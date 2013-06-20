@@ -1,0 +1,61 @@
+ol.todo {
+	padding: 0; margin: 0;
+	
+	> li { 
+		position: relative;
+		list-style: none;
+		padding: 1em 2em 1em 4em;
+		background: $light-gray;
+
+		&:before, &:after { content: ""; position: absolute; }
+
+		&:before {
+			width: 2px;
+			top: 0; bottom: 0;
+			left: 2em;
+			background: $dark-gray;
+		}
+
+		&:after {
+			$size: 10px;
+
+			width: $size; height: $size;
+			background: $yellow;
+			border-radius: $size;
+			left: 2em; top: 50%;
+			
+			margin-left: 1 - ($size / 2);
+			margin-top: 0 - ($size / 2);
+		}
+	}
+
+	h2 {
+		font-weight: normal;
+		margin: 0 0 .2em;
+	}
+
+	time, .tags { display: inline-block; }
+
+	time {
+		background: lighten($light-gray, 10%);
+		padding: 0 0.3em;
+	}
+
+	.tags { 
+		margin: 0 0 0 1em; 
+		padding: 0; 
+		
+		li {
+			display: inline-block;
+			margin: 0 0 0 -.3em; 
+			padding: 0;
+
+			&:before { content: ', '; }
+			
+			&:first-child {
+				margin-left: 0;
+				&:before { content: none; }
+			}
+		}
+	}
+}

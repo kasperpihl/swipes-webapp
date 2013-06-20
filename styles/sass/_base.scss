@@ -1,11 +1,11 @@
 body {
-	font: 16px/1.25 "Helvetica Neue", Helvetica, sans-serif;
+	font: 13px/1.25 "Helvetica Neue", Helvetica, sans-serif;
 	color: $text-color;
-	background: $primary-color;
+	background: $dark-gray;
 }
 
 nav {
-	border-bottom: thick solid lighten($primary-color, 30%);
+	border-bottom: thick solid $light-gray;
 	color: white;
 
 	ul {
@@ -24,7 +24,7 @@ nav {
 		display: block;
 		
 		padding: 1.5em 0;
-		&.active { background: lighten($primary-color, 30%); }
+		&.active { background: $light-gray; }
 		
 		text-decoration: none;
 		color: inherit;

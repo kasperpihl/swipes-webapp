@@ -215,7 +215,7 @@ select { width: 100%; }
 
 /* Grid HTML Classes */
 /* line 116, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_grid.scss */
-.row { width: 100%; margin-left: auto; margin-right: auto; margin-top: 0; margin-bottom: 0; max-width: 62.5em; *zoom: 1; }
+.row { width: 100%; margin-left: auto; margin-right: auto; margin-top: 0; margin-bottom: 0; max-width: 76.92308em; *zoom: 1; }
 /* line 121, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_global.scss */
 .row:before, .row:after { content: " "; display: table; }
 /* line 122, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_global.scss */
@@ -223,7 +223,7 @@ select { width: 100%; }
 /* line 121, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_grid.scss */
 .row.collapse .column, .row.collapse .columns { position: relative; padding-left: 0; padding-right: 0; float: left; }
 /* line 124, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_grid.scss */
-.row .row { width: auto; margin-left: -0.9375em; margin-right: -0.9375em; margin-top: 0; margin-bottom: 0; max-width: none; *zoom: 1; }
+.row .row { width: auto; margin-left: -1.15385em; margin-right: -1.15385em; margin-top: 0; margin-bottom: 0; max-width: none; *zoom: 1; }
 /* line 121, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_global.scss */
 .row .row:before, .row .row:after { content: " "; display: table; }
 /* line 122, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_global.scss */
@@ -236,10 +236,10 @@ select { width: 100%; }
 .row .row.collapse:after { clear: both; }
 
 /* line 130, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_grid.scss */
-.column, .columns { position: relative; padding-left: 0.9375em; padding-right: 0.9375em; width: 100%; float: left; }
+.column, .columns { position: relative; padding-left: 1.15385em; padding-right: 1.15385em; width: 100%; float: left; }
 
 @media only screen { /* line 135, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_grid.scss */
-  .column, .columns { position: relative; padding-left: 0.9375em; padding-right: 0.9375em; float: left; }
+  .column, .columns { position: relative; padding-left: 1.15385em; padding-right: 1.15385em; float: left; }
   /* line 138, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_grid.scss */
   .small-1 { position: relative; width: 8.33333%; }
   /* line 138, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_grid.scss */
@@ -585,81 +585,81 @@ th.hide-for-touch { display: table-cell !important; }
 
 /* Foundation Block Grids for below small breakpoint */
 @media only screen { /* line 50, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  [class*="block-grid-"] { display: block; padding: 0; margin: 0 -0.625em; *zoom: 1; }
+  [class*="block-grid-"] { display: block; padding: 0; margin: 0 -0.76923em; *zoom: 1; }
   /* line 121, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_global.scss */
   [class*="block-grid-"]:before, [class*="block-grid-"]:after { content: " "; display: table; }
   /* line 122, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_global.scss */
   [class*="block-grid-"]:after { clear: both; }
   /* line 27, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  [class*="block-grid-"] > li { display: inline; height: auto; float: left; padding: 0 0.625em 1.25em; }
+  [class*="block-grid-"] > li { display: inline; height: auto; float: left; padding: 0 0.76923em 1.53846em; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-1 > li { width: 100%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-1 > li { width: 100%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-1 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-1 > li:nth-of-type(1n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-2 > li { width: 50%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-2 > li { width: 50%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-2 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-2 > li:nth-of-type(2n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-3 > li { width: 33.33333%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-3 > li { width: 33.33333%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-3 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-3 > li:nth-of-type(3n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-4 > li { width: 25%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-4 > li { width: 25%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-4 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-4 > li:nth-of-type(4n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-5 > li { width: 20%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-5 > li { width: 20%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-5 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-5 > li:nth-of-type(5n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-6 > li { width: 16.66667%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-6 > li { width: 16.66667%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-6 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-6 > li:nth-of-type(6n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-7 > li { width: 14.28571%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-7 > li { width: 14.28571%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-7 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-7 > li:nth-of-type(7n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-8 > li { width: 12.5%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-8 > li { width: 12.5%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-8 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-8 > li:nth-of-type(8n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-9 > li { width: 11.11111%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-9 > li { width: 11.11111%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-9 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-9 > li:nth-of-type(9n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-10 > li { width: 10%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-10 > li { width: 10%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-10 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-10 > li:nth-of-type(10n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-11 > li { width: 9.09091%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-11 > li { width: 9.09091%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-11 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-11 > li:nth-of-type(11n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .small-block-grid-12 > li { width: 8.33333%; padding: 0 0.625em 1.25em; }
+  .small-block-grid-12 > li { width: 8.33333%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-12 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
@@ -691,73 +691,73 @@ th.hide-for-touch { display: table-cell !important; }
   /* line 63, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .small-block-grid-12 > li:nth-of-type(12n+1) { clear: none; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-1 > li { width: 100%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-1 > li { width: 100%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-1 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-1 > li:nth-of-type(1n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-2 > li { width: 50%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-2 > li { width: 50%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-2 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-2 > li:nth-of-type(2n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-3 > li { width: 33.33333%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-3 > li { width: 33.33333%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-3 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-3 > li:nth-of-type(3n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-4 > li { width: 25%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-4 > li { width: 25%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-4 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-4 > li:nth-of-type(4n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-5 > li { width: 20%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-5 > li { width: 20%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-5 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-5 > li:nth-of-type(5n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-6 > li { width: 16.66667%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-6 > li { width: 16.66667%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-6 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-6 > li:nth-of-type(6n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-7 > li { width: 14.28571%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-7 > li { width: 14.28571%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-7 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-7 > li:nth-of-type(7n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-8 > li { width: 12.5%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-8 > li { width: 12.5%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-8 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-8 > li:nth-of-type(8n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-9 > li { width: 11.11111%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-9 > li { width: 11.11111%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-9 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-9 > li:nth-of-type(9n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-10 > li { width: 10%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-10 > li { width: 10%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-10 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-10 > li:nth-of-type(10n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-11 > li { width: 9.09091%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-11 > li { width: 9.09091%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-11 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-11 > li:nth-of-type(11n+1) { clear: both; }
   /* line 36, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
-  .large-block-grid-12 > li { width: 8.33333%; padding: 0 0.625em 1.25em; }
+  .large-block-grid-12 > li { width: 8.33333%; padding: 0 0.76923em 1.53846em; }
   /* line 40, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
   .large-block-grid-12 > li:nth-of-type(n) { clear: none; }
   /* line 41, ../../../../../../.rvm/gems/ruby-1.9.3-p374/gems/zurb-foundation-4.2.2/scss/foundation/components/_block-grid.scss */
@@ -2517,10 +2517,10 @@ PAGE TRANSITION ANIMATIONS
 .pt-page-delay1000 { -webkit-animation-delay: 1s; -moz-animation-delay: 1s; animation-delay: 1s; }
 
 /* line 1, ../sass/_base.scss */
-body { font: 16px/1.25 "Helvetica Neue", Helvetica, sans-serif; color: #d4d4d4; background: #2d333e; }
+body { font: 13px/1.25 "Helvetica Neue", Helvetica, sans-serif; color: #d4d4d4; background: #2d333e; }
 
 /* line 7, ../sass/_base.scss */
-nav { border-bottom: thick solid #6e7c96; color: white; }
+nav { border-bottom: thick solid #4d576a; color: white; }
 /* line 11, ../sass/_base.scss */
 nav ul { margin: 0; padding: 0; overflow: hidden; }
 /* line 16, ../sass/_base.scss */
@@ -2528,13 +2528,36 @@ nav li { display: block; float: left; width: 33.3%; text-align: center; }
 /* line 23, ../sass/_base.scss */
 nav a { display: block; padding: 1.5em 0; text-decoration: none; color: inherit; }
 /* line 27, ../sass/_base.scss */
-nav a.active { background: #6e7c96; }
+nav a.active { background: #4d576a; }
+
+/* line 1, ../sass/_todolist.scss */
+ol.todo { padding: 0; margin: 0; }
+/* line 4, ../sass/_todolist.scss */
+ol.todo > li { position: relative; list-style: none; padding: 1em 2em 1em 4em; background: #4d576a; }
+/* line 10, ../sass/_todolist.scss */
+ol.todo > li:before, ol.todo > li:after { content: ""; position: absolute; }
+/* line 12, ../sass/_todolist.scss */
+ol.todo > li:before { width: 2px; top: 0; bottom: 0; left: 2em; background: #2d333e; }
+/* line 19, ../sass/_todolist.scss */
+ol.todo > li:after { width: 10px; height: 10px; background: #e4d03b; border-radius: 10px; left: 2em; top: 50%; margin-left: -4px; margin-top: -5px; }
+/* line 32, ../sass/_todolist.scss */
+ol.todo h2 { font-weight: normal; margin: 0 0 .2em; }
+/* line 37, ../sass/_todolist.scss */
+ol.todo time, ol.todo .tags { display: inline-block; }
+/* line 39, ../sass/_todolist.scss */
+ol.todo time { background: #637088; padding: 0 0.3em; }
+/* line 44, ../sass/_todolist.scss */
+ol.todo .tags { margin: 0 0 0 1em; padding: 0; }
+/* line 48, ../sass/_todolist.scss */
+ol.todo .tags li { display: inline-block; margin: 0 0 0 -.3em; padding: 0; }
+/* line 53, ../sass/_todolist.scss */
+ol.todo .tags li:before { content: ', '; }
+/* line 55, ../sass/_todolist.scss */
+ol.todo .tags li:first-child { margin-left: 0; }
+/* line 57, ../sass/_todolist.scss */
+ol.todo .tags li:first-child:before { content: none; }
 
 /* line 1, ../sass/view/_base-view.scss */
-.pt-page { background: #7fcaba; }
+.pt-page { background: #2d333e; }
 /* line 4, ../sass/view/_base-view.scss */
-.pt-page h1, .pt-page h2, .pt-page h3, .pt-page h4, .pt-page h5, .pt-page h6 { margin: 0; padding: 0; }
-/* line 6, ../sass/view/_base-view.scss */
-.pt-page h1.hide-text, .pt-page h2.hide-text, .pt-page h3.hide-text, .pt-page h4.hide-text, .pt-page h5.hide-text, .pt-page h6.hide-text { text-indent: -119988px; overflow: hidden; text-align: left; }
-/* line 12, ../sass/view/_base-view.scss */
 .pt-page input, .pt-page textarea { -webkit-appearance: none; border-radius: 0; display: block; width: 245px; margin: auto; padding: .4em .6em; border: thin solid #86a3a5; outline: none; font-size: 18px; color: black; }

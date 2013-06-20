@@ -1,14 +1,6 @@
 .pt-page {
-	background: #7fcaba;
+	background: $dark-gray;
 	
-	#{headers()} {
-		margin: 0; padding: 0;
-		&.hide-text {
-			@include hide-text();
-		}	
-	}
-
-
 	input, textarea {
 		-webkit-appearance: none;
 		border-radius: 0;
