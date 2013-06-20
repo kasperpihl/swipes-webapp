@@ -7,23 +7,38 @@
 	<title>Swipy</title>
 	
 	<link rel="stylesheet" href="styles/css/combined.css">
+	<script src="scripts/vendor/custom.modernizr.js"></script>
 </head>
 
 <body>
 
-	<div id="container">
+	<article>
 		<header>
-			<h1>Swipy</h1>
+			<nav>
+				<ul>
+					<li><a href="#/archive">Archive</a></li>
+					<li><a href="#/todo">Todo</a></li>
+					<li><a href="#/schedule">Schedule</a></li>
+				</ul>
+			</nav>
 		</header>
-		
-		<div role="main">
-			 <p>Here's some content...</p>
-		</div>
-		
-		<footer>
 
-		</footer>
-	</div>
+		<div class="pt-perspective">
+
+			<section class="pt-page" data-slug="todo">
+				this is all the stuff you need to do...
+			</section>
+
+			<section class="pt-page" data-slug="archive">
+				this is all the stuff you already completed...
+			</section>
+
+			<section class="pt-page" data-slug="schedule">
+				this is your future schedule...
+			</section>
+
+		</div>
+	</article>
 
 	<script data-main="scripts/Main" src="scripts/vendor/require.js"></script>
 

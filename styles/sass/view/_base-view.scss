@@ -1,0 +1,29 @@
+.pt-page {
+	background: #7fcaba;
+	
+	#{headers()} {
+		margin: 0; padding: 0;
+		&.hide-text {
+			@include hide-text();
+		}	
+	}
+
+
+	input, textarea {
+		-webkit-appearance: none;
+		border-radius: 0;
+
+		display: block;
+		
+		width: 245px;
+		margin: auto;
+
+		padding: .4em .6em;
+		
+		border: thin solid #86a3a5;
+		outline: none;
+
+		font-size: 18px;
+		color: black;
+	}
+}

@@ -3,7 +3,7 @@
     window.$ = window.jQuery = $;
     window._ = _;
     window.Backbone = Backbone;
-    return App.init();
+    return new App();
   });
 
 }).call(this);
