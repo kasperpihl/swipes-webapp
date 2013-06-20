@@ -2516,6 +2516,20 @@ PAGE TRANSITION ANIMATIONS
 /* line 1990, ../sass/_page-transitions.scss */
 .pt-page-delay1000 { -webkit-animation-delay: 1s; -moz-animation-delay: 1s; animation-delay: 1s; }
 
+/* line 1, ../sass/_base.scss */
+body { font: 16px/1.25 "Helvetica Neue", Helvetica, sans-serif; color: #d4d4d4; background: #2d333e; }
+
+/* line 7, ../sass/_base.scss */
+nav { border-bottom: thick solid #6e7c96; color: white; }
+/* line 11, ../sass/_base.scss */
+nav ul { margin: 0; padding: 0; overflow: hidden; }
+/* line 16, ../sass/_base.scss */
+nav li { display: block; float: left; width: 33.3%; text-align: center; }
+/* line 23, ../sass/_base.scss */
+nav a { display: block; padding: 1.5em 0; text-decoration: none; color: inherit; }
+/* line 27, ../sass/_base.scss */
+nav a.active { background: #6e7c96; }
+
 /* line 1, ../sass/view/_base-view.scss */
 .pt-page { background: #7fcaba; }
 /* line 4, ../sass/view/_base-view.scss */

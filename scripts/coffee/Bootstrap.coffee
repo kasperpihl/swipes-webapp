@@ -1,9 +1,9 @@
-define ['controller/PageController', 'router/MainRouter'], (PageController, MainRouter) ->
+define ['controller/ViewController', 'router/MainRouter'], (ViewController, MainRouter) ->
 	class Bootstrap
 		constructor: ->
 			@init()
 		init: ->
-			@pageController = new PageController()
+			@viewController = new ViewController()
 			@router = new MainRouter()
 
 			Backbone.history.start { pushState: no }

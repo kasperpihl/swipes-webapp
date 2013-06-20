@@ -1,13 +1,17 @@
 (function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
   define(function() {
-    var PageController;
-    return PageController = (function() {
-      function PageController(opts) {
+    var ViewController;
+    return ViewController = (function() {
+      function ViewController(opts) {
+        this.updateNavigation = __bind(this.updateNavigation, this);
         this.setOpts(opts);
         this.init();
+        this.navLinks = $('nav a');
       }
 
-      PageController.prototype.setOpts = function(opts) {
+      ViewController.prototype.setOpts = function(opts) {
         var defaultOptions;
         defaultOptions = {
           $wrap: $('.pt-perspective'),
@@ -27,7 +31,7 @@
         return this.options = $.extend(defaultOptions, opts);
       };
 
-      PageController.prototype.init = function() {
+      ViewController.prototype.init = function() {
         var _this = this;
         this.options.$pages.each(function() {
           return $(this).data('originalClassList', $(this).attr('class'));
@@ -38,7 +42,7 @@
         });
       };
 
-      PageController.prototype.goto = function(slug) {
+      ViewController.prototype.goto = function(slug) {
         var newPage, oldPage;
         if (this.options.isAnimating) {
           return false;
@@ -48,10 +52,20 @@
         newPage = this.options.$pages.filter(function() {
           return $(this).data('slug') === slug;
         });
-        return this.transitionPages(oldPage, newPage);
+        this.transitionPages(oldPage, newPage);
+        return this.updateNavigation(slug);
       };
 
-      PageController.prototype.transitionPages = function(oldPage, newPage) {
+      ViewController.prototype.updateNavigation = function(slug) {
+        return this.navLinks.each(function() {
+          var isCurrLink, link;
+          link = $(this);
+          isCurrLink = link.attr('href').slice(2) === slug ? true : false;
+          return link.toggleClass('active', isCurrLink);
+        });
+      };
+
+      ViewController.prototype.transitionPages = function(oldPage, newPage) {
         var transitionIn, transitionOut,
           _this = this;
         log("out: '" + (oldPage.data('slug')) + "' /// in: '" + (newPage.data('slug')) + "'");
@@ -75,7 +89,7 @@
         });
       };
 
-      PageController.prototype.onEndAnimation = function(oldPage, newPage) {
+      ViewController.prototype.onEndAnimation = function(oldPage, newPage) {
         this.options.endOldPage = false;
         this.options.endNewPage = false;
         this.resetPage(oldPage, newPage);
@@ -83,12 +97,12 @@
         return this.loadPageScripts(newPage.data('slug'), newPage);
       };
 
-      PageController.prototype.resetPage = function(oldPage, newPage) {
+      ViewController.prototype.resetPage = function(oldPage, newPage) {
         oldPage.attr('class', oldPage.data('originalClassList'));
         return newPage.attr('class', newPage.data('originalClassList') + ' pt-page-current');
       };
 
-      PageController.prototype.getTransitionsForPage = function(slug) {
+      ViewController.prototype.getTransitionsForPage = function(slug) {
         var transitions;
         transitions = {
           "in": '',
@@ -110,7 +124,7 @@
         return transitions;
       };
 
-      PageController.prototype.loadPageScripts = function(slug, pageEl) {
+      ViewController.prototype.loadPageScripts = function(slug, pageEl) {
         var _this = this;
         return require(["view/" + slug], function(View) {
           return _this.options.currView = new View({
@@ -119,7 +133,7 @@
         });
       };
 
-      return PageController;
+      return ViewController;
 
     })();
   });

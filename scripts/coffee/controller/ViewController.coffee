@@ -1,8 +1,9 @@
 define ->
-	class PageController
+	class ViewController
 		constructor: (opts) ->
 			@setOpts opts
 			@init()
+			@navLinks = $('nav a')
 		setOpts: (opts) ->
 			defaultOptions = {
 				$wrap: $('.pt-perspective')
@@ -43,6 +44,12 @@ define ->
 			newPage = @options.$pages.filter -> $(@).data('slug') is slug
 
 			@transitionPages oldPage, newPage
+			@updateNavigation slug
+		updateNavigation: (slug) =>
+			@navLinks.each ->
+				link = $(@)
+				isCurrLink = if link.attr('href')[2...] is slug then yes else no
+				link.toggleClass 'active', isCurrLink
 		transitionPages: (oldPage, newPage) ->
 			log "out: '#{oldPage.data('slug')}' /// in: '#{newPage.data('slug')}'"
 
