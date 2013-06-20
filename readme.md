@@ -6,4 +6,4 @@ Just a silly little experiemnt. Trying to recreate [Swipes](http://swipesapp.com
 * This is only targeted at smart phones, so no Modernizr and no polyfills for old stupid browsers.
 * Want to see more of my work? Check out my portfolio at [http://ahrengot.com](http://ahrengot.com).
 
-**Have a nice day!**
+*Have a nice day!*
