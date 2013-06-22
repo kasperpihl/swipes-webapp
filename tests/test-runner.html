@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <title>Test'em</title>
+  
+  <link rel="stylesheet" href="/testem/mocha.css">
+  
+  <script src="/testem/mocha.js"></script>
+  <script src="/testem.js"></script>
+  <script>mocha.setup('bdd')</script>
+  <script src="../scripts/vendor/require.js"></script>
+  <script>
+    require.config({
+      deps: ["../scripts/vendor/require.config"],
+      baseUrl:'../scripts',
+      urlArgs: new Date().getTime(),
+    });
+  </script>
+  
+  {{#styles}}<link rel="stylesheet" href="{{.}}">{{/styles}}
+</head>
+<body>
+  <div id="mocha"></div>
+  
+  <script>
+    var files = ['../tests/helpers/chai'];
+    {{#serve_files}}
+      files.push("../{{src}}");
+    {{/serve_files}}
+    
+    require(files, function(chai) {
+      window.should = chai.should();
+
+      mocha.run();
+    });
+  </script>
+  
+</body>
+</html>

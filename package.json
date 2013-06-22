@@ -1,7 +1,18 @@
 {
+  "name": "Swipy Todos",
+  "version": "0.0.1",
+  "dependencies": {
+
+  },
   "jam": {
-    "packageDir": "scripts/vendor",
-    "baseUrl": "scripts/"
+    "packageDir": "./scripts/vendor",
+    "baseUrl": "./scripts",
+    "dependencies": {
+      "chai": null,
+      "coffee-script": null,
+      "cs": null,
+      "mocha": null
+    }
   },
   "devDependencies": {
     "grunt-contrib-compass": "~0.2.0",
