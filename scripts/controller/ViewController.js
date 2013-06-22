@@ -50,7 +50,7 @@
         this.options.isAnimating = true;
         oldPage = this.options.$pages.filter('.pt-page-current');
         newPage = this.options.$pages.filter(function() {
-          return $(this).data('slug') === slug;
+          return $(this).attr('id') === slug;
         });
         this.transitionPages(oldPage, newPage);
         return this.updateNavigation(slug);
@@ -68,13 +68,13 @@
       ViewController.prototype.transitionPages = function(oldPage, newPage) {
         var transitionIn, transitionOut,
           _this = this;
-        log("out: '" + (oldPage.data('slug')) + "' /// in: '" + (newPage.data('slug')) + "'");
+        log("out: '" + (oldPage.attr('id')) + "' /// in: '" + (newPage.attr('id')) + "'");
         if (this.options.currView != null) {
           this.options.currView.cleanUp();
         }
         newPage.addClass('pt-page-current');
-        transitionOut = this.getTransitionsForPage(oldPage.data('slug')).out;
-        transitionIn = this.getTransitionsForPage(newPage.data('slug'))["in"];
+        transitionOut = this.getTransitionsForPage(oldPage.attr('id')).out;
+        transitionIn = this.getTransitionsForPage(newPage.attr('id'))["in"];
         oldPage.addClass(transitionOut).one(this.options.animEndEventName, function() {
           _this.options.endOldPage = true;
           if (_this.options.endNewPage) {
@@ -94,7 +94,7 @@
         this.options.endNewPage = false;
         this.resetPage(oldPage, newPage);
         this.options.isAnimating = false;
-        return this.loadPageScripts(newPage.data('slug'), newPage);
+        return this.loadPageScripts(newPage.attr('id'), newPage);
       };
 
       ViewController.prototype.resetPage = function(oldPage, newPage) {

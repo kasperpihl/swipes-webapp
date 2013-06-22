@@ -2,7 +2,7 @@
 (function() {
 
   define(['collection/ToDoCollection'], function(ToDoCollection) {
-    return describe("A ToDo collection", function() {
+    describe("A ToDo collection", function() {
       ToDoCollection = new ToDoCollection();
       it("shoudl exist", function() {
         return ToDoCollection.should.exist;
@@ -46,6 +46,11 @@
           state: "archived",
           title: "test archived todo"
         }).should.exist;
+      });
+    });
+    return describe("A ToDo view", function() {
+      return it("should test some stuff", function() {
+        return (2 + 2).should.equal(4);
       });
     });
   });

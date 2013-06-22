@@ -24,3 +24,7 @@ define ['collection/ToDoCollection'], (ToDoCollection) ->
 			ToDoCollection.add title: "test archived todo", state: "archived"
 			ToDoCollection.getArchived().should.not.be.undefined
 			ToDoCollection.findWhere( state: "archived", title: "test archived todo").should.exist
+
+	describe "A ToDo view", ->
+		it "should test some stuff", ->
+			( 2+2 ).should.equal 4

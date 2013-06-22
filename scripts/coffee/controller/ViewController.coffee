@@ -41,7 +41,7 @@ define ->
 			oldPage = @options.$pages.filter '.pt-page-current'
 
 			# Store a reference to the next page (The one we're transitioning to)
-			newPage = @options.$pages.filter -> $(@).data('slug') is slug
+			newPage = @options.$pages.filter -> $(@).attr('id') is slug
 
 			@transitionPages oldPage, newPage
 			@updateNavigation slug
@@ -51,13 +51,13 @@ define ->
 				isCurrLink = if link.attr('href')[2...] is slug then yes else no
 				link.toggleClass 'active', isCurrLink
 		transitionPages: (oldPage, newPage) ->
-			log "out: '#{oldPage.data('slug')}' /// in: '#{newPage.data('slug')}'"
+			log "out: '#{oldPage.attr('id')}' /// in: '#{newPage.attr('id')}'"
 
 			if @options.currView? then @options.currView.cleanUp()
 
 			newPage.addClass 'pt-page-current'
-			transitionOut = @getTransitionsForPage(oldPage.data('slug')).out
-			transitionIn = @getTransitionsForPage(newPage.data('slug')).in
+			transitionOut = @getTransitionsForPage(oldPage.attr('id')).out
+			transitionIn = @getTransitionsForPage(newPage.attr('id')).in
 
 			# First, kick off transition out
 			oldPage.addClass(transitionOut).one @options.animEndEventName, =>
@@ -74,7 +74,7 @@ define ->
 			@resetPage(oldPage, newPage)
 			@options.isAnimating = no
 
-			@loadPageScripts( newPage.data('slug'), newPage )
+			@loadPageScripts( newPage.attr('id'), newPage )
 		resetPage: (oldPage, newPage) ->
 			oldPage.attr('class', oldPage.data('originalClassList'))
 			newPage.attr('class', newPage.data('originalClassList') + ' pt-page-current')
