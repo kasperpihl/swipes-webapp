@@ -39,10 +39,11 @@ ol.todo {
 	time {
 		background: lighten($light-gray, 10%);
 		padding: 0 0.3em;
+		margin-right: 1em;
 	}
 
 	.tags { 
-		margin: 0 0 0 1em; 
+		margin: 0; 
 		padding: 0; 
 		
 		li {

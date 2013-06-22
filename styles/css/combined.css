@@ -2545,16 +2545,16 @@ ol.todo h2 { font-weight: normal; margin: 0 0 .2em; }
 /* line 37, ../sass/_todolist.scss */
 ol.todo time, ol.todo .tags { display: inline-block; }
 /* line 39, ../sass/_todolist.scss */
-ol.todo time { background: #637088; padding: 0 0.3em; }
-/* line 44, ../sass/_todolist.scss */
-ol.todo .tags { margin: 0 0 0 1em; padding: 0; }
-/* line 48, ../sass/_todolist.scss */
+ol.todo time { background: #637088; padding: 0 0.3em; margin-right: 1em; }
+/* line 45, ../sass/_todolist.scss */
+ol.todo .tags { margin: 0; padding: 0; }
+/* line 49, ../sass/_todolist.scss */
 ol.todo .tags li { display: inline-block; margin: 0 0 0 -.3em; padding: 0; }
-/* line 53, ../sass/_todolist.scss */
+/* line 54, ../sass/_todolist.scss */
 ol.todo .tags li:before { content: ', '; }
-/* line 55, ../sass/_todolist.scss */
+/* line 56, ../sass/_todolist.scss */
 ol.todo .tags li:first-child { margin-left: 0; }
-/* line 57, ../sass/_todolist.scss */
+/* line 58, ../sass/_todolist.scss */
 ol.todo .tags li:first-child:before { content: none; }
 
 /* line 1, ../sass/view/_base-view.scss */

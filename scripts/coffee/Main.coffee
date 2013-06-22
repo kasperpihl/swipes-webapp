@@ -3,4 +3,4 @@ require ['jquery', 'underscore', 'backbone', 'Bootstrap', 'plugins/log'], ($, _,
 	window._ = _
 	window.Backbone = Backbone
 
-	new App()
+	window.swipy = new App()

@@ -3,7 +3,7 @@
     window.$ = window.jQuery = $;
     window._ = _;
     window.Backbone = Backbone;
-    return new App();
+    return window.swipy = new App();
   });
 
 }).call(this);

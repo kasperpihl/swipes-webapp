@@ -2007,6 +2007,11 @@ var jam = {
             "main": "backbone.js"
         },
         {
+            "name": "backbone-localStorage",
+            "location": "vendor/backbone-localStorage",
+            "main": "main.js"
+        },
+        {
             "name": "jquery",
             "location": "vendor/jquery",
             "main": "dist/jquery.js"
@@ -2041,6 +2046,11 @@ if (typeof require !== "undefined" && require.config) {
             "main": "backbone.js"
         },
         {
+            "name": "backbone-localStorage",
+            "location": "vendor/backbone-localStorage",
+            "main": "main.js"
+        },
+        {
             "name": "jquery",
             "location": "vendor/jquery",
             "main": "dist/jquery.js"
@@ -2072,6 +2082,11 @@ else {
             "name": "backbone",
             "location": "vendor/backbone",
             "main": "backbone.js"
+        },
+        {
+            "name": "backbone-localStorage",
+            "location": "vendor/backbone-localStorage",
+            "main": "main.js"
         },
         {
             "name": "jquery",
