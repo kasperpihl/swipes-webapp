@@ -1,6 +1,6 @@
 (function() {
-  define(['view/default-view'], function(DefaultView) {
-    return DefaultView.extend({
+  define(['view/list-view'], function(ListView) {
+    return ListView.extend({
       el: "#todo",
       events: {
         'tap .add-new': 'addNew',
@@ -8,7 +8,7 @@
       },
       init: function() {
         this.listTmpl = _.template($('#template-list').html());
-        return swipy.collection.on('add remove reset', this.renderList, this);
+        return swipy.collection.on('add remove reset change', this.renderList, this);
       },
       addNew: function() {
         var todo;
@@ -18,19 +18,6 @@
             title: todo
           }));
         }
-      },
-      render: function() {
-        return this.renderList();
-      },
-      renderList: function() {
-        var itemsJSON;
-        itemsJSON = new Backbone.Collection(swipy.collection.getActive()).toJSON();
-        return this.$el.find('.list-wrap').html(this.listTmpl({
-          items: itemsJSON
-        }));
-      },
-      customCleanUp: function() {
-        return swipy.collection.off();
       }
     });
   });

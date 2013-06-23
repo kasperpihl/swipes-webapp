@@ -2012,9 +2012,34 @@ var jam = {
             "main": "main.js"
         },
         {
+            "name": "chai",
+            "location": "vendor/chai",
+            "main": "./index"
+        },
+        {
+            "name": "coffee-script",
+            "location": "vendor/coffee-script",
+            "main": "./extras/coffee-script.js"
+        },
+        {
+            "name": "cs",
+            "location": "vendor/cs",
+            "main": "cs.js"
+        },
+        {
+            "name": "hammer",
+            "location": "vendor/hammer",
+            "main": "hammer.js"
+        },
+        {
             "name": "jquery",
             "location": "vendor/jquery",
             "main": "dist/jquery.js"
+        },
+        {
+            "name": "mocha",
+            "location": "vendor/mocha",
+            "main": "./index"
         },
         {
             "name": "underscore",
@@ -2051,9 +2076,34 @@ if (typeof require !== "undefined" && require.config) {
             "main": "main.js"
         },
         {
+            "name": "chai",
+            "location": "vendor/chai",
+            "main": "./index"
+        },
+        {
+            "name": "coffee-script",
+            "location": "vendor/coffee-script",
+            "main": "./extras/coffee-script.js"
+        },
+        {
+            "name": "cs",
+            "location": "vendor/cs",
+            "main": "cs.js"
+        },
+        {
+            "name": "hammer",
+            "location": "vendor/hammer",
+            "main": "hammer.js"
+        },
+        {
             "name": "jquery",
             "location": "vendor/jquery",
             "main": "dist/jquery.js"
+        },
+        {
+            "name": "mocha",
+            "location": "vendor/mocha",
+            "main": "./index"
         },
         {
             "name": "underscore",
@@ -2089,9 +2139,34 @@ else {
             "main": "main.js"
         },
         {
+            "name": "chai",
+            "location": "vendor/chai",
+            "main": "./index"
+        },
+        {
+            "name": "coffee-script",
+            "location": "vendor/coffee-script",
+            "main": "./extras/coffee-script.js"
+        },
+        {
+            "name": "cs",
+            "location": "vendor/cs",
+            "main": "cs.js"
+        },
+        {
+            "name": "hammer",
+            "location": "vendor/hammer",
+            "main": "hammer.js"
+        },
+        {
             "name": "jquery",
             "location": "vendor/jquery",
             "main": "dist/jquery.js"
+        },
+        {
+            "name": "mocha",
+            "location": "vendor/mocha",
+            "main": "./index"
         },
         {
             "name": "underscore",

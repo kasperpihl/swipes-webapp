@@ -47,18 +47,20 @@
 		<ol class="todo">
 			<% _.each(items, function(item) { %>
 				<li>
-					<h2><%= item.title %></h2>
-					<% if (item.alert) { %>
-						<time><%= item.alert %></time>
-					<% } %>
+					<div class="todo-content">
+						<h2><%= item.title %></h2>
+						<% if (item.alert) { %>
+							<time><%= item.alert %></time>
+						<% } %>
 
-					<% if (item.tags && item.tags.length) { %>
-						<ul class="tags">
-						<% _.each(item.tags, function(tag) { %>
-							<li><%= tag %></li>
-						<% }); %>
-						</ul>
-					<% } %>
+						<% if (item.tags && item.tags.length) { %>
+							<ul class="tags">
+							<% _.each(item.tags, function(tag) { %>
+								<li><%= tag %></li>
+							<% }); %>
+							</ul>
+						<% } %>
+					</div>
 				</li>
 			<% }); %>
 		</ol>
