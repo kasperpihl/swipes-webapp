@@ -2,6 +2,8 @@ define ['backbone', 'backbone-localStorage', 'model/ToDoModel'], (Backbone, Back
 	Backbone.Collection.extend
 		model: ToDoModel
 		localStorage: new Backbone.LocalStorage "SwipyTodos"
-		getActive: -> @where status: "todo"
-		getScheduled: -> @where status: "scheduled"
-		getArchived: -> @where status: "archived"
+		initialize: ->
+			@on 'add', (model) -> model.save()
+		getActive: -> @where state: "todo"
+		getScheduled: -> @where state: "scheduled"
+		getCompleted: -> @where state: "completed"
