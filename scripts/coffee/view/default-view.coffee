@@ -1,8 +1,5 @@
 define ['backbone'], (Backbone) ->
 	Backbone.View.extend
-		events: 
-			'tap .page-link': 'gotoPage'
-			'click .page-link': 'gotoPage'
 		initialize: ->
 			_.bindAll(@)
 			@timers = []
@@ -10,9 +7,6 @@ define ['backbone'], (Backbone) ->
 			@render()
 		init: -> 
 			# In views extending me, place initialize logic here
-		gotoPage: (e) ->
-			link = $(e.currentTarget).attr('data-href')
-			window.location.hash = link
 		render: -> 
 			return @el;
 		customCleanUp: ->

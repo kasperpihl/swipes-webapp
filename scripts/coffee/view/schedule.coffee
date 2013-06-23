@@ -1,5 +1,16 @@
 define ['view/default-view'], (DefaultView) ->
 	DefaultView.extend
 		init: ->
-			log "Schedule view initialized"
-		cacheEls: ->
+			# Set HTML tempalte for our list
+			@listTmpl = _.template $('#template-list').html()
+
+			# Render the list whenever it updates
+			swipy.collection.on 'change', @renderList, @
+		render: ->
+			@renderList()
+		renderList: ->
+			itemsJSON = new Backbone.Collection( swipy.collection.getScheduled() ).toJSON()
+			@$el.find('.list-wrap').html @listTmpl( { items: itemsJSON } )
+		customCleanUp: ->
+			# Unbind all events
+			swipy.collection.off()

@@ -1,0 +1,18 @@
+section#todo {
+	.add-new {
+		$size: 70px;
+		
+		display: block;
+		position: fixed;
+		
+		width: $size; height: $size;
+		left: 50%; bottom: 2em;
+		margin-left: 0 - $size / 2;
+
+		background: $yellow;
+		border-radius: $size;
+
+		@include squish-text();
+		@include plus-icon(6px, 16px, 2px);
+	}
+}

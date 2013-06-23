@@ -16,9 +16,9 @@
 		<header>
 			<nav>
 				<ul>
-					<li><a href="#/archive">Archive</a></li>
-					<li><a href="#/todo">Todo</a></li>
 					<li><a href="#/schedule">Schedule</a></li>
+					<li><a href="#/todo">Todo</a></li>
+					<li><a href="#/completed">Completed</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -26,55 +26,43 @@
 		<div class="pt-perspective">
 
 			<section class="pt-page" id="todo">
-				<ol class="todo">
-					<li>
-						<h2>Buy pizza snails</h2>
-						<time>9:00am</time>
-						<ul class="tags">
-							<li>Work</li>
-							<li>Errand</li>
-						</ul>
-					</li>
-					<li>
-						<h2>Buy pizza snails</h2>
-						<ul class="tags">
-							<li>Work</li>
-						</ul>
-					</li>
-					<li>
-						<h2>Buy pizza snails</h2>
-						<time>9:00am</time>
-						<ul class="tags">
-							<li>Errand</li>
-						</ul>
-					</li>
-					<li>
-						<h2>Buy pizza snails</h2>
-						<ul class="tags">
-							<li>Work</li>
-							<li>Private</li>
-						</ul>
-					</li>
-					<li>
-						<h2>Buy pizza snails</h2>
-						<time>9:00am</time>
-						<ul class="tags">
-							<li>Shopping</li>
-						</ul>
-					</li>
-				</ol>
+				<div class="list-wrap"></div>
+				<a href="JavaScript:void(0);" title="Add new todo" class="add-new">Add new todo</a>
 			</section>
 			
-			<section class="pt-page" id="archive">
+			<section class="pt-page" id="completed">
 				this is all the stuff you already did...
+				<div class="list-wrap"></div>
 			</section>
 
 			<section class="pt-page" id="schedule">
 				this is your future schedule...
+				<div class="list-wrap"></div>
 			</section>
 
 		</div>
 	</article>
+
+	<script type="text/template" id="template-list">
+		<ol class="todo">
+			<% _.each(items, function(item) { %>
+				<li>
+					<h2><%= item.title %></h2>
+					<% if (item.alert) { %>
+						<time><%= item.alert %></time>
+					<% } %>
+
+					<% if (item.tags && item.tags.length) { %>
+						<ul class="tags">
+						<% _.each(item.tags, function(tag) { %>
+							<li><%= tag %></li>
+						<% }); %>
+						</ul>
+					<% } %>
+				</li>
+			<% }); %>
+		</ol>
+	</script>
 
 	<script data-main="scripts/Main" src="scripts/vendor/require.js"></script>
 

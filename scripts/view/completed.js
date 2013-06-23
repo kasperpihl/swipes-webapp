@@ -10,7 +10,7 @@
       },
       renderList: function() {
         var itemsJSON;
-        itemsJSON = new Backbone.Collection(swipy.collection.getScheduled()).toJSON();
+        itemsJSON = new Backbone.Collection(swipy.collection.getCompleted()).toJSON();
         return this.$el.find('.list-wrap').html(this.listTmpl({
           items: itemsJSON
         }));

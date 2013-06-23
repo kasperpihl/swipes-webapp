@@ -1,10 +1,6 @@
 (function() {
   define(['backbone'], function(Backbone) {
     return Backbone.View.extend({
-      events: {
-        'tap .page-link': 'gotoPage',
-        'click .page-link': 'gotoPage'
-      },
       initialize: function() {
         _.bindAll(this);
         this.timers = [];
@@ -12,11 +8,6 @@
         return this.render();
       },
       init: function() {},
-      gotoPage: function(e) {
-        var link;
-        link = $(e.currentTarget).attr('data-href');
-        return window.location.hash = link;
-      },
       render: function() {
         return this.el;
       },
