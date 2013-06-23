@@ -3,11 +3,12 @@
     return ListView.extend({
       el: "#completed",
       renderList: function() {
-        var itemsJSON;
-        itemsJSON = new Backbone.Collection(swipy.collection.getCompleted()).toJSON();
-        return this.$el.find('.list-wrap').html(this.listTmpl({
-          items: itemsJSON
+        var items;
+        items = new Backbone.Collection(swipy.collection.getCompleted());
+        this.$el.find('.list-wrap').html(this.listTmpl({
+          items: items.toJSON()
         }));
+        return this.afterRenderList(items);
       }
     });
   });
