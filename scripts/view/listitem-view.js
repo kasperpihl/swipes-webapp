@@ -7,7 +7,8 @@
       },
       enableGestures: function() {
         log("Enabling gestures for ", this.model.toJSON());
-        return this.hammer = Hammer(this.el).on("drag", this.handleDrag);
+        this.hammer = Hammer(this.el).on("drag", this.handleDrag);
+        return this.hammer = Hammer(this.el).on("dragend", this.handleDragEnd);
       },
       disableGestures: function() {
         return log("Disabling gestures for ", this.model.toJSON());
@@ -20,7 +21,10 @@
         } else if (val < 0 - window.innerWidth * 0.8) {
           val = 0 - window.innerWidth * 0.8;
         }
-        return this.$el.css("left", "" + val + "px");
+        return this.$el.css("-webkit-transform", "translate3d(" + val + "px, 0, 0)");
+      },
+      handleDragEnd: function(e) {
+        return this.$el.css("-webkit-transform", "translate3d(0, 0, 0)");
       },
       render: function() {
         this.enableGestures();
