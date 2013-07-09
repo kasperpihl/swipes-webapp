@@ -2530,28 +2530,34 @@ nav a.active { background: #4d576a; }
 /* line 1, ../sass/_todolist.scss */
 ol.todo { padding: 0; margin: 0; }
 /* line 4, ../sass/_todolist.scss */
-ol.todo > li { position: relative; list-style: none; padding: 1em 2em 1em 4em; background: #4d576a; }
-/* line 10, ../sass/_todolist.scss */
-ol.todo > li:before, ol.todo > li:after { content: ""; position: absolute; }
+ol.todo > li { list-style: none; }
+/* line 7, ../sass/_todolist.scss */
+ol.todo > li .todo-content { position: relative; padding: 1em 2em 1em 4em; background: #4d576a; }
 /* line 12, ../sass/_todolist.scss */
-ol.todo > li:before { width: 2px; top: 0; bottom: 0; left: 2em; background: #2d333e; }
-/* line 19, ../sass/_todolist.scss */
-ol.todo > li:after { width: 10px; height: 10px; background: #e4d03b; border-radius: 10px; left: 2em; top: 50%; margin-left: -4px; margin-top: -5px; }
-/* line 32, ../sass/_todolist.scss */
-ol.todo h2 { font-weight: normal; margin: 0 0 .2em; }
-/* line 37, ../sass/_todolist.scss */
-ol.todo time, ol.todo .tags { display: inline-block; }
+ol.todo > li .todo-content:before, ol.todo > li .todo-content:after { content: ""; position: absolute; }
+/* line 14, ../sass/_todolist.scss */
+ol.todo > li .todo-content:before { width: 2px; top: 0; bottom: 0; left: 2em; background: #2d333e; }
+/* line 21, ../sass/_todolist.scss */
+ol.todo > li .todo-content:after { width: 10px; height: 10px; background: #e4d03b; border-radius: 10px; left: 2em; top: 50%; margin-left: -4px; margin-top: -5px; }
+/* line 35, ../sass/_todolist.scss */
+ol.todo .done { background: #57b583; }
 /* line 39, ../sass/_todolist.scss */
+ol.todo .prostponed { background: #d31e2b; }
+/* line 43, ../sass/_todolist.scss */
+ol.todo h2 { font-weight: normal; margin: 0 0 .2em; }
+/* line 48, ../sass/_todolist.scss */
+ol.todo time, ol.todo .tags { display: inline-block; }
+/* line 50, ../sass/_todolist.scss */
 ol.todo time { background: #637088; padding: 0 0.3em; margin-right: 1em; }
-/* line 45, ../sass/_todolist.scss */
-ol.todo .tags { margin: 0; padding: 0; }
-/* line 49, ../sass/_todolist.scss */
-ol.todo .tags li { display: inline-block; margin: 0 0 0 -.3em; padding: 0; }
-/* line 54, ../sass/_todolist.scss */
-ol.todo .tags li:before { content: ', '; }
 /* line 56, ../sass/_todolist.scss */
+ol.todo .tags { margin: 0; padding: 0; }
+/* line 60, ../sass/_todolist.scss */
+ol.todo .tags li { display: inline-block; margin: 0 0 0 -.3em; padding: 0; }
+/* line 65, ../sass/_todolist.scss */
+ol.todo .tags li:before { content: ', '; }
+/* line 67, ../sass/_todolist.scss */
 ol.todo .tags li:first-child { margin-left: 0; }
-/* line 58, ../sass/_todolist.scss */
+/* line 69, ../sass/_todolist.scss */
 ol.todo .tags li:first-child:before { content: none; }
 
 /* line 1, ../sass/view/_base-view.scss */

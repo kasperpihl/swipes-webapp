@@ -3,28 +3,58 @@
     return Backbone.View.extend({
       initialize: function() {
         _.bindAll(this);
+        this.content = this.$el.find('.todo-content');
         return this.render();
       },
       enableGestures: function() {
-        log("Enabling gestures for ", this.model.toJSON());
-        this.hammer = Hammer(this.el).on("drag", this.handleDrag);
-        return this.hammer = Hammer(this.el).on("dragend", this.handleDragEnd);
+        this.hammer = Hammer(this.content[0]).on("drag", this.handleDrag);
+        return this.hammer = Hammer(this.content[0]).on("dragend", this.handleDragEnd);
       },
       disableGestures: function() {
         return log("Disabling gestures for ", this.model.toJSON());
       },
+      getUserIntent: function(val) {
+        var absDragAmount, dragAmount, name;
+        dragAmount = val / window.innerWidth;
+        absDragAmount = Math.abs(dragAmount);
+        name = dragAmount > 0 ? "done" : "prostpone";
+        return {
+          name: name,
+          amount: absDragAmount
+        };
+      },
       handleDrag: function(e) {
         var val;
         val = e.gesture.direction === "left" ? e.gesture.distance * -1 : e.gesture.distance;
-        if (val > window.innerWidth * 0.8) {
-          val = window.innerWidth * 0.8;
-        } else if (val < 0 - window.innerWidth * 0.8) {
-          val = 0 - window.innerWidth * 0.8;
+        this.intent = this.getUserIntent(val);
+        switch (this.intent.name) {
+          case "done":
+            this.$el.css("background", "hsla(144, 40%, 47%, " + (this.intent.amount * 4) + ")");
+            break;
+          case "prostpone":
+            this.$el.css("background", "hsla(43, 78%, 44%, " + (this.intent.amount * 4) + ")");
+            break;
         }
-        return this.$el.css("-webkit-transform", "translate3d(" + val + "px, 0, 0)");
+        return this.content.css("-webkit-transform", "translate3d(" + val + "px, 0, 0)");
       },
       handleDragEnd: function(e) {
-        return this.$el.css("-webkit-transform", "translate3d(0, 0, 0)");
+        if (this.intent.amount < 0.2) {
+          this.content.css({
+            "-webkit-transform": "translate3d(0, 0, 0)",
+            "background": ""
+          });
+          return;
+        }
+        switch (this.intent.name) {
+          case "done":
+            this.$el.addClass("done");
+            alert("done!");
+            break;
+          case "prostpone":
+            this.$el.addClass("prostponed");
+            alert("prostponed");
+            break;
+        }
       },
       render: function() {
         this.enableGestures();
