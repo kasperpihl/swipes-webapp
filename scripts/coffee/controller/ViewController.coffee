@@ -68,13 +68,13 @@ define ->
 			newPage.addClass(transitionIn).one @options.animEndEventName, =>
 				@options.endNewPage = yes
 				if @options.endOldPage then @onEndAnimation(oldPage, newPage)
+
+			@loadPageScripts( newPage.attr('id'), newPage )
 		onEndAnimation: (oldPage, newPage) ->
 			@options.endOldPage = no
 			@options.endNewPage = no
 			@resetPage(oldPage, newPage)
 			@options.isAnimating = no
-
-			@loadPageScripts( newPage.attr('id'), newPage )
 		resetPage: (oldPage, newPage) ->
 			oldPage.attr('class', oldPage.data('originalClassList'))
 			newPage.attr('class', newPage.data('originalClassList') + ' pt-page-current')

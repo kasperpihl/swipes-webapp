@@ -32,12 +32,16 @@ ol.todo {
 		}
 	}
 
-	.done {
-		background: $green;
+	.completed {
+		.todo-content {
+			@include translate3d(100%, 0, 0);
+		}
 	}
 
-	.prostponed {
-		background: $red;
+	.scheduled {
+		.todo-content {
+			@include translate3d(-100%, 0, 0);
+		}
 	}
 
 	h2 {

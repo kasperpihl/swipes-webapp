@@ -81,20 +81,20 @@
             return _this.onEndAnimation(oldPage, newPage);
           }
         });
-        return newPage.addClass(transitionIn).one(this.options.animEndEventName, function() {
+        newPage.addClass(transitionIn).one(this.options.animEndEventName, function() {
           _this.options.endNewPage = true;
           if (_this.options.endOldPage) {
             return _this.onEndAnimation(oldPage, newPage);
           }
         });
+        return this.loadPageScripts(newPage.attr('id'), newPage);
       };
 
       ViewController.prototype.onEndAnimation = function(oldPage, newPage) {
         this.options.endOldPage = false;
         this.options.endNewPage = false;
         this.resetPage(oldPage, newPage);
-        this.options.isAnimating = false;
-        return this.loadPageScripts(newPage.attr('id'), newPage);
+        return this.options.isAnimating = false;
       };
 
       ViewController.prototype.resetPage = function(oldPage, newPage) {

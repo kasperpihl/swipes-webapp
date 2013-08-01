@@ -2539,25 +2539,25 @@ ol.todo > li .todo-content:before, ol.todo > li .todo-content:after { content: "
 ol.todo > li .todo-content:before { width: 2px; top: 0; bottom: 0; left: 2em; background: #2d333e; }
 /* line 21, ../sass/_todolist.scss */
 ol.todo > li .todo-content:after { width: 10px; height: 10px; background: #e4d03b; border-radius: 10px; left: 2em; top: 50%; margin-left: -4px; margin-top: -5px; }
-/* line 35, ../sass/_todolist.scss */
-ol.todo .done { background: #57b583; }
-/* line 39, ../sass/_todolist.scss */
-ol.todo .prostponed { background: #d31e2b; }
-/* line 43, ../sass/_todolist.scss */
+/* line 36, ../sass/_todolist.scss */
+ol.todo .completed .todo-content { -webkit-transform: translate3d(100%, 0, 0); -moz-transform: translate3d(100%, 0, 0); -ms-transform: translate3d(100%, 0, 0); -o-transform: translate3d(100%, 0, 0); transform: translate3d(100%, 0, 0); }
+/* line 42, ../sass/_todolist.scss */
+ol.todo .scheduled .todo-content { -webkit-transform: translate3d(-100%, 0, 0); -moz-transform: translate3d(-100%, 0, 0); -ms-transform: translate3d(-100%, 0, 0); -o-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+/* line 47, ../sass/_todolist.scss */
 ol.todo h2 { font-weight: normal; margin: 0 0 .2em; }
-/* line 48, ../sass/_todolist.scss */
+/* line 52, ../sass/_todolist.scss */
 ol.todo time, ol.todo .tags { display: inline-block; }
-/* line 50, ../sass/_todolist.scss */
+/* line 54, ../sass/_todolist.scss */
 ol.todo time { background: #637088; padding: 0 0.3em; margin-right: 1em; }
-/* line 56, ../sass/_todolist.scss */
-ol.todo .tags { margin: 0; padding: 0; }
 /* line 60, ../sass/_todolist.scss */
+ol.todo .tags { margin: 0; padding: 0; }
+/* line 64, ../sass/_todolist.scss */
 ol.todo .tags li { display: inline-block; margin: 0 0 0 -.3em; padding: 0; }
-/* line 65, ../sass/_todolist.scss */
-ol.todo .tags li:before { content: ', '; }
-/* line 67, ../sass/_todolist.scss */
-ol.todo .tags li:first-child { margin-left: 0; }
 /* line 69, ../sass/_todolist.scss */
+ol.todo .tags li:before { content: ', '; }
+/* line 71, ../sass/_todolist.scss */
+ol.todo .tags li:first-child { margin-left: 0; }
+/* line 73, ../sass/_todolist.scss */
 ol.todo .tags li:first-child:before { content: none; }
 
 /* line 1, ../sass/view/_base-view.scss */
