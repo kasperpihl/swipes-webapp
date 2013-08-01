@@ -51,7 +51,7 @@ define ->
 				isCurrLink = if link.attr('href')[2...] is slug then yes else no
 				link.toggleClass 'active', isCurrLink
 		transitionPages: (oldPage, newPage) ->
-			log "out: '#{oldPage.attr('id')}' /// in: '#{newPage.attr('id')}'"
+			console.log "out: '#{oldPage.attr('id')}' /// in: '#{newPage.attr('id')}'"
 
 			if @options.currView? then @options.currView.cleanUp()
 

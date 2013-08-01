@@ -68,7 +68,7 @@
       ViewController.prototype.transitionPages = function(oldPage, newPage) {
         var transitionIn, transitionOut,
           _this = this;
-        log("out: '" + (oldPage.attr('id')) + "' /// in: '" + (newPage.attr('id')) + "'");
+        console.log("out: '" + (oldPage.attr('id')) + "' /// in: '" + (newPage.attr('id')) + "'");
         if (this.options.currView != null) {
           this.options.currView.cleanUp();
         }

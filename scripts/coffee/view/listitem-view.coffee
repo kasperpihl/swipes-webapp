@@ -10,7 +10,7 @@ define ['hammer'], (Hammer) ->
 			@hammer = Hammer(@content[0]).on "drag", @handleDrag
 			@hammer = Hammer(@content[0]).on "dragend", @handleDragEnd
 		disableGestures: ->
-			log "Disabling gestures for ", @model.toJSON()
+			console.warn "Disabling gestures for ", @model.toJSON()
 		getUserIntent: (val) ->
 			dragAmount = val / window.innerWidth
 			absDragAmount = Math.abs dragAmount

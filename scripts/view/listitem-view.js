@@ -11,7 +11,7 @@
         return this.hammer = Hammer(this.content[0]).on("dragend", this.handleDragEnd);
       },
       disableGestures: function() {
-        return log("Disabling gestures for ", this.model.toJSON());
+        return console.warn("Disabling gestures for ", this.model.toJSON());
       },
       getUserIntent: function(val) {
         var absDragAmount, dragAmount, name;

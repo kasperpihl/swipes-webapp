@@ -1,0 +1,3 @@
+[submodule "scripts/plugins/jwerty"]
+	path = scripts/plugins/jwerty
+	url = git://github.com/keithamus/jwerty
