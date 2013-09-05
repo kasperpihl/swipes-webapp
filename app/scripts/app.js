@@ -14,9 +14,10 @@
         			@collection = new ToDoCollection()
         */
 
-        return Backbone.history.start({
+        Backbone.history.start({
           pushState: false
         });
+        return $(".add-new input").focus();
       };
 
       Bootstrap.prototype.update = function() {

@@ -17,5 +17,7 @@ define [
 
 			Backbone.history.start { pushState: no }
 			# @update()
+			
+			$(".add-new input").focus()
 		update: ->
 			@collection.fetch()
