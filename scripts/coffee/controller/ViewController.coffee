@@ -33,6 +33,10 @@ define ->
 
 			# Listen for navigation events
 			$(document).on 'navigate/page', (e, slug) => @goto slug
+
+			# Set up responsive height
+			$(window).on "resize", @handleResize
+			@handleResize()
 		goto: (slug) ->
 			return false if @options.isAnimating
 			@options.isAnimating = yes
@@ -50,6 +54,11 @@ define ->
 				link = $(@)
 				isCurrLink = if link.attr('href')[2...] is slug then yes else no
 				link.toggleClass 'active', isCurrLink
+		handleResize: (e) =>
+			totalH = window.innerHeight 
+			menubarH = $("body > article > header").height()
+
+			$(".pt-perspective").height totalH - menubarH
 		transitionPages: (oldPage, newPage) ->
 			console.log "out: '#{oldPage.attr('id')}' /// in: '#{newPage.attr('id')}'"
 

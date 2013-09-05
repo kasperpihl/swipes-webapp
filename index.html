@@ -41,33 +41,12 @@
 		</div>
 	</article>
 
-	<script type="text/template" id="template-list">
-		<ol class="todo">
-			<% _.each(items, function(item) { %>
-				<li>
-					<div class="todo-content">
-						<h2><%= item.title %></h2>
-						<% if (item.alert) { %>
-							<time><%= item.alert %></time>
-						<% } %>
-
-						<% if (item.tags && item.tags.length) { %>
-							<ul class="tags">
-							<% _.each(item.tags, function(tag) { %>
-								<li><%= tag %></li>
-							<% }); %>
-							</ul>
-						<% } %>
-					</div>
-				</li>
-			<% }); %>
-		</ol>
-	</script>
-
 	<script data-main="scripts/Main" src="scripts/vendor/require.js"></script>
 
 	<script>
-		document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+		if ( location.host === "swipy.dev" ) {
+			document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+		}
 	</script>
 </body>
 </html>

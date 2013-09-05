@@ -1,16 +1,10 @@
-define ['hammer'], (Hammer) ->
-	Backbone.View.extend
-		initialize: ->
-			_.bindAll @
-			
-			@content = @$el.find('.todo-content')
-			
-			@render()
-		enableGestures: ->
+define ["view/list/BaseListItem", 'hammer'], (BaseListItemView, Hammer) ->
+	BaseListItemView.extend
+		enableInteraction: ->
 			@hammer = Hammer(@content[0]).on "drag", @handleDrag
 			@hammer = Hammer(@content[0]).on "dragend", @handleDragEnd
-		disableGestures: ->
-			console.warn "Disabling gestures for ", @model.toJSON()
+		disableInteraction: ->
+			console.warn "Disabling touch gestures for ", @model.toJSON()
 		getUserIntent: (val) ->
 			dragAmount = val / window.innerWidth
 			absDragAmount = Math.abs dragAmount
@@ -49,13 +43,4 @@ define ['hammer'], (Hammer) ->
 							@model.set("state", @intent.name)
 							@model.save()
 					, delay * 1000
-
-		render: ->
-			@enableGestures()
-			return @el
-		remove: ->
-			@destroy()
-			@model.off()
-		destroy: ->
-			@disableGestures()
 

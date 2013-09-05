@@ -1,11 +1,10 @@
 (function() {
-  define(["view/list/List"], function(ListView) {
+  define(['view/list-view'], function(ListView) {
     return ListView.extend({
-      el: "#completed",
+      el: "#schedule",
       renderList: function() {
         var items;
-        console.warn("Rendering completed todo list");
-        items = new Backbone.Collection(swipy.collection.getCompleted());
+        items = new Backbone.Collection(swipy.collection.getScheduled());
         this.$el.find('.list-wrap').html(this.listTmpl({
           items: items.toJSON()
         }));

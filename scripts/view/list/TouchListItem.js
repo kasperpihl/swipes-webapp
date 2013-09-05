@@ -1,17 +1,12 @@
 (function() {
-  define(['hammer'], function(Hammer) {
-    return Backbone.View.extend({
-      initialize: function() {
-        _.bindAll(this);
-        this.content = this.$el.find('.todo-content');
-        return this.render();
-      },
-      enableGestures: function() {
+  define(["view/list/BaseListItem", 'hammer'], function(BaseListItemView, Hammer) {
+    return BaseListItemView.extend({
+      enableInteraction: function() {
         this.hammer = Hammer(this.content[0]).on("drag", this.handleDrag);
         return this.hammer = Hammer(this.content[0]).on("dragend", this.handleDragEnd);
       },
-      disableGestures: function() {
-        return console.warn("Disabling gestures for ", this.model.toJSON());
+      disableInteraction: function() {
+        return console.warn("Disabling touch gestures for ", this.model.toJSON());
       },
       getUserIntent: function(val) {
         var absDragAmount, dragAmount, name;
@@ -59,17 +54,6 @@
             });
           }, delay * 1000);
         }
-      },
-      render: function() {
-        this.enableGestures();
-        return this.el;
-      },
-      remove: function() {
-        this.destroy();
-        return this.model.off();
-      },
-      destroy: function() {
-        return this.disableGestures();
       }
     });
   });

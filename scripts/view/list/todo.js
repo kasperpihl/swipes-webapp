@@ -1,5 +1,5 @@
 (function() {
-  define(["view/List"], function(ListView) {
+  define(["view/list-view"], function(ListView) {
     return ListView.extend({
       el: "#todo",
       events: {

@@ -1,4 +1,4 @@
-define ['view/list-view'], (ListView) ->
+define ["view/list/List"], (ListView) ->
 	ListView.extend
 		el: "#completed"
 		renderList: ->

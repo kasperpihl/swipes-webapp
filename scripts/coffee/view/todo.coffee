@@ -1,4 +1,4 @@
-define ["view/list-view"], (ListView) ->
+define ["view/List"], (ListView) ->
 	ListView.extend
 		el: "#todo"
 		events: 
@@ -14,5 +14,5 @@ define ["view/list-view"], (ListView) ->
 			# Unless touch, load out keyboard shortcut plugin and bind to cmd+n for add new
 			unless Modernizr.touch then require ["plugins/jwerty/jwerty"], => jwerty.key "cmd+s", @addNew
 		addNew: ->
-			todo = prompt "Todo title:"
-			if todo then console.log swipy.collection.add( title: todo )
+			title = prompt "Todo title:"
+			if title then console.log swipy.collection.add { title }

@@ -5,6 +5,7 @@
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
+        this.handleResize = __bind(this.handleResize, this);
         this.updateNavigation = __bind(this.updateNavigation, this);
         this.setOpts(opts);
         this.init();
@@ -37,9 +38,11 @@
           return $(this).data('originalClassList', $(this).attr('class'));
         });
         this.options.$pages.eq(0).addClass('pt-page-current');
-        return $(document).on('navigate/page', function(e, slug) {
+        $(document).on('navigate/page', function(e, slug) {
           return _this.goto(slug);
         });
+        $(window).on("resize", this.handleResize);
+        return this.handleResize();
       };
 
       ViewController.prototype.goto = function(slug) {
@@ -63,6 +66,13 @@
           isCurrLink = link.attr('href').slice(2) === slug ? true : false;
           return link.toggleClass('active', isCurrLink);
         });
+      };
+
+      ViewController.prototype.handleResize = function(e) {
+        var menubarH, totalH;
+        totalH = window.innerHeight;
+        menubarH = $("body > article > header").height();
+        return $(".pt-perspective").height(totalH - menubarH);
       };
 
       ViewController.prototype.transitionPages = function(oldPage, newPage) {

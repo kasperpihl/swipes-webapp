@@ -8,7 +8,6 @@ html, body, article { height: 100%; }
 .pt-perspective {
 	position: relative;
 	width: 100%;
-	height: 100%;
 	
 	-webkit-perspective: 1200px;
 	-moz-perspective: 1200px;
@@ -24,10 +23,8 @@ html, body, article { height: 100%; }
 }
 
 .pt-page {
-	width: 100%;
-	height: 100%;
 	position: absolute;
-	top: 0; left: 0;
+	width: 100%; height: 100%;
 	
 	visibility: hidden;
 	overflow: hidden;
