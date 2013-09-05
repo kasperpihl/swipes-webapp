@@ -7,15 +7,14 @@ ol.todo {
 		.todo-content { 
 			position: relative;
 			padding: 1em 2em 1em 4em;
-			background: $light-gray;
-
+			
 			&:before, &:after { content: ""; position: absolute; }
 
 			&:before {
 				width: 2px;
 				top: 0; bottom: 0;
 				left: 2em;
-				background: $dark-gray;
+				background: $gray-dark;
 			}
 
 			&:after {
@@ -52,7 +51,7 @@ ol.todo {
 	time, .tags { display: inline-block; }
 
 	time {
-		background: lighten($light-gray, 10%);
+		background: $gray-lighter;
 		padding: 0 0.3em;
 		margin-right: 1em;
 	}
