@@ -3,7 +3,7 @@
 
 $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
-
+@import "functions";
 @import "mixins";
 @import "fonts";
 @import "colors";
@@ -14,8 +14,14 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 // @import "typography";
 @import "animation";
 
+// Base page styles
+@import "base";
 
-@import "view/todo";
-@import "view/list/list-item";
+// Modules
+@import "module/forms";
+@import "module/todo-list";
+@import "module/list/list-item";
+@import "module/todo-input";
 
+// Other modules
 @import "module/browsehappy";

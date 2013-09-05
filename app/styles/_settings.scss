@@ -2,6 +2,7 @@
 // Custom Variables
 // --------------------------------------------------
 $yellow: #e4d03b;
+$lobster: #fd746c;
 $green: #57b583;
 $red: #d31e2b;
 
@@ -16,7 +17,7 @@ $gray-darker:            lighten(#000, 13.5%) !default; // #222
 $gray-dark:              lighten(#000, 20%) !default;   // #333
 $gray:                   lighten(#000, 33.5%) !default; // #555
 $gray-light:             lighten(#000, 60%) !default;   // #999
-$gray-lighter:           lighten(#000, 93.5%) !default; // #eee
+$gray-lighter:           #d2d0c5 !default; // #eee
 
 // Brand colors
 // -------------------------

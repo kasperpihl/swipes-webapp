@@ -1,0 +1,3 @@
+@function emCalc($pxWidth, $baseSize: 18px) {
+	@return $pxWidth / $baseSize * 1em;
+}
