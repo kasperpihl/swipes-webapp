@@ -1,4 +1,8 @@
-*.DS_Store
-*.sass-cache
+node_modules
+dist
+.tmp
+.sass-cache
+.DS_Store
+app/bower_components
 *.sublime-project
 *.sublime-workspace
