@@ -4,10 +4,9 @@
 		position: relative;
 		padding: 3em 3em 3em 28%;
 
-		border-bottom: thin solid $gray-lighter;
-		
 		&:before, &:after { content: ""; position: absolute; }
-
+		
+		// Priority dot
 		&:before {
 			$size: 1.2em;
 			$border-size: 4px;
@@ -23,9 +22,19 @@
 			margin-left: 19.5%;
 			margin-top: 0 - emCalc($border-size) - ($size / 2);
 		}
+
+		// Border
+		&:after {
+			bottom: 0; left: 0; right: 0;
+			
+			height: 1px;
+			@include background-image( 
+				linear-gradient(left, transparent, $gray-lighter 15%, transparent 105%) 
+			);
+		}
 	}
 	
-	.tasks > li:last-child .todo-content { border-bottom: none; }
+	.tasks > li:last-child .todo-content:after { content: none; }
 	
 	h2 {
 		font-family: $font-light;
@@ -37,11 +46,12 @@
 	time, .tags { display: inline-block; }
 
 	time {
+		font-family: $font-light;
 		background: $gray-light;
 		padding: 0 0.6em;
 		margin-right: 0.5em;
 		color: white;
-		font-size: 1em;
+		font-size: 0.9em;
 	}
 
 	.tags { 
