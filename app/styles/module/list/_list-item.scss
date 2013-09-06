@@ -1,74 +1,58 @@
-ol.todo-list {
+// General task styling
+.todo-list {
+	.todo-content { 
+		position: relative;
+		padding: 3em 3em 3em 28%;
 
-	> li {
-		font-size: 14px;
-		list-style: none;
-		color: #9d9b93;
+		border-bottom: thin solid $gray-lighter;
+		
+		&:before, &:after { content: ""; position: absolute; }
 
-		.todo-content { 
-			position: relative;
-			padding: emCalc(28px) emCalc(130px) emCalc(32px);
+		&:before {
+			$size: 1.2em;
+			$border-size: 4px;
 
-			border-bottom: thin solid $gray-lighter;
+			width: $size; height: $size;
+			background: $lobster;
+			border: $border-size solid $gray;
+			border-radius: $size;
+			left: 0; top: 50%;
+
+			@include box-sizing(content-box);
 			
-			&:before, &:after { content: ""; position: absolute; }
-
-			&:before {
-				$size: emCalc(14px);
-				$border-size: 4px;
-
-				width: $size; height: $size;
-				background: $lobster;
-				border: $border-size solid $gray;
-				border-radius: $size;
-				left: 0; top: 50%;
-
-				@include box-sizing(content-box);
-				
-				margin-left: emCalc(100px) - ($size / 2);
-				margin-top: 0 - emCalc($border-size) - ($size / 2);
-			}
-		}
-
-		&:first-child .todo-content { border-top: thin solid $gray-lighter; }
-		&:last-child .todo-content { border-bottom: none; }
-	}
-
-	.completed {
-		.todo-content {
-			@include translate3d(100%, 0, 0);
+			margin-left: 19.5%;
+			margin-top: 0 - emCalc($border-size) - ($size / 2);
 		}
 	}
-
-	.scheduled {
-		.todo-content {
-			@include translate3d(-100%, 0, 0);
-		}
-	}
-
+	
+	.tasks > li:last-child .todo-content { border-bottom: none; }
+	
 	h2 {
 		font-family: $font-light;
-		font-weight: normal;
-		font-size: 1.43em;
+		font-weight: lighter;
+		font-size: 1.85em;
 		margin: 0 0 .2em;
 	}
 
 	time, .tags { display: inline-block; }
 
 	time {
-		background: $gray-lighter;
-		padding: 0 0.3em;
-		margin-right: 1em;
+		background: $gray-light;
+		padding: 0 0.6em;
+		margin-right: 0.5em;
+		color: white;
+		font-size: 1em;
 	}
 
 	.tags { 
 		margin: 0; 
 		padding: 0; 
-		font-size: 0.825em;
+		font-family: $font-bold;
 		
 		li {
 			display: inline-block;
-			margin: 0 0 0 -.3em; 
+			font-size: 1em;
+			margin: 0 0 0 -0.3em; 
 			padding: 0;
 
 			&:before { content: ', '; }
@@ -80,3 +64,20 @@ ol.todo-list {
 		}
 	}
 }
+	
+
+// Styling for completed and scheduled tasks
+.todo-list {
+	.completed {
+		.todo-content {
+			@include translate3d(100%, 0, 0);
+		}
+	}
+
+	.scheduled {
+		.todo-content {
+			@include translate3d(-100%, 0, 0);
+		}
+	}
+}
+
