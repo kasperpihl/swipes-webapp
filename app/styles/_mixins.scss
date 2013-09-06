@@ -53,3 +53,11 @@
 	&::-moz-placeholder { @content; }
 	&::-webkit-input-placeholder { @content; }
 }
+
+@mixin divider-triangle($color: $green, $size: 1.4em) {
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 0 ($size * 0.7) $size 0;
+	border-color: transparent $color transparent transparent;
+}
