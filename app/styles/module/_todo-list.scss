@@ -42,3 +42,13 @@
 		}
 	}
 }
+
+.list-fade {
+	z-index: 999;
+	
+	position: fixed;
+	bottom: 0; left: 0; right: 0;
+
+	height: 10em;
+	@include background-image( linear-gradient(rgba(white, 0), white 75%) );
+}
