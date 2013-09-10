@@ -4,7 +4,6 @@ define ["gsap"], (TweenLite) ->
 			@init()
 			@navLinks = $ ".list-nav a"
 			@lists = $ "ol.todo-list"
-		
 		init: ->
 			# Listen for navigation events
 			$(document).on( 'navigate/page', (e, slug) => @goto slug )
@@ -33,7 +32,15 @@ define ["gsap"], (TweenLite) ->
 
 		transitionOut: (view) ->
 			dfd = new $.Deferred()
-			TweenLite.to( view.$el, 0.5, { alpha: 0, className: "hidden", onComplete: dfd.resolve } )
+
+			opts = 
+				alpha: 0
+				onComplete: =>
+					view.$el.addClass "hidden"
+					view.cleanUp()
+					dfd.resolve()
+
+			TweenLite.to( view.$el, 0.1, opts )
 			
 			return dfd.promise()
 		
@@ -42,10 +49,8 @@ define ["gsap"], (TweenLite) ->
 			
 			console.log "transitioning in ", view
 			view.$el.removeClass "hidden"
-			debugger unless view.$el.length
-			TweenLite.fromTo( view.$el, 0.5, { alpha: 0 }, { alpha: 1, onComplete: dfd.resolve } )
+			TweenLite.fromTo( view.$el, 0.2, { alpha: 0 }, { alpha: 1, onComplete: dfd.resolve } )
 			
 			@currView = view
 			
 			return dfd.promise()
-

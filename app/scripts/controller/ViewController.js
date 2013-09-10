@@ -50,13 +50,18 @@
       };
 
       ViewController.prototype.transitionOut = function(view) {
-        var dfd;
+        var dfd, opts,
+          _this = this;
         dfd = new $.Deferred();
-        TweenLite.to(view.$el, 0.5, {
+        opts = {
           alpha: 0,
-          className: "hidden",
-          onComplete: dfd.resolve
-        });
+          onComplete: function() {
+            view.$el.addClass("hidden");
+            view.cleanUp();
+            return dfd.resolve();
+          }
+        };
+        TweenLite.to(view.$el, 0.1, opts);
         return dfd.promise();
       };
 
@@ -65,10 +70,7 @@
         dfd = new $.Deferred();
         console.log("transitioning in ", view);
         view.$el.removeClass("hidden");
-        if (!view.$el.length) {
-          debugger;
-        }
-        TweenLite.fromTo(view.$el, 0.5, {
+        TweenLite.fromTo(view.$el, 0.2, {
           alpha: 0
         }, {
           alpha: 1,
