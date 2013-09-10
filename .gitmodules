@@ -1,3 +1,6 @@
 [submodule "app/scripts/plugins/jwerty"]
 	path = app/scripts/plugins/jwerty
 	url = git://github.com/keithamus/jwerty
+[submodule "app/styles/animate"]
+	path = app/styles/animate
+	url = git@github.com:Ahrengot/animate.sass.git
