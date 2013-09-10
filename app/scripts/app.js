@@ -14,6 +14,7 @@
         Backbone.history.start({
           pushState: false
         });
+        this.update();
         return $(".add-new input").focus();
       };
 

@@ -19,10 +19,10 @@ define ["view/list/BaseListItem", 'hammer'], (BaseListItemView, Hammer) ->
 			@intent = @getUserIntent val
 			switch @intent.name
 				when "completed"
-					@$el.css "background", "hsla(144, 40%, 47%, #{@intent.amount * 4})"
+					@$el.css( "background", "hsla(144, 40%, 47%, #{@intent.amount * 4})" )
 					break
 				when "scheduled"
-					@$el.css "background", "hsla(43, 78%, 44%, #{@intent.amount * 4})"
+					@$el.css( "background", "hsla(43, 78%, 44%, #{@intent.amount * 4})" )
 					break
 
 			@content.css "-webkit-transform", "translate3d(#{val}px, 0, 0)"

@@ -1,13 +1,14 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(function() {
+  define(["gsap"], function(TweenLite) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
         this.updateNavigation = __bind(this.updateNavigation, this);
         this.init();
-        this.navLinks = $('.list-nav a');
+        this.navLinks = $(".list-nav a");
+        this.lists = $("ol.todo-list");
       }
 
       ViewController.prototype.init = function() {
@@ -31,8 +32,46 @@
         });
       };
 
-      ViewController.prototype.transitionViews = function(newViewSlug) {
-        return console.log("Tranisiton between views to " + newViewSlug);
+      ViewController.prototype.transitionViews = function(slug) {
+        var viewName,
+          _this = this;
+        viewName = slug[0].toUpperCase() + slug.slice(1);
+        return require(["view/" + viewName], function(View) {
+          var newView;
+          newView = new View({
+            el: "ol.todo-list." + slug
+          }).render();
+          if (_this.currView != null) {
+            return _this.transitionOut(_this.currView).then(_this.transitionIn(newView));
+          } else {
+            return _this.transitionIn(newView);
+          }
+        });
+      };
+
+      ViewController.prototype.transitionOut = function(view) {
+        var dfd;
+        dfd = new $.Deferred();
+        TweenLite.to(view.$el, 0.5, {
+          alpha: 0,
+          className: "hidden",
+          onComplete: dfd.resolve
+        });
+        return dfd.promise();
+      };
+
+      ViewController.prototype.transitionIn = function(view) {
+        var dfd;
+        dfd = new $.Deferred();
+        view.$el.removeClass("hidden");
+        TweenLite.fromTo(view.$el, 0.5, {
+          alpha: 0
+        }, {
+          alpha: 1,
+          onComplete: dfd.resolve
+        });
+        this.currView = view;
+        return dfd.promise();
       };
 
       return ViewController;

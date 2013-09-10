@@ -15,7 +15,11 @@ require.config({
         requirejs: '../bower_components/requirejs/require',
         'sass-bootstrap': '../bower_components/sass-bootstrap/dist/js/bootstrap',
         underscore: '../bower_components/underscore/underscore',
-        'backbone.localStorage': '../bower_components/backbone.localStorage/backbone.localStorage'
+        'backbone.localStorage': '../bower_components/backbone.localStorage/backbone.localStorage',
+        'greensock-js': '../bower_components/greensock-js/src/minified/TweenMax.min',
+        gsap: '../bower_components/greensock-js/src/uncompressed/TweenLite',
+        'gsap-easing': '../bower_components/greensock-js/src/uncompressed/easing/EasePack',
+        'gsap-css': '../bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin'
     },
     shim: {
         bootstrapAffix: {
@@ -77,6 +81,13 @@ require.config({
         },
         underscore: {
             exports: '_'
+        },
+        gsap: {
+            deps: [
+                'gsap-easing',
+                'gsap-css'
+            ],
+            exports: 'TweenLite'
         }
     }
 });

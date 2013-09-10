@@ -1,8 +1,7 @@
 (function() {
-  define(['backbone'], function(Backbone) {
+  define(["underscore", "backbone"], function(_, Backbone) {
     return Backbone.View.extend({
       initialize: function() {
-        _.bindAll(this);
         this.timers = [];
         this.init();
         return this.render();

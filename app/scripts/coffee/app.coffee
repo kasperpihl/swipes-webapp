@@ -14,7 +14,7 @@ define [
 			@collection = new ToDoCollection()
 
 			Backbone.history.start { pushState: no }
-			# @update()
+			@update()
 			
 			$(".add-new input").focus()
 		update: ->
