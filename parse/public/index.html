@@ -1,0 +1,225 @@
+<!doctype html>
+<!--[if IE 8]>         <html class="no-js ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>Swipes</title>
+
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
+
+	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+	<link rel="stylesheet" href="styles/20382e9e.main.css">
+
+	<script src="scripts/vendor/f7f27360.modernizr.js"></script>
+</head>
+
+<body>
+	<!--[if lt IE 10]>
+	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	<![endif]-->
+
+
+	<div class="container">
+		<header class="add-new row">
+			<input type="text" placeholder="Add a task" class="borderless" autocomplete="">
+		</header>
+
+		<nav class="row">
+			<ul class="list-nav">
+				<li><a class="icon-schedule" href="#schedule"><span class="sr-only">Schedule</span></a></li>
+				<li><a class="icon-todo active" href="#todo"><span class="sr-only">Todo</span></a></li>
+				<li><a class="icon-checkmark" href="#completed"><span class="sr-only">Completed</span></a></li>
+			</ul>
+		</nav>
+
+		<section class="row">
+			<ol class="todo-list hidden schedule"></ol>
+
+			<ol class="todo-list todo">
+				<!-- Due: later today -->
+				<li>
+					<h1>Later Today</h1>
+					<ol class="tasks">
+						<li>
+							<article class="todo-content">
+								<h2>Follow up on Martin</h2>
+								<time>10:00am</time>
+								<ul class="tags">
+									<li>work</li>
+									<li>client</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Make visual research</h2>
+								<time>3:00pm</time>
+								<ul class="tags">
+									<li>work</li>
+									<li>Project y19</li>
+								</ul>
+							</article>
+						</li>
+					</ol>
+				</li>
+				
+				<!-- Due: Tomorrow -->
+				<li>
+					<h1>Tomorrow</h1>
+					<ol class="tasks">
+						<li>
+							<article class="todo-content">
+								<h2>Buy a new Helmet</h2>
+								<time>4:00pm</time>
+								<ul class="tags">
+									<li>Personal</li>
+									<li>Bike</li>
+									<li>Outside</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Renew Wired Magazine subscription</h2>
+								<time>9:00pm</time>
+								<ul class="tags">
+									<li>Personal</li>
+									<li>Home</li>
+								</ul>
+							</article>
+						</li>
+					</ol>
+				</li>
+
+				<!-- Due: This Weekend -->
+				<li>
+					<h1>This Weekend</h1>
+					<ol class="tasks">
+						<li>
+							<article class="todo-content">
+								<h2>Get a haircut</h2>
+								<time>11:00am</time>
+								<ul class="tags">
+									<li>Personal</li>
+									<li>City</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Clean up the house</h2>
+								<time>1:00pm</time>
+								<ul class="tags">
+									<li>Errand</li>
+									<li>Home</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Buy things for BBQ</h2>
+								<time>3:00pm</time>
+								<ul class="tags">
+									<li>Errand</li>
+									<li>City</li>
+								</ul>
+							</article>
+						</li>
+					</ol>
+				</li>
+				
+				<!-- Due: Unspecified -->
+				<li>
+					<h1>Unspecified</h1>
+					<ol class="tasks">
+						<li>
+							<article class="todo-content">
+								<h2>Finish the presentation</h2>
+								<time>2:15pm</time>
+								<ul class="tags">
+									<li>work</li>
+									<li>presentation</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Arrange a meeting with Steve</h2>
+								<ul class="tags">
+									<li>work</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Buy food for the office</h2>
+								<time>9:30am</time>
+								<ul class="tags">
+									<li>Outside</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Call Olivia</h2>
+								<time>9:00pm</time>
+								<ul class="tags">
+									<li>Home</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Take a look at SquareSpace</h2>
+								<ul class="tags">
+									<li>Web design</li>
+									<li>My Blog</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Finish the sketches</h2>
+								<time>9:00am</time>
+								<ul class="tags">
+									<li>Work</li>
+								</ul>
+							</article>
+						</li>
+						<li>
+							<article class="todo-content">
+								<h2>Turn Markup into _.js template</h2>
+								<ul class="tags">
+									<li>Work</li>
+									<li>Swipes</li>
+								</ul>
+							</article>
+						</li>
+					</ol>
+				</li>
+			</ol>
+			<ol class="todo-list hidden completed"></ol>
+
+			<div class="list-fade"></div>
+		</section>
+	</div>
+
+
+	<script src="scripts/1137e1f5.vendor.js"></script>
+
+	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+	<script>
+		(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+		e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+		e.src='//www.google-analytics.com/analytics.js';
+		r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+		ga('create','UA-XXXXX-X');ga('send','pageview');
+	</script>
+
+	<script data-main="scripts/ac1bf30a.main" src="bower_components/requirejs/require.js"></script>
+</body>
+</html>
