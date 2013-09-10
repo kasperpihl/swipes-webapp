@@ -15,7 +15,7 @@
 
 // tasks header styles
 .todo-list > li {
-	border-top: 3px solid $lobster;
+	border-top: 3px solid $yellow;
 
 	h1 {
 		position: relative;
@@ -25,10 +25,10 @@
 		margin-top: 0;
 		padding: 0.05em 0.5em 0.1em;
 		
-		background: $lobster;
+		background: $yellow;
 		
 		font-size: 1.13em;
-		color: white;
+		color: $gray;
 
 		&:before {
 			position: absolute;
@@ -38,7 +38,7 @@
 			display: block;
 			content: "";
 
-			@include divider-triangle($lobster);
+			@include divider-triangle($yellow);
 		}
 	}
 }
