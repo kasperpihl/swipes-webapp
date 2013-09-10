@@ -1,4 +1,4 @@
-define ['view/list-view'], (ListView) ->
+define ['view/List'], (ListView) ->
 	ListView.extend
 		renderList: ->
 			# items = new Backbone.Collection( swipy.collection.getScheduled() )

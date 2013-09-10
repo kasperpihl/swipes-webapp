@@ -1,5 +1,5 @@
 (function() {
-  define(['view/list-view'], function(ListView) {
+  define(['view/List'], function(ListView) {
     return ListView.extend({
       renderList: function() {}
     });
