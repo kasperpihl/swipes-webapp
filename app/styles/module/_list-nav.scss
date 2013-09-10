@@ -1,0 +1,18 @@
+.list-nav {
+	@extend .clearfix;
+	list-style: none;
+
+	li {
+		text-align: center;
+		width: 33%;
+		float: left;
+
+		&:last-child {
+			float: right;
+		}
+	}
+
+	a {
+		
+	}
+}

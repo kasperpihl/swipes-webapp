@@ -1,38 +1,116 @@
+$fonts-url: 'fonts/';
+
+/*
+	====================
+	Normal fonts
+	====================
+ */
+$font_name: 'ProximaNova-Semibold';
 @font-face {
-    font-family: "Proxima Nova Semibold";
-    src: url('fonts/ProximaNova-Semibold.eot');
-	src: local('☺'), url('fonts/ProximaNova-Semibold.woff') format('woff'), url('fonts/ProximaNova-Semibold.ttf') format('truetype'), url('fonts/ProximaNova-Semibold.svg') format('svg');
+	font-family: $font-name;
+	src: url($fonts-url + $font-name + '-webfont.eot');
+	src: url($fonts-url + $font-name + '-webfont.eot?#iefix') format('embedded-opentype'),
+		 url($fonts-url + $font-name + '-webfont.woff') format('woff'),
+		 url($fonts-url + $font-name + '-webfont.ttf') format('truetype'),
+		 url($fonts-url + $font-name + '-webfont.svg#' + 'font-name') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
+$font_name: 'ProximaNova-Regular';
 @font-face {
-    font-family: "Proxima Nova Regular";
-    src: url('fonts/ProximaNova-Regular.eot');
-	src: local('☺'), url('fonts/ProximaNova-Regular.woff') format('woff'), url('fonts/ProximaNova-Regular.ttf') format('truetype'), url('fonts/ProximaNova-Regular.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-family: "Proxima Nova Light";
-	src: url('fonts/ProximaNova-Light.eot');
-	src: local('☺'), url('fonts/ProximaNova-Light.woff') format('woff'), url('fonts/ProximaNova-Light.ttf') format('truetype'), url('fonts/ProximaNova-Light.svg') format('svg');
+	font-family: $font-name;
+	src: url($fonts-url + $font-name + '-webfont.eot');
+	src: url($fonts-url + $font-name + '-webfont.eot?#iefix') format('embedded-opentype'),
+		 url($fonts-url + $font-name + '-webfont.woff') format('woff'),
+		 url($fonts-url + $font-name + '-webfont.ttf') format('truetype'),
+		 url($fonts-url + $font-name + '-webfont.svg#' + 'font-name') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
-$font-bold: "Proxima Nova Semibold", sans-serif;
-$font-normal: "Proxima Nova Regular", sans-serif;
-$font-light: "Proxima Nova Light", sans-serif;
-
-
+$font_name: 'ProximaNova-Light';
 @font-face {
-	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot');
-	src:url('fonts/icomoon.eot?#iefix') format('embedded-opentype'),
-		url('fonts/icomoon.woff') format('woff'),
-		url('fonts/icomoon.ttf') format('truetype'),
-		url('fonts/icomoon.svg#icomoon') format('svg');
+	font-family: $font-name;
+	src: url($fonts-url + $font-name + '-webfont.eot');
+	src: url($fonts-url + $font-name + '-webfont.eot?#iefix') format('embedded-opentype'),
+		 url($fonts-url + $font-name + '-webfont.woff') format('woff'),
+		 url($fonts-url + $font-name + '-webfont.ttf') format('truetype'),
+		 url($fonts-url + $font-name + '-webfont.svg#' + 'font-name') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
+
+$font-bold: "ProximaNova-Semibold", sans-serif;
+$font-normal: "ProximaNova-Regular", sans-serif;
+$font-light: "ProximaNova-Light", sans-serif;
+
+/*
+	====================
+	Icon font
+	====================
+ */
+$font_name: 'swipes';
+@font-face {
+	font-family: $font-name;
+	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
+		 url($fonts-url + $font-name + '.woff') format('woff'),
+		 url($fonts-url + $font-name + '.ttf') format('truetype'),
+		 url($fonts-url + $font-name + '.svg#' + 'font-name') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.icon:before {
+	font-family: 'swipes';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+.icon-triangle-right, .icon-triangle-left, .icon-trashcan, .icon-todo, .icon-tags, .icon-swipes-plus, .icon-swipes-logo, .icon-swipes-logo-square, .icon-support, .icon-snooze-unspecified, .icon-snooze-tomorrow, .icon-snooze-this-weekend, .icon-snooze-this-evening, .icon-snooze-next-week, .icon-snooze-location, .icon-snooze-later-today, .icon-snooze-day-after-tomorrow, .icon-snooze-date, .icon-share, .icon-schedule, .icon-repeat, .icon-questionmark-circle, .icon-policy, .icon-plus, .icon-pencil, .icon-note, .icon-log-out, .icon-facebook-logo, .icon-facebook-btn, .icon-cross, .icon-cog, .icon-clock, .icon-checkmark, .icon-arr-right, .icon-arr-right-long, .icon-arr-left, .icon-arr-left-long {
+	@extend .icon;
+}
+
+.icon-triangle-right:before { content: "\e000"; }
+.icon-triangle-left:before { content: "\e001"; }
+.icon-trashcan:before { content: "\e002"; }
+.icon-todo:before { content: "\e003"; }
+.icon-tags:before { content: "\e004"; }
+.icon-swipes-plus:before { content: "\e005"; }
+.icon-swipes-logo:before { content: "\e006"; }
+.icon-swipes-logo-square:before { content: "\e007"; }
+.icon-support:before { content: "\e008"; }
+.icon-snooze-unspecified:before { content: "\e009"; }
+.icon-snooze-tomorrow:before { content: "\e00a"; }
+.icon-snooze-this-weekend:before { content: "\e00b"; }
+.icon-snooze-this-evening:before { content: "\e00c"; }
+.icon-snooze-next-week:before { content: "\e00d"; }
+.icon-snooze-location:before { content: "\e00e"; }
+.icon-snooze-later-today:before { content: "\e00f"; }
+.icon-snooze-day-after-tomorrow:before { content: "\e010"; }
+.icon-snooze-date:before { content: "\e011"; }
+.icon-share:before { content: "\e012"; }
+.icon-schedule:before { content: "\e013"; }
+.icon-repeat:before { content: "\e014"; }
+.icon-questionmark-circle:before { content: "\e015"; }
+.icon-policy:before { content: "\e016"; }
+.icon-plus:before { content: "\e017"; }
+.icon-pencil:before { content: "\e018"; }
+.icon-note:before { content: "\e019"; }
+.icon-log-out:before { content: "\e01a"; }
+.icon-facebook-logo:before { content: "\e01b"; }
+.icon-facebook-btn:before { content: "\e01c"; }
+.icon-cross:before { content: "\e01d"; }
+.icon-cog:before { content: "\e01e"; }
+.icon-clock:before { content: "\e01f"; }
+.icon-checkmark:before { content: "\e020"; }
+.icon-arr-right:before { content: "\e021"; }
+.icon-arr-right-long:before { content: "\e022"; }
+.icon-arr-left:before { content: "\e023"; }
+.icon-arr-left-long:before { content: "\e024"; }
