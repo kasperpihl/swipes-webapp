@@ -3,17 +3,15 @@ define [
 	'router/MainRouter'
 	'collection/ToDoCollection'
 	], (ViewController, MainRouter, ToDoCollection) ->
-	class Bootstrap
+	class Swipes
 		constructor: ->
 			@init()
 		init: ->
 			console.log "initialized app"
 
-			###
 			@viewController = new ViewController()
 			@router = new MainRouter()
 			@collection = new ToDoCollection()
-			###
 
 			Backbone.history.start { pushState: no }
 			# @update()

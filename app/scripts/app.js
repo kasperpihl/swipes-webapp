@@ -1,30 +1,27 @@
 (function() {
   define(['controller/ViewController', 'router/MainRouter', 'collection/ToDoCollection'], function(ViewController, MainRouter, ToDoCollection) {
-    var Bootstrap;
-    return Bootstrap = (function() {
-      function Bootstrap() {
+    var Swipes;
+    return Swipes = (function() {
+      function Swipes() {
         this.init();
       }
 
-      Bootstrap.prototype.init = function() {
+      Swipes.prototype.init = function() {
         console.log("initialized app");
-        /*
-        			@viewController = new ViewController()
-        			@router = new MainRouter()
-        			@collection = new ToDoCollection()
-        */
-
+        this.viewController = new ViewController();
+        this.router = new MainRouter();
+        this.collection = new ToDoCollection();
         Backbone.history.start({
           pushState: false
         });
         return $(".add-new input").focus();
       };
 
-      Bootstrap.prototype.update = function() {
+      Swipes.prototype.update = function() {
         return this.collection.fetch();
       };
 
-      return Bootstrap;
+      return Swipes;
 
     })();
   });
