@@ -4,6 +4,15 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 		localStorage: new Backbone.LocalStorage "SwipyTodos"
 		initialize: ->
 			@on 'add', (model) -> model.save()
-		getActive: -> @where state: "todo"
-		getScheduled: -> @where state: "scheduled"
-		getCompleted: -> @where state: "completed"
+		getActive: -> 
+			now = new Date().getTime()
+			@filter (m) => 
+				schedule = m.get("schedule")
+				if !schedule then return false
+				else return schedule.getTime() < now
+		getScheduled: -> 
+			@where 
+				schedule: null
+				completionDate: null
+		getCompleted: -> 
+			@filter (m) => m.get("completionDate") isnt null

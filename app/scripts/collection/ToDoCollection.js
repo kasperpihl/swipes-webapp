@@ -9,18 +9,29 @@
         });
       },
       getActive: function() {
-        return this.where({
-          state: "todo"
+        var now,
+          _this = this;
+        now = new Date().getTime();
+        return this.filter(function(m) {
+          var schedule;
+          schedule = m.get("schedule");
+          if (!schedule) {
+            return false;
+          } else {
+            return schedule.getTime() < now;
+          }
         });
       },
       getScheduled: function() {
         return this.where({
-          state: "scheduled"
+          schedule: null,
+          completionDate: null
         });
       },
       getCompleted: function() {
-        return this.where({
-          state: "completed"
+        var _this = this;
+        return this.filter(function(m) {
+          return m.get("completionDate") !== null;
         });
       }
     });
