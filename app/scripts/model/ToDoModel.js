@@ -2,10 +2,14 @@
   define(['backbone'], function(Backbone) {
     return Backbone.Model.extend({
       defaults: {
-        state: 'todo',
-        title: '',
-        alert: null,
-        tags: null
+        title: "",
+        order: 0,
+        schedule: null,
+        completionDate: null,
+        repeatOption: "never",
+        repeatDate: null,
+        tags: null,
+        notes: ""
       }
     });
   });
