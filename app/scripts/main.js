@@ -19,7 +19,8 @@ require.config({
         'greensock-js': '../bower_components/greensock-js/src/minified/TweenMax.min',
         gsap: '../bower_components/greensock-js/src/uncompressed/TweenLite',
         'gsap-easing': '../bower_components/greensock-js/src/uncompressed/easing/EasePack',
-        'gsap-css': '../bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin'
+        'gsap-css': '../bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin',
+        'text': '../bower_components/requirejs-text/text'
     },
     shim: {
         bootstrapAffix: {

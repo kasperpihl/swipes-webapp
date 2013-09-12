@@ -8,6 +8,7 @@
         completionDate: null,
         repeatOption: "never",
         repeatDate: null,
+        repeatCount: 0,
         tags: null,
         notes: ""
       }

@@ -40,7 +40,7 @@
           var newView;
           newView = new View({
             el: "ol.todo-list." + slug
-          }).render();
+          });
           if (_this.currView != null) {
             return _this.transitionOut(_this.currView).then(_this.transitionIn(newView));
           } else {

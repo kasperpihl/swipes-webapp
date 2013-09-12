@@ -1,10 +1,10 @@
-define ["view/Default"], (DefaultView) ->
+define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoListTemplate) ->
 	DefaultView.extend
 		events:
 			if Modernizr.touch then "tap" else "click "
 		init: ->
 			# Set HTML tempalte for our list
-			#@listTmpl = _.template $("#template-list").html()
+			@template = _.template TodoListTemplate
 
 			# Render the list whenever it updates
 			#swipy.collection.on "change", @renderList, @
@@ -13,16 +13,67 @@ define ["view/Default"], (DefaultView) ->
 			return @
 		getDummyData: ->
 			[
-				{
-					schedule: ""
-				}
+					title: "Follow up on Martin"
+					order: 0
+					schedule: new Date()
+					completionDate: null
+					repeatOption: "never"
+					repeatDate: null
+					tags: ["work", "client"]
+					notes: ""
+				,
+					title: "Make visual research"
+					order: 1
+					schedule: new Date()
+					completionDate: null
+					repeatOption: "never"
+					repeatDate: null
+					tags: ["work", "Project y19"]
+					notes: ""
+				,
+					title: "Buy a new Helmet"
+					order: 2
+					schedule: new Date()
+					completionDate: null
+					repeatOption: "never"
+					repeatDate: null
+					tags: ["Personal", "Bike", "Outside"]
+					notes: ""
+				,
+					title: "Renew Wired Magazine subscription"
+					order: 3
+					schedule: new Date()
+					completionDate: null
+					repeatOption: "never"
+					repeatDate: null
+					tags: ["Personal", "Home"]
+					notes: ""
+				,
+					title: "Get a Haircut"
+					order: 4
+					schedule: new Date()
+					completionDate: null
+					repeatOption: "never"
+					repeatDate: null
+					tags: ["Errand", "Home"]
+					notes: ""
+				,
+					title: "Clean up the house"
+					order: 5
+					schedule: new Date()
+					completionDate: null
+					repeatOption: "never"
+					repeatDate: null
+					tags: ["Errand", "City"]
+					notes: ""
 			]
 		renderList: ->
-			#items = @getDummyData()
+			items = @getDummyData()
 			# items = new Backbone.Collection( swipy.collection.getActive() )
-			# @$el.find('.list-wrap').html( @listTmpl( { items: items.toJSON() } ) )
-			#@afterRenderList items
+			@$el.html( @template( { items: items } ) )
+			@afterRenderList items
 		afterRenderList: (models) ->
+			console.log "Rendered json: ", models
 			# type = if Modernizr.touch then "Touch" else "Desktop"
 
 			# require ["view/list/#{type}ListItem"], (ListItemView) => 

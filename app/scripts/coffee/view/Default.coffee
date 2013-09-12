@@ -10,7 +10,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		render: -> 
 			return @el;
 		customCleanUp: ->
-			# Exten this in other views
+			# Extend this in other views
 		cleanUp: ->
 			@customCleanUp()
 			this.undelegateEvents();

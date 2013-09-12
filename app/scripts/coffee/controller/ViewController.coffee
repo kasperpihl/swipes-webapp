@@ -23,7 +23,7 @@ define ["gsap"], (TweenLite) ->
 			viewName = slug[0].toUpperCase() + slug[1...]
 
 			require ["view/#{ viewName }"], (View) =>
-				newView = new View( el: "ol.todo-list.#{ slug }" ).render()
+				newView = new View( el: "ol.todo-list.#{ slug }" )
 
 				if @currView? 
 					@transitionOut( @currView ).then @transitionIn newView
