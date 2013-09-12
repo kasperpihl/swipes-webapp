@@ -68,7 +68,6 @@
       ViewController.prototype.transitionIn = function(view) {
         var dfd;
         dfd = new $.Deferred();
-        console.log("transitioning in ", view);
         view.$el.removeClass("hidden");
         TweenLite.fromTo(view.$el, 0.2, {
           alpha: 0
