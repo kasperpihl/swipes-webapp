@@ -47,7 +47,6 @@ define ["gsap"], (TweenLite) ->
 		transitionIn: (view) ->
 			dfd = new $.Deferred()
 			
-			console.log "transitioning in ", view
 			view.$el.removeClass "hidden"
 			TweenLite.fromTo( view.$el, 0.2, { alpha: 0 }, { alpha: 1, onComplete: dfd.resolve } )
 			
