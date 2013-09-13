@@ -34,8 +34,10 @@
     });
     require(["model/ToDoModel"], function(Model) {
       return describe("List Item model", function() {
+        var model;
+        model = new Model();
         it("Should set scheduleStr when instantiated", function() {
-          return expect(2).to.be.lessThan(1);
+          return expect(model.get("scheduleString")).to.be("past");
         });
         return it("Should update scheduleStr when schedule property is changed", function() {
           return expect(2).to.be.lessThan(1);

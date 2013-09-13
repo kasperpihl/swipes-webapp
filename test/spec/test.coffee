@@ -28,8 +28,11 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 
 	require ["model/ToDoModel"], (Model) ->
 		describe "List Item model", ->
+			model = new Model()
+
 			it "Should set scheduleStr when instantiated", ->
-				expect(2).to.be.lessThan 1 
+				expect(model.get("scheduleString")).to.be "past"
+			
 			it "Should update scheduleStr when schedule property is changed", ->
 				expect(2).to.be.lessThan 1
 
