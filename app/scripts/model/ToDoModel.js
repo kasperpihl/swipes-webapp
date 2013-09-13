@@ -4,7 +4,7 @@
       defaults: {
         title: "",
         order: 0,
-        schedule: null,
+        schedule: new Date(),
         completionDate: null,
         repeatOption: "never",
         repeatDate: null,
