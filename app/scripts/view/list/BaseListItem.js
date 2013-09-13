@@ -19,7 +19,8 @@
         return this.model.off();
       },
       destroy: function() {
-        return this.disableInteraction();
+        this.disableInteraction();
+        return console.log("CLEEEAAAANED!!!!!");
       }
     });
   });

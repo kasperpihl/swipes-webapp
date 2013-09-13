@@ -6,6 +6,9 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 			# Set HTML tempalte for our list
 			@template = _.template TodoListTemplate
 
+			# Store subviews in this array so we can kill them (and free up memory) when we no longer need them
+			@subviews = []
+
 			# Render the list whenever it updates
 			#swipy.collection.on "change", @renderList, @
 		render: ->
@@ -74,11 +77,13 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 			@afterRenderList items
 		afterRenderList: (models) ->
 			console.log "Rendered json: ", models
-			# type = if Modernizr.touch then "Touch" else "Desktop"
+			type = if Modernizr.touch then "Touch" else "Desktop"
 
-			# require ["view/list/#{type}ListItem"], (ListItemView) => 
-			# 	@$el.find('ol.todo > li').each (i, el) =>
-			# 		new ListItemView el: el, model: models.at(i)
+			require ["view/list/#{type}ListItem"], (ListItemView) => 
+				@$el.find('ol.todo > li').each (i, el) =>
+					@subviews.push new ListItemView el: el, model: models.at(i)
 		customCleanUp: ->
 			# Unbind all events
 			#swipy.collection.off()
+			
+			view.remove() for view in @subviews

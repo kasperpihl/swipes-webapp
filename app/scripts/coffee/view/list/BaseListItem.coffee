@@ -18,4 +18,5 @@ define ->
 			@model.off()
 		destroy: ->
 			@disableInteraction()
+			console.log "CLEEEAAAANED!!!!!"
 

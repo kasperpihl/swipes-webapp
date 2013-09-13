@@ -3,7 +3,8 @@
     return DefaultView.extend({
       events: Modernizr.touch ? "tap" : "click ",
       init: function() {
-        return this.template = _.template(TodoListTemplate);
+        this.template = _.template(TodoListTemplate);
+        return this.subviews = [];
       },
       render: function() {
         this.renderList();
@@ -77,9 +78,29 @@
         return this.afterRenderList(items);
       },
       afterRenderList: function(models) {
-        return console.log("Rendered json: ", models);
+        var type,
+          _this = this;
+        console.log("Rendered json: ", models);
+        type = Modernizr.touch ? "Touch" : "Desktop";
+        return require(["view/list/" + type + "ListItem"], function(ListItemView) {
+          return _this.$el.find('ol.todo > li').each(function(i, el) {
+            return _this.subviews.push(new ListItemView({
+              el: el,
+              model: models.at(i)
+            }));
+          });
+        });
       },
-      customCleanUp: function() {}
+      customCleanUp: function() {
+        var view, _i, _len, _ref, _results;
+        _ref = this.subviews;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          _results.push(view.remove());
+        }
+        return _results;
+      }
     });
   });
 
