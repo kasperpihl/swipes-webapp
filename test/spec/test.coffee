@@ -17,7 +17,16 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 			dfd = new $.Deferred()
 			require ["text!templates/todo-list.html"], (ListTempl) ->
 				tmpl = _.template ListTempl
-				contentHolder.html tmpl( data )
+
+				data = 
+					taskGroups: [
+						{
+							deadline: "Tomorrow"
+							tasks: [helpers.getListItemModel()] 
+						}
+					]
+
+				contentHolder.html $("<ol class='todo'></ol>").append( tmpl data )
 				dfd.resolve()
 
 			return dfd.promise()
@@ -31,10 +40,18 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 			model = new Model()
 
 			it "Should set scheduleStr when instantiated", ->
-				expect(model.get("scheduleString")).to.be "past"
+				expect( model.get("scheduleString") ).to.equal "past"
 			
 			it "Should update scheduleStr when schedule property is changed", ->
-				expect(2).to.be.lessThan 1
+				date = model.get "schedule"
+
+				# unset for change event to occur
+				model.set( "schedule", "" )
+				
+				date.setDate date.getDate()+1
+				model.set( "schedule", date )
+
+				expect( model.get("scheduleString") ).to.equal "Tomorrow"
 
 	require ["model/ToDoModel", "view/list/DesktopListItem"], (Model, View) ->
 		describe "List Item View", ->
@@ -43,7 +60,7 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 				it "Should toggle selection when clicked", ->
 					model = new Model helpers.getListItemModel()
 					helpers.renderTodoList( items: [model.toJSON()] ).then ->
-						el = $("#content-holder .todo > li").first()
+						el = $("#content-holder .todo ol > li").first()
 						view = new View { el, model }
 
 						el.click()

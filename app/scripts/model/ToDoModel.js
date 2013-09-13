@@ -36,7 +36,7 @@
           }
           return this.set("scheduleString", result);
         }
-        calndarWithoutTime = parsedDate.calendar().match(/\w+/);
+        calndarWithoutTime = parsedDate.calendar().match(/\w+/)[0];
         return this.set("scheduleString", calndarWithoutTime);
       }
     });

@@ -21,7 +21,15 @@
         require(["text!templates/todo-list.html"], function(ListTempl) {
           var tmpl;
           tmpl = _.template(ListTempl);
-          contentHolder.html(tmpl(data));
+          data = {
+            taskGroups: [
+              {
+                deadline: "Tomorrow",
+                tasks: [helpers.getListItemModel()]
+              }
+            ]
+          };
+          contentHolder.html($("<ol class='todo'></ol>").append(tmpl(data)));
           return dfd.resolve();
         });
         return dfd.promise();
@@ -37,10 +45,15 @@
         var model;
         model = new Model();
         it("Should set scheduleStr when instantiated", function() {
-          return expect(model.get("scheduleString")).to.be("past");
+          return expect(model.get("scheduleString")).to.equal("past");
         });
         return it("Should update scheduleStr when schedule property is changed", function() {
-          return expect(2).to.be.lessThan(1);
+          var date;
+          date = model.get("schedule");
+          model.set("schedule", "");
+          date.setDate(date.getDate() + 1);
+          model.set("schedule", date);
+          return expect(model.get("scheduleString")).to.equal("Tomorrow");
         });
       });
     });
@@ -54,7 +67,7 @@
               items: [model.toJSON()]
             }).then(function() {
               var el, view;
-              el = $("#content-holder .todo > li").first();
+              el = $("#content-holder .todo ol > li").first();
               view = new View({
                 el: el,
                 model: model
