@@ -11,13 +11,25 @@
         return this;
       },
       groupTasks: function(data) {
-        return {
-          items: data
-        };
+        var deadline, tasks, tasksByDate;
+        tasksByDate = _.groupBy(data, function(json) {
+          return json.scheduleString;
+        });
+        return (function() {
+          var _results;
+          _results = [];
+          for (deadline in tasksByDate) {
+            tasks = tasksByDate[deadline];
+            _results.push({
+              deadline: deadline,
+              tasks: tasks
+            });
+          }
+          return _results;
+        })();
       },
       getDummyData: function() {
-        var data, models;
-        data = [
+        return [
           {
             title: "Follow up on Martin",
             order: 0,
@@ -74,23 +86,24 @@
             notes: ""
           }
         ];
-        models = [];
-        require(["model/ToDoModel"], function(Model) {
-          var obj, _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = data.length; _i < _len; _i++) {
-            obj = data[_i];
-            _results.push(models.push(new Model(obj)));
-          }
-          return _results;
-        });
-        return models;
       },
       renderList: function() {
-        var items;
-        items = new Backbone.Collection(this.getDummyData());
-        this.$el.html(this.template(this.groupTasks(items.toJSON())));
-        return this.afterRenderList(items);
+        var col, items,
+          _this = this;
+        items = this.getDummyData();
+        col = new Backbone.Collection();
+        return require(["model/ToDoModel"], function(Model) {
+          var obj, _i, _len;
+          col.model = Model;
+          for (_i = 0, _len = items.length; _i < _len; _i++) {
+            obj = items[_i];
+            col.add(obj);
+          }
+          _this.$el.html(_this.template({
+            taskGroups: _this.groupTasks(col.toJSON())
+          }));
+          return _this.afterRenderList(items);
+        });
       },
       afterRenderList: function(models) {
         var type,

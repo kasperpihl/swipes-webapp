@@ -15,12 +15,10 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			@renderList()
 			return @
 		groupTasks: (data) ->
-			# result = _.groupBy( data, (json) -> json.scheduleString )
-			# debugger
-			
-			{ items: data }
+			tasksByDate = _.groupBy( data, (json) -> json.scheduleString )
+			return ( { deadline, tasks } for deadline, tasks of tasksByDate )
 		getDummyData: ->
-			data = [
+			[
 					title: "Follow up on Martin"
 					order: 0
 					schedule: new Date("September 16, 2013 16:30:02")
@@ -75,18 +73,18 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 					tags: ["Errand", "City"]
 					notes: ""
 			]
-
-			models = []
-			require ["model/ToDoModel"], (Model) ->
-				for obj in data
-					models.push new Model obj
-
-			return models
 		renderList: ->
+			items = @getDummyData()
 			# items = new Backbone.Collection( swipy.collection.getActive() )
-			items = new Backbone.Collection @getDummyData()
-			@$el.html( @template @groupTasks items.toJSON() )
-			@afterRenderList items
+			
+			col = new Backbone.Collection()
+			require ["model/ToDoModel"], (Model) =>
+				col.model = Model
+				for obj in items
+					col.add obj
+				
+				@$el.html @template( taskGroups: @groupTasks col.toJSON() )
+				@afterRenderList items
 		afterRenderList: (models) ->
 			type = if Modernizr.touch then "Touch" else "Desktop"
 

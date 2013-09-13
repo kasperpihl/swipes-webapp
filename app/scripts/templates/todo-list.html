@@ -1,32 +1,34 @@
 
-<li>
-	<h1></h1>
-	<ol>
-		
-		<% _.each(items, function(item) { %>
-		<li>
-			<div class="todo-content">
-				<h2><%= item.title %></h2>
-				<% if (item.alert) { %>
-				<time><%= item.alert %></time>
-				<% } %>
-				
-				<% if (item.tags && item.tags.length) { %>
-				<ul class="tags">
-					
-					<% _.each(item.tags, function(tag) { %>
-					
-					<li><%= tag %></li>
-					
-					<% }); %>
-				
-				</ul>
-				<% } %>
+<% _.each(taskGroups, function(group) { %>
+	<li>
+		<h1><%= group.deadline %></h1>
+		<ol>
+			
+			<% _.each(group.tasks, function(task) { %>
 
-			</div>
-		</li>
+				<li>
+					<div class="todo-content">
+						<h2><%= task.title %></h2>
+						<% if (task.alert) { %>
+						<time><%= task.alert %></time>
+						<% } %>
+						
+						<% if (task.tags && task.tags.length) { %>
+						<ul class="tags">
+							
+							<% _.each(task.tags, function(tag) { %>
+							
+							<li><%= tag %></li>
+							
+							<% }); %>
+						
+						</ul>
+						<% } %>
 
+					</div>
+				</li>
 
-		<% }); %>
-	</ol>
-</li>
+			<% }); %>
+		</ol>
+	</li>
+<% }); %>
