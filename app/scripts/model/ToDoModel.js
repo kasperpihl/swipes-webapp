@@ -18,7 +18,7 @@
         return this.on("change:schedule", this.setScheduleString);
       },
       setScheduleString: function() {
-        var now, parsedDate, result, schedule;
+        var calndarWithoutTime, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
         if (!schedule) {
           return this.set("scheduleString", void 0);
@@ -36,7 +36,8 @@
           }
           return this.set("scheduleString", result);
         }
-        return this.set("scheduleString", parsedDate.calendar());
+        calndarWithoutTime = parsedDate.calendar().match(/\w+/);
+        return this.set("scheduleString", calndarWithoutTime);
       }
     });
   });
