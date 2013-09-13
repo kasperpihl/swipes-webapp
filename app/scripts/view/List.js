@@ -1,5 +1,5 @@
 (function() {
-  define(["view/Default", "text!templates/todo-list.html"], function(DefaultView, TodoListTemplate) {
+  define(["underscore", "view/Default", "text!templates/todo-list.html"], function(_, DefaultView, TodoListTemplate) {
     return DefaultView.extend({
       events: Modernizr.touch ? "tap" : "click ",
       init: function() {
@@ -10,12 +10,18 @@
         this.renderList();
         return this;
       },
+      groupTasks: function(data) {
+        return {
+          items: data
+        };
+      },
       getDummyData: function() {
-        return [
+        var data, models;
+        data = [
           {
             title: "Follow up on Martin",
             order: 0,
-            schedule: new Date(),
+            schedule: new Date("September 16, 2013 16:30:02"),
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
@@ -24,7 +30,7 @@
           }, {
             title: "Make visual research",
             order: 1,
-            schedule: new Date(),
+            schedule: new Date("October 13, 2013 11:13:00"),
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
@@ -33,7 +39,7 @@
           }, {
             title: "Buy a new Helmet",
             order: 2,
-            schedule: new Date(),
+            schedule: new Date("March 1, 2014 16:30:02"),
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
@@ -42,7 +48,7 @@
           }, {
             title: "Renew Wired Magazine subscription",
             order: 3,
-            schedule: new Date(),
+            schedule: new Date("September 14, 2013 16:30:02"),
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
@@ -51,7 +57,7 @@
           }, {
             title: "Get a Haircut",
             order: 4,
-            schedule: new Date(),
+            schedule: new Date("September 14, 2013 16:30:02"),
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
@@ -60,7 +66,7 @@
           }, {
             title: "Clean up the house",
             order: 5,
-            schedule: new Date(),
+            schedule: new Date("September 15, 2013 16:30:02"),
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
@@ -68,13 +74,22 @@
             notes: ""
           }
         ];
+        models = [];
+        require(["model/ToDoModel"], function(Model) {
+          var obj, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = data.length; _i < _len; _i++) {
+            obj = data[_i];
+            _results.push(models.push(new Model(obj)));
+          }
+          return _results;
+        });
+        return models;
       },
       renderList: function() {
         var items;
         items = new Backbone.Collection(this.getDummyData());
-        this.$el.html(this.template({
-          items: items.toJSON()
-        }));
+        this.$el.html(this.template(this.groupTasks(items.toJSON())));
         return this.afterRenderList(items);
       },
       afterRenderList: function(models) {

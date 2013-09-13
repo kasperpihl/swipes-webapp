@@ -32,8 +32,18 @@
         return expect(window.app).to.exist;
       });
     });
+    require(["model/ToDoModel"], function(Model) {
+      return describe("List Item model", function() {
+        it("Should set scheduleStr when instantiated", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        return it("Should update scheduleStr when schedule property is changed", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+      });
+    });
     return require(["model/ToDoModel", "view/list/DesktopListItem"], function(Model, View) {
-      return describe("List Item Views", function() {
+      return describe("List Item View", function() {
         return describe("Selection", function() {
           return it("Should toggle selection when clicked", function() {
             var model;

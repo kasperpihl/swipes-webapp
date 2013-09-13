@@ -20,7 +20,9 @@ require.config({
         gsap: '../bower_components/greensock-js/src/uncompressed/TweenLite',
         'gsap-easing': '../bower_components/greensock-js/src/uncompressed/easing/EasePack',
         'gsap-css': '../bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin',
-        'text': '../bower_components/requirejs-text/text'
+        text: '../bower_components/requirejs-text/text',
+        momentjs: '../bower_components/momentjs/moment',
+        'requirejs-text': '../bower_components/requirejs-text/text'
     },
     shim: {
         bootstrapAffix: {

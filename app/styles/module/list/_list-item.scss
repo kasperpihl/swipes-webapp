@@ -1,5 +1,14 @@
 // General task styling
 .todo-list {
+	
+	> li {
+
+
+		&.selected {
+			background: #D0CEC2;
+		}
+	}
+
 	.todo-content { 
 		position: relative;
 		padding: 3em 3em 3em 28%;

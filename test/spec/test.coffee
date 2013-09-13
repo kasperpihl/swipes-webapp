@@ -26,8 +26,15 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 		it "App should be up and running", ->
 			expect( window.app ).to.exist
 
+	require ["model/ToDoModel"], (Model) ->
+		describe "List Item model", ->
+			it "Should set scheduleStr when instantiated", ->
+				expect(2).to.be.lessThan 1 
+			it "Should update scheduleStr when schedule property is changed", ->
+				expect(2).to.be.lessThan 1
+
 	require ["model/ToDoModel", "view/list/DesktopListItem"], (Model, View) ->
-		describe "List Item Views", ->
+		describe "List Item View", ->
 			
 			describe "Selection", ->
 				it "Should toggle selection when clicked", ->

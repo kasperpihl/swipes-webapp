@@ -1,4 +1,4 @@
-define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoListTemplate) ->
+define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, DefaultView, TodoListTemplate) ->
 	DefaultView.extend
 		events:
 			if Modernizr.touch then "tap" else "click "
@@ -14,11 +14,16 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 		render: ->
 			@renderList()
 			return @
+		groupTasks: (data) ->
+			# result = _.groupBy( data, (json) -> json.scheduleString )
+			# debugger
+			
+			{ items: data }
 		getDummyData: ->
-			[
+			data = [
 					title: "Follow up on Martin"
 					order: 0
-					schedule: new Date()
+					schedule: new Date("September 16, 2013 16:30:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
@@ -27,7 +32,7 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 				,
 					title: "Make visual research"
 					order: 1
-					schedule: new Date()
+					schedule: new Date("October 13, 2013 11:13:00")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
@@ -36,7 +41,7 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 				,
 					title: "Buy a new Helmet"
 					order: 2
-					schedule: new Date()
+					schedule: new Date("March 1, 2014 16:30:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
@@ -45,7 +50,7 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 				,
 					title: "Renew Wired Magazine subscription"
 					order: 3
-					schedule: new Date()
+					schedule: new Date("September 14, 2013 16:30:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
@@ -54,7 +59,7 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 				,
 					title: "Get a Haircut"
 					order: 4
-					schedule: new Date()
+					schedule: new Date("September 14, 2013 16:30:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
@@ -63,17 +68,24 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 				,
 					title: "Clean up the house"
 					order: 5
-					schedule: new Date()
+					schedule: new Date("September 15, 2013 16:30:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
 					tags: ["Errand", "City"]
 					notes: ""
 			]
+
+			models = []
+			require ["model/ToDoModel"], (Model) ->
+				for obj in data
+					models.push new Model obj
+
+			return models
 		renderList: ->
 			# items = new Backbone.Collection( swipy.collection.getActive() )
 			items = new Backbone.Collection @getDummyData()
-			@$el.html( @template( { items: items.toJSON() } ) )
+			@$el.html( @template @groupTasks items.toJSON() )
 			@afterRenderList items
 		afterRenderList: (models) ->
 			type = if Modernizr.touch then "Touch" else "Desktop"
