@@ -71,12 +71,11 @@ define ["view/Default", "text!templates/todo-list.html"], (DefaultView, TodoList
 					notes: ""
 			]
 		renderList: ->
-			items = @getDummyData()
 			# items = new Backbone.Collection( swipy.collection.getActive() )
-			@$el.html( @template( { items: items } ) )
+			items = new Backbone.Collection @getDummyData()
+			@$el.html( @template( { items: items.toJSON() } ) )
 			@afterRenderList items
 		afterRenderList: (models) ->
-			console.log "Rendered json: ", models
 			type = if Modernizr.touch then "Touch" else "Desktop"
 
 			require ["view/list/#{type}ListItem"], (ListItemView) => 

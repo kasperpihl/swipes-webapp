@@ -1,7 +1,6 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		initialize: ->
-			#_.bindAll @
 			@timers = []
 			@init()
 			@render()

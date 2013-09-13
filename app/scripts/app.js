@@ -7,7 +7,6 @@
       }
 
       Swipes.prototype.init = function() {
-        console.log("initialized app");
         this.viewController = new ViewController();
         this.router = new MainRouter();
         this.collection = new ToDoCollection();

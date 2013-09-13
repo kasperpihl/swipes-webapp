@@ -1,8 +1,7 @@
 (function() {
-  define(function() {
+  define(["underscore", "backbone"], function(_, Backbone) {
     return Backbone.View.extend({
       initialize: function() {
-        _.bindAll(this);
         this.content = this.$el.find('.todo-content');
         return this.render();
       },

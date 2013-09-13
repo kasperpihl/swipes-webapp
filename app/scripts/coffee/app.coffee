@@ -7,8 +7,6 @@ define [
 		constructor: ->
 			@init()
 		init: ->
-			console.log "initialized app"
-
 			@viewController = new ViewController()
 			@router = new MainRouter()
 			@collection = new ToDoCollection()

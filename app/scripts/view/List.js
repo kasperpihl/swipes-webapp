@@ -71,16 +71,15 @@
       },
       renderList: function() {
         var items;
-        items = this.getDummyData();
+        items = new Backbone.Collection(this.getDummyData());
         this.$el.html(this.template({
-          items: items
+          items: items.toJSON()
         }));
         return this.afterRenderList(items);
       },
       afterRenderList: function(models) {
         var type,
           _this = this;
-        console.log("Rendered json: ", models);
         type = Modernizr.touch ? "Touch" : "Desktop";
         return require(["view/list/" + type + "ListItem"], function(ListItemView) {
           return _this.$el.find('ol.todo > li').each(function(i, el) {

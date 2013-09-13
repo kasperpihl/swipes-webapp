@@ -96,7 +96,5 @@ require.config({
 require(["jquery", "app", "plugins/log"], function ($, App) {
     'use strict';
     window.$ = window.jQuery = $;
-
     window.app = new App();
-    console.log('Running jQuery %s', $().jquery);
 });

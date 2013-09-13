@@ -1,10 +1,7 @@
-define ->
+define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		initialize: ->
-			_.bindAll @
-			
 			@content = @$el.find('.todo-content')
-			
 			@render()
 		enableInteraction: ->
 			
