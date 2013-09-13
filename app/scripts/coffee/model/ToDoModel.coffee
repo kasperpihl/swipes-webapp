@@ -10,3 +10,4 @@ define ['backbone'], (Backbone) ->
 			repeatCount: 0
 			tags: null
 			notes: ""
+			deleted: no
