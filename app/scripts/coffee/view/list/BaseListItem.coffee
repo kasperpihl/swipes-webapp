@@ -1,19 +1,18 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		initialize: ->
-			@content = @$el.find('.todo-content')
-			@render()
-		enableInteraction: ->
+			_.bindAll( @, "handleSelected" )
 			
-		disableInteraction: ->
-			console.warn "Disabling gestures for ", @model.toJSON()
+			@content = @$el.find('.todo-content')
+			
+			@model.on( "change:selected", @handleSelected )
+			
+			@render()
+		handleSelected: (model, selected) ->
+			@$el.toggleClass( "selected", selected )
 		render: ->
-			@enableInteraction()
 			return @el
 		remove: ->
-			@destroy()
+			@cleanUp()
+		cleanUp: ->
 			@model.off()
-		destroy: ->
-			@disableInteraction()
-			console.log "CLEEEAAAANED!!!!!"
-

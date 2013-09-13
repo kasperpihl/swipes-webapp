@@ -2,24 +2,22 @@
   define(["underscore", "backbone"], function(_, Backbone) {
     return Backbone.View.extend({
       initialize: function() {
+        _.bindAll(this, "handleSelected");
         this.content = this.$el.find('.todo-content');
+        this.model.on("change:selected", this.handleSelected);
         return this.render();
       },
-      enableInteraction: function() {},
-      disableInteraction: function() {
-        return console.warn("Disabling gestures for ", this.model.toJSON());
+      handleSelected: function(model, selected) {
+        return this.$el.toggleClass("selected", selected);
       },
       render: function() {
-        this.enableInteraction();
         return this.el;
       },
       remove: function() {
-        this.destroy();
-        return this.model.off();
+        return this.cleanUp();
       },
-      destroy: function() {
-        this.disableInteraction();
-        return console.log("CLEEEAAAANED!!!!!");
+      cleanUp: function() {
+        return this.model.off();
       }
     });
   });

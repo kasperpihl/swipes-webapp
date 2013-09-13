@@ -1,11 +1,13 @@
 (function() {
   define(["view/list/BaseListItem"], function(BaseListItemView) {
     return BaseListItemView.extend({
-      enableInteraction: function() {
-        return console.log("Enabling interaction for desktop");
+      events: {
+        "click": "toggleSelected"
       },
-      disableInteraction: function() {
-        return console.warn("Disabling interaction for desktop for ", this.model.toJSON());
+      toggleSelected: function() {
+        var currentlySelected;
+        currentlySelected = this.model.get("selected") || false;
+        return this.model.set("selected", !currentlySelected);
       }
     });
   });
