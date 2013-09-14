@@ -33,7 +33,11 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 					result = parsedDate.format "MMM Do"
 
 				return @set( "scheduleString", result )
+
+			if parsedDate.diff( now, "days" ) < 1
+				return @set( "scheduleString", "Later today" )
 			
+
 			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm", 
 			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
 			calndarWithoutTime = parsedDate.calendar().match( /\w+/ )[0]

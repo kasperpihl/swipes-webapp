@@ -36,6 +36,9 @@
           }
           return this.set("scheduleString", result);
         }
+        if (parsedDate.diff(now, "days") < 1) {
+          return this.set("scheduleString", "Later today");
+        }
         calndarWithoutTime = parsedDate.calendar().match(/\w+/)[0];
         return this.set("scheduleString", calndarWithoutTime);
       }
