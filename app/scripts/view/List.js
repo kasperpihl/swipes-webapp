@@ -1,19 +1,19 @@
 (function() {
-  define(["underscore", "view/Default", "text!templates/todo-list.html"], function(_, DefaultView, TodoListTemplate) {
+  define(["underscore", "view/Default", "text!templates/todo-list.html"], function(_, DefaultView, ToDoListTmpl) {
     return DefaultView.extend({
       events: Modernizr.touch ? "tap" : "click ",
       init: function() {
-        this.template = _.template(TodoListTemplate);
+        this.template = _.template(ToDoListTmpl);
         return this.subviews = [];
       },
       render: function() {
         this.renderList();
         return this;
       },
-      groupTasks: function(data) {
+      groupTasks: function(collection) {
         var deadline, tasks, tasksByDate;
-        tasksByDate = _.groupBy(data, function(json) {
-          return json.scheduleString;
+        tasksByDate = collection.groupBy(function(m) {
+          return m.get("scheduleString");
         });
         return (function() {
           var _results;
@@ -86,36 +86,41 @@
         ];
       },
       renderList: function() {
-        var col, items,
+        var col, items, type,
           _this = this;
         items = this.getDummyData();
         col = new Backbone.Collection();
-        return require(["model/ToDoModel"], function(Model) {
-          var obj, _i, _len;
+        type = Modernizr.touch ? "Touch" : "Desktop";
+        this.$el.empty();
+        return require(["model/ToDoModel", "view/list/" + type + "ListItem"], function(Model, ListItemView) {
+          var $html, group, list, m, obj, tasksJSON, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
           col.model = Model;
           for (_i = 0, _len = items.length; _i < _len; _i++) {
             obj = items[_i];
             col.add(obj);
           }
-          _this.$el.html(_this.template({
-            taskGroups: _this.groupTasks(col.toJSON())
-          }));
+          _ref = _this.groupTasks(col);
+          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+            group = _ref[_j];
+            tasksJSON = _.invoke(group.tasks, "toJSON");
+            $html = $(_this.template({
+              title: group.deadline,
+              tasks: tasksJSON 
+            }));
+            list = $html.find("ol");
+            _ref1 = group.tasks;
+            for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+              m = _ref1[_k];
+              list.append(new ListItemView({
+                model: m
+              }).el);
+            }
+            _this.$el.append($html);
+          }
           return _this.afterRenderList(col);
         });
       },
-      afterRenderList: function(collection) {
-        var type,
-          _this = this;
-        type = Modernizr.touch ? "Touch" : "Desktop";
-        return require(["view/list/" + type + "ListItem"], function(ListItemView) {
-          return _this.$el.find('ol > li').each(function(i, el) {
-            return _this.subviews.push(new ListItemView({
-              el: el,
-              model: collection.at(i)
-            }));
-          });
-        });
-      },
+      afterRenderList: function(collection) {},
       customCleanUp: function() {
         var view, _i, _len, _ref, _results;
         _ref = this.subviews;

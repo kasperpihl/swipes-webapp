@@ -1,0 +1,19 @@
+<div class="todo-content">
+	<h2><%= title %></h2>
+	<% if (timeStr) { %>
+	<time><%= timeStr %></time>
+	<% } %>
+	
+	<% if (tags && tags.length) { %>
+	<ul class="tags">
+		
+		<% _.each(tags, function(tag) { %>
+		
+		<li><%= tag %></li>
+		
+		<% }); %>
+	
+	</ul>
+	<% } %>
+
+</div>

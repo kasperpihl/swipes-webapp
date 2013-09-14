@@ -1,10 +1,10 @@
-define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, DefaultView, TodoListTemplate) ->
+define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, DefaultView, ToDoListTmpl) ->
 	DefaultView.extend
 		events:
 			if Modernizr.touch then "tap" else "click "
 		init: ->
 			# Set HTML tempalte for our list
-			@template = _.template TodoListTemplate
+			@template = _.template ToDoListTmpl
 
 			# Store subviews in this array so we can kill them (and free up memory) when we no longer need them
 			@subviews = []
@@ -14,8 +14,8 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 		render: ->
 			@renderList()
 			return @
-		groupTasks: (data) ->
-			tasksByDate = _.groupBy( data, (json) -> json.scheduleString )
+		groupTasks: (collection) ->
+			tasksByDate = collection.groupBy (m) -> m.get "scheduleString"
 			return ( { deadline, tasks } for deadline, tasks of tasksByDate )
 		getDummyData: ->
 			[
@@ -78,19 +78,31 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			# items = new Backbone.Collection( swipy.collection.getActive() )
 			
 			col = new Backbone.Collection()
-			require ["model/ToDoModel"], (Model) =>
-				col.model = Model
-				for obj in items
-					col.add obj
-				
-				@$el.html @template( taskGroups: @groupTasks col.toJSON() )
-				@afterRenderList col
-		afterRenderList: (collection) ->
 			type = if Modernizr.touch then "Touch" else "Desktop"
+			
+			# Remove any old HTML
+			@$el.empty()
 
-			require ["view/list/#{type}ListItem"], (ListItemView) => 
-				@$el.find('ol > li').each (i, el) =>
-					@subviews.push new ListItemView el: el, model: collection.at(i)
+			require ["model/ToDoModel", "view/list/#{type}ListItem"], (Model, ListItemView) =>
+				## Swap out this part with localStorage/parse ##
+				col.model = Model
+				col.add obj for obj in items
+				## / Swap out this part with localStorage/parse ##
+				
+				for group in @groupTasks col
+					tasksJSON = _.invoke( group.tasks, "toJSON" )
+					$html = $( @template( { title: group.deadline, tasks: tasksJSON } ) )
+					list = $html.find "ol"
+					
+					for m in group.tasks
+						list.append new ListItemView({ model: m }).el
+
+					@$el.append $html
+
+				@afterRenderList col
+
+		afterRenderList: (collection) ->
+			# Hook for other views
 		customCleanUp: ->
 			# Unbind all events
 			#swipy.collection.off()
