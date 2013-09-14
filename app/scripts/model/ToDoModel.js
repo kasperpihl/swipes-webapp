@@ -54,7 +54,7 @@
         if (!schedule) {
           return this.set("timeStr", void 0);
         }
-        return this.set("timeStr", moment(schedule).format("h:mA"));
+        return this.set("timeStr", moment(schedule).format("h:mmA"));
       }
     });
   });

@@ -50,4 +50,4 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			if !schedule then return @set( "timeStr", undefined )
 			
 			# We have a schedule set, update timeStr prop
-			@set( "timeStr", moment( schedule ).format "h:mA" )
+			@set( "timeStr", moment( schedule ).format "h:mmA" )
