@@ -55,7 +55,6 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Personal", "Bike", "Outside"],
             notes: ""
           }, {
             title: "Renew Wired Magazine subscription",
@@ -73,7 +72,6 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Errand", "Home"],
             notes: ""
           }, {
             title: "Clean up the house",

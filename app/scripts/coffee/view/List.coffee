@@ -43,7 +43,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
-					tags: ["Personal", "Bike", "Outside"]
+					#tags: ["Personal", "Bike", "Outside"]
 					notes: ""
 				,
 					title: "Renew Wired Magazine subscription"
@@ -61,7 +61,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
-					tags: ["Errand", "Home"]
+					#tags: ["Errand", "Home"]
 					notes: ""
 				,
 					title: "Clean up the house"

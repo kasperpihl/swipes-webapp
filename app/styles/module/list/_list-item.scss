@@ -1,13 +1,7 @@
 // General task styling
 .todo-list {
 	
-	> li {
-
-
-		&.selected {
-			background: #D0CEC2;
-		}
-	}
+	ol { padding: 0; }
 
 	.todo-content { 
 		position: relative;
@@ -41,6 +35,10 @@
 				linear-gradient(left, transparent, $gray-lighter 15%, transparent 105%) 
 			);
 		}
+	}
+
+	.selected .todo-content {
+		background: #f3f3f3;
 	}
 	
 	.tasks > li:last-child .todo-content:after { content: none; }
