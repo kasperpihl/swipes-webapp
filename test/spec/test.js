@@ -73,8 +73,10 @@
                 model: model
               });
               el.click();
+              expect(el).to.not.be.empty;
               expect(model.get("selected")).to.be["true"];
               expect(el.hasClass("selected")).to.be["true"];
+              debugger;
               return contentHolder.empty();
             });
           });

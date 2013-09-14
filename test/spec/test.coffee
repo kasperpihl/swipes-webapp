@@ -31,10 +31,16 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 
 			return dfd.promise()
 
+	#
+	# The Basics
+	#
 	describe "Basics", ->
 		it "App should be up and running", ->
 			expect( window.app ).to.exist
 
+	#
+	# To Do Model
+	#
 	require ["model/ToDoModel"], (Model) ->
 		describe "List Item model", ->
 			model = new Model()
@@ -53,6 +59,9 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 
 				expect( model.get("scheduleString") ).to.equal "Tomorrow"
 
+	#
+	# To Do View
+	#
 	require ["model/ToDoModel", "view/list/DesktopListItem"], (Model, View) ->
 		describe "List Item View", ->
 			
@@ -65,8 +74,11 @@ require ["jquery", "underscore", "backbone"], ($, _, Backbone) ->
 
 						el.click()
 
+						expect( el ).to.not.be.empty
 						expect( model.get "selected" ).to.be.true
 						expect( el.hasClass "selected" ).to.be.true
+
+						debugger
 
 						contentHolder.empty()
 
