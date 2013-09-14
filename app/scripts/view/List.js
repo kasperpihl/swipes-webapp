@@ -102,18 +102,18 @@
           _this.$el.html(_this.template({
             taskGroups: _this.groupTasks(col.toJSON())
           }));
-          return _this.afterRenderList(items);
+          return _this.afterRenderList(col);
         });
       },
-      afterRenderList: function(models) {
+      afterRenderList: function(collection) {
         var type,
           _this = this;
         type = Modernizr.touch ? "Touch" : "Desktop";
         return require(["view/list/" + type + "ListItem"], function(ListItemView) {
-          return _this.$el.find('ol.todo > li').each(function(i, el) {
+          return _this.$el.find('ol > li').each(function(i, el) {
             return _this.subviews.push(new ListItemView({
               el: el,
-              model: models.at(i)
+              model: collection.at(i)
             }));
           });
         });

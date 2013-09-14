@@ -84,13 +84,13 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 					col.add obj
 				
 				@$el.html @template( taskGroups: @groupTasks col.toJSON() )
-				@afterRenderList items
-		afterRenderList: (models) ->
+				@afterRenderList col
+		afterRenderList: (collection) ->
 			type = if Modernizr.touch then "Touch" else "Desktop"
 
 			require ["view/list/#{type}ListItem"], (ListItemView) => 
-				@$el.find('ol.todo > li').each (i, el) =>
-					@subviews.push new ListItemView el: el, model: models.at(i)
+				@$el.find('ol > li').each (i, el) =>
+					@subviews.push new ListItemView el: el, model: collection.at(i)
 		customCleanUp: ->
 			# Unbind all events
 			#swipy.collection.off()

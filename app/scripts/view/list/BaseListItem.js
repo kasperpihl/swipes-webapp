@@ -3,10 +3,12 @@
     return Backbone.View.extend({
       initialize: function() {
         _.bindAll(this, "handleSelected");
+        this.init();
         this.content = this.$el.find('.todo-content');
         this.model.on("change:selected", this.handleSelected);
         return this.render();
       },
+      init: function() {},
       handleSelected: function(model, selected) {
         return this.$el.toggleClass("selected", selected);
       },
