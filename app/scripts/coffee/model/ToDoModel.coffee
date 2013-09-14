@@ -12,11 +12,15 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			notes: ""
 			deleted: no
 		initialize: ->
-			@setScheduleString()
-			@on "change:schedule", @setScheduleString
-		setScheduleString: ->
+			@setScheduleStr()
+			@setTimeStr()
+			
+			@on "change:schedule", =>
+				@setScheduleStr()
+				@setTimeStr()
+		setScheduleStr: ->
 			schedule = @get "schedule"
-			if !schedule then return @set( "scheduleString", undefined )
+			if !schedule then return @unset "scheduleString"
 
 			now = moment()
 			parsedDate = moment schedule
@@ -41,3 +45,9 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			if calendarWithoutTime is "Today" then calendarWithoutTime = "Later today"
 			
 			@set( "scheduleString", calendarWithoutTime )
+		setTimeStr: ->
+			schedule = @get "schedule"
+			if !schedule then return @set( "timeStr", undefined )
+			
+			# We have a schedule set, update timeStr prop
+			@set( "timeStr", moment( schedule ).format "h:mA" )

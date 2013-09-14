@@ -14,14 +14,19 @@
         deleted: false
       },
       initialize: function() {
-        this.setScheduleString();
-        return this.on("change:schedule", this.setScheduleString);
+        var _this = this;
+        this.setScheduleStr();
+        this.setTimeStr();
+        return this.on("change:schedule", function() {
+          _this.setScheduleStr();
+          return _this.setTimeStr();
+        });
       },
-      setScheduleString: function() {
+      setScheduleStr: function() {
         var calendarWithoutTime, dayDiff, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
         if (!schedule) {
-          return this.set("scheduleString", void 0);
+          return this.unset("scheduleString");
         }
         now = moment();
         parsedDate = moment(schedule);
@@ -42,6 +47,14 @@
           calendarWithoutTime = "Later today";
         }
         return this.set("scheduleString", calendarWithoutTime);
+      },
+      setTimeStr: function() {
+        var schedule;
+        schedule = this.get("schedule");
+        if (!schedule) {
+          return this.set("timeStr", void 0);
+        }
+        return this.set("timeStr", moment(schedule).format("h:mA"));
       }
     });
   });
