@@ -48,7 +48,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 				,
 					title: "Renew Wired Magazine subscription"
 					order: 3
-					schedule: new Date("September 14, 2013 16:30:02")
+					schedule: new Date("September 14, 2013 20:30:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
@@ -57,7 +57,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 				,
 					title: "Get a Haircut"
 					order: 4
-					schedule: new Date("September 14, 2013 16:30:02")
+					schedule: new Date("September 14, 2013 23:59:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null

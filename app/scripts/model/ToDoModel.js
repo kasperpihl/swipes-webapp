@@ -18,17 +18,18 @@
         return this.on("change:schedule", this.setScheduleString);
       },
       setScheduleString: function() {
-        var calndarWithoutTime, now, parsedDate, result, schedule;
+        var calendarWithoutTime, dayDiff, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
         if (!schedule) {
           return this.set("scheduleString", void 0);
         }
         now = moment();
         parsedDate = moment(schedule);
-        if (parsedDate.isBefore(now)) {
+        if (parsedDate.isBefore()) {
           return this.set("scheduleString", "past");
         }
-        if (parsedDate.diff(now, "days") > 7) {
+        dayDiff = parsedDate.diff(now, "days");
+        if (dayDiff > 7) {
           if (parsedDate.year() > now.year()) {
             result = parsedDate.format("MMM Do 'YY");
           } else {
@@ -36,11 +37,11 @@
           }
           return this.set("scheduleString", result);
         }
-        if (parsedDate.diff(now, "days") < 1) {
-          return this.set("scheduleString", "Later today");
+        calendarWithoutTime = parsedDate.calendar().match(/\w+/)[0];
+        if (calendarWithoutTime === "Today") {
+          calendarWithoutTime = "Later today";
         }
-        calndarWithoutTime = parsedDate.calendar().match(/\w+/)[0];
-        return this.set("scheduleString", calndarWithoutTime);
+        return this.set("scheduleString", calendarWithoutTime);
       }
     });
   });

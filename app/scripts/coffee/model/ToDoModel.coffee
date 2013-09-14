@@ -22,23 +22,22 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			parsedDate = moment schedule
 
 			# Check if parsedDate is in the past
-			if parsedDate.isBefore now then return @set( "scheduleString", "past" )
+			if parsedDate.isBefore() then return @set( "scheduleString", "past" )
 
 			# If difference is more than 1 week, we want different formatting
-			if parsedDate.diff( now, "days" ) > 7
+			dayDiff = parsedDate.diff( now, "days" )
+			if dayDiff > 7
 				# If it's next year, add year suffix
-				if parsedDate.year() > now.year()
-					result = parsedDate.format "MMM Do 'YY"
-				else
-					result = parsedDate.format "MMM Do"
+				if parsedDate.year() > now.year() then result = parsedDate.format "MMM Do 'YY"
+				else result = parsedDate.format "MMM Do"
 
 				return @set( "scheduleString", result )
 
-			if parsedDate.diff( now, "days" ) < 1
-				return @set( "scheduleString", "Later today" )
-			
-
 			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm", 
 			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
-			calndarWithoutTime = parsedDate.calendar().match( /\w+/ )[0]
-			@set( "scheduleString", calndarWithoutTime )
+			calendarWithoutTime = parsedDate.calendar().match( /\w+/ )[0]
+
+			# Change "Today" to "Later today"
+			if calendarWithoutTime is "Today" then calendarWithoutTime = "Later today"
+			
+			@set( "scheduleString", calendarWithoutTime )
