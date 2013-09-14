@@ -4,12 +4,11 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		initialize: ->
 			_.bindAll( @, "handleSelected" )
 			
+			@model.on( "change:selected", @handleSelected )
+			
 			@setTemplate().then =>		
 				@init()
-
 				@content = @$el.find('.todo-content')
-				@model.on( "change:selected", @handleSelected )
-				
 				@render()
 		setTemplate: ->
 			dfd = new $.Deferred()
@@ -20,6 +19,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		init: ->
 			# Hook for views extending me
 		handleSelected: (model, selected) ->
+			console.log "BaseListItem selected changed to: ", selected
 			@$el.toggleClass( "selected", selected )
 		render: ->
 			# If template isnt set yet, just return the empty element
