@@ -34,15 +34,14 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 			@$el.off "mousemove"
 			@isHoveringComplete = @isHoveringSchedule = false	
 
-
+			Backbone.trigger( "unhover-complete", @.cid )
+			Backbone.trigger( "unhover-schedule", @.cid )
 		onHover: (e) ->
 			if e.type is "mouseenter" then @trackMouse()
 			else if e.type is "mouseleave" then @stopTrackingMouse()
 		onMouseMove: (e) ->
-			console.log "Mouse move"
-
 			# If we have any todos selected, but the hover target isnt
-			# selected, just ignore any movement
+			# selected, simply ignore any movement
 			if window.app.todos.any( (model) -> model.get("selected") )
 				if not @model.get "selected"
 					return false

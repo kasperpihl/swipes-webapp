@@ -35,7 +35,9 @@
       },
       stopTrackingMouse: function() {
         this.$el.off("mousemove");
-        return this.isHoveringComplete = this.isHoveringSchedule = false;
+        this.isHoveringComplete = this.isHoveringSchedule = false;
+        Backbone.trigger("unhover-complete", this.cid);
+        return Backbone.trigger("unhover-schedule", this.cid);
       },
       onHover: function(e) {
         if (e.type === "mouseenter") {
@@ -46,7 +48,6 @@
       },
       onMouseMove: function(e) {
         var mousePos;
-        console.log("Mouse move");
         if (window.app.todos.any(function(model) {
           return model.get("selected");
         })) {
