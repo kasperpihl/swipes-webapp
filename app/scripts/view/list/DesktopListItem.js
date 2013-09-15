@@ -3,19 +3,13 @@
     return BaseListItemView.extend({
       events: {
         "click": "toggleSelected",
-        "mouseenter .todo-content": "onHover",
-        "mouseleave .todo-content": "onHover"
+        "mouseenter .todo-content": "trackMouse",
+        "mouseleave .todo-content": "stopTrackingMouse"
       },
       init: function() {
-        var _this = this;
         this.throttledOnMouseMove = _.throttle(this.onMouseMove, 250);
-        _.bindAll(this, "onHover", "onMouseMove", "throttledOnMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule");
-        this.width = this.$el.width();
-        this.x = this.$el.offset().left;
-        $(window).on("resize", function() {
-          _this.width = _this.$el.width();
-          return _this.x = _this.$el.offset().left;
-        });
+        _.bindAll(this, "setBounds", "onMouseMove", "throttledOnMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule");
+        $(window).on("resize", this.setBounds);
         Backbone.on("hover-complete", this.onHoverComplete);
         Backbone.on("hover-schedule", this.onHoverSchedule);
         Backbone.on("unhover-complete", this.onUnhoverComplete);
@@ -26,28 +20,30 @@
         currentlySelected = this.model.get("selected") || false;
         return this.model.set("selected", !currentlySelected);
       },
+      setBounds: function() {
+        return this.bounds = this.el.getClientRects()[0];
+      },
       getMousePos: function(mouseX) {
-        mouseX = mouseX - this.x;
-        return Math.round((mouseX / this.width) * 100);
+        if (!this.bounds) {
+          this.setBounds();
+        }
+        return Math.round(((mouseX - this.bounds.left) / this.bounds.width) * 100);
       },
       trackMouse: function() {
+        this.allowThrottledMoveHandler = true;
         return this.$el.on("mousemove", this.throttledOnMouseMove);
       },
       stopTrackingMouse: function() {
         this.$el.off("mousemove");
         this.isHoveringComplete = this.isHoveringSchedule = false;
+        this.allowThrottledMoveHandler = false;
         Backbone.trigger("unhover-complete", this.cid);
         return Backbone.trigger("unhover-schedule", this.cid);
       },
-      onHover: function(e) {
-        if (e.type === "mouseenter") {
-          return this.trackMouse();
-        } else if (e.type === "mouseleave") {
-          return this.stopTrackingMouse();
-        }
-      },
       onMouseMove: function(e) {
-        var mousePos;
+        if (!this.allowThrottledMoveHandler) {
+          return;
+        }
         if (window.app.todos.any(function(model) {
           return model.get("selected");
         })) {
@@ -55,7 +51,9 @@
             return false;
           }
         }
-        mousePos = this.getMousePos(e.pageX);
+        return this.determineUserIntent(this.getMousePos(e.pageX));
+      },
+      determineUserIntent: function(mousePos) {
         if (mousePos <= 15 && this.isHoveringComplete !== true) {
           Backbone.trigger("hover-complete", this.cid);
           this.isHoveringComplete = true;
