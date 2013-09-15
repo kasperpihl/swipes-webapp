@@ -69,10 +69,10 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 				@$el.addClass "hover-complete"
 		onHoverSchedule: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				@$el.removeClass "hover-complete"
+				@$el.addClass "hover-schedule"
 		onUnhoverComplete: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				@$el.addClass "hover-schedule"
+				@$el.removeClass "hover-complete"
 		onUnhoverSchedule: (target) ->
 			if @model.get( "selected" ) or target is @cid
 				@$el.removeClass "hover-schedule"

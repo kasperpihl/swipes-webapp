@@ -1,26 +1,17 @@
 (function() {
-  define(["underscore", "backbone"], function(_, Backbone) {
+  define(["underscore", "backbone", "text!templates/list-item.html"], function(_, Backbone, ListItemTmpl) {
     return Backbone.View.extend({
       tagName: "li",
       initialize: function() {
-        var _this = this;
         _.bindAll(this, "onSelected");
         this.model.on("change:selected", this.onSelected);
-        return this.setTemplate().then(function() {
-          _this.init();
-          _this.content = _this.$el.find('.todo-content');
-          return _this.render();
-        });
+        this.setTemplate();
+        this.init();
+        this.content = this.$el.find('.todo-content');
+        return this.render();
       },
       setTemplate: function() {
-        var dfd,
-          _this = this;
-        dfd = new $.Deferred();
-        require(["text!templates/list-item.html"], function(ListItemTmpl) {
-          _this.template = _.template(ListItemTmpl);
-          return dfd.resolve();
-        });
-        return dfd.promise();
+        return this.template = _.template(ListItemTmpl);
       },
       init: function() {},
       onSelected: function(model, selected) {

@@ -73,22 +73,22 @@
       },
       onHoverComplete: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return console.log("Hover: Complete");
+          return this.$el.addClass("hover-complete");
         }
       },
       onHoverSchedule: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return console.log("Hover: Schedule");
+          return this.$el.addClass("hover-schedule");
         }
       },
       onUnhoverComplete: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return console.log("Unhover: Complete");
+          return this.$el.removeClass("hover-complete");
         }
       },
       onUnhoverSchedule: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return console.log("Unhover: Schedule");
+          return this.$el.removeClass("hover-schedule");
         }
       },
       customCleanUp: function() {
