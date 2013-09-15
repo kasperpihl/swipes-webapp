@@ -42,6 +42,18 @@
 	.selected .todo-content {
 		background: #f3f3f3;
 	}
+
+	.hover-complete {
+		.todo-content {
+			background: $green;
+		}
+	}
+
+	.hover-schedule {
+		.todo-content {
+			background: $lobster;
+		}
+	}
 	
 	.tasks > li:last-child .todo-content:after { content: none; }
 	
