@@ -66,16 +66,16 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 
 		onHoverComplete: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				console.log "Hover: Complete"
+				@$el.addClass "hover-complete"
 		onHoverSchedule: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				console.log "Hover: Schedule"
+				@$el.removeClass "hover-complete"
 		onUnhoverComplete: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				console.log "Unhover: Complete"
+				@$el.addClass "hover-schedule"
 		onUnhoverSchedule: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				console.log "Unhover: Schedule"
+				@$el.removeClass "hover-schedule"
 
 		customCleanUp: ->
 			$(window).off()
