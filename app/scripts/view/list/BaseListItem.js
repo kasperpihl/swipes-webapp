@@ -4,8 +4,8 @@
       tagName: "li",
       initialize: function() {
         var _this = this;
-        _.bindAll(this, "handleSelected");
-        this.model.on("change:selected", this.handleSelected);
+        _.bindAll(this, "onSelected");
+        this.model.on("change:selected", this.onSelected);
         return this.setTemplate().then(function() {
           _this.init();
           _this.content = _this.$el.find('.todo-content');
@@ -23,8 +23,7 @@
         return dfd.promise();
       },
       init: function() {},
-      handleSelected: function(model, selected) {
-        console.log("BaseListItem selected changed to: ", selected);
+      onSelected: function(model, selected) {
         return this.$el.toggleClass("selected", selected);
       },
       render: function() {
@@ -37,8 +36,10 @@
       remove: function() {
         return this.cleanUp();
       },
+      customCleanUp: function() {},
       cleanUp: function() {
-        return this.model.off();
+        this.model.off();
+        return this.customCleanUp();
       }
     });
   });

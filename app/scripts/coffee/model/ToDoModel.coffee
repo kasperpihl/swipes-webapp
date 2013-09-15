@@ -26,7 +26,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			parsedDate = moment schedule
 
 			# Check if parsedDate is in the past
-			if parsedDate.isBefore() then return @set( "scheduleString", "past" )
+			if parsedDate.isBefore() then return @set( "scheduleString", "the past" )
 
 			# If difference is more than 1 week, we want different formatting
 			dayDiff = parsedDate.diff( now, "days" )

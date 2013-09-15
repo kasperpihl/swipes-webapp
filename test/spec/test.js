@@ -94,15 +94,17 @@
       });
     });
     return require(["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopListItem"], function(ToDoCollection, Model, View) {
-      return describe("List Item View", function() {
-        helpers.renderTodoList().then(function() {
+      return helpers.renderTodoList().then(function() {
+        var list;
+        list = contentHolder.find(".todo ol");
+        (function() {
           var model, view;
           model = new Model(helpers.getListItemModels()[0]);
           view = new View({
             model: model
           });
-          describe("Selection", function() {
-            contentHolder.find(".todo ol").append(view.el);
+          describe("To Do View: Selecting", function() {
+            list.append(view.el);
             view.$el.click();
             it("Should toggle selected property on model when clicked", function() {
               return expect(model.get("selected")).to.be["true"];
@@ -111,23 +113,36 @@
               return expect(view.$el.hasClass("selected")).to.be["true"];
             });
           });
-          return contentHolder.empty();
-        });
-        return describe("Hovering", function() {
-          var model, todos, _i, _len, _ref;
-          todos = new ToDoCollection();
-          _ref = helpers.getListItemModels();
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            model = _ref[_i];
-            todos.add(model);
+          return list.empty();
+        })();
+        return (function() {
+          var model, todos, view, views, _i, _len;
+          todos = new ToDoCollection(helpers.getListItemModels());
+          views = (function() {
+            var _i, _len, _ref, _results;
+            _ref = todos.models;
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              model = _ref[_i];
+              _results.push(new View({
+                model: model
+              }));
+            }
+            return _results;
+          })();
+          for (_i = 0, _len = views.length; _i < _len; _i++) {
+            view = views[_i];
+            list.append(view.el);
           }
-          return helpers.renderTodoList().then(function() {
-            it("Should trigger a 'allow-toggle-completed' event when hovering any task on the left edge", function() {});
-            it("Should trigger a 'allow-toggle-schedule' event when hovering any task on the right edge", function() {});
-            it("All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are 'selected'", function() {});
-            return it("All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are the current hovered view, no matter if they are selected or not", function() {});
+          return describe("To Do View: Hovering", function() {
+            it("All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are 'selected'", function() {
+              return expect(2).to.be.lessThan(1);
+            });
+            return it("All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are the current hovered view, no matter if they are selected or not", function() {
+              return expect(2).to.be.lessThan(1);
+            });
           });
-        });
+        })();
       });
     });
   });

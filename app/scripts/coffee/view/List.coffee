@@ -79,6 +79,8 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			
 			col = new Backbone.Collection()
 			type = if Modernizr.touch then "Touch" else "Desktop"
+
+			window.app.todos = col
 			
 			# Remove any old HTML
 			@$el.empty()

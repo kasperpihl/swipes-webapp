@@ -2,9 +2,9 @@ define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
-			_.bindAll( @, "handleSelected" )
+			_.bindAll( @, "onSelected" )
 			
-			@model.on( "change:selected", @handleSelected )
+			@model.on( "change:selected", @onSelected )
 			
 			@setTemplate().then =>		
 				@init()
@@ -18,9 +18,9 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			return dfd.promise()
 		init: ->
 			# Hook for views extending me
-		handleSelected: (model, selected) ->
-			console.log "BaseListItem selected changed to: ", selected
+		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
+
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @el if !@template?
@@ -30,5 +30,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			return @el
 		remove: ->
 			@cleanUp()
+		customCleanUp: ->
+			# Hook for views extending me
 		cleanUp: ->
 			@model.off()
+			@customCleanUp()

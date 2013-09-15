@@ -31,7 +31,7 @@
         now = moment();
         parsedDate = moment(schedule);
         if (parsedDate.isBefore()) {
-          return this.set("scheduleString", "past");
+          return this.set("scheduleString", "the past");
         }
         dayDiff = parsedDate.diff(now, "days");
         if (dayDiff > 7) {

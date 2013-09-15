@@ -91,6 +91,7 @@
         items = this.getDummyData();
         col = new Backbone.Collection();
         type = Modernizr.touch ? "Touch" : "Desktop";
+        window.app.todos = col;
         this.$el.empty();
         return require(["model/ToDoModel", "view/list/" + type + "ListItem"], function(Model, ListItemView) {
           var $html, group, list, m, obj, tasksJSON, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;

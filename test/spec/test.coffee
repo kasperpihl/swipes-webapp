@@ -109,15 +109,16 @@ require [
 	# To Do View
 	#
 	require ["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopListItem"], (ToDoCollection, Model, View) ->
-		describe "List Item View", ->
-		
-			helpers.renderTodoList().then ->
+		helpers.renderTodoList().then ->
+			list = contentHolder.find(".todo ol")
+
+			do ->
 				model = new Model helpers.getListItemModels()[0]
 				view = new View { model }
 				
-				describe "Selection", ->
+				describe "To Do View: Selecting", ->
 
-					contentHolder.find(".todo ol").append view.el
+					list.append view.el
 					view.$el.click()
 				
 					it "Should toggle selected property on model when clicked", ->
@@ -125,25 +126,19 @@ require [
 					
 					it "Should toggle selected class on element when clicked", ->
 						expect( view.$el.hasClass "selected" ).to.be.true
+				
+				list.empty()
 
-				contentHolder.empty()
+			do ->
+				todos = new ToDoCollection helpers.getListItemModels()
+				views = ( new View( model: model ) for model in todos.models )
+				list.append view.el for view in views
+				
+				describe "To Do View: Hovering", ->
 
-			describe "Hovering", ->
-				todos = new ToDoCollection()
-				for model in helpers.getListItemModels()
-					todos.add model
-
-				helpers.renderTodoList().then ->
-
-					it "Should trigger a 'allow-toggle-completed' event when hovering any task on the left edge", ->
-						# Lyt på event emits fra Backbone obj.
-						# expect(2).to.be.lessThan 1
-					it "Should trigger a 'allow-toggle-schedule' event when hovering any task on the right edge", ->
-						# Lyt på event emits fra Backbone obj.
-						# expect(2).to.be.lessThan 1
 					it "All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are 'selected'", ->
 						# Lyt på event emits fra Backbone obj.
-						# expect(2).to.be.lessThan 1
+						expect(2).to.be.lessThan 1
 					it "All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are the current hovered view, no matter if they are selected or not", ->
 						# Maybe compare e.currentTarget to self like if (selected is true or e.currentTarget is @)
-						# expect(2).to.be.lessThan 1
+						expect(2).to.be.lessThan 1
