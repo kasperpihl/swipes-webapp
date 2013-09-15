@@ -103,7 +103,7 @@
           view = new View({
             model: model
           });
-          describe("To Do View: Selecting", function() {
+          return describe("To Do View: Selecting", function() {
             list.append(view.el);
             view.$el.click();
             it("Should toggle selected property on model when clicked", function() {
@@ -113,30 +113,121 @@
               return expect(view.$el.hasClass("selected")).to.be["true"];
             });
           });
-          return list.empty();
         })();
         return (function() {
-          var model, todos, view, views, _i, _len;
-          todos = new ToDoCollection(helpers.getListItemModels());
-          views = (function() {
-            var _i, _len, _ref, _results;
-            _ref = todos.models;
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              model = _ref[_i];
-              _results.push(new View({
-                model: model
-              }));
-            }
-            return _results;
-          })();
-          for (_i = 0, _len = views.length; _i < _len; _i++) {
-            view = views[_i];
-            list.append(view.el);
-          }
+          var todos, views;
+          todos = views = null;
           return describe("To Do View: Hovering", function() {
-            it("All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are 'selected'", function() {});
-            return it("All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are the current hovered view, no matter if they are selected or not", function() {});
+            beforeEach(function() {
+              var model, view, _i, _len, _results;
+              list.empty();
+              todos = new ToDoCollection(helpers.getListItemModels());
+              views = (function() {
+                var _i, _len, _ref, _results;
+                _ref = todos.models;
+                _results = [];
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  model = _ref[_i];
+                  _results.push(new View({
+                    model: model
+                  }));
+                }
+                return _results;
+              })();
+              _results = [];
+              for (_i = 0, _len = views.length; _i < _len; _i++) {
+                view = views[_i];
+                _results.push(list.append(view.el));
+              }
+              return _results;
+            });
+            after(function() {
+              return contentHolder.empty();
+            });
+            it("Should be unresponsive to 'hover-complete' event when not selected", function() {
+              var count, view, _i, _len;
+              Backbone.trigger("hover-complete");
+              count = 0;
+              for (_i = 0, _len = views.length; _i < _len; _i++) {
+                view = views[_i];
+                if (view.$el.hasClass("hover-complete")) {
+                  count++;
+                }
+              }
+              return expect(count).to.equal(0);
+            });
+            it("Should be unresponsive to 'hover-schedule' event when not selected", function() {
+              var count, view, _i, _len;
+              Backbone.trigger("hover-schedule");
+              count = 0;
+              for (_i = 0, _len = views.length; _i < _len; _i++) {
+                view = views[_i];
+                if (view.$el.hasClass("hover-schedule")) {
+                  count++;
+                }
+              }
+              return expect(count).to.equal(0);
+            });
+            it("Should get the 'hover-complete' CSS class when 'hover-complete' event is triggered when selected", function() {
+              var count, view, _i, _len;
+              views[0].model.set("selected", true);
+              views[1].model.set("selected", true);
+              Backbone.trigger("hover-complete");
+              count = 0;
+              for (_i = 0, _len = views.length; _i < _len; _i++) {
+                view = views[_i];
+                if (view.$el.hasClass("hover-complete")) {
+                  count++;
+                }
+              }
+              return expect(count).to.equal(2);
+            });
+            it("Should remove the 'hover-complete' CSS class when 'unhover-complete' event is triggered when selected", function() {
+              var count, view, _i, _len;
+              views[0].model.set("selected", true);
+              views[1].model.set("selected", true);
+              views[0].$el.addClass("hover-complete");
+              views[1].$el.addClass("hover-complete");
+              Backbone.trigger("unhover-complete");
+              count = 0;
+              for (_i = 0, _len = views.length; _i < _len; _i++) {
+                view = views[_i];
+                if (view.$el.hasClass("hover-complete")) {
+                  count++;
+                }
+              }
+              return expect(count).to.equal(0);
+            });
+            it("Should get the 'hover-schedule' CSS class when 'hover-schedule' event is triggered when selected", function() {
+              var count, view, _i, _len;
+              views[0].model.set("selected", true);
+              views[1].model.set("selected", true);
+              Backbone.trigger("hover-schedule");
+              count = 0;
+              for (_i = 0, _len = views.length; _i < _len; _i++) {
+                view = views[_i];
+                if (view.$el.hasClass("hover-schedule")) {
+                  count++;
+                }
+              }
+              return expect(count).to.equal(2);
+            });
+            return it("Should remove the 'hover-schedule' CSS class when 'unhover-schedule' event is triggered when selected", function() {
+              var count, view, _i, _len;
+              views[0].model.set("selected", true);
+              views[1].model.set("selected", true);
+              views[0].$el.addClass("hover-schedule");
+              views[1].$el.addClass("hover-schedule");
+              Backbone.trigger("unhover-schedule");
+              count = 0;
+              for (_i = 0, _len = views.length; _i < _len; _i++) {
+                view = views[_i];
+                if (view.$el.hasClass("hover-schedule")) {
+                  count++;
+                }
+              }
+              return expect(count).to.equal(0);
+            });
           });
         })();
       });

@@ -118,6 +118,7 @@ require [
 				
 				describe "To Do View: Selecting", ->
 
+
 					list.append view.el
 					view.$el.click()
 				
@@ -127,18 +128,85 @@ require [
 					it "Should toggle selected class on element when clicked", ->
 						expect( view.$el.hasClass "selected" ).to.be.true
 				
-				list.empty()
 
 			do ->
-				todos = new ToDoCollection helpers.getListItemModels()
-				views = ( new View( model: model ) for model in todos.models )
-				list.append view.el for view in views
-				
-				describe "To Do View: Hovering", ->
+				todos = views = null
 
-					it "All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are 'selected'", ->
-						# Lyt på event emits fra Backbone obj.
-						# expect(2).to.be.lessThan 1
-					it "All views should listen for 'allow-toggle-completed' and 'allow-toggle-schedule' event and toggle if they are the current hovered view, no matter if they are selected or not", ->
-						# Maybe compare e.currentTarget to self like if (selected is true or e.currentTarget is @)
-						# expect(2).to.be.lessThan 1
+				describe "To Do View: Hovering", ->
+					beforeEach ->
+						# Clear out list to remove any 'unsanitary' data
+						list.empty()
+						todos = new ToDoCollection helpers.getListItemModels()
+						views = ( new View( model: model ) for model in todos.models )
+						list.append view.el for view in views
+
+					after ->
+						contentHolder.empty()
+
+
+					it "Should be unresponsive to 'hover-complete' event when not selected", ->
+						Backbone.trigger "hover-complete"
+						count = 0
+						count++ for view in views when view.$el.hasClass "hover-complete"
+
+						expect( count ).to.equal 0
+
+					it "Should be unresponsive to 'hover-schedule' event when not selected", ->
+						Backbone.trigger "hover-schedule"
+						count = 0
+						count++ for view in views when view.$el.hasClass "hover-schedule"
+
+						expect( count ).to.equal 0
+					
+
+					it "Should get the 'hover-complete' CSS class when 'hover-complete' event is triggered when selected", ->
+						# Make 2 views selected
+						views[0].model.set( "selected", true )
+						views[1].model.set( "selected", true )
+
+						Backbone.trigger "hover-complete"
+						
+						count = 0
+						count++ for view in views when view.$el.hasClass "hover-complete"
+
+						expect( count ).to.equal 2
+
+					it "Should remove the 'hover-complete' CSS class when 'unhover-complete' event is triggered when selected", ->
+						# Make 2 views selected
+						views[0].model.set( "selected", true )
+						views[1].model.set( "selected", true )
+
+						views[0].$el.addClass "hover-complete"
+						views[1].$el.addClass "hover-complete"
+
+						Backbone.trigger "unhover-complete"
+						count = 0
+						count++ for view in views when view.$el.hasClass "hover-complete"
+
+						expect( count ).to.equal 0
+
+					it "Should get the 'hover-schedule' CSS class when 'hover-schedule' event is triggered when selected", ->
+						# Make 2 views selected
+						views[0].model.set( "selected", true )
+						views[1].model.set( "selected", true )
+
+						Backbone.trigger "hover-schedule"
+						
+						count = 0
+						count++ for view in views when view.$el.hasClass "hover-schedule"
+
+						expect( count ).to.equal 2
+
+					it "Should remove the 'hover-schedule' CSS class when 'unhover-schedule' event is triggered when selected", ->
+						# Make 2 views selected
+						views[0].model.set( "selected", true )
+						views[1].model.set( "selected", true )
+
+						views[0].$el.addClass "hover-schedule"
+						views[1].$el.addClass "hover-schedule"
+
+						Backbone.trigger "unhover-schedule"
+						count = 0
+						count++ for view in views when view.$el.hasClass "hover-schedule"
+
+						expect( count ).to.equal 0
