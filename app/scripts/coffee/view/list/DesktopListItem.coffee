@@ -1,12 +1,15 @@
-define ["view/list/BaseListItem"], (BaseListItemView) ->
+define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 	BaseListItemView.extend
 		events: 
 			"click": "toggleSelected"
 			"mouseenter .todo-content": "onHover"
 			"mouseleave .todo-content": "onHover"
 		init: ->
-			_.bindAll( @, "onHover", "onMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule" )
+			@throttledOnMouseMove = _.throttle( @onMouseMove, 250 )
 			
+			_.bindAll( @, "onHover", "onMouseMove", "throttledOnMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule" )
+			
+
 			@width = @$el.width()
 			@x = @$el.offset().left
 			
@@ -26,15 +29,24 @@ define ["view/list/BaseListItem"], (BaseListItemView) ->
 			mouseX = mouseX - @x # Adjust for view positoin on the page
 			Math.round ( mouseX / @width ) * 100
 		trackMouse: ->
-			@$el.on( "mousemove", @onMouseMove )
+			@$el.on( "mousemove", @throttledOnMouseMove )
 		stopTrackingMouse: ->
 			@$el.off "mousemove"
 			@isHoveringComplete = @isHoveringSchedule = false	
+
+
 		onHover: (e) ->
 			if e.type is "mouseenter" then @trackMouse()
 			else if e.type is "mouseleave" then @stopTrackingMouse()
 		onMouseMove: (e) ->
-			# Ignore move events from sub nodes
+			console.log "Mouse move"
+
+			# If we have any todos selected, but the hover target isnt
+			# selected, just ignore any movement
+			if window.app.todos.any( (model) -> model.get("selected") )
+				if not @model.get "selected"
+					return false
+
 			mousePos = @getMousePos e.pageX
 
 			if mousePos <= 15 and @isHoveringComplete isnt true
@@ -54,44 +66,16 @@ define ["view/list/BaseListItem"], (BaseListItemView) ->
 				@isHoveringSchedule = false
 
 		onHoverComplete: (target) ->
-			noTodosAreSelected = !window.app.todos.any (model) -> model.get("selected")
-			
-			if noTodosAreSelected 
-				if target is @cid
-					console.log "Hover: Complete (None selected)"
-			
-			# Else check if todo is selected
-			else if @model.get( "selected" )
+			if @model.get( "selected" ) or target is @cid
 				console.log "Hover: Complete"
 		onHoverSchedule: (target) ->
-			noTodosAreSelected = !window.app.todos.any (model) -> model.get("selected")
-			
-			if noTodosAreSelected 
-				if target is @cid
-					console.log "Hover: Schedule (None selected)"
-			
-			# Else check if todo is selected
-			else if @model.get( "selected" )
+			if @model.get( "selected" ) or target is @cid
 				console.log "Hover: Schedule"
 		onUnhoverComplete: (target) ->
-			noTodosAreSelected = !window.app.todos.any (model) -> model.get("selected")
-			
-			if noTodosAreSelected 
-				if target is @cid
-					console.log "Unhover: Complete (None selected)"
-			
-			# Else check if todo is selected
-			else if @model.get( "selected" )
+			if @model.get( "selected" ) or target is @cid
 				console.log "Unhover: Complete"
 		onUnhoverSchedule: (target) ->
-			noTodosAreSelected = !window.app.todos.any (model) -> model.get("selected")
-			
-			if noTodosAreSelected 
-				if target is @cid
-					console.log "Unhover: Schedule (None selected)"
-			
-			# Else check if todo is selected
-			else if @model.get( "selected" )
+			if @model.get( "selected" ) or target is @cid
 				console.log "Unhover: Schedule"
 
 		customCleanUp: ->
