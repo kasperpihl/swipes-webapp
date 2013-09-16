@@ -2,8 +2,8 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 	BaseListItemView.extend
 		events: 
 			"click": "toggleSelected"
-			"mouseenter .todo-content": "trackMouse"
-			"mouseleave .todo-content": "stopTrackingMouse"
+			"mouseenter": "trackMouse"
+			"mouseleave": "stopTrackingMouse"
 		init: ->
 			@throttledOnMouseMove = _.throttle( @onMouseMove, 250 )
 			

@@ -1,13 +1,17 @@
 // General task styling
-.todo-list {
-	
+.todo-list {	
 	ol { padding: 0; }
 
 	.todo-content { 
 		position: relative;
 		padding: 3em 3em 3em 28%;
+		background: white;
 
-		@include transition(background 0.15s);
+		@include transition(
+			background 0.15s,
+			left 0.25s ease-in-out,
+			right 0.25s ease-in-out
+		);
 
 		&:before, &:after { content: ""; position: absolute; }
 		
@@ -39,22 +43,6 @@
 		}
 	}
 
-	.selected .todo-content {
-		background: #f3f3f3;
-	}
-
-	.hover-complete {
-		.todo-content {
-			background: $green;
-		}
-	}
-
-	.hover-schedule {
-		.todo-content {
-			background: $lobster;
-		}
-	}
-	
 	.tasks > li:last-child .todo-content:after { content: none; }
 	
 	h2 {
@@ -95,7 +83,61 @@
 		}
 	}
 }
-	
+
+// action buttons
+.todo-list {
+	.action {
+		position: absolute;
+		display: block;
+		
+		width: 105px; 
+		height: 100%;
+
+		line-height: 105px;
+		text-align: center;
+		color: white;
+		text-decoration: none;
+		font-size: 1.7em;
+		
+		span {
+			opacity: 0.7;
+			@include transition(opacity 0.1s ease-out);
+		}
+
+		&:hover { 
+			span { opacity: 1; }
+		}
+
+		&.complete {
+			left: 0;
+			background: $green;
+		}
+
+		&.schedule {
+			right: 0;
+			background: $lobster;
+		}
+	}
+}
+
+// Various states for tasks
+.todo-list {
+	.selected .todo-content {
+		background: #f3f3f3;
+	}
+
+	.hover-complete {
+		.todo-content {
+			left: 95px;
+		}
+	}
+
+	.hover-schedule {
+		.todo-content {
+			right: 95px;
+		}
+	}
+}
 
 // Styling for completed and scheduled tasks
 .todo-list {

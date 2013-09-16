@@ -3,8 +3,8 @@
     return BaseListItemView.extend({
       events: {
         "click": "toggleSelected",
-        "mouseenter .todo-content": "trackMouse",
-        "mouseleave .todo-content": "stopTrackingMouse"
+        "mouseenter": "trackMouse",
+        "mouseleave": "stopTrackingMouse"
       },
       init: function() {
         this.throttledOnMouseMove = _.throttle(this.onMouseMove, 250);
