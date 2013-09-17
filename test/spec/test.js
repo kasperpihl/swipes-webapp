@@ -3,7 +3,7 @@
     var contentHolder, helpers;
     contentHolder = $("#content-holder");
     helpers = {
-      getListItemModels: function() {
+      getDummyModels: function() {
         return [
           {
             title: "Follow up on Martin",
@@ -15,10 +15,10 @@
             tags: ["work", "client"],
             notes: ""
           }, {
-            title: "Dummy task #3",
+            title: "Completed Dummy task #3",
             order: 2,
             schedule: new Date(),
-            completionDate: null,
+            completionDate: new Date("July 12, 2013 11:51:45"),
             repeatOption: "never",
             repeatDate: null,
             tags: ["work", "client"],
@@ -81,7 +81,7 @@
         it("Should create timeStr property when model is instantiated", function() {
           return expect(model.get("timeStr")).to.exist;
         });
-        it("Should update timeStr when schedule property is changed", function() {
+        return it("Should update timeStr when schedule property is changed", function() {
           var date, timeAfterChange, timeBeforeChange;
           timeBeforeChange = model.get("timeStr");
           date = model.get("schedule");
@@ -91,24 +91,41 @@
           timeAfterChange = model.get("timeStr");
           return expect(timeBeforeChange).to.not.equal(timeAfterChange);
         });
-        it("ScheduleString should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", function() {
-          return expect(2).to.be.lessThan(1);
-        });
-        return it("ScheduleString should be a real date (Not Thursday) for instance, when completion date is more than a week ago", function() {
-          return expect(2).to.be.lessThan(1);
-        });
       });
     });
-    require(["collection/ToDoCollection"], function(Collection) {
+    require(["collection/ToDoCollection", "model/ToDoModel"], function(ToDoCollection, ToDo) {
       return describe("To Do collection", function() {
-        it("Should be able to return all tasks to do right now", function() {
-          return expect(2).to.be.lessThan(1);
+        var todos;
+        todos = null;
+        beforeEach(function() {
+          var completedTask, future, now, past, scheduledTask, todoTask;
+          now = new Date();
+          future = new Date();
+          past = new Date();
+          future.setDate(now.getDate() + 1);
+          past.setDate(now.getDate() - 1);
+          scheduledTask = new ToDo({
+            title: "scheduled task",
+            schedule: future
+          });
+          todoTask = new ToDo({
+            title: "todo task",
+            schedule: now
+          });
+          completedTask = new ToDo({
+            title: "completed task",
+            completionDate: past
+          });
+          return todos = new ToDoCollection([scheduledTask, todoTask, completedTask]);
         });
-        it("Should be able to return all scheduled tasks", function() {
-          return expect(2).to.be.lessThan(1);
+        it("getActive() should return all tasks to do right now", function() {
+          return expect(todos.getActive().length).to.equal(1);
         });
-        return it("Should be able to return all completed tasks", function() {
-          return expect(2).to.be.lessThan(1);
+        it("getScheduled() Should return all scheduled tasks", function() {
+          return expect(todos.getScheduled().length).to.equal(1);
+        });
+        return it("getCompleted() Should return all completed tasks", function() {
+          return expect(todos.getCompleted().length).to.equal(1);
         });
       });
     });
@@ -118,7 +135,7 @@
         list = contentHolder.find(".todo ol");
         (function() {
           var model, view;
-          model = new Model(helpers.getListItemModels()[0]);
+          model = new Model(helpers.getDummyModels()[0]);
           view = new View({
             model: model
           });
@@ -140,7 +157,7 @@
             beforeEach(function() {
               var model, view, _i, _len, _results;
               list.empty();
-              todos = new ToDoCollection(helpers.getListItemModels());
+              todos = new ToDoCollection(helpers.getDummyModels());
               views = (function() {
                 var _i, _len, _ref, _results;
                 _ref = todos.models;

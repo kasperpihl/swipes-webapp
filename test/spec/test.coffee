@@ -8,7 +8,7 @@ require [
 	contentHolder = $("#content-holder")
 	
 	helpers = 
-		getListItemModels: ->
+		getDummyModels: ->
 			[
 					title: "Follow up on Martin"
 					order: 0
@@ -19,10 +19,10 @@ require [
 					tags: ["work", "client"]
 					notes: ""
 				,
-					title: "Dummy task #3"
+					title: "Completed Dummy task #3"
 					order: 2
 					schedule: new Date()
-					completionDate: null
+					completionDate: new Date("July 12, 2013 11:51:45")
 					repeatOption: "never"
 					repeatDate: null
 					tags: ["work", "client"]
@@ -105,25 +105,41 @@ require [
 				
 				expect( timeBeforeChange ).to.not.equal timeAfterChange
 
-			it "ScheduleString should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
-				expect(2).to.be.lessThan 1
+			# it "ScheduleString should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
+				# expect(2).to.be.lessThan 1
 
-			it "ScheduleString should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
-				expect(2).to.be.lessThan 1
+			# it "ScheduleString should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
+				# expect(2).to.be.lessThan 1
 
 	#
 	# To Do Collection
 	#
-	require ["collection/ToDoCollection"], (Collection) ->
+	require ["collection/ToDoCollection", "model/ToDoModel"], (ToDoCollection, ToDo) ->
 		describe "To Do collection", ->
-			it "Should be able to return all tasks to do right now", ->
-				expect(2).to.be.lessThan 1
+			todos = null
+
+			beforeEach ->
+				now = new Date()
+				future = new Date()
+				past = new Date()
+
+				future.setDate now.getDate() + 1
+				past.setDate now.getDate() - 1
+
+				scheduledTask = new ToDo { title: "scheduled task", schedule: future }
+				todoTask = new ToDo { title: "todo task", schedule: now }
+				completedTask = new ToDo { title: "completed task", completionDate: past }
+				
+				todos = new ToDoCollection [scheduledTask, todoTask, completedTask]
+
+			it "getActive() should return all tasks to do right now", ->
+				expect(todos.getActive().length).to.equal 1
 			
-			it "Should be able to return all scheduled tasks", ->
-				expect(2).to.be.lessThan 1
+			it "getScheduled() Should return all scheduled tasks", ->
+				expect(todos.getScheduled().length).to.equal 1
 			
-			it "Should be able to return all completed tasks", ->
-				expect(2).to.be.lessThan 1
+			it "getCompleted() Should return all completed tasks", ->
+				expect(todos.getCompleted().length).to.equal 1
 
 	#
 	# To Do View
@@ -133,7 +149,7 @@ require [
 			list = contentHolder.find(".todo ol")
 
 			do ->
-				model = new Model helpers.getListItemModels()[0]
+				model = new Model helpers.getDummyModels()[0]
 				view = new View { model }
 				
 				describe "To Do View: Selecting", ->
@@ -156,7 +172,7 @@ require [
 					beforeEach ->
 						# Clear out list to remove any 'unsanitary' data
 						list.empty()
-						todos = new ToDoCollection helpers.getListItemModels()
+						todos = new ToDoCollection helpers.getDummyModels()
 						views = ( new View( model: model ) for model in todos.models )
 						list.append view.el for view in views
 
