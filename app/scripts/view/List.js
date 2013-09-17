@@ -29,14 +29,17 @@
           return _results;
         })();
       },
+      getListItems: function() {
+        return swipy.todos.getActive();
+      },
       renderList: function() {
-        var todos, type,
+        var type,
           _this = this;
         type = Modernizr.touch ? "Touch" : "Desktop";
-        todos = swipy.todos.getActive();
-        this.$el.empty();
         return require(["view/list/" + type + "ListItem"], function(ListItemView) {
-          var $html, group, list, model, tasksJSON, _i, _j, _len, _len1, _ref, _ref1;
+          var $html, group, list, model, tasksJSON, todos, _i, _j, _len, _len1, _ref, _ref1;
+          _this.$el.empty();
+          todos = _this.getListItems();
           _ref = _this.groupTasks(todos);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             group = _ref[_i];

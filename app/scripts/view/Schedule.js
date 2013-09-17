@@ -1,7 +1,9 @@
 (function() {
   define(['view/List'], function(ListView) {
     return ListView.extend({
-      renderList: function() {}
+      getListItems: function() {
+        return swipy.todos.getScheduled();
+      }
     });
   });
 
