@@ -15,7 +15,7 @@
         return this.filter(function(m) {
           var schedule;
           schedule = m.getValidatedSchedule();
-          if (!schedule) {
+          if (!schedule || m.get("completionDate")) {
             return false;
           } else {
             return schedule.getTime() < now;
@@ -31,7 +31,7 @@
       getCompleted: function() {
         var _this = this;
         return this.filter(function(m) {
-          return m.get("completionDate") !== null;
+          return m.get("completionDate") != null;
         });
       }
     });
