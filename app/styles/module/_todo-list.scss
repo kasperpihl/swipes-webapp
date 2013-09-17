@@ -47,6 +47,19 @@
 	}
 }
 
+// Colors for schedule and completed lists
+.todo-list.schedule > li {
+	border-top-color: $lobster;
+	h1 { background: $lobster; color: white; }
+	h1:before { @include divider-triangle($lobster) }
+}
+
+.todo-list.completed > li {
+	border-top-color: $green;
+	h1 { background: $green; color: white; }
+	h1:before { @include divider-triangle($green) }
+}
+
 .list-fade {
 	z-index: 999;
 	
