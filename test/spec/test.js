@@ -60,7 +60,7 @@
     };
     describe("Basics", function() {
       return it("App should be up and running", function() {
-        return expect(window.app).to.exist;
+        return expect(swipy).to.exist;
       });
     });
     require(["model/ToDoModel"], function(Model) {

@@ -9,7 +9,7 @@
       Swipes.prototype.init = function() {
         this.viewController = new ViewController();
         this.router = new MainRouter();
-        this.collection = new ToDoCollection();
+        this.todos = new ToDoCollection();
         Backbone.history.start({
           pushState: false
         });
@@ -18,7 +18,7 @@
       };
 
       Swipes.prototype.update = function() {
-        return this.collection.fetch();
+        return this.todos.fetch();
       };
 
       return Swipes;

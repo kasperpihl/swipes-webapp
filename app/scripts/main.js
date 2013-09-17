@@ -95,8 +95,9 @@ require.config({
     }
 });
 
-require(["jquery", "app", "plugins/log"], function ($, App) {
+require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, DebugHelper) {
     'use strict';
     window.$ = window.jQuery = $;
-    window.app = new App();
+    window.swipy = new App();
+    window.debugHelper = new DebugHelper();
 });

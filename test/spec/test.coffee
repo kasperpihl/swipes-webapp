@@ -65,7 +65,7 @@ require [
 	#
 	describe "Basics", ->
 		it "App should be up and running", ->
-			expect( window.app ).to.exist
+			expect( swipy ).to.exist
 
 	#
 	# To Do Model

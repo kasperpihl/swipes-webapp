@@ -9,11 +9,11 @@ define [
 		init: ->
 			@viewController = new ViewController()
 			@router = new MainRouter()
-			@collection = new ToDoCollection()
+			@todos = new ToDoCollection()
 
 			Backbone.history.start { pushState: no }
 			@update()
 			
 			$(".add-new input").focus()
 		update: ->
-			@collection.fetch()
+			@todos.fetch()

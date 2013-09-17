@@ -3,7 +3,6 @@ define ["gsap"], (TweenLite) ->
 		constructor: (opts) ->
 			@init()
 			@navLinks = $ ".list-nav a"
-			@lists = $ "ol.todo-list"
 		init: ->
 			# Listen for navigation events
 			$(document).on( 'navigate/page', (e, slug) => @goto slug )
@@ -14,9 +13,9 @@ define ["gsap"], (TweenLite) ->
 		
 		updateNavigation: (slug) =>
 			@navLinks.each ->
-				link = $(@)
-				isCurrLink = if link.attr("href")[1...] is slug then yes else no
-				link.toggleClass( 'active', isCurrLink )
+				link = $ @
+				isCurrLink = if link.attr( "href" )[1...] is slug then yes else no
+				link.toggleClass( "active", isCurrLink )
 		
 		transitionViews: (slug) ->
 			# Make first letter uppercase

@@ -44,7 +44,7 @@
         if (!this.allowThrottledMoveHandler) {
           return;
         }
-        if (window.app.todos.any(function(model) {
+        if (swipy.todos.any(function(model) {
           return model.get("selected");
         })) {
           if (!this.model.get("selected")) {

@@ -8,7 +8,6 @@
         this.updateNavigation = __bind(this.updateNavigation, this);
         this.init();
         this.navLinks = $(".list-nav a");
-        this.lists = $("ol.todo-list");
       }
 
       ViewController.prototype.init = function() {
@@ -28,7 +27,7 @@
           var isCurrLink, link;
           link = $(this);
           isCurrLink = link.attr("href").slice(1) === slug ? true : false;
-          return link.toggleClass('active', isCurrLink);
+          return link.toggleClass("active", isCurrLink);
         });
       };
 

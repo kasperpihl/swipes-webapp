@@ -41,7 +41,7 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 			
 			# If we have any todos selected, but the hover target isnt
 			# selected, simply ignore any movement
-			if window.app.todos.any( (model) -> model.get("selected") )
+			if swipy.todos.any( (model) -> model.get("selected") )
 				if not @model.get "selected"
 					return false
 
