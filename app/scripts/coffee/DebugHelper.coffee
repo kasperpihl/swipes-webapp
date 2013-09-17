@@ -13,7 +13,7 @@ define [
 					title: "Follow up on Martin"
 					order: 0
 					schedule: new Date("September 19, 2013 16:30:02")
-					completionDate: null
+					completionDate: new Date("September 02, 2013 11:51:34")
 					repeatOption: "never"
 					repeatDate: null
 					tags: ["work", "client"]
