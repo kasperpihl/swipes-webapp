@@ -1,4 +1,14 @@
 .container {
+	max-width: emCalc(685px);
+
+	@include breakpoint(desktop) {
+		@include transition(max-width 0.5s ease-out);
+	}
+
+	@include breakpoint(desktop-wide) {
+		max-width: emCalc(850px);
+	}
+
 	header.add-new {
 		margin: emCalc(58px) 0 emCalc(43px);
 	}
