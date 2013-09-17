@@ -14,7 +14,7 @@
         now = new Date().getTime();
         return this.filter(function(m) {
           var schedule;
-          schedule = m.get("schedule");
+          schedule = m.getValidatedSchedule();
           if (!schedule) {
             return false;
           } else {

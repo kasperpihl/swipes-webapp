@@ -18,6 +18,14 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
+		getValidatedSchedule: ->
+			schedule = @get "schedule"
+			if !schedule then return false
+
+			if typeof schedule is "string"
+				@set( "schedule", new Date schedule )
+
+			return @get "schedule"
 		setScheduleStr: ->
 			schedule = @get "schedule"
 			if !schedule then return @unset "scheduleString"

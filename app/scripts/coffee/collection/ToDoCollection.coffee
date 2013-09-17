@@ -7,9 +7,11 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 		getActive: -> 
 			now = new Date().getTime()
 			@filter (m) => 
-				schedule = m.get("schedule")
-				if !schedule then return false
-				else return schedule.getTime() < now
+				schedule = m.getValidatedSchedule()
+				if !schedule
+					return false
+				else 
+					return schedule.getTime() < now
 		getScheduled: -> 
 			@where 
 				schedule: null

@@ -22,6 +22,17 @@
           return _this.setTimeStr();
         });
       },
+      getValidatedSchedule: function() {
+        var schedule;
+        schedule = this.get("schedule");
+        if (!schedule) {
+          return false;
+        }
+        if (typeof schedule === "string") {
+          this.set("schedule", new Date(schedule));
+        }
+        return this.get("schedule");
+      },
       setScheduleStr: function() {
         var calendarWithoutTime, dayDiff, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
