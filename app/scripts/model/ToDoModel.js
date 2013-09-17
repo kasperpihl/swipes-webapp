@@ -4,7 +4,7 @@
       defaults: {
         title: "",
         order: 0,
-        schedule: new Date(),
+        schedule: null,
         completionDate: null,
         repeatOption: "never",
         repeatDate: null,
@@ -15,12 +15,21 @@
       },
       initialize: function() {
         var _this = this;
+        if (this.get("schedule") === null) {
+          this.set("schedule", this.getDefaultSchedule());
+        }
         this.setScheduleStr();
         this.setTimeStr();
         return this.on("change:schedule", function() {
           _this.setScheduleStr();
           return _this.setTimeStr();
         });
+      },
+      getDefaultSchedule: function() {
+        var now;
+        now = new Date();
+        now.setSeconds(now.getSeconds() - 1);
+        return now;
       },
       getValidatedSchedule: function() {
         var schedule;
@@ -37,7 +46,12 @@
         var calendarWithoutTime, dayDiff, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
         if (!schedule) {
-          return this.unset("scheduleString");
+          if (this.get("completionDate")) {
+            this.set("scheduleString", "the past");
+            return this.get("scheduleString");
+          } else {
+            return false;
+          }
         }
         now = moment();
         parsedDate = moment(schedule);

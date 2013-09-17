@@ -3,7 +3,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 		defaults: 
 			title: ""
 			order: 0
-			schedule: new Date()
+			schedule: null
 			completionDate: null
 			repeatOption: "never"
 			repeatDate: null
@@ -12,12 +12,19 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			notes: ""
 			deleted: no
 		initialize: ->
+			# Schedule defaults to a new date object 1 second in the past
+			@set( "schedule", @getDefaultSchedule() ) if @get( "schedule" ) is null
+
 			@setScheduleStr()
 			@setTimeStr()
-			
+
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
+		getDefaultSchedule: ->
+			now = new Date()
+			now.setSeconds now.getSeconds() - 1
+			return now
 		getValidatedSchedule: ->
 			schedule = @get "schedule"
 			if !schedule then return false
@@ -28,7 +35,12 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			return @get "schedule"
 		setScheduleStr: ->
 			schedule = @get "schedule"
-			if !schedule then return @unset "scheduleString"
+			if !schedule 
+				if @get "completionDate"
+					@set( "scheduleString", "the past" )
+					return @get "scheduleString"
+				else
+					return false
 
 			now = moment()
 			parsedDate = moment schedule
