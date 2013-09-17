@@ -6,7 +6,8 @@ define [
 		constructor: ->
 			@setDummyTodos()
 		setDummyTodos: ->
-			swipy.todos.add @getDummyData()
+			# Reset collection with dummy data
+			swipy.todos.reset @getDummyData()
 		getDummyData: ->
 			[
 					title: "Follow up on Martin"

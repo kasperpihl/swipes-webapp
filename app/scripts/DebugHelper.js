@@ -7,7 +7,7 @@
       }
 
       DebugHelper.prototype.setDummyTodos = function() {
-        return swipy.todos.add(this.getDummyData());
+        return swipy.todos.reset(this.getDummyData());
       };
 
       DebugHelper.prototype.getDummyData = function() {
@@ -16,7 +16,7 @@
             title: "Follow up on Martin",
             order: 0,
             schedule: new Date("September 19, 2013 16:30:02"),
-            completionDate: null,
+            completionDate: new Date("September 11, 2013 12:15:32"),
             repeatOption: "never",
             repeatDate: null,
             tags: ["work", "client"],
