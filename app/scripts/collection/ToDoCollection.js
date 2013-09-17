@@ -23,9 +23,9 @@
         });
       },
       getScheduled: function() {
-        return this.where({
-          schedule: null,
-          completionDate: null
+        var _this = this;
+        return this.filter(function(m) {
+          return m.get("scheduleString") !== "the past";
         });
       },
       getCompleted: function() {
