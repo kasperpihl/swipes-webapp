@@ -41,7 +41,9 @@
             el: "ol.todo-list." + slug
           });
           if (_this.currView != null) {
-            return _this.transitionOut(_this.currView).then(_this.transitionIn(newView));
+            return _this.transitionOut(_this.currView).then(function() {
+              return _this.transitionIn(newView);
+            });
           } else {
             return _this.transitionIn(newView);
           }
@@ -60,20 +62,24 @@
             return dfd.resolve();
           }
         };
-        TweenLite.to(view.$el, 0.1, opts);
+        TweenLite.to(view.$el, 0.15, opts);
         return dfd.promise();
       };
 
       ViewController.prototype.transitionIn = function(view) {
-        var dfd;
+        var dfd, opts,
+          _this = this;
         dfd = new $.Deferred();
-        view.$el.removeClass("hidden");
-        TweenLite.fromTo(view.$el, 0.2, {
-          alpha: 0
-        }, {
+        opts = {
           alpha: 1,
-          onComplete: dfd.resolve
-        });
+          onComplete: function() {
+            return dfd.resolve();
+          }
+        };
+        view.$el.removeClass("hidden");
+        TweenLite.fromTo(view.$el, 0.4, {
+          alpha: 0
+        }, opts);
         this.currView = view;
         return dfd.promise();
       };

@@ -25,7 +25,8 @@ define ["gsap"], (TweenLite) ->
 				newView = new View( el: "ol.todo-list.#{ slug }" )
 
 				if @currView? 
-					@transitionOut( @currView ).then @transitionIn newView
+					@transitionOut( @currView ).then =>
+						@transitionIn newView
 				else
 					@transitionIn newView
 
@@ -39,15 +40,19 @@ define ["gsap"], (TweenLite) ->
 					view.cleanUp()
 					dfd.resolve()
 
-			TweenLite.to( view.$el, 0.1, opts )
+			TweenLite.to( view.$el, 0.15, opts )
 			
 			return dfd.promise()
-		
 		transitionIn: (view) ->
 			dfd = new $.Deferred()
 			
+			opts = 
+				alpha: 1
+				onComplete: =>
+					dfd.resolve()
+
 			view.$el.removeClass "hidden"
-			TweenLite.fromTo( view.$el, 0.2, { alpha: 0 }, { alpha: 1, onComplete: dfd.resolve } )
+			TweenLite.fromTo( view.$el, 0.4, { alpha: 0 }, opts )
 			
 			@currView = view
 			
