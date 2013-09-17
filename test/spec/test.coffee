@@ -105,6 +105,26 @@ require [
 				
 				expect( timeBeforeChange ).to.not.equal timeAfterChange
 
+			it "ScheduleString should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
+				expect(2).to.be.lessThan 1
+
+			it "ScheduleString should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
+				expect(2).to.be.lessThan 1
+
+	#
+	# To Do Collection
+	#
+	require ["collection/ToDoCollection"], (Collection) ->
+		describe "To Do collection", ->
+			it "Should be able to return all tasks to do right now", ->
+				expect(2).to.be.lessThan 1
+			
+			it "Should be able to return all scheduled tasks", ->
+				expect(2).to.be.lessThan 1
+			
+			it "Should be able to return all completed tasks", ->
+				expect(2).to.be.lessThan 1
+
 	#
 	# To Do View
 	#
@@ -210,3 +230,28 @@ require [
 						count++ for view in views when view.$el.hasClass "hover-schedule"
 
 						expect( count ).to.equal 0
+
+	#
+	# Scheduled list View
+	#
+	require ["view/Schedule"], (ScheduleView) ->
+		describe "Schedule list view", ->
+			it "Should order tasks by chronological order", ->
+				expect(2).to.be.lessThan 1
+
+
+	#
+	# To do list View
+	#
+	require ["view/Todo"], (ToDoView) ->
+		describe "To Do list view", ->
+			it "Should order tasks by models 'order' property", ->
+				expect(2).to.be.lessThan 1
+	
+	#
+	# Completed list View
+	#
+	require ["view/Completed"], (CompletedView) ->
+		describe "Schedule list view", ->
+			it "Should order tasks by chronological order", ->
+				expect(2).to.be.lessThan 1

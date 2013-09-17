@@ -81,7 +81,7 @@
         it("Should create timeStr property when model is instantiated", function() {
           return expect(model.get("timeStr")).to.exist;
         });
-        return it("Should update timeStr when schedule property is changed", function() {
+        it("Should update timeStr when schedule property is changed", function() {
           var date, timeAfterChange, timeBeforeChange;
           timeBeforeChange = model.get("timeStr");
           date = model.get("schedule");
@@ -91,9 +91,28 @@
           timeAfterChange = model.get("timeStr");
           return expect(timeBeforeChange).to.not.equal(timeAfterChange);
         });
+        it("ScheduleString should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        return it("ScheduleString should be a real date (Not Thursday) for instance, when completion date is more than a week ago", function() {
+          return expect(2).to.be.lessThan(1);
+        });
       });
     });
-    return require(["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopListItem"], function(ToDoCollection, Model, View) {
+    require(["collection/ToDoCollection"], function(Collection) {
+      return describe("To Do collection", function() {
+        it("Should be able to return all tasks to do right now", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        it("Should be able to return all scheduled tasks", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        return it("Should be able to return all completed tasks", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+      });
+    });
+    require(["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopListItem"], function(ToDoCollection, Model, View) {
       return helpers.renderTodoList().then(function() {
         var list;
         list = contentHolder.find(".todo ol");
@@ -230,6 +249,27 @@
             });
           });
         })();
+      });
+    });
+    require(["view/Schedule"], function(ScheduleView) {
+      return describe("Schedule list view", function() {
+        return it("Should order tasks by chronological order", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+      });
+    });
+    require(["view/Todo"], function(ToDoView) {
+      return describe("To Do list view", function() {
+        return it("Should order tasks by models 'order' property", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+      });
+    });
+    return require(["view/Completed"], function(CompletedView) {
+      return describe("Schedule list view", function() {
+        return it("Should order tasks by chronological order", function() {
+          return expect(2).to.be.lessThan(1);
+        });
       });
     });
   });
