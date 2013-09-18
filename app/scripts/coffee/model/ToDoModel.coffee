@@ -27,8 +27,10 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				@setCompletionStr()
 				@setCompletionTimeStr()
 			
-			if @has "completionDate" then @setCompletionStr()
-		
+			if @has "completionDate" 
+				@setCompletionStr()
+				@setCompletionTimeStr()
+
 		getDefaultSchedule: ->
 			now = new Date()
 			now.setSeconds now.getSeconds() - 1

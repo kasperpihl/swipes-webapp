@@ -29,7 +29,8 @@
           return _this.setCompletionTimeStr();
         });
         if (this.has("completionDate")) {
-          return this.setCompletionStr();
+          this.setCompletionStr();
+          return this.setCompletionTimeStr();
         }
       },
       getDefaultSchedule: function() {
