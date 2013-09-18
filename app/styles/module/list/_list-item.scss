@@ -98,12 +98,15 @@
 		
 		width: 105px; 
 		height: 100%;
+		background: transparent;
 
 		line-height: 105px;
 		text-align: center;
 		color: white;
 		text-decoration: none;
 		font-size: 1.7em;
+
+		@include transition(0.2s ease-in-out);
 		
 		span {
 			opacity: 0.7;
@@ -113,15 +116,13 @@
 		&:hover { 
 			span { opacity: 1; }
 		}
-
+		
 		&.complete {
 			left: 0;
-			background: $green;
 		}
 
 		&.schedule {
 			right: 0;
-			background: $lobster;
 		}
 	}
 }
@@ -133,15 +134,13 @@
 	}
 
 	.hover-complete {
-		.todo-content {
-			left: 95px;
-		}
+		.todo-content { left: 95px; }
+		.action.complete { background: $green; }
 	}
 
 	.hover-schedule {
-		.todo-content {
-			right: 95px;
-		}
+		.todo-content { right: 95px; }
+		.action.schedule { background: $lobster; }
 	}
 }
 
