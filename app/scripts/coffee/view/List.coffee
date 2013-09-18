@@ -10,7 +10,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			@subviews = []
 
 			# Render the list whenever it updates
-			swipy.todos.on( "change", @renderList, @ )
+			swipy.todos.on( "add remove reset", @renderList, @ )
 		render: ->
 			@renderList()
 			return @

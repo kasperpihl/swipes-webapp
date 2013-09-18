@@ -5,7 +5,7 @@
       init: function() {
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
-        return swipy.todos.on("change", this.renderList, this);
+        return swipy.todos.on("add remove reset", this.renderList, this);
       },
       render: function() {
         this.renderList();
