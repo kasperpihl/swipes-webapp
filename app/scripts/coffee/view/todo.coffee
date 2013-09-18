@@ -1,4 +1,4 @@
 define ["view/List"], (ListView) ->
 	ListView.extend
-		customCleanUp: ->
-			
+		sortTasks: (tasks) ->
+			return _.sortBy tasks, (model) -> model.get("order")

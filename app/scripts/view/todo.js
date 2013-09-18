@@ -1,7 +1,11 @@
 (function() {
   define(["view/List"], function(ListView) {
     return ListView.extend({
-      customCleanUp: function() {}
+      sortTasks: function(tasks) {
+        return _.sortBy(tasks, function(model) {
+          return model.get("order");
+        });
+      }
     });
   });
 
