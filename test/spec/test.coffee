@@ -255,6 +255,14 @@ require [
 	#
 	# Scheduled list View
 	#
+	require ["view/List", "model/ToDoModel"], (ListView, ToDo) ->
+		describe "Base list view", ->
+			it "Should remove all nested children when transitionOut occurs", ->
+				expect( 2 ).to.be.lessThan 1
+
+	#
+	# Scheduled list View
+	#
 	require ["view/Schedule", "model/ToDoModel"], (ScheduleView, ToDo) ->
 		laterToday = new Date()
 		tomorrow = new Date()

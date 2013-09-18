@@ -38,7 +38,6 @@ define [
 					notes: ""
 				,
 					title: "Renew Wired Magazine subscription"
-					order: 3
 					schedule: new Date("September 17, 2013 20:30:02")
 					completionDate: null
 					repeatOption: "never"
@@ -46,22 +45,21 @@ define [
 					tags: ["Personal", "Home"]
 					notes: ""
 				,
-					title: "Get a Haircut"
-					order: 4
-					schedule: new Date("September 17, 2013 23:59:02")
-					completionDate: null
-					repeatOption: "never"
-					repeatDate: null
-					#tags: ["Errand", "Home"]
-					notes: ""
-				,
 					title: "Clean up the house"
-					order: 5
+					order: 2
 					schedule: new Date("September 16, 2013 22:30:02")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
 					tags: ["Errand", "City"]
+					notes: ""
+				,
+					title: "Get a Haircut"
+					schedule: new Date("September 17, 2013 23:59:02")
+					completionDate: null
+					repeatOption: "never"
+					repeatDate: null
+					#tags: ["Errand", "Home"]
 					notes: ""
 			]
 		

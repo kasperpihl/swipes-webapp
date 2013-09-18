@@ -273,6 +273,13 @@
         })();
       });
     });
+    require(["view/List", "model/ToDoModel"], function(ListView, ToDo) {
+      return describe("Base list view", function() {
+        return it("Should remove all nested children when transitionOut occurs", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+      });
+    });
     require(["view/Schedule", "model/ToDoModel"], function(ScheduleView, ToDo) {
       var laterToday, nextMonth, now, todos, tomorrow, view;
       laterToday = new Date();
