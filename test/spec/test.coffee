@@ -75,7 +75,7 @@ require [
 			model = new Model()
 
 			it "Should create scheduleStr property when instantiated", ->
-				expect( model.get("scheduleString") ).to.equal "the past"
+				expect( model.get("scheduleStr") ).to.equal "the past"
 			
 			it "Should update scheduleStr when schedule property is changed", ->
 				date = model.get "schedule"
@@ -86,7 +86,7 @@ require [
 				date.setDate date.getDate()+1
 				model.set( "schedule", date )
 
-				expect( model.get("scheduleString") ).to.equal "Tomorrow"
+				expect( model.get("scheduleStr") ).to.equal "Tomorrow"
 
 			it "Should create timeStr property when model is instantiated", ->
 				expect( model.get("timeStr") ).to.exist
@@ -105,10 +105,15 @@ require [
 				
 				expect( timeBeforeChange ).to.not.equal timeAfterChange
 
-			# it "ScheduleString should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
+			it "Should update completedStr when completionDate is changed", ->
+				model.set( "completionDate", new Date() )
+				expect( model.get "completionStr" ).to.exist
+				expect( model.get "completionTimeStr" ).to.exist
+
+			# it "ScheduleStr should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
 				# expect(2).to.be.lessThan 1
 
-			# it "ScheduleString should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
+			# it "completedStr should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
 				# expect(2).to.be.lessThan 1
 
 	#
@@ -294,19 +299,19 @@ require [
 	# Completed list View
 	#
 	require ["view/Completed", "model/ToDoModel"], (CompletedView, ToDo) ->
-		laterToday = new Date()
-		tomorrow = new Date()
-		nextMonth = new Date()
+		earlierToday = new Date()
+		yesterday = new Date()
+		prevMonth = new Date()
 		now = new Date()
 
-		laterToday.setHours now.getHours() + 1
-		tomorrow.setDate now.getDate() + 1
-		nextMonth.setMonth now.getMonth() + 1
+		earlierToday.setHours now.getHours() - 1
+		yesterday.setDate now.getDate() - 1
+		prevMonth.setMonth now.getMonth() - 1
 
 		todos = [
-			new ToDo( { title: "In a month", schedule: nextMonth } )
-			new ToDo( { title: "Tomorrow", schedule: tomorrow } ), 
-			new ToDo( { title: "In 1 hour", schedule: laterToday } ), 
+			new ToDo( { title: "Last month", completionDate: prevMonth } )
+			new ToDo( { title: "Yesterday", completionDate: yesterday } ), 
+			new ToDo( { title: "An hour ago", completionDate: earlierToday } ), 
 		]
 
 		view = new CompletedView()
@@ -314,7 +319,7 @@ require [
 		describe "Completed list view", ->
 			it "Should order tasks by chronological order", ->
 				result = view.groupTasks todos
-				expect(result[0].deadline).to.equal "Later today"
-				expect(result[1].deadline).to.equal "Tomorrow"
+				expect(result[0].deadline).to.equal "Earlier today"
+				expect(result[1].deadline).to.equal "Yesterday"
 
 				# If 1 and 2 is correct we know that 3 is too.

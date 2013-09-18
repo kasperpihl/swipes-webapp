@@ -68,7 +68,7 @@
         var model;
         model = new Model();
         it("Should create scheduleStr property when instantiated", function() {
-          return expect(model.get("scheduleString")).to.equal("the past");
+          return expect(model.get("scheduleStr")).to.equal("the past");
         });
         it("Should update scheduleStr when schedule property is changed", function() {
           var date;
@@ -76,12 +76,12 @@
           model.unset("schedule");
           date.setDate(date.getDate() + 1);
           model.set("schedule", date);
-          return expect(model.get("scheduleString")).to.equal("Tomorrow");
+          return expect(model.get("scheduleStr")).to.equal("Tomorrow");
         });
         it("Should create timeStr property when model is instantiated", function() {
           return expect(model.get("timeStr")).to.exist;
         });
-        return it("Should update timeStr when schedule property is changed", function() {
+        it("Should update timeStr when schedule property is changed", function() {
           var date, timeAfterChange, timeBeforeChange;
           timeBeforeChange = model.get("timeStr");
           date = model.get("schedule");
@@ -90,6 +90,11 @@
           model.set("schedule", date);
           timeAfterChange = model.get("timeStr");
           return expect(timeBeforeChange).to.not.equal(timeAfterChange);
+        });
+        return it("Should update completedStr when completionDate is changed", function() {
+          model.set("completionDate", new Date());
+          expect(model.get("completionStr")).to.exist;
+          return expect(model.get("completionTimeStr")).to.exist;
         });
       });
     });
@@ -324,24 +329,24 @@
       });
     });
     return require(["view/Completed", "model/ToDoModel"], function(CompletedView, ToDo) {
-      var laterToday, nextMonth, now, todos, tomorrow, view;
-      laterToday = new Date();
-      tomorrow = new Date();
-      nextMonth = new Date();
+      var earlierToday, now, prevMonth, todos, view, yesterday;
+      earlierToday = new Date();
+      yesterday = new Date();
+      prevMonth = new Date();
       now = new Date();
-      laterToday.setHours(now.getHours() + 1);
-      tomorrow.setDate(now.getDate() + 1);
-      nextMonth.setMonth(now.getMonth() + 1);
+      earlierToday.setHours(now.getHours() - 1);
+      yesterday.setDate(now.getDate() - 1);
+      prevMonth.setMonth(now.getMonth() - 1);
       todos = [
         new ToDo({
-          title: "In a month",
-          schedule: nextMonth
+          title: "Last month",
+          completionDate: prevMonth
         }), new ToDo({
-          title: "Tomorrow",
-          schedule: tomorrow
+          title: "Yesterday",
+          completionDate: yesterday
         }), new ToDo({
-          title: "In 1 hour",
-          schedule: laterToday
+          title: "An hour ago",
+          completionDate: earlierToday
         })
       ];
       view = new CompletedView();
@@ -349,8 +354,8 @@
         return it("Should order tasks by chronological order", function() {
           var result;
           result = view.groupTasks(todos);
-          expect(result[0].deadline).to.equal("Later today");
-          return expect(result[1].deadline).to.equal("Tomorrow");
+          expect(result[0].deadline).to.equal("Earlier today");
+          return expect(result[1].deadline).to.equal("Yesterday");
         });
       });
     });
