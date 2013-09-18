@@ -2,7 +2,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 	Backbone.Model.extend
 		defaults: 
 			title: ""
-			order: 0
+			order: undefined
 			schedule: null
 			completionDate: null
 			repeatOption: "never"
