@@ -5,6 +5,15 @@
         return _.sortBy(tasks, function(model) {
           return model.get("order");
         });
+      },
+      groupTasks: function(tasksArr) {
+        tasksArr = this.sortTasks(tasksArr);
+        return [
+          {
+            deadline: "Tasks",
+            tasks: tasksArr
+          }
+        ];
       }
     });
   });
