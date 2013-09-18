@@ -12,7 +12,9 @@
         return this;
       },
       sortTasks: function(tasks) {
-        return tasks;
+        return _.sortBy(tasks, function(model) {
+          return model.get("schedule").getTime();
+        });
       },
       groupTasks: function(tasksArr) {
         var deadline, tasks, tasksByDate;

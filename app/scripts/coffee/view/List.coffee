@@ -15,7 +15,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			@renderList()
 			return @
 		sortTasks: (tasks) ->
-			return tasks
+			return _.sortBy tasks, (model) -> model.get( "schedule" ).getTime()
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "scheduleString" )
