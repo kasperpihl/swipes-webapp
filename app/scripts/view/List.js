@@ -43,8 +43,9 @@
           _this = this;
         type = Modernizr.touch ? "Touch" : "Desktop";
         return require(["view/list/" + type + "ListItem"], function(ListItemView) {
-          var $html, group, list, model, tasksJSON, todos, _i, _j, _len, _len1, _ref, _ref1;
+          var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
           _this.$el.empty();
+          _this.killSubViews();
           todos = _this.getListItems();
           _ref = _this.groupTasks(todos);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -58,26 +59,30 @@
             _ref1 = group.tasks;
             for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
               model = _ref1[_j];
-              list.append(new ListItemView({
+              view = new ListItemView({
                 model: model
-              }).el);
+              });
+              _this.subviews.push(view);
+              list.append(view.el);
             }
             _this.$el.append($html);
           }
           return _this.afterRenderList(todos);
         });
       },
-      afterRenderList: function(collection) {},
-      customCleanUp: function() {
-        var view, _i, _len, _ref, _results;
-        swipy.todos.off();
+      afterRenderList: function(todos) {},
+      killSubViews: function() {
+        var view, _i, _len, _ref;
         _ref = this.subviews;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
-          _results.push(view.remove());
+          view.remove();
         }
-        return _results;
+        return this.subviews = [];
+      },
+      customCleanUp: function() {
+        swipy.todos.off();
+        return this.killSubViews();
       }
     });
   });

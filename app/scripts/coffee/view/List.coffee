@@ -29,6 +29,8 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			require ["view/list/#{type}ListItem"], (ListItemView) =>
 				# Remove any old HTML before appending new stuff.
 				@$el.empty()
+				@killSubViews()
+
 				todos = @getListItems()
 
 				for group in @groupTasks todos
@@ -37,16 +39,20 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 					list = $html.find "ol"
 					
 					for model in group.tasks
-						list.append new ListItemView( { model } ).el
+						view = new ListItemView( { model } )
+						@subviews.push view
+						list.append view.el
 
 					@$el.append $html
 
 				@afterRenderList todos
 
-		afterRenderList: (collection) ->
+		afterRenderList: (todos) ->
 			# Hook for other views
+		killSubViews: ->
+			view.remove() for view in @subviews
+			@subviews = []
 		customCleanUp: ->
 			# Unbind all events
 			swipy.todos.off()
-			
-			view.remove() for view in @subviews
+			@killSubViews()
