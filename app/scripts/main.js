@@ -20,6 +20,8 @@ require.config({
         gsap: '../bower_components/greensock-js/src/uncompressed/TweenLite',
         'gsap-easing': '../bower_components/greensock-js/src/uncompressed/easing/EasePack',
         'gsap-css': '../bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin',
+        'gsap-throwprops': '../bower_components/greensock-js/src/uncompressed/plugins/ThrowPropsPlugin',
+        'gsap-draggable': '../bower_components/greensock-js/src/uncompressed/utils/Draggable',
         text: '../bower_components/requirejs-text/text',
         momentjs: '../bower_components/momentjs/moment',
         'requirejs-text': '../bower_components/requirejs-text/text'
@@ -91,6 +93,12 @@ require.config({
                 'gsap-css'
             ],
             exports: 'TweenLite'
+        },
+        'gsap-draggable': {
+            deps: [
+                'gsap-throwprops'
+            ],
+            exports: 'Draggable'
         }
     }
 });
