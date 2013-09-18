@@ -280,14 +280,15 @@ require [
 	# To do list View
 	#
 	require ["view/Todo", "model/ToDoModel"], (ToDoView, ToDo) ->
-		todos = [ new ToDo(), new ToDo(), new ToDo() ]
+		todos = [ new ToDo( title: "three" ), new ToDo( title: "two", order: 2 ), new ToDo( title: "one", order: 1 ) ]
 		view = new ToDoView()
 
 		describe "To Do list view", ->
 			it "Should order tasks by models 'order' property", ->
 				result = view.groupTasks todos
-				expect(result[0].deadline).to.equal "Later today"
-				expect(result[1].deadline).to.equal "Tomorrow"
+				expect(result[0].tasks[0].get "title").to.equal "one"
+				expect(result[0].tasks[1].get "title").to.equal "two"
+				expect(result[0].tasks[2].get "title").to.equal "three"
 	
 	#
 	# Completed list View

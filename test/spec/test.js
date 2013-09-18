@@ -301,14 +301,25 @@
     });
     require(["view/Todo", "model/ToDoModel"], function(ToDoView, ToDo) {
       var todos, view;
-      todos = [new ToDo(), new ToDo(), new ToDo()];
+      todos = [
+        new ToDo({
+          title: "three"
+        }), new ToDo({
+          title: "two",
+          order: 2
+        }), new ToDo({
+          title: "one",
+          order: 1
+        })
+      ];
       view = new ToDoView();
       return describe("To Do list view", function() {
         return it("Should order tasks by models 'order' property", function() {
           var result;
           result = view.groupTasks(todos);
-          expect(result[0].deadline).to.equal("Later today");
-          return expect(result[1].deadline).to.equal("Tomorrow");
+          expect(result[0].tasks[0].get("title")).to.equal("one");
+          expect(result[0].tasks[1].get("title")).to.equal("two");
+          return expect(result[0].tasks[2].get("title")).to.equal("three");
         });
       });
     });
