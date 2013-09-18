@@ -38,13 +38,6 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 			Backbone.trigger( "unhover-schedule", @.cid )
 		onMouseMove: (e) ->
 			return unless @allowThrottledMoveHandler
-			
-			# If we have any todos selected, but the hover target isnt
-			# selected, simply ignore any movement
-			if swipy.todos.any( (model) -> model.get("selected") )
-				if not @model.get "selected"
-					return false
-
 			@determineUserIntent @getMousePos e.pageX
 		determineUserIntent: (mousePos) ->
 			if mousePos <= 15 and @isHoveringComplete isnt true

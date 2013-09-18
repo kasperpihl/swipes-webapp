@@ -44,13 +44,6 @@
         if (!this.allowThrottledMoveHandler) {
           return;
         }
-        if (swipy.todos.any(function(model) {
-          return model.get("selected");
-        })) {
-          if (!this.model.get("selected")) {
-            return false;
-          }
-        }
         return this.determineUserIntent(this.getMousePos(e.pageX));
       },
       determineUserIntent: function(mousePos) {
