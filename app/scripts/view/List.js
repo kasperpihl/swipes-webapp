@@ -11,8 +11,12 @@
         this.renderList();
         return this;
       },
+      sortTasks: function(tasks) {
+        return tasks;
+      },
       groupTasks: function(tasksArr) {
         var deadline, tasks, tasksByDate;
+        tasksArr = this.sortTasks(tasksArr);
         tasksByDate = _.groupBy(tasksArr, function(m) {
           return m.get("scheduleString");
         });

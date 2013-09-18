@@ -14,7 +14,10 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 		render: ->
 			@renderList()
 			return @
+		sortTasks: (tasks) ->
+			return tasks
 		groupTasks: (tasksArr) ->
+			tasksArr = @sortTasks tasksArr
 			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "scheduleString" )
 			return ( { deadline, tasks } for deadline, tasks of tasksByDate )
 		getListItems: ->
