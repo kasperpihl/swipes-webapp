@@ -250,24 +250,70 @@ require [
 	#
 	# Scheduled list View
 	#
-	require ["view/Schedule"], (ScheduleView) ->
+	require ["view/Schedule", "model/ToDoModel"], (ScheduleView, ToDo) ->
+		laterToday = new Date()
+		tomorrow = new Date()
+		nextMonth = new Date()
+		now = new Date()
+
+		laterToday.setHours now.getHours() + 1
+		tomorrow.setDate now.getDate() + 1
+		nextMonth.setMonth now.getMonth() + 1
+
+		todos = [
+			new ToDo( { title: "In a month", schedule: nextMonth } )
+			new ToDo( { title: "Tomorrow", schedule: tomorrow } ), 
+			new ToDo( { title: "In 1 hour", schedule: laterToday } ), 
+		]
+
+		view = new ScheduleView()
+
 		describe "Schedule list view", ->
 			it "Should order tasks by chronological order", ->
-				expect(2).to.be.lessThan 1
+				result = view.groupTasks todos
+				expect(result[0].deadline).to.equal "Later today"
+				expect(result[1].deadline).to.equal "Tomorrow"
 
+				# If 1 and 2 is correct we know that 3 is too.
 
 	#
 	# To do list View
 	#
-	require ["view/Todo"], (ToDoView) ->
+	require ["view/Todo", "model/ToDoModel"], (ToDoView, ToDo) ->
+		todos = [ new ToDo(), new ToDo(), new ToDo() ]
+		view = new ToDoView()
+
 		describe "To Do list view", ->
 			it "Should order tasks by models 'order' property", ->
-				expect(2).to.be.lessThan 1
+				result = view.groupTasks todos
+				expect(result[0].deadline).to.equal "Later today"
+				expect(result[1].deadline).to.equal "Tomorrow"
 	
 	#
 	# Completed list View
 	#
-	require ["view/Completed"], (CompletedView) ->
-		describe "Schedule list view", ->
+	require ["view/Completed", "model/ToDoModel"], (CompletedView, ToDo) ->
+		laterToday = new Date()
+		tomorrow = new Date()
+		nextMonth = new Date()
+		now = new Date()
+
+		laterToday.setHours now.getHours() + 1
+		tomorrow.setDate now.getDate() + 1
+		nextMonth.setMonth now.getMonth() + 1
+
+		todos = [
+			new ToDo( { title: "In a month", schedule: nextMonth } )
+			new ToDo( { title: "Tomorrow", schedule: tomorrow } ), 
+			new ToDo( { title: "In 1 hour", schedule: laterToday } ), 
+		]
+
+		view = new CompletedView()
+
+		describe "Completed list view", ->
 			it "Should order tasks by chronological order", ->
-				expect(2).to.be.lessThan 1
+				result = view.groupTasks todos
+				expect(result[0].deadline).to.equal "Later today"
+				expect(result[1].deadline).to.equal "Tomorrow"
+
+				# If 1 and 2 is correct we know that 3 is too.

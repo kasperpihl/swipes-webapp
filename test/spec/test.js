@@ -268,24 +268,78 @@
         })();
       });
     });
-    require(["view/Schedule"], function(ScheduleView) {
+    require(["view/Schedule", "model/ToDoModel"], function(ScheduleView, ToDo) {
+      var laterToday, nextMonth, now, todos, tomorrow, view;
+      laterToday = new Date();
+      tomorrow = new Date();
+      nextMonth = new Date();
+      now = new Date();
+      laterToday.setHours(now.getHours() + 1);
+      tomorrow.setDate(now.getDate() + 1);
+      nextMonth.setMonth(now.getMonth() + 1);
+      todos = [
+        new ToDo({
+          title: "In a month",
+          schedule: nextMonth
+        }), new ToDo({
+          title: "Tomorrow",
+          schedule: tomorrow
+        }), new ToDo({
+          title: "In 1 hour",
+          schedule: laterToday
+        })
+      ];
+      view = new ScheduleView();
       return describe("Schedule list view", function() {
         return it("Should order tasks by chronological order", function() {
-          return expect(2).to.be.lessThan(1);
+          var result;
+          result = view.groupTasks(todos);
+          expect(result[0].deadline).to.equal("Later today");
+          return expect(result[1].deadline).to.equal("Tomorrow");
         });
       });
     });
-    require(["view/Todo"], function(ToDoView) {
+    require(["view/Todo", "model/ToDoModel"], function(ToDoView, ToDo) {
+      var todos, view;
+      todos = [new ToDo(), new ToDo(), new ToDo()];
+      view = new ToDoView();
       return describe("To Do list view", function() {
         return it("Should order tasks by models 'order' property", function() {
-          return expect(2).to.be.lessThan(1);
+          var result;
+          result = view.groupTasks(todos);
+          expect(result[0].deadline).to.equal("Later today");
+          return expect(result[1].deadline).to.equal("Tomorrow");
         });
       });
     });
-    return require(["view/Completed"], function(CompletedView) {
-      return describe("Schedule list view", function() {
+    return require(["view/Completed", "model/ToDoModel"], function(CompletedView, ToDo) {
+      var laterToday, nextMonth, now, todos, tomorrow, view;
+      laterToday = new Date();
+      tomorrow = new Date();
+      nextMonth = new Date();
+      now = new Date();
+      laterToday.setHours(now.getHours() + 1);
+      tomorrow.setDate(now.getDate() + 1);
+      nextMonth.setMonth(now.getMonth() + 1);
+      todos = [
+        new ToDo({
+          title: "In a month",
+          schedule: nextMonth
+        }), new ToDo({
+          title: "Tomorrow",
+          schedule: tomorrow
+        }), new ToDo({
+          title: "In 1 hour",
+          schedule: laterToday
+        })
+      ];
+      view = new CompletedView();
+      return describe("Completed list view", function() {
         return it("Should order tasks by chronological order", function() {
-          return expect(2).to.be.lessThan(1);
+          var result;
+          result = view.groupTasks(todos);
+          expect(result[0].deadline).to.equal("Later today");
+          return expect(result[1].deadline).to.equal("Tomorrow");
         });
       });
     });
