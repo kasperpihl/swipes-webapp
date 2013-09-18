@@ -20,7 +20,7 @@
         var deadline, tasks, tasksByDate;
         tasksArr = this.sortTasks(tasksArr);
         tasksByDate = _.groupBy(tasksArr, function(m) {
-          return m.get("scheduleString");
+          return m.get("scheduleStr");
         });
         return (function() {
           var _results;

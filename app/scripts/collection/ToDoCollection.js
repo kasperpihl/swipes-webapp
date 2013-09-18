@@ -25,7 +25,7 @@
       getScheduled: function() {
         var _this = this;
         return this.filter(function(m) {
-          return m.get("scheduleString") !== "the past" && !m.get("completionDate");
+          return m.get("scheduleStr") !== "the past" && !m.get("completionDate");
         });
       },
       getCompleted: function() {

@@ -18,7 +18,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			return _.sortBy tasks, (model) -> model.get( "schedule" ).getTime()
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
-			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "scheduleString" )
+			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "scheduleStr" )
 			return ( { deadline, tasks } for deadline, tasks of tasksByDate )
 		getListItems: ->
 			# Fetch todos that are active
