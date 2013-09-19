@@ -44,7 +44,6 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Personal", "Home"],
             notes: ""
           }, {
             title: "Clean up the house",
@@ -56,7 +55,21 @@
             tags: ["Errand", "City"],
             notes: ""
           }, {
-            title: "Get a Haircut",
+            title: "Buy a biiiiiiiike!!!",
+            schedule: new Date("September 17, 2013 23:59:02"),
+            completionDate: null,
+            repeatOption: "never",
+            repeatDate: null,
+            notes: ""
+          }, {
+            title: "Check that insurance covers bike",
+            schedule: new Date("September 17, 2013 23:59:02"),
+            completionDate: null,
+            repeatOption: "never",
+            repeatDate: null,
+            notes: ""
+          }, {
+            title: "Dirt Jumps, Dirt Jumps, Dirt Jumps!",
             schedule: new Date("September 17, 2013 23:59:02"),
             completionDate: null,
             repeatOption: "never",
