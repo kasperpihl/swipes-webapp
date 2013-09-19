@@ -3,6 +3,8 @@
 	ol { padding: 0; }
 
 	h2 {
+		@include ellipsis();
+		
 		font-family: $font-light;
 		font-weight: lighter;
 		font-size: 1.85em;
