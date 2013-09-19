@@ -96,6 +96,7 @@ require.config({
         },
         'gsap-draggable': {
             deps: [
+                'gsap',
                 'gsap-throwprops'
             ],
             exports: 'Draggable'
