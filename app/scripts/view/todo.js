@@ -61,8 +61,9 @@
           return this.setTodoOrder(todos);
         }
         if (this.sortController != null) {
-          return this.sortController.destroy();
+          this.sortController.destroy();
         }
+        return this.sortController = new ListSortController(this.$el, this.subviews);
       }
     });
   });

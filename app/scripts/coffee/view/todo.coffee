@@ -27,7 +27,7 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 				# If position is taken, set order to next available position
 				while _.contains( takenPositions, i + pushOrderCount )
 					pushOrderCount++
-				
+
 				view.model.set( "order", i + pushOrderCount )
 
 			@renderList()
@@ -39,4 +39,4 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 			# Alright, by now all todos have a set order. Continue on ...
 			@sortController.destroy() if @sortController?
 
-			# @sortController = new ListSortController(@$el, )
+			@sortController = new ListSortController( @$el, @subviews )
