@@ -73,6 +73,7 @@
             onDragStart: this.onDragStart,
             onDragParams: [view, this.model],
             onDrag: this.onDrag,
+            onDragEndParams: [view, this.model],
             onDragEnd: this.onDragEnd
           };
           dragOpts.trigger = view.$el.find(".todo-content");
@@ -130,7 +131,8 @@
         return model.reorderRows(view, this.y);
       };
 
-      ListSortController.prototype.onDragEnd = function(view, allViews) {
+      ListSortController.prototype.onDragEnd = function(view, model) {
+        model.reorderRows(view, this.endY);
         return TweenLite.to(this.target, 0.25, {
           scale: 1,
           zIndex: "",

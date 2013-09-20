@@ -54,6 +54,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 					onDragStart: @onDragStart
 					onDragParams: [view, @model]
 					onDrag: @onDrag
+					onDragEndParams: [view, @model]
 					onDragEnd: @onDragEnd
 
 				dragOpts.trigger = view.$el.find ".todo-content"
@@ -84,7 +85,8 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 			# Limit this function call to once every 250ms or something
 			model.reorderRows( view, @y )
 		
-		onDragEnd: (view, allViews) ->
+		onDragEnd: (view, model) ->
+			model.reorderRows( view, @endY )
 			TweenLite.to( @target, 0.25, { scale: 1, zIndex: "", boxShadow: "0 0 0 transparent", } );
 
 		reorderView: (model, newOrder) ->
