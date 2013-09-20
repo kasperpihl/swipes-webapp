@@ -2,6 +2,7 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 	BaseListItemView.extend
 		events: 
 			"click": "toggleSelected"
+			"dblclick": "edit"
 			"mouseenter": "trackMouse"
 			"mouseleave": "stopTrackingMouse"
 		init: ->
@@ -20,6 +21,8 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 		toggleSelected: ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
+		edit: ->
+			alert "Edit!"
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
 		getMousePos: (mouseX) ->

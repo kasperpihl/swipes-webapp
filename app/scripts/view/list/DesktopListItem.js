@@ -3,6 +3,7 @@
     return BaseListItemView.extend({
       events: {
         "click": "toggleSelected",
+        "dblclick": "edit",
         "mouseenter": "trackMouse",
         "mouseleave": "stopTrackingMouse"
       },
@@ -19,6 +20,9 @@
         var currentlySelected;
         currentlySelected = this.model.get("selected") || false;
         return this.model.set("selected", !currentlySelected);
+      },
+      edit: function() {
+        return alert("Edit!");
       },
       setBounds: function() {
         return this.bounds = this.el.getClientRects()[0];
