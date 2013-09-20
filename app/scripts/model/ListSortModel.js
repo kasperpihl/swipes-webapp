@@ -1,7 +1,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(["underscore", "backbone"], function(_, Backbone) {
+  define(["underscore", "backbone", "gsap-scroll", "gsap"], function(_, Backbone) {
     var ListSortModel;
     return ListSortModel = (function() {
       function ListSortModel(container, views) {
@@ -131,11 +131,17 @@
       };
 
       ListSortModel.prototype.scrollWindow = function(pointerY) {
-        if (pointerY < this.bounds.top) {
-          return console.log("Scroll up!");
-        } else if (pointerY > this.bounds.bottom) {
-          return console.log("Scroll down!");
+        var amount, newScroll;
+        amount = 50;
+        if (pointerY - 100 < this.bounds.top) {
+          newScroll = window.pageYOffset - amount;
+        } else if (pointerY + 100 > this.bounds.bottom) {
+          newScroll = window.pageYOffset + amount;
         }
+        return TweenLite.to(window, 0.1, {
+          scrollTo: newScroll,
+          ease: Linear.easeNone
+        });
       };
 
       ListSortModel.prototype.destroy = function() {};

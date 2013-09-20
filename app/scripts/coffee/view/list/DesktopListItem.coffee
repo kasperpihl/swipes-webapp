@@ -22,7 +22,8 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
 		edit: ->
-			alert "Edit!"
+			require ["gsap-text", "gsap"], =>
+				TweenLite.to( @$el.find("h2"), 0.5, { text: "Yolo!!" }, ease:Power4.easeInOut, delay: 1 );
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
 		getMousePos: (mouseX) ->

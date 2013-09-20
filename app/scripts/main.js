@@ -18,6 +18,8 @@ require.config({
         'backbone.localStorage': '../bower_components/backbone.localStorage/backbone.localStorage',
         'greensock-js': '../bower_components/greensock-js/src/minified/TweenMax.min',
         gsap: '../bower_components/greensock-js/src/uncompressed/TweenLite',
+        'gsap-scroll': '../bower_components/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
+        'gsap-text': '../bower_components/greensock-js/src/uncompressed/plugins/TextPlugin',
         'gsap-easing': '../bower_components/greensock-js/src/uncompressed/easing/EasePack',
         'gsap-css': '../bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin',
         'gsap-throwprops': '../bower_components/greensock-js/src/uncompressed/plugins/ThrowPropsPlugin',

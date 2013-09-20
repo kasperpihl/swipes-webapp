@@ -1,4 +1,4 @@
-define ["underscore", "backbone"], (_, Backbone) ->
+define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 	class ListSortModel
 		
 		constructor: (@container, @views) ->
@@ -66,11 +66,15 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			view.model.set( { order: newOrder }, { silent: yes } )
 
 		scrollWindow: (pointerY) ->
-			if pointerY < @bounds.top
-				console.log "Scroll up!"
-			else if pointerY > @bounds.bottom
-				console.log "Scroll down!"
+			amount = 50
 
+			if pointerY - 100 < @bounds.top
+				newScroll = window.pageYOffset - amount
+
+			else if pointerY + 100 > @bounds.bottom
+				newScroll = window.pageYOffset + amount
+
+			TweenLite.to( window, 0.1, { scrollTo: newScroll, ease:Linear.easeNone } )
 
 		destroy: ->
 
