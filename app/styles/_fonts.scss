@@ -8,11 +8,11 @@ $fonts-url: 'fonts/';
 $font_name: 'ProximaNova-Semibold';
 @font-face {
 	font-family: $font-name;
-	src: url($fonts-url + $font-name + '-webfont.eot');
-	src: url($fonts-url + $font-name + '-webfont.eot?#iefix') format('embedded-opentype'),
-		 url($fonts-url + $font-name + '-webfont.woff') format('woff'),
-		 url($fonts-url + $font-name + '-webfont.ttf') format('truetype'),
-		 url($fonts-url + $font-name + '-webfont.svg#' + 'font-name') format('svg');
+	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
+		 url($fonts-url + $font-name + '.woff') format('woff'),
+		 url($fonts-url + $font-name + '.ttf') format('truetype'),
+		 url($fonts-url + $font-name + '.svg#' + 'font-name') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -20,11 +20,11 @@ $font_name: 'ProximaNova-Semibold';
 $font_name: 'ProximaNova-Regular';
 @font-face {
 	font-family: $font-name;
-	src: url($fonts-url + $font-name + '-webfont.eot');
-	src: url($fonts-url + $font-name + '-webfont.eot?#iefix') format('embedded-opentype'),
-		 url($fonts-url + $font-name + '-webfont.woff') format('woff'),
-		 url($fonts-url + $font-name + '-webfont.ttf') format('truetype'),
-		 url($fonts-url + $font-name + '-webfont.svg#' + 'font-name') format('svg');
+	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
+		 url($fonts-url + $font-name + '.woff') format('woff'),
+		 url($fonts-url + $font-name + '.ttf') format('truetype'),
+		 url($fonts-url + $font-name + '.svg#' + 'font-name') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -32,11 +32,11 @@ $font_name: 'ProximaNova-Regular';
 $font_name: 'ProximaNova-Light';
 @font-face {
 	font-family: $font-name;
-	src: url($fonts-url + $font-name + '-webfont.eot');
-	src: url($fonts-url + $font-name + '-webfont.eot?#iefix') format('embedded-opentype'),
-		 url($fonts-url + $font-name + '-webfont.woff') format('woff'),
-		 url($fonts-url + $font-name + '-webfont.ttf') format('truetype'),
-		 url($fonts-url + $font-name + '-webfont.svg#' + 'font-name') format('svg');
+	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
+		 url($fonts-url + $font-name + '.woff') format('woff'),
+		 url($fonts-url + $font-name + '.ttf') format('truetype'),
+		 url($fonts-url + $font-name + '.svg#' + 'font-name') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }

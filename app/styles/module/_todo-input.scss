@@ -1,6 +1,9 @@
 .add-new {
 	input {
-		font-size: emCalc(100px);
+		text-indent: 0;
+		max-width: 100%;
 		font-family: $font-bold;
+		
+		font-size: emCalc(50px);
 	}	
 }
