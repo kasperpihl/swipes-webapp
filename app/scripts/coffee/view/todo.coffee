@@ -19,7 +19,7 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
 		setTodoOrder: (todos) ->
-			takenPositions = ( m.get( "order" ) for m in todos when m.has "order" )
+			takenPositions = ( m.get "order" for m in todos when m.has "order" )
 			pushOrderCount = 0
 
 			for view, i in @subviews when !view.model.has "order"
