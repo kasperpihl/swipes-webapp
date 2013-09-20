@@ -1,20 +1,22 @@
 (function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
   define(["underscore", "backbone"], function(_, Backbone) {
     var ListSortModel;
     return ListSortModel = (function() {
       function ListSortModel(container, views) {
-        var view, _i, _len, _ref;
+        var debouncedSetBounds,
+          _this = this;
         this.container = container;
         this.views = views;
+        this.setBounds = __bind(this.setBounds, this);
         this.rows = this.getRows();
+        this.setBounds();
         this.setRowTops();
-        console.groupCollapsed("Starting with order: ");
-        _ref = this.views;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          console.log(view.model.get("title") + ": " + view.model.get("order"));
-        }
-        console.groupEnd();
+        debouncedSetBounds = _.debounce(this.setBounds, 300);
+        $(window).on("resize scroll", function() {
+          return debouncedSetBounds();
+        });
       }
 
       ListSortModel.prototype.getRows = function() {
@@ -31,6 +33,13 @@
           return _results;
         }).call(this);
         return rows;
+      };
+
+      ListSortModel.prototype.setBounds = function() {
+        return this.bounds = {
+          top: Math.max(this.container[0].getClientRects()[0].top, window.pageYOffset),
+          bottom: window.innerHeight + window.pageYOffset
+        };
       };
 
       ListSortModel.prototype.setRowTops = function() {
@@ -119,6 +128,14 @@
         }, {
           silent: true
         });
+      };
+
+      ListSortModel.prototype.scrollWindow = function(pointerY) {
+        if (pointerY < this.bounds.top) {
+          return console.log("Scroll up!");
+        } else if (pointerY > this.bounds.bottom) {
+          return console.log("Scroll down!");
+        }
       };
 
       ListSortModel.prototype.destroy = function() {};

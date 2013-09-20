@@ -39,7 +39,7 @@
             position: "absolute",
             width: "100%"
           });
-          _results.push(this.reorderView.call(view, view.model, view.model.get("order")));
+          _results.push(this.reorderView.call(view, view.model, view.model.get("order"), false));
         }
         return _results;
       };
@@ -132,7 +132,8 @@
       };
 
       ListSortController.prototype.onDrag = function(view, model) {
-        return model.reorderRows(view, this.y);
+        model.reorderRows(view, this.y);
+        return model.scrollWindow(this.pointerY);
       };
 
       ListSortController.prototype.onDragEnd = function(view, model) {
@@ -144,8 +145,13 @@
         });
       };
 
-      ListSortController.prototype.reorderView = function(model, newOrder) {
-        return TweenLite.to(this.el, 0.3, {
+      ListSortController.prototype.reorderView = function(model, newOrder, animate) {
+        var dur;
+        if (animate == null) {
+          animate = true;
+        }
+        dur = animate ? 0.3 : 0;
+        return TweenLite.to(this.el, dur, {
           top: newOrder * this.$el.height()
         });
       };

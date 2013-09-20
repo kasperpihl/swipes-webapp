@@ -25,7 +25,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 					position: "absolute"
 					width: "100%"
 				
-				@reorderView.call( view, view.model, view.model.get "order" )
+				@reorderView.call( view, view.model, view.model.get( "order" ), no )
 
 		init: ->
 			if @draggables? then @destroy()
@@ -88,15 +88,16 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 				, 100
 		
 		onDrag: (view, model) ->
-			# Limit this function call to once every 250ms or something
 			model.reorderRows( view, @y )
-		
+			# if Modernizr.touch then model.scrollWindow( @pointerY )
+			model.scrollWindow( @pointerY )
 		onDragEnd: (view, model) ->
 			model.reorderRows( view, @endY )
 			TweenLite.to( @target, 0.25, { scale: 1, zIndex: "", boxShadow: "0 0 0 transparent", } );
 
-		reorderView: (model, newOrder) ->
-			TweenLite.to( @el, 0.3, { top: newOrder * @$el.height() } )
+		reorderView: (model, newOrder, animate = yes) ->
+			dur = if animate then 0.3 else 0
+			TweenLite.to( @el, dur, { top: newOrder * @$el.height() } )
 		
 		destroy: ->
 			@stopListenForOrderChanges()

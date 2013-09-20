@@ -3,17 +3,21 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		
 		constructor: (@container, @views) ->
 			@rows = @getRows()
+			@setBounds()
 			@setRowTops()
 
-			console.groupCollapsed "Starting with order: "
-			for view in @views
-				console.log view.model.get( "title" ) + ": " + view.model.get "order"
-			console.groupEnd()
+			debouncedSetBounds = _.debounce( @setBounds, 300 )
+			$(window).on( "resize scroll", => debouncedSetBounds() )
 
 		getRows: ->
 			@rowHeight = @views[0].$el.height()
 			rows = ( i * @rowHeight for view, i in @views )
 			return rows
+
+		setBounds: =>
+			@bounds = 
+				top: Math.max( @container[0].getClientRects()[0].top, window.pageYOffset )
+				bottom: window.innerHeight + window.pageYOffset
 
 		setRowTops: ->
 			for view in @views
@@ -60,6 +64,13 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			
 			# Silently set order for this view, because we don't want to trigger the handler that tweens the position for it.
 			view.model.set( { order: newOrder }, { silent: yes } )
+
+		scrollWindow: (pointerY) ->
+			if pointerY < @bounds.top
+				console.log "Scroll up!"
+			else if pointerY > @bounds.bottom
+				console.log "Scroll down!"
+
 
 		destroy: ->
 
