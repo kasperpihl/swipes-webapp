@@ -5,6 +5,8 @@
 		font-family: $font-bold;
 		
 		font-size: emCalc(50px);
+		line-height: 1;
+		
 		@include breakpoint(tablet) { font-size: emCalc(70px); }
 		@include breakpoint(desktop) { font-size: emCalc(100px); }
 	}	

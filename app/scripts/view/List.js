@@ -42,6 +42,7 @@
         var type,
           _this = this;
         type = Modernizr.touch ? "Touch" : "Desktop";
+        type = "Desktop";
         return require(["view/list/" + type + "ListItem"], function(ListItemView) {
           var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
           _this.$el.empty();

@@ -10,15 +10,13 @@
 	}
 
 	header.add-new {
-		margin: emCalc(38px) 0 emCalc(35px);
-		
-		@include breakpoint(tablet) {
-			margin: emCalc(58px) 0 emCalc(43px);
-		}
+		margin: emCalc(5px) 0 emCalc(10px);
+		@include breakpoint(tablet) { margin: emCalc(58px) 0 emCalc(43px); }
 	}
 
 	> nav {
-		margin-bottom: emCalc(40px);
+		margin-bottom: emCalc(10px);
+		@include breakpoint(tablet) { margin-bottom: emCalc(40px); }
 	}
 
 	padding-bottom: 11em;

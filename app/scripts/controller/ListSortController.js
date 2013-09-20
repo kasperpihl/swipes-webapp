@@ -117,12 +117,16 @@
       ListSortController.prototype.onDragStart = function(view, allViews) {
         var _this = this;
         return setTimeout(function() {
+          var opts;
           if (!(_this.clicked && _this.clicked === view.cid)) {
-            return TweenLite.to(view.el, 0.1, {
-              scale: 1.05,
+            opts = {
               zIndex: 3,
               boxShadow: "0px 0px 15px 1px rgba(0,0,0,0.1)"
-            });
+            };
+            if (window.innerWidth >= 768) {
+              opts.scale = 1.05;
+            }
+            return TweenLite.to(view.el, 0.1, opts);
           }
         }, 100);
       };

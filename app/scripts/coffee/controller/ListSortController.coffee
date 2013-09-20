@@ -78,7 +78,13 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 			# Use a timer to prevent this behavior when user intent is a click, not dragging.
 			setTimeout =>
 					unless @clicked and @clicked is view.cid
-						TweenLite.to( view.el, 0.1, { scale: 1.05, zIndex: 3, boxShadow: "0px 0px 15px 1px rgba(0,0,0,0.1)", } );
+						opts = 
+							zIndex: 3
+							boxShadow: "0px 0px 15px 1px rgba(0,0,0,0.1)"
+							
+						if window.innerWidth >= 768 then opts.scale = 1.05
+
+						TweenLite.to( view.el, 0.1, opts );
 				, 100
 		
 		onDrag: (view, model) ->

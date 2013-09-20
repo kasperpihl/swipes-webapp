@@ -25,6 +25,9 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			return swipy.todos.getActive()
 		renderList: ->
 			type = if Modernizr.touch then "Touch" else "Desktop"
+
+			# For now, force type to be desktop
+			type = "Desktop"
 			
 			require ["view/list/#{type}ListItem"], (ListItemView) =>
 				# Remove any old HTML before appending new stuff.
