@@ -1,3 +1,9 @@
+html.touch body {
+	@include breakpoint(tablet-horizontal) {
+		min-width: 1180px;
+	}
+}
+
 .container {
 	max-width: emCalc(685px);
 
