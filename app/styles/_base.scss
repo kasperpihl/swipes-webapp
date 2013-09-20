@@ -10,7 +10,11 @@
 	}
 
 	header.add-new {
-		margin: emCalc(58px) 0 emCalc(43px);
+		margin: emCalc(38px) 0 emCalc(35px);
+		
+		@include breakpoint(tablet) {
+			margin: emCalc(58px) 0 emCalc(43px);
+		}
 	}
 
 	> nav {
