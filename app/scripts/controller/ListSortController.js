@@ -1,48 +1,22 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(["jquery", "gsap", "gsap-draggable"], function($, TweenLite, Draggable) {
+  define(["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], function($, ListSortModel, TweenLite, Draggable) {
     var ListSortController;
     return ListSortController = (function() {
       function ListSortController(container, views) {
-        this.container = container;
-        this.views = views;
         this.onDragStart = __bind(this.onDragStart, this);
         this.onClick = __bind(this.onClick, this);
-        this.rows = this.getRows();
+        this.model = new ListSortModel(container, views);
         this.disableNativeClickHandlers();
-        this.setViewTops();
+        this.listenForOrderChanges();
+        this.setInitialOrder();
         this.init();
       }
 
-      ListSortController.prototype.getRows = function() {
-        var i, rows, view;
-        this.rowHeight = this.views[0].$el.height();
-        rows = (function() {
-          var _i, _len, _ref, _results;
-          _ref = this.views;
-          _results = [];
-          for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-            view = _ref[i];
-            _results.push(i * this.rowHeight);
-          }
-          return _results;
-        }).call(this);
-        return rows;
-      };
-
-      ListSortController.prototype.setViewTops = function() {
-        var view, _i, _len, _ref;
-        _ref = this.views;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          view.top = parseInt(view.$el.position().top);
-        }
-      };
-
       ListSortController.prototype.disableNativeClickHandlers = function() {
         var view, _i, _len, _ref, _results;
-        _ref = this.views;
+        _ref = this.model.views;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
@@ -54,6 +28,22 @@
         return _results;
       };
 
+      ListSortController.prototype.setInitialOrder = function() {
+        var view, _i, _len, _ref, _results;
+        this.model.container.height(this.model.container.height());
+        _ref = this.model.views;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.$el.css({
+            position: "absolute",
+            width: "100%"
+          });
+          _results.push(this.reorderView.call(view, view.model, view.model.get("order")));
+        }
+        return _results;
+      };
+
       ListSortController.prototype.init = function() {
         var dragOpts, draggable, self, view, _i, _len, _ref, _results;
         if (this.draggables != null) {
@@ -61,27 +51,27 @@
         }
         self = this;
         this.draggables = [];
-        _ref = this.views;
+        _ref = this.model.views;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
           dragOpts = {
             type: "top",
-            bounds: this.container,
+            bounds: this.model.container,
             zIndexBoost: false,
             edgeResistance: 0.75,
             throwProps: true,
             resistance: 3000,
             snap: {
               top: function(endValue) {
-                return Math.max(this.minY, Math.min(this.maxY, Math.round(endValue / self.rowHeight) * self.rowHeight));
+                return Math.max(this.minY, Math.min(this.maxY, Math.round(endValue / self.model.rowHeight) * self.model.rowHeight));
               }
             },
             onClickParams: [view],
             onClick: this.onClick,
-            onDragStartParams: [view, this.views],
+            onDragStartParams: [view, this.model.views],
             onDragStart: this.onDragStart,
-            onDragParams: [view, this.views],
+            onDragParams: [view, this.model],
             onDrag: this.onDrag,
             onDragEnd: this.onDragEnd
           };
@@ -92,8 +82,26 @@
         return _results;
       };
 
-      ListSortController.prototype.getOrderValForView = function(view) {
-        return console.log("Get order value for ", view);
+      ListSortController.prototype.listenForOrderChanges = function() {
+        var view, _i, _len, _ref, _results;
+        _ref = this.model.views;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          _results.push(view.model.on("change:order", this.reorderView, view));
+        }
+        return _results;
+      };
+
+      ListSortController.prototype.stopListenForOrderChanges = function() {
+        var view, _i, _len, _ref, _results;
+        _ref = this.model.views;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          _results.push(view.model.off());
+        }
+        return _results;
       };
 
       ListSortController.prototype.onClick = function(view, allViews) {
@@ -118,10 +126,8 @@
         }, 100);
       };
 
-      ListSortController.prototype.onDrag = function(view, allViews) {
-        var truePos;
-        truePos = this.y + view.top;
-        return console.log("True position: " + truePos + "px / y: " + this.y);
+      ListSortController.prototype.onDrag = function(view, model) {
+        return model.reorderRows(view, this.y);
       };
 
       ListSortController.prototype.onDragEnd = function(view, allViews) {
@@ -132,14 +138,23 @@
         });
       };
 
+      ListSortController.prototype.reorderView = function(model, newOrder) {
+        return TweenLite.to(this.el, 0.3, {
+          top: newOrder * this.$el.height()
+        });
+      };
+
       ListSortController.prototype.destroy = function() {
         var draggable, _i, _len, _ref;
+        this.stopListenForOrderChanges();
         _ref = this.draggables;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           draggable = _ref[_i];
           draggable.disable();
         }
-        return this.draggables = null;
+        this.draggables = null;
+        this.model.destroy();
+        return this.model = null;
       };
 
       return ListSortController;

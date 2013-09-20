@@ -10,10 +10,10 @@
         this.throttledOnMouseMove = _.throttle(this.onMouseMove, 250);
         _.bindAll(this, "setBounds", "onMouseMove", "throttledOnMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule");
         $(window).on("resize", this.setBounds);
-        Backbone.on("hover-complete", this.onHoverComplete);
-        Backbone.on("hover-schedule", this.onHoverSchedule);
-        Backbone.on("unhover-complete", this.onUnhoverComplete);
-        return Backbone.on("unhover-schedule", this.onUnhoverSchedule);
+        this.listenTo(Backbone, "hover-complete", this.onHoverComplete);
+        this.listenTo(Backbone, "hover-schedule", this.onHoverSchedule);
+        this.listenTo(Backbone, "unhover-complete", this.onUnhoverComplete);
+        return this.listenTo(Backbone, "unhover-schedule", this.onUnhoverSchedule);
       },
       toggleSelected: function() {
         var currentlySelected;

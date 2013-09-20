@@ -11,10 +11,11 @@ define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
 			
 			$(window).on "resize", @setBounds
 
-			Backbone.on( "hover-complete", @onHoverComplete )
-			Backbone.on( "hover-schedule", @onHoverSchedule )
-			Backbone.on( "unhover-complete", @onUnhoverComplete )
-			Backbone.on( "unhover-schedule", @onUnhoverSchedule )
+
+			@listenTo( Backbone, "hover-complete", @onHoverComplete )
+			@listenTo( Backbone, "hover-schedule", @onHoverSchedule )
+			@listenTo( Backbone, "unhover-complete", @onUnhoverComplete )
+			@listenTo( Backbone, "unhover-schedule", @onUnhoverSchedule )
 
 		toggleSelected: ->
 			currentlySelected = @model.get( "selected" ) or false

@@ -47,7 +47,7 @@
             notes: ""
           }, {
             title: "Clean up the house",
-            order: 2,
+            order: 0,
             schedule: new Date("September 16, 2013 22:30:02"),
             completionDate: null,
             repeatOption: "never",
