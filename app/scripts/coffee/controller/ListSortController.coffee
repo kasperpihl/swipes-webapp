@@ -37,7 +37,6 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 				dragOpts = 
 					type: "top"
 					bounds: @model.container
-					zIndexBoost: no
 					
 					# Throwing / Dragging
 					edgeResistance: 0.75
@@ -78,13 +77,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 			# Use a timer to prevent this behavior when user intent is a click, not dragging.
 			setTimeout =>
 					unless @clicked and @clicked is view.cid
-						opts = 
-							zIndex: 3
-							boxShadow: "0px 0px 15px 1px rgba(0,0,0,0.1)"
-							
-						if window.innerWidth >= 768 then opts.scale = 1.05
-
-						TweenLite.to( view.el, 0.1, opts );
+						view.$el.addClass "selected"
 				, 100
 		
 		onDrag: (view, model) ->
@@ -93,7 +86,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 			model.scrollWindow( @pointerY )
 		onDragEnd: (view, model) ->
 			model.reorderRows( view, @endY )
-			TweenLite.to( @target, 0.25, { scale: 1, zIndex: "", boxShadow: "0 0 0 transparent", } );
+			view.$el.removeClass( "selected" ) unless view.model.get "selected"
 
 		reorderView: (model, newOrder, animate = yes) ->
 			dur = if animate then 0.3 else 0

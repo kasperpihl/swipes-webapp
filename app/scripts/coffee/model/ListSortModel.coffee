@@ -15,8 +15,11 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			return rows
 
 		setBounds: =>
+			# Check if bounds is set. They won't be if element is hidden etc.
+			bounds = @container[0].getClientRects()[0]? or { top: 0 }
+			
 			@bounds = 
-				top: Math.max( @container[0].getClientRects()[0].top, window.pageYOffset )
+				top: Math.max( bounds.top, window.pageYOffset )
 				bottom: window.innerHeight + window.pageYOffset
 
 		setRowTops: ->
@@ -66,7 +69,7 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			view.model.set( { order: newOrder }, { silent: yes } )
 
 		scrollWindow: (pointerY) ->
-			amount = 50
+			amount = 20
 
 			if pointerY - 100 < @bounds.top
 				newScroll = window.pageYOffset - amount
