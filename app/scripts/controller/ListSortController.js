@@ -58,7 +58,6 @@
           dragOpts = {
             type: "top",
             bounds: this.model.container,
-            zIndexBoost: false,
             edgeResistance: 0.75,
             throwProps: true,
             resistance: 3000,
@@ -117,16 +116,8 @@
       ListSortController.prototype.onDragStart = function(view, allViews) {
         var _this = this;
         return setTimeout(function() {
-          var opts;
           if (!(_this.clicked && _this.clicked === view.cid)) {
-            opts = {
-              zIndex: 3,
-              boxShadow: "0px 0px 15px 1px rgba(0,0,0,0.1)"
-            };
-            if (window.innerWidth >= 768) {
-              opts.scale = 1.05;
-            }
-            return TweenLite.to(view.el, 0.1, opts);
+            return view.$el.addClass("selected");
           }
         }, 100);
       };
@@ -138,11 +129,9 @@
 
       ListSortController.prototype.onDragEnd = function(view, model) {
         model.reorderRows(view, this.endY);
-        return TweenLite.to(this.target, 0.25, {
-          scale: 1,
-          zIndex: "",
-          boxShadow: "0 0 0 transparent"
-        });
+        if (!view.model.get("selected")) {
+          return view.$el.removeClass("selected");
+        }
       };
 
       ListSortController.prototype.reorderView = function(model, newOrder, animate) {

@@ -46,13 +46,13 @@
       renderTodoList: function() {
         var dfd;
         dfd = new $.Deferred();
-        require(["text!templates/todo-list.html", "model/ToDoModel", "view/list/DesktopListItem"], function(ListTempl, Model, View) {
-          var data, tmpl;
-          tmpl = _.template(ListTempl);
-          data = {
+        require(["text!templates/task.html", "model/ToDoModel", "view/list/DesktopTask"], function(TaskTmpl, Model, View) {
+          var model, tmpl;
+          tmpl = _.template(TaskTmpl);
+          model = new Model({
             title: "Tomorrow"
-          };
-          contentHolder.html($("<ol class='todo'></ol>").append(tmpl(data)));
+          });
+          contentHolder.html($("<ol class='todo'></ol>").append(tmpl(model.toJSON())));
           return dfd.resolve();
         });
         return dfd.promise();
@@ -134,7 +134,7 @@
         });
       });
     });
-    require(["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopListItem"], function(ToDoCollection, Model, View) {
+    require(["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopTask"], function(ToDoCollection, Model, View) {
       return helpers.renderTodoList().then(function() {
         var list;
         list = contentHolder.find(".todo ol");
@@ -312,8 +312,8 @@
       });
     });
     require(["view/Todo", "model/ToDoModel"], function(ToDoView, ToDo) {
-      var todos, view;
-      todos = [
+      var todos;
+      return todos = [
         new ToDo({
           title: "three"
         }), new ToDo({
@@ -324,16 +324,15 @@
           order: 1
         })
       ];
-      view = new ToDoView();
-      return describe("To Do list view", function() {
-        return it("Should order tasks by models 'order' property", function() {
-          var result;
-          result = view.groupTasks(todos);
-          expect(result[0].tasks[0].get("title")).to.equal("one");
-          expect(result[0].tasks[1].get("title")).to.equal("two");
-          return expect(result[0].tasks[2].get("title")).to.equal("three");
-        });
-      });
+      /*
+      		describe "To Do list view", ->
+      			it "Should order tasks by models 'order' property", ->
+      				result = view.groupTasks todos
+      				expect(result[0].tasks[0].get "title").to.equal "one"
+      				expect(result[0].tasks[1].get "title").to.equal "two"
+      				expect(result[0].tasks[2].get "title").to.equal "three"
+      */
+
     });
     return require(["view/Completed", "model/ToDoModel"], function(CompletedView, ToDo) {
       var earlierToday, now, prevMonth, todos, view, yesterday;

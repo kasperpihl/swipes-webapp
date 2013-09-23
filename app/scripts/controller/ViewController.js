@@ -67,14 +67,11 @@
       };
 
       ViewController.prototype.transitionIn = function(view) {
-        var dfd, opts,
-          _this = this;
+        var dfd, opts;
         dfd = new $.Deferred();
         opts = {
           alpha: 1,
-          onComplete: function() {
-            return dfd.resolve();
-          }
+          onComplete: dfd.resolve
         };
         view.$el.removeClass("hidden");
         TweenLite.fromTo(view.$el, 0.4, {

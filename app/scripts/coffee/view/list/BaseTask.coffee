@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/list-item.html"], (_, Backbone, ListItemTmpl) ->
+define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, TaskTmpl) ->
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
@@ -11,7 +11,7 @@ define ["underscore", "backbone", "text!templates/list-item.html"], (_, Backbone
 			@content = @$el.find('.todo-content')
 			@render()
 		setTemplate: ->
-			@template = _.template ListItemTmpl
+			@template = _.template TaskTmpl
 		init: ->
 			# Hook for views extending me
 		onSelected: (model, selected) ->

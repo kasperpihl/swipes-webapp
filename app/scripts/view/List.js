@@ -35,7 +35,7 @@
           return _results;
         })();
       },
-      getListItems: function() {
+      getTasks: function() {
         return swipy.todos.getActive();
       },
       renderList: function() {
@@ -43,11 +43,11 @@
           _this = this;
         type = Modernizr.touch ? "Touch" : "Desktop";
         type = "Desktop";
-        return require(["view/list/" + type + "ListItem"], function(ListItemView) {
+        return require(["view/list/" + type + "Task"], function(TaskView) {
           var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
           _this.$el.empty();
           _this.killSubViews();
-          todos = _this.getListItems();
+          todos = _this.getTasks();
           _ref = _this.groupTasks(todos);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             group = _ref[_i];
@@ -60,7 +60,7 @@
             _ref1 = group.tasks;
             for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
               model = _ref1[_j];
-              view = new ListItemView({
+              view = new TaskView({
                 model: model
               });
               _this.subviews.push(view);

@@ -36,8 +36,12 @@
       };
 
       ListSortModel.prototype.setBounds = function() {
+        var bounds;
+        bounds = (this.container[0].getClientRects()[0] != null) || {
+          top: 0
+        };
         return this.bounds = {
-          top: Math.max(this.container[0].getClientRects()[0].top, window.pageYOffset),
+          top: Math.max(bounds.top, window.pageYOffset),
           bottom: window.innerHeight + window.pageYOffset
         };
       };
@@ -132,7 +136,7 @@
 
       ListSortModel.prototype.scrollWindow = function(pointerY) {
         var amount, newScroll;
-        amount = 50;
+        amount = 20;
         if (pointerY - 100 < this.bounds.top) {
           newScroll = window.pageYOffset - amount;
         } else if (pointerY + 100 > this.bounds.bottom) {

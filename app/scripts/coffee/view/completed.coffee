@@ -6,5 +6,5 @@ define ["view/List"], (ListView) ->
 			tasksArr = @sortTasks tasksArr
 			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "completionStr" )
 			return ( { deadline, tasks } for deadline, tasks of tasksByDate )
-		getListItems: ->
+		getTasks: ->
 			return swipy.todos.getCompleted()

@@ -48,8 +48,7 @@ define ["gsap"], (TweenLite) ->
 			
 			opts = 
 				alpha: 1
-				onComplete: =>
-					dfd.resolve()
+				onComplete: dfd.resolve
 
 			view.$el.removeClass "hidden"
 			TweenLite.fromTo( view.$el, 0.4, { alpha: 0 }, opts )

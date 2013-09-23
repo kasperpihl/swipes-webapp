@@ -1,5 +1,5 @@
-define ["underscore", "view/list/BaseListItem"], (_, BaseListItemView) ->
-	BaseListItemView.extend
+define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
+	BaseTaskView.extend
 		events: 
 			"click": "toggleSelected"
 			"dblclick": "edit"

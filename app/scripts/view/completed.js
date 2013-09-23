@@ -25,7 +25,7 @@
           return _results;
         })();
       },
-      getListItems: function() {
+      getTasks: function() {
         return swipy.todos.getCompleted();
       }
     });

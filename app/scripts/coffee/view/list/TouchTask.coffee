@@ -1,5 +1,5 @@
-define ["view/list/BaseListItem", 'hammer'], (BaseListItemView, Hammer) ->
-	BaseListItemView.extend
+define ["view/list/BaseTask", 'hammer'], (BaseTaskView, Hammer) ->
+	BaseTaskView.extend
 		enableInteraction: ->
 			@hammer = Hammer(@content[0]).on "drag", @handleDrag
 			@hammer = Hammer(@content[0]).on "dragend", @handleDragEnd

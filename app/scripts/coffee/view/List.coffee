@@ -20,7 +20,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			tasksArr = @sortTasks tasksArr
 			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "scheduleStr" )
 			return ( { deadline, tasks } for deadline, tasks of tasksByDate )
-		getListItems: ->
+		getTasks: ->
 			# Fetch todos that are active
 			return swipy.todos.getActive()
 		renderList: ->
@@ -29,12 +29,12 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			# For now, force type to be desktop
 			type = "Desktop"
 			
-			require ["view/list/#{type}ListItem"], (ListItemView) =>
+			require ["view/list/#{type}Task"], (TaskView) =>
 				# Remove any old HTML before appending new stuff.
 				@$el.empty()
 				@killSubViews()
 
-				todos = @getListItems()
+				todos = @getTasks()
 
 				for group in @groupTasks todos
 					tasksJSON = _.invoke( group.tasks, "toJSON" )
@@ -42,7 +42,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 					list = $html.find "ol"
 					
 					for model in group.tasks
-						view = new ListItemView( { model } )
+						view = new TaskView( { model } )
 						@subviews.push view
 						list.append view.el
 
