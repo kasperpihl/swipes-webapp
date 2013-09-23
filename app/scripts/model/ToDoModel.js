@@ -18,6 +18,9 @@
         if (this.get("schedule") === null) {
           this.set("schedule", this.getDefaultSchedule());
         }
+        if (typeof this.get("schedule") === "string") {
+          this.set("schedule", new Date(this.get("schedule")));
+        }
         this.setScheduleStr();
         this.setTimeStr();
         this.on("change:schedule", function() {

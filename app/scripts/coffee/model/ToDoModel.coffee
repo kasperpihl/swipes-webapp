@@ -16,6 +16,10 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			# Schedule defaults to a new date object 1 second in the past
 			@set( "schedule", @getDefaultSchedule() ) if @get( "schedule" ) is null
 
+			# Convert schedule to date obj if for some reason it's a string
+			if typeof @get( "schedule" ) is "string" 
+				@set( "schedule", new Date @get( "schedule" ) )
+
 			@setScheduleStr()
 			@setTimeStr()
 
