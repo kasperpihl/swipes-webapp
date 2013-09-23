@@ -2,11 +2,13 @@
 require [
 	"jquery", 
 	"underscore", 
-	"backbone"
-	], ($, _, Backbone) ->
+	"backbone",
+	"model/ToDoModel"
+
+	], ($, _, Backbone, ToDoModel) ->
 	
 	contentHolder = $("#content-holder")
-	
+
 	helpers = 
 		getDummyModels: ->
 			[
@@ -47,10 +49,10 @@ require [
 			]
 		renderTodoList: ->
 			dfd = new $.Deferred()
-			require ["text!templates/task.html", "model/ToDoModel", "view/list/DesktopTask"], (TaskTmpl, Model, View) ->
+			require ["text!templates/task.html", "view/list/DesktopTask"], (TaskTmpl, View) ->
 				tmpl = _.template TaskTmpl
 
-				model = new Model { title: "Tomorrow" }
+				model = new ToDoModel { title: "Tomorrow" }
 
 				contentHolder.html $("<ol class='todo'></ol>").append( tmpl model.toJSON() )
 
@@ -61,63 +63,74 @@ require [
 	#
 	# The Basics
 	#
-	describe "Basics", ->
+	describe "Basics", ->	
 		it "App should be up and running", ->
+			# Overwrite todos with dummy data
+			swipy.todos.reset helpers.getDummyModels()
+			
 			expect( swipy ).to.exist
+		
+		it "Should have scheduled tasks for testing", ->
+			expect( swipy.todos.getScheduled() ).to.have.length.above 0
+		
+		it "Should have active tasks for testing", ->
+			expect( swipy.todos.getActive() ).to.have.length.above 0
+		
+		it "Should have completed tasks for testing", ->
+			expect( swipy.todos.getCompleted() ).to.have.length.above 0
 
 	#
 	# To Do Model
 	#
-	require ["model/ToDoModel"], (Model) ->
-		describe "List Item model", ->
-			model = new Model()
+	describe "List Item model", ->
+		model = new ToDoModel()
 
-			it "Should create scheduleStr property when instantiated", ->
-				expect( model.get("scheduleStr") ).to.equal "the past"
+		it "Should create scheduleStr property when instantiated", ->
+			expect( model.get("scheduleStr") ).to.equal "the past"
+		
+		it "Should update scheduleStr when schedule property is changed", ->
+			date = model.get "schedule"
+
+			# unset for change event to occur
+			model.unset "schedule"
 			
-			it "Should update scheduleStr when schedule property is changed", ->
-				date = model.get "schedule"
+			date.setDate date.getDate()+1
+			model.set( "schedule", date )
 
-				# unset for change event to occur
-				model.unset "schedule"
-				
-				date.setDate date.getDate()+1
-				model.set( "schedule", date )
+			expect( model.get("scheduleStr") ).to.equal "Tomorrow"
 
-				expect( model.get("scheduleStr") ).to.equal "Tomorrow"
+		it "Should create timeStr property when model is instantiated", ->
+			expect( model.get("timeStr") ).to.exist
 
-			it "Should create timeStr property when model is instantiated", ->
-				expect( model.get("timeStr") ).to.exist
+		it "Should update timeStr when schedule property is changed", ->
+			timeBeforeChange = model.get "timeStr"
+			
+			date = model.get "schedule"
+			# Unset because its an object and wont trigger a change if we just update the object itself.
+			model.unset "schedule"
 
-			it "Should update timeStr when schedule property is changed", ->
-				timeBeforeChange = model.get "timeStr"
-				
-				date = model.get "schedule"
-				# Unset because its an object and wont trigger a change if we just update the object itself.
-				model.unset "schedule"
+			date.setHours date.getHours() - 1
+			model.set( "schedule", date )
+			
+			timeAfterChange = model.get "timeStr"
+			
+			expect( timeBeforeChange ).to.not.equal timeAfterChange
 
-				date.setHours date.getHours() - 1
-				model.set( "schedule", date )
-				
-				timeAfterChange = model.get "timeStr"
-				
-				expect( timeBeforeChange ).to.not.equal timeAfterChange
+		it "Should update completedStr when completionDate is changed", ->
+			model.set( "completionDate", new Date() )
+			expect( model.get "completionStr" ).to.exist
+			expect( model.get "completionTimeStr" ).to.exist
 
-			it "Should update completedStr when completionDate is changed", ->
-				model.set( "completionDate", new Date() )
-				expect( model.get "completionStr" ).to.exist
-				expect( model.get "completionTimeStr" ).to.exist
+		# it "ScheduleStr should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
+			# expect(2).to.be.lessThan 1
 
-			# it "ScheduleStr should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
-				# expect(2).to.be.lessThan 1
-
-			# it "completedStr should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
-				# expect(2).to.be.lessThan 1
+		# it "completedStr should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
+			# expect(2).to.be.lessThan 1
 
 	#
 	# To Do Collection
 	#
-	require ["collection/ToDoCollection", "model/ToDoModel"], (ToDoCollection, ToDo) ->
+	require ["collection/ToDoCollection"], (ToDoCollection) ->
 		describe "To Do collection", ->
 			todos = null
 
@@ -129,9 +142,9 @@ require [
 				future.setDate now.getDate() + 1
 				past.setDate now.getDate() - 1
 
-				scheduledTask = new ToDo { title: "scheduled task", schedule: future }
-				todoTask = new ToDo { title: "todo task", schedule: now }
-				completedTask = new ToDo { title: "completed task", completionDate: past }
+				scheduledTask = new ToDoModel { title: "scheduled task", schedule: future }
+				todoTask = new ToDoModel { title: "todo task", schedule: now }
+				completedTask = new ToDoModel { title: "completed task", completionDate: past }
 				
 				todos = new ToDoCollection [scheduledTask, todoTask, completedTask]
 
@@ -147,12 +160,12 @@ require [
 	#
 	# To Do View
 	#
-	require ["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopTask"], (ToDoCollection, Model, View) ->
+	require ["collection/ToDoCollection", "view/list/DesktopTask"], (ToDoCollection, View) ->
 		helpers.renderTodoList().then ->
 			list = contentHolder.find(".todo ol")
 
 			do ->
-				model = new Model helpers.getDummyModels()[0]
+				model = new ToDoModel helpers.getDummyModels()[0]
 				view = new View { model }
 				
 				describe "To Do View: Selecting", ->
@@ -251,17 +264,29 @@ require [
 						expect( count ).to.equal 0
 
 	#
-	# Scheduled list View
+	# Any list View
 	#
+	
+	###
 	require ["view/List", "model/ToDoModel"], (ListView, ToDo) ->
+		contentHolder.empty()
+		list = new ListView();
+		list.$el.appendTo contentHolder
+			
 		describe "Base list view", ->
-			it "Should remove all nested children when transitionOut occurs", ->
-				expect( 2 ).to.be.lessThan 1
+			children = list.$el.find "ol li"
+			it "should add appropiate children rendering", ->
+				expect( children ).to.have.length.above 0
+			
+			it "Should remove all nested children as part of the cleanUp routine", ->
+				list.cleanUp()
+				expect( children ).to.have.length.lessThan 1
+	###
 
 	#
 	# Scheduled list View
 	#
-	require ["view/Schedule", "model/ToDoModel"], (ScheduleView, ToDo) ->
+	require ["view/Schedule"], (ScheduleView) ->
 		laterToday = new Date()
 		tomorrow = new Date()
 		nextMonth = new Date()
@@ -272,9 +297,9 @@ require [
 		nextMonth.setMonth now.getMonth() + 1
 
 		todos = [
-			new ToDo( { title: "In a month", schedule: nextMonth } )
-			new ToDo( { title: "Tomorrow", schedule: tomorrow } ), 
-			new ToDo( { title: "In 1 hour", schedule: laterToday } ), 
+			new ToDoModel( { title: "In a month", schedule: nextMonth } )
+			new ToDoModel( { title: "Tomorrow", schedule: tomorrow } ), 
+			new ToDoModel( { title: "In 1 hour", schedule: laterToday } ), 
 		]
 
 		view = new ScheduleView()
@@ -290,23 +315,21 @@ require [
 	#
 	# To do list View
 	#
-	require ["view/Todo", "model/ToDoModel"], (ToDoView, ToDo) ->
-		todos = [ new ToDo( title: "three" ), new ToDo( title: "two", order: 2 ), new ToDo( title: "one", order: 1 ) ]
-		# view = new ToDoView()
+	require ["view/Todo"], (ToDoView) ->
+		todos = [ new ToDoModel( title: "three" ), new ToDoModel( title: "two", order: 2 ), new ToDoModel( title: "one", order: 1 ) ]
+		view = new ToDoView()
 
-		###
 		describe "To Do list view", ->
 			it "Should order tasks by models 'order' property", ->
 				result = view.groupTasks todos
 				expect(result[0].tasks[0].get "title").to.equal "one"
 				expect(result[0].tasks[1].get "title").to.equal "two"
 				expect(result[0].tasks[2].get "title").to.equal "three"
-		###
 	
 	#
 	# Completed list View
 	#
-	require ["view/Completed", "model/ToDoModel"], (CompletedView, ToDo) ->
+	require ["view/Completed"], (CompletedView) ->
 		earlierToday = new Date()
 		yesterday = new Date()
 		prevMonth = new Date()
@@ -317,9 +340,9 @@ require [
 		prevMonth.setMonth now.getMonth() - 1
 
 		todos = [
-			new ToDo( { title: "Last month", completionDate: prevMonth } )
-			new ToDo( { title: "Yesterday", completionDate: yesterday } ), 
-			new ToDo( { title: "An hour ago", completionDate: earlierToday } ), 
+			new ToDoModel( { title: "Last month", completionDate: prevMonth } )
+			new ToDoModel( { title: "Yesterday", completionDate: yesterday } ), 
+			new ToDoModel( { title: "An hour ago", completionDate: earlierToday } ), 
 		]
 
 		view = new CompletedView()

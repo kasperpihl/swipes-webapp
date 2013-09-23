@@ -1,5 +1,5 @@
 (function() {
-  require(["jquery", "underscore", "backbone"], function($, _, Backbone) {
+  require(["jquery", "underscore", "backbone", "model/ToDoModel"], function($, _, Backbone, ToDoModel) {
     var contentHolder, helpers;
     contentHolder = $("#content-holder");
     helpers = {
@@ -46,10 +46,10 @@
       renderTodoList: function() {
         var dfd;
         dfd = new $.Deferred();
-        require(["text!templates/task.html", "model/ToDoModel", "view/list/DesktopTask"], function(TaskTmpl, Model, View) {
+        require(["text!templates/task.html", "view/list/DesktopTask"], function(TaskTmpl, View) {
           var model, tmpl;
           tmpl = _.template(TaskTmpl);
-          model = new Model({
+          model = new ToDoModel({
             title: "Tomorrow"
           });
           contentHolder.html($("<ol class='todo'></ol>").append(tmpl(model.toJSON())));
@@ -59,46 +59,54 @@
       }
     };
     describe("Basics", function() {
-      return it("App should be up and running", function() {
+      it("App should be up and running", function() {
+        swipy.todos.reset(helpers.getDummyModels());
         return expect(swipy).to.exist;
       });
-    });
-    require(["model/ToDoModel"], function(Model) {
-      return describe("List Item model", function() {
-        var model;
-        model = new Model();
-        it("Should create scheduleStr property when instantiated", function() {
-          return expect(model.get("scheduleStr")).to.equal("the past");
-        });
-        it("Should update scheduleStr when schedule property is changed", function() {
-          var date;
-          date = model.get("schedule");
-          model.unset("schedule");
-          date.setDate(date.getDate() + 1);
-          model.set("schedule", date);
-          return expect(model.get("scheduleStr")).to.equal("Tomorrow");
-        });
-        it("Should create timeStr property when model is instantiated", function() {
-          return expect(model.get("timeStr")).to.exist;
-        });
-        it("Should update timeStr when schedule property is changed", function() {
-          var date, timeAfterChange, timeBeforeChange;
-          timeBeforeChange = model.get("timeStr");
-          date = model.get("schedule");
-          model.unset("schedule");
-          date.setHours(date.getHours() - 1);
-          model.set("schedule", date);
-          timeAfterChange = model.get("timeStr");
-          return expect(timeBeforeChange).to.not.equal(timeAfterChange);
-        });
-        return it("Should update completedStr when completionDate is changed", function() {
-          model.set("completionDate", new Date());
-          expect(model.get("completionStr")).to.exist;
-          return expect(model.get("completionTimeStr")).to.exist;
-        });
+      it("Should have scheduled tasks for testing", function() {
+        return expect(swipy.todos.getScheduled()).to.have.length.above(0);
+      });
+      it("Should have active tasks for testing", function() {
+        return expect(swipy.todos.getActive()).to.have.length.above(0);
+      });
+      return it("Should have completed tasks for testing", function() {
+        return expect(swipy.todos.getCompleted()).to.have.length.above(0);
       });
     });
-    require(["collection/ToDoCollection", "model/ToDoModel"], function(ToDoCollection, ToDo) {
+    describe("List Item model", function() {
+      var model;
+      model = new ToDoModel();
+      it("Should create scheduleStr property when instantiated", function() {
+        return expect(model.get("scheduleStr")).to.equal("the past");
+      });
+      it("Should update scheduleStr when schedule property is changed", function() {
+        var date;
+        date = model.get("schedule");
+        model.unset("schedule");
+        date.setDate(date.getDate() + 1);
+        model.set("schedule", date);
+        return expect(model.get("scheduleStr")).to.equal("Tomorrow");
+      });
+      it("Should create timeStr property when model is instantiated", function() {
+        return expect(model.get("timeStr")).to.exist;
+      });
+      it("Should update timeStr when schedule property is changed", function() {
+        var date, timeAfterChange, timeBeforeChange;
+        timeBeforeChange = model.get("timeStr");
+        date = model.get("schedule");
+        model.unset("schedule");
+        date.setHours(date.getHours() - 1);
+        model.set("schedule", date);
+        timeAfterChange = model.get("timeStr");
+        return expect(timeBeforeChange).to.not.equal(timeAfterChange);
+      });
+      return it("Should update completedStr when completionDate is changed", function() {
+        model.set("completionDate", new Date());
+        expect(model.get("completionStr")).to.exist;
+        return expect(model.get("completionTimeStr")).to.exist;
+      });
+    });
+    require(["collection/ToDoCollection"], function(ToDoCollection) {
       return describe("To Do collection", function() {
         var todos;
         todos = null;
@@ -109,15 +117,15 @@
           past = new Date();
           future.setDate(now.getDate() + 1);
           past.setDate(now.getDate() - 1);
-          scheduledTask = new ToDo({
+          scheduledTask = new ToDoModel({
             title: "scheduled task",
             schedule: future
           });
-          todoTask = new ToDo({
+          todoTask = new ToDoModel({
             title: "todo task",
             schedule: now
           });
-          completedTask = new ToDo({
+          completedTask = new ToDoModel({
             title: "completed task",
             completionDate: past
           });
@@ -134,13 +142,13 @@
         });
       });
     });
-    require(["collection/ToDoCollection", "model/ToDoModel", "view/list/DesktopTask"], function(ToDoCollection, Model, View) {
+    require(["collection/ToDoCollection", "view/list/DesktopTask"], function(ToDoCollection, View) {
       return helpers.renderTodoList().then(function() {
         var list;
         list = contentHolder.find(".todo ol");
         (function() {
           var model, view;
-          model = new Model(helpers.getDummyModels()[0]);
+          model = new ToDoModel(helpers.getDummyModels()[0]);
           view = new View({
             model: model
           });
@@ -273,14 +281,23 @@
         })();
       });
     });
-    require(["view/List", "model/ToDoModel"], function(ListView, ToDo) {
-      return describe("Base list view", function() {
-        return it("Should remove all nested children when transitionOut occurs", function() {
-          return expect(2).to.be.lessThan(1);
-        });
-      });
-    });
-    require(["view/Schedule", "model/ToDoModel"], function(ScheduleView, ToDo) {
+    /*
+    	require ["view/List", "model/ToDoModel"], (ListView, ToDo) ->
+    		contentHolder.empty()
+    		list = new ListView();
+    		list.$el.appendTo contentHolder
+    			
+    		describe "Base list view", ->
+    			children = list.$el.find "ol li"
+    			it "should add appropiate children rendering", ->
+    				expect( children ).to.have.length.above 0
+    			
+    			it "Should remove all nested children as part of the cleanUp routine", ->
+    				list.cleanUp()
+    				expect( children ).to.have.length.lessThan 1
+    */
+
+    require(["view/Schedule"], function(ScheduleView) {
       var laterToday, nextMonth, now, todos, tomorrow, view;
       laterToday = new Date();
       tomorrow = new Date();
@@ -290,13 +307,13 @@
       tomorrow.setDate(now.getDate() + 1);
       nextMonth.setMonth(now.getMonth() + 1);
       todos = [
-        new ToDo({
+        new ToDoModel({
           title: "In a month",
           schedule: nextMonth
-        }), new ToDo({
+        }), new ToDoModel({
           title: "Tomorrow",
           schedule: tomorrow
-        }), new ToDo({
+        }), new ToDoModel({
           title: "In 1 hour",
           schedule: laterToday
         })
@@ -311,30 +328,31 @@
         });
       });
     });
-    require(["view/Todo", "model/ToDoModel"], function(ToDoView, ToDo) {
-      var todos;
-      return todos = [
-        new ToDo({
+    require(["view/Todo"], function(ToDoView) {
+      var todos, view;
+      todos = [
+        new ToDoModel({
           title: "three"
-        }), new ToDo({
+        }), new ToDoModel({
           title: "two",
           order: 2
-        }), new ToDo({
+        }), new ToDoModel({
           title: "one",
           order: 1
         })
       ];
-      /*
-      		describe "To Do list view", ->
-      			it "Should order tasks by models 'order' property", ->
-      				result = view.groupTasks todos
-      				expect(result[0].tasks[0].get "title").to.equal "one"
-      				expect(result[0].tasks[1].get "title").to.equal "two"
-      				expect(result[0].tasks[2].get "title").to.equal "three"
-      */
-
+      view = new ToDoView();
+      return describe("To Do list view", function() {
+        return it("Should order tasks by models 'order' property", function() {
+          var result;
+          result = view.groupTasks(todos);
+          expect(result[0].tasks[0].get("title")).to.equal("one");
+          expect(result[0].tasks[1].get("title")).to.equal("two");
+          return expect(result[0].tasks[2].get("title")).to.equal("three");
+        });
+      });
     });
-    return require(["view/Completed", "model/ToDoModel"], function(CompletedView, ToDo) {
+    return require(["view/Completed"], function(CompletedView) {
       var earlierToday, now, prevMonth, todos, view, yesterday;
       earlierToday = new Date();
       yesterday = new Date();
@@ -344,13 +362,13 @@
       yesterday.setDate(now.getDate() - 1);
       prevMonth.setMonth(now.getMonth() - 1);
       todos = [
-        new ToDo({
+        new ToDoModel({
           title: "Last month",
           completionDate: prevMonth
-        }), new ToDo({
+        }), new ToDoModel({
           title: "Yesterday",
           completionDate: yesterday
-        }), new ToDo({
+        }), new ToDoModel({
           title: "An hour ago",
           completionDate: earlierToday
         })
