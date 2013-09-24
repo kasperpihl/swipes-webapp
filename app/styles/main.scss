@@ -20,15 +20,12 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 // Modules
 @import "module/forms";
-
 @import "module/todo-list";
 @import "module/list/list-item";
-
 @import "module/todo-input";
-
 @import "module/list-nav";
-
 @import "module/divider";
+@import "module/buttons";
 
 // Other modules
 @import "module/browsehappy";
