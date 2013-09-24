@@ -17,7 +17,27 @@
 		font-size: 0.8em;
 
 		a.remove {
-			display: none;
+			display: inline-block;
+			width: 0;
+			opacity: 0;
+			
+			font-size: 0.8em;
+			line-height: 1em;
+			color: $gray-light;
+			text-decoration: none;
+			
+			@include transition(all 0.2s ease-out);
+			
+			&:hover {
+				color: $gray;
+			}
+		}
+
+		&:hover {
+			a.remove {
+				opacity: 1;
+				width: 1.3em;
+			}
 		}
 	}
 
