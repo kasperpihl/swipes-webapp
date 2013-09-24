@@ -43,7 +43,7 @@
         }
         if (this.currView != null) {
           return this.transitionOut(this.currView).then(function() {
-            return require(["view/list/EditTask"], function(EditTaskView) {
+            return require(["view/editor/EditTask"], function(EditTaskView) {
               var editView;
               editView = new EditTaskView({
                 model: model
@@ -53,7 +53,7 @@
             });
           });
         } else {
-          return require(["view/list/EditTask"], function(EditTaskView) {
+          return require(["view/editor/EditTask"], function(EditTaskView) {
             var editView;
             editView = new EditTaskView({
               model: model

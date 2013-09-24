@@ -22,12 +22,12 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 
 			if @currView?
 				@transitionOut( @currView ).then =>
-					require ["view/list/EditTask"], (EditTaskView) =>
+					require ["view/editor/EditTask"], (EditTaskView) =>
 						editView = new EditTaskView( model: model )
 						$("#main-content").prepend editView.el
 						@transitionIn editView
 			else
-				require ["view/list/EditTask"], (EditTaskView) =>
+				require ["view/editor/EditTask"], (EditTaskView) =>
 					editView = new EditTaskView( model: model )
 					$("#main-content").prepend editView.el
 					@transitionIn editView
