@@ -15,51 +15,6 @@
 	}
 }
 
-// tasks header styles
-.todo-list > li {
-	border-top: 3px solid $yellow;
-
-	h1 {
-		position: relative;
-		display: inline-block;
-		float: right;
-
-		z-index: 2;
-		
-		margin-top: 0;
-		padding: 0.05em 0.5em 0.1em;
-		
-		background: $yellow;
-		
-		font-size: 1.13em;
-		color: $gray;
-
-		&:before {
-			position: absolute;
-			left: -0.9em;
-			top: -0.1em;
-
-			display: block;
-			content: "";
-
-			@include divider-triangle($yellow);
-		}
-	}
-}
-
-// Colors for schedule and completed lists
-.todo-list.schedule > li {
-	border-top-color: $lobster;
-	h1 { background: $lobster; color: white; }
-	h1:before { @include divider-triangle($lobster) }
-}
-
-.todo-list.completed > li {
-	border-top-color: $green;
-	h1 { background: $green; color: white; }
-	h1:before { @include divider-triangle($green) }
-}
-
 .list-fade {
 	z-index: 999;
 	

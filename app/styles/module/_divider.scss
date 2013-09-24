@@ -1,0 +1,50 @@
+.divider {
+	border-top: 3px solid $yellow;
+
+	> h1, > h2, > h3 {
+		position: relative;
+		display: inline-block;
+		float: right;
+
+		z-index: 2;
+		
+		margin-top: 0;
+		padding: 0.05em 0.5em 0.1em;
+		
+		background: $yellow;
+		
+		font-size: 1.13em;
+		color: $gray;
+
+		&:before {
+			position: absolute;
+			left: -0.9em;
+			top: -0.1em;
+
+			display: block;
+			content: "";
+
+			@include divider-triangle($yellow);
+		}
+	}
+
+	.schedule & {
+		border-top-color: $lobster;
+		
+		> h1, > h2, > h3 { 
+			background: $lobster; color: white; 
+			
+			&:before { @include divider-triangle($lobster) }
+		}
+	}
+
+	.completed & {
+		border-top-color: $green;
+		
+		> h1, > h2, > h3 { 
+			background: $green; color: white; 
+
+			&:before { @include divider-triangle($green) }
+		}
+	}
+}

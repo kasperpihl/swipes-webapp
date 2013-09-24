@@ -1,14 +1,16 @@
-<h1>Tasks</h1>
+<div class="divider">
+	<h2>Tasks</h2>
+</div>
 
 <section class="editor-content">
-	<h2><span contenteditable><%= title %></span></h2>
+	<h1><span contenteditable><%= title %></span></h1>
 	
 
 	<% if (scheduleStr) { %>
 		<time class="icon-schedule"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
 	<% } %>
 
-	<div class="repeat icon-repeat">
+	<div class="repeat-picker icon-repeat">
 		<p>Repeat every &hellip;</p>
 		<ul>
 			<li><a href="JavaScript:void(0);">never</a></li>
