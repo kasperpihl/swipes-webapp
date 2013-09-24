@@ -1,21 +1,15 @@
 (function() {
-  define(["underscore", "backbone", "text!templates/task.html"], function(_, Backbone, TaskTmpl) {
+  define(["underscore", "backbone", "text!templates/edit-task.html"], function(_, Backbone, TaskTmpl) {
     return Backbone.View.extend({
-      tagName: "li",
+      tagName: "article",
+      className: "task-editor",
       initialize: function() {
-        _.bindAll(this, "onSelected");
-        this.model.on("change:selected", this.onSelected);
+        this.model.on("change", this.render, this);
         this.setTemplate();
-        this.init();
-        this.content = this.$el.find('.todo-content');
         return this.render();
       },
       setTemplate: function() {
         return this.template = _.template(TaskTmpl);
-      },
-      init: function() {},
-      onSelected: function(model, selected) {
-        return this.$el.toggleClass("selected", selected);
       },
       render: function() {
         if (this.template == null) {

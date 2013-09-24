@@ -1,22 +1,13 @@
-define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, TaskTmpl) ->
+define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone, TaskTmpl) ->
 	Backbone.View.extend
-		tagName: "li"
+		tagName: "article"
+		className: "task-editor"
 		initialize: ->
-			_.bindAll( @, "onSelected" )
-			
-			@model.on( "change:selected", @onSelected )
-			
+			@model.on( "change", @render, @ )
 			@setTemplate()	
-			@init()
-			@content = @$el.find('.todo-content')
 			@render()
 		setTemplate: ->
 			@template = _.template TaskTmpl
-		init: ->
-			# Hook for views extending me
-		onSelected: (model, selected) ->
-			@$el.toggleClass( "selected", selected )
-
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @el if !@template?
