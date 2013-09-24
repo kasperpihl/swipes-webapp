@@ -1,0 +1,41 @@
+.task-editor {
+	$padding: 66px;
+
+	color: $gray-light;
+
+	.title {
+		position: relative;
+		font-size: emCalc(20px);
+		padding-left: $padding;
+	}
+
+	.editor-content {
+		width: 84%;
+		margin: auto;
+
+		.has-icon {
+			// Can't use em, because font-size might vary
+			padding-left: $padding;
+			position: relative;
+
+			&:before {
+				position: absolute;
+				left: 0; top: 0;
+				font-size: 1.4em;
+				color: $gray-lighter;
+			}
+		}
+
+		> section, .title {
+			margin-bottom: emCalc(36px);
+		}
+	}
+
+	> nav {
+		margin-top: 5.3em;
+		text-align: center;
+
+		a { margin-left: 8em; }
+		a:first-child { margin-left: 0; }
+	}
+}

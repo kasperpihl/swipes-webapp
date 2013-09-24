@@ -43,6 +43,7 @@
             schedule: new Date("September 17, 2013 20:30:02"),
             completionDate: null,
             repeatOption: "never",
+            tags: ["presentation", "work"],
             repeatDate: null,
             notes: ""
           }, {

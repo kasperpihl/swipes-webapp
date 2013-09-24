@@ -2,42 +2,54 @@
 	<h2>Tasks</h2>
 </div>
 
-<section class="editor-content">
-	<h1><span contenteditable><%= title %></span></h1>
+<div class="editor-content">
 	
-
+	<h1 class="h2 title">
+		<span class="priority"></span>
+		<span contenteditable><%= title %></span>
+	</h1>
+	
+	
 	<% if (scheduleStr) { %>
-		<time class="icon-schedule"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
+		<section>
+			<time class="icon-schedule has-icon"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
+		</section>
 	<% } %>
+	
+	<section>
+		<div class="repeat-picker icon-repeat has-icon">
+			<p>Repeat every &hellip;</p>
+			<ul>
+				<li><a href="JavaScript:void(0);">never</a></li>
+				<li><a class="selected" href="JavaScript:void(0);">day</a></li>
+				<li><a href="JavaScript:void(0);">sat+sun</a></li>
+				<li><a href="JavaScript:void(0);">week</a></li>
+				<li><a href="JavaScript:void(0);">month</a></li>
+				<li><a href="JavaScript:void(0);">year</a></li>
+			</ul>
+		</div>
+	</section>
+	
+	<section>
+		<ul class="rounded-tags icon-tags has-icon">
+		
+			<% if (tags && tags.length) { %>	
+				<% _.each(tags, function(tag) { %>
+					<li><%= tag %></li>
+				<% }); %>
+			<% } %>
 
-	<div class="repeat-picker icon-repeat">
-		<p>Repeat every &hellip;</p>
-		<ul>
-			<li><a href="JavaScript:void(0);">never</a></li>
-			<li><a class="selected" href="JavaScript:void(0);">day</a></li>
-			<li><a href="JavaScript:void(0);">sat+sun</a></li>
-			<li><a href="JavaScript:void(0);">week</a></li>
-			<li><a href="JavaScript:void(0);">month</a></li>
-			<li><a href="JavaScript:void(0);">year</a></li>
+			<li class="add-new-tag">+</li>
 		</ul>
-	</div>
+	</section>	
 	
-	<ul class="tags icon-tags">
-	
-		<% if (tags && tags.length) { %>	
-			<% _.each(tags, function(tag) { %>
-				<li><%= tag %></li>
-			<% }); %>
-		<% } %>
+	<section>
+		<div class="notes icon-note has-icon">
+			<p contenteditable>Bacon ipsum dolor sit amet sausage strip steak doner, short ribs turkey bresaola tri-tip short loin ribeye filet mignon boudin ground round prosciutto pork chop.</p>
+		</div>
+	</section>
 
-		<li class="add-new-tag">+</li>
-	</ul>
-
-	<div class="notes icon-note">
-		<p contenteditable>Bacon ipsum dolor sit amet sausage strip steak doner, short ribs turkey bresaola tri-tip short loin ribeye filet mignon boudin ground round prosciutto pork chop.</p>
-	</div>
-
-</section>
+</div>
 
 <nav>
 	<a href="JavaScript:void(0);" class="round-btn">
