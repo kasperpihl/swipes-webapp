@@ -31,16 +31,27 @@
 	</section>
 	
 	<section>
-		<ul class="rounded-tags icon-tags has-icon">
-		
-			<% if (tags && tags.length) { %>	
-				<% _.each(tags, function(tag) { %>
-					<li><%= tag %></li>
-				<% }); %>
-			<% } %>
+		<div class="icon-tags has-icon">
 
-			<li class="add-new-tag">+</li>
-		</ul>
+			<ul class="rounded-tags">
+				<% if (tags && tags.length) { %>	
+					<% _.each(tags, function(tag) { %>
+						<li>
+							<a class="remove" href="JavaScript:void(0);" title="Remove">
+								<span class="icon-cross"></span>
+							</a>
+							<%= tag %>
+						</li>
+					<% }); %>
+				<% } %>
+
+				<li class="add-new-tag">
+					<a href="JavaScript:void(0);" title="Add a new tag">
+						<span class="icon-plus"></span>		
+					</a>
+				</li>
+			</ul>
+		</div>
 	</section>	
 	
 	<section>

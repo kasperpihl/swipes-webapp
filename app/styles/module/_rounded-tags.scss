@@ -1,3 +1,44 @@
 .rounded-tags {
-	
+	@extend .clearfix;
+	padding: 0;
+
+	li {
+		list-style: none;
+		display: block;
+		float: left;
+
+		margin-right: 0.7em;
+		
+		padding: emCalc(9px) emCalc(12px);
+		background: $gray-lighter;
+		border-radius: 0.5em;
+
+		color: white;
+		font-size: 0.8em;
+
+		a.remove {
+			display: none;
+		}
+	}
+
+	.add-new-tag {
+		background: $yellow;
+		padding: 0;
+
+		.icon-plus {
+			position: relative;
+			top: 0.1em;
+		}
+
+		a {
+			display: block;
+			color: white;
+			padding: emCalc(9px) emCalc(12px);
+
+			&:hover {
+				color: white;
+				text-decoration: none;
+			}
+		}
+	}	
 }
