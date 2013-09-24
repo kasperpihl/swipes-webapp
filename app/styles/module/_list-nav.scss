@@ -4,6 +4,12 @@
 	margin: 0;
 	padding: 0;
 
+	body.edit-mode & {
+		opacity: 0;
+		height: 0;
+		overflow: hidden;
+	}
+
 	li {
 		text-align: center;
 		width: 33%;

@@ -18,6 +18,10 @@ html.touch body {
 	header.add-new {
 		margin: emCalc(5px) 0 emCalc(10px);
 		@include breakpoint(tablet) { margin: emCalc(58px) 0 emCalc(43px); }
+
+		body.edit-mode & {
+			margin: 0;
+		}
 	}
 
 	> nav {

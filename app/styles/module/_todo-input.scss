@@ -1,4 +1,10 @@
 .add-new {
+	body.edit-mode & {
+		opacity: 0;
+		height: 0;
+		overflow: hidden;
+	}
+
 	input {
 		text-indent: 0;
 		max-width: 100%;

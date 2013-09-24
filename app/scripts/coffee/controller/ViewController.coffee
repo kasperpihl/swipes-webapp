@@ -9,11 +9,14 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 			Backbone.on( 'edit/task', (taskId) => @editTask taskId )
 		
 		goto: (slug) ->
+			$("body").removeClass "edit-mode"
 			console.log "Go to #{slug}"
 			@updateNavigation slug
 			@transitionViews slug
 
 		editTask: (taskId) ->
+			$("body").addClass "edit-mode"
+
 			model = m for m in swipy.todos.models when m.cid is taskId
 			if not model? then return console.warn "Model with id #{taskId} couldn't be foudn"
 

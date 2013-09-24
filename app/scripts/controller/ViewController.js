@@ -21,6 +21,7 @@
       };
 
       ViewController.prototype.goto = function(slug) {
+        $("body").removeClass("edit-mode");
         console.log("Go to " + slug);
         this.updateNavigation(slug);
         return this.transitionViews(slug);
@@ -29,6 +30,7 @@
       ViewController.prototype.editTask = function(taskId) {
         var m, model, _i, _len, _ref,
           _this = this;
+        $("body").addClass("edit-mode");
         _ref = swipy.todos.models;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           m = _ref[_i];

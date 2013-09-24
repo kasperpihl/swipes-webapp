@@ -9,7 +9,7 @@
       },
       goto: function(route) {
         if (route == null) {
-          route = 'todo';
+          route = "todo";
         }
         return Backbone.trigger("navigate/view", route);
       },

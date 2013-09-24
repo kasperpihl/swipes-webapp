@@ -4,7 +4,7 @@ define ['backbone'], (Backbone) ->
 			":term": "goto"
 			"edit/:id": "edit"
 			"": "goto"
-		goto: (route = 'todo') -> 
+		goto: (route = "todo") -> 
 			Backbone.trigger( "navigate/view", route )
 		edit: (taskId) ->
 			Backbone.trigger( "edit/task", taskId )
