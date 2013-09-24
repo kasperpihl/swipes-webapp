@@ -1,15 +1,33 @@
-define ["gsap"], (TweenLite) ->
+define ["backbone", "gsap"], (Backbone, TweenLite) ->
 	class ViewController
 		constructor: (opts) ->
 			@init()
 			@navLinks = $ ".list-nav a"
 		init: ->
 			# Listen for navigation events
-			$(document).on( 'navigate/page', (e, slug) => @goto slug )
+			Backbone.on( 'navigate/view', (slug) => @goto slug )
+			Backbone.on( 'edit/task', (taskId) => @editTask taskId )
 		
 		goto: (slug) ->
+			console.log "Go to #{slug}"
 			@updateNavigation slug
 			@transitionViews slug
+
+		editTask: (taskId) ->
+			model = m for m in swipy.todos.models when m.cid is taskId
+			if not model? then return console.warn "Model with id #{taskId} couldn't be foudn"
+
+			if @currView?
+				@transitionOut( @currView ).then =>
+					require ["view/list/EditTask"], (EditTaskView) =>
+						editView = new EditTaskView( model: model )
+						$("#main-content").prepend editView.el
+						@transitionIn editView
+			else
+				require ["view/list/EditTask"], (EditTaskView) =>
+					editView = new EditTaskView( model: model )
+					$("#main-content").prepend editView.el
+					@transitionIn editView
 		
 		updateNavigation: (slug) =>
 			@navLinks.each ->

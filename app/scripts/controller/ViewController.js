@@ -1,7 +1,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(["gsap"], function(TweenLite) {
+  define(["backbone", "gsap"], function(Backbone, TweenLite) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
@@ -12,14 +12,54 @@
 
       ViewController.prototype.init = function() {
         var _this = this;
-        return $(document).on('navigate/page', function(e, slug) {
+        Backbone.on('navigate/view', function(slug) {
           return _this.goto(slug);
+        });
+        return Backbone.on('edit/task', function(taskId) {
+          return _this.editTask(taskId);
         });
       };
 
       ViewController.prototype.goto = function(slug) {
+        console.log("Go to " + slug);
         this.updateNavigation(slug);
         return this.transitionViews(slug);
+      };
+
+      ViewController.prototype.editTask = function(taskId) {
+        var m, model, _i, _len, _ref,
+          _this = this;
+        _ref = swipy.todos.models;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          m = _ref[_i];
+          if (m.cid === taskId) {
+            model = m;
+          }
+        }
+        if (model == null) {
+          return console.warn("Model with id " + taskId + " couldn't be foudn");
+        }
+        if (this.currView != null) {
+          return this.transitionOut(this.currView).then(function() {
+            return require(["view/list/EditTask"], function(EditTaskView) {
+              var editView;
+              editView = new EditTaskView({
+                model: model
+              });
+              $("#main-content").prepend(editView.el);
+              return _this.transitionIn(editView);
+            });
+          });
+        } else {
+          return require(["view/list/EditTask"], function(EditTaskView) {
+            var editView;
+            editView = new EditTaskView({
+              model: model
+            });
+            $("#main-content").prepend(editView.el);
+            return _this.transitionIn(editView);
+          });
+        }
       };
 
       ViewController.prototype.updateNavigation = function(slug) {
