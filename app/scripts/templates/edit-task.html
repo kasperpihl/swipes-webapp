@@ -1,7 +1,7 @@
 <h1>Tasks</h1>
 
 <section class="editor-content">
-	<h2><%= title %></h2>
+	<h2><span contenteditable><%= title %></span></h2>
 	
 
 	<% if (scheduleStr) { %>
@@ -32,14 +32,14 @@
 	</ul>
 
 	<div class="notes icon-note">
-		<p>Bacon ipsum dolor sit amet sausage strip steak doner, short ribs turkey bresaola tri-tip short loin ribeye filet mignon boudin ground round prosciutto pork chop.</p>
+		<p contenteditable>Bacon ipsum dolor sit amet sausage strip steak doner, short ribs turkey bresaola tri-tip short loin ribeye filet mignon boudin ground round prosciutto pork chop.</p>
 	</div>
 
 </section>
 
 <nav>
 	<a href="JavaScript:void(0);" class="round-btn">
-		<span class="icon-cancel"></span>
+		<span class="icon-cross"></span>
 	</a>
 	<a href="JavaScript:void(0);" class="round-btn">
 		<span class="icon-checkmark"></span>
