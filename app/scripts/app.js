@@ -3,21 +3,21 @@
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
-        this.init();
+        this.todos = new ToDoCollection();
+        this.todos.on("reset", this.init, this);
+        this.fetchTodos();
       }
 
       Swipes.prototype.init = function() {
         this.viewController = new ViewController();
         this.router = new MainRouter();
-        this.todos = new ToDoCollection();
         Backbone.history.start({
           pushState: false
         });
-        this.update();
         return $(".add-new input").focus();
       };
 
-      Swipes.prototype.update = function() {
+      Swipes.prototype.fetchTodos = function() {
         return this.todos.fetch();
       };
 

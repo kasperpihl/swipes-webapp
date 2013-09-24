@@ -5,15 +5,15 @@ define [
 	], (ViewController, MainRouter, ToDoCollection) ->
 	class Swipes
 		constructor: ->
-			@init()
+			@todos = new ToDoCollection()
+			@todos.on( "reset", @init, @ )
+			@fetchTodos()
 		init: ->
 			@viewController = new ViewController()
 			@router = new MainRouter()
-			@todos = new ToDoCollection()
 
 			Backbone.history.start { pushState: no }
-			@update()
 			
 			$(".add-new input").focus()
-		update: ->
+		fetchTodos: ->
 			@todos.fetch()
