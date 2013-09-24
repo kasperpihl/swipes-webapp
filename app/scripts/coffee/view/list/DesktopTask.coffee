@@ -22,8 +22,7 @@ define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
 		edit: ->
-			require ["gsap-text", "gsap"], =>
-				TweenLite.to( @$el.find("h2"), 0.5, { text: "Yolo!!" }, ease:Power4.easeInOut, delay: 1 );
+			swipy.router.navigate( "edit/#{ @model.cid }", yes )
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
 		getMousePos: (mouseX) ->

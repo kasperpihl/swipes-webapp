@@ -22,15 +22,7 @@
         return this.model.set("selected", !currentlySelected);
       },
       edit: function() {
-        var _this = this;
-        return require(["gsap-text", "gsap"], function() {
-          return TweenLite.to(_this.$el.find("h2"), 0.5, {
-            text: "Yolo!!"
-          }, {
-            ease: Power4.easeInOut,
-            delay: 1
-          });
-        });
+        return swipy.router.navigate("edit/" + this.model.cid, true);
       },
       setBounds: function() {
         return this.bounds = this.el.getClientRects()[0];
