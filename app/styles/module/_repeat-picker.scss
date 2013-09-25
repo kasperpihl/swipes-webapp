@@ -1,8 +1,10 @@
 .repeat-picker {
-
+	margin-bottom: emCalc(50px);
+	
 	ul {
 		@extend .clearfix;
 		padding: 0;
+		margin-top: emCalc(35px);
 	}
 
 	li {

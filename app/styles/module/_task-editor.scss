@@ -7,6 +7,7 @@
 		position: relative;
 		font-size: emCalc(20px);
 		padding-left: $padding;
+		margin-bottom: emCalc(50px);
 	}
 
 	.editor-content {
@@ -21,12 +22,12 @@
 			&:before {
 				position: absolute;
 				left: 0; top: 0;
-				font-size: 1.4em;
+				font-size: 1.3em;
 				color: $gray-lighter;
 			}
 		}
 
-		> section, .title {
+		> section {
 			margin-bottom: emCalc(36px);
 		}
 	}
