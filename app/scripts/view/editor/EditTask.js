@@ -29,9 +29,6 @@
           _this = this;
         atts = {
           title: this.getTitle(),
-          schedule: this.getSchedule(),
-          repeatDate: this.getRepeatDate(),
-          tags: this.getTags(),
           notes: this.getNotes()
         };
         opts = {
@@ -48,17 +45,8 @@
       getTitle: function() {
         return this.$el.find(".title")[0].innerText;
       },
-      getSchedule: function() {
-        return console.log("Saving schedule");
-      },
-      getRepeatDate: function() {
-        return console.log("Saving repeat option");
-      },
-      getTags: function() {
-        return console.log("Saving tags");
-      },
       getNotes: function() {
-        return console.log("Saving notes");
+        return this.$el.find(".notes p")[0].innerText;
       },
       remove: function() {
         this.cleanUp();

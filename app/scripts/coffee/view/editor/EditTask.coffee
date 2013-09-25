@@ -22,9 +22,6 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 		save: ->
 			atts = {
 				title: @getTitle()
-				schedule: @getSchedule()
-				repeatDate: @getRepeatDate()
-				tags: @getTags()
 				notes: @getNotes()
 			}
 
@@ -37,17 +34,10 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			}
 
 			@model.save( atts, opts )
-			# @back()
 		getTitle: ->
 			@$el.find( ".title" )[0].innerText
-		getSchedule: ->
-			console.log "Saving schedule"
-		getRepeatDate: ->
-			console.log "Saving repeat option"
-		getTags: ->
-			console.log "Saving tags"
 		getNotes: ->
-			console.log "Saving notes"
+			@$el.find( ".notes p" )[0].innerText
 		remove: ->
 			@cleanUp()
 			@$el.remove()
