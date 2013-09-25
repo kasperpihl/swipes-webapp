@@ -2,7 +2,7 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 	class ViewController
 		constructor: (opts) ->
 			@init()
-			@navLinks = $ ".list-nav a"
+
 		init: ->
 			# Listen for navigation events
 			Backbone.on( 'navigate/view', (slug) => @goto slug )
@@ -10,8 +10,6 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 		
 		goto: (slug) ->
 			$("body").removeClass "edit-mode"
-			console.log "Go to #{slug}"
-			@updateNavigation slug
 			@transitionViews slug
 
 		editTask: (taskId) ->
@@ -31,12 +29,6 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 					editView = new EditTaskView( model: model )
 					$("#main-content").prepend editView.el
 					@transitionIn editView
-		
-		updateNavigation: (slug) =>
-			@navLinks.each ->
-				link = $ @
-				isCurrLink = if link.attr( "href" )[1...] is slug then yes else no
-				link.toggleClass( "active", isCurrLink )
 		
 		transitionViews: (slug) ->
 			# Make first letter uppercase
@@ -58,7 +50,7 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 				alpha: 0
 				onComplete: =>
 					view.$el.addClass "hidden"
-					view.cleanUp()
+					view.remove()
 					dfd.resolve()
 
 			TweenLite.to( view.$el, 0.15, opts )

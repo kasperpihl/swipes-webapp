@@ -1,13 +1,9 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
   define(["backbone", "gsap"], function(Backbone, TweenLite) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
-        this.updateNavigation = __bind(this.updateNavigation, this);
         this.init();
-        this.navLinks = $(".list-nav a");
       }
 
       ViewController.prototype.init = function() {
@@ -22,8 +18,6 @@
 
       ViewController.prototype.goto = function(slug) {
         $("body").removeClass("edit-mode");
-        console.log("Go to " + slug);
-        this.updateNavigation(slug);
         return this.transitionViews(slug);
       };
 
@@ -64,15 +58,6 @@
         }
       };
 
-      ViewController.prototype.updateNavigation = function(slug) {
-        return this.navLinks.each(function() {
-          var isCurrLink, link;
-          link = $(this);
-          isCurrLink = link.attr("href").slice(1) === slug ? true : false;
-          return link.toggleClass("active", isCurrLink);
-        });
-      };
-
       ViewController.prototype.transitionViews = function(slug) {
         var viewName,
           _this = this;
@@ -100,7 +85,7 @@
           alpha: 0,
           onComplete: function() {
             view.$el.addClass("hidden");
-            view.cleanUp();
+            view.remove();
             return dfd.resolve();
           }
         };
