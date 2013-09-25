@@ -8,7 +8,6 @@
         "click .save": "save"
       },
       initialize: function() {
-        this.model.on("change", this.render, this);
         this.setTemplate();
         return this.render();
       },
@@ -26,25 +25,39 @@
         return swipy.router.navigate("todo", true);
       },
       save: function() {
-        this.saveTitle();
-        this.saveSchedule();
-        this.saveRepeat();
-        this.saveTags();
-        return this.saveNotes();
+        var atts, opts,
+          _this = this;
+        atts = {
+          title: this.getTitle(),
+          schedule: this.getSchedule(),
+          repeatDate: this.getRepeatDate(),
+          tags: this.getTags(),
+          notes: this.getNotes()
+        };
+        opts = {
+          success: function() {
+            return _this.back();
+          },
+          error: function(e) {
+            console.warn("Error saving ", arguments);
+            return alert("Something went wrong. Please try again in a little bit.");
+          }
+        };
+        return this.model.save(atts, opts);
       },
-      saveTitle: function() {
-        return console.log("Saving title");
+      getTitle: function() {
+        return this.$el.find(".title")[0].innerText;
       },
-      saveSchedule: function() {
+      getSchedule: function() {
         return console.log("Saving schedule");
       },
-      saveRepeat: function() {
+      getRepeatDate: function() {
         return console.log("Saving repeat option");
       },
-      saveTags: function() {
+      getTags: function() {
         return console.log("Saving tags");
       },
-      saveNotes: function() {
+      getNotes: function() {
         return console.log("Saving notes");
       },
       remove: function() {

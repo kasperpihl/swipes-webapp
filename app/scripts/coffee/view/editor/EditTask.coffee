@@ -6,7 +6,6 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			"click .cancel": "back"
 			"click .save": "save"
 		initialize: ->
-			@model.on( "change", @render, @ )
 			@setTemplate()	
 			@render()
 		setTemplate: ->
@@ -21,22 +20,33 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 		back: ->
 			swipy.router.navigate( "todo", yes )
 		save: ->
-			@saveTitle()
-			@saveSchedule()
-			@saveRepeat()
-			@saveTags()
-			@saveNotes()
+			atts = {
+				title: @getTitle()
+				schedule: @getSchedule()
+				repeatDate: @getRepeatDate()
+				tags: @getTags()
+				notes: @getNotes()
+			}
 
+			opts = {
+				success: =>
+					@back()
+				error: (e) =>
+					console.warn "Error saving ", arguments
+					alert "Something went wrong. Please try again in a little bit."
+			}
+
+			@model.save( atts, opts )
 			# @back()
-		saveTitle: ->
-			console.log "Saving title"
-		saveSchedule: ->
+		getTitle: ->
+			@$el.find( ".title" )[0].innerText
+		getSchedule: ->
 			console.log "Saving schedule"
-		saveRepeat: ->
+		getRepeatDate: ->
 			console.log "Saving repeat option"
-		saveTags: ->
+		getTags: ->
 			console.log "Saving tags"
-		saveNotes: ->
+		getNotes: ->
 			console.log "Saving notes"
 		remove: ->
 			@cleanUp()
