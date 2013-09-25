@@ -26,6 +26,10 @@ html.touch body {
 
 	> nav {
 		margin-bottom: emCalc(10px);
+		body.edit-mode & {
+			margin-bottom: 0;
+		}
+		
 		@include breakpoint(tablet) { margin-bottom: emCalc(40px); }
 	}
 
