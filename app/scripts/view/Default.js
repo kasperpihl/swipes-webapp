@@ -11,7 +11,7 @@
         return this.el;
       },
       customCleanUp: function() {},
-      cleanUp: function() {
+      remove: function() {
         var timer, _i, _len, _ref, _results;
         this.customCleanUp();
         this.undelegateEvents();

@@ -10,7 +10,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			return @el;
 		customCleanUp: ->
 			# Extend this in other views
-		cleanUp: ->
+		remove: ->
 			@customCleanUp()
 			this.undelegateEvents();
 			clearTimeout timer for timer in @timers
