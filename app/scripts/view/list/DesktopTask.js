@@ -86,6 +86,10 @@
           return this.$el.removeClass("hover-schedule");
         }
       },
+      remove: function() {
+        this.customCleanUp();
+        return this.$el.remove();
+      },
       customCleanUp: function() {
         $(window).off();
         return this.stopTrackingMouse();

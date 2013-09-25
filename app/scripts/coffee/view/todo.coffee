@@ -14,7 +14,7 @@
 define ["underscore", "view/List", "controller/ListSortController"], (_, ListView, ListSortController) ->
 	ListView.extend
 		sortTasks: (tasks) ->
-			return _.sortBy tasks, (model) -> model.get("order")
+			return _.sortBy( tasks, (model) -> model.get "order" )
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
@@ -39,4 +39,6 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 			# Alright, by now all todos have a set order. Continue on ...
 			@sortController.destroy() if @sortController?
 
-			@sortController = new ListSortController( @$el, @subviews )
+			# Dont init sort controller before transition in, because we need to read the height of the elements
+			@transitionDeferred.done =>
+				@sortController = new ListSortController( @$el, @subviews )

@@ -7,9 +7,6 @@
         ":term": "goto",
         "edit/:id": "edit"
       },
-      initialize: function() {
-        return console.log("Something is wrong in the state of Denmark...");
-      },
       goto: function(route) {
         if (route == null) {
           route = "todo";

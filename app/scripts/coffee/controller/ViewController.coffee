@@ -23,12 +23,14 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 					require ["view/editor/EditTask"], (EditTaskView) =>
 						editView = new EditTaskView( model: model )
 						$("#main-content").prepend editView.el
-						@transitionIn editView
+						@transitionIn( editView ).then ->
+							editView.transitionInComplete?.call(editView)
 			else
 				require ["view/editor/EditTask"], (EditTaskView) =>
 					editView = new EditTaskView( model: model )
 					$("#main-content").prepend editView.el
-					@transitionIn editView
+					@transitionIn( editView ).then ->
+						editView.transitionInComplete?.call(editView)
 		
 		transitionViews: (slug) ->
 			# Make first letter uppercase
@@ -39,9 +41,11 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 
 				if @currView? 
 					@transitionOut( @currView ).then =>
-						@transitionIn newView
+						@transitionIn( newView ).then ->
+							newView.transitionInComplete?.call(newView)
 				else
-					@transitionIn newView
+					@transitionIn( newView ).then ->
+						newView.transitionInComplete?.call(newView)
 
 		transitionOut: (view) ->
 			dfd = new $.Deferred()

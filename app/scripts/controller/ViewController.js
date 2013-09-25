@@ -43,7 +43,10 @@
                 model: model
               });
               $("#main-content").prepend(editView.el);
-              return _this.transitionIn(editView);
+              return _this.transitionIn(editView).then(function() {
+                var _ref1;
+                return (_ref1 = editView.transitionInComplete) != null ? _ref1.call(editView) : void 0;
+              });
             });
           });
         } else {
@@ -53,7 +56,10 @@
               model: model
             });
             $("#main-content").prepend(editView.el);
-            return _this.transitionIn(editView);
+            return _this.transitionIn(editView).then(function() {
+              var _ref1;
+              return (_ref1 = editView.transitionInComplete) != null ? _ref1.call(editView) : void 0;
+            });
           });
         }
       };
@@ -69,10 +75,16 @@
           });
           if (_this.currView != null) {
             return _this.transitionOut(_this.currView).then(function() {
-              return _this.transitionIn(newView);
+              return _this.transitionIn(newView).then(function() {
+                var _ref;
+                return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
+              });
             });
           } else {
-            return _this.transitionIn(newView);
+            return _this.transitionIn(newView).then(function() {
+              var _ref;
+              return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
+            });
           }
         });
       };

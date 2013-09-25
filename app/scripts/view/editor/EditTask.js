@@ -3,6 +3,10 @@
     return Backbone.View.extend({
       tagName: "article",
       className: "task-editor",
+      events: {
+        "click .cancel": "back",
+        "click .save": "save"
+      },
       initialize: function() {
         this.model.on("change", this.render, this);
         this.setTemplate();
@@ -18,13 +22,38 @@
         this.$el.html(this.template(this.model.toJSON()));
         return this.el;
       },
-      remove: function() {
-        return this.cleanUp();
+      back: function() {
+        return swipy.router.navigate("todo", true);
       },
-      customCleanUp: function() {},
+      save: function() {
+        this.saveTitle();
+        this.saveSchedule();
+        this.saveRepeat();
+        this.saveTags();
+        return this.saveNotes();
+      },
+      saveTitle: function() {
+        return console.log("Saving title");
+      },
+      saveSchedule: function() {
+        return console.log("Saving schedule");
+      },
+      saveRepeat: function() {
+        return console.log("Saving repeat option");
+      },
+      saveTags: function() {
+        return console.log("Saving tags");
+      },
+      saveNotes: function() {
+        return console.log("Saving notes");
+      },
+      remove: function() {
+        this.cleanUp();
+        return this.$el.remove();
+      },
       cleanUp: function() {
         this.model.off();
-        return this.customCleanUp();
+        return this.undelegateEvents();
       }
     });
   });

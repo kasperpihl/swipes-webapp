@@ -2,6 +2,9 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
+		events: 
+			"click .cancel": "back"
+			"click .save": "save"
 		initialize: ->
 			@model.on( "change", @render, @ )
 			@setTemplate()	
@@ -15,10 +18,29 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			@$el.html @template @model.toJSON()
 
 			return @el
+		back: ->
+			swipy.router.navigate( "todo", yes )
+		save: ->
+			@saveTitle()
+			@saveSchedule()
+			@saveRepeat()
+			@saveTags()
+			@saveNotes()
+
+			# @back()
+		saveTitle: ->
+			console.log "Saving title"
+		saveSchedule: ->
+			console.log "Saving schedule"
+		saveRepeat: ->
+			console.log "Saving repeat option"
+		saveTags: ->
+			console.log "Saving tags"
+		saveNotes: ->
+			console.log "Saving notes"
 		remove: ->
 			@cleanUp()
-		customCleanUp: ->
-			# Hook for views extending me
+			@$el.remove()
 		cleanUp: ->
 			@model.off()
-			@customCleanUp()
+			@undelegateEvents()

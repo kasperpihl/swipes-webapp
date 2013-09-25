@@ -3,6 +3,7 @@
     return DefaultView.extend({
       events: Modernizr.touch ? "tap" : "click ",
       init: function() {
+        this.transitionDeferred = new $.Deferred();
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
         return swipy.todos.on("add remove reset", this.renderList, this);
@@ -72,6 +73,9 @@
         });
       },
       afterRenderList: function(todos) {},
+      transitionInComplete: function() {
+        return this.transitionDeferred.resolve();
+      },
       killSubViews: function() {
         var view, _i, _len, _ref;
         _ref = this.subviews;
@@ -82,8 +86,10 @@
         return this.subviews = [];
       },
       customCleanUp: function() {
+        this.transitionDeferred = null;
         swipy.todos.off();
-        return this.killSubViews();
+        this.killSubViews();
+        return this.$el.empty();
       }
     });
   });

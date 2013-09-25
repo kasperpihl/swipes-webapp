@@ -3,6 +3,9 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 		events:
 			if Modernizr.touch then "tap" else "click "
 		init: ->
+			# This deferred is resolved after view has been transitioned in
+			@transitionDeferred = new $.Deferred()
+
 			# Set HTML tempalte for our list
 			@template = _.template ToDoListTmpl
 
@@ -47,15 +50,22 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 						list.append view.el
 
 					@$el.append $html
-
+					
 				@afterRenderList todos
 
 		afterRenderList: (todos) ->
 			# Hook for other views
+		transitionInComplete: ->
+			@transitionDeferred.resolve()
 		killSubViews: ->
 			view.remove() for view in @subviews
 			@subviews = []
 		customCleanUp: ->
+			# Reset transitionDeferred
+			@transitionDeferred = null
+
 			# Unbind all events
 			swipy.todos.off()
+			
 			@killSubViews()
+			@$el.empty()

@@ -55,6 +55,7 @@
         return this.renderList();
       },
       afterRenderList: function(todos) {
+        var _this = this;
         if (_.any(todos, function(m) {
           return !m.has("order");
         })) {
@@ -63,7 +64,9 @@
         if (this.sortController != null) {
           this.sortController.destroy();
         }
-        return this.sortController = new ListSortController(this.$el, this.subviews);
+        return this.transitionDeferred.done(function() {
+          return _this.sortController = new ListSortController(_this.$el, _this.subviews);
+        });
       }
     });
   });
