@@ -7,6 +7,9 @@ define [
 	class Swipes
 		constructor: ->
 			@todos = new ToDoCollection()
+			@todos.on( "reset", @init, @ )
+			@fetchTodos()
+		init: ->
 			@viewController = new ViewController()
 			@nav = new ListNavigation()
 			@router = new MainRouter()
@@ -14,5 +17,5 @@ define [
 			Backbone.history.start { pushState: no }
 			
 			$(".add-new input").focus()
-			
+		fetchTodos: ->
 			@todos.fetch()

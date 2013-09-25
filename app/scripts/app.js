@@ -4,15 +4,23 @@
     return Swipes = (function() {
       function Swipes() {
         this.todos = new ToDoCollection();
+        this.todos.on("reset", this.init, this);
+        this.fetchTodos();
+      }
+
+      Swipes.prototype.init = function() {
         this.viewController = new ViewController();
         this.nav = new ListNavigation();
         this.router = new MainRouter();
         Backbone.history.start({
           pushState: false
         });
-        $(".add-new input").focus();
-        this.todos.fetch();
-      }
+        return $(".add-new input").focus();
+      };
+
+      Swipes.prototype.fetchTodos = function() {
+        return this.todos.fetch();
+      };
 
       return Swipes;
 
