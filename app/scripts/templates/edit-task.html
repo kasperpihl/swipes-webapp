@@ -6,13 +6,13 @@
 	
 	<h1 class="h2 title">
 		<span class="priority"></span>
-		<span contenteditable><%= title %></span>
+		<span contenteditable="true"><%= title %></span>
 	</h1>
 	
 	
 	<% if (scheduleStr) { %>
 		<section>
-			<time class="icon-schedule has-icon"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
+			<time class="icon-schedule has-icon no-select"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
 		</section>
 	<% } %>
 	
@@ -56,7 +56,7 @@
 	
 	<section>
 		<div class="notes icon-note has-icon">
-			<p contenteditable>Bacon ipsum dolor sit amet sausage strip steak doner, short ribs turkey bresaola tri-tip short loin ribeye filet mignon boudin ground round prosciutto pork chop.</p>
+			<p contenteditable="true">Bacon ipsum dolor sit amet sausage strip steak doner, short ribs turkey bresaola tri-tip short loin ribeye filet mignon boudin ground round prosciutto pork chop.</p>
 		</div>
 	</section>
 

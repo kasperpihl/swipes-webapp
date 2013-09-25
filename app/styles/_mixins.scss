@@ -24,29 +24,6 @@
 	}
 }
 
-@mixin plus-icon($width: 4px, $padding: 0, $roundness: 0, $color: white) {
-	&:before, &:after {
-		position: absolute;
-		background: $color;
-		border-radius: $roundness;
-		content: '';
-	}
-
-	&:before {
-		top: $padding; bottom: $padding; 
-		left: 50%;
-		width: $width;
-		margin-left: 0 - ($width / 2);
-	}
-
-	&:after {
-		left: $padding; right: $padding; 
-		top: 50%;
-		height: $width;
-		margin-top: 0 - ($width / 2);
-	}
-}
-
 @mixin input-placeholder {
 	&.placeholder { @content; }
 	&:-moz-placeholder { @content; }
@@ -60,4 +37,17 @@
 	border-style: solid;
 	border-width: 0 ($size * 0.7) $size 0;
 	border-color: transparent $color transparent transparent;
+}
+
+
+.no-select {
+	cursor: default;
+
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+
+	  /* No support for these yet, use at own risk */
+	-o-user-select: none;
+	user-select: none;
 }

@@ -38,4 +38,17 @@
 		a { margin-left: 8em; }
 		a:first-child { margin-left: 0; }
 	}
+
+	[contenteditable="true"] {
+		@include transition(color 0.2s ease-out);
+
+		&:focus, &:hover {
+			color: $gray-dark;
+		}
+		
+		&:active, &:focus {
+			border:none;
+			outline:none;
+		}
+	}
 }

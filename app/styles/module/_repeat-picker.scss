@@ -1,0 +1,53 @@
+.repeat-picker {
+
+	ul {
+		@extend .clearfix;
+		padding: 0;
+	}
+
+	li {
+		list-style: none;
+	}
+
+	> p {
+		@extend .no-select;
+	}
+
+	a {
+		$height: emCalc(59px);
+
+		float: left;
+		display: block;
+		width: 16.6667%;
+		height: $height;
+		
+		line-height: $height;
+		text-align: center;
+		font-family: $font-bold;
+		color: $gray-light;
+
+		border-left: thin solid lighten($gray-lighter, 10%);
+		
+		&:hover {
+			text-decoration: none;
+			color: $gray;
+		}
+
+		&.selected {
+			background: $yellow;
+			color: white;
+
+			.schedule & {
+				background: $lobster;
+			}
+		}
+
+	}
+
+	li:first-child a, a.selected { border-left: none; }
+	
+	li:first-child a:not(.selected) { 
+		width: 14%;
+		text-align: left;
+	}
+}

@@ -3,6 +3,8 @@
 	padding: 0;
 
 	li {
+		@extend .no-select;
+		
 		list-style: none;
 		display: block;
 		float: left;
@@ -15,6 +17,7 @@
 
 		color: white;
 		font-size: 0.8em;
+
 
 		a.remove {
 			display: inline-block;
