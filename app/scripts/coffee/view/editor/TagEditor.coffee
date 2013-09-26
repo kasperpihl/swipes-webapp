@@ -25,33 +25,40 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			icon.removeClass "icon-plus icon-minus"
 			icon.addClass( if flag is on then "icon-plus" else "icon-minus" )
 		addTag: (e) ->
-			console.log "Add tag: ", e
+			@addTagToModel e.currentTarget.innerText
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
 			return if tagName is ""
 
+			@addTagToModel tagName
+		addTagToModel: (tagName, addToCollection = yes) ->
 			tags = @model.get( "tags" ) or []
-			if _.contains( tags, tagName )
-				return alert "You've already added that tag"
+			if _.contains( tags, tagName ) then return alert "You've already added that tag"
 
 			tags.push tagName
-
 			@model.unset( "tags", { silent: yes } )
 
 			# If it's a new tag, add it to the stack
-			unless _.contains( swipy.tags.pluck( "title" ), tagName )
-				swipy.tags.add { title: tagName }
+			if addToCollection 
+				unless _.contains( swipy.tags.pluck( "title" ), tagName )
+					swipy.tags.add { title: tagName }
 			
 			# This trigger re-rendering
 			@model.set( "tags", tags )
 		render: ->
+			@renderTags()
+			@renderTagPool()
+
+			if @toggled then @$el.find("form.add-tag input").focus()
+
+			return @el
+		renderTags: ->
 			list = @$el.find " > .rounded-tags"
 			list.empty()
 
-			if @model.has "tags"
-				for tagname in @model.get "tags"
-					@renderTag( tagname, list, yes )
+			if @model.has "tags" then for tagname in @model.get "tags"
+				@renderTag( tagname, list, yes )
 
 			icon = "<span class='" + ( if @toggled then "icon-minus" else "icon-plus" ) + "'></span>"
 			poolToggler = "
@@ -61,13 +68,6 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			"
 
 			list.append poolToggler
-
-			@renderTagPool()
-
-			if @toggled
-				@$el.find("form.add-tag input").focus()
-
-			return @el
 		renderTagPool: ->
 			list = @$el.find(".tag-pool .rounded-tags")
 			list.empty()

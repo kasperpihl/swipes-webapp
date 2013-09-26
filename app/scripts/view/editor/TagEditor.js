@@ -39,14 +39,21 @@
         return icon.addClass(flag === true ? "icon-plus" : "icon-minus");
       },
       addTag: function(e) {
-        return console.log("Add tag: ", e);
+        return this.addTagToModel(e.currentTarget.innerText);
       },
       createTag: function(e) {
-        var tagName, tags;
+        var tagName;
         e.preventDefault();
         tagName = this.$el.find("form.add-tag input").val();
         if (tagName === "") {
           return;
+        }
+        return this.addTagToModel(tagName);
+      },
+      addTagToModel: function(tagName, addToCollection) {
+        var tags;
+        if (addToCollection == null) {
+          addToCollection = true;
         }
         tags = this.model.get("tags") || [];
         if (_.contains(tags, tagName)) {
@@ -56,14 +63,24 @@
         this.model.unset("tags", {
           silent: true
         });
-        if (!_.contains(swipy.tags.pluck("title"), tagName)) {
-          swipy.tags.add({
-            title: tagName
-          });
+        if (addToCollection) {
+          if (!_.contains(swipy.tags.pluck("title"), tagName)) {
+            swipy.tags.add({
+              title: tagName
+            });
+          }
         }
         return this.model.set("tags", tags);
       },
       render: function() {
+        this.renderTags();
+        this.renderTagPool();
+        if (this.toggled) {
+          this.$el.find("form.add-tag input").focus();
+        }
+        return this.el;
+      },
+      renderTags: function() {
         var icon, list, poolToggler, tagname, _i, _len, _ref;
         list = this.$el.find(" > .rounded-tags");
         list.empty();
@@ -76,12 +93,7 @@
         }
         icon = "<span class='" + (this.toggled ? "icon-minus" : "icon-plus") + "'></span>";
         poolToggler = "				<li class='add-new-tag'>					<a href='JavaScript:void(0);' title='Add a new tag'>" + icon + "</a>				</li>			";
-        list.append(poolToggler);
-        this.renderTagPool();
-        if (this.toggled) {
-          this.$el.find("form.add-tag input").focus();
-        }
-        return this.el;
+        return list.append(poolToggler);
       },
       renderTagPool: function() {
         var allTags, list, tagInput, tagname, unusedTags, _i, _len;
