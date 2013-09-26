@@ -91,12 +91,14 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			list = @$el.find(".tag-pool .rounded-tags")
 			list.empty()
 			
+			allTags = swipy.tags.pluck "title"
 			if @model.has "tags"
-				allTags = swipy.tags.pluck "title"
 				unusedTags = _.without( allTags, @model.get("tags")... )
+			else
+				unusedTags = allTags
 
-				for tagname in unusedTags
-					@renderTag( tagname, list )
+			for tagname in unusedTags
+				@renderTag( tagname, list )
 
 			tagInput = "
 				<li class='tag-input'>

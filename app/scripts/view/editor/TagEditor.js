@@ -109,13 +109,15 @@
         var allTags, list, tagInput, tagname, unusedTags, _i, _len;
         list = this.$el.find(".tag-pool .rounded-tags");
         list.empty();
+        allTags = swipy.tags.pluck("title");
         if (this.model.has("tags")) {
-          allTags = swipy.tags.pluck("title");
           unusedTags = _.without.apply(_, [allTags].concat(__slice.call(this.model.get("tags"))));
-          for (_i = 0, _len = unusedTags.length; _i < _len; _i++) {
-            tagname = unusedTags[_i];
-            this.renderTag(tagname, list);
-          }
+        } else {
+          unusedTags = allTags;
+        }
+        for (_i = 0, _len = unusedTags.length; _i < _len; _i++) {
+          tagname = unusedTags[_i];
+          this.renderTag(tagname, list);
         }
         tagInput = "				<li class='tag-input'>					<form class='add-tag'>						<input type='text' placeholder='Add new tag'>					</form>				</li>			";
         return list.append(tagInput);
