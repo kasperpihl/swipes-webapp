@@ -1,4 +1,4 @@
-<div class="divider">
+ <div class="divider">
 	<h2>Tasks</h2>
 </div>
 
@@ -34,23 +34,11 @@
 		<div class="icon-tags has-icon">
 
 			<ul class="rounded-tags">
-				<% if (tags && tags.length) { %>	
-					<% _.each(tags, function(tag) { %>
-						<li>
-							<a class="remove" href="JavaScript:void(0);" title="Remove">
-								<span class="icon-cross"></span>
-							</a>
-							<%= tag %>
-						</li>
-					<% }); %>
-				<% } %>
-
-				<li class="add-new-tag">
-					<a href="JavaScript:void(0);" title="Add a new tag">
-						<span class="icon-plus"></span>		
-					</a>
-				</li>
 			</ul>
+			<aside class="tag-pool">
+				<ul class="rounded-tags">
+				</ul>
+			</aside>
 		</div>
 	</section>	
 	

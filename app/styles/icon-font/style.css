@@ -28,7 +28,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="icon-"] {
 */
-.icon-triangle-right, .icon-triangle-left, .icon-trashcan, .icon-todo, .icon-tags, .icon-swipes-plus, .icon-swipes-logo, .icon-swipes-logo-square, .icon-support, .icon-snooze-unspecified, .icon-snooze-tomorrow, .icon-snooze-this-weekend, .icon-snooze-this-evening, .icon-snooze-next-week, .icon-snooze-location, .icon-snooze-later-today, .icon-snooze-day-after-tomorrow, .icon-snooze-date, .icon-share, .icon-schedule, .icon-repeat, .icon-questionmark-circle, .icon-policy, .icon-plus, .icon-pencil, .icon-note, .icon-log-out, .icon-facebook-logo, .icon-facebook-btn, .icon-cross, .icon-cog, .icon-clock, .icon-checkmark, .icon-arr-right, .icon-arr-right-long, .icon-arr-left, .icon-arr-left-long {
+.icon-triangle-right, .icon-triangle-left, .icon-trashcan, .icon-todo, .icon-tags, .icon-swipes-plus, .icon-swipes-logo, .icon-swipes-logo-square, .icon-support, .icon-snooze-unspecified, .icon-snooze-tomorrow, .icon-snooze-this-weekend, .icon-snooze-this-evening, .icon-snooze-next-week, .icon-snooze-location, .icon-snooze-later-today, .icon-snooze-day-after-tomorrow, .icon-snooze-date, .icon-share, .icon-schedule, .icon-repeat, .icon-questionmark-circle, .icon-policy, .icon-plus, .icon-pencil, .icon-note, .icon-log-out, .icon-facebook-logo, .icon-facebook-btn, .icon-cross, .icon-cog, .icon-clock, .icon-checkmark, .icon-arr-right, .icon-arr-right-long, .icon-arr-left, .icon-arr-left-long, .icon-minus {
 	font-family: 'swipes';
 	speak: none;
 	font-style: normal;
@@ -148,4 +148,7 @@ you can use the generic selector below, but it's slower:
 }
 .icon-arr-left-long:before {
 	content: "\e024";
+}
+.icon-minus:before {
+	content: "\e025";
 }

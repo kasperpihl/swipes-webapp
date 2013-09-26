@@ -1,0 +1,29 @@
+.tag-pool {
+	background: lighten($gray-lighter, 10%);
+	padding: emCalc(27px) emCalc(16px);
+	
+	.rounded-tags {
+		margin: 0;
+	}
+
+	.rounded-tags li {
+		background: $gray-warm;
+	}
+
+	form {
+		width: emCalc(102px);
+	}
+
+	input {
+		width: 100%;
+
+		outline: none;
+		border: none;
+		background: transparent;
+		color: $gray-dark;
+
+		@include input-placeholder() {
+			color: $gray;
+		}
+	}
+}

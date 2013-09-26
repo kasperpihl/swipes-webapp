@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "text!templates/edit-task.html"], function(_, Backbone, TaskTmpl) {
+  define(["underscore", "backbone", "text!templates/edit-task.html", "view/editor/TagEditor"], function(_, Backbone, TaskTmpl, TagEditor) {
     return Backbone.View.extend({
       tagName: "article",
       className: "task-editor",
@@ -9,10 +9,17 @@
       },
       initialize: function() {
         this.setTemplate();
-        return this.render();
+        this.render();
+        return this.createTagEditor();
       },
       setTemplate: function() {
         return this.template = _.template(TaskTmpl);
+      },
+      createTagEditor: function() {
+        return this.tagEditor = new TagEditor({
+          el: this.$el.find(".icon-tags"),
+          model: this.model
+        });
       },
       render: function() {
         if (this.template == null) {
@@ -35,7 +42,7 @@
           success: function() {
             return _this.back();
           },
-          error: function(e) {
+          error: function() {
             console.warn("Error saving ", arguments);
             return alert("Something went wrong. Please try again in a little bit.");
           }

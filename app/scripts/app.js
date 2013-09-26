@@ -1,5 +1,5 @@
 (function() {
-  define(['controller/ViewController', 'router/MainRouter', 'collection/ToDoCollection', 'view/nav/ListNavigation'], function(ViewController, MainRouter, ToDoCollection, ListNavigation) {
+  define(['controller/ViewController', 'router/MainRouter', 'collection/ToDoCollection', 'collection/TagCollection', 'view/nav/ListNavigation'], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation) {
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
@@ -9,6 +9,7 @@
       }
 
       Swipes.prototype.init = function() {
+        this.tags = new TagCollection();
         this.viewController = new ViewController();
         this.nav = new ListNavigation();
         this.router = new MainRouter();

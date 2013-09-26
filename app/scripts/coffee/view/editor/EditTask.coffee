@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone, TaskTmpl) ->
+define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/TagEditor"], (_, Backbone, TaskTmpl, TagEditor) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
@@ -6,10 +6,14 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			"click .cancel": "back"
 			"click .save": "save"
 		initialize: ->
-			@setTemplate()	
+			@setTemplate()
 			@render()
+			
+			@createTagEditor()
 		setTemplate: ->
 			@template = _.template TaskTmpl
+		createTagEditor: ->
+			@tagEditor = new TagEditor { el: @$el.find(".icon-tags"), model: @model }
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @el if !@template?
@@ -28,7 +32,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			opts = {
 				success: =>
 					@back()
-				error: (e) =>
+				error: =>
 					console.warn "Error saving ", arguments
 					alert "Something went wrong. Please try again in a little bit."
 			}
