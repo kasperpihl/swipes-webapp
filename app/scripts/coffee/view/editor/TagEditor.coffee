@@ -2,8 +2,9 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 	Backbone.View.extend
 		events: 
 			"click .add-new-tag": "toggleTagPool"
-			"click .tag-pool li:not(.tag-input)": "addTag"
 			"submit .add-tag": "createTag"
+			"click .tag-pool li:not(.tag-input)": "addTag"
+			"click .remove": "removeTag"
 		initialize: ->
 			@toggled = no
 			@model.on( "change:tags", @render, @ )
@@ -26,6 +27,12 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			icon.addClass( if flag is on then "icon-plus" else "icon-minus" )
 		addTag: (e) ->
 			@addTagToModel e.currentTarget.innerText
+		removeTag: (e) ->
+			tag = $.trim e.currentTarget.parentNode.innerText
+			tags = _.without( @model.get( "tags" ), tag )
+			
+			@model.unset( "tags", { silent: yes } )
+			@model.set( "tags", tags )
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()

@@ -5,8 +5,9 @@
     return Backbone.View.extend({
       events: {
         "click .add-new-tag": "toggleTagPool",
+        "submit .add-tag": "createTag",
         "click .tag-pool li:not(.tag-input)": "addTag",
-        "submit .add-tag": "createTag"
+        "click .remove": "removeTag"
       },
       initialize: function() {
         this.toggled = false;
@@ -40,6 +41,15 @@
       },
       addTag: function(e) {
         return this.addTagToModel(e.currentTarget.innerText);
+      },
+      removeTag: function(e) {
+        var tag, tags;
+        tag = $.trim(e.currentTarget.parentNode.innerText);
+        tags = _.without(this.model.get("tags"), tag);
+        this.model.unset("tags", {
+          silent: true
+        });
+        return this.model.set("tags", tags);
       },
       createTag: function(e) {
         var tagName;
