@@ -14,7 +14,12 @@
 
 	.rounded-tags li {
 		background: $gray-warm;
+		@include transition(background 0.15s ease-out);
 		cursor: pointer;
+
+		&:hover {
+			background: darken($gray-warm, 7%);
+		}
 	}
 
 	form {
