@@ -5,7 +5,7 @@
     return Backbone.View.extend({
       events: {
         "click .add-new-tag": "toggleTagPool",
-        "click .tag-pool li": "addTag",
+        "click .tag-pool li:not(.tag-input)": "addTag",
         "submit .add-tag": "createTag"
       },
       initialize: function() {
@@ -49,15 +49,22 @@
           return;
         }
         tags = this.model.get("tags") || [];
+        if (_.contains(tags, tagName)) {
+          return alert("You've already added that tag");
+        }
         tags.push(tagName);
         this.model.unset("tags", {
           silent: true
         });
+        if (!_.contains(swipy.tags.pluck("title"), tagName)) {
+          swipy.tags.add({
+            title: tagName
+          });
+        }
         return this.model.set("tags", tags);
       },
       render: function() {
         var icon, list, poolToggler, tagname, _i, _len, _ref;
-        console.log("Render tags!");
         list = this.$el.find(" > .rounded-tags");
         list.empty();
         if (this.model.has("tags")) {

@@ -2,7 +2,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 	Backbone.View.extend
 		events: 
 			"click .add-new-tag": "toggleTagPool"
-			"click .tag-pool li": "addTag"
+			"click .tag-pool li:not(.tag-input)": "addTag"
 			"submit .add-tag": "createTag"
 		initialize: ->
 			@toggled = no
@@ -30,14 +30,22 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
 			return if tagName is ""
-			
+
 			tags = @model.get( "tags" ) or []
+			if _.contains( tags, tagName )
+				return alert "You've already added that tag"
+
 			tags.push tagName
 
 			@model.unset( "tags", { silent: yes } )
+
+			# If it's a new tag, add it to the stack
+			unless _.contains( swipy.tags.pluck( "title" ), tagName )
+				swipy.tags.add { title: tagName }
+			
+			# This trigger re-rendering
 			@model.set( "tags", tags )
 		render: ->
-			console.log "Render tags!"
 			list = @$el.find " > .rounded-tags"
 			list.empty()
 
