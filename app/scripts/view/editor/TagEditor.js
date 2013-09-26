@@ -23,13 +23,13 @@
       },
       showTagPool: function() {
         this.toggleButton(false);
-        this.$el.find(".tag-pool").addClass("show");
+        this.$el.addClass("show-pool");
         this.$el.find("form.add-tag input").focus();
         return this.toggled = true;
       },
       hideTagPool: function() {
         this.toggleButton(true);
-        this.$el.find(".tag-pool").removeClass("show");
+        this.$el.removeClass("show-pool");
         this.$el.find("form.add-tag input").blur();
         return this.toggled = false;
       },

@@ -1,6 +1,12 @@
 .tag-pool {
+	display: none;
+
 	background: lighten($gray-lighter, 10%);
-	padding: emCalc(27px) emCalc(16px);
+	padding: 1.5em 0.8em 0.8em;
+
+	.show-pool & {
+		display: block;
+	}
 	
 	.rounded-tags {
 		margin: 0;
@@ -8,6 +14,7 @@
 
 	.rounded-tags li {
 		background: $gray-warm;
+		cursor: pointer;
 	}
 
 	form {

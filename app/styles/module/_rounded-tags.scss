@@ -1,6 +1,7 @@
 .rounded-tags {
 	@extend .clearfix;
 	padding: 0;
+	margin-bottom: 0;
 
 	li {
 		@extend .no-select;
@@ -9,7 +10,7 @@
 		display: block;
 		float: left;
 
-		margin-right: 0.7em;
+		margin: 0 0.7em 0.7em 0;
 		
 		padding: emCalc(9px) emCalc(12px);
 		background: $gray-lighter;
@@ -50,8 +51,10 @@
 	}
 
 	.add-new-tag {
+		position: relative;
 		background: $yellow;
 		padding: 0;
+
 
 		.icon-plus {
 			position: relative;
@@ -74,4 +77,16 @@
 			}
 		}
 	}
+}
+
+.show-pool .add-new-tag:after {
+	content: "";
+	position: absolute;
+	display: block;
+
+	left: 50%;
+	margin-left: -0.7em;
+	margin-top: emCalc(6px);
+	
+	@include triangle(1.6em, 0.72em, up, lighten($gray-lighter, 10%));
 }

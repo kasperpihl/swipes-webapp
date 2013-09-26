@@ -5,40 +5,49 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			"submit .add-tag": "createTag"
 			"click .tag-pool li:not(.tag-input)": "addTag"
 			"click .remove": "removeTag"
+		
 		initialize: ->
 			@toggled = no
 			@model.on( "change:tags", @render, @ )
 			@render()
+		
 		toggleTagPool: ->
 			if @toggled then @hideTagPool() else @showTagPool()
+		
 		showTagPool: ->
 			@toggleButton off
-			@$el.find(".tag-pool").addClass "show"
+			@$el.addClass "show-pool"
 			@$el.find("form.add-tag input").focus()
 			@toggled = yes
+		
 		hideTagPool: ->
 			@toggleButton on
-			@$el.find(".tag-pool").removeClass "show"
+			@$el.removeClass "show-pool"
 			@$el.find("form.add-tag input").blur()
 			@toggled = no
+		
 		toggleButton: (flag) ->
 			icon = @$el.find ".add-new-tag span"
 			icon.removeClass "icon-plus icon-minus"
 			icon.addClass( if flag is on then "icon-plus" else "icon-minus" )
+		
 		addTag: (e) ->
 			@addTagToModel e.currentTarget.innerText
+		
 		removeTag: (e) ->
 			tag = $.trim e.currentTarget.parentNode.innerText
 			tags = _.without( @model.get( "tags" ), tag )
 			
 			@model.unset( "tags", { silent: yes } )
 			@model.set( "tags", tags )
+		
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
 			return if tagName is ""
 
 			@addTagToModel tagName
+		
 		addTagToModel: (tagName, addToCollection = yes) ->
 			tags = @model.get( "tags" ) or []
 			if _.contains( tags, tagName ) then return alert "You've already added that tag"
@@ -53,6 +62,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			
 			# This trigger re-rendering
 			@model.set( "tags", tags )
+		
 		render: ->
 			@renderTags()
 			@renderTagPool()
@@ -60,6 +70,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			if @toggled then @$el.find("form.add-tag input").focus()
 
 			return @el
+		
 		renderTags: ->
 			list = @$el.find " > .rounded-tags"
 			list.empty()
@@ -75,6 +86,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			"
 
 			list.append poolToggler
+		
 		renderTagPool: ->
 			list = @$el.find(".tag-pool .rounded-tags")
 			list.empty()
@@ -94,6 +106,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 				</li>
 			"
 			list.append tagInput
+		
 		renderTag: (tagName, parent, removable = no) ->
 			tag = document.createElement "li"
 			tag.innerText = tagName
@@ -106,6 +119,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 					</a>
 				"
 				$(tag).prepend removeBtn
+		
 		cleanUp: ->
 			@model.off()
 			@undelegateEvents()
