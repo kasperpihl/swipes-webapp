@@ -5,7 +5,8 @@
         this.transitionDeferred = new $.Deferred();
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
-        return this.listenTo(swipy.todos, "add remove reset", this.renderList);
+        this.listenTo(swipy.todos, "add remove reset change:completionDate change:schdule", this.renderList);
+        return this.listenTo(Backbone, "complete-task", this.completeTasks);
       },
       render: function() {
         this.renderList();
@@ -73,6 +74,9 @@
       },
       beforeRenderList: function(todos) {},
       afterRenderList: function(todos) {},
+      completeTasks: function(tasks) {
+        return console.log("Complete: ", tasks);
+      },
       transitionInComplete: function() {
         this.actionbar = new ActionBar();
         return this.transitionDeferred.resolve();

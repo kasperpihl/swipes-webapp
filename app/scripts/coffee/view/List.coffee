@@ -11,7 +11,10 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			@subviews = []
 
 			# Render the list whenever it updates
-			@listenTo( swipy.todos, "add remove reset", @renderList )
+			@listenTo( swipy.todos, "add remove reset change:completionDate change:schdule", @renderList )
+
+			# Handle completed tasks
+			@listenTo( Backbone, "complete-task", @completeTasks )
 		render: ->
 			@renderList()
 			return @
@@ -52,6 +55,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
+
+		completeTasks: (tasks) ->
+			console.log "Complete: ", tasks
 
 		transitionInComplete: ->
 			@actionbar = new ActionBar()

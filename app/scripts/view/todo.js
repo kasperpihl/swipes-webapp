@@ -72,7 +72,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
-          _results.push(view.$el.off("click"));
+          _results.push(view.$el.off("click", ".todo-content"));
         }
         return _results;
       },

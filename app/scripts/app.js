@@ -1,5 +1,5 @@
 (function() {
-  define(['controller/ViewController', 'router/MainRouter', 'collection/ToDoCollection', 'collection/TagCollection', 'view/nav/ListNavigation'], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation) {
+  define(["controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "view/scheduler/ScheduleOverlay"], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, ScheduleOverlay) {
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
@@ -13,6 +13,7 @@
         this.viewController = new ViewController();
         this.nav = new ListNavigation();
         this.router = new MainRouter();
+        this.scheduler = new ScheduleOverlay();
         Backbone.history.start({
           pushState: false
         });

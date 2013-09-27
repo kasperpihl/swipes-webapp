@@ -3,14 +3,15 @@
     return Backbone.View.extend({
       tagName: "li",
       initialize: function() {
-        _.bindAll(this, "onSelected", "setBounds", "toggleSelected", "edit");
+        _.bindAll(this, "onSelected", "setBounds", "toggleSelected", "edit", "handleAction");
         this.listenTo(this.model, "change:selected", this.onSelected);
         $(window).on("resize", this.setBounds);
         this.setTemplate();
         this.init();
         this.render();
         this.$el.on("click", ".todo-content", this.toggleSelected);
-        return this.$el.on("dblclick", "h2", this.edit);
+        this.$el.on("dblclick", "h2", this.edit);
+        return this.$el.on("click", ".action", this.handleAction);
       },
       setTemplate: function() {
         return this.template = _.template(TaskTmpl);
@@ -23,6 +24,28 @@
         var currentlySelected;
         currentlySelected = this.model.get("selected") || false;
         return this.model.set("selected", !currentlySelected);
+      },
+      handleAction: function(e) {
+        var selectedTasks, task, trigger, _i, _len,
+          _this = this;
+        trigger = [this.model];
+        selectedTasks = swipy.todos.where({
+          selected: true
+        });
+        if (selectedTasks.length) {
+          selectedTasks = _.reject(selectedTasks, function(m) {
+            return m.cid === _this.model.cid;
+          });
+          for (_i = 0, _len = selectedTasks.length; _i < _len; _i++) {
+            task = selectedTasks[_i];
+            trigger.push(task);
+          }
+        }
+        if ($(e.currentTarget).hasClass("schedule")) {
+          return Backbone.trigger("schedule-task", trigger);
+        } else if ($(e.currentTarget).hasClass("complete")) {
+          return Backbone.trigger("complete-task", trigger);
+        }
       },
       onSelected: function(model, selected) {
         return this.$el.toggleClass("selected", selected);

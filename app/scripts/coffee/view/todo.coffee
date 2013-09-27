@@ -40,7 +40,7 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 		
 		disableNativeClickHandlers: ->
 			# SortController takes over click interaction, so disable the default behaviour
-			view.$el.off "click" for view in @subviews
+			view.$el.off( "click", ".todo-content" ) for view in @subviews
 				
 		customCleanUp: ->
 			@sortController.destroy() if @sortController?
