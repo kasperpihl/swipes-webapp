@@ -3,7 +3,8 @@
     return Backbone.View.extend({
       el: ".action-bar",
       events: {
-        "click .edit": "editTask"
+        "click .edit": "editTask",
+        "click .delete": "deleteTasks"
       },
       initialize: function() {
         this.shown = false;
@@ -36,8 +37,26 @@
         this.stopListening();
         return this.hide();
       },
-      editTask: function(e) {
-        return console.log("Edit task: ", arguments);
+      editTask: function() {
+        var targetCid;
+        targetCid = swipy.todos.findWhere({
+          selected: true
+        }).cid;
+        return swipy.router.navigate("edit/" + targetCid, true);
+      },
+      deleteTasks: function() {
+        var model, targets, _i, _len, _results;
+        targets = swipy.todos.where({
+          selected: true
+        });
+        if (confirm("Delete " + targets.length + " tasks?")) {
+          _results = [];
+          for (_i = 0, _len = targets.length; _i < _len; _i++) {
+            model = targets[_i];
+            _results.push(model.destroy());
+          }
+          return _results;
+        }
       }
     });
   });

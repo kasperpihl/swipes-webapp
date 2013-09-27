@@ -3,6 +3,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		el: ".action-bar"
 		events: 
 			"click .edit": "editTask"
+			"click .delete": "deleteTasks"
 		initialize: ->
 			@shown = no
 			@listenTo( swipy.todos, "change:selected", @toggle )
@@ -23,5 +24,10 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		kill: ->
 			@stopListening()
 			@hide()
-		editTask: (e) ->
-			console.log "Edit task: ", arguments
+		editTask: ->
+			targetCid = swipy.todos.findWhere( selected: yes ).cid
+			swipy.router.navigate( "edit/#{ targetCid }", yes )
+		deleteTasks: ->
+			targets = swipy.todos.where( selected: yes )
+			if confirm "Delete #{targets.length} tasks?"
+				model.destroy() for model in targets
