@@ -42,6 +42,15 @@
         }
         return this.renderList();
       },
+      beforeRenderList: function(todos) {
+        var i, task, _i, _len, _results;
+        _results = [];
+        for (i = _i = 0, _len = todos.length; _i < _len; i = ++_i) {
+          task = todos[i];
+          _results.push(task.set("order", i));
+        }
+        return _results;
+      },
       afterRenderList: function(todos) {
         var _this = this;
         if (_.any(todos, function(m) {

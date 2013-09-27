@@ -34,6 +34,8 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 				todos = @getTasks()
 
+				@beforeRenderList todos
+
 				for group in @groupTasks todos
 					tasksJSON = _.invoke( group.tasks, "toJSON" )
 					$html = $( @template { title: group.deadline, tasks: tasksJSON } )
@@ -48,7 +50,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 					
 				@afterRenderList todos
 
+		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
+
 		transitionInComplete: ->
 			@actionbar = new ActionBar()
 			@transitionDeferred.resolve()

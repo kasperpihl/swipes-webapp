@@ -47,6 +47,7 @@
           _this.$el.empty();
           _this.killSubViews();
           todos = _this.getTasks();
+          _this.beforeRenderList(todos);
           _ref = _this.groupTasks(todos);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             group = _ref[_i];
@@ -70,6 +71,7 @@
           return _this.afterRenderList(todos);
         });
       },
+      beforeRenderList: function(todos) {},
       afterRenderList: function(todos) {},
       transitionInComplete: function() {
         this.actionbar = new ActionBar();

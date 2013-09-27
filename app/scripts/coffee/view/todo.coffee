@@ -20,7 +20,11 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 				view.model.set( "order", i + pushOrderCount )
 
 			@renderList()
-		
+
+		beforeRenderList: (todos) ->
+			for task, i in todos
+				task.set( "order", i )
+
 		afterRenderList: (todos) ->
 			# If we find any todos without a defined order,
 			# determine its correct order and re-render the list
