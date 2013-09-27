@@ -3,7 +3,8 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 		model: ToDoModel
 		localStorage: new Backbone.LocalStorage "SwipyTodos"
 		initialize: ->
-			@on 'add', (model) -> model.save()
+			@on( "add", (model) -> model.save() )
+			@on( "destroy", (model) => @remove model )
 		getActive: -> 
 			now = new Date().getTime()
 			@filter (m) => 

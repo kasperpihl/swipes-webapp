@@ -4,8 +4,12 @@
       model: ToDoModel,
       localStorage: new Backbone.LocalStorage("SwipyTodos"),
       initialize: function() {
-        return this.on('add', function(model) {
+        var _this = this;
+        this.on("add", function(model) {
           return model.save();
+        });
+        return this.on("destroy", function(model) {
+          return _this.remove(model);
         });
       },
       getActive: function() {
