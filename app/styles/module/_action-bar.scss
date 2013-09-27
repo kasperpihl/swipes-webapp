@@ -1,0 +1,56 @@
+.action-bar {
+	@extend .clearfix;
+	@extend .animated;
+	@extend .fadeInUp;
+
+	@include experimental(animation-duration, 0.3s);
+
+	&.fadeout {
+		@extend .fadeOutDown;
+	}
+
+	z-index: 10000;
+	position: absolute;
+	bottom: 1.5em;
+	
+	padding: 0;
+	text-align: center;
+
+	width: 100%;
+	max-width: emCalc(350px);
+
+	@include breakpoint(min-width, emCalc(350px)) {
+		left: 50%;
+		margin-left: 0 - emCalc(175px);
+	}
+	
+	@include breakpoint(desktop-wide) {
+		@include transition(max-width 0.5s ease-out);
+		max-width: emCalc(600px);
+		margin-left: 0 - emCalc(300px);
+	}
+
+	li { list-style: none; }
+
+	a {
+		display: block;
+		width: 25%;
+
+		float: left;
+		
+		color: $gray-lighter;
+		text-decoration: none;
+		text-align: center;
+
+		@include transition(all 0.2s ease-out);
+
+		&:hover {
+			color: $gray-light;
+			@include scale(1.2);
+		}
+	}
+
+	span {
+		font-size: 1.5em;
+	}
+}
