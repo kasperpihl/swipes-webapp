@@ -49,8 +49,8 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				@afterRenderList todos
 
 		afterRenderList: (todos) ->
-			@actionbar = new ActionBar()
 		transitionInComplete: ->
+			@actionbar = new ActionBar()
 			@transitionDeferred.resolve()
 		killSubViews: ->
 			view.remove() for view in @subviews
@@ -66,6 +66,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 			# Unbind all events
 			@stopListening()
+			
+			# Deactivate actionbar (Do this before killing subviews)
+			@actionbar.kill()
 
 			# Deselect all todos, so selection isnt messed up in new view
 			swipy.todos.invoke( "set", { selected: no } )
@@ -73,8 +76,6 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			# Run clean-up routine on sub views
 			@killSubViews()
 
-			# Deactivate actionbar
-			@actionbar.kill()
 
 			# Clean up DOM element
 			@$el.empty()

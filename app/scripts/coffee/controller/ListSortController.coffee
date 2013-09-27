@@ -55,7 +55,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 				view.model.on( "change:order", @reorderView, view )
 
 		stopListenForOrderChanges: ->
-			view.model.off() for view in @model.views
+			view.model.off(null, null, @) for view in @model.views
 				
 		onClick: (view, allViews) =>
 			@clicked = view.cid

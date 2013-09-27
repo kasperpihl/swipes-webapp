@@ -1,4 +1,4 @@
-define ["underscore", "view/List", "controller/ListSortController", "view/list/ActionBar"], (_, ListView, ListSortController, ActionBar) ->
+define ["underscore", "view/List", "controller/ListSortController"], (_, ListView, ListSortController) ->
 	ListView.extend
 		sortTasks: (tasks) ->
 			return _.sortBy( tasks, (model) -> model.get "order" )
@@ -33,14 +33,11 @@ define ["underscore", "view/List", "controller/ListSortController", "view/list/A
 			@transitionDeferred.done =>
 				@disableNativeClickHandlers()
 				@sortController = new ListSortController( @$el, @subviews )
-
-			@actionbar = new ActionBar()
 		
 		disableNativeClickHandlers: ->
-				# Remove both click event, because 
-			for view in @subviews
-				view.$el.off("click")
-		
+			# SortController takes over click interaction, so disable the default behaviour
+			view.$el.off "click" for view in @subviews
+				
 		customCleanUp: ->
 			@sortController.destroy() if @sortController?
 			@sortController = null

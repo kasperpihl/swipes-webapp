@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "view/List", "controller/ListSortController", "view/list/ActionBar"], function(_, ListView, ListSortController, ActionBar) {
+  define(["underscore", "view/List", "controller/ListSortController"], function(_, ListView, ListSortController) {
     return ListView.extend({
       sortTasks: function(tasks) {
         return _.sortBy(tasks, function(model) {
@@ -52,11 +52,10 @@
         if (this.sortController != null) {
           this.sortController.destroy();
         }
-        this.transitionDeferred.done(function() {
+        return this.transitionDeferred.done(function() {
           _this.disableNativeClickHandlers();
           return _this.sortController = new ListSortController(_this.$el, _this.subviews);
         });
-        return this.actionbar = new ActionBar();
       },
       disableNativeClickHandlers: function() {
         var view, _i, _len, _ref, _results;

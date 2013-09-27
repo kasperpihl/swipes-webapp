@@ -84,7 +84,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
-          _results.push(view.model.off());
+          _results.push(view.model.off(null, null, this));
         }
         return _results;
       };

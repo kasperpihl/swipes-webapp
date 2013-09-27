@@ -4,33 +4,34 @@
       el: ".action-bar",
       events: {
         "click .edit": "editTask",
-        "click .delete": "deleteTasks"
+        "click .delete": "deleteTasks",
+        "click .share": "shareTasks"
       },
       initialize: function() {
-        this.shown = false;
+        this.hide();
         return this.listenTo(swipy.todos, "change:selected", this.toggle);
       },
       toggle: function() {
         if (this.shown) {
-          if (swipy.todos.filter(function(m) {
-            return m.get("selected");
+          if (swipy.todos.where({
+            selected: true
           }).length === 0) {
             return this.hide();
           }
         } else {
-          if (swipy.todos.filter(function(m) {
-            return m.get("selected");
+          if (swipy.todos.where({
+            selected: true
           }).length === 1) {
             return this.show();
           }
         }
       },
       show: function() {
-        this.$el.removeClass("fadeout");
+        this.$el.toggleClass("fadeout", false);
         return this.shown = true;
       },
       hide: function() {
-        this.$el.addClass("fadeout");
+        this.$el.toggleClass("fadeout", true);
         return this.shown = false;
       },
       kill: function() {
@@ -57,6 +58,9 @@
           }
           return _results;
         }
+      },
+      shareTasks: function() {
+        return alert("Task sharing is coming soon :)");
       }
     });
   });

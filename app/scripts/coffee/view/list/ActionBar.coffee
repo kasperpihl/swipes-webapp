@@ -4,22 +4,23 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		events: 
 			"click .edit": "editTask"
 			"click .delete": "deleteTasks"
+			"click .share": "shareTasks"
 		initialize: ->
-			@shown = no
+			@hide()
 			@listenTo( swipy.todos, "change:selected", @toggle )
 		toggle: ->
 			if @shown
-				if swipy.todos.filter( (m) -> m.get "selected" ).length is 0
+				if swipy.todos.where( selected: yes ).length is 0
 					@hide()
 			else
-				if swipy.todos.filter( (m) -> m.get "selected" ).length is 1
+				if swipy.todos.where( selected: yes ).length is 1
 					@show()
 		show: ->
-			@$el.removeClass "fadeout"
+			@$el.toggleClass( "fadeout", no )
 			@shown = yes
 
 		hide: ->
-			@$el.addClass "fadeout"
+			@$el.toggleClass( "fadeout", yes )
 			@shown = no
 		kill: ->
 			@stopListening()
@@ -31,3 +32,5 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			targets = swipy.todos.where( selected: yes )
 			if confirm "Delete #{targets.length} tasks?"
 				model.destroy() for model in targets
+		shareTasks: ->
+			alert "Task sharing is coming soon :)"

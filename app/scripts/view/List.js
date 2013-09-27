@@ -70,10 +70,9 @@
           return _this.afterRenderList(todos);
         });
       },
-      afterRenderList: function(todos) {
-        return this.actionbar = new ActionBar();
-      },
+      afterRenderList: function(todos) {},
       transitionInComplete: function() {
+        this.actionbar = new ActionBar();
         return this.transitionDeferred.resolve();
       },
       killSubViews: function() {
@@ -90,11 +89,11 @@
         this.customCleanUp();
         this.transitionDeferred = null;
         this.stopListening();
+        this.actionbar.kill();
         swipy.todos.invoke("set", {
           selected: false
         });
         this.killSubViews();
-        this.actionbar.kill();
         return this.$el.empty();
       }
     });
