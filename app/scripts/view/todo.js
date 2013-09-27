@@ -1,17 +1,5 @@
-/*
-
-	# Libraries
-	1. https://github.com/farhadi/html5sortable/blob/master/jquery.sortable.js
-	2. GreenSock Draggable (Fucking lækkert!) - http://greensock.com/draggable/
-
-	# Kasper
-	1. https://github.com/kasperpihl/swipes-ios/blob/master/Swipes/Classes/Models/CustomClasses/KPToDo.m#L184
-	2. https://github.com/kasperpihl/swipes-ios/blob/master/Swipes/Classes/Handlers/ItemHandler.m#L71
-*/
-
-
 (function() {
-  define(["underscore", "view/List", "controller/ListSortController"], function(_, ListView, ListSortController) {
+  define(["underscore", "view/List", "controller/ListSortController", "view/list/ActionBar"], function(_, ListView, ListSortController, ActionBar) {
     return ListView.extend({
       sortTasks: function(tasks) {
         return _.sortBy(tasks, function(model) {
@@ -64,9 +52,39 @@
         if (this.sortController != null) {
           this.sortController.destroy();
         }
-        return this.transitionDeferred.done(function() {
+        this.transitionDeferred.done(function() {
+          _this.disableNativeClickHandlers();
           return _this.sortController = new ListSortController(_this.$el, _this.subviews);
         });
+        return this.actionbar = new ActionBar();
+      },
+      disableNativeClickHandlers: function() {
+        var view, _i, _len, _ref, _results;
+        _ref = this.subviews;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          delete view.events["click .todo-content"];
+          delete view.events.tap;
+          _results.push(view.delegateEvents());
+        }
+        return _results;
+      },
+      customCleanUp: function() {
+        var view, _i, _len, _ref, _results;
+        if (this.sortController != null) {
+          this.sortController.destroy();
+        }
+        this.sortController = null;
+        _ref = this.subviews;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.events["click .todo-content"] = "toggleSelected";
+          view.events.tap = "toggleSelected";
+          _results.push(view.delegateEvents());
+        }
+        return _results;
       }
     });
   });

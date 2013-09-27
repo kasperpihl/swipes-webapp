@@ -1,12 +1,11 @@
 (function() {
-  define(["underscore", "view/Default", "text!templates/todo-list.html"], function(_, DefaultView, ToDoListTmpl) {
+  define(["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html"], function(_, DefaultView, ActionBar, ToDoListTmpl) {
     return DefaultView.extend({
-      events: Modernizr.touch ? "tap" : "click ",
       init: function() {
         this.transitionDeferred = new $.Deferred();
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
-        return swipy.todos.on("add remove reset", this.renderList, this);
+        return this.listenTo(swipy.todos, "add remove reset", this.renderList);
       },
       render: function() {
         this.renderList();
@@ -43,7 +42,6 @@
         var type,
           _this = this;
         type = Modernizr.touch ? "Touch" : "Desktop";
-        type = "Desktop";
         return require(["view/list/" + type + "Task"], function(TaskView) {
           var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
           _this.$el.empty();
@@ -72,7 +70,9 @@
           return _this.afterRenderList(todos);
         });
       },
-      afterRenderList: function(todos) {},
+      afterRenderList: function(todos) {
+        return this.actionbar = new ActionBar();
+      },
       transitionInComplete: function() {
         return this.transitionDeferred.resolve();
       },
@@ -85,10 +85,16 @@
         }
         return this.subviews = [];
       },
-      customCleanUp: function() {
+      customCleanUp: function() {},
+      cleanUp: function() {
+        this.customCleanUp();
         this.transitionDeferred = null;
-        swipy.todos.off();
+        this.stopListening();
+        swipy.todos.invoke("set", {
+          selected: false
+        });
         this.killSubViews();
+        this.actionbar.kill();
         return this.$el.empty();
       }
     });

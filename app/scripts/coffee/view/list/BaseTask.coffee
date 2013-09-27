@@ -2,21 +2,31 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
-			_.bindAll( @, "onSelected" )
+			_.bindAll( @, "onSelected", "setBounds" )
 			
-			@model.on( "change:selected", @onSelected )
-			
+			@listenTo( @model, "change:selected", @onSelected )
+			$(window).on "resize", @setBounds
+
 			@setTemplate()	
 			@init()
-			@content = @$el.find('.todo-content')
 			@render()
+		
 		setTemplate: ->
 			@template = _.template TaskTmpl
+
+		setBounds: ->
+			@bounds = @el.getClientRects()[0]
+		
 		init: ->
 			# Hook for views extending me
+		
 		onSelected: (model, selected) ->
-			@$el.toggleClass( "selected", selected )
-
+			currentlySelected = @model.get( "selected" ) or false
+			@model.set( "selected", !currentlySelected )
+		
+		edit: ->
+			swipy.router.navigate( "edit/#{ @model.cid }", yes )
+		
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @el if !@template?
@@ -24,10 +34,16 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 			@$el.html @template @model.toJSON()
 
 			return @el
+		
 		remove: ->
 			@cleanUp()
+			@$el.remove()
+		
 		customCleanUp: ->
 			# Hook for views extending me
+		
 		cleanUp: ->
-			@model.off()
+			$(window).off()
+			@undelegateEvents()
+			@stopListening()
 			@customCleanUp()

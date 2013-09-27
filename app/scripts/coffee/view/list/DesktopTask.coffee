@@ -1,30 +1,20 @@
 define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
 	BaseTaskView.extend
 		events: 
-			"click": "toggleSelected"
-			"dblclick": "edit"
+			"click .todo-content": "toggleSelected"
+			"dblclick h2": "edit"
 			"mouseenter": "trackMouse"
 			"mouseleave": "stopTrackingMouse"
 		init: ->
 			@throttledOnMouseMove = _.throttle( @onMouseMove, 250 )
 			
 			_.bindAll( @, "setBounds", "onMouseMove", "throttledOnMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule" )
-			
-			$(window).on "resize", @setBounds
-
 
 			@listenTo( Backbone, "hover-complete", @onHoverComplete )
 			@listenTo( Backbone, "hover-schedule", @onHoverSchedule )
 			@listenTo( Backbone, "unhover-complete", @onUnhoverComplete )
 			@listenTo( Backbone, "unhover-schedule", @onUnhoverSchedule )
-
-		toggleSelected: ->
-			currentlySelected = @model.get( "selected" ) or false
-			@model.set( "selected", !currentlySelected )
-		edit: ->
-			swipy.router.navigate( "edit/#{ @model.cid }", yes )
-		setBounds: ->
-			@bounds = @el.getClientRects()[0]
+		
 		getMousePos: (mouseX) ->
 			if !@bounds then @setBounds()
 			Math.round ( ( mouseX - @bounds.left ) / @bounds.width ) * 100
@@ -44,7 +34,7 @@ define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
 			return unless @allowThrottledMoveHandler
 			@determineUserIntent @getMousePos e.pageX
 		determineUserIntent: (mousePos) ->
-			if mousePos <= 15 and @isHoveringComplete isnt true
+			if mousePos <= 15 and not @isHoveringComplete
 				Backbone.trigger( "hover-complete", @.cid )
 				@isHoveringComplete = true
 			
@@ -52,24 +42,29 @@ define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
 				Backbone.trigger( "unhover-complete", @.cid )
 				@isHoveringComplete = false
 
-			if mousePos >= 85 and @isHoveringSchedule isnt true
+			if mousePos >= 85 and not @isHoveringSchedule
 				Backbone.trigger( "hover-schedule", @.cid )
 				@isHoveringSchedule = true
 
 			else if mousePos < 85 and @isHoveringSchedule
 				Backbone.trigger( "unhover-schedule", @.cid )
 				@isHoveringSchedule = false
+		
 		onHoverComplete: (target) ->
-			@$el.addClass "hover-complete" if @model.get( "selected" ) or target is @cid
+			if @model.get( "selected" ) or target is @cid
+				@$el.addClass "hover-complete" 
+		
 		onHoverSchedule: (target) ->
-			@$el.addClass "hover-schedule" if @model.get( "selected" ) or target is @cid
+			if @model.get( "selected" ) or target is @cid
+				@$el.addClass "hover-schedule"
+		
 		onUnhoverComplete: (target) ->
-			@$el.removeClass "hover-complete" if @model.get( "selected" ) or target is @cid
+			if @model.get( "selected" ) or target is @cid
+				@$el.removeClass "hover-complete"
+		
 		onUnhoverSchedule: (target) ->
-			@$el.removeClass "hover-schedule" if @model.get( "selected" ) or target is @cid
-		remove: ->
-			@customCleanUp()
-			@$el.remove()
+			if @model.get( "selected" ) or target is @cid
+				@$el.removeClass "hover-schedule"
+		
 		customCleanUp: ->
-			$(window).off()
 			@stopTrackingMouse()

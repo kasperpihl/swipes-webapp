@@ -1,7 +1,5 @@
-define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, DefaultView, ToDoListTmpl) ->
+define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html"], (_, DefaultView, ActionBar, ToDoListTmpl) ->
 	DefaultView.extend
-		events:
-			if Modernizr.touch then "tap" else "click "
 		init: ->
 			# This deferred is resolved after view has been transitioned in
 			@transitionDeferred = new $.Deferred()
@@ -13,7 +11,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 			@subviews = []
 
 			# Render the list whenever it updates
-			swipy.todos.on( "add remove reset", @renderList, @ )
+			@listenTo( swipy.todos, "add remove reset", @renderList )
 		render: ->
 			@renderList()
 			return @
@@ -29,9 +27,6 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 		renderList: ->
 			type = if Modernizr.touch then "Touch" else "Desktop"
 
-			# For now, force type to be desktop
-			type = "Desktop"
-			
 			require ["view/list/#{type}Task"], (TaskView) =>
 				# Remove any old HTML before appending new stuff.
 				@$el.empty()
@@ -41,7 +36,7 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 
 				for group in @groupTasks todos
 					tasksJSON = _.invoke( group.tasks, "toJSON" )
-					$html = $( @template( { title: group.deadline, tasks: tasksJSON } ) )
+					$html = $( @template { title: group.deadline, tasks: tasksJSON } )
 					list = $html.find "ol"
 					
 					for model in group.tasks
@@ -54,18 +49,32 @@ define ["underscore", "view/Default", "text!templates/todo-list.html"], (_, Defa
 				@afterRenderList todos
 
 		afterRenderList: (todos) ->
-			# Hook for other views
+			@actionbar = new ActionBar()
 		transitionInComplete: ->
 			@transitionDeferred.resolve()
 		killSubViews: ->
 			view.remove() for view in @subviews
 			@subviews = []
 		customCleanUp: ->
+			# Extend this in subviews
+		cleanUp: ->
+			# A hook for the subviews to do custom clean ups
+			@customCleanUp()
+
 			# Reset transitionDeferred
 			@transitionDeferred = null
 
 			# Unbind all events
-			swipy.todos.off()
+			@stopListening()
+
+			# Deselect all todos, so selection isnt messed up in new view
+			swipy.todos.invoke( "set", { selected: no } )
 			
+			# Run clean-up routine on sub views
 			@killSubViews()
+
+			# Deactivate actionbar
+			@actionbar.kill()
+
+			# Clean up DOM element
 			@$el.empty()

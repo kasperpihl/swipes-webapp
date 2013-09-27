@@ -3,19 +3,27 @@
     return Backbone.View.extend({
       tagName: "li",
       initialize: function() {
-        _.bindAll(this, "onSelected");
-        this.model.on("change:selected", this.onSelected);
+        _.bindAll(this, "onSelected", "setBounds");
+        this.listenTo(this.model, "change:selected", this.onSelected);
+        $(window).on("resize", this.setBounds);
         this.setTemplate();
         this.init();
-        this.content = this.$el.find('.todo-content');
         return this.render();
       },
       setTemplate: function() {
         return this.template = _.template(TaskTmpl);
       },
+      setBounds: function() {
+        return this.bounds = this.el.getClientRects()[0];
+      },
       init: function() {},
       onSelected: function(model, selected) {
-        return this.$el.toggleClass("selected", selected);
+        var currentlySelected;
+        currentlySelected = this.model.get("selected") || false;
+        return this.model.set("selected", !currentlySelected);
+      },
+      edit: function() {
+        return swipy.router.navigate("edit/" + this.model.cid, true);
       },
       render: function() {
         if (this.template == null) {
@@ -25,11 +33,14 @@
         return this.el;
       },
       remove: function() {
-        return this.cleanUp();
+        this.cleanUp();
+        return this.$el.remove();
       },
       customCleanUp: function() {},
       cleanUp: function() {
-        this.model.off();
+        $(window).off();
+        this.undelegateEvents();
+        this.stopListening();
         return this.customCleanUp();
       }
     });

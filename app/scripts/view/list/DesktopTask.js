@@ -2,30 +2,18 @@
   define(["underscore", "view/list/BaseTask"], function(_, BaseTaskView) {
     return BaseTaskView.extend({
       events: {
-        "click": "toggleSelected",
-        "dblclick": "edit",
+        "click .todo-content": "toggleSelected",
+        "dblclick h2": "edit",
         "mouseenter": "trackMouse",
         "mouseleave": "stopTrackingMouse"
       },
       init: function() {
         this.throttledOnMouseMove = _.throttle(this.onMouseMove, 250);
         _.bindAll(this, "setBounds", "onMouseMove", "throttledOnMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule");
-        $(window).on("resize", this.setBounds);
         this.listenTo(Backbone, "hover-complete", this.onHoverComplete);
         this.listenTo(Backbone, "hover-schedule", this.onHoverSchedule);
         this.listenTo(Backbone, "unhover-complete", this.onUnhoverComplete);
         return this.listenTo(Backbone, "unhover-schedule", this.onUnhoverSchedule);
-      },
-      toggleSelected: function() {
-        var currentlySelected;
-        currentlySelected = this.model.get("selected") || false;
-        return this.model.set("selected", !currentlySelected);
-      },
-      edit: function() {
-        return swipy.router.navigate("edit/" + this.model.cid, true);
-      },
-      setBounds: function() {
-        return this.bounds = this.el.getClientRects()[0];
       },
       getMousePos: function(mouseX) {
         if (!this.bounds) {
@@ -51,14 +39,14 @@
         return this.determineUserIntent(this.getMousePos(e.pageX));
       },
       determineUserIntent: function(mousePos) {
-        if (mousePos <= 15 && this.isHoveringComplete !== true) {
+        if (mousePos <= 15 && !this.isHoveringComplete) {
           Backbone.trigger("hover-complete", this.cid);
           this.isHoveringComplete = true;
         } else if (mousePos > 15 && this.isHoveringComplete) {
           Backbone.trigger("unhover-complete", this.cid);
           this.isHoveringComplete = false;
         }
-        if (mousePos >= 85 && this.isHoveringSchedule !== true) {
+        if (mousePos >= 85 && !this.isHoveringSchedule) {
           Backbone.trigger("hover-schedule", this.cid);
           return this.isHoveringSchedule = true;
         } else if (mousePos < 85 && this.isHoveringSchedule) {
@@ -86,12 +74,7 @@
           return this.$el.removeClass("hover-schedule");
         }
       },
-      remove: function() {
-        this.customCleanUp();
-        return this.$el.remove();
-      },
       customCleanUp: function() {
-        $(window).off();
         return this.stopTrackingMouse();
       }
     });

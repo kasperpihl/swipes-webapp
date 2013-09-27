@@ -1,17 +1,4 @@
-###
-
-	# Libraries
-	1. https://github.com/farhadi/html5sortable/blob/master/jquery.sortable.js
-	2. GreenSock Draggable (Fucking lækkert!) - http://greensock.com/draggable/
-
-	# Kasper
-	1. https://github.com/kasperpihl/swipes-ios/blob/master/Swipes/Classes/Models/CustomClasses/KPToDo.m#L184
-	2. https://github.com/kasperpihl/swipes-ios/blob/master/Swipes/Classes/Handlers/ItemHandler.m#L71
-
-
-###
-
-define ["underscore", "view/List", "controller/ListSortController"], (_, ListView, ListSortController) ->
+define ["underscore", "view/List", "controller/ListSortController", "view/list/ActionBar"], (_, ListView, ListSortController, ActionBar) ->
 	ListView.extend
 		sortTasks: (tasks) ->
 			return _.sortBy( tasks, (model) -> model.get "order" )
@@ -41,4 +28,27 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 
 			# Dont init sort controller before transition in, because we need to read the height of the elements
 			@transitionDeferred.done =>
+				@disableNativeClickHandlers()
 				@sortController = new ListSortController( @$el, @subviews )
+
+			@actionbar = new ActionBar()
+		disableNativeClickHandlers: ->
+			for view in @subviews
+				# Remove both (desktop) click and (mobile) touch events
+				delete view.events["click .todo-content"]
+				delete view.events.tap
+		
+				view.delegateEvents()
+		customCleanUp: ->
+			@sortController.destroy() if @sortController?
+			@sortController = null
+
+			for view in @subviews
+				# Set events back to events hash so they'll be there for 
+				# the other list types
+				view.events["click .todo-content"] = "toggleSelected"
+				view.events.tap = "toggleSelected"
+
+				view.delegateEvents()
+
+

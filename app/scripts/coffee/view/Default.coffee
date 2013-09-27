@@ -8,9 +8,9 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			# In views extending me, place initialize logic here
 		render: -> 
 			return @el;
-		customCleanUp: ->
+		cleanUp: ->
 			# Extend this in other views
 		remove: ->
-			@customCleanUp()
+			@cleanUp()
 			this.undelegateEvents();
 			clearTimeout timer for timer in @timers
