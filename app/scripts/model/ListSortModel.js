@@ -148,7 +148,9 @@
         });
       };
 
-      ListSortModel.prototype.destroy = function() {};
+      ListSortModel.prototype.destroy = function() {
+        return $(window).off();
+      };
 
       return ListSortModel;
 

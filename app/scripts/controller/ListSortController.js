@@ -8,25 +8,10 @@
         this.onDragStart = __bind(this.onDragStart, this);
         this.onClick = __bind(this.onClick, this);
         this.model = new ListSortModel(container, views);
-        this.disableNativeClickHandlers();
         this.listenForOrderChanges();
         this.setInitialOrder();
         this.init();
       }
-
-      ListSortController.prototype.disableNativeClickHandlers = function() {
-        var view, _i, _len, _ref, _results;
-        _ref = this.model.views;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          view.undelegateEvents();
-          delete view.events.click;
-          delete view.events.tap;
-          _results.push(view.delegateEvents());
-        }
-        return _results;
-      };
 
       ListSortController.prototype.setInitialOrder = function() {
         var view, _i, _len, _ref, _results;

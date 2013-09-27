@@ -3,20 +3,9 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 		
 		constructor: (container, views) ->
 			@model = new ListSortModel( container, views )
-			@disableNativeClickHandlers()
 			@listenForOrderChanges()
 			@setInitialOrder()
 			@init()
-
-		disableNativeClickHandlers: ->
-			for view in @model.views
-				view.undelegateEvents()
-
-				# Remove both (desktop) click and (mobile) touch events
-				delete view.events.click
-				delete view.events.tap
-		
-				view.delegateEvents()
 
 		setInitialOrder: ->
 			@model.container.height( @model.container.height() )
@@ -79,7 +68,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 					unless @clicked and @clicked is view.cid
 						view.$el.addClass "selected"
 				, 100
-		
+
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y )
 			# if Modernizr.touch then model.scrollWindow( @pointerY )

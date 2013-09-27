@@ -8,7 +8,6 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 
 			debouncedSetBounds = _.debounce( @setBounds, 300 )
 			$(window).on( "resize scroll", => debouncedSetBounds() )
-
 		getRows: ->
 			@rowHeight = @views[0].$el.height()
 			rows = ( i * @rowHeight for view, i in @views )
@@ -80,5 +79,5 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			TweenLite.to( window, 0.1, { scrollTo: newScroll, ease:Linear.easeNone } )
 
 		destroy: ->
-
+			$(window).off()
 					
