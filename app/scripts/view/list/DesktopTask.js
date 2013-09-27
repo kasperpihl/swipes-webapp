@@ -2,8 +2,6 @@
   define(["underscore", "view/list/BaseTask"], function(_, BaseTaskView) {
     return BaseTaskView.extend({
       events: {
-        "click .todo-content": "toggleSelected",
-        "dblclick h2": "edit",
         "mouseenter": "trackMouse",
         "mouseleave": "stopTrackingMouse"
       },

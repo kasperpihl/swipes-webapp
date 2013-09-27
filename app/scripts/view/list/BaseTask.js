@@ -3,12 +3,14 @@
     return Backbone.View.extend({
       tagName: "li",
       initialize: function() {
-        _.bindAll(this, "onSelected", "setBounds");
+        _.bindAll(this, "onSelected", "setBounds", "toggleSelected", "edit");
         this.listenTo(this.model, "change:selected", this.onSelected);
         $(window).on("resize", this.setBounds);
         this.setTemplate();
         this.init();
-        return this.render();
+        this.render();
+        this.$el.on("click", ".todo-content", this.toggleSelected);
+        return this.$el.on("dblclick", "h2", this.edit);
       },
       setTemplate: function() {
         return this.template = _.template(TaskTmpl);
@@ -17,10 +19,13 @@
         return this.bounds = this.el.getClientRects()[0];
       },
       init: function() {},
-      onSelected: function(model, selected) {
+      toggleSelected: function() {
         var currentlySelected;
         currentlySelected = this.model.get("selected") || false;
         return this.model.set("selected", !currentlySelected);
+      },
+      onSelected: function(model, selected) {
+        return this.$el.toggleClass("selected", selected);
       },
       edit: function() {
         return swipy.router.navigate("edit/" + this.model.cid, true);
@@ -39,6 +44,7 @@
       customCleanUp: function() {},
       cleanUp: function() {
         $(window).off();
+        this.$el.off();
         this.undelegateEvents();
         this.stopListening();
         return this.customCleanUp();

@@ -22,5 +22,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@shown = no
 		kill: ->
 			@stopListening()
+			@hide()
 		editTask: (e) ->
 			console.log "Edit task: ", arguments

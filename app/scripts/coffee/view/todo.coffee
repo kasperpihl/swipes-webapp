@@ -2,9 +2,11 @@ define ["underscore", "view/List", "controller/ListSortController", "view/list/A
 	ListView.extend
 		sortTasks: (tasks) ->
 			return _.sortBy( tasks, (model) -> model.get "order" )
+		
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
+		
 		setTodoOrder: (todos) ->
 			takenPositions = ( m.get "order" for m in todos when m.has "order" )
 			pushOrderCount = 0
@@ -18,6 +20,7 @@ define ["underscore", "view/List", "controller/ListSortController", "view/list/A
 				view.model.set( "order", i + pushOrderCount )
 
 			@renderList()
+		
 		afterRenderList: (todos) ->
 			# If we find any todos without a defined order,
 			# determine its correct order and re-render the list
@@ -32,23 +35,14 @@ define ["underscore", "view/List", "controller/ListSortController", "view/list/A
 				@sortController = new ListSortController( @$el, @subviews )
 
 			@actionbar = new ActionBar()
-		disableNativeClickHandlers: ->
-			for view in @subviews
-				# Remove both (desktop) click and (mobile) touch events
-				delete view.events["click .todo-content"]
-				delete view.events.tap
 		
-				view.delegateEvents()
+		disableNativeClickHandlers: ->
+				# Remove both click event, because 
+			for view in @subviews
+				view.$el.off("click")
+		
 		customCleanUp: ->
 			@sortController.destroy() if @sortController?
 			@sortController = null
-
-			for view in @subviews
-				# Set events back to events hash so they'll be there for 
-				# the other list types
-				view.events["click .todo-content"] = "toggleSelected"
-				view.events.tap = "toggleSelected"
-
-				view.delegateEvents()
 
 

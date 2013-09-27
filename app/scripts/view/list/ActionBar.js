@@ -33,7 +33,8 @@
         return this.shown = false;
       },
       kill: function() {
-        return this.stopListening();
+        this.stopListening();
+        return this.hide();
       },
       editTask: function(e) {
         return console.log("Edit task: ", arguments);

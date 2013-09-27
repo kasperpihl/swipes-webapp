@@ -2,7 +2,7 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
-			_.bindAll( @, "onSelected", "setBounds" )
+			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "edit" )
 			
 			@listenTo( @model, "change:selected", @onSelected )
 			$(window).on "resize", @setBounds
@@ -10,6 +10,9 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 			@setTemplate()	
 			@init()
 			@render()
+
+			@$el.on( "click", ".todo-content", @toggleSelected )
+			@$el.on( "dblclick", "h2", @edit )
 		
 		setTemplate: ->
 			@template = _.template TaskTmpl
@@ -20,9 +23,12 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 		init: ->
 			# Hook for views extending me
 		
-		onSelected: (model, selected) ->
+		toggleSelected: ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
+
+		onSelected: (model, selected) ->
+			@$el.toggleClass( "selected", selected )
 		
 		edit: ->
 			swipy.router.navigate( "edit/#{ @model.cid }", yes )
@@ -44,6 +50,7 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 		
 		cleanUp: ->
 			$(window).off()
+			@$el.off()
 			@undelegateEvents()
 			@stopListening()
 			@customCleanUp()

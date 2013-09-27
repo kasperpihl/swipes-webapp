@@ -64,27 +64,15 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
-          delete view.events["click .todo-content"];
-          delete view.events.tap;
-          _results.push(view.delegateEvents());
+          _results.push(view.$el.off("click"));
         }
         return _results;
       },
       customCleanUp: function() {
-        var view, _i, _len, _ref, _results;
         if (this.sortController != null) {
           this.sortController.destroy();
         }
-        this.sortController = null;
-        _ref = this.subviews;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          view.events["click .todo-content"] = "toggleSelected";
-          view.events.tap = "toggleSelected";
-          _results.push(view.delegateEvents());
-        }
-        return _results;
+        return this.sortController = null;
       }
     });
   });

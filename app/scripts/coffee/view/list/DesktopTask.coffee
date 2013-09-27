@@ -1,8 +1,6 @@
 define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
 	BaseTaskView.extend
-		events: 
-			"click .todo-content": "toggleSelected"
-			"dblclick h2": "edit"
+		events:
 			"mouseenter": "trackMouse"
 			"mouseleave": "stopTrackingMouse"
 		init: ->
