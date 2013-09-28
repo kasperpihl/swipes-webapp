@@ -1,11 +1,12 @@
-define ["underscore", "backbone", "view/Overlay"], (_, Backbone, Overlay) ->
+define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overlay.html"], (_, Backbone, Overlay, ScheduleOverlayTmpl) ->
 	Overlay.extend
+		className: 'overlay scheduler'
 		bindEvents: ->
-			@listenTo( Backbone, "schedule-task", @schedule )
+			
 		init: ->
 			console.log "New Schedule Overlay created"
-		schedule: (tasks) ->
-			console.log "Schedule tasks: ", tasks
-			@show()
+		setTemplate: ->
+			@template = _.template ScheduleOverlayTmpl
 		afterShow: ->
+			console.log "Schedule overlay shown"
 			

@@ -5,9 +5,13 @@ define [
 	class DebugHelper
 		constructor: ->
 			@setDummyTodos()
+			@promptSchedule()
 		setDummyTodos: ->
 			# Reset collection with dummy data
 			swipy.todos.reset @getDummyData()
+		promptSchedule: ->
+			trigger = [ swipy.todos.getActive()[0] ]
+			Backbone.trigger( "schedule-task", trigger )
 		getDummyData: ->
 			[
 					title: "Follow up on Martin"

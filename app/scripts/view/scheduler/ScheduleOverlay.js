@@ -1,17 +1,17 @@
 (function() {
-  define(["underscore", "backbone", "view/Overlay"], function(_, Backbone, Overlay) {
+  define(["underscore", "backbone", "view/Overlay", "text!templates/schedule-overlay.html"], function(_, Backbone, Overlay, ScheduleOverlayTmpl) {
     return Overlay.extend({
-      bindEvents: function() {
-        return this.listenTo(Backbone, "schedule-task", this.schedule);
-      },
+      className: 'overlay scheduler',
+      bindEvents: function() {},
       init: function() {
         return console.log("New Schedule Overlay created");
       },
-      schedule: function(tasks) {
-        console.log("Schedule tasks: ", tasks);
-        return this.show();
+      setTemplate: function() {
+        return this.template = _.template(ScheduleOverlayTmpl);
       },
-      afterShow: function() {}
+      afterShow: function() {
+        return console.log("Schedule overlay shown");
+      }
     });
   });
 

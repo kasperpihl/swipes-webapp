@@ -22,8 +22,10 @@
       init: function() {},
       render: function() {
         var html;
-        html = this.template({});
-        this.$el.html(html);
+        if (this.template) {
+          html = this.template({});
+          this.$el.html(html);
+        }
         return this;
       },
       show: function() {

@@ -4,10 +4,17 @@
     return DebugHelper = (function() {
       function DebugHelper() {
         this.setDummyTodos();
+        this.promptSchedule();
       }
 
       DebugHelper.prototype.setDummyTodos = function() {
         return swipy.todos.reset(this.getDummyData());
+      };
+
+      DebugHelper.prototype.promptSchedule = function() {
+        var trigger;
+        trigger = [swipy.todos.getActive()[0]];
+        return Backbone.trigger("schedule-task", trigger);
       };
 
       DebugHelper.prototype.getDummyData = function() {

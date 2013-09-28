@@ -4,8 +4,8 @@ define [
 	"collection/ToDoCollection"
 	"collection/TagCollection"
 	"view/nav/ListNavigation"
-	"view/scheduler/ScheduleOverlay"
-	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, ScheduleOverlay) ->
+	"controller/ScheduleController"
+	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, ScheduleController) ->
 	class Swipes
 		constructor: ->
 			@todos = new ToDoCollection()
@@ -16,7 +16,7 @@ define [
 			@viewController = new ViewController()
 			@nav = new ListNavigation()
 			@router = new MainRouter()
-			@scheduler = new ScheduleOverlay()
+			@scheduler = new ScheduleController()
 
 			Backbone.history.start { pushState: no }
 			
