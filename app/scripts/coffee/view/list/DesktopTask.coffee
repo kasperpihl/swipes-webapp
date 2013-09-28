@@ -50,19 +50,19 @@ define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
 		
 		onHoverComplete: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				@$el.addClass "hover-complete" 
+				@$el.addClass "hover-left" 
 		
 		onHoverSchedule: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				@$el.addClass "hover-schedule"
+				@$el.addClass "hover-right"
 		
 		onUnhoverComplete: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				@$el.removeClass "hover-complete"
+				@$el.removeClass "hover-left"
 		
 		onUnhoverSchedule: (target) ->
 			if @model.get( "selected" ) or target is @cid
-				@$el.removeClass "hover-schedule"
+				@$el.removeClass "hover-right"
 		
 		customCleanUp: ->
 			@stopTrackingMouse()

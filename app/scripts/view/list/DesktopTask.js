@@ -54,22 +54,22 @@
       },
       onHoverComplete: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return this.$el.addClass("hover-complete");
+          return this.$el.addClass("hover-left");
         }
       },
       onHoverSchedule: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return this.$el.addClass("hover-schedule");
+          return this.$el.addClass("hover-right");
         }
       },
       onUnhoverComplete: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return this.$el.removeClass("hover-complete");
+          return this.$el.removeClass("hover-left");
         }
       },
       onUnhoverSchedule: function(target) {
         if (this.model.get("selected") || target === this.cid) {
-          return this.$el.removeClass("hover-schedule");
+          return this.$el.removeClass("hover-right");
         }
       },
       customCleanUp: function() {

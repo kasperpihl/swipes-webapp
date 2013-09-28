@@ -89,7 +89,7 @@
 			span { opacity: 1; }
 		}
 		
-		&.complete {
+		&.complete, &.todo {
 			left: 0;
 		}
 
@@ -105,12 +105,13 @@
 		background: #f3f3f3;
 	}
 
-	.hover-complete {
+	.hover-left {
 		.todo-content { left: 95px; }
 		.action.complete { background: $green; }
+		.action.todo { background: $yellow; }
 	}
 
-	.hover-schedule {
+	.hover-right {
 		.todo-content { right: 95px; }
 		.action.schedule { background: $lobster; }
 	}

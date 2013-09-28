@@ -43,6 +43,8 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 				Backbone.trigger( "schedule-task", trigger )
 			else if $( e.currentTarget ).hasClass "complete"
 				Backbone.trigger( "complete-task", trigger )
+			else if $( e.currentTarget ).hasClass "todo"
+				Backbone.trigger( "todo-task", trigger )
 
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
@@ -65,11 +67,11 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		customCleanUp: ->
 			# Hook for views extending me
 		
-		doCompleteAnimation: ->
+		swipeLeftAnimation: (className) ->
 			dfd = new $.Deferred()
 			
 			content = @$el.find ".todo-content"
-			@$el.addClass "completed"
+			if className then @$el.addClass className
 
 			timeline = new TimelineLite { onComplete: dfd.resolve }
 			timeline.to( content, 0.4, { x: content.outerWidth() } )

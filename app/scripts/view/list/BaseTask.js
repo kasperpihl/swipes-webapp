@@ -45,6 +45,8 @@
           return Backbone.trigger("schedule-task", trigger);
         } else if ($(e.currentTarget).hasClass("complete")) {
           return Backbone.trigger("complete-task", trigger);
+        } else if ($(e.currentTarget).hasClass("todo")) {
+          return Backbone.trigger("todo-task", trigger);
         }
       },
       onSelected: function(model, selected) {
@@ -65,11 +67,13 @@
         return this.$el.remove();
       },
       customCleanUp: function() {},
-      doCompleteAnimation: function() {
+      swipeLeftAnimation: function(className) {
         var content, dfd, timeline;
         dfd = new $.Deferred();
         content = this.$el.find(".todo-content");
-        this.$el.addClass("completed");
+        if (className) {
+          this.$el.addClass(className);
+        }
         timeline = new TimelineLite({
           onComplete: dfd.resolve
         });

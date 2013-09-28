@@ -14,8 +14,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			@renderList = _.debounce( @renderList, 300 )
 			@listenTo( swipy.todos, "add remove reset change:completionDate change:schdule", @renderList )
 
-			# Handle completed tasks
+			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
+			@listenTo( Backbone, "todo-task", @markTaskAsTodo )
 		render: ->
 			@renderList()
 			return @
@@ -29,7 +30,6 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			# Fetch todos that are active
 			return swipy.todos.getActive()
 		renderList: ->
-			console.log "Render list"
 			type = if Modernizr.touch then "Touch" else "Desktop"
 
 			require ["view/list/#{type}Task"], (TaskView) =>
@@ -67,7 +67,17 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.doCompleteAnimation().then => 
+					view.swipeLeftAnimation("completed").then => 
+						m.set( "completionDate", new Date() )
+
+		markTaskAsTodo: (tasks) ->
+			for task in tasks
+				view = @getViewForModel task
+				
+				# Wrap in do, so reference to model isn't changed next time the loop iterates
+				if view? then do ->
+					m = task
+					view.swipeLeftAnimation("todo").then => 
 						m.set( "completionDate", new Date() )
 
 		transitionInComplete: ->
@@ -96,7 +106,6 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			
 			# Run clean-up routine on sub views
 			@killSubViews()
-
 
 			# Clean up DOM element
 			@$el.empty()

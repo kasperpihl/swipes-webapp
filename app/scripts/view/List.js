@@ -7,7 +7,8 @@
         this.subviews = [];
         this.renderList = _.debounce(this.renderList, 300);
         this.listenTo(swipy.todos, "add remove reset change:completionDate change:schdule", this.renderList);
-        return this.listenTo(Backbone, "complete-task", this.completeTasks);
+        this.listenTo(Backbone, "complete-task", this.completeTasks);
+        return this.listenTo(Backbone, "todo-task", this.markTaskAsTodo);
       },
       render: function() {
         this.renderList();
@@ -43,7 +44,6 @@
       renderList: function() {
         var type,
           _this = this;
-        console.log("Render list");
         type = Modernizr.touch ? "Touch" : "Desktop";
         return require(["view/list/" + type + "Task"], function(TaskView) {
           var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
@@ -97,7 +97,28 @@
               var m,
                 _this = this;
               m = task;
-              return view.doCompleteAnimation().then(function() {
+              return view.swipeLeftAnimation("completed").then(function() {
+                return m.set("completionDate", new Date());
+              });
+            })());
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      },
+      markTaskAsTodo: function(tasks) {
+        var task, view, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = tasks.length; _i < _len; _i++) {
+          task = tasks[_i];
+          view = this.getViewForModel(task);
+          if (view != null) {
+            _results.push((function() {
+              var m,
+                _this = this;
+              m = task;
+              return view.swipeLeftAnimation("todo").then(function() {
                 return m.set("completionDate", new Date());
               });
             })());
