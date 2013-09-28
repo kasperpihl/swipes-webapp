@@ -14,7 +14,7 @@
 	z-index: 0;
 
 	opacity: 0;
-	@include transition(opacity 0.8s ease-out);
+	@include transition(opacity 0.2s ease-out);
 }
 
 .overlay-content {
@@ -24,7 +24,7 @@
 
 body.overlay-open {
 	.container {
-		@include transition(all 0.3s ease-out);
+		// @include transition(all 0.3s ease-out);
 		-webkit-filter: blur(10px);
 	}
 

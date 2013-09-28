@@ -35,7 +35,7 @@ define ["backbone"], (Backbone) ->
 			if not @shown then return
 			@shown = no
 			$("body").toggleClass( 'overlay-open', no )
-			afterHide()
+			@afterHide()
 		afterHide: ->
 			# Hook for views extending me
 		destroy: ->

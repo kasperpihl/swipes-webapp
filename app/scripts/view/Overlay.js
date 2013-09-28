@@ -43,7 +43,7 @@
         }
         this.shown = false;
         $("body").toggleClass('overlay-open', false);
-        return afterHide();
+        return this.afterHide();
       },
       afterHide: function() {},
       destroy: function() {
