@@ -35,7 +35,9 @@
 
 		&:hover {
 			text-decoration: none;
-			background: rgba(white, 0.5);
+			&:not(.disabled) {
+				background: rgba(white, 0.5);
+			}
 		}
 	}
 
@@ -77,4 +79,9 @@
 	@include breakpoint(min-width, 410px) { 
 		font-size: 3em;
 	}
+}
+
+// Disabled grid items
+.overlay .grid a.disabled {
+	cursor: default;
 }
