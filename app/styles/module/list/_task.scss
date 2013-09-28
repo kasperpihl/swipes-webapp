@@ -60,8 +60,7 @@
 	);
 }
 
-.tasks > li:last-child .todo-content:after { content: none; }
-	
+.tasks > li:last-child .todo-content:after { content: none; }	
 
 // action buttons
 .todo-list {
@@ -120,15 +119,21 @@
 // Styling for completed and scheduled tasks
 .todo-list {
 	.completed {
-		.todo-content {
-			@include translate3d(100%, 0, 0);
+		background: $green;
+		overflow: hidden;
+		
+		.action.complete {
+			background: $green;
+		}
+
+		.action.schedule {
+			display: none;
 		}
 	}
-
-	.scheduled {
+	
+	/*.scheduled {
 		.todo-content {
 			@include translate3d(-100%, 0, 0);
 		}
-	}
+	}*/
 }
-

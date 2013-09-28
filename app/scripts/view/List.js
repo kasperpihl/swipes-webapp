@@ -74,8 +74,34 @@
       },
       beforeRenderList: function(todos) {},
       afterRenderList: function(todos) {},
+      getViewForModel: function(model) {
+        var view, _i, _len, _ref;
+        _ref = this.subviews;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          if (view.model.cid === model.cid) {
+            return view;
+          }
+        }
+      },
       completeTasks: function(tasks) {
-        return console.log("Complete: ", tasks);
+        var task, view, _i, _len, _results,
+          _this = this;
+        console.log("Complete: ", tasks);
+        _results = [];
+        for (_i = 0, _len = tasks.length; _i < _len; _i++) {
+          task = tasks[_i];
+          view = this.getViewForModel(task);
+          if (view != null) {
+            console.log("Do animation");
+            _results.push(view.doCompleteAnimation().then(function() {
+              return task.set("completionDate", new Date());
+            }));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       },
       transitionInComplete: function() {
         this.actionbar = new ActionBar();

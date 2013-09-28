@@ -18,6 +18,7 @@ require.config({
         'backbone.localStorage': '../bower_components/backbone.localStorage/backbone.localStorage',
         'greensock-js': '../bower_components/greensock-js/src/minified/TweenMax.min',
         gsap: '../bower_components/greensock-js/src/uncompressed/TweenLite',
+        timelinelite: '../bower_components/greensock-js/src/uncompressed/TimelineLite',
         'gsap-scroll': '../bower_components/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
         'gsap-text': '../bower_components/greensock-js/src/uncompressed/plugins/TextPlugin',
         'gsap-easing': '../bower_components/greensock-js/src/uncompressed/easing/EasePack',
@@ -95,6 +96,9 @@ require.config({
                 'gsap-css'
             ],
             exports: 'TweenLite'
+        },
+        timelinelite: {
+            exports: "TimelineLite"
         },
         'gsap-draggable': {
             deps: [

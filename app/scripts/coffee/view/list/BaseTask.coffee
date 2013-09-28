@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, TaskTmpl) ->
+define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.html"], (_, Backbone, TweenLite, TimelineLite, TaskTmpl) ->
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
@@ -36,9 +36,8 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 			selectedTasks = swipy.todos.where( selected: yes )
 			if selectedTasks.length 
 				selectedTasks = _.reject( selectedTasks, (m) => m.cid is @model.cid )
-				for task in selectedTasks
-					trigger.push task	
-			
+				trigger.push task for task in selectedTasks
+
 			# Actual trigger logic
 			if $( e.currentTarget ).hasClass "schedule"
 				Backbone.trigger( "schedule-task", trigger )
@@ -66,6 +65,17 @@ define ["underscore", "backbone", "text!templates/task.html"], (_, Backbone, Tas
 		customCleanUp: ->
 			# Hook for views extending me
 		
+		doCompleteAnimation: ->
+			dfd = new $.Deferred()
+			
+			content = @$el.find ".todo-content"
+			@$el.addClass "completed"
+
+			timeline = new TimelineLite { onComplete: dfd.resolve }
+			timeline.to( content, 0.4, { x: content.outerWidth() } )
+			timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
+			
+			return dfd.promise()
 		cleanUp: ->
 			$(window).off()
 			@$el.off()

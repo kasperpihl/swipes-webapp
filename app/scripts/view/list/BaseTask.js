@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "text!templates/task.html"], function(_, Backbone, TaskTmpl) {
+  define(["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.html"], function(_, Backbone, TweenLite, TimelineLite, TaskTmpl) {
     return Backbone.View.extend({
       tagName: "li",
       initialize: function() {
@@ -65,6 +65,22 @@
         return this.$el.remove();
       },
       customCleanUp: function() {},
+      doCompleteAnimation: function() {
+        var content, dfd, timeline;
+        dfd = new $.Deferred();
+        content = this.$el.find(".todo-content");
+        this.$el.addClass("completed");
+        timeline = new TimelineLite({
+          onComplete: dfd.resolve
+        });
+        timeline.to(content, 0.4, {
+          x: content.outerWidth()
+        });
+        timeline.to(this.$el, 0.4, {
+          alpha: 0
+        }, "-=0.2");
+        return dfd.promise();
+      },
       cleanUp: function() {
         $(window).off();
         this.$el.off();

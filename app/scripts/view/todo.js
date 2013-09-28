@@ -53,6 +53,9 @@
       },
       afterRenderList: function(todos) {
         var _this = this;
+        if (!todos.length) {
+          return;
+        }
         if (_.any(todos, function(m) {
           return !m.has("order");
         })) {

@@ -26,6 +26,8 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 				task.set( "order", i )
 
 		afterRenderList: (todos) ->
+			return unless todos.length
+
 			# If we find any todos without a defined order,
 			# determine its correct order and re-render the list
 			return @setTodoOrder( todos ) if _.any( todos, (m) -> not m.has "order" )

@@ -56,8 +56,16 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
 
+		getViewForModel: (model) ->
+			return view for view in @subviews when view.model.cid is model.cid
 		completeTasks: (tasks) ->
 			console.log "Complete: ", tasks
+			for task in tasks
+				view = @getViewForModel task
+				if view?
+					console.log "Do animation"
+					view.doCompleteAnimation().then =>
+						task.set( "completionDate", new Date() )
 
 		transitionInComplete: ->
 			@actionbar = new ActionBar()
