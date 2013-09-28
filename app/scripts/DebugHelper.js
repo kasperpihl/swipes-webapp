@@ -3,8 +3,11 @@
     var DebugHelper;
     return DebugHelper = (function() {
       function DebugHelper() {
+        var _this = this;
         this.setDummyTodos();
-        this.promptSchedule();
+        setTimeout(function() {
+          return _this.promptSchedule();
+        }, 1000);
       }
 
       DebugHelper.prototype.setDummyTodos = function() {

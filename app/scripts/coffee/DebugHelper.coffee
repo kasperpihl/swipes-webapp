@@ -5,7 +5,10 @@ define [
 	class DebugHelper
 		constructor: ->
 			@setDummyTodos()
-			@promptSchedule()
+
+			setTimeout =>
+					@promptSchedule()
+				, 1000
 		setDummyTodos: ->
 			# Reset collection with dummy data
 			swipy.todos.reset @getDummyData()
