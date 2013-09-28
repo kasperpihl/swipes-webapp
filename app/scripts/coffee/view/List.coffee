@@ -63,9 +63,12 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 		completeTasks: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task
-				if view?
-					view.doCompleteAnimation().then =>
-						task.set( "completionDate", new Date() )
+				
+				# Wrap in do, so reference to model isn't changed next time the loop iterates
+				if view? then do ->
+					m = task
+					view.doCompleteAnimation().then => 
+						m.set( "completionDate", new Date() )
 
 		transitionInComplete: ->
 			@actionbar = new ActionBar()
