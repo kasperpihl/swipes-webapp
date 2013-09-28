@@ -11,6 +11,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			@subviews = []
 
 			# Render the list whenever it updates
+			@renderList = _.debounce( @renderList, 300 )
 			@listenTo( swipy.todos, "add remove reset change:completionDate change:schdule", @renderList )
 
 			# Handle completed tasks
@@ -28,6 +29,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			# Fetch todos that are active
 			return swipy.todos.getActive()
 		renderList: ->
+			console.log "Render list"
 			type = if Modernizr.touch then "Touch" else "Desktop"
 
 			require ["view/list/#{type}Task"], (TaskView) =>
@@ -59,11 +61,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
 		completeTasks: (tasks) ->
-			console.log "Complete: ", tasks
 			for task in tasks
 				view = @getViewForModel task
 				if view?
-					console.log "Do animation"
 					view.doCompleteAnimation().then =>
 						task.set( "completionDate", new Date() )
 
