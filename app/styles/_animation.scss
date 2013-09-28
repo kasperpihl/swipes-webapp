@@ -909,3 +909,64 @@
 	-o-animation-name: fadeOutRightBig;
 	animation-name: fadeOutRightBig;
 }
+
+
+
+/**
+ *
+ *
+ * Custom animations
+ * 
+ */
+
+@-webkit-keyframes scaleDown {
+	0% {
+		opacity: 0;
+		-webkit-transform: scale(3);
+	}
+	
+	100% {
+		opacity: 1;
+		-webkit-transform: scale(1);
+	}
+}
+@-moz-keyframes scaleDown {
+	0% {
+		opacity: 0;
+		-moz-transform: scale(3);
+	}
+	
+	100% {
+		opacity: 1;
+		-moz-transform: scale(1);
+	}
+}
+@-o-keyframes scaleDown {
+	0% {
+		opacity: 0;
+		-o-transform: scale(3);
+	}
+	
+	100% {
+		opacity: 1;
+		-o-transform: scale(1);
+	}
+}
+@keyframes scaleDown {
+	0% {
+		opacity: 0;
+		transform: scale(3);
+	}
+	
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.scaleDown {
+	-webkit-animation-name: scaleDown;
+	-moz-animation-name: scaleDown;
+	-o-animation-name: scaleDown;
+	animation-name: scaleDown;
+}
