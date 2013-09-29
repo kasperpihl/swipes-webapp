@@ -61,7 +61,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 					@set( "scheduleStr", "the past" )
 					return @get "scheduleStr"
 				else
-					return false
+					return @set( "scheduleStr", "unspecified" )
 
 			now = moment()
 			parsedDate = moment schedule

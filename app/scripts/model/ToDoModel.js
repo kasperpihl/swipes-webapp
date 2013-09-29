@@ -64,7 +64,7 @@
             this.set("scheduleStr", "the past");
             return this.get("scheduleStr");
           } else {
-            return false;
+            return this.set("scheduleStr", "unspecified");
           }
         }
         now = moment();
