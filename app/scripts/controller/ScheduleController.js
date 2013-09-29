@@ -13,7 +13,8 @@
         });
         $("body").append(this.view.render().el);
         Backbone.on("schedule-task", this.showScheduleView, this);
-        return Backbone.on("pick-schedule-option", this.pickOption, this);
+        Backbone.on("pick-schedule-option", this.pickOption, this);
+        return Backbone.on("select-date", this.selectDate, this);
       };
 
       ViewController.prototype.showScheduleView = function(tasks) {
@@ -26,6 +27,9 @@
         if (!this.currentTasks) {
           return;
         }
+        if (option === "pick a date") {
+          return Backbone.trigger("select-date");
+        }
         date = this.model.getDateFromScheduleOption(option);
         _ref = this.currentTasks;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -36,6 +40,10 @@
           task.set("schedule", date);
         }
         return this.view.hide();
+      };
+
+      ViewController.prototype.selectDate = function() {
+        return console.log("Select a date");
       };
 
       ViewController.prototype.destroy = function() {
