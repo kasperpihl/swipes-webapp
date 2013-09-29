@@ -353,7 +353,7 @@
         });
       });
     });
-    return require(["view/Completed"], function(CompletedView) {
+    require(["view/Completed"], function(CompletedView) {
       var earlierToday, now, prevMonth, todos, view, yesterday;
       earlierToday = new Date();
       yesterday = new Date();
@@ -376,11 +376,34 @@
       ];
       view = new CompletedView();
       return describe("Completed list view", function() {
-        return it("Should order tasks by chronological order", function() {
+        return it("Should order tasks by reverse chronological order", function() {
           var result;
           result = view.groupTasks(todos);
           expect(result[0].deadline).to.equal("Earlier today");
           return expect(result[1].deadline).to.equal("Yesterday");
+        });
+      });
+    });
+    return require(["model/ScheduleModel", "momentjs"], function(ScheduleModel, Moment) {
+      return describe("Schedule model", function() {
+        it("Should should not convert 'This evening' when it's before 18:00 hours", function() {
+          var adjustedTime, model;
+          adjustedTime = moment("2013-01-01 17:59");
+          model = new ScheduleModel(null, adjustedTime);
+          return expect(model.getDynamicTime("This Evening")).to.equal("This Evening");
+        });
+        it("Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", function() {
+          var adjustedTime, model;
+          adjustedTime = moment("2013-01-01 18:00");
+          model = new ScheduleModel(null, adjustedTime);
+          return expect(model.getDynamicTime("This Evening")).to.equal("Tomorrow Evening");
+        });
+        return it("Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", function() {
+          var adjustedTime, model;
+          adjustedTime = moment();
+          adjustedTime.day("Monday");
+          model = new ScheduleModel(null, adjustedTime);
+          return expect(model.getDynamicTime("Day After Tomorrow")).to.equal("Wednesday");
         });
       });
     });

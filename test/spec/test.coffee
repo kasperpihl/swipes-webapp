@@ -349,9 +349,32 @@ require [
 		view = new CompletedView()
 
 		describe "Completed list view", ->
-			it "Should order tasks by chronological order", ->
+			it "Should order tasks by reverse chronological order", ->
 				result = view.groupTasks todos
 				expect(result[0].deadline).to.equal "Earlier today"
 				expect(result[1].deadline).to.equal "Yesterday"
 
 				# If 1 and 2 is correct we know that 3 is too.
+
+	require ["model/ScheduleModel", "momentjs"], (ScheduleModel, Moment) ->
+		describe "Schedule model", ->
+			
+			it "Should should not convert 'This evening' when it's before 18:00 hours", ->
+				adjustedTime = moment("2013-01-01 17:59")
+				model = new ScheduleModel( null, adjustedTime )
+				
+				expect( model.getDynamicTime("This Evening") ).to.equal "This Evening"
+
+			it "Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", ->
+				adjustedTime = moment("2013-01-01 18:00")
+				model = new ScheduleModel( null, adjustedTime )
+				
+				expect( model.getDynamicTime("This Evening") ).to.equal "Tomorrow Evening"
+
+			it "Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", ->
+				adjustedTime = moment()
+				adjustedTime.day "Monday"
+
+				model = new ScheduleModel( null, adjustedTime )
+				
+				expect( model.getDynamicTime("Day After Tomorrow") ).to.equal "Wednesday"
