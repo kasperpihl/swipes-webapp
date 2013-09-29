@@ -2,12 +2,8 @@
   define(["underscore", "momentjs"], function(_, Moment) {
     var ScheduleModel;
     return ScheduleModel = (function() {
-      function ScheduleModel(settings, now) {
+      function ScheduleModel(settings) {
         this.settings = settings;
-        this.now = now;
-        if (this.now == null) {
-          this.now = moment();
-        }
         this.validateSettings();
         this.data = this.getData();
       }
@@ -56,21 +52,30 @@
         ];
       };
 
-      ScheduleModel.prototype.getDateFromScheduleOption = function(option) {
-        return new Date();
+      ScheduleModel.prototype.getDateFromScheduleOption = function(option, now) {
+        if (now == null) {
+          now = moment();
+        }
+        switch (option) {
+          case "later today":
+            return "lol";
+        }
       };
 
-      ScheduleModel.prototype.getDynamicTime = function(time) {
+      ScheduleModel.prototype.getDynamicTime = function(time, now) {
         var dayAfterTomorrow;
+        if (now == null) {
+          now = moment();
+        }
         switch (time) {
           case "This Evening":
-            if (this.now.hour() >= 18) {
+            if (now.hour() >= 18) {
               return "Tomorrow Evening";
             } else {
               return "This Evening";
             }
           case "Day After Tomorrow":
-            dayAfterTomorrow = moment(this.now);
+            dayAfterTomorrow = moment(now);
             dayAfterTomorrow.day(dayAfterTomorrow.day() + 2);
             return dayAfterTomorrow.format("dddd");
           default:
