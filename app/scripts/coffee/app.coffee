@@ -11,15 +11,17 @@ define [
 			@todos = new ToDoCollection()
 			@todos.on( "reset", @init, @ )
 			@fetchTodos()
+			
 		init: ->
 			@tags = new TagCollection()
 			@viewController = new ViewController()
 			@nav = new ListNavigation()
 			@router = new MainRouter()
 			@scheduler = new ScheduleController()
-
-			Backbone.history.start { pushState: no }
 			
+			unless Backbone.History.started 
+				Backbone.history.start { pushState: no }
+
 			$(".add-new input").focus()
 		fetchTodos: ->
 			@todos.fetch()

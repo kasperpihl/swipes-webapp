@@ -14,9 +14,11 @@
         this.nav = new ListNavigation();
         this.router = new MainRouter();
         this.scheduler = new ScheduleController();
-        Backbone.history.start({
-          pushState: false
-        });
+        if (!Backbone.History.started) {
+          Backbone.history.start({
+            pushState: false
+          });
+        }
         return $(".add-new input").focus();
       };
 
