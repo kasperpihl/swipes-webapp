@@ -61,12 +61,15 @@
         }
         times = {
           laterTodayDelay: 3,
-          morning: 9,
-          weekend: {
-            day: "Saturday",
-            morning: 10
+          evening: 18,
+          weekday: {
+            start: "Monday",
+            morning: 9
           },
-          evening: 18
+          weekend: {
+            start: "Saturday",
+            morning: 10
+          }
         };
         switch (option) {
           case "later today":
@@ -80,14 +83,14 @@
             break;
           case "tomorrow":
             newDate.add("days", 1);
-            newDate.hour(times.morning);
+            newDate.hour(times.weekday.morning);
             break;
           case "day after tomorrow":
             newDate.add("days", 2);
-            newDate.hour(times.morning);
+            newDate.hour(times.weekday.morning);
             break;
           case "this weekend":
-            newDate.day(times.weekend.day);
+            newDate.day(times.weekend.start);
             newDate.hour(times.weekend.morning);
         }
         return newDate.toDate();
