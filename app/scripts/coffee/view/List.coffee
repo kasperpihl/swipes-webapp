@@ -39,6 +39,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 				todos = @getTasks()
 
+				# Deselect any selected items 
+				_.invoke( todos, "set", { selected: no } )
+
 				@beforeRenderList todos
 
 				for group in @groupTasks todos

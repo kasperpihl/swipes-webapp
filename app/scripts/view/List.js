@@ -51,6 +51,9 @@
           _this.$el.empty();
           _this.killSubViews();
           todos = _this.getTasks();
+          _.invoke(todos, "set", {
+            selected: false
+          });
           _this.beforeRenderList(todos);
           _ref = _this.groupTasks(todos);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {

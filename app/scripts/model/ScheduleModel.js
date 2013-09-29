@@ -81,22 +81,27 @@
               newDate.add("days", 1);
             }
             newDate.hour(this.rules.evening);
+            newDate = newDate.startOf("hour");
             break;
           case "tomorrow":
             newDate.add("days", 1);
             newDate.hour(this.rules.weekday.morning);
+            newDate = newDate.startOf("hour");
             break;
           case "day after tomorrow":
             newDate.add("days", 2);
             newDate.hour(this.rules.weekday.morning);
+            newDate = newDate.startOf("hour");
             break;
           case "this weekend":
             newDate.day(this.rules.weekend.start);
             newDate.hour(this.rules.weekend.morning);
+            newDate = newDate.startOf("hour");
             break;
           case "next week":
             newDate.day(this.rules.weekday.start);
             newDate.hour(this.rules.weekday.morning);
+            newDate = newDate.startOf("hour");
             break;
           default:
             return null;

@@ -38,18 +38,23 @@ define ["underscore", "momentjs"], (_, Moment) ->
 				when "this evening"
 					if newDate.hour() >= @rules.evening then newDate.add( "days", 1 )
 					newDate.hour @rules.evening
+					newDate = newDate.startOf "hour"
 				when "tomorrow"
 					newDate.add( "days", 1 )
 					newDate.hour @rules.weekday.morning
+					newDate = newDate.startOf "hour"
 				when "day after tomorrow"
 					newDate.add( "days", 2 )
 					newDate.hour @rules.weekday.morning
+					newDate = newDate.startOf "hour"
 				when "this weekend"
 					newDate.day @rules.weekend.start
 					newDate.hour @rules.weekend.morning
+					newDate = newDate.startOf "hour"
 				when "next week"
 					newDate.day @rules.weekday.start
 					newDate.hour @rules.weekday.morning
+					newDate = newDate.startOf "hour"
 				else 
 					# Catch any errors and return null, because then they aren't lost, just simply 
 					# put in the 'unspecified' pile
