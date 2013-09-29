@@ -6,7 +6,7 @@
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
         this.renderList = _.debounce(this.renderList, 300);
-        this.listenTo(swipy.todos, "add remove reset change:completionDate change:schdule", this.renderList);
+        this.listenTo(swipy.todos, "add remove reset change:completionDate change:schedule", this.renderList);
         this.listenTo(Backbone, "complete-task", this.completeTasks);
         return this.listenTo(Backbone, "todo-task", this.markTaskAsTodo);
       },
