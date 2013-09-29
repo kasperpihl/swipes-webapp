@@ -25,4 +25,3 @@ define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/Sched
 		destroy: ->
 			@view.remove()
 			Backbone.off( null, null, @ )
-		

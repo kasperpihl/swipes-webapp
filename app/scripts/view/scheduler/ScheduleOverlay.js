@@ -9,9 +9,6 @@
         _.bindAll(this, "handleResize");
         return $(window).on("resize", this.handleResize);
       },
-      init: function() {
-        return console.log("New Schedule Overlay created");
-      },
       setTemplate: function() {
         return this.template = _.template(ScheduleOverlayTmpl);
       },
@@ -24,7 +21,6 @@
         return this;
       },
       afterShow: function() {
-        console.log("Schedule overlay shown");
         return this.handleResize();
       },
       selectOption: function(e) {

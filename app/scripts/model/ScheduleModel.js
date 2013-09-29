@@ -53,18 +53,21 @@
       };
 
       ScheduleModel.prototype.getDateFromScheduleOption = function(option, now) {
-        if (now == null) {
+        var newDate;
+        if (!now) {
           now = moment();
         }
         switch (option) {
           case "later today":
-            return "lol";
+            newDate = moment(now);
+            newDate.hour(newDate.hour() + 3);
+            return newDate.toDate();
         }
       };
 
       ScheduleModel.prototype.getDynamicTime = function(time, now) {
         var dayAfterTomorrow;
-        if (now == null) {
+        if (!now) {
           now = moment();
         }
         switch (time) {

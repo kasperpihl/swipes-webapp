@@ -6,8 +6,6 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		bindEvents: ->
 			_.bindAll( @, "handleResize" )
 			$(window).on( "resize", @handleResize )
-		init: ->
-			console.log "New Schedule Overlay created"
 		setTemplate: ->
 			@template = _.template ScheduleOverlayTmpl
 		render: ->
@@ -17,7 +15,6 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 			
 			return @
 		afterShow: ->
-			console.log "Schedule overlay shown"
 			@handleResize()
 		selectOption: (e) ->
 			option = e.currentTarget.getAttribute 'data-option'
