@@ -1,8 +1,15 @@
 define ["underscore", "momentjs"], (_, Moment) ->
 	class ScheduleModel
+		rules: 
+			evening: 18
+			laterTodayDelay: 3
+			weekday: { start: "Monday", morning: 9 }
+			weekend: { start: "Saturday", morning: 10 }
+		
 		constructor: (@settings) ->
 			@validateSettings()
 			@data = @getData()
+			
 		validateSettings: ->
 
 		getData: ->
@@ -24,28 +31,22 @@ define ["underscore", "momentjs"], (_, Moment) ->
 			else
 				newDate = moment()
 
-			times = 
-				laterTodayDelay: 3
-				evening: 18
-				weekday: { start: "Monday", morning: 9 }
-				weekend: { start: "Saturday", morning: 10 }
-
 			# Check settings for 'this evening' setting, but for now just use 18:00
 			switch option
 				when "later today"
-					newDate.hour( newDate.hour() + times.laterTodayDelay )
+					newDate.hour( newDate.hour() + @rules.laterTodayDelay )
 				when "this evening"
-					newDate.hour times.evening
-					if now.hour() > times.evening then newDate.add( "days", 1 )
+					newDate.hour @rules.evening
+					if now.hour() > @rules.evening then newDate.add( "days", 1 )
 				when "tomorrow"
 					newDate.add( "days", 1 )
-					newDate.hour times.weekday.morning
+					newDate.hour @rules.weekday.morning
 				when "day after tomorrow"
 					newDate.add( "days", 2 )
-					newDate.hour times.weekday.morning
+					newDate.hour @rules.weekday.morning
 				when "this weekend"
-					newDate.day times.weekend.start
-					newDate.hour times.weekend.morning
+					newDate.day @rules.weekend.start
+					newDate.hour @rules.weekend.morning
 
 			return newDate.toDate()
 		getDynamicTime: (time, now) ->

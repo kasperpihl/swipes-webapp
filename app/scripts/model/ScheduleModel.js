@@ -2,6 +2,19 @@
   define(["underscore", "momentjs"], function(_, Moment) {
     var ScheduleModel;
     return ScheduleModel = (function() {
+      ScheduleModel.prototype.rules = {
+        evening: 18,
+        laterTodayDelay: 3,
+        weekday: {
+          start: "Monday",
+          morning: 9
+        },
+        weekend: {
+          start: "Saturday",
+          morning: 10
+        }
+      };
+
       function ScheduleModel(settings) {
         this.settings = settings;
         this.validateSettings();
@@ -53,45 +66,33 @@
       };
 
       ScheduleModel.prototype.getDateFromScheduleOption = function(option, now) {
-        var newDate, times;
+        var newDate;
         if (now) {
           newDate = moment(now);
         } else {
           newDate = moment();
         }
-        times = {
-          laterTodayDelay: 3,
-          evening: 18,
-          weekday: {
-            start: "Monday",
-            morning: 9
-          },
-          weekend: {
-            start: "Saturday",
-            morning: 10
-          }
-        };
         switch (option) {
           case "later today":
-            newDate.hour(newDate.hour() + times.laterTodayDelay);
+            newDate.hour(newDate.hour() + this.rules.laterTodayDelay);
             break;
           case "this evening":
-            newDate.hour(times.evening);
-            if (now.hour() > times.evening) {
+            newDate.hour(this.rules.evening);
+            if (now.hour() > this.rules.evening) {
               newDate.add("days", 1);
             }
             break;
           case "tomorrow":
             newDate.add("days", 1);
-            newDate.hour(times.weekday.morning);
+            newDate.hour(this.rules.weekday.morning);
             break;
           case "day after tomorrow":
             newDate.add("days", 2);
-            newDate.hour(times.weekday.morning);
+            newDate.hour(this.rules.weekday.morning);
             break;
           case "this weekend":
-            newDate.day(times.weekend.start);
-            newDate.hour(times.weekend.morning);
+            newDate.day(this.rules.weekend.start);
+            newDate.hour(this.rules.weekend.morning);
         }
         return newDate.toDate();
       };
