@@ -363,26 +363,6 @@ require [
 			beforeEach ->
 				model = new ScheduleModel()
 			
-			it "Should should not convert 'This evening' when it's before 18:00 hours", ->
-				expect( model.getDynamicTime( "This Evening", moment("2013-01-01 17:59") ) ).to.equal "This Evening"
-
-			it "Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", ->
-				expect( model.getDynamicTime( "This Evening", moment("2013-01-01 18:00") ) ).to.equal "Tomorrow Evening"
-
-			it "Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", ->
-				adjustedTime = moment()
-				adjustedTime.day "Monday"
-
-				expect( model.getDynamicTime( "Day After Tomorrow", adjustedTime ) ).to.equal "Wednesday"
-
-			it "Should not convert 'This Weekend' when we're on a monday-friday", ->
-				monday = moment().day("Monday")
-				expect( model.getDynamicTime( "This Weekend", monday ) ).to.equal "This Weekend"
-
-			it "Should convert 'This Weekend' to 'Next Weekend' when we're on a saturday/sunday", ->
-				saturday = moment().day("Saturday")
-				expect( model.getDynamicTime( "This Weekend", saturday ) ).to.equal "Next Weekend"
-
 			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
 				now = moment()
 				newDate = model.getDateFromScheduleOption( "later today", now )
@@ -402,6 +382,8 @@ require [
 				parsedNewDate = moment newDate
 				expect( parsedNewDate.hour() ).to.equal 18
 				expect( parsedNewDate.day() ).to.equal today.day()
+
+			it "Should set minutes and seconds to 0 when delaying a task to later today", ->
 
 			it "Should return a new date the day after at 18:00 when scheduling for 'tomorrow evening' (after 18.00)", ->
 				today = moment()
@@ -458,3 +440,70 @@ require [
 
 			it "Should return null when scheduling for 'unspecified'", ->
 				expect( model.getDateFromScheduleOption "unspecified" ).to.equal null
+			
+			describe "converting time", ->
+				it "Should should not convert 'This evening' when it's before 18:00 hours", ->
+					expect( model.getDynamicTime( "This Evening", moment("2013-01-01 17:59") ) ).to.equal "This Evening"
+
+				it "Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", ->
+					expect( model.getDynamicTime( "This Evening", moment("2013-01-01 18:00") ) ).to.equal "Tomorrow Evening"
+
+				it "Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", ->
+					adjustedTime = moment()
+					adjustedTime.day "Monday"
+
+					expect( model.getDynamicTime( "Day After Tomorrow", adjustedTime ) ).to.equal "Wednesday"
+
+				it "Should not convert 'This Weekend' when we're on a monday-friday", ->
+					monday = moment().day("Monday")
+					expect( model.getDynamicTime( "This Weekend", monday ) ).to.equal "This Weekend"
+
+				it "Should convert 'This Weekend' to 'Next Weekend' when we're on a saturday/sunday", ->
+					saturday = moment().day("Saturday")
+					expect( model.getDynamicTime( "This Weekend", saturday ) ).to.equal "Next Weekend"
+
+			describe "Rounding minutes and seconds", ->
+				it "Should not alter minutes and seconds when delaying a task to later today", ->
+					now = moment().minute(23)
+					newDate = model.getDateFromScheduleOption( "later today", now )
+					parsedNewDate = moment newDate
+					
+					expect( parsedNewDate.diff(now, "hours") ).to.equal 3				
+					expect( parsedNewDate.minute() ).to.equal 23
+
+				it "Should set minutes and seconds to 0 when selecting 'this evening'", ->
+					now = moment().hour(12).minute(23).second(23)
+					newDate = model.getDateFromScheduleOption( "this evening", now )
+					parsedNewDate = moment newDate
+					
+					expect( parsedNewDate.hour() ).to.equal 18				
+					expect( parsedNewDate.minute() ).to.equal 0
+					expect( parsedNewDate.second() ).to.equal 0
+
+				it "Should set minutes and seconds to 0 when selecting 'tomorrow'", ->
+					newDate = model.getDateFromScheduleOption( "tomorrow", moment().minute(23).second(23) )
+					parsedNewDate = moment newDate
+					
+					expect( parsedNewDate.minute() ).to.equal 0
+					expect( parsedNewDate.second() ).to.equal 0
+
+				it "Should set minutes and seconds to 0 when selecting 'day after tomorrow'", ->
+					newDate = model.getDateFromScheduleOption( "day after tomorrow", moment().minute(23).second(23) )
+					parsedNewDate = moment newDate
+					
+					expect( parsedNewDate.minute() ).to.equal 0
+					expect( parsedNewDate.second() ).to.equal 0
+
+				it "Should set minutes and seconds to 0 when selecting 'this weekend'", ->
+					newDate = model.getDateFromScheduleOption( "this weekend", moment().minute(23).second(23) )
+					parsedNewDate = moment newDate
+					
+					expect( parsedNewDate.minute() ).to.equal 0
+					expect( parsedNewDate.second() ).to.equal 0
+
+				it "Should set minutes and seconds to 0 when selecting 'next week'", ->
+					newDate = model.getDateFromScheduleOption( "next week", moment().minute(23).second(23) )
+					parsedNewDate = moment newDate
+					
+					expect( parsedNewDate.minute() ).to.equal 0
+					expect( parsedNewDate.second() ).to.equal 0
