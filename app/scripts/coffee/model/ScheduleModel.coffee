@@ -30,6 +30,16 @@ define ["underscore", "momentjs"], (_, Moment) ->
 					# toDate() converts moment to normal JavaScript Date
 					return newDate.toDate()
 
+				when "this evening"
+					newDate = moment( now )
+					newDate.hour 18
+					
+					if now.hour() < 18
+						return newDate.toDate()
+					else
+						newDate.dayOfYear( newDate.dayOfYear() + 1 )
+						return newDate.toDate()
+
 		getDynamicTime: (time, now) ->
 			if not now then now = moment()
 

@@ -62,6 +62,15 @@
             newDate = moment(now);
             newDate.hour(newDate.hour() + 3);
             return newDate.toDate();
+          case "this evening":
+            newDate = moment(now);
+            newDate.hour(18);
+            if (now.hour() < 18) {
+              return newDate.toDate();
+            } else {
+              newDate.dayOfYear(newDate.dayOfYear() + 1);
+              return newDate.toDate();
+            }
         }
       };
 
