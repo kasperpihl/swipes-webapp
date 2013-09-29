@@ -460,7 +460,14 @@
           return expect(parsedNewDate.hour()).to.equal(10);
         });
         it("Should return a new date this following monday at 9:00 when scheduling for 'next week'", function() {
-          return expect(2).to.be.lessThan(1);
+          var monday, newDate, parsedNewDate, today;
+          today = moment();
+          monday = moment().day("Monday");
+          newDate = model.getDateFromScheduleOption("next week");
+          expect(newDate).to.exist;
+          parsedNewDate = moment(newDate);
+          expect(parsedNewDate.dayOfYear()).to.equal(monday.dayOfYear());
+          return expect(parsedNewDate.hour()).to.equal(9);
         });
         it("Should return null when scheduling for 'unspecified'", function() {
           return expect(2).to.be.lessThan(1);
