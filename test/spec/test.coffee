@@ -139,6 +139,8 @@ require [
 				future = new Date()
 				past = new Date()
 
+				# Put now 1 second in the past
+				now.setSeconds now.getSeconds() - 1
 				future.setDate now.getDate() + 1
 				past.setDate now.getDate() - 1
 
@@ -170,9 +172,8 @@ require [
 				
 				describe "To Do View: Selecting", ->
 
-
 					list.append view.el
-					view.$el.click()
+					view.$el.find( ".todo-content" ).click()
 				
 					it "Should toggle selected property on model when clicked", ->
 						expect( model.get "selected" ).to.be.true
@@ -211,7 +212,7 @@ require [
 						expect( count ).to.equal 0
 					
 
-					it "Should get the 'hover-complete' CSS class when 'hover-complete' event is triggered when selected", ->
+					it "Should get the 'hover-left' CSS class when 'hover-complete' event is triggered when selected", ->
 						# Make 2 views selected
 						views[0].model.set( "selected", true )
 						views[1].model.set( "selected", true )
@@ -219,11 +220,11 @@ require [
 						Backbone.trigger "hover-complete"
 						
 						count = 0
-						count++ for view in views when view.$el.hasClass "hover-complete"
+						count++ for view in views when view.$el.hasClass "hover-left"
 
 						expect( count ).to.equal 2
 
-					it "Should remove the 'hover-complete' CSS class when 'unhover-complete' event is triggered when selected", ->
+					it "Should remove the 'hover-left' CSS class when 'unhover-complete' event is triggered when selected", ->
 						# Make 2 views selected
 						views[0].model.set( "selected", true )
 						views[1].model.set( "selected", true )
@@ -233,11 +234,11 @@ require [
 
 						Backbone.trigger "unhover-complete"
 						count = 0
-						count++ for view in views when view.$el.hasClass "hover-complete"
+						count++ for view in views when view.$el.hasClass "hover-left"
 
 						expect( count ).to.equal 0
 
-					it "Should get the 'hover-schedule' CSS class when 'hover-schedule' event is triggered when selected", ->
+					it "Should get the 'hover-right' CSS class when 'hover-schedule' event is triggered when selected", ->
 						# Make 2 views selected
 						views[0].model.set( "selected", true )
 						views[1].model.set( "selected", true )
@@ -245,21 +246,21 @@ require [
 						Backbone.trigger "hover-schedule"
 						
 						count = 0
-						count++ for view in views when view.$el.hasClass "hover-schedule"
+						count++ for view in views when view.$el.hasClass "hover-right"
 
 						expect( count ).to.equal 2
 
-					it "Should remove the 'hover-schedule' CSS class when 'unhover-schedule' event is triggered when selected", ->
+					it "Should remove the 'hover-right' CSS class when 'unhover-schedule' event is triggered when selected", ->
 						# Make 2 views selected
 						views[0].model.set( "selected", true )
 						views[1].model.set( "selected", true )
 
-						views[0].$el.addClass "hover-schedule"
-						views[1].$el.addClass "hover-schedule"
+						views[0].$el.addClass "hover-right"
+						views[1].$el.addClass "hover-right"
 
 						Backbone.trigger "unhover-schedule"
 						count = 0
-						count++ for view in views when view.$el.hasClass "hover-schedule"
+						count++ for view in views when view.$el.hasClass "hover-right"
 
 						expect( count ).to.equal 0
 

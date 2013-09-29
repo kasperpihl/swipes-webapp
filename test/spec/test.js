@@ -115,6 +115,7 @@
           now = new Date();
           future = new Date();
           past = new Date();
+          now.setSeconds(now.getSeconds() - 1);
           future.setDate(now.getDate() + 1);
           past.setDate(now.getDate() - 1);
           scheduledTask = new ToDoModel({
@@ -154,7 +155,7 @@
           });
           return describe("To Do View: Selecting", function() {
             list.append(view.el);
-            view.$el.click();
+            view.$el.find(".todo-content").click();
             it("Should toggle selected property on model when clicked", function() {
               return expect(model.get("selected")).to.be["true"];
             });
@@ -217,7 +218,7 @@
               }
               return expect(count).to.equal(0);
             });
-            it("Should get the 'hover-complete' CSS class when 'hover-complete' event is triggered when selected", function() {
+            it("Should get the 'hover-left' CSS class when 'hover-complete' event is triggered when selected", function() {
               var count, view, _i, _len;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
@@ -225,13 +226,13 @@
               count = 0;
               for (_i = 0, _len = views.length; _i < _len; _i++) {
                 view = views[_i];
-                if (view.$el.hasClass("hover-complete")) {
+                if (view.$el.hasClass("hover-left")) {
                   count++;
                 }
               }
               return expect(count).to.equal(2);
             });
-            it("Should remove the 'hover-complete' CSS class when 'unhover-complete' event is triggered when selected", function() {
+            it("Should remove the 'hover-left' CSS class when 'unhover-complete' event is triggered when selected", function() {
               var count, view, _i, _len;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
@@ -241,13 +242,13 @@
               count = 0;
               for (_i = 0, _len = views.length; _i < _len; _i++) {
                 view = views[_i];
-                if (view.$el.hasClass("hover-complete")) {
+                if (view.$el.hasClass("hover-left")) {
                   count++;
                 }
               }
               return expect(count).to.equal(0);
             });
-            it("Should get the 'hover-schedule' CSS class when 'hover-schedule' event is triggered when selected", function() {
+            it("Should get the 'hover-right' CSS class when 'hover-schedule' event is triggered when selected", function() {
               var count, view, _i, _len;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
@@ -255,23 +256,23 @@
               count = 0;
               for (_i = 0, _len = views.length; _i < _len; _i++) {
                 view = views[_i];
-                if (view.$el.hasClass("hover-schedule")) {
+                if (view.$el.hasClass("hover-right")) {
                   count++;
                 }
               }
               return expect(count).to.equal(2);
             });
-            return it("Should remove the 'hover-schedule' CSS class when 'unhover-schedule' event is triggered when selected", function() {
+            return it("Should remove the 'hover-right' CSS class when 'unhover-schedule' event is triggered when selected", function() {
               var count, view, _i, _len;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
-              views[0].$el.addClass("hover-schedule");
-              views[1].$el.addClass("hover-schedule");
+              views[0].$el.addClass("hover-right");
+              views[1].$el.addClass("hover-right");
               Backbone.trigger("unhover-schedule");
               count = 0;
               for (_i = 0, _len = views.length; _i < _len; _i++) {
                 view = views[_i];
-                if (view.$el.hasClass("hover-schedule")) {
+                if (view.$el.hasClass("hover-right")) {
                   count++;
                 }
               }
