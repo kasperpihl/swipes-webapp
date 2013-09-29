@@ -432,7 +432,13 @@
           return expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 1);
         });
         it("Should return a new date the day after at 09:00 when scheduling for 'tomorrow'", function() {
-          return expect(2).to.be.lessThan(1);
+          var newDate, parsedNewDate, today;
+          today = moment();
+          newDate = model.getDateFromScheduleOption("tomorrow", today);
+          expect(newDate).to.exist;
+          parsedNewDate = moment(newDate);
+          expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 1);
+          return expect(parsedNewDate.hour()).to.equal(9);
         });
         it("Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", function() {
           return expect(2).to.be.lessThan(1);
