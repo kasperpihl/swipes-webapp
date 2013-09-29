@@ -378,3 +378,26 @@ require [
 				model = new ScheduleModel( null, adjustedTime )
 				
 				expect( model.getDynamicTime("Day After Tomorrow") ).to.equal "Wednesday"
+
+			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
+				expect( 2 ).to.be.lessThan 1
+
+			it "Should return a new date tomorrow at 09:00 when scheduling for 'tomorrow'", ->
+				expect( 2 ).to.be.lessThan 1
+
+			it "Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", ->
+				expect( 2 ).to.be.lessThan 1
+
+			it "Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", ->
+				expect( 2 ).to.be.lessThan 1
+
+			it "Should return a new date this following monday at 9:00 when scheduling for 'next week'", ->
+				expect( 2 ).to.be.lessThan 1
+
+			it "Should return null when scheduling for 'unspecified'", ->
+				expect( 2 ).to.be.lessThan 1
+
+			it "Should return a specific date when scheduling for 'pick a date'", ->
+				expect( 2 ).to.be.lessThan 1
+
+

@@ -398,12 +398,33 @@
           model = new ScheduleModel(null, adjustedTime);
           return expect(model.getDynamicTime("This Evening")).to.equal("Tomorrow Evening");
         });
-        return it("Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", function() {
+        it("Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", function() {
           var adjustedTime, model;
           adjustedTime = moment();
           adjustedTime.day("Monday");
           model = new ScheduleModel(null, adjustedTime);
           return expect(model.getDynamicTime("Day After Tomorrow")).to.equal("Wednesday");
+        });
+        it("Should return a new date 3 hours in the future when scheduling for 'later today'", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        it("Should return a new date tomorrow at 09:00 when scheduling for 'tomorrow'", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        it("Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        it("Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        it("Should return a new date this following monday at 9:00 when scheduling for 'next week'", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        it("Should return null when scheduling for 'unspecified'", function() {
+          return expect(2).to.be.lessThan(1);
+        });
+        return it("Should return a specific date when scheduling for 'pick a date'", function() {
+          return expect(2).to.be.lessThan(1);
         });
       });
     });
