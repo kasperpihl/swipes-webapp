@@ -50,6 +50,10 @@ define ["underscore", "momentjs"], (_, Moment) ->
 				when "next week"
 					newDate.day @rules.weekday.start
 					newDate.hour @rules.weekday.morning
+				else 
+					# Catch any errors and return null, because then they aren't lost, just simply 
+					# put in the 'unspecified' pile
+					return null
 
 			return newDate.toDate()
 		getDynamicTime: (time, now) ->

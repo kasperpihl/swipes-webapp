@@ -97,6 +97,9 @@
           case "next week":
             newDate.day(this.rules.weekday.start);
             newDate.hour(this.rules.weekday.morning);
+            break;
+          default:
+            return null;
         }
         return newDate.toDate();
       };
