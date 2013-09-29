@@ -10,6 +10,12 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 			console.log "New Schedule Overlay created"
 		setTemplate: ->
 			@template = _.template ScheduleOverlayTmpl
+		render: ->
+			if @template
+				html = @template @model.toJSON()
+				@$el.html html
+			
+			return @
 		afterShow: ->
 			console.log "Schedule overlay shown"
 			@handleResize()

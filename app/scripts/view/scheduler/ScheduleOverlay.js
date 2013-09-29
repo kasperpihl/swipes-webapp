@@ -15,6 +15,14 @@
       setTemplate: function() {
         return this.template = _.template(ScheduleOverlayTmpl);
       },
+      render: function() {
+        var html;
+        if (this.template) {
+          html = this.template(this.model.toJSON());
+          this.$el.html(html);
+        }
+        return this;
+      },
       afterShow: function() {
         console.log("Schedule overlay shown");
         return this.handleResize();

@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/DateConverter"], function(_, Backbone, ScheduleOverlayView, DateConverter) {
+  define(["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/ScheduleModel"], function(_, Backbone, ScheduleOverlayView, ScheduleModel) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
@@ -7,8 +7,10 @@
       }
 
       ViewController.prototype.init = function() {
-        this.view = new ScheduleOverlayView();
-        this.dateConverter = new DateConverter();
+        this.model = new ScheduleModel();
+        this.view = new ScheduleOverlayView({
+          model: this.model
+        });
         $("body").append(this.view.render().el);
         Backbone.on("schedule-task", this.showScheduleView, this);
         return Backbone.on("pick-schedule-option", this.pickOption, this);
@@ -24,7 +26,7 @@
         if (!this.currentTasks) {
           return;
         }
-        date = this.dateConverter.getDateFromScheduleOption(option);
+        date = this.model.getDateFromScheduleOption(option);
         _ref = this.currentTasks;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           task = _ref[_i];

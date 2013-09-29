@@ -1,11 +1,11 @@
-define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/DateConverter"], (_, Backbone, ScheduleOverlayView, DateConverter) ->
+define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/ScheduleModel"], (_, Backbone, ScheduleOverlayView, ScheduleModel) ->
 	class ViewController
 		constructor: (opts) ->
 			@init()
 
 		init: ->
-			@view = new ScheduleOverlayView()
-			@dateConverter = new DateConverter()
+			@model = new ScheduleModel()
+			@view = new ScheduleOverlayView( model: @model )
 			$("body").append @view.render().el
 
 			Backbone.on( "schedule-task", @showScheduleView, @ )
@@ -15,7 +15,7 @@ define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/DateC
 			@view.show()
 		pickOption: (option) ->
 			return unless @currentTasks
-			date = @dateConverter.getDateFromScheduleOption option
+			date = @model.getDateFromScheduleOption option
 			
 			for task in @currentTasks
 				task.unset( "schedule", {silent: yes} )

@@ -73,7 +73,7 @@ $font_name: 'swipes';
 	-webkit-font-smoothing: antialiased;
 }
 
-.icon-triangle-right, .icon-triangle-left, .icon-trashcan, .icon-todo, .icon-tags, .icon-swipes-plus, .icon-swipes-logo, .icon-swipes-logo-square, .icon-support, .icon-snooze-unspecified, .icon-snooze-tomorrow, .icon-snooze-this-weekend, .icon-snooze-this-evening, .icon-snooze-next-week, .icon-snooze-location, .icon-snooze-later-today, .icon-snooze-day-after-tomorrow, .icon-snooze-date, .icon-share, .icon-schedule, .icon-repeat, .icon-questionmark-circle, .icon-policy, .icon-plus, .icon-pencil, .icon-note, .icon-log-out, .icon-facebook-logo, .icon-facebook-btn, .icon-cross, .icon-cog, .icon-clock, .icon-checkmark, .icon-arr-right, .icon-arr-right-long, .icon-arr-left, .icon-arr-left-long, .icon-minus {
+.icon-triangle-right, .icon-triangle-left, .icon-trashcan, .icon-todo, .icon-tags, .icon-swipes-plus, .icon-swipes-logo, .icon-swipes-logo-square, .icon-support, .icon-snooze-unspecified, .icon-snooze-tomorrow, .icon-snooze-this-weekend, .icon-snooze-this-evening, .icon-snooze-next-week, .icon-snooze-location, .icon-snooze-later-today, .icon-snooze-day-after-tomorrow, .icon-snooze-pick-a-date, .icon-share, .icon-schedule, .icon-repeat, .icon-questionmark-circle, .icon-policy, .icon-plus, .icon-pencil, .icon-note, .icon-log-out, .icon-facebook-logo, .icon-facebook-btn, .icon-cross, .icon-cog, .icon-clock, .icon-checkmark, .icon-arr-right, .icon-arr-right-long, .icon-arr-left, .icon-arr-left-long, .icon-minus {
 	@extend .icon;
 }
 
@@ -94,7 +94,7 @@ $font_name: 'swipes';
 .icon-snooze-location:before { content: "\e00e"; }
 .icon-snooze-later-today:before { content: "\e00f"; }
 .icon-snooze-day-after-tomorrow:before { content: "\e010"; }
-.icon-snooze-date:before { content: "\e011"; }
+.icon-snooze-pick-a-date:before { content: "\e011"; }
 .icon-share:before { content: "\e012"; }
 .icon-schedule:before { content: "\e013"; }
 .icon-repeat:before { content: "\e014"; }
