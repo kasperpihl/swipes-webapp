@@ -32,12 +32,12 @@ define ["underscore", "momentjs"], (_, Moment) ->
 					newDate.hour( newDate.hour() + times.laterTodayDelay )
 				when "this evening"
 					newDate.hour times.evening
-					if now.hour() > times.evening then newDate.dayOfYear( newDate.dayOfYear() + 1 )
+					if now.hour() > times.evening then newDate.add( "days", 1 )
 				when "tomorrow"
-					newDate.dayOfYear( newDate.dayOfYear() + 1 )
+					newDate.add( "days", 1 )
 					newDate.hour times.morning
 				when "day after tomorrow"
-					newDate.dayOfYear( newDate.dayOfYear() + 2 )
+					newDate.add( "days", 2 )
 					newDate.hour times.morning
 
 			return newDate.toDate()

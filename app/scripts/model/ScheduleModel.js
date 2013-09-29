@@ -71,15 +71,15 @@
           case "this evening":
             newDate.hour(times.evening);
             if (now.hour() > times.evening) {
-              newDate.dayOfYear(newDate.dayOfYear() + 1);
+              newDate.add("days", 1);
             }
             break;
           case "tomorrow":
-            newDate.dayOfYear(newDate.dayOfYear() + 1);
+            newDate.add("days", 1);
             newDate.hour(times.morning);
             break;
           case "day after tomorrow":
-            newDate.dayOfYear(newDate.dayOfYear() + 2);
+            newDate.add("days", 2);
             newDate.hour(times.morning);
         }
         return newDate.toDate();
