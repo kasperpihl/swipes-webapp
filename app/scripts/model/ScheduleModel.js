@@ -93,6 +93,10 @@
           case "this weekend":
             newDate.day(this.rules.weekend.start);
             newDate.hour(this.rules.weekend.morning);
+            break;
+          case "next week":
+            newDate.day(this.rules.weekday.start);
+            newDate.hour(this.rules.weekday.morning);
         }
         return newDate.toDate();
       };

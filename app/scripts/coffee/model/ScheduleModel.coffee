@@ -47,6 +47,9 @@ define ["underscore", "momentjs"], (_, Moment) ->
 				when "this weekend"
 					newDate.day @rules.weekend.start
 					newDate.hour @rules.weekend.morning
+				when "next week"
+					newDate.day @rules.weekday.start
+					newDate.hour @rules.weekday.morning
 
 			return newDate.toDate()
 		getDynamicTime: (time, now) ->
