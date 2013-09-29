@@ -27,9 +27,12 @@ define ["underscore", "momentjs"], (_, Moment) ->
 			switch time
 				when "This Evening"
 					# Check settings for 'this evening' setting, but for now just use 18:00
-					return "*DYNAMIC*"
+					return if @now.hour() >= 18 then "Tomorrow Evening" else "This Evening"
 				when "Day After Tomorrow"
-					return "*DYNAMIC*"
+					dayAfterTomorrow = moment @now
+					dayAfterTomorrow.day ( dayAfterTomorrow.day() + 2 )
+
+					return dayAfterTomorrow.format "dddd"
 				else 
 					return time
 

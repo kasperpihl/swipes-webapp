@@ -61,11 +61,18 @@
       };
 
       ScheduleModel.prototype.getDynamicTime = function(time) {
+        var dayAfterTomorrow;
         switch (time) {
           case "This Evening":
-            return "*DYNAMIC*";
+            if (this.now.hour() >= 18) {
+              return "Tomorrow Evening";
+            } else {
+              return "This Evening";
+            }
           case "Day After Tomorrow":
-            return "*DYNAMIC*";
+            dayAfterTomorrow = moment(this.now);
+            dayAfterTomorrow.day(dayAfterTomorrow.day() + 2);
+            return dayAfterTomorrow.format("dddd");
           default:
             return time;
         }
