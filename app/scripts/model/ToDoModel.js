@@ -45,9 +45,6 @@
       getValidatedSchedule: function() {
         var schedule;
         schedule = this.get("schedule");
-        if (!schedule) {
-          return false;
-        }
         if (typeof schedule === "string") {
           this.set("schedule", new Date(schedule));
         }
@@ -57,7 +54,7 @@
         return moment.calendar().match(/\w+/)[0];
       },
       setScheduleStr: function() {
-        var dayDiff, dayWithoutTime, now, parsedDate, result, schedule;
+        var dayWithoutTime, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
         if (!schedule) {
           if (this.get("completionDate")) {
@@ -72,8 +69,7 @@
         if (parsedDate.isBefore()) {
           return this.set("scheduleStr", "the past");
         }
-        dayDiff = parsedDate.diff(now, "days");
-        if (dayDiff > 7) {
+        if (parsedDate.diff(now, "days") > 7) {
           if (parsedDate.year() > now.year()) {
             result = parsedDate.format("MMM Do 'YY");
           } else {
@@ -96,15 +92,14 @@
         return this.set("timeStr", moment(schedule).format("h:mmA"));
       },
       setCompletionStr: function() {
-        var completionDate, dayDiff, dayWithoutTime, now, parsedDate, result;
+        var completionDate, dayWithoutTime, now, parsedDate, result;
         completionDate = this.get("completionDate");
         if (!completionDate) {
           return this.set("completionStr", void 0);
         }
         now = moment();
         parsedDate = moment(completionDate);
-        dayDiff = parsedDate.diff(now, "days");
-        if (dayDiff < -7) {
+        if (parsedDate.diff(now, "days") < -7) {
           if (parsedDate.year() < now.year()) {
             result = parsedDate.format("MMM Do 'YY");
           } else {

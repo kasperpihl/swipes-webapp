@@ -31,13 +31,15 @@
           _this = this;
         now = new Date().getTime();
         return this.filter(function(m) {
+          var schedule;
           if (m.get("completionDate")) {
             return false;
           }
-          if (m.get("schdule") === null) {
+          schedule = m.getValidatedSchedule();
+          if (schedule === null) {
             return true;
           }
-          return m.getValidatedSchedule().getTime() > now;
+          return schedule.getTime() > now;
         });
       },
       getCompleted: function() {

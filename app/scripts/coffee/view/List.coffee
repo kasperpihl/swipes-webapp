@@ -21,7 +21,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			@renderList()
 			return @
 		sortTasks: (tasks) ->
-			return _.sortBy tasks, (model) -> model.get( "schedule" ).getTime()
+			return _.sortBy tasks, (model) -> model.get( "schedule" )?.getTime()
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "scheduleStr" )

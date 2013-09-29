@@ -78,7 +78,7 @@
             break;
           case "this evening":
             newDate.hour(this.rules.evening);
-            if (now.hour() > this.rules.evening) {
+            if (newDate.hour() > this.rules.evening) {
               newDate.add("days", 1);
             }
             break;
