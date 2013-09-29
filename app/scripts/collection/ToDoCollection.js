@@ -22,14 +22,19 @@
           if (!schedule || m.get("completionDate")) {
             return false;
           } else {
-            return schedule.getTime() < now;
+            return schedule.getTime() <= now;
           }
         });
       },
       getScheduled: function() {
-        var _this = this;
+        var now,
+          _this = this;
+        now = new Date().getTime();
         return this.filter(function(m) {
-          return m.get("scheduleStr") !== "the past" && !m.get("completionDate");
+          if (m.get("completionDate")) {
+            return false;
+          }
+          return m.getValidatedSchedule().getTime() > now;
         });
       },
       getCompleted: function() {

@@ -13,10 +13,13 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 				if not schedule or m.get "completionDate"
 					return false
 				else
-					return schedule.getTime() < now
+					return schedule.getTime() <= now
 		getScheduled: -> 
-			@filter (m) => 
-				m.get( "scheduleStr" ) isnt "the past" and not m.get "completionDate"
+			now = new Date().getTime()
+			
+			@filter (m) =>
+				return false if m.get "completionDate"
+				return m.getValidatedSchedule().getTime() > now
 		getCompleted: -> 
 			@filter (m) =>
 				m.get("completionDate")?
