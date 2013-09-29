@@ -360,24 +360,20 @@ require [
 		describe "Schedule model", ->
 			
 			it "Should should not convert 'This evening' when it's before 18:00 hours", ->
-				adjustedTime = moment("2013-01-01 17:59")
-				model = new ScheduleModel( null, adjustedTime )
-				
-				expect( model.getDynamicTime("This Evening") ).to.equal "This Evening"
+				model = new ScheduleModel()
+				expect( model.getDynamicTime( "This Evening", moment("2013-01-01 17:59") ) ).to.equal "This Evening"
 
 			it "Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", ->
-				adjustedTime = moment("2013-01-01 18:00")
-				model = new ScheduleModel( null, adjustedTime )
-				
-				expect( model.getDynamicTime("This Evening") ).to.equal "Tomorrow Evening"
+				model = new ScheduleModel()
+				expect( model.getDynamicTime( "This Evening", moment("2013-01-01 18:00") ) ).to.equal "Tomorrow Evening"
 
 			it "Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", ->
 				adjustedTime = moment()
 				adjustedTime.day "Monday"
 
-				model = new ScheduleModel( null, adjustedTime )
+				model = new ScheduleModel()
 				
-				expect( model.getDynamicTime("Day After Tomorrow") ).to.equal "Wednesday"
+				expect( model.getDynamicTime( "Day After Tomorrow", adjustedTime ) ).to.equal "Wednesday"
 
 			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
 				expect( 2 ).to.be.lessThan 1
