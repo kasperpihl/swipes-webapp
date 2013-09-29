@@ -77,6 +77,10 @@
           case "tomorrow":
             newDate.dayOfYear(newDate.dayOfYear() + 1);
             newDate.hour(times.morning);
+            break;
+          case "day after tomorrow":
+            newDate.dayOfYear(newDate.dayOfYear() + 2);
+            newDate.hour(times.morning);
         }
         return newDate.toDate();
       };

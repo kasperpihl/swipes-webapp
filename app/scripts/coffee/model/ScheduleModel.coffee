@@ -36,6 +36,9 @@ define ["underscore", "momentjs"], (_, Moment) ->
 				when "tomorrow"
 					newDate.dayOfYear( newDate.dayOfYear() + 1 )
 					newDate.hour times.morning
+				when "day after tomorrow"
+					newDate.dayOfYear( newDate.dayOfYear() + 2 )
+					newDate.hour times.morning
 
 			return newDate.toDate()
 		getDynamicTime: (time, now) ->
