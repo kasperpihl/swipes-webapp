@@ -2,8 +2,12 @@
   define(["underscore", "momentjs"], function(_, Moment) {
     var ScheduleModel;
     return ScheduleModel = (function() {
-      function ScheduleModel(settings) {
+      function ScheduleModel(settings, now) {
         this.settings = settings;
+        this.now = now;
+        if (this.now == null) {
+          this.now = moment();
+        }
         this.validateSettings();
         this.data = this.getData();
       }

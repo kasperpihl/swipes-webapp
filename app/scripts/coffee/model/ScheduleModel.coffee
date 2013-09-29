@@ -1,6 +1,8 @@
 define ["underscore", "momentjs"], (_, Moment) ->
 	class ScheduleModel
-		constructor: (@settings) ->
+		constructor: (@settings, @now) ->
+			if not @now? then @now = moment()
+			
 			@validateSettings()
 			@data = @getData()
 		validateSettings: ->
@@ -22,8 +24,6 @@ define ["underscore", "momentjs"], (_, Moment) ->
 			return new Date()
 
 		getDynamicTime: (time) ->
-			# now = moment()
-
 			switch time
 				when "This Evening"
 					# Check settings for 'this evening' setting, but for now just use 18:00
