@@ -9,12 +9,20 @@
       ViewController.prototype.init = function() {
         this.view = new ScheduleOverlayView();
         $("body").append(this.view.render().el);
-        return Backbone.on("schedule-task", this.scheduleTasks, this);
+        Backbone.on("schedule-task", this.showScheduleView, this);
+        return Backbone.on("pick-schedule-option", this.pickOption, this);
       };
 
-      ViewController.prototype.scheduleTasks = function(tasks) {
-        console.log("Schedule tasks: ", tasks);
+      ViewController.prototype.showScheduleView = function(tasks) {
+        this.currentTasks = tasks;
         return this.view.show();
+      };
+
+      ViewController.prototype.pickOption = function(option) {
+        if (!this.currentTasks) {
+          return;
+        }
+        return console.log("Schdule ", this.currentTasks, " for " + option + ".");
       };
 
       ViewController.prototype.destroy = function() {

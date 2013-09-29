@@ -15,7 +15,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 			@handleResize()
 		selectOption: (e) ->
 			option = e.currentTarget.getAttribute 'data-option'
-			console.log "Selected option: #{ option }"
+			Backbone.trigger( "pick-schedule-option", option )
 		handleResize: ->
 			return unless @shown
 			

@@ -22,7 +22,7 @@
       selectOption: function(e) {
         var option;
         option = e.currentTarget.getAttribute('data-option');
-        return console.log("Selected option: " + option);
+        return Backbone.trigger("pick-schedule-option", option);
       },
       handleResize: function() {
         var content, offset;
