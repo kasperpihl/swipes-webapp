@@ -449,7 +449,7 @@ require [
 				expect( parsedNewDate.hour() ).to.equal 9
 
 			it "Should return null when scheduling for 'unspecified'", ->
-				expect( 2 ).to.be.lessThan 1
+				expect( model.getDateFromScheduleOption "unspecified" ).to.equal null
 
 			it "Should return a specific date when scheduling for 'pick a date'", ->
 				expect( 2 ).to.be.lessThan 1
