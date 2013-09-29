@@ -375,6 +375,14 @@ require [
 
 				expect( model.getDynamicTime( "Day After Tomorrow", adjustedTime ) ).to.equal "Wednesday"
 
+			it "Should not convert 'This Weekend' when we're on a monday-friday", ->
+				monday = moment().day("Monday")
+				expect( model.getDynamicTime( "This Weekend", monday ) ).to.equal "This Weekend"
+
+			it "Should convert 'This Weekend' to 'Next Weekend' when we're on a saturday/sunday", ->
+				saturday = moment().day("Saturday")
+				expect( model.getDynamicTime( "This Weekend", saturday ) ).to.equal "Next Weekend"
+
 			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
 				now = moment()
 				newDate = model.getDateFromScheduleOption( "later today", now )
