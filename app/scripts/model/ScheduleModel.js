@@ -117,9 +117,14 @@
               return "This Evening";
             }
           case "Day After Tomorrow":
-            dayAfterTomorrow = moment(now);
-            dayAfterTomorrow.day(dayAfterTomorrow.day() + 2);
+            dayAfterTomorrow = moment(now).add("days", 2);
             return dayAfterTomorrow.format("dddd");
+          case "This Weekend":
+            if (now.day() < 5) {
+              return "This Weekend";
+            } else {
+              return "Next Weekend";
+            }
           default:
             return time;
         }

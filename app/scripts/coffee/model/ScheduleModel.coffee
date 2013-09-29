@@ -63,10 +63,10 @@ define ["underscore", "momentjs"], (_, Moment) ->
 				when "This Evening"
 					return if now.hour() >= 18 then "Tomorrow Evening" else "This Evening"
 				when "Day After Tomorrow"
-					dayAfterTomorrow = moment now
-					dayAfterTomorrow.day ( dayAfterTomorrow.day() + 2 )
-
+					dayAfterTomorrow = moment( now ).add( "days", 2 )
 					return dayAfterTomorrow.format "dddd"
+				when "This Weekend"
+					return if now.day() < 5 then "This Weekend" else "Next Weekend"
 				else 
 					return time
 
