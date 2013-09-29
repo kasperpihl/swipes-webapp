@@ -407,10 +407,31 @@
           var newDate, now, parsedNewDate;
           now = moment();
           newDate = model.getDateFromScheduleOption("later today", now);
+          expect(newDate).to.exist;
           parsedNewDate = moment(newDate);
           return expect(parsedNewDate.diff(now, "hours")).to.equal(3);
         });
-        it("Should return a new date tomorrow at 09:00 when scheduling for 'tomorrow'", function() {
+        it("Should return a new date the same day at 18:00 when scheduling for 'this evening' (before 18.00)", function() {
+          var newDate, parsedNewDate, today;
+          today = moment();
+          today.hour(17);
+          newDate = model.getDateFromScheduleOption("this evening", today);
+          expect(newDate).to.exist;
+          parsedNewDate = moment(newDate);
+          expect(parsedNewDate.hour()).to.equal(18);
+          return expect(parsedNewDate.day()).to.equal(today.day());
+        });
+        it("Should return a new date the day after at 18:00 when scheduling for 'tomorrow evening' (after 18.00)", function() {
+          var newDate, parsedNewDate, today;
+          today = moment();
+          today.hour(19);
+          newDate = model.getDateFromScheduleOption("this evening", today);
+          expect(newDate).to.exist;
+          parsedNewDate = moment(newDate);
+          expect(parsedNewDate.hour()).to.equal(18);
+          return expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 1);
+        });
+        it("Should return a new date the day after at 09:00 when scheduling for 'tomorrow'", function() {
           return expect(2).to.be.lessThan(1);
         });
         it("Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", function() {

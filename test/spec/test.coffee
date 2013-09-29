@@ -378,11 +378,35 @@ require [
 			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
 				now = moment()
 				newDate = model.getDateFromScheduleOption( "later today", now )
-				parsedNewDate = moment newDate
+				
+				expect( newDate ).to.exist
 
+				parsedNewDate = moment newDate
 				expect( parsedNewDate.diff(now, "hours") ).to.equal 3
 
-			it "Should return a new date tomorrow at 09:00 when scheduling for 'tomorrow'", ->
+			it "Should return a new date the same day at 18:00 when scheduling for 'this evening' (before 18.00)", ->
+				today = moment()
+				today.hour 17
+				newDate = model.getDateFromScheduleOption( "this evening", today )
+				
+				expect( newDate ).to.exist
+
+				parsedNewDate = moment newDate
+				expect( parsedNewDate.hour() ).to.equal 18
+				expect( parsedNewDate.day() ).to.equal today.day()
+
+			it "Should return a new date the day after at 18:00 when scheduling for 'tomorrow evening' (after 18.00)", ->
+				today = moment()
+				today.hour 19
+				newDate = model.getDateFromScheduleOption( "this evening", today )
+				
+				expect( newDate ).to.exist
+
+				parsedNewDate = moment newDate
+				expect( parsedNewDate.hour() ).to.equal 18
+				expect( parsedNewDate.dayOfYear() ).to.equal today.dayOfYear() + 1
+
+			it "Should return a new date the day after at 09:00 when scheduling for 'tomorrow'", ->
 				expect( 2 ).to.be.lessThan 1
 
 			it "Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", ->
