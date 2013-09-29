@@ -34,6 +34,9 @@
           if (m.get("completionDate")) {
             return false;
           }
+          if (m.get("schdule") === null) {
+            return true;
+          }
           return m.getValidatedSchedule().getTime() > now;
         });
       },

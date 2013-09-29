@@ -19,6 +19,7 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 			
 			@filter (m) =>
 				return false if m.get "completionDate"
+				return true if m.get( "schdule" ) is null
 				return m.getValidatedSchedule().getTime() > now
 		getCompleted: -> 
 			@filter (m) =>
