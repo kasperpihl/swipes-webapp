@@ -54,8 +54,10 @@
 
       ScheduleModel.prototype.getDateFromScheduleOption = function(option, now) {
         var newDate, times;
-        if (!now) {
-          now = moment();
+        if (now) {
+          newDate = moment(now);
+        } else {
+          newDate = moment();
         }
         times = {
           laterTodayDelay: 3,
@@ -64,19 +66,19 @@
         };
         switch (option) {
           case "later today":
-            newDate = moment(now);
             newDate.hour(newDate.hour() + times.laterTodayDelay);
-            return newDate.toDate();
+            break;
           case "this evening":
-            newDate = moment(now);
             newDate.hour(times.evening);
-            if (now.hour() < times.evening) {
-              return newDate.toDate();
-            } else {
+            if (now.hour() > times.evening) {
               newDate.dayOfYear(newDate.dayOfYear() + 1);
-              return newDate.toDate();
             }
+            break;
+          case "tomorrow":
+            newDate.dayOfYear(newDate.dayOfYear() + 1);
+            newDate.hour(times.morning);
         }
+        return newDate.toDate();
       };
 
       ScheduleModel.prototype.getDynamicTime = function(time, now) {

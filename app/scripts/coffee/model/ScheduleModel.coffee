@@ -19,33 +19,25 @@ define ["underscore", "momentjs"], (_, Moment) ->
 			]
 
 		getDateFromScheduleOption: (option, now) ->
-			if not now then now = moment()
+			if now
+				newDate = moment now
+			else
+				newDate = moment()
 
-			times = {
-				laterTodayDelay: 3
-				morning: 9
-				evening: 18
-			}
+			times = { laterTodayDelay: 3, morning: 9, evening: 18 }
 
 			# Check settings for 'this evening' setting, but for now just use 18:00
 			switch option
 				when "later today"
-					newDate = moment( now )
 					newDate.hour( newDate.hour() + times.laterTodayDelay )
-					
-					# toDate() converts moment to normal JavaScript Date
-					return newDate.toDate()
-
 				when "this evening"
-					newDate = moment( now )
 					newDate.hour times.evening
-					
-					if now.hour() < times.evening
-						return newDate.toDate()
-					else
-						newDate.dayOfYear( newDate.dayOfYear() + 1 )
-						return newDate.toDate()
+					if now.hour() > times.evening then newDate.dayOfYear( newDate.dayOfYear() + 1 )
+				when "tomorrow"
+					newDate.dayOfYear( newDate.dayOfYear() + 1 )
+					newDate.hour times.morning
 
+			return newDate.toDate()
 		getDynamicTime: (time, now) ->
 			if not now then now = moment()
 
