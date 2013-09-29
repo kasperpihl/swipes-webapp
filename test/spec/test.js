@@ -386,25 +386,29 @@
     });
     return require(["model/ScheduleModel", "momentjs"], function(ScheduleModel, Moment) {
       return describe("Schedule model", function() {
+        var model;
+        model = null;
+        beforeEach(function() {
+          return model = new ScheduleModel();
+        });
         it("Should should not convert 'This evening' when it's before 18:00 hours", function() {
-          var model;
-          model = new ScheduleModel();
           return expect(model.getDynamicTime("This Evening", moment("2013-01-01 17:59"))).to.equal("This Evening");
         });
         it("Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", function() {
-          var model;
-          model = new ScheduleModel();
           return expect(model.getDynamicTime("This Evening", moment("2013-01-01 18:00"))).to.equal("Tomorrow Evening");
         });
         it("Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", function() {
-          var adjustedTime, model;
+          var adjustedTime;
           adjustedTime = moment();
           adjustedTime.day("Monday");
-          model = new ScheduleModel();
           return expect(model.getDynamicTime("Day After Tomorrow", adjustedTime)).to.equal("Wednesday");
         });
         it("Should return a new date 3 hours in the future when scheduling for 'later today'", function() {
-          return expect(2).to.be.lessThan(1);
+          var newDate, now, parsedNewDate;
+          now = moment();
+          newDate = model.getDateFromScheduleOption("later today", now);
+          parsedNewDate = moment(newDate);
+          return expect(parsedNewDate.diff(now, "hours")).to.equal(3);
         });
         it("Should return a new date tomorrow at 09:00 when scheduling for 'tomorrow'", function() {
           return expect(2).to.be.lessThan(1);

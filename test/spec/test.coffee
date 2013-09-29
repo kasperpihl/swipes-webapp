@@ -358,25 +358,29 @@ require [
 
 	require ["model/ScheduleModel", "momentjs"], (ScheduleModel, Moment) ->
 		describe "Schedule model", ->
+			model = null
+
+			beforeEach ->
+				model = new ScheduleModel()
 			
 			it "Should should not convert 'This evening' when it's before 18:00 hours", ->
-				model = new ScheduleModel()
 				expect( model.getDynamicTime( "This Evening", moment("2013-01-01 17:59") ) ).to.equal "This Evening"
 
 			it "Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", ->
-				model = new ScheduleModel()
 				expect( model.getDynamicTime( "This Evening", moment("2013-01-01 18:00") ) ).to.equal "Tomorrow Evening"
 
 			it "Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", ->
 				adjustedTime = moment()
 				adjustedTime.day "Monday"
 
-				model = new ScheduleModel()
-				
 				expect( model.getDynamicTime( "Day After Tomorrow", adjustedTime ) ).to.equal "Wednesday"
 
 			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
-				expect( 2 ).to.be.lessThan 1
+				now = moment()
+				newDate = model.getDateFromScheduleOption( "later today", now )
+				parsedNewDate = moment newDate
+
+				expect( parsedNewDate.diff(now, "hours") ).to.equal 3
 
 			it "Should return a new date tomorrow at 09:00 when scheduling for 'tomorrow'", ->
 				expect( 2 ).to.be.lessThan 1
