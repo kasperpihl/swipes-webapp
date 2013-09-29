@@ -21,20 +21,26 @@ define ["underscore", "momentjs"], (_, Moment) ->
 		getDateFromScheduleOption: (option, now) ->
 			if not now then now = moment()
 
+			times = {
+				laterTodayDelay: 3
+				morning: 9
+				evening: 18
+			}
+
 			# Check settings for 'this evening' setting, but for now just use 18:00
 			switch option
 				when "later today"
 					newDate = moment( now )
-					newDate.hour( newDate.hour() + 3 )
+					newDate.hour( newDate.hour() + times.laterTodayDelay )
 					
 					# toDate() converts moment to normal JavaScript Date
 					return newDate.toDate()
 
 				when "this evening"
 					newDate = moment( now )
-					newDate.hour 18
+					newDate.hour times.evening
 					
-					if now.hour() < 18
+					if now.hour() < times.evening
 						return newDate.toDate()
 					else
 						newDate.dayOfYear( newDate.dayOfYear() + 1 )
