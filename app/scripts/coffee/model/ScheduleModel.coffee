@@ -36,8 +36,8 @@ define ["underscore", "momentjs"], (_, Moment) ->
 				when "later today"
 					newDate.hour( newDate.hour() + @rules.laterTodayDelay )
 				when "this evening"
+					if newDate.hour() >= @rules.evening then newDate.add( "days", 1 )
 					newDate.hour @rules.evening
-					if newDate.hour() > @rules.evening then newDate.add( "days", 1 )
 				when "tomorrow"
 					newDate.add( "days", 1 )
 					newDate.hour @rules.weekday.morning
