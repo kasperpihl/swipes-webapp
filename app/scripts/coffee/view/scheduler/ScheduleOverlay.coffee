@@ -2,7 +2,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 	Overlay.extend
 		className: 'overlay scheduler'
 		events: 
-			"click .grid > a": "selectOption"
+			"click .grid > a:not(.disabled)": "selectOption"
 		bindEvents: ->
 			_.bindAll( @, "handleResize" )
 			$(window).on( "resize", @handleResize )

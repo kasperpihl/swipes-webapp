@@ -24,12 +24,26 @@
 
 body.overlay-open {
 	.container {
-		// @include transition(all 0.3s ease-out);
 		-webkit-filter: blur(10px);
 	}
 
 	.overlay { visibility: visible; }
 	.overlay-bg { 
-		opacity: 1; 
+		opacity: 1;
+	}
+
+	&.hide-overlay {
+		.container {
+			-webkit-filter: none;
+		}
+
+		.overlay-bg {
+			opacity: 0;
+			@include transition(opacity 0.35s ease-out 0.1s);
+		}
+
+		.overlay-content {
+			display: none;
+		}
 	}
 }

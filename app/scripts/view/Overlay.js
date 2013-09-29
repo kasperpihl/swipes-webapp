@@ -33,17 +33,25 @@
           return;
         }
         this.shown = true;
+        $("body").removeClass("hide-overlay");
+        if (this.hideTimer != null) {
+          clearTimeout(this.hideTimer);
+        }
         $("body").toggleClass('overlay-open', true);
         return this.afterShow();
       },
       afterShow: function() {},
       hide: function() {
+        var _this = this;
         if (!this.shown) {
           return;
         }
         this.shown = false;
-        $("body").toggleClass('overlay-open', false);
-        return this.afterHide();
+        $("body").addClass("hide-overlay");
+        return this.hideTimer = setTimeout(function() {
+          $("body").toggleClass('overlay-open', false);
+          return _this.afterHide();
+        }, 400);
       },
       afterHide: function() {},
       cleanUp: function() {

@@ -3,7 +3,7 @@
     return Overlay.extend({
       className: 'overlay scheduler',
       events: {
-        "click .grid > a": "selectOption"
+        "click .grid > a:not(.disabled)": "selectOption"
       },
       bindEvents: function() {
         _.bindAll(this, "handleResize");

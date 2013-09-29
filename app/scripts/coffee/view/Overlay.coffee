@@ -27,6 +27,10 @@ define ["backbone"], (Backbone) ->
 		show: ->
 			if @shown then return
 			@shown = yes
+
+			$("body").removeClass "hide-overlay"
+			if @hideTimer? then clearTimeout @hideTimer
+			
 			$("body").toggleClass( 'overlay-open', yes )
 			@afterShow()
 		afterShow: ->
@@ -34,8 +38,13 @@ define ["backbone"], (Backbone) ->
 		hide: ->
 			if not @shown then return
 			@shown = no
-			$("body").toggleClass( 'overlay-open', no )
-			@afterHide()
+
+			$("body").addClass "hide-overlay"
+			@hideTimer = setTimeout =>
+					$("body").toggleClass( 'overlay-open', no )
+					@afterHide()
+				, 400
+					
 		afterHide: ->
 			# Hook for views extending me
 		cleanUp: ->
