@@ -359,7 +359,7 @@
       yesterday = new Date();
       prevMonth = new Date();
       now = new Date();
-      earlierToday.setHours(now.getHours() - 1);
+      earlierToday.setSeconds(now.getSeconds() - 1);
       yesterday.setDate(now.getDate() - 1);
       prevMonth.setMonth(now.getMonth() - 1);
       todos = [
