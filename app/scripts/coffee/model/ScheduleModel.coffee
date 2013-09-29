@@ -24,7 +24,11 @@ define ["underscore", "momentjs"], (_, Moment) ->
 			else
 				newDate = moment()
 
-			times = { laterTodayDelay: 3, morning: 9, evening: 18 }
+			times = 
+				laterTodayDelay: 3
+				morning: 9
+				weekend: { day: "Saturday", morning: 10 }
+				evening: 18
 
 			# Check settings for 'this evening' setting, but for now just use 18:00
 			switch option
@@ -39,6 +43,9 @@ define ["underscore", "momentjs"], (_, Moment) ->
 				when "day after tomorrow"
 					newDate.add( "days", 2 )
 					newDate.hour times.morning
+				when "this weekend"
+					newDate.day times.weekend.day
+					newDate.hour times.weekend.morning
 
 			return newDate.toDate()
 		getDynamicTime: (time, now) ->
