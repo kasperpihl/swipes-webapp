@@ -417,7 +417,14 @@ require [
 				expect( parsedNewDate.hour() ).to.equal 9
 
 			it "Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", ->
-				expect( 2 ).to.be.lessThan 1
+				today = moment()
+				newDate = model.getDateFromScheduleOption( "day after tomorrow", today )
+				
+				expect( newDate ).to.exist
+
+				parsedNewDate = moment newDate
+				expect( parsedNewDate.dayOfYear() ).to.equal today.dayOfYear() + 2
+				expect( parsedNewDate.hour() ).to.equal 9
 
 			it "Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", ->
 				expect( 2 ).to.be.lessThan 1

@@ -441,7 +441,13 @@
           return expect(parsedNewDate.hour()).to.equal(9);
         });
         it("Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", function() {
-          return expect(2).to.be.lessThan(1);
+          var newDate, parsedNewDate, today;
+          today = moment();
+          newDate = model.getDateFromScheduleOption("day after tomorrow", today);
+          expect(newDate).to.exist;
+          parsedNewDate = moment(newDate);
+          expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 2);
+          return expect(parsedNewDate.hour()).to.equal(9);
         });
         it("Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", function() {
           return expect(2).to.be.lessThan(1);
