@@ -38,8 +38,10 @@ define ["backbone"], (Backbone) ->
 			@afterHide()
 		afterHide: ->
 			# Hook for views extending me
+		cleanUp: ->
+			@stopListening()
+			$(document).off()
 		destroy: ->
 			@hide().done => 
-				@stopListening()
-				$(document).off()
+				@cleanUp()
 				@$el.empty()

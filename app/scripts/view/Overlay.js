@@ -46,11 +46,14 @@
         return this.afterHide();
       },
       afterHide: function() {},
+      cleanUp: function() {
+        this.stopListening();
+        return $(document).off();
+      },
       destroy: function() {
         var _this = this;
         return this.hide().done(function() {
-          _this.stopListening();
-          $(document).off();
+          _this.cleanUp();
           return _this.$el.empty();
         });
       }

@@ -2,11 +2,6 @@
 	color: white;
 	
 	.overlay-bg { background: rgba($lobster, 0.8); }
-	
-	.overlay-content {
-		margin-top: 20%;
-		@include breakpoint(tablet) { margin-top: 15%; }
-	}
 }
 
 // Grid styles
