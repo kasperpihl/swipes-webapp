@@ -1,8 +1,9 @@
 (function() {
-  define(["controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/ScheduleController"], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, ScheduleController) {
+  define(["controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/ScheduleController", "controller/ErrorController"], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, ScheduleController, ErrorController) {
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
+        this.errors = new ErrorController();
         this.todos = new ToDoCollection();
         this.todos.on("reset", this.init, this);
         this.fetchTodos();

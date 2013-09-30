@@ -6,9 +6,11 @@ define [
 	"view/nav/ListNavigation"
 	"controller/TaskInputController"
 	"controller/ScheduleController"
-	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, ScheduleController) ->
+	"controller/ErrorController"
+	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, ScheduleController, ErrorController) ->
 	class Swipes
 		constructor: ->
+			@errors = new ErrorController()
 			@todos = new ToDoCollection()
 			@todos.on( "reset", @init, @ )
 			@fetchTodos()

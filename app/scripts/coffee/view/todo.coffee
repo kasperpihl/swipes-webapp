@@ -19,26 +19,19 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 
 				view.model.set( "order", i + pushOrderCount )
 
-			@renderList()
-
 		beforeRenderList: (todos) ->
-			for task, i in todos
-				task.set( "order", i )
+			@setTodoOrder todos
 
 		afterRenderList: (todos) ->
 			return unless todos.length
-
-			# If we find any todos without a defined order,
-			# determine its correct order and re-render the list
-			return @setTodoOrder( todos ) if _.any( todos, (m) -> not m.has "order" )
 			
 			# Alright, by now all todos have a set order. Continue on ...
 			@sortController.destroy() if @sortController?
 
 			# Dont init sort controller before transition in, because we need to read the height of the elements
 			@transitionDeferred.done =>
-				@disableNativeClickHandlers()
-				@sortController = new ListSortController( @$el, @subviews )
+				# @disableNativeClickHandlers()
+				# @sortController = new ListSortController( @$el, @subviews )
 		
 		disableNativeClickHandlers: ->
 			# SortController takes over click interaction, so disable the default behaviour

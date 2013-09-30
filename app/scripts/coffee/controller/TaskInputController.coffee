@@ -28,11 +28,12 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 			
 			tags = @parseTags str
 			title = @parseTitle str
-			order = 0
 
 			# If user is trying to add 
 			if !title 
-				return alert "You cannot create a todo by simply adding a tag. We need a title too. Titles should come before tags when you write out your task."
+				msg = "You cannot create a todo by simply adding a tag. We need a title too. Titles should come before tags when you write out your task."
+				Backbone.trigger( "throw-error", msg )
+				return 
 
 			@bumpTodosOrder()
-			swipy.todos.add { title, tags, order }
+			swipy.todos.add { title, tags }

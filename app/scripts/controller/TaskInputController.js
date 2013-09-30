@@ -52,21 +52,21 @@
       };
 
       TaskInputController.prototype.createTask = function(str) {
-        var order, tags, title;
+        var msg, tags, title;
         if (swipy.todos == null) {
           return;
         }
         tags = this.parseTags(str);
         title = this.parseTitle(str);
-        order = 0;
         if (!title) {
-          return alert("You cannot create a todo by simply adding a tag. We need a title too. Titles should come before tags when you write out your task.");
+          msg = "You cannot create a todo by simply adding a tag. We need a title too. Titles should come before tags when you write out your task.";
+          Backbone.trigger("throw-error", msg);
+          return;
         }
         this.bumpTodosOrder();
         return swipy.todos.add({
           title: title,
-          tags: tags,
-          order: order
+          tags: tags
         });
       };
 

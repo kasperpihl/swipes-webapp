@@ -69,7 +69,7 @@ require [
 			swipy.todos.reset helpers.getDummyModels()
 			
 			expect( swipy ).to.exist
-		
+
 		it "Should have scheduled tasks for testing", ->
 			expect( swipy.todos.getScheduled() ).to.have.length.above 0
 		
