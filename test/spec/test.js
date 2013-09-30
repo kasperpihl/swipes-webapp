@@ -539,8 +539,27 @@
     });
     return require(["controller/TaskInputController"], function(TaskInputController) {
       return describe("Task Input", function() {
+        var taskInput;
+        taskInput = null;
+        before(function() {
+          return $("body").append("<form id='add-task'><input></form>");
+        });
+        beforeEach(function() {
+          return taskInput = new TaskInputController();
+        });
+        after(function() {
+          taskInput.view.remove();
+          return taskInput = null;
+        });
         describe("view", function() {
-          return it("Should trigger a 'create-task' event when submitting input", function(done) {
+          it("Should not trigger a 'create-task' event when submitting input, if the input field is empty", function(done) {
+            Backbone.on("create-task", function() {
+              return done("'create-task' event was triggered");
+            });
+            taskInput.view.$el.submit();
+            return setTimeout(done, 1);
+          });
+          return it("Should trigger a 'create-task' event when submitting actual input", function(done) {
             return expect(2).to.be.lessThan(1);
           });
         });

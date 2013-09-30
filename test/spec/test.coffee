@@ -513,8 +513,30 @@ require [
 
 	require ["controller/TaskInputController"], (TaskInputController) ->
 		describe "Task Input", ->
+			taskInput = null
+			
+			before ->
+				$("body").append("<form id='add-task'><input></form>")
+
+
+			beforeEach ->
+				taskInput = new TaskInputController()
+
+			after ->
+				taskInput.view.remove()
+				taskInput = null
+
 			describe "view", ->
-				it "Should trigger a 'create-task' event when submitting input", (done) ->
+				it "Should not trigger a 'create-task' event when submitting input, if the input field is empty", (done) ->
+					# Throw error if create-task is triggered
+					Backbone.on( "create-task", -> done "'create-task' event was triggered" )
+					taskInput.view.$el.submit()
+
+					# 1ms timeout means the event loop has finished, and the event should have been dispatched by now.
+					setTimeout( done, 1 )
+
+
+				it "Should trigger a 'create-task' event when submitting actual input", (done) ->
 					# http://visionmedia.github.io/mocha/#asynchronous-code
 					expect( 2 ).to.be.lessThan 1
 
