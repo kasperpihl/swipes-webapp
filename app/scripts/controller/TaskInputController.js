@@ -23,7 +23,12 @@
       };
 
       TaskInputController.prototype.parseTitle = function(str) {
-        return "Looool";
+        var result, _ref;
+        result = (_ref = str.match(/.[^#]+/)) != null ? _ref[0] : void 0;
+        if (result) {
+          result = $.trim(result);
+        }
+        return result;
       };
 
       TaskInputController.prototype.createTask = function(str) {

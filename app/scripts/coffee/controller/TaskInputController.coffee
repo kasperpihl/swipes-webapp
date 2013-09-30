@@ -11,7 +11,10 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 
 			return result
 		parseTitle: (str) ->
-			return "Looool"
+			result = str.match(/.[^#]+/)?[0]
+			if result then result = $.trim result
+
+			return result
 		createTask: (str) ->
 			return unless swipy.todos?
 			
