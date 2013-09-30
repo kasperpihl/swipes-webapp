@@ -384,7 +384,7 @@
         });
       });
     });
-    return require(["model/ScheduleModel", "momentjs"], function(ScheduleModel, Moment) {
+    require(["model/ScheduleModel", "momentjs"], function(ScheduleModel, Moment) {
       return describe("Schedule model", function() {
         var model;
         model = null;
@@ -533,6 +533,26 @@
             parsedNewDate = moment(newDate);
             expect(parsedNewDate.minute()).to.equal(0);
             return expect(parsedNewDate.second()).to.equal(0);
+          });
+        });
+      });
+    });
+    return require(["controller/TaskInputController"], function(TaskInputController) {
+      return describe("Task Input", function() {
+        describe("view", function() {
+          return it("Should trigger a 'create-task' event when submitting input", function(done) {
+            return expect(2).to.be.lessThan(1);
+          });
+        });
+        return describe("controller", function() {
+          it("Should parse tags from task input", function() {
+            return expect(2).to.be.lessThan(1);
+          });
+          it("Should parse title from task input", function() {
+            return expect(2).to.be.lessThan(1);
+          });
+          return it("Should add a new item to swipy.todos list when create-task event is fired", function() {
+            return expect(2).to.be.lessThan(1);
           });
         });
       });

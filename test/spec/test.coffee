@@ -510,3 +510,20 @@ require [
 					
 					expect( parsedNewDate.minute() ).to.equal 0
 					expect( parsedNewDate.second() ).to.equal 0
+
+	require ["controller/TaskInputController"], (TaskInputController) ->
+		describe "Task Input", ->
+			describe "view", ->
+				it "Should trigger a 'create-task' event when submitting input", (done) ->
+					# http://visionmedia.github.io/mocha/#asynchronous-code
+					expect( 2 ).to.be.lessThan 1
+
+			describe "controller", ->
+				it "Should parse tags from task input", ->
+					expect( 2 ).to.be.lessThan 1
+
+				it "Should parse title from task input", ->
+					expect( 2 ).to.be.lessThan 1
+
+				it "Should add a new item to swipy.todos list when create-task event is fired", ->
+					expect( 2 ).to.be.lessThan 1
