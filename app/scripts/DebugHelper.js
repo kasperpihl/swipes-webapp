@@ -3,21 +3,11 @@
     var DebugHelper;
     return DebugHelper = (function() {
       function DebugHelper() {
-        var _this = this;
         this.setDummyTodos();
-        setTimeout(function() {
-          return _this.promptSchedule();
-        }, 1000);
       }
 
       DebugHelper.prototype.setDummyTodos = function() {
         return swipy.todos.reset(this.getDummyData());
-      };
-
-      DebugHelper.prototype.promptSchedule = function() {
-        var trigger;
-        trigger = [swipy.todos.getActive()[0]];
-        return Backbone.trigger("schedule-task", trigger);
       };
 
       DebugHelper.prototype.getDummyData = function() {
