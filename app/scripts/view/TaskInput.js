@@ -18,7 +18,8 @@
         return this.input.val("");
       },
       remove: function() {
-        return this.undelegateEvents();
+        this.undelegateEvents();
+        return this.$el.remove();
       }
     });
   });

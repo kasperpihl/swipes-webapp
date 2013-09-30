@@ -13,4 +13,5 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			Backbone.trigger( "create-task", @input.val() )
 			@input.val("")
 		remove: ->
-			this.undelegateEvents();
+			@undelegateEvents();
+			@$el.remove()
