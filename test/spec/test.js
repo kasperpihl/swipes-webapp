@@ -392,7 +392,7 @@
           return model = new ScheduleModel();
         });
         after(function() {
-          return $(".overlay");
+          return $(".overlay.scheduler").remove();
         });
         it("Should return a new date 3 hours in the future when scheduling for 'later today'", function() {
           var newDate, now, parsedNewDate;
@@ -554,22 +554,31 @@
           return taskInput = null;
         });
         describe("view", function() {
-          it("Should not trigger a 'create-task' event when submitting input, if the input field is empty", function(done1) {
-            var _this = this;
+          it("Should not trigger a 'create-task' event when submitting input, if the input field is empty", function(done) {
             Backbone.once("create-task", function() {
-              return done1(new Error("'create-task' event was triggered"));
+              return done(new Error("'create-task' event was triggered"));
             });
             taskInput.view.$el.submit();
-            return setTimeout(function() {
-              console.log("Timeout");
-              return done1();
-            }, 100);
+            return setTimeout(done, 100);
           });
           return it("Should trigger a 'create-task' event when submitting actual input");
         });
         return describe("controller", function() {
-          it("Should parse tags from task input");
-          it("Should parse title from task input");
+          describe("parsing tags", function() {
+            it("Should be able to parse 1 tag", function() {
+              var result;
+              result = taskInput.parseTags("I love #tags");
+              expect(result).to.have.length(1);
+              return expect(result[0]).to.be("tags");
+            });
+            it("Should be able to parse multiple tags");
+            return it("Should be able to parse tags with spaces");
+          });
+          describe("parsing title", function() {
+            it("Should parse title from task input");
+            it("Should parse title if it's defined before tags");
+            return it("Should parse title if it's defined after tags");
+          });
           return it("Should add a new item to swipy.todos list when create-task event is fired");
         });
       });

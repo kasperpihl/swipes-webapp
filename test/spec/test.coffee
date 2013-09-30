@@ -364,7 +364,7 @@ require [
 				model = new ScheduleModel()
 
 			after ->
-				$(".overlay")
+				$(".overlay.scheduler").remove()
 			
 			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
 				now = moment()
@@ -528,16 +528,13 @@ require [
 				taskInput = null
 
 			describe "view", ->
-				it "Should not trigger a 'create-task' event when submitting input, if the input field is empty", (done1) ->
+				it "Should not trigger a 'create-task' event when submitting input, if the input field is empty", (done) ->
 					# Throw error if create-task is triggered
-					Backbone.once( "create-task", -> done1 new Error "'create-task' event was triggered" )
+					Backbone.once( "create-task", -> done new Error "'create-task' event was triggered" )
 					taskInput.view.$el.submit()
 
-					# 1ms timeout means the event loop has finished, and the event should have been dispatched by now.
-					setTimeout => 
-							console.log "Timeout"
-							done1()
-						, 100
+					# a timeout means the event loop has finished, and the event should have been dispatched by now.
+					setTimeout( done, 100 )
 
 				it "Should trigger a 'create-task' event when submitting actual input"
 					# Backbone.once( "create-task", -> done2() )
@@ -550,8 +547,21 @@ require [
 					# 	, 100
 
 			describe "controller", ->
-				it "Should parse tags from task input"
+				describe "parsing tags", ->
+					it "Should be able to parse 1 tag", ->
+						result = taskInput.parseTags "I love #tags"
+						expect(result).to.have.length 1
+						expect(result[0]).to.be "tags"
 
-				it "Should parse title from task input"
+					it "Should be able to parse multiple tags"
+					
+					it "Should be able to parse tags with spaces"
+
+				describe "parsing title", ->
+					it "Should parse title from task input"
+					
+					it "Should parse title if it's defined before tags"
+					
+					it "Should parse title if it's defined after tags"
 
 				it "Should add a new item to swipy.todos list when create-task event is fired"
