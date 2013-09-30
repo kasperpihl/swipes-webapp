@@ -573,12 +573,20 @@
               expect(result).to.include("racks");
               return expect(result).to.include("stacks");
             });
-            return it("Should be able to parse tags with spaces", function() {
+            it("Should be able to parse tags with spaces", function() {
               var result;
               result = taskInput.parseTags("I love #tags, #racks and stacks");
               expect(result).to.have.length(2);
               expect(result).to.include("tags");
               return expect(result).to.include("racks and stacks");
+            });
+            return it("Should be able to seperate tags without commas", function() {
+              var result;
+              result = taskInput.parseTags("I love #tags, #racks #stacks");
+              expect(result).to.have.length(3);
+              expect(result).to.include("tags");
+              expect(result).to.include("racks");
+              return expect(result).to.include("stacks");
             });
           });
           describe("parsing title", function() {

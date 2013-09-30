@@ -566,6 +566,13 @@ require [
 						expect(result).to.include "tags"
 						expect(result).to.include "racks and stacks"
 
+					it "Should be able to seperate tags without commas", ->
+						result = taskInput.parseTags "I love #tags, #racks #stacks"
+						expect(result).to.have.length 3
+						expect(result).to.include "tags"
+						expect(result).to.include "racks"
+						expect(result).to.include "stacks"
+
 				describe "parsing title", ->
 					it "Should parse title without including 1 tag", ->
 						result = taskInput.parseTitle "I love #tags"
