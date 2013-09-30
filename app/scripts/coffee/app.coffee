@@ -4,8 +4,9 @@ define [
 	"collection/ToDoCollection"
 	"collection/TagCollection"
 	"view/nav/ListNavigation"
+	"controller/TaskInputController"
 	"controller/ScheduleController"
-	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, ScheduleController) ->
+	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, ScheduleController) ->
 	class Swipes
 		constructor: ->
 			@todos = new ToDoCollection()
@@ -18,10 +19,9 @@ define [
 			@nav = new ListNavigation()
 			@router = new MainRouter()
 			@scheduler = new ScheduleController()
+			@input = new TaskInputController()
 			
 			unless Backbone.History.started 
 				Backbone.history.start { pushState: no }
-
-			$(".add-new input").focus()
 		fetchTodos: ->
 			@todos.fetch()

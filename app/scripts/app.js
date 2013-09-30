@@ -1,5 +1,5 @@
 (function() {
-  define(["controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/ScheduleController"], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, ScheduleController) {
+  define(["controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/ScheduleController"], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, ScheduleController) {
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
@@ -14,12 +14,12 @@
         this.nav = new ListNavigation();
         this.router = new MainRouter();
         this.scheduler = new ScheduleController();
+        this.input = new TaskInputController();
         if (!Backbone.History.started) {
-          Backbone.history.start({
+          return Backbone.history.start({
             pushState: false
           });
         }
-        return $(".add-new input").focus();
       };
 
       Swipes.prototype.fetchTodos = function() {
