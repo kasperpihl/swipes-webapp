@@ -344,13 +344,15 @@
       ];
       view = new ToDoView();
       return describe("To Do list view", function() {
-        return it("Should order tasks by models 'order' property", function() {
+        it("Should order tasks by models 'order' property", function() {
           var result;
           result = view.groupTasks(todos);
           expect(result[0].tasks[0].get("title")).to.equal("one");
           expect(result[0].tasks[1].get("title")).to.equal("two");
           return expect(result[0].tasks[2].get("title")).to.equal("three");
         });
+        it("Should make sure no two todos can have the same order id");
+        return it("Should order todos be schdule if no order is defined");
       });
     });
     require(["view/Completed"], function(CompletedView) {

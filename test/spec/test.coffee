@@ -326,6 +326,10 @@ require [
 				expect(result[0].tasks[0].get "title").to.equal "one"
 				expect(result[0].tasks[1].get "title").to.equal "two"
 				expect(result[0].tasks[2].get "title").to.equal "three"
+
+			it "Should make sure no two todos can have the same order id"
+
+			it "Should order todos be schdule if no order is defined"
 	
 	#
 	# Completed list View
@@ -604,3 +608,4 @@ require [
 					expect( model.get "tags" ).to.have.length 2
 					expect( model.get "tags" ).to.include "tags"
 					expect( model.get "tags" ).to.include "rags"
+
