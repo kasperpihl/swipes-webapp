@@ -17,7 +17,7 @@
 	
 	<% if (completionDate) { %>
 		<time><%= completionTimeStr %></time>
-	<% } else if (timeStr) { %>
+	<% } else if (timeStr && scheduleStr !== "the past") { %>
 		<time><%= timeStr %></time>
 	<% } %>
 	
