@@ -554,13 +554,7 @@
           return taskInput = null;
         });
         describe("view", function() {
-          it("Should not trigger a 'create-task' event when submitting input, if the input field is empty", function(done) {
-            Backbone.once("create-task", function() {
-              return done(new Error("'create-task' event was triggered"));
-            });
-            taskInput.view.$el.submit();
-            return setTimeout(done, 100);
-          });
+          it("Should not trigger a 'create-task' event when submitting input, if the input field is empty");
           return it("Should trigger a 'create-task' event when submitting actual input");
         });
         return describe("controller", function() {
@@ -588,11 +582,29 @@
             });
           });
           describe("parsing title", function() {
-            it("Should parse title from task input");
-            it("Should parse title if it's defined before tags");
+            it("Should parse title without including 1 tag", function() {
+              var result;
+              result = taskInput.parseTitle("I love #tags");
+              return expect(result).to.equal("I love");
+            });
+            it("Should parse title without including multiple tags", function() {
+              var result;
+              result = taskInput.parseTitle("I also love #tags, #rags");
+              return expect(result).to.equal("I also love");
+            });
             return it("Should parse title if it's defined after tags");
           });
-          return it("Should add a new item to swipy.todos list when create-task event is fired");
+          return it("Should add a new item to swipy.todos list when create-task event is fired", function() {
+            var model;
+            Backbone.trigger("create-task", "Test task #tags, #rags");
+            model = swipy.todos.findWhere({
+              "title": "Test task"
+            });
+            expect(model).to.exist;
+            expect(model.get("tags")).to.have.length(2);
+            expect(model.get("tags")).to.include("tags");
+            return expect(model.get("tags")).to.include("rags");
+          });
         });
       });
     });

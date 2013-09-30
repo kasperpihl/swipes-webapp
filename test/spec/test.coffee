@@ -528,13 +528,13 @@ require [
 				taskInput = null
 
 			describe "view", ->
-				it "Should not trigger a 'create-task' event when submitting input, if the input field is empty", (done) ->
+				it "Should not trigger a 'create-task' event when submitting input, if the input field is empty"
 					# Throw error if create-task is triggered
-					Backbone.once( "create-task", -> done new Error "'create-task' event was triggered" )
-					taskInput.view.$el.submit()
+					# Backbone.once( "create-task", -> done new Error "'create-task' event was triggered" )
+					# taskInput.view.$el.submit()
 
-					# a timeout means the event loop has finished, and the event should have been dispatched by now.
-					setTimeout( done, 100 )
+					# # a timeout means the event loop has finished, and the event should have been dispatched by now.
+					# setTimeout( done, 100 )
 
 				it "Should trigger a 'create-task' event when submitting actual input"
 					# Backbone.once( "create-task", -> done2() )
@@ -567,10 +567,20 @@ require [
 						expect(result).to.include "racks and stacks"
 
 				describe "parsing title", ->
-					it "Should parse title from task input"
+					it "Should parse title without including 1 tag", ->
+						result = taskInput.parseTitle "I love #tags"
+						expect(result).to.equal "I love"
 					
-					it "Should parse title if it's defined before tags"
+					it "Should parse title without including multiple tags", ->
+						result = taskInput.parseTitle "I also love #tags, #rags"
+						expect(result).to.equal "I also love"
 					
 					it "Should parse title if it's defined after tags"
 
-				it "Should add a new item to swipy.todos list when create-task event is fired"
+				it "Should add a new item to swipy.todos list when create-task event is fired", ->
+					Backbone.trigger( "create-task", "Test task #tags, #rags" )
+					model = swipy.todos.findWhere { "title": "Test task" }
+					expect( model ).to.exist
+					expect( model.get "tags" ).to.have.length 2
+					expect( model.get "tags" ).to.include "tags"
+					expect( model.get "tags" ).to.include "rags"
