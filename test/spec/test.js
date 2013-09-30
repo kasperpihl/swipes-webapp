@@ -391,6 +391,9 @@
         beforeEach(function() {
           return model = new ScheduleModel();
         });
+        after(function() {
+          return $(".overlay");
+        });
         it("Should return a new date 3 hours in the future when scheduling for 'later today'", function() {
           var newDate, now, parsedNewDate;
           now = moment();
@@ -539,12 +542,11 @@
     });
     return require(["controller/TaskInputController"], function(TaskInputController) {
       return describe("Task Input", function() {
-        var taskInput;
+        var callback, taskInput;
         taskInput = null;
+        callback = null;
         before(function() {
-          return $("body").append("<form id='add-task'><input></form>");
-        });
-        beforeEach(function() {
+          $("body").append("<form id='add-task'><input></form>");
           return taskInput = new TaskInputController();
         });
         after(function() {
@@ -552,27 +554,23 @@
           return taskInput = null;
         });
         describe("view", function() {
-          it("Should not trigger a 'create-task' event when submitting input, if the input field is empty", function(done) {
-            Backbone.on("create-task", function() {
-              return done("'create-task' event was triggered");
+          it("Should not trigger a 'create-task' event when submitting input, if the input field is empty", function(done1) {
+            var _this = this;
+            Backbone.once("create-task", function() {
+              return done1(new Error("'create-task' event was triggered"));
             });
             taskInput.view.$el.submit();
-            return setTimeout(done, 1);
+            return setTimeout(function() {
+              console.log("Timeout");
+              return done1();
+            }, 100);
           });
-          return it("Should trigger a 'create-task' event when submitting actual input", function(done) {
-            return expect(2).to.be.lessThan(1);
-          });
+          return it("Should trigger a 'create-task' event when submitting actual input");
         });
         return describe("controller", function() {
-          it("Should parse tags from task input", function() {
-            return expect(2).to.be.lessThan(1);
-          });
-          it("Should parse title from task input", function() {
-            return expect(2).to.be.lessThan(1);
-          });
-          return it("Should add a new item to swipy.todos list when create-task event is fired", function() {
-            return expect(2).to.be.lessThan(1);
-          });
+          it("Should parse tags from task input");
+          it("Should parse title from task input");
+          return it("Should add a new item to swipy.todos list when create-task event is fired");
         });
       });
     });

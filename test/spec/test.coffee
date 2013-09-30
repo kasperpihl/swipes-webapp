@@ -362,6 +362,9 @@ require [
 
 			beforeEach ->
 				model = new ScheduleModel()
+
+			after ->
+				$(".overlay")
 			
 			it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
 				now = moment()
@@ -514,12 +517,10 @@ require [
 	require ["controller/TaskInputController"], (TaskInputController) ->
 		describe "Task Input", ->
 			taskInput = null
+			callback = null
 			
 			before ->
 				$("body").append("<form id='add-task'><input></form>")
-
-
-			beforeEach ->
 				taskInput = new TaskInputController()
 
 			after ->
@@ -527,25 +528,30 @@ require [
 				taskInput = null
 
 			describe "view", ->
-				it "Should not trigger a 'create-task' event when submitting input, if the input field is empty", (done) ->
+				it "Should not trigger a 'create-task' event when submitting input, if the input field is empty", (done1) ->
 					# Throw error if create-task is triggered
-					Backbone.on( "create-task", -> done "'create-task' event was triggered" )
+					Backbone.once( "create-task", -> done1 new Error "'create-task' event was triggered" )
 					taskInput.view.$el.submit()
 
 					# 1ms timeout means the event loop has finished, and the event should have been dispatched by now.
-					setTimeout( done, 1 )
+					setTimeout => 
+							console.log "Timeout"
+							done1()
+						, 100
 
+				it "Should trigger a 'create-task' event when submitting actual input"
+					# Backbone.once( "create-task", -> done2() )
 
-				it "Should trigger a 'create-task' event when submitting actual input", (done) ->
-					# http://visionmedia.github.io/mocha/#asynchronous-code
-					expect( 2 ).to.be.lessThan 1
+					# taskInput.view.input.val "here's a new task"
+					# taskInput.view.$el.submit()
+
+					# setTimeout =>
+					# 		done2 new Error "'create-task' wasn't triggered"
+					# 	, 100
 
 			describe "controller", ->
-				it "Should parse tags from task input", ->
-					expect( 2 ).to.be.lessThan 1
+				it "Should parse tags from task input"
 
-				it "Should parse title from task input", ->
-					expect( 2 ).to.be.lessThan 1
+				it "Should parse title from task input"
 
-				it "Should add a new item to swipy.todos list when create-task event is fired", ->
-					expect( 2 ).to.be.lessThan 1
+				it "Should add a new item to swipy.todos list when create-task event is fired"
