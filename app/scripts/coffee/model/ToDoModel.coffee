@@ -69,7 +69,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			if parsedDate.isBefore() then return @set( "scheduleStr", "the past" )
 
 			# If difference is more than 1 week, we want different formatting
-			if parsedDate.diff( now, "days" ) > 7
+			if Math.abs( parsedDate.diff( now, "days" ) ) >= 7
 				# If it's next year, add year suffix
 				if parsedDate.year() > now.year() then result = parsedDate.format "MMM Do 'YY"
 				else result = parsedDate.format "MMM Do"
@@ -98,7 +98,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			parsedDate = moment completionDate
 
 			# If difference is more than 1 week, we want different formatting
-			if parsedDate.diff( now, "days" ) < -7
+			if parsedDate.diff( now, "days" ) <= -7
 				# If it's the previous year, add year suffix
 				if parsedDate.year() < now.year() then result = parsedDate.format "MMM Do 'YY"
 				else result = parsedDate.format "MMM Do"

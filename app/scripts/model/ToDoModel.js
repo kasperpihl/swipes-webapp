@@ -69,7 +69,7 @@
         if (parsedDate.isBefore()) {
           return this.set("scheduleStr", "the past");
         }
-        if (parsedDate.diff(now, "days") > 7) {
+        if (Math.abs(parsedDate.diff(now, "days")) >= 7) {
           if (parsedDate.year() > now.year()) {
             result = parsedDate.format("MMM Do 'YY");
           } else {
@@ -99,7 +99,7 @@
         }
         now = moment();
         parsedDate = moment(completionDate);
-        if (parsedDate.diff(now, "days") < -7) {
+        if (parsedDate.diff(now, "days") <= -7) {
           if (parsedDate.year() < now.year()) {
             result = parsedDate.format("MMM Do 'YY");
           } else {
