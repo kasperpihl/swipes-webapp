@@ -417,26 +417,33 @@ require [
 				expect( parsedNewDate.hour() ).to.equal 9
 
 			it "Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", ->
-				today = moment()
-				saturday = moment().day "Saturday"
-				newDate = model.getDateFromScheduleOption "this weekend"
+				saturday = moment().endOf "week"
+				saturday.day(6).hour(model.rules.weekend.morning)
+				newDate = model.getDateFromScheduleOption( "this weekend", saturday )
 
 				expect( newDate ).to.exist
 
 				parsedNewDate = moment newDate
-				expect( parsedNewDate.dayOfYear() ).to.equal saturday.dayOfYear()
+				expect( parsedNewDate.day() ).to.equal 6
+				expect( Math.floor saturday.diff( parsedNewDate, "days", true ) ).to.equal -7
 				expect( parsedNewDate.hour() ).to.equal 10
 
+				# Tag højde for om det er lør/søndag i dag
+
 			it "Should return a new date this following monday at 9:00 when scheduling for 'next week'", ->
-				today = moment()
-				monday = moment().day "Monday"
-				newDate = model.getDateFromScheduleOption "next week"
+				monday = moment().startOf "week"
+				monday.day(1).hour(model.rules.weekday.morning) # Defautl is sunday. Upgrade that to monday.
+				newDate = model.getDateFromScheduleOption( "next week", monday )
 
 				expect( newDate ).to.exist
 
 				parsedNewDate = moment newDate
-				expect( parsedNewDate.dayOfYear() ).to.equal monday.dayOfYear()
+				expect( parsedNewDate.dayOfYear() ).not.to.equal monday.dayOfYear()
+				expect( parsedNewDate.day() ).to.equal 1
+				expect( Math.floor monday.diff( parsedNewDate, "days", true ) ).to.equal -7
 				expect( parsedNewDate.hour() ).to.equal 9
+
+				# Tag højde for om det er mandag i dag
 
 			it "Should return null when scheduling for 'unspecified'", ->
 				expect( model.getDateFromScheduleOption "unspecified" ).to.equal null
