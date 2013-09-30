@@ -8,7 +8,18 @@
       }
 
       TaskInputController.prototype.parseTags = function(str) {
-        return ["one", "two", "three"];
+        var result, tag;
+        result = str.match(/#(.[^,]+)/g);
+        result = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = result.length; _i < _len; _i++) {
+            tag = result[_i];
+            _results.push(tag.replace("#", ""));
+          }
+          return _results;
+        })();
+        return result;
       };
 
       TaskInputController.prototype.parseTitle = function(str) {

@@ -4,7 +4,12 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 			@view = new TaskInputView()
 			Backbone.on( "create-task", @createTask, @ )
 		parseTags: (str) ->
-			return ["one", "two", "three"]
+			result = str.match /#(.[^,]+)/g
+
+			# Remove #-character from results
+			result = ( tag.replace("#", "") for tag in result )
+
+			return result
 		parseTitle: (str) ->
 			return "Looool"
 		createTask: (str) ->
