@@ -3,6 +3,8 @@ define ["underscore", "momentjs"], (_, Moment) ->
 		rules: 
 			evening: 18
 			laterTodayDelay: 3
+			startOfWeek: 1 # Sunday, monday is 1
+			startOfWeekend: 6 # Saturday
 			weekday: { start: "Monday", morning: 9 }
 			weekend: { start: "Saturday", morning: 10 }
 		
@@ -48,11 +50,21 @@ define ["underscore", "momentjs"], (_, Moment) ->
 					newDate.hour @rules.weekday.morning
 					newDate = newDate.startOf "hour"
 				when "this weekend"
-					newDate.day @rules.weekend.start
+					# If we're on weekend start date, fast-forward 7 days.
+					if newDate.day() is @rules.startOfWeekend
+						newDate.add( "days", 7 )
+					else
+						newDate.day @rules.weekend.start
+					
 					newDate.hour @rules.weekend.morning
 					newDate = newDate.startOf "hour"
 				when "next week"
-					newDate.day @rules.weekday.start
+					# If we're on week start date, fast-forward 7 days.
+					if newDate.day() is @rules.startOfWeek
+						newDate.add( "days", 7 )
+					else
+						newDate.day @rules.weekday.start
+					
 					newDate.hour @rules.weekday.morning
 					newDate = newDate.startOf "hour"
 				else 

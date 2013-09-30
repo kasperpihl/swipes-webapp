@@ -5,6 +5,8 @@
       ScheduleModel.prototype.rules = {
         evening: 18,
         laterTodayDelay: 3,
+        startOfWeek: 1,
+        startOfWeekend: 6,
         weekday: {
           start: "Monday",
           morning: 9
@@ -94,12 +96,20 @@
             newDate = newDate.startOf("hour");
             break;
           case "this weekend":
-            newDate.day(this.rules.weekend.start);
+            if (newDate.day() === this.rules.startOfWeekend) {
+              newDate.add("days", 7);
+            } else {
+              newDate.day(this.rules.weekend.start);
+            }
             newDate.hour(this.rules.weekend.morning);
             newDate = newDate.startOf("hour");
             break;
           case "next week":
-            newDate.day(this.rules.weekday.start);
+            if (newDate.day() === this.rules.startOfWeek) {
+              newDate.add("days", 7);
+            } else {
+              newDate.day(this.rules.weekday.start);
+            }
             newDate.hour(this.rules.weekday.morning);
             newDate = newDate.startOf("hour");
             break;
