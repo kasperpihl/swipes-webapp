@@ -1,3 +1,5 @@
+$list-item-height: 105px;
+
 // General task styling
 .todo-list {	
 	ol { padding: 0; }
@@ -51,6 +53,7 @@
 .todo-content { 
 	position: relative;
 	padding: 3em 3em 3em 28%;
+	height: $list-item-height;
 	background: white;
 
 	@include transition(
@@ -68,11 +71,11 @@
 		position: absolute;
 		display: block;
 		
-		width: 105px; 
+		width: $list-item-height; 
 		height: 100%;
 		background: transparent;
 
-		line-height: 105px;
+		line-height: $list-item-height;
 		text-align: center;
 		color: white;
 		text-decoration: none;

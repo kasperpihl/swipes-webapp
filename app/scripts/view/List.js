@@ -55,6 +55,7 @@
             selected: false
           });
           _this.beforeRenderList(todos);
+          console.log("Render list with ", todos);
           _ref = _this.groupTasks(todos);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             group = _ref[_i];

@@ -44,6 +44,8 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 				@beforeRenderList todos
 
+				console.log "Render list with ", todos
+
 				for group in @groupTasks todos
 					tasksJSON = _.invoke( group.tasks, "toJSON" )
 					$html = $( @template { title: group.deadline, tasks: tasksJSON } )
