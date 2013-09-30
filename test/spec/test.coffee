@@ -551,11 +551,20 @@ require [
 					it "Should be able to parse 1 tag", ->
 						result = taskInput.parseTags "I love #tags"
 						expect(result).to.have.length 1
-						expect(result[0]).to.be "tags"
+						expect(result[0]).to.equal "tags"
 
-					it "Should be able to parse multiple tags"
+					it "Should be able to parse multiple tags", ->
+						result = taskInput.parseTags "I love #tags, #racks, #stacks"
+						expect(result).to.have.length 3
+						expect(result).to.include "tags"
+						expect(result).to.include "racks"
+						expect(result).to.include "stacks"
 					
-					it "Should be able to parse tags with spaces"
+					it "Should be able to parse tags with spaces", ->
+						result = taskInput.parseTags "I love #tags, #racks and stacks"
+						expect(result).to.have.length 2
+						expect(result).to.include "tags"
+						expect(result).to.include "racks and stacks"
 
 				describe "parsing title", ->
 					it "Should parse title from task input"

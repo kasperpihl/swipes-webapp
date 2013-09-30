@@ -569,10 +569,23 @@
               var result;
               result = taskInput.parseTags("I love #tags");
               expect(result).to.have.length(1);
-              return expect(result[0]).to.be("tags");
+              return expect(result[0]).to.equal("tags");
             });
-            it("Should be able to parse multiple tags");
-            return it("Should be able to parse tags with spaces");
+            it("Should be able to parse multiple tags", function() {
+              var result;
+              result = taskInput.parseTags("I love #tags, #racks, #stacks");
+              expect(result).to.have.length(3);
+              expect(result).to.include("tags");
+              expect(result).to.include("racks");
+              return expect(result).to.include("stacks");
+            });
+            return it("Should be able to parse tags with spaces", function() {
+              var result;
+              result = taskInput.parseTags("I love #tags, #racks and stacks");
+              expect(result).to.have.length(2);
+              expect(result).to.include("tags");
+              return expect(result).to.include("racks and stacks");
+            });
           });
           describe("parsing title", function() {
             it("Should parse title from task input");
