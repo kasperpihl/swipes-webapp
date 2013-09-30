@@ -548,6 +548,12 @@ require [
 
 			describe "controller", ->
 				describe "parsing tags", ->
+					it "Should be able to add tasks without tags", ->
+						taskInput.createTask "I love not using tags"
+						model = swipy.todos.findWhere { title: "I love not using tags" }
+						expect( model ).to.exist
+						expect( model.get "tags" ).to.have.length 0
+
 					it "Should be able to parse 1 tag", ->
 						result = taskInput.parseTags "I love #tags"
 						expect(result).to.have.length 1
@@ -574,6 +580,13 @@ require [
 						expect(result).to.include "stacks"
 
 				describe "parsing title", ->
+					it "Should not be able to add tags without a title", ->
+						lengthBefore = swipy.todos.length
+						taskInput.createTask "#just a tag"
+						lengthAfter = swipy.todos.length
+						expect( lengthBefore ).to.equal lengthAfter
+
+
 					it "Should parse title without including 1 tag", ->
 						result = taskInput.parseTitle "I love #tags"
 						expect(result).to.equal "I love"
