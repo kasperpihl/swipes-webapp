@@ -7,17 +7,82 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
 		
+		getEmptySpotBefore: (order, orders) ->
+			if order is 0 then return undefined
+
+			for num in [0..order] when not _.contains( orders, num )
+				return num
+			
+			return undefined
+
+		getEmptySpotAfter: (order, orders) ->
+			while _.contains(orders, order)
+				order++
+
+			return order
+
+		findSpotForTask: (order, orders) ->
+			emptySpotBefore = @getEmptySpotBefore( order, orders )
+			if emptySpotBefore? then return emptySpotBefore
+
+			return @getEmptySpotAfter( order, orders )
+
 		setTodoOrder: (todos) ->
-			takenPositions = ( m.get "order" for m in todos when m.has "order" )
-			pushOrderCount = 0
+			orders = _.invoke( todos, "get", "order" )
+			orders = _.without( orders, undefined ) #Remove falsy values from array, like undefined.
+			
+			withoutOrder = []
 
-			for view, i in @subviews when !view.model.has "order"
+			# 1st loop — Reorder todos so no 2 todos have the same order and 
+			# that no order is set higher than the number of todos in the list
+			for task in todos
+				order = task.get "order"
+				
+				if not order?
+					withoutOrder.push task
+					continue
 
-				# If position is taken, set order to next available position
-				while _.contains( takenPositions, i + pushOrderCount )
-					pushOrderCount++
+				# Cap order value to number of tasks (-1 because arrays are 0-indexed)
+				if order >= todos.length then order = todos.length - 1
 
-				view.model.set( "order", i + pushOrderCount )
+				# First, pick out all instances matching current order
+				# then add them back minus 1 replecenting current order.
+				ordersMinusCurrent = _.without( orders, order )
+				diff = orders.length - ordersMinusCurrent.length - 1
+				if diff > 0 then while diff--
+					ordersMinusCurrent.push order
+
+				if _.contains( ordersMinusCurrent, order )
+					# Position is taken. Find a new spot and update orders array.
+					spot = @findSpotForTask( order, ordersMinusCurrent )
+					
+					# Replace old spot with new spot
+					oldSpotIndex = _.indexOf( orders, order )
+					orders.splice( oldSpotIndex, 1, spot )
+					
+					task.set( "order", spot )
+				else if order is todos.length - 1
+					# Order was assigned to the last spot in the list and that spot isnt taken
+					# Just update the order prop and reserve the spot
+					
+					oldSpotIndex = _.indexOf( orders, order )
+					orders.splice( oldSpotIndex, 1, spot )
+					
+					task.set( "order", order )
+					
+				# Curr spot is available. Do nothing.
+				else continue
+
+			# 2nd loop — Assigt orders to those todos that didn't have one to begin with.
+			# 
+			# FIRST SORT WITHOUT ORDER BY SCHEDULE DATE
+			# 
+			# for task in withoutOrder
+			# 	spot = @findSpotForTask task
+			# 	orders.push spot
+			# 	task.set( "order", spot )
+
+			return todos
 
 		beforeRenderList: (todos) ->
 			@setTodoOrder todos

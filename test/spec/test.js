@@ -351,8 +351,34 @@
           expect(result[0].tasks[1].get("title")).to.equal("two");
           return expect(result[0].tasks[2].get("title")).to.equal("three");
         });
-        it("Should make sure no two todos can have the same order id");
-        it("Should order todos be schdule if no order is defined");
+        it("Should make sure no two todos can have the same order id", function() {
+          var newTasks, orders, task, tasks, _i, _j, _len, _len1;
+          tasks = swipy.todos.getActive().slice(0, 4);
+          tasks[0].set("order", 0);
+          tasks[1].set("order", 0);
+          tasks[2].set("order", 2);
+          tasks[3].set("order", 5);
+          console.groupCollapsed("tasks before");
+          for (_i = 0, _len = tasks.length; _i < _len; _i++) {
+            task = tasks[_i];
+            console.log("order: " + (task.get('order')));
+          }
+          console.groupEnd();
+          newTasks = view.setTodoOrder(tasks);
+          console.groupCollapsed("tasks after");
+          for (_j = 0, _len1 = newTasks.length; _j < _len1; _j++) {
+            task = newTasks[_j];
+            console.log("order: " + (task.get('order')));
+          }
+          console.groupEnd();
+          orders = _.invoke(newTasks, "get", "order");
+          expect(orders).to.have.length(4);
+          expect(orders).to.contain(0);
+          expect(orders).to.contain(1);
+          expect(orders).to.contain(2);
+          return expect(orders).to.contain(3);
+        });
+        it("Should order todos by schdule date if no order is defined");
         it("Should put the tasks you add at the top (Order 0)");
         return it("Should put tasks that move form schedule to todo at the top (Order 0)");
       });
@@ -615,12 +641,11 @@
               result = taskInput.parseTitle("I love #tags");
               return expect(result).to.equal("I love");
             });
-            it("Should parse title without including multiple tags", function() {
+            return it("Should parse title without including multiple tags", function() {
               var result;
               result = taskInput.parseTitle("I also love #tags, #rags");
               return expect(result).to.equal("I also love");
             });
-            return it("Should parse title if it's defined after tags");
           });
           return it("Should add a new item to swipy.todos list when create-task event is fired", function() {
             var model;

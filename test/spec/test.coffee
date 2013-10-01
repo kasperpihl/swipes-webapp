@@ -321,9 +321,35 @@ require [
 				expect(result[0].tasks[1].get "title").to.equal "two"
 				expect(result[0].tasks[2].get "title").to.equal "three"
 
-			it "Should make sure no two todos can have the same order id"
+			it "Should make sure no two todos can have the same order id", ->
+				tasks = swipy.todos.getActive().slice(0, 4)
+				
+				tasks[0].set( "order", 0 )
+				tasks[1].set( "order", 0 )
+				tasks[2].set( "order", 2 )
+				tasks[3].set( "order", 5 )
 
-			it "Should order todos be schdule if no order is defined"
+				console.groupCollapsed "tasks before"
+				for task in tasks
+					console.log "order: #{ task.get 'order' }"
+				console.groupEnd()
+
+				newTasks = view.setTodoOrder tasks
+
+				console.groupCollapsed "tasks after"
+				for task in newTasks
+					console.log "order: #{ task.get 'order' }"
+				console.groupEnd()
+
+				orders = _.invoke( newTasks, "get", "order" )
+
+				expect(orders).to.have.length 4
+				expect(orders).to.contain 0
+				expect(orders).to.contain 1
+				expect(orders).to.contain 2
+				expect(orders).to.contain 3
+
+			it "Should order todos by schdule date if no order is defined"
 
 			it "Should put the tasks you add at the top (Order 0)"
 
@@ -535,18 +561,17 @@ require [
 					# Backbone.once( "create-task", -> done new Error "'create-task' event was triggered" )
 					# taskInput.view.$el.submit()
 
-					# # a timeout means the event loop has finished, and the event should have been dispatched by now.
-					# setTimeout( done, 100 )
+					# setTimeout =>
+					# 		done()
+					# 	, 200
 
 				it "Should trigger a 'create-task' event when submitting actual input"
-					# Backbone.once( "create-task", -> done2() )
+					# Backbone.once( "create-task", -> done() )
 
 					# taskInput.view.input.val "here's a new task"
 					# taskInput.view.$el.submit()
 
-					# setTimeout =>
-					# 		done2 new Error "'create-task' wasn't triggered"
-					# 	, 100
+					# @timeout 200
 
 			describe "controller", ->
 				describe "parsing tags", ->
@@ -597,7 +622,7 @@ require [
 						result = taskInput.parseTitle "I also love #tags, #rags"
 						expect(result).to.equal "I also love"
 					
-					it "Should parse title if it's defined after tags"
+					# it "Should parse title if it's defined after tags"
 
 				it "Should add a new item to swipy.todos list when create-task event is fired", ->
 					Backbone.trigger( "create-task", "Test task #tags, #rags" )

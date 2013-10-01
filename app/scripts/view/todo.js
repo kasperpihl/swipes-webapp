@@ -15,33 +15,68 @@
           }
         ];
       },
-      setTodoOrder: function(todos) {
-        var i, m, pushOrderCount, takenPositions, view, _i, _len, _ref, _results;
-        takenPositions = (function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = todos.length; _i < _len; _i++) {
-            m = todos[_i];
-            if (m.has("order")) {
-              _results.push(m.get("order"));
-            }
+      getEmptySpotBefore: function(order, orders) {
+        var num, _i;
+        if (order === 0) {
+          return void 0;
+        }
+        for (num = _i = 0; 0 <= order ? _i <= order : _i >= order; num = 0 <= order ? ++_i : --_i) {
+          if (!_.contains(orders, num)) {
+            return num;
           }
-          return _results;
-        })();
-        pushOrderCount = 0;
-        _ref = this.subviews;
-        _results = [];
-        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-          view = _ref[i];
-          if (!(!view.model.has("order"))) {
+        }
+        return void 0;
+      },
+      getEmptySpotAfter: function(order, orders) {
+        while (_.contains(orders, order)) {
+          order++;
+        }
+        return order;
+      },
+      findSpotForTask: function(order, orders) {
+        var emptySpotBefore;
+        emptySpotBefore = this.getEmptySpotBefore(order, orders);
+        if (emptySpotBefore != null) {
+          return emptySpotBefore;
+        }
+        return this.getEmptySpotAfter(order, orders);
+      },
+      setTodoOrder: function(todos) {
+        var diff, oldSpotIndex, order, orders, ordersMinusCurrent, spot, task, withoutOrder, _i, _len;
+        orders = _.invoke(todos, "get", "order");
+        orders = _.without(orders, void 0);
+        withoutOrder = [];
+        for (_i = 0, _len = todos.length; _i < _len; _i++) {
+          task = todos[_i];
+          order = task.get("order");
+          if (order == null) {
+            withoutOrder.push(task);
             continue;
           }
-          while (_.contains(takenPositions, i + pushOrderCount)) {
-            pushOrderCount++;
+          if (order >= todos.length) {
+            order = todos.length - 1;
           }
-          _results.push(view.model.set("order", i + pushOrderCount));
+          ordersMinusCurrent = _.without(orders, order);
+          diff = orders.length - ordersMinusCurrent.length - 1;
+          if (diff > 0) {
+            while (diff--) {
+              ordersMinusCurrent.push(order);
+            }
+          }
+          if (_.contains(ordersMinusCurrent, order)) {
+            spot = this.findSpotForTask(order, ordersMinusCurrent);
+            oldSpotIndex = _.indexOf(orders, order);
+            orders.splice(oldSpotIndex, 1, spot);
+            task.set("order", spot);
+          } else if (order === todos.length - 1) {
+            oldSpotIndex = _.indexOf(orders, order);
+            orders.splice(oldSpotIndex, 1, spot);
+            task.set("order", order);
+          } else {
+            continue;
+          }
         }
-        return _results;
+        return todos;
       },
       beforeRenderList: function(todos) {
         return this.setTodoOrder(todos);
