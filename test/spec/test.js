@@ -352,7 +352,9 @@
           return expect(result[0].tasks[2].get("title")).to.equal("three");
         });
         it("Should make sure no two todos can have the same order id");
-        return it("Should order todos be schdule if no order is defined");
+        it("Should order todos be schdule if no order is defined");
+        it("Should put the tasks you add at the top (Order 0)");
+        return it("Should put tasks that move form schedule to todo at the top (Order 0)");
       });
     });
     require(["view/Completed"], function(CompletedView) {

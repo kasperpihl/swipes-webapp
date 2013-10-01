@@ -121,12 +121,6 @@ require [
 			expect( model.get "completionStr" ).to.exist
 			expect( model.get "completionTimeStr" ).to.exist
 
-		# it "ScheduleStr should be a real date (Not Thursday) for instance, when schedule date is more than a week from now", ->
-			# expect(2).to.be.lessThan 1
-
-		# it "completedStr should be a real date (Not Thursday) for instance, when completion date is more than a week ago", ->
-			# expect(2).to.be.lessThan 1
-
 	#
 	# To Do Collection
 	#
@@ -330,6 +324,10 @@ require [
 			it "Should make sure no two todos can have the same order id"
 
 			it "Should order todos be schdule if no order is defined"
+
+			it "Should put the tasks you add at the top (Order 0)"
+
+			it "Should put tasks that move form schedule to todo at the top (Order 0)"
 	
 	#
 	# Completed list View
