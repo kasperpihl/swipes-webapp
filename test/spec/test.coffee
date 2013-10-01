@@ -386,6 +386,10 @@ require [
 				expect( secondModel.get "order" ).to.equal 1
 				expect( thirdModel.get "order" ).to.equal 2
 				expect( fourthModel.get "order" ).to.equal 3
+
+			it "Should take models with order 3,4,5,6 and change them to 0,1,2,3"
+
+			it "Should take models with order 0,1,11,5 and change them to 0,1,2,3"
 	
 	#
 	# Completed list View

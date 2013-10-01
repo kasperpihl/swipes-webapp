@@ -400,7 +400,7 @@
           expect(secondModel.get("order")).to.equal(1);
           return expect(thirdModel.get("order")).to.equal(2);
         });
-        return it("Should be able to mix in unordered and ordered items without a problem", function() {
+        it("Should be able to mix in unordered and ordered items without a problem", function() {
           var first, firstModel, fourthModel, list, result, second, secondModel, thirdModel;
           first = new Date();
           second = new Date();
@@ -439,6 +439,8 @@
           expect(thirdModel.get("order")).to.equal(2);
           return expect(fourthModel.get("order")).to.equal(3);
         });
+        it("Should take models with order 3,4,5,6 and change them to 0,1,2,3");
+        return it("Should take models with order 0,1,11,5 and change them to 0,1,2,3");
       });
     });
     require(["view/Completed"], function(CompletedView) {
