@@ -15,6 +15,7 @@
 
       ListSortController.prototype.setInitialOrder = function() {
         var view, _i, _len, _ref, _results;
+        this.model.container.height("");
         this.model.container.height(this.model.container.height());
         _ref = this.model.views;
         _results = [];

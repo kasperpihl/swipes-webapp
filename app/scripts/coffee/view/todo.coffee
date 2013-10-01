@@ -28,6 +28,7 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 			return @getEmptySpotAfter( order, orders )
 
 		setTodoOrder: (todos) ->
+			
 			orders = _.invoke( todos, "get", "order" )
 			orders = _.without( orders, undefined ) #Remove falsy values from array, like undefined.
 			

@@ -8,7 +8,9 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable"], ($, ListSort
 			@init()
 
 		setInitialOrder: ->
+			@model.container.height ""
 			@model.container.height( @model.container.height() )
+			
 			for view in @model.views
 				view.$el.css
 					position: "absolute"
