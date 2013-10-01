@@ -970,3 +970,55 @@
 	-o-animation-name: scaleDown;
 	animation-name: scaleDown;
 }
+
+@-webkit-keyframes scaleUp {	
+	0% {
+		opacity: 0;
+		-webkit-transform: scale(0.6);
+	}
+	
+	100% {
+		opacity: 1;
+		-webkit-transform: scale(1);
+	}
+}
+@-moz-keyframes scaleUp {	
+	0% {
+		opacity: 0;
+		-moz-transform: scale(0.6);
+	}
+	
+	100% {
+		opacity: 1;
+		-moz-transform: scale(1);
+	}
+}
+@-o-keyframes scaleUp {	
+	0% {
+		opacity: 0;
+		-o-transform: scale(0.6);
+	}
+	
+	100% {
+		opacity: 1;
+		-o-transform: scale(1);
+	}
+}
+@keyframes scaleUp {	
+	0% {
+		opacity: 0;
+		transform: scale(0.6);
+	}
+	
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.scaleUp {
+	-webkit-animation-name: scaleUp;
+	-moz-animation-name: scaleUp;
+	-o-animation-name: scaleUp;
+	animation-name: scaleUp;
+}

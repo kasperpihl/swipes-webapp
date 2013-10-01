@@ -72,6 +72,13 @@
           return this.$el.removeClass("hover-right");
         }
       },
+      render: function() {
+        if (this.model.get("animateIn")) {
+          this.$el.addClass("animate-in");
+          this.model.unset("animateIn");
+        }
+        return BaseTaskView.prototype.render.apply(this, arguments);
+      },
       customCleanUp: function() {
         return this.stopTrackingMouse();
       }

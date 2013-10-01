@@ -28,6 +28,7 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 			
 			tags = @parseTags str
 			title = @parseTitle str
+			animateIn = yes
 
 			# If user is trying to add 
 			if !title 
@@ -36,4 +37,4 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 				return 
 
 			@bumpTodosOrder()
-			swipy.todos.add { title, tags }
+			swipy.todos.add { title, tags, animateIn }

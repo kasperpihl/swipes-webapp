@@ -141,3 +141,10 @@ $list-item-height: 105px;
 		}
 	}*/
 }
+
+// Animate-in when adding new tasks
+.todo-list .animate-in {
+	@extend .animated;
+	@extend .fadeInDown;
+	@include experimental(animation-duration, 0.3s);
+}

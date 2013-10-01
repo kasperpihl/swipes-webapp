@@ -64,5 +64,12 @@ define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
 			if @model.get( "selected" ) or target is @cid
 				@$el.removeClass "hover-right"
 		
+		render: ->
+			if @model.get "animateIn"
+				@$el.addClass "animate-in"
+				@model.unset "animateIn"
+
+			BaseTaskView::render.apply( @, arguments )
+
 		customCleanUp: ->
 			@stopTrackingMouse()
