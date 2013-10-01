@@ -6,19 +6,19 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
+
+		sortBySchedule: (todos) ->
+			_.sortBy( todos, (m) -> m.get("schedule").getTime() )
 		
 		getEmptySpotBefore: (order, orders) ->
 			if order is 0 then return undefined
 
-			for num in [0..order] when not _.contains( orders, num )
-				return num
-			
+			return num for num in [0..order] when not _.contains( orders, num )
+
 			return undefined
 
 		getEmptySpotAfter: (order, orders) ->
-			while _.contains(orders, order)
-				order++
-
+			order++ while _.contains(orders, order)
 			return order
 
 		findSpotForTask: (order, orders) ->
@@ -76,11 +76,26 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 			# 2nd loop — Assigt orders to those todos that didn't have one to begin with.
 			# 
 			# FIRST SORT WITHOUT ORDER BY SCHEDULE DATE
-			# 
-			# for task in withoutOrder
-			# 	spot = @findSpotForTask task
-			# 	orders.push spot
-			# 	task.set( "order", spot )
+			#
+			
+			if withoutOrder.length
+				console.group "Before sort"
+				for task in withoutOrder
+					console.log task.get( "title" ) + ": " + task.get "order"
+				console.groupEnd()
+
+				withoutOrder = @sortBySchedule withoutOrder
+
+
+				for task, i in withoutOrder
+					spot = @findSpotForTask( i, orders )
+					orders.push spot
+					task.set( "order", spot )
+				
+				console.group "After sort"
+				for task in withoutOrder
+					console.log task.get( "title" ) + ": " + task.get "order"
+				console.groupEnd()
 
 			return todos
 

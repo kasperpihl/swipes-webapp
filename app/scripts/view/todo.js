@@ -15,6 +15,11 @@
           }
         ];
       },
+      sortBySchedule: function(todos) {
+        return _.sortBy(todos, function(m) {
+          return m.get("schedule").getTime();
+        });
+      },
       getEmptySpotBefore: function(order, orders) {
         var num, _i;
         if (order === 0) {
@@ -42,7 +47,7 @@
         return this.getEmptySpotAfter(order, orders);
       },
       setTodoOrder: function(todos) {
-        var diff, oldSpotIndex, order, orders, ordersMinusCurrent, spot, task, withoutOrder, _i, _len;
+        var diff, i, oldSpotIndex, order, orders, ordersMinusCurrent, spot, task, withoutOrder, _i, _j, _k, _l, _len, _len1, _len2, _len3;
         orders = _.invoke(todos, "get", "order");
         orders = _.without(orders, void 0);
         withoutOrder = [];
@@ -75,6 +80,27 @@
           } else {
             continue;
           }
+        }
+        if (withoutOrder.length) {
+          console.group("Before sort");
+          for (_j = 0, _len1 = withoutOrder.length; _j < _len1; _j++) {
+            task = withoutOrder[_j];
+            console.log(task.get("title") + ": " + task.get("order"));
+          }
+          console.groupEnd();
+          withoutOrder = this.sortBySchedule(withoutOrder);
+          for (i = _k = 0, _len2 = withoutOrder.length; _k < _len2; i = ++_k) {
+            task = withoutOrder[i];
+            spot = this.findSpotForTask(i, orders);
+            orders.push(spot);
+            task.set("order", spot);
+          }
+          console.group("After sort");
+          for (_l = 0, _len3 = withoutOrder.length; _l < _len3; _l++) {
+            task = withoutOrder[_l];
+            console.log(task.get("title") + ": " + task.get("order"));
+          }
+          console.groupEnd();
         }
         return todos;
       },

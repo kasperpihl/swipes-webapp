@@ -329,18 +329,7 @@ require [
 				tasks[2].set( "order", 2 )
 				tasks[3].set( "order", 5 )
 
-				console.groupCollapsed "tasks before"
-				for task in tasks
-					console.log "order: #{ task.get 'order' }"
-				console.groupEnd()
-
 				newTasks = view.setTodoOrder tasks
-
-				console.groupCollapsed "tasks after"
-				for task in newTasks
-					console.log "order: #{ task.get 'order' }"
-				console.groupEnd()
-
 				orders = _.invoke( newTasks, "get", "order" )
 
 				expect(orders).to.have.length 4
@@ -349,7 +338,32 @@ require [
 				expect(orders).to.contain 2
 				expect(orders).to.contain 3
 
-			it "Should order todos by schdule date if no order is defined"
+			it "Should order todos by schdule date if no order is defined", ->
+				first = new Date()
+				second = new Date()
+				third = new Date()
+
+				second.setSeconds( second.getSeconds() + 1 )
+				third.setSeconds( third.getSeconds() + 2 )
+
+				list = [ 
+					new ToDoModel( { title: "third", schedule: third } ),
+					new ToDoModel( { title: "second", schedule: second } )
+					new ToDoModel( { title: "first", schedule: first } )
+				]
+
+				result = view.setTodoOrder list
+				firstModel = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
+				secondModel = _.filter( result, (m) -> m.get( "title" ) is "second" )[0]
+				thirdModel = _.filter( result, (m) -> m.get( "title" ) is "third" )[0]
+
+				expect( result ).to.have.length 3
+				expect( firstModel.get "order" ).to.equal 0
+				expect( secondModel.get "order" ).to.equal 1
+				expect( thirdModel.get "order" ).to.equal 2
+
+			it "Should be able to mix in unordered and ordered items without a problem"
+				# nr. 1 og 3 er ordered 2 og 4 er ikke. 4 kommer efter 1 med har schedule før.
 
 			it "Should put the tasks you add at the top (Order 0)"
 
