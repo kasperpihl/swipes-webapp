@@ -400,9 +400,45 @@
           expect(secondModel.get("order")).to.equal(1);
           return expect(thirdModel.get("order")).to.equal(2);
         });
-        it("Should be able to mix in unordered and ordered items without a problem");
-        it("Should put the tasks you add at the top (Order 0)");
-        return it("Should put tasks that move form schedule to todo at the top (Order 0)");
+        return it("Should be able to mix in unordered and ordered items without a problem", function() {
+          var first, firstModel, fourthModel, list, result, second, secondModel, thirdModel;
+          first = new Date();
+          second = new Date();
+          second.setSeconds(second.getSeconds() + 1);
+          list = [
+            new ToDoModel({
+              title: "third",
+              schedule: second
+            }), new ToDoModel({
+              title: "first",
+              schedule: first
+            }), new ToDoModel({
+              title: "second (has order)",
+              order: 1
+            }), new ToDoModel({
+              title: "fourth (has order)",
+              order: 3
+            })
+          ];
+          result = view.setTodoOrder(list);
+          firstModel = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          secondModel = _.filter(result, function(m) {
+            return m.get("title") === "second (has order)";
+          })[0];
+          thirdModel = _.filter(result, function(m) {
+            return m.get("title") === "third";
+          })[0];
+          fourthModel = _.filter(result, function(m) {
+            return m.get("title") === "fourth (has order)";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(firstModel.get("order")).to.equal(0);
+          expect(secondModel.get("order")).to.equal(1);
+          expect(thirdModel.get("order")).to.equal(2);
+          return expect(fourthModel.get("order")).to.equal(3);
+        });
       });
     });
     require(["view/Completed"], function(CompletedView) {

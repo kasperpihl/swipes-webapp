@@ -362,12 +362,30 @@ require [
 				expect( secondModel.get "order" ).to.equal 1
 				expect( thirdModel.get "order" ).to.equal 2
 
-			it "Should be able to mix in unordered and ordered items without a problem"
-				# nr. 1 og 3 er ordered 2 og 4 er ikke. 4 kommer efter 1 med har schedule før.
+			it "Should be able to mix in unordered and ordered items without a problem", ->
+				first = new Date()
+				second = new Date()
 
-			it "Should put the tasks you add at the top (Order 0)"
+				second.setSeconds( second.getSeconds() + 1 )
 
-			it "Should put tasks that move form schedule to todo at the top (Order 0)"
+				list = [ 
+					new ToDoModel( { title: "third", schedule: second } ),
+					new ToDoModel( { title: "first", schedule: first } ),
+					new ToDoModel( { title: "second (has order)", order: 1 } ),
+					new ToDoModel( { title: "fourth (has order)", order: 3 } )
+				]
+
+				result = view.setTodoOrder list
+				firstModel = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
+				secondModel = _.filter( result, (m) -> m.get( "title" ) is "second (has order)" )[0]
+				thirdModel = _.filter( result, (m) -> m.get( "title" ) is "third" )[0]
+				fourthModel = _.filter( result, (m) -> m.get( "title" ) is "fourth (has order)" )[0]
+
+				expect( result ).to.have.length 4
+				expect( firstModel.get "order" ).to.equal 0
+				expect( secondModel.get "order" ).to.equal 1
+				expect( thirdModel.get "order" ).to.equal 2
+				expect( fourthModel.get "order" ).to.equal 3
 	
 	#
 	# Completed list View

@@ -47,7 +47,7 @@
         return this.getEmptySpotAfter(order, orders);
       },
       setTodoOrder: function(todos) {
-        var diff, i, oldSpotIndex, order, orders, ordersMinusCurrent, spot, task, withoutOrder, _i, _j, _k, _l, _len, _len1, _len2, _len3;
+        var diff, i, oldSpotIndex, order, orders, ordersMinusCurrent, spot, task, withoutOrder, _i, _j, _len, _len1;
         orders = _.invoke(todos, "get", "order");
         orders = _.without(orders, void 0);
         withoutOrder = [];
@@ -82,25 +82,13 @@
           }
         }
         if (withoutOrder.length) {
-          console.group("Before sort");
-          for (_j = 0, _len1 = withoutOrder.length; _j < _len1; _j++) {
-            task = withoutOrder[_j];
-            console.log(task.get("title") + ": " + task.get("order"));
-          }
-          console.groupEnd();
           withoutOrder = this.sortBySchedule(withoutOrder);
-          for (i = _k = 0, _len2 = withoutOrder.length; _k < _len2; i = ++_k) {
+          for (i = _j = 0, _len1 = withoutOrder.length; _j < _len1; i = ++_j) {
             task = withoutOrder[i];
             spot = this.findSpotForTask(i, orders);
             orders.push(spot);
             task.set("order", spot);
           }
-          console.group("After sort");
-          for (_l = 0, _len3 = withoutOrder.length; _l < _len3; _l++) {
-            task = withoutOrder[_l];
-            console.log(task.get("title") + ": " + task.get("order"));
-          }
-          console.groupEnd();
         }
         return todos;
       },
@@ -115,7 +103,10 @@
         if (this.sortController != null) {
           this.sortController.destroy();
         }
-        return this.transitionDeferred.done(function() {});
+        return this.transitionDeferred.done(function() {
+          _this.disableNativeClickHandlers();
+          return _this.sortController = new ListSortController(_this.$el, _this.subviews);
+        });
       },
       disableNativeClickHandlers: function() {
         var view, _i, _len, _ref, _results;

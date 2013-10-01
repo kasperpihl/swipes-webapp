@@ -74,28 +74,12 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 				else continue
 
 			# 2nd loop — Assigt orders to those todos that didn't have one to begin with.
-			# 
-			# FIRST SORT WITHOUT ORDER BY SCHEDULE DATE
-			#
-			
 			if withoutOrder.length
-				console.group "Before sort"
-				for task in withoutOrder
-					console.log task.get( "title" ) + ": " + task.get "order"
-				console.groupEnd()
-
 				withoutOrder = @sortBySchedule withoutOrder
-
-
 				for task, i in withoutOrder
 					spot = @findSpotForTask( i, orders )
 					orders.push spot
 					task.set( "order", spot )
-				
-				console.group "After sort"
-				for task in withoutOrder
-					console.log task.get( "title" ) + ": " + task.get "order"
-				console.groupEnd()
 
 			return todos
 
@@ -110,8 +94,8 @@ define ["underscore", "view/List", "controller/ListSortController"], (_, ListVie
 
 			# Dont init sort controller before transition in, because we need to read the height of the elements
 			@transitionDeferred.done =>
-				# @disableNativeClickHandlers()
-				# @sortController = new ListSortController( @$el, @subviews )
+				@disableNativeClickHandlers()
+				@sortController = new ListSortController( @$el, @subviews )
 		
 		disableNativeClickHandlers: ->
 			# SortController takes over click interaction, so disable the default behaviour
