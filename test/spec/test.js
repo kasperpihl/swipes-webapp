@@ -304,7 +304,7 @@
       tomorrow = new Date();
       nextMonth = new Date();
       now = new Date();
-      laterToday.setHours(now.getHours() + 1);
+      laterToday.setSeconds(now.getSeconds() + 1);
       tomorrow.setDate(now.getDate() + 1);
       nextMonth.setMonth(now.getMonth() + 1);
       todos = [
@@ -439,7 +439,42 @@
           expect(thirdModel.get("order")).to.equal(2);
           return expect(fourthModel.get("order")).to.equal(3);
         });
-        it("Should take models with order 3,4,5,6 and change them to 0,1,2,3");
+        it("Should take models with order 3,4,5,6 and change them to 0,1,2,3", function() {
+          var first, fourth, list, result, second, third;
+          list = [
+            new ToDoModel({
+              title: "first",
+              order: 3
+            }), new ToDoModel({
+              title: "second",
+              order: 4
+            }), new ToDoModel({
+              title: "third",
+              order: 5
+            }), new ToDoModel({
+              title: "fourth",
+              order: 6
+            })
+          ];
+          result = view.setTodoOrder(list);
+          first = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          second = _.filter(result, function(m) {
+            return m.get("title") === "second";
+          })[0];
+          third = _.filter(result, function(m) {
+            return m.get("title") === "third";
+          })[0];
+          fourth = _.filter(result, function(m) {
+            return m.get("title") === "fourth";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(first.get("order")).to.equal(0);
+          expect(second.get("order")).to.equal(1);
+          expect(third.get("order")).to.equal(2);
+          return expect(fourth.get("order")).to.equal(3);
+        });
         return it("Should take models with order 0,1,11,5 and change them to 0,1,2,3");
       });
     });
@@ -485,12 +520,13 @@
           return $(".overlay.scheduler").remove();
         });
         it("Should return a new date 3 hours in the future when scheduling for 'later today'", function() {
-          var newDate, now, parsedNewDate;
+          var newDate, now, parsedNewDate, threeHoursInMs;
           now = moment();
           newDate = model.getDateFromScheduleOption("later today", now);
           expect(newDate).to.exist;
           parsedNewDate = moment(newDate);
-          return expect(parsedNewDate.diff(now, "hours")).to.equal(3);
+          threeHoursInMs = 3 * 60 * 60 * 1000;
+          return expect(parsedNewDate.diff(now)).to.equal(threeHoursInMs);
         });
         it("Should return a new date the same day at 18:00 when scheduling for 'this evening' (before 18.00)", function() {
           var newDate, parsedNewDate, today;
