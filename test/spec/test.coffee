@@ -447,7 +447,25 @@ require [
 				expect( third.get "order" ).to.equal 2
 				expect( fourth.get "order" ).to.equal 3
 
-			it "Should take models with order 2,2,2,2 and change them to 0,1,2,3"
+			it "Should take models with order 2,2,2,2 and change them to 0,1,2,3", ->
+				list = [ 
+					new ToDoModel( { title: "first", order: 2 } ),
+					new ToDoModel( { title: "second", order: 2 } ),
+					new ToDoModel( { title: "jtown", order: 2 } ),
+					new ToDoModel( { title: "fourth", order: 2 } )
+				]
+
+				result = view.setTodoOrder list
+				first = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
+				second = _.filter( result, (m) -> m.get( "title" ) is "second" )[0]
+				third = _.filter( result, (m) -> m.get( "title" ) is "jtown" )[0]
+				fourth = _.filter( result, (m) -> m.get( "title" ) is "fourth" )[0]
+
+				expect( result ).to.have.length 4
+				expect( first.get "order" ).to.equal 0
+				expect( second.get "order" ).to.equal 1
+				expect( third.get "order" ).to.equal 2
+				expect( fourth.get "order" ).to.equal 3
 	
 	#
 	# Completed list View

@@ -551,7 +551,42 @@
           expect(third.get("order")).to.equal(2);
           return expect(fourth.get("order")).to.equal(3);
         });
-        return it("Should take models with order 2,2,2,2 and change them to 0,1,2,3");
+        return it("Should take models with order 2,2,2,2 and change them to 0,1,2,3", function() {
+          var first, fourth, list, result, second, third;
+          list = [
+            new ToDoModel({
+              title: "first",
+              order: 2
+            }), new ToDoModel({
+              title: "second",
+              order: 2
+            }), new ToDoModel({
+              title: "jtown",
+              order: 2
+            }), new ToDoModel({
+              title: "fourth",
+              order: 2
+            })
+          ];
+          result = view.setTodoOrder(list);
+          first = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          second = _.filter(result, function(m) {
+            return m.get("title") === "second";
+          })[0];
+          third = _.filter(result, function(m) {
+            return m.get("title") === "jtown";
+          })[0];
+          fourth = _.filter(result, function(m) {
+            return m.get("title") === "fourth";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(first.get("order")).to.equal(0);
+          expect(second.get("order")).to.equal(1);
+          expect(third.get("order")).to.equal(2);
+          return expect(fourth.get("order")).to.equal(3);
+        });
       });
     });
     require(["view/Completed"], function(CompletedView) {
