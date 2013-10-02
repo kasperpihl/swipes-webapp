@@ -11,7 +11,7 @@ define ["backbone"], (Backbone) ->
 			
 			# Remove overlay on ESC key
 			$(document).on 'keyup', (e) =>
-				if e.keyCode is 27 and @$el.html then @hide()
+				if e.keyCode is 27 and @$el.html then @hide yes
 		setTemplate: ->
 			# Hook for views extending me
 		bindEvents: ->
@@ -35,7 +35,7 @@ define ["backbone"], (Backbone) ->
 			@afterShow()
 		afterShow: ->
 			# Hook for views extending me
-		hide: ->
+		hide: (cancelled = no) ->
 			if not @shown then return
 			@shown = no
 

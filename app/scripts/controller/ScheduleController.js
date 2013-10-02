@@ -12,13 +12,13 @@
           model: this.model
         });
         $("body").append(this.view.render().el);
-        Backbone.on("schedule-task", this.showScheduleView, this);
+        Backbone.on("show-scheduler", this.showScheduleView, this);
         Backbone.on("pick-schedule-option", this.pickOption, this);
         return Backbone.on("select-date", this.selectDate, this);
       };
 
       ViewController.prototype.showScheduleView = function(tasks) {
-        this.currentTasks = tasks;
+        this.view.currentTasks = this.currentTasks = tasks;
         return this.view.show();
       };
 
@@ -39,6 +39,7 @@
           });
           task.set("schedule", date);
         }
+        this.view.currentTasks = void 0;
         return this.view.hide();
       };
 

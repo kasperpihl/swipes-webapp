@@ -8,11 +8,11 @@ define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/Sched
 			@view = new ScheduleOverlayView( model: @model )
 			$("body").append @view.render().el
 
-			Backbone.on( "schedule-task", @showScheduleView, @ )
+			Backbone.on( "show-scheduler", @showScheduleView, @ )
 			Backbone.on( "pick-schedule-option", @pickOption, @ )
 			Backbone.on( "select-date", @selectDate, @ )
 		showScheduleView: (tasks) ->
-			@currentTasks = tasks
+			@view.currentTasks = @currentTasks = tasks
 			@view.show()
 		pickOption: (option) ->
 			return unless @currentTasks
@@ -25,6 +25,7 @@ define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/Sched
 				task.unset( "schedule", {silent: yes} )
 				task.set( "schedule", date )
 			
+			@view.currentTasks = undefined
 			@view.hide()
 		selectDate: ->
 			console.log "Select a date"

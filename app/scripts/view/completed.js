@@ -41,7 +41,10 @@
                 _this = this;
               m = task;
               return view.swipeRight("todo").then(function() {
-                return m.set("completionDate", null);
+                return m.set({
+                  completionDate: null,
+                  schedule: new Date()
+                });
               });
             })());
           } else {

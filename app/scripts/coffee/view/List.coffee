@@ -17,6 +17,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
 			@listenTo( Backbone, "todo-task", @markTaskAsTodo )
+			@listenTo( Backbone, "schedule-task", @scheduleTasks )
+			@listenTo( Backbone, "schedule-task", @scheduleTasks )
+			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
 		render: ->
 			@renderList()
 			return @
@@ -71,7 +74,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				if view? then do ->
 					m = task
 					view.swipeLeft("completed").then => 
-						m.set( "completionDate", new Date() )
+						m.set
+							completionDate: new Date()
+							schedule: null
 
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
@@ -81,7 +86,27 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				if view? then do ->
 					m = task
 					view.swipeLeft("todo").then => 
-						m.set( "completionDate", null )
+						m.set
+							completionDate: null
+							schedule: new Date()
+
+		scheduleTasks: (tasks) ->
+			deferredArr = []
+			
+			for task in tasks
+				view = @getViewForModel task
+				
+				# Wrap in do, so reference to model isn't changed next time the loop iterates
+				if view? then do ->
+					m = task
+					deferredArr.push view.swipeRight("scheduled")
+
+			$.when( deferredArr... ).then => Backbone.trigger( "show-scheduler", tasks )
+
+		handleSchedulerCancelled: (tasks) ->
+			for task in tasks
+				view = @getViewForModel task
+				if view? then view.reset()
 
 		transitionInComplete: ->
 			@actionbar = new ActionBar()

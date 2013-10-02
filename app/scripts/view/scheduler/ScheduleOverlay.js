@@ -28,6 +28,12 @@
         option = e.currentTarget.getAttribute('data-option');
         return Backbone.trigger("pick-schedule-option", option);
       },
+      hide: function(cancelled) {
+        if (cancelled && (this.currentTasks != null)) {
+          Backbone.trigger("scheduler-cancelled", this.currentTasks);
+        }
+        return Overlay.prototype.hide.apply(this, arguments);
+      },
       handleResize: function() {
         var content, offset;
         if (!this.shown) {

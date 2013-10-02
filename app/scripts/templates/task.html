@@ -1,4 +1,4 @@
-<% if (!completionDate) { %>
+<% if (scheduleStr === "the past" && !completionDate) { %>
 <a href="JavaScript:void(0);" class="action complete" title="Mark todo as completed">
 	<span class="icon-checkmark"></span>
 </a>

@@ -19,6 +19,11 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		selectOption: (e) ->
 			option = e.currentTarget.getAttribute 'data-option'
 			Backbone.trigger( "pick-schedule-option", option )
+		hide: (cancelled) ->
+			if cancelled and @currentTasks?
+				Backbone.trigger( "scheduler-cancelled", @currentTasks )
+
+			Overlay::hide.apply( @, arguments )
 		handleResize: ->
 			return unless @shown
 			

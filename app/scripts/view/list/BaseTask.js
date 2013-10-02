@@ -103,6 +103,13 @@
         }, "-=0.2");
         return dfd.promise();
       },
+      reset: function() {
+        var content;
+        content = this.$el.find(".todo-content");
+        this.$el.removeClass("scheduled completed todo");
+        content.css("left", "");
+        return this.$el.css("opacity", "");
+      },
       cleanUp: function() {
         $(window).off();
         this.$el.off();

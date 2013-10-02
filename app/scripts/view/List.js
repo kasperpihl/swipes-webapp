@@ -8,7 +8,10 @@
         this.renderList = _.debounce(this.renderList, 300);
         this.listenTo(swipy.todos, "add remove reset change:completionDate change:schedule", this.renderList);
         this.listenTo(Backbone, "complete-task", this.completeTasks);
-        return this.listenTo(Backbone, "todo-task", this.markTaskAsTodo);
+        this.listenTo(Backbone, "todo-task", this.markTaskAsTodo);
+        this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
+        this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
+        return this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
       },
       render: function() {
         this.renderList();
@@ -102,7 +105,10 @@
                 _this = this;
               m = task;
               return view.swipeLeft("completed").then(function() {
-                return m.set("completionDate", new Date());
+                return m.set({
+                  completionDate: new Date(),
+                  schedule: null
+                });
               });
             })());
           } else {
@@ -123,9 +129,45 @@
                 _this = this;
               m = task;
               return view.swipeLeft("todo").then(function() {
-                return m.set("completionDate", null);
+                return m.set({
+                  completionDate: null,
+                  schedule: new Date()
+                });
               });
             })());
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      },
+      scheduleTasks: function(tasks) {
+        var deferredArr, task, view, _i, _len,
+          _this = this;
+        deferredArr = [];
+        for (_i = 0, _len = tasks.length; _i < _len; _i++) {
+          task = tasks[_i];
+          view = this.getViewForModel(task);
+          if (view != null) {
+            (function() {
+              var m;
+              m = task;
+              return deferredArr.push(view.swipeRight("scheduled"));
+            })();
+          }
+        }
+        return $.when.apply($, deferredArr).then(function() {
+          return Backbone.trigger("show-scheduler", tasks);
+        });
+      },
+      handleSchedulerCancelled: function(tasks) {
+        var task, view, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = tasks.length; _i < _len; _i++) {
+          task = tasks[_i];
+          view = this.getViewForModel(task);
+          if (view != null) {
+            _results.push(view.reset());
           } else {
             _results.push(void 0);
           }

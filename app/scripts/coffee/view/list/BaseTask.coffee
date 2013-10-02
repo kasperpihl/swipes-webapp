@@ -40,6 +40,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 
 			# Actual trigger logic
 			if $( e.currentTarget ).hasClass "schedule"
+				
 				Backbone.trigger( "schedule-task", trigger )
 			else if $( e.currentTarget ).hasClass "complete"
 				Backbone.trigger( "complete-task", trigger )
@@ -89,6 +90,13 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
 			
 			return dfd.promise()
+
+		reset: ->
+			content = @$el.find ".todo-content"
+			@$el.removeClass "scheduled completed todo"
+			content.css( "left", "" )
+			@$el.css( "opacity", "" )
+
 		cleanUp: ->
 			$(window).off()
 			@$el.off()

@@ -13,7 +13,7 @@
         this.init();
         return $(document).on('keyup', function(e) {
           if (e.keyCode === 27 && _this.$el.html) {
-            return _this.hide();
+            return _this.hide(true);
           }
         });
       },
@@ -41,8 +41,11 @@
         return this.afterShow();
       },
       afterShow: function() {},
-      hide: function() {
+      hide: function(cancelled) {
         var _this = this;
+        if (cancelled == null) {
+          cancelled = false;
+        }
         if (!this.shown) {
           return;
         }
