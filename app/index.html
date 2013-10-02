@@ -26,7 +26,7 @@
 	<![endif]-->
 
 
-	<div class="container">
+	<div class="container" role="main">
 		<header class="add-new row">
 			<form id="add-task">
 				<input type="text" placeholder="Add a task" class="borderless" autocomplete>
@@ -58,6 +58,27 @@
 			
 		</section>
 	</div>
+
+	<aside class="sidebar hidden">
+		<a href="JavaScript:void(0);" title="Close sidebar" class="icon-cross"></a>
+
+		<section class="search">
+			<form>
+				<input type="search" placeholder="search" autocomplete>
+			</form>
+		</section>
+
+		<section class="date-filter">
+			calendar filter
+		</section>
+
+		<section class="tags-filter">
+			tags filter
+		</section>
+
+		<a href="http://swipesapp.com/app"><span class="icon-log-out"></span></a>
+		<a href="#/settings"><span class="icon-cog"></span></a>
+	</aside>
 
 
 	<!-- build:js scripts/vendor.js -->

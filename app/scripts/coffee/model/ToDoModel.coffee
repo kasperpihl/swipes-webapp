@@ -27,10 +27,12 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
+				@set( "selected", no )
 
 			@on "change:completionDate", => 
 				@setCompletionStr()
 				@setCompletionTimeStr()
+				@set( "selected", no )
 			
 			if @has "completionDate" 
 				@setCompletionStr()

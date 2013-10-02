@@ -1,0 +1,59 @@
+ <div class="divider">
+	<h2>Tasks</h2>
+</div>
+
+<div class="editor-content">
+	
+	<h1 class="h2 title">
+		<span class="priority"></span>
+		<span contenteditable="true"><%= title %></span>
+	</h1>
+	
+	<% if (scheduleStr) { %>
+		<section>
+			<time class="icon-schedule has-icon no-select"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
+		</section>
+	<% } %>
+	
+	<section>
+		<div class="repeat-picker icon-repeat has-icon">
+			<p>Repeat every &hellip;</p>
+			<ul>
+				<li><a href="JavaScript:void(0);">never</a></li>
+				<li><a class="selected" href="JavaScript:void(0);">day</a></li>
+				<li><a href="JavaScript:void(0);">sat+sun</a></li>
+				<li><a href="JavaScript:void(0);">week</a></li>
+				<li><a href="JavaScript:void(0);">month</a></li>
+				<li><a href="JavaScript:void(0);">year</a></li>
+			</ul>
+		</div>
+	</section>
+	
+	<section>
+		<div class="icon-tags has-icon">
+
+			<ul class="rounded-tags">
+			</ul>
+			<aside class="tag-pool">
+				<ul class="rounded-tags">
+				</ul>
+			</aside>
+		</div>
+	</section>	
+	
+	<section>
+		<div class="notes icon-note has-icon">
+			<p contenteditable="true"><% notes ? print(notes) : print("Add a note") %></p>
+		</div>
+	</section>
+
+</div>
+
+<nav>
+	<a href="JavaScript:void(0);" class="cancel round-btn">
+		<span class="icon-cross"></span>
+	</a>
+	<a href="JavaScript:void(0);" class="save round-btn">
+		<span class="icon-checkmark"></span>
+	</a>
+</nav>

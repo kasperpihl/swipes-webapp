@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width">
 
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-	<link rel="stylesheet" href="styles/20382e9e.main.css">
+	<link rel="stylesheet" href="styles/39f65dc1.main.css">
 
 	<script src="scripts/vendor/f7f27360.modernizr.js"></script>
 </head>
@@ -22,190 +22,59 @@
 	<![endif]-->
 
 
-	<div class="container">
+	<div class="container" role="main">
 		<header class="add-new row">
-			<input type="text" placeholder="Add a task" class="borderless" autocomplete="">
+			<form id="add-task">
+				<input type="text" placeholder="Add a task" class="borderless" autocomplete="">
+			</form>
 		</header>
 
 		<nav class="row">
 			<ul class="list-nav">
 				<li><a class="icon-schedule" href="#schedule"><span class="sr-only">Schedule</span></a></li>
-				<li><a class="icon-todo active" href="#todo"><span class="sr-only">Todo</span></a></li>
+				<li><a class="icon-todo" href="#todo"><span class="sr-only">Todo</span></a></li>
 				<li><a class="icon-checkmark" href="#completed"><span class="sr-only">Completed</span></a></li>
 			</ul>
 		</nav>
 
-		<section class="row">
+		<section id="main-content" class="row">
 			<ol class="todo-list hidden schedule"></ol>
-
-			<ol class="todo-list todo">
-				<!-- Due: later today -->
-				<li>
-					<h1>Later Today</h1>
-					<ol class="tasks">
-						<li>
-							<article class="todo-content">
-								<h2>Follow up on Martin</h2>
-								<time>10:00am</time>
-								<ul class="tags">
-									<li>work</li>
-									<li>client</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Make visual research</h2>
-								<time>3:00pm</time>
-								<ul class="tags">
-									<li>work</li>
-									<li>Project y19</li>
-								</ul>
-							</article>
-						</li>
-					</ol>
-				</li>
-				
-				<!-- Due: Tomorrow -->
-				<li>
-					<h1>Tomorrow</h1>
-					<ol class="tasks">
-						<li>
-							<article class="todo-content">
-								<h2>Buy a new Helmet</h2>
-								<time>4:00pm</time>
-								<ul class="tags">
-									<li>Personal</li>
-									<li>Bike</li>
-									<li>Outside</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Renew Wired Magazine subscription</h2>
-								<time>9:00pm</time>
-								<ul class="tags">
-									<li>Personal</li>
-									<li>Home</li>
-								</ul>
-							</article>
-						</li>
-					</ol>
-				</li>
-
-				<!-- Due: This Weekend -->
-				<li>
-					<h1>This Weekend</h1>
-					<ol class="tasks">
-						<li>
-							<article class="todo-content">
-								<h2>Get a haircut</h2>
-								<time>11:00am</time>
-								<ul class="tags">
-									<li>Personal</li>
-									<li>City</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Clean up the house</h2>
-								<time>1:00pm</time>
-								<ul class="tags">
-									<li>Errand</li>
-									<li>Home</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Buy things for BBQ</h2>
-								<time>3:00pm</time>
-								<ul class="tags">
-									<li>Errand</li>
-									<li>City</li>
-								</ul>
-							</article>
-						</li>
-					</ol>
-				</li>
-				
-				<!-- Due: Unspecified -->
-				<li>
-					<h1>Unspecified</h1>
-					<ol class="tasks">
-						<li>
-							<article class="todo-content">
-								<h2>Finish the presentation</h2>
-								<time>2:15pm</time>
-								<ul class="tags">
-									<li>work</li>
-									<li>presentation</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Arrange a meeting with Steve</h2>
-								<ul class="tags">
-									<li>work</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Buy food for the office</h2>
-								<time>9:30am</time>
-								<ul class="tags">
-									<li>Outside</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Call Olivia</h2>
-								<time>9:00pm</time>
-								<ul class="tags">
-									<li>Home</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Take a look at SquareSpace</h2>
-								<ul class="tags">
-									<li>Web design</li>
-									<li>My Blog</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Finish the sketches</h2>
-								<time>9:00am</time>
-								<ul class="tags">
-									<li>Work</li>
-								</ul>
-							</article>
-						</li>
-						<li>
-							<article class="todo-content">
-								<h2>Turn Markup into _.js template</h2>
-								<ul class="tags">
-									<li>Work</li>
-									<li>Swipes</li>
-								</ul>
-							</article>
-						</li>
-					</ol>
-				</li>
-			</ol>
+			<ol class="todo-list hidden todo"></ol>
 			<ol class="todo-list hidden completed"></ol>
-
-			<div class="list-fade"></div>
+			
+			
+			<div class="list-fade hidden-xs"></div>
+			
+			<ul class="action-bar fadeout">
+				<li><a href="JavaScript:void(0);" class="edit" title="Edit"><span class="icon-pencil"></span></a></li>
+				<li><a href="JavaScript:void(0);" class="tags" title="Set tags"><span class="icon-tags"></span></a></li>
+				<li><a href="JavaScript:void(0);" class="delete" title="Delete"><span class="icon-trashcan"></span></a></li>
+				<li><a href="JavaScript:void(0);" class="share" title="Share"><span class="icon-share"></span></a></li>
+			</ul>
+			
 		</section>
 	</div>
+
+	<aside class="sidebar hidden">
+		<a href="JavaScript:void(0);" title="Close sidebar" class="icon-cross"></a>
+
+		<section class="search">
+			<form>
+				<input type="search" placeholder="search" autocomplete="">
+			</form>
+		</section>
+
+		<section class="date-filter">
+			calendar filter
+		</section>
+
+		<section class="tags-filter">
+			tags filter
+		</section>
+
+		<a href="http://swipesapp.com/app"><span class="icon-log-out"></span></a>
+		<a href="#/settings"><span class="icon-cog"></span></a>
+	</aside>
 
 
 	<script src="scripts/1137e1f5.vendor.js"></script>
@@ -220,6 +89,6 @@
 		ga('create','UA-XXXXX-X');ga('send','pageview');
 	</script>
 
-	<script data-main="scripts/ac1bf30a.main" src="bower_components/requirejs/require.js"></script>
+	<script data-main="scripts/4bedff55.main" src="bower_components/requirejs/require.js"></script>
 </body>
 </html>
