@@ -321,15 +321,15 @@ require [
 				expect(result[0].tasks[1].get "title").to.equal "two"
 				expect(result[0].tasks[2].get "title").to.equal "three"
 
-			it "Should make sure no two todos can have the same order id", ->
-				tasks = swipy.todos.getActive().slice(0, 4)
-				
-				tasks[0].set( "order", 0 )
-				tasks[1].set( "order", 0 )
-				tasks[2].set( "order", 2 )
-				tasks[3].set( "order", 5 )
+			it "Should make sure no two todos have the same order id", ->
+				list = [ 
+					new ToDoModel( { order: 0 } ),
+					new ToDoModel( { order: 0 } ),
+					new ToDoModel( { order: 2 } ),
+					new ToDoModel( { order: 5 } )
+				]
 
-				newTasks = view.setTodoOrder tasks
+				newTasks = view.setTodoOrder list
 				orders = _.invoke( newTasks, "get", "order" )
 
 				expect(orders).to.have.length 4
@@ -362,7 +362,7 @@ require [
 				expect( secondModel.get "order" ).to.equal 1
 				expect( thirdModel.get "order" ).to.equal 2
 
-			it "Should be able to mix in unordered and ordered items without a problem", ->
+			it "Should be able to mix in unordered and ordered items", ->
 				first = new Date()
 				second = new Date()
 
@@ -408,6 +408,10 @@ require [
 				expect( fourth.get "order" ).to.equal 3
 
 			it "Should take models with order 0,1,11,5 and change them to 0,1,2,3"
+
+			it "Should take models with order undefined,1,undefined,5 and change them to 0,1,2,3"
+
+			it "Should take models with order 2,2,2,2 and change them to 0,1,2,3"
 	
 	#
 	# Completed list View

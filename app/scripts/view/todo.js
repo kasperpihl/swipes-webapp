@@ -16,9 +16,12 @@
         ];
       },
       sortBySchedule: function(todos) {
-        return _.sortBy(todos, function(m) {
+        var result;
+        result = _.sortBy(todos, function(m) {
           return m.get("schedule").getTime();
         });
+        result.reverse();
+        return result;
       },
       getEmptySpotBefore: function(order, orders) {
         var num, _i;
@@ -46,50 +49,79 @@
         }
         return this.getEmptySpotAfter(order, orders);
       },
+      swapSpots: function(newSpot, oldSpot, list) {
+        var oldIndex;
+        oldIndex = _.indexOf(list, oldSpot);
+        return list.splice(oldIndex, 1, newSpot);
+      },
+      subtractOnce: function(list, val) {
+        var diff, result;
+        result = _.without(list, val);
+        diff = list.length - result.length - 1;
+        if (diff > 0) {
+          while (diff--) {
+            result.push(val);
+          }
+        }
+        return result;
+      },
       setTodoOrder: function(todos) {
-        var diff, i, oldSpotIndex, order, orders, ordersMinusCurrent, spot, task, withoutOrder, _i, _j, _len, _len1;
+        var i, order, orders, ordersBefore, ordersMinusCurrent, spot, task, withoutOrder, _i, _j, _k, _len, _len1, _len2;
         orders = _.invoke(todos, "get", "order");
         orders = _.without(orders, void 0);
-        withoutOrder = [];
-        for (_i = 0, _len = todos.length; _i < _len; _i++) {
-          task = todos[_i];
+        ordersBefore = orders;
+        withoutOrder = this.sortBySchedule(_.filter(todos, function(m) {
+          return !m.has("order");
+        }));
+        for (i = _i = 0, _len = todos.length; _i < _len; i = ++_i) {
+          task = todos[i];
+          order = task.get("order");
+          if (!_.contains(orders, i)) {
+            if (withoutOrder.length) {
+              task = withoutOrder.pop();
+              task.set("order", i);
+              console.log("Found an empty spot. We have a task without order that we can fit in: ", task.get("title"));
+              continue;
+            } else {
+              console.log("Found an empty spot. Swapping current task from " + order + " to " + i);
+              this.swapSpots(i, order, orders);
+              task.set("order", i);
+            }
+          }
+        }
+        for (_j = 0, _len1 = todos.length; _j < _len1; _j++) {
+          task = todos[_j];
           order = task.get("order");
           if (order == null) {
-            withoutOrder.push(task);
             continue;
           }
           if (order >= todos.length) {
+            this.swapSpots(todos.length - 1, order, orders);
             order = todos.length - 1;
           }
-          ordersMinusCurrent = _.without(orders, order);
-          diff = orders.length - ordersMinusCurrent.length - 1;
-          if (diff > 0) {
-            while (diff--) {
-              ordersMinusCurrent.push(order);
-            }
-          }
+          ordersMinusCurrent = this.subtractOnce(orders, order);
           if (_.contains(ordersMinusCurrent, order)) {
             spot = this.findSpotForTask(order, ordersMinusCurrent);
-            oldSpotIndex = _.indexOf(orders, order);
-            orders.splice(oldSpotIndex, 1, spot);
+            console.log("Spot " + order + " was occupied. swapped for " + spot);
+            this.swapSpots(spot, order, orders);
             task.set("order", spot);
           } else if (order === todos.length - 1) {
-            oldSpotIndex = _.indexOf(orders, order);
-            orders.splice(oldSpotIndex, 1, spot);
+            console.log("Spot set to last in line (" + order + ")");
             task.set("order", order);
           } else {
             continue;
           }
         }
         if (withoutOrder.length) {
-          withoutOrder = this.sortBySchedule(withoutOrder);
-          for (i = _j = 0, _len1 = withoutOrder.length; _j < _len1; i = ++_j) {
+          for (i = _k = 0, _len2 = withoutOrder.length; _k < _len2; i = ++_k) {
             task = withoutOrder[i];
             spot = this.findSpotForTask(i, orders);
             orders.push(spot);
+            console.log("A task (" + (task.get('title')) + ") didn't have a spot, so we assigned it " + spot);
             task.set("order", spot);
           }
         }
+        console.groupEnd();
         return todos;
       },
       beforeRenderList: function(todos) {
