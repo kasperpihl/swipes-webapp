@@ -33,8 +33,13 @@
         });
         if (this.has("completionDate")) {
           this.setCompletionStr();
-          return this.setCompletionTimeStr();
+          this.setCompletionTimeStr();
         }
+        return this.on("change:order", function() {
+          if ((_this.get("order") != null) && _this.get("order") < 0) {
+            return console.error("Model order value set to less than 0");
+          }
+        });
       },
       getDefaultSchedule: function() {
         var now;

@@ -36,6 +36,10 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				@setCompletionStr()
 				@setCompletionTimeStr()
 
+			@on "change:order", =>
+				if @get( "order" )? and @get( "order" ) < 0
+					console.error "Model order value set to less than 0"
+
 		getDefaultSchedule: ->
 			now = new Date()
 			now.setSeconds now.getSeconds() - 1
