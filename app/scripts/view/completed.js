@@ -4,7 +4,7 @@
       sortTasks: function(tasks) {
         return _.sortBy(tasks, function(model) {
           var _ref;
-          return (_ref = model.get("schedule")) != null ? _ref.getTime() : void 0;
+          return (_ref = model.get("completionDate")) != null ? _ref.getTime() : void 0;
         }).reverse();
       },
       groupTasks: function(tasksArr) {
