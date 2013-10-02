@@ -46,12 +46,11 @@
         return swipy.router.navigate("edit/" + targetCid, true);
       },
       deleteTasks: function() {
-        var model, order, targets, _i, _len, _results;
+        var model, order, targets, _i, _len;
         targets = swipy.todos.where({
           selected: true
         });
         if (confirm("Delete " + targets.length + " tasks?")) {
-          _results = [];
           for (_i = 0, _len = targets.length; _i < _len; _i++) {
             model = targets[_i];
             if (model.has("order")) {
@@ -59,9 +58,9 @@
               model.unset("order");
               swipy.todos.bumpOrder("up", order);
             }
-            _results.push(model.destroy());
+            model.destroy();
           }
-          return _results;
+          return this.hide();
         }
       },
       shareTasks: function() {

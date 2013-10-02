@@ -30,9 +30,7 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 		bumpOrder: (direction = "down", startFrom = 0) ->
 			if direction is "down"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom
-						console.log "Bumping #{model.get 'title'} from #{model.get 'order'} to ", model.get( "order" ) + 1
-						model.set( "order", model.get( "order" ) + 1 )
+					model.set( "order", model.get( "order" ) + 1 )
 			else if direction is "up"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
-					console.log "Bumping #{model.get 'title'} from #{model.get 'order'} to ", model.get( "order" ) - 1
 					model.set( "order", model.get( "order" ) - 1 )

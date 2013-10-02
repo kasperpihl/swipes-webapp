@@ -37,5 +37,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 						model.unset "order"
 						swipy.todos.bumpOrder( "up", order )
 					model.destroy()
+
+				@hide()
 		shareTasks: ->
 			alert "Task sharing is coming soon :)"
