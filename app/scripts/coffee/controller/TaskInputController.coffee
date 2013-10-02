@@ -20,14 +20,12 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 			result = str.match(/[^#]+/)?[0]
 			if result then result = $.trim result
 			return result
-		bumpTodosOrder: ->
-			for model in swipy.todos.getActive() when model.has "order"
-				model.set( "order", model.get( "order" ) + 1 )
 		createTask: (str) ->
 			return unless swipy.todos?
 			
 			tags = @parseTags str
 			title = @parseTitle str
+			order = 0
 			animateIn = yes
 
 			# If user is trying to add 
@@ -36,5 +34,5 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 				Backbone.trigger( "throw-error", msg )
 				return 
 
-			@bumpTodosOrder()
-			swipy.todos.add { title, tags, animateIn }
+			swipy.todos.bumpOrder()
+			swipy.todos.add { title, tags, order, animateIn }

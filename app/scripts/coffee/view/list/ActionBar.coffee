@@ -31,6 +31,11 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		deleteTasks: ->
 			targets = swipy.todos.where( selected: yes )
 			if confirm "Delete #{targets.length} tasks?"
-				model.destroy() for model in targets
+				for model in targets
+					if model.has "order"
+						order = model.get "order"
+						model.unset "order"
+						swipy.todos.bumpOrder( "up", order )
+					model.destroy()
 		shareTasks: ->
 			alert "Task sharing is coming soon :)"

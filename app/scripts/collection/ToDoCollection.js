@@ -47,6 +47,40 @@
         return this.filter(function(m) {
           return m.get("completionDate") != null;
         });
+      },
+      bumpOrder: function(direction, startFrom) {
+        var model, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        if (direction == null) {
+          direction = "down";
+        }
+        if (startFrom == null) {
+          startFrom = 0;
+        }
+        if (direction === "down") {
+          _ref = swipy.todos.getActive();
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            model = _ref[_i];
+            if (!(model.has("order") && model.get("order") >= startFrom)) {
+              continue;
+            }
+            console.log("Bumping " + (model.get('title')) + " from " + (model.get('order')) + " to ", model.get("order") + 1);
+            _results.push(model.set("order", model.get("order") + 1));
+          }
+          return _results;
+        } else if (direction === "up") {
+          _ref1 = swipy.todos.getActive();
+          _results1 = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            model = _ref1[_j];
+            if (!(model.has("order") && model.get("order") > startFrom)) {
+              continue;
+            }
+            console.log("Bumping " + (model.get('title')) + " from " + (model.get('order')) + " to ", model.get("order") - 1);
+            _results1.push(model.set("order", model.get("order") - 1));
+          }
+          return _results1;
+        }
       }
     });
   });

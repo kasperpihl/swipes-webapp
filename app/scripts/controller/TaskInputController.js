@@ -38,36 +38,25 @@
         return result;
       };
 
-      TaskInputController.prototype.bumpTodosOrder = function() {
-        var model, _i, _len, _ref, _results;
-        _ref = swipy.todos.getActive();
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          model = _ref[_i];
-          if (model.has("order")) {
-            _results.push(model.set("order", model.get("order") + 1));
-          }
-        }
-        return _results;
-      };
-
       TaskInputController.prototype.createTask = function(str) {
-        var animateIn, msg, tags, title;
+        var animateIn, msg, order, tags, title;
         if (swipy.todos == null) {
           return;
         }
         tags = this.parseTags(str);
         title = this.parseTitle(str);
+        order = 0;
         animateIn = true;
         if (!title) {
           msg = "You cannot create a todo by simply adding a tag. We need a title too. Titles should come before tags when you write out your task.";
           Backbone.trigger("throw-error", msg);
           return;
         }
-        this.bumpTodosOrder();
+        swipy.todos.bumpOrder();
         return swipy.todos.add({
           title: title,
           tags: tags,
+          order: order,
           animateIn: animateIn
         });
       };
