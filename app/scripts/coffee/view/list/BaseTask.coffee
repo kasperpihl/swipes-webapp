@@ -67,14 +67,25 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		customCleanUp: ->
 			# Hook for views extending me
 		
-		swipeLeftAnimation: (className) ->
+		swipeLeft: (className) ->
 			dfd = new $.Deferred()
 			
 			content = @$el.find ".todo-content"
 			if className then @$el.addClass className
 
 			timeline = new TimelineLite { onComplete: dfd.resolve }
-			timeline.to( content, 0.4, { x: content.outerWidth() } )
+			timeline.to( content, 0.4, { left: @$el.outerWidth() } )
+			timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
+			
+			return dfd.promise()
+		swipeRight: (className) ->
+			dfd = new $.Deferred()
+			
+			content = @$el.find ".todo-content"
+			if className then @$el.addClass className
+
+			timeline = new TimelineLite { onComplete: dfd.resolve }
+			timeline.to( content, 0.4, { left: 0 - @$el.outerWidth() } )
 			timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
 			
 			return dfd.promise()

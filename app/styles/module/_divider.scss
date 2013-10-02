@@ -3,9 +3,9 @@
 	font-size: 0.77778em;
 
 	> h1, > h2, > h3 {
-		position: relative;
-		display: inline-block;
-		float: right;
+		position: absolute;
+		display: block;
+		right: 0;
 
 		z-index: 2000;
 		

@@ -122,12 +122,32 @@ $list-item-height: 105px;
 
 // Styling for completed and scheduled tasks
 .todo-list {
+	.completed, .todo, .scheduled {
+		.todo-content {
+			// Unset left/right animation
+			@include transition(background 0.15s);
+		}
+	}
+
 	.completed {
 		background: $green;
 		overflow: hidden;
 		
 		.action.complete {
 			background: $green;
+		}
+
+		.action.schedule {
+			display: none;
+		}
+	}
+
+	.todo {
+		background: $yellow;
+		overflow: hidden;
+		
+		.action.complete {
+			background: $yellow;
 		}
 
 		.action.schedule {

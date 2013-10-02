@@ -70,7 +70,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeLeftAnimation("completed").then => 
+					view.swipeLeft("completed").then => 
 						m.set( "completionDate", new Date() )
 
 		markTaskAsTodo: (tasks) ->
@@ -80,8 +80,8 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeLeftAnimation("todo").then => 
-						m.set( "completionDate", new Date() )
+					view.swipeLeft("todo").then => 
+						m.set( "completionDate", null )
 
 		transitionInComplete: ->
 			@actionbar = new ActionBar()

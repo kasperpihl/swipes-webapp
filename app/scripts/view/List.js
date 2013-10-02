@@ -101,7 +101,7 @@
               var m,
                 _this = this;
               m = task;
-              return view.swipeLeftAnimation("completed").then(function() {
+              return view.swipeLeft("completed").then(function() {
                 return m.set("completionDate", new Date());
               });
             })());
@@ -122,8 +122,8 @@
               var m,
                 _this = this;
               m = task;
-              return view.swipeLeftAnimation("todo").then(function() {
-                return m.set("completionDate", new Date());
+              return view.swipeLeft("todo").then(function() {
+                return m.set("completionDate", null);
               });
             })());
           } else {

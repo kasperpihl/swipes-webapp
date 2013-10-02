@@ -28,6 +28,27 @@
       },
       getTasks: function() {
         return swipy.todos.getCompleted();
+      },
+      markTaskAsTodo: function(tasks) {
+        var task, view, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = tasks.length; _i < _len; _i++) {
+          task = tasks[_i];
+          view = this.getViewForModel(task);
+          if (view != null) {
+            _results.push((function() {
+              var m,
+                _this = this;
+              m = task;
+              return view.swipeRight("todo").then(function() {
+                return m.set("completionDate", null);
+              });
+            })());
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       }
     });
   });

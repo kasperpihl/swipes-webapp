@@ -67,7 +67,7 @@
         return this.$el.remove();
       },
       customCleanUp: function() {},
-      swipeLeftAnimation: function(className) {
+      swipeLeft: function(className) {
         var content, dfd, timeline;
         dfd = new $.Deferred();
         content = this.$el.find(".todo-content");
@@ -78,7 +78,25 @@
           onComplete: dfd.resolve
         });
         timeline.to(content, 0.4, {
-          x: content.outerWidth()
+          left: this.$el.outerWidth()
+        });
+        timeline.to(this.$el, 0.4, {
+          alpha: 0
+        }, "-=0.2");
+        return dfd.promise();
+      },
+      swipeRight: function(className) {
+        var content, dfd, timeline;
+        dfd = new $.Deferred();
+        content = this.$el.find(".todo-content");
+        if (className) {
+          this.$el.addClass(className);
+        }
+        timeline = new TimelineLite({
+          onComplete: dfd.resolve
+        });
+        timeline.to(content, 0.4, {
+          left: 0 - this.$el.outerWidth()
         });
         timeline.to(this.$el, 0.4, {
           alpha: 0
