@@ -79,6 +79,27 @@
 	}
 }
 
+// Tag input
+.rounded-tags {
+	form {
+		width: emCalc(102px);
+	}
+
+	input {
+		width: 100%;
+
+		outline: none;
+		border: none;
+		background: transparent;
+		color: $gray-dark;
+
+		@include input-placeholder() {
+			color: $gray;
+		}
+	}
+}
+
+// Show / hide pool btn
 .show-pool .add-new-tag:after {
 	content: "";
 	position: absolute;

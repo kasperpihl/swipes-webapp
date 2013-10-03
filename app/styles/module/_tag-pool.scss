@@ -21,21 +21,4 @@
 			background: darken($gray-warm, 7%);
 		}
 	}
-
-	form {
-		width: emCalc(102px);
-	}
-
-	input {
-		width: 100%;
-
-		outline: none;
-		border: none;
-		background: transparent;
-		color: $gray-dark;
-
-		@include input-placeholder() {
-			color: $gray;
-		}
-	}
 }

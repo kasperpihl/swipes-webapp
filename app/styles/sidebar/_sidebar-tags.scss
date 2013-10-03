@@ -1,0 +1,15 @@
+.sidebar {
+	.rounded-tags {
+		li {
+			cursor: pointer;
+			background: $blue-dark;
+			margin: 0 0.25em 0.25em 0;
+			color: rgba(white, 0.5);
+
+			@include transition(all 0.18s ease-out);
+
+			border: thin solid $blue-dark;
+			&:hover, &.selected { background: darken($blue-dark, 7%); color: white; }
+		}
+	}
+}

@@ -6,15 +6,23 @@
 
 	min-height: 100%;
 	width: $sidebar-width;
-	padding: 45px 12px 12px;
+	padding: 12px;
 	
 	@include breakpoint(desktop) { 
 		width: $sidebar-width-big; 
-		padding: 75px 20px 20px;
+		padding: 20px;
 	}
 
 	background: $blue;
 
 	color: #9FA8B2;
 	#{headers()} { color: white; }
+}
+
+.sidebar > section {
+	margin-top: 45px;
+	
+	@include breakpoint(min-height, emCalc(800px)) {
+		margin-top: 75px;
+	}
 }
