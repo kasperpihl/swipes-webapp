@@ -3,6 +3,7 @@
 	a.close-sidebar, a.log-out, a.settings {
 		position: absolute;
 		color: #94a0aa;
+		line-height: 0;
 		
 		@include transition(color 0.18s ease-out);
 		
@@ -17,6 +18,8 @@
 		@include breakpoint(desktop) {
 			top: 20px; right: 20px;
 		}
+
+		font-size: 0.9em;
 	}
 
 	a.log-out {
@@ -31,5 +34,7 @@
 		@include breakpoint(desktop) {
 			bottom: 20px; right: 20px;
 		}
+
+		> span { font-size: 1.4em; }
 	}
 }
