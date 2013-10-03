@@ -22,6 +22,10 @@
 	@include breakpoint(min-width, emCalc(350px)) {
 		left: 50%;
 		margin-left: 0 - emCalc(175px);
+
+		.sidebar-open & {
+			margin-left: 0 - emCalc(350px - $sidebar-width);
+		}
 	}
 	
 	@include breakpoint(desktop-wide) {

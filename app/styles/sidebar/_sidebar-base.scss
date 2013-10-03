@@ -1,0 +1,20 @@
+.sidebar {
+	display: none;
+	body.sidebar-open & { display: block; }
+
+	position: absolute;
+
+	min-height: 100%;
+	width: $sidebar-width;
+	padding: 45px 12px 12px;
+	
+	@include breakpoint(desktop) { 
+		width: $sidebar-width-big; 
+		padding: 75px 20px 20px;
+	}
+
+	background: $blue;
+
+	color: #9FA8B2;
+	#{headers()} { color: white; }
+}

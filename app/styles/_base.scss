@@ -5,12 +5,25 @@ html.touch body {
 }
 
 .container {
+	margin: 0;
 	padding: 0;
+	max-width: none;
 }
 
 div[role=main] {
 	margin: auto;
 	max-width: emCalc(685px);
+	position: relative;
+
+	body.sidebar-open & {
+		left: $sidebar-width;
+		margin-left: 3em;
+		
+		@include breakpoint(desktop) { 
+			left: $sidebar-width-big; 
+			margin-left: 12em;
+		}
+	}
 
 	@include breakpoint(desktop) {
 		@include transition(max-width 0.5s ease-out);

@@ -39,6 +39,8 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 // Sidebar
 @import "sidebar/sidebar-base";
 @import "sidebar/sidebar-toggler";
+@import "sidebar/sidebar-actions";
+@import "sidebar/sidebar-search";
 
 // Other modules
 @import "module/browsehappy";
