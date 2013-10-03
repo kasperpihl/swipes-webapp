@@ -20,65 +20,72 @@
 	<!-- endbuild -->
 </head>
 
-<body>
+<body class="sidebar-open">
 	<!--[if lt IE 10]>
 	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
 
+	<div class="container">
+		
+		<aside class="sidebar hidden">
+			<a href="JavaScript:void(0);" title="Close sidebar" class="icon-cross"></a>
 
-	<div class="container" role="main">
-		<header class="add-new row">
-			<form id="add-task">
-				<input type="text" placeholder="Add a task" class="borderless" autocomplete>
-			</form>
-		</header>
+			<section class="search">
+				<form>
+					<input type="search" placeholder="search" autocomplete>
+				</form>
+			</section>
 
-		<nav class="row">
-			<ul class="list-nav">
-				<li><a class="icon-schedule" href="#schedule"><span class="sr-only">Schedule</span></a></li>
-				<li><a class="icon-todo" href="#todo"><span class="sr-only">Todo</span></a></li>
-				<li><a class="icon-checkmark" href="#completed"><span class="sr-only">Completed</span></a></li>
-			</ul>
-		</nav>
+			<section class="date-filter">
+				calendar filter
+			</section>
 
-		<section id="main-content" class="row">
-			<ol class="todo-list hidden schedule"></ol>
-			<ol class="todo-list hidden todo"></ol>
-			<ol class="todo-list hidden completed"></ol>
-			
-			
-			<div class="list-fade hidden-xs"></div>
-			
-			<ul class="action-bar fadeout">
-				<li><a href="JavaScript:void(0);" class="edit" title="Edit"><span class="icon-pencil"></span></a></li>
-				<li><a href="JavaScript:void(0);" class="tags" title="Set tags"><span class="icon-tags"></span></a></li>
-				<li><a href="JavaScript:void(0);" class="delete" title="Delete"><span class="icon-trashcan"></span></a></li>
-				<li><a href="JavaScript:void(0);" class="share" title="Share"><span class="icon-share"></span></a></li>
-			</ul>
-			
-		</section>
+			<section class="tags-filter">
+				tags filter
+			</section>
+
+			<a href="http://swipesapp.com/app"><span class="icon-log-out"></span></a>
+			<a href="#/settings"><span class="icon-cog"></span></a>
+		</aside>
+
+		<div id="main" role="main">
+			<a id="open-sidebar" href="JavaScript:void(0);" title="Open sidebar">
+				<span class="icon-swipes-logo"></span>
+			</a>
+
+			<header class="add-new row">
+				<form id="add-task">
+					<input type="text" placeholder="Add a task" class="borderless" autocomplete>
+				</form>
+			</header>
+
+			<nav class="row">
+				<ul class="list-nav">
+					<li><a class="icon-schedule" href="#schedule"><span class="sr-only">Schedule</span></a></li>
+					<li><a class="icon-todo" href="#todo"><span class="sr-only">Todo</span></a></li>
+					<li><a class="icon-checkmark" href="#completed"><span class="sr-only">Completed</span></a></li>
+				</ul>
+			</nav>
+
+			<section id="main-content" class="row">
+				<ol class="todo-list hidden schedule"></ol>
+				<ol class="todo-list hidden todo"></ol>
+				<ol class="todo-list hidden completed"></ol>
+				
+				
+				<div class="list-fade hidden-xs"></div>
+				
+				<ul class="action-bar fadeout">
+					<li><a href="JavaScript:void(0);" class="edit" title="Edit"><span class="icon-pencil"></span></a></li>
+					<li><a href="JavaScript:void(0);" class="tags" title="Set tags"><span class="icon-tags"></span></a></li>
+					<li><a href="JavaScript:void(0);" class="delete" title="Delete"><span class="icon-trashcan"></span></a></li>
+					<li><a href="JavaScript:void(0);" class="share" title="Share"><span class="icon-share"></span></a></li>
+				</ul>
+				
+			</section>
+		</div>
 	</div>
 
-	<aside class="sidebar hidden">
-		<a href="JavaScript:void(0);" title="Close sidebar" class="icon-cross"></a>
-
-		<section class="search">
-			<form>
-				<input type="search" placeholder="search" autocomplete>
-			</form>
-		</section>
-
-		<section class="date-filter">
-			calendar filter
-		</section>
-
-		<section class="tags-filter">
-			tags filter
-		</section>
-
-		<a href="http://swipesapp.com/app"><span class="icon-log-out"></span></a>
-		<a href="#/settings"><span class="icon-cog"></span></a>
-	</aside>
 
 
 	<!-- build:js scripts/vendor.js -->
