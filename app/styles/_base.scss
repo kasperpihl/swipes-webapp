@@ -5,6 +5,11 @@ html.touch body {
 }
 
 .container {
+	padding: 0;
+}
+
+div[role=main] {
+	margin: auto;
 	max-width: emCalc(685px);
 
 	@include breakpoint(desktop) {

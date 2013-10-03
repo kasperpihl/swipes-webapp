@@ -1,0 +1,40 @@
+#open-sidebar {
+	$size: emCalc(40px);
+	$padding: emCalc(20px);
+	position: absolute;
+	display: block;
+
+	width: $size; height: $size;
+	top: $padding; left: $padding;
+	background: $green;
+
+	color: white;
+	text-align: center;
+
+	@include transition(all 0.2s ease-out);
+
+	> span {
+		font-size: 1.5em;
+		line-height: 1.84em;
+	}
+
+	&:hover {
+		text-decoration: none;
+		background: lighten($green, 7%);
+	}
+}
+
+html.cssanimations {
+	body.sidebar-open #open-sidebar {
+		@extend .animated;
+		@extend .scaleDownOut;
+		@include experimental(animation-duration, 0.45s);
+		pointer-events: none;
+	}
+}
+
+html.no-cssanimations {
+	body.sidebar-open #open-sidebar {
+		display: none;
+	}
+}

@@ -36,5 +36,9 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "module/overlay/overlay";
 @import "module/overlay/scheduler-overlay";
 
+// Sidebar
+@import "sidebar/sidebar-base";
+@import "sidebar/sidebar-toggler";
+
 // Other modules
 @import "module/browsehappy";
