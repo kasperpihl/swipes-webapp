@@ -9,7 +9,9 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			el = $( e.currentTarget ).toggleClass "selected"
 
 			if el.hasClass "selected"
-				console.log "Filter for ", tag
+				Backbone.trigger( "apply-filter", "tag", tag )
 			else
-				console.log "De-filter for ", tag
+				Backbone.trigger( "remove-filter", "tag", tag )
+		render: ->
+			
 
