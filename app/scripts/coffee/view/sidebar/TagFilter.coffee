@@ -31,7 +31,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			tagName = $.trim e.currentTarget.parentNode.innerText
 			tag = swipy.tags.findWhere {title: tagName}
 
-			if tag then tag.destroy
+			if tag and confirm( "Are you sure you want to permenently delete this tag?" ) then tag.destroy
 				success: (model, response) ->
 					swipy.todos.remove model
 				error: (model, response) ->

@@ -48,7 +48,7 @@
         tag = swipy.tags.findWhere({
           title: tagName
         });
-        if (tag) {
+        if (tag && confirm("Are you sure you want to permenently delete this tag?")) {
           return tag.destroy({
             success: function(model, response) {
               return swipy.todos.remove(model);
