@@ -1,4 +1,4 @@
-#open-sidebar {
+.open-sidebar {
 	$size: emCalc(40px);
 	$padding: emCalc(20px);
 	position: absolute;
@@ -20,12 +20,13 @@
 
 	&:hover {
 		text-decoration: none;
+		color: white;
 		background: lighten($green, 7%);
 	}
 }
 
 html.cssanimations {
-	body.sidebar-open #open-sidebar {
+	body.sidebar-open .open-sidebar {
 		@extend .animated;
 		@extend .scaleDownOut;
 		@include experimental(animation-duration, 0.45s);
@@ -34,7 +35,7 @@ html.cssanimations {
 }
 
 html.no-cssanimations {
-	body.sidebar-open #open-sidebar {
+	body.sidebar-open .open-sidebar {
 		display: none;
 	}
 }

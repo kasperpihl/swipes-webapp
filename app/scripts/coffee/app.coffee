@@ -5,9 +5,10 @@ define [
 	"collection/TagCollection"
 	"view/nav/ListNavigation"
 	"controller/TaskInputController"
+	"controller/SidebarController"
 	"controller/ScheduleController"
 	"controller/ErrorController"
-	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, ScheduleController, ErrorController) ->
+	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, ErrorController) ->
 	class Swipes
 		constructor: ->
 			@errors = new ErrorController()
@@ -22,6 +23,7 @@ define [
 			@router = new MainRouter()
 			@scheduler = new ScheduleController()
 			@input = new TaskInputController()
+			@sidebar = new SidebarController()
 			
 			unless Backbone.History.started 
 				Backbone.history.start { pushState: no }

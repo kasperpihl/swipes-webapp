@@ -2,6 +2,10 @@
 	@extend .clearfix;
 	padding: 0; 
 	margin: 0;
+
+	.sidebar-open & {
+		overflow: hidden;
+	}
 	
 	li {
 		position: relative;
