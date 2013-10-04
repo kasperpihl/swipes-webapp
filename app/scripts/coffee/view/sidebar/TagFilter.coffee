@@ -2,6 +2,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		events: 
 			"click li": "toggleFilter"
+			"submit form": "createTag"
 		initialize: ->
 			@listenTo( swipy.tags, "add remove reset", @render, @ )
 			@render()
@@ -13,6 +14,17 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				Backbone.trigger( "apply-filter", "tag", tag )
 			else
 				Backbone.trigger( "remove-filter", "tag", tag )
+		createTag: (e) ->
+			e.preventDefault()
+			tagName = @$el.find("form.add-tag input").val()
+			return if tagName is ""
+
+			@addTagToModel tagName
+		addTagToModel: (tagName, addToCollection = yes) ->
+			if _.contains( swipy.tags.pluck( "title" ), tagName )
+				return alert "That tag already exists"
+			else
+				swipy.tags.add { title: tagName }
 		render: ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
