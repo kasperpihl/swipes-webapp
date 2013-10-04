@@ -12,7 +12,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 			# Render the list whenever it updates
 			@renderList = _.debounce( @renderList, 300 )
-			@listenTo( swipy.todos, "add remove reset change:completionDate change:schedule", @renderList )
+			@listenTo( swipy.todos, "add remove reset change:completionDate change:schedule change:rejectedByTag", @renderList )
 
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
@@ -42,6 +42,11 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 				todos = @getTasks()
 
+				# Rejects models filtered out by tag or search
+				todos = _.reject todos, (m) -> 
+					# console.log "Is #{ m.get 'title' } rejected by tags? ", m.get "rejectedByTag"
+					m.get( "rejectedByTag" ) or m.get( "rejectedBySearch" )
+				
 				# Deselect any selected items 
 				_.invoke( todos, "set", { selected: no } )
 

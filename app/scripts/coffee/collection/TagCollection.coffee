@@ -24,4 +24,3 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				oldTags = task.get "tags"
 				task.unset( "tags", { silent: yes } )
 				task.set( "tags", _.without( oldTags, tagName ) )
-				console.log "Removing tag #{tagName} from ", task.get "title"

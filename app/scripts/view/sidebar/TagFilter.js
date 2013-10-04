@@ -12,7 +12,7 @@
       },
       toggleFilter: function(e) {
         var el, tag;
-        tag = e.currentTarget.innerText;
+        tag = $.trim(e.currentTarget.innerText);
         el = $(e.currentTarget).toggleClass("selected");
         if (el.hasClass("selected")) {
           return Backbone.trigger("apply-filter", "tag", tag);
@@ -42,16 +42,20 @@
         }
       },
       removeTag: function(e) {
-        var tag, tagName;
+        var tag, tagName, wasSelected;
         e.stopPropagation();
         tagName = $.trim(e.currentTarget.parentNode.innerText);
         tag = swipy.tags.findWhere({
           title: tagName
         });
+        wasSelected = $(e.currentTarget.parentNode).hasClass("selected");
         if (tag && confirm("Are you sure you want to permenently delete this tag?")) {
           return tag.destroy({
             success: function(model, response) {
-              return swipy.todos.remove(model);
+              swipy.todos.remove(model);
+              if (wasSelected) {
+                return Backbone.trigger("remove-filter", "tag", tagName);
+              }
             },
             error: function(model, response) {
               alert("Something went wrong trying to delete the tag '" + (model.get('title')) + "' please try again.");

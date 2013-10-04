@@ -8,7 +8,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@listenTo( swipy.tags, "add remove reset", @render, @ )
 			@render()
 		toggleFilter: (e) ->
-			tag = e.currentTarget.innerText
+			tag = $.trim e.currentTarget.innerText
 			el = $( e.currentTarget ).toggleClass "selected"
 
 			if el.hasClass "selected"
@@ -31,9 +31,12 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			tagName = $.trim e.currentTarget.parentNode.innerText
 			tag = swipy.tags.findWhere {title: tagName}
 
+			wasSelected = $(e.currentTarget.parentNode).hasClass "selected"
+
 			if tag and confirm( "Are you sure you want to permenently delete this tag?" ) then tag.destroy
 				success: (model, response) ->
 					swipy.todos.remove model
+					if wasSelected then Backbone.trigger( "remove-filter", "tag", tagName )
 				error: (model, response) ->
 					alert "Something went wrong trying to delete the tag '#{ model.get 'title' }' please try again."
 					console.warn "Error deleting tag — Response: ", response

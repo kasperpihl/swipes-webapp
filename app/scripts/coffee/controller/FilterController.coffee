@@ -7,19 +7,34 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			Backbone.on( "apply-filter", @applyFilter, @ )
 			Backbone.on( "remove-filter", @removeFilter, @ )
 		applyFilter: (type, filter) ->
-			if type is "tags" then @applyTagsFilter filter else @applySearchFilter filter
+			if type is "tag" then @applyTagsFilter filter else @applySearchFilter filter
 
 		removeFilter: (type, filter) ->
-			if type is "tags" then @removeTagsFilter filter else @removeSearchFilter filter
+			if type is "tag" then @removeTagsFilter filter else @removeSearchFilter filter
 
-		applyTagsFilter: (filter) ->
-			console.log "Apply tags filter for #{filter}"
+		applyTagsFilter: (addTag) ->
+			if (addTag) and not _.contains( @tagsFilter, addTag )
+				@tagsFilter.push addTag
+			
+			for task in swipy.todos.models
+				reject = yes
+				
+				if task.has( "tags" ) and _.intersection( task.get( "tags" ), @tagsFilter ).length is @tagsFilter.length
+					reject = no
+
+				console.log "Reject #{ task.get 'title' }: ", reject
+				task.set( "rejectedByTag", reject )
 
 		applySearchFilter: (filter) ->
 			console.log "Apply search filter for: #{filter}"
 
-		removeTagsFilter: (filter) ->
-			console.log "Remove tags filter for #{filter}"
+		removeTagsFilter: (tag) ->
+			@tagsFilter = _.without( @tagsFilter, tag )
+
+			if @tagsFilter.length is 0
+				swipy.todos.invoke( "set", "rejectedByTag", no )
+			else
+				@applyTagsFilter()
 
 		removeSearchFilter: (filter) ->
 			# This is only called when search input is reset (text is deleted)

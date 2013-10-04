@@ -10,7 +10,7 @@
       }
 
       FilterController.prototype.applyFilter = function(type, filter) {
-        if (type === "tags") {
+        if (type === "tag") {
           return this.applyTagsFilter(filter);
         } else {
           return this.applySearchFilter(filter);
@@ -18,23 +18,43 @@
       };
 
       FilterController.prototype.removeFilter = function(type, filter) {
-        if (type === "tags") {
+        if (type === "tag") {
           return this.removeTagsFilter(filter);
         } else {
           return this.removeSearchFilter(filter);
         }
       };
 
-      FilterController.prototype.applyTagsFilter = function(filter) {
-        return console.log("Apply tags filter for " + filter);
+      FilterController.prototype.applyTagsFilter = function(addTag) {
+        var reject, task, _i, _len, _ref, _results;
+        if (addTag && !_.contains(this.tagsFilter, addTag)) {
+          this.tagsFilter.push(addTag);
+        }
+        _ref = swipy.todos.models;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          task = _ref[_i];
+          reject = true;
+          if (task.has("tags") && _.intersection(task.get("tags"), this.tagsFilter).length === this.tagsFilter.length) {
+            reject = false;
+          }
+          console.log("Reject " + (task.get('title')) + ": ", reject);
+          _results.push(task.set("rejectedByTag", reject));
+        }
+        return _results;
       };
 
       FilterController.prototype.applySearchFilter = function(filter) {
         return console.log("Apply search filter for: " + filter);
       };
 
-      FilterController.prototype.removeTagsFilter = function(filter) {
-        return console.log("Remove tags filter for " + filter);
+      FilterController.prototype.removeTagsFilter = function(tag) {
+        this.tagsFilter = _.without(this.tagsFilter, tag);
+        if (this.tagsFilter.length === 0) {
+          return swipy.todos.invoke("set", "rejectedByTag", false);
+        } else {
+          return this.applyTagsFilter();
+        }
       };
 
       FilterController.prototype.removeSearchFilter = function(filter) {

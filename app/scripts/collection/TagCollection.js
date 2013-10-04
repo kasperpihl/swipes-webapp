@@ -43,8 +43,7 @@
           task.unset("tags", {
             silent: true
           });
-          task.set("tags", _.without(oldTags, tagName));
-          _results.push(console.log("Removing tag " + tagName + " from ", task.get("title")));
+          _results.push(task.set("tags", _.without(oldTags, tagName)));
         }
         return _results;
       }
