@@ -2,6 +2,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.Collection.extend
 		initialize: ->
 			@getTagsFromTasks()
+			@on( "remove", @handleTagDeleted, @ )
 		getTagsFromTasks: ->
 			tags = []
 			swipy.todos.each (m) ->
@@ -12,5 +13,15 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			
 			# Finally add tags to our collection
 			@add { title: tagname } for tagname in tags
-				
-		
+
+		handleTagDeleted: (model) ->
+			tagName = model.get "title"
+			
+			affectedTasks = swipy.todos.filter (m) -> 
+				m.has( "tags" ) and _.contains( m.get( "tags" ), tagName )
+			
+			for task in affectedTasks
+				oldTags = task.get "tags"
+				task.unset( "tags", { silent: yes } )
+				task.set( "tags", _.without( oldTags, tagName ) )
+				console.log "Removing tag #{tagName} from ", task.get "title"

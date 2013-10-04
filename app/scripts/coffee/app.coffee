@@ -7,8 +7,9 @@ define [
 	"controller/TaskInputController"
 	"controller/SidebarController"
 	"controller/ScheduleController"
+	"controller/FilterController"
 	"controller/ErrorController"
-	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, ErrorController) ->
+	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, ErrorController) ->
 	class Swipes
 		constructor: ->
 			@errors = new ErrorController()
@@ -24,6 +25,7 @@ define [
 			@scheduler = new ScheduleController()
 			@input = new TaskInputController()
 			@sidebar = new SidebarController()
+			@filter = new FilterController()
 			
 			unless Backbone.History.started 
 				Backbone.history.start { pushState: no }

@@ -2,6 +2,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		events: 
 			"click li": "toggleFilter"
+			"click .remove": "removeTag"
 			"submit form": "createTag"
 		initialize: ->
 			@listenTo( swipy.tags, "add remove reset", @render, @ )
@@ -25,6 +26,19 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				return alert "That tag already exists"
 			else
 				swipy.tags.add { title: tagName }
+		removeTag: (e) ->
+			e.stopPropagation()
+			tagName = $.trim e.currentTarget.parentNode.innerText
+			tag = swipy.tags.findWhere {title: tagName}
+
+			if tag then tag.destroy
+				success: (model, response) ->
+					swipy.todos.remove model
+				error: (model, response) ->
+					alert "Something went wrong trying to delete the tag '#{ model.get 'title' }' please try again."
+					console.warn "Error deleting tag — Response: ", response
+
+
 		render: ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
@@ -34,7 +48,13 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			return @el
 		renderTag: (tag, list) ->
-			list.append "<li>#{ tag.get 'title' }</li>" 
+			list.append "
+				<li>
+					<a class='remove' href='JavaScript:void(0);' title='Remove'>
+						<span class='icon-cross'></span>
+					</a>
+					#{ tag.get 'title' }
+				</li>"
 		renderTagInput: (list) ->
 			list.append "
 				<li class='tag-input'>

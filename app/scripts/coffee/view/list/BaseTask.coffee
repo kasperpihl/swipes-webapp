@@ -4,6 +4,9 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		initialize: ->
 			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "edit", "handleAction" )
 			
+			# Bind events that should re-render the view
+			@listenTo( @model, "change:tags change:timeStr", @render, @ )
+
 			@listenTo( @model, "change:selected", @onSelected )
 			$(window).on "resize", @setBounds
 
