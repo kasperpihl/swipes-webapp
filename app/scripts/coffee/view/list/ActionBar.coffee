@@ -3,6 +3,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		el: ".action-bar"
 		events: 
 			"click .edit": "editTask"
+			"click .tags": "editTags"
 			"click .delete": "deleteTasks"
 			"click .share": "shareTasks"
 		initialize: ->
@@ -28,6 +29,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		editTask: ->
 			targetCid = swipy.todos.findWhere( selected: yes ).cid
 			swipy.router.navigate( "edit/#{ targetCid }", yes )
+		editTags: ->
+			alert "We are adding multiple task tagging soon :)"
 		deleteTasks: ->
 			targets = swipy.todos.where( selected: yes )
 			if confirm "Delete #{targets.length} tasks?"

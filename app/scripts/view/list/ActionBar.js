@@ -4,6 +4,7 @@
       el: ".action-bar",
       events: {
         "click .edit": "editTask",
+        "click .tags": "editTags",
         "click .delete": "deleteTasks",
         "click .share": "shareTasks"
       },
@@ -44,6 +45,9 @@
           selected: true
         }).cid;
         return swipy.router.navigate("edit/" + targetCid, true);
+      },
+      editTags: function() {
+        return alert("We are adding multiple task tagging soon :)");
       },
       deleteTasks: function() {
         var model, order, targets, _i, _len;
