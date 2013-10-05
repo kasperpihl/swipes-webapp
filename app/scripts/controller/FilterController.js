@@ -5,6 +5,8 @@
       function FilterController() {
         this.tagsFilter = [];
         this.searchFilter = "";
+        this.debouncedSearch = _.debounce(this.applySearchFilter, 100);
+        this.debouncedClearSearch = _.debounce(this.removeSearchFilter, 100);
         Backbone.on("apply-filter", this.applyFilter, this);
         Backbone.on("remove-filter", this.removeFilter, this);
       }
@@ -13,7 +15,7 @@
         if (type === "tag") {
           return this.applyTagsFilter(filter);
         } else {
-          return this.applySearchFilter(filter);
+          return this.debouncedSearch(filter);
         }
       };
 
@@ -21,7 +23,7 @@
         if (type === "tag") {
           return this.removeTagsFilter(filter);
         } else {
-          return this.removeSearchFilter(filter);
+          return this.debouncedClearSearch(filter);
         }
       };
 
@@ -38,14 +40,22 @@
           if (task.has("tags") && _.intersection(task.get("tags"), this.tagsFilter).length === this.tagsFilter.length) {
             reject = false;
           }
-          console.log("Reject " + (task.get('title')) + ": ", reject);
           _results.push(task.set("rejectedByTag", reject));
         }
         return _results;
       };
 
       FilterController.prototype.applySearchFilter = function(filter) {
-        return console.log("Apply search filter for: " + filter);
+        var _this = this;
+        this.searchFilter = filter;
+        swipy.todos.each(function(model) {
+          var isRejected;
+          isRejected = model.get("title").toLowerCase().indexOf(_this.searchFilter) === -1;
+          return model.set("rejectedBySearch", isRejected);
+        });
+        return console.log("Search for " + this.searchFilter + " — Matches: ", swipy.todos.where({
+          rejectedBySearch: false
+        }));
       };
 
       FilterController.prototype.removeTagsFilter = function(tag) {
@@ -58,7 +68,8 @@
       };
 
       FilterController.prototype.removeSearchFilter = function(filter) {
-        return console.log("Remove search filter for: " + filter);
+        this.searchFilter = "";
+        return swipy.todos.invoke("set", "rejectedBySearch", false);
       };
 
       FilterController.prototype.getTasksThatMatchTags = function(tagsArr) {};

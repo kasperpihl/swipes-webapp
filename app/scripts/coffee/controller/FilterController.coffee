@@ -4,13 +4,16 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@tagsFilter = []
 			@searchFilter = ""
 			
+			@debouncedSearch = _.debounce( @applySearchFilter, 100 )
+			@debouncedClearSearch = _.debounce( @removeSearchFilter, 100 )
+
 			Backbone.on( "apply-filter", @applyFilter, @ )
 			Backbone.on( "remove-filter", @removeFilter, @ )
 		applyFilter: (type, filter) ->
-			if type is "tag" then @applyTagsFilter filter else @applySearchFilter filter
+			if type is "tag" then @applyTagsFilter filter else @debouncedSearch filter
 
 		removeFilter: (type, filter) ->
-			if type is "tag" then @removeTagsFilter filter else @removeSearchFilter filter
+			if type is "tag" then @removeTagsFilter filter else @debouncedClearSearch filter
 
 		applyTagsFilter: (addTag) ->
 			if (addTag) and not _.contains( @tagsFilter, addTag )
@@ -22,11 +25,16 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				if task.has( "tags" ) and _.intersection( task.get( "tags" ), @tagsFilter ).length is @tagsFilter.length
 					reject = no
 
-				console.log "Reject #{ task.get 'title' }: ", reject
 				task.set( "rejectedByTag", reject )
 
 		applySearchFilter: (filter) ->
-			console.log "Apply search filter for: #{filter}"
+			@searchFilter = filter
+			
+			swipy.todos.each (model) =>
+				isRejected = model.get( "title" ).toLowerCase().indexOf( @searchFilter ) is -1
+				model.set( "rejectedBySearch", isRejected )
+
+			console.log "Search for #{@searchFilter} — Matches: ", swipy.todos.where( { rejectedBySearch:no } )
 
 		removeTagsFilter: (tag) ->
 			@tagsFilter = _.without( @tagsFilter, tag )
@@ -37,7 +45,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				@applyTagsFilter()
 
 		removeSearchFilter: (filter) ->
-			# This is only called when search input is reset (text is deleted)
-			console.log "Remove search filter for: #{filter}"
-
+			@searchFilter = ""
+			swipy.todos.invoke( "set", "rejectedBySearch", no )
+			
 		getTasksThatMatchTags: (tagsArr) ->

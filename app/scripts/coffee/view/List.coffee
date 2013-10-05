@@ -12,7 +12,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 
 			# Render the list whenever it updates
 			@renderList = _.debounce( @renderList, 300 )
-			@listenTo( swipy.todos, "add remove reset change:completionDate change:schedule change:rejectedByTag", @renderList )
+			@listenTo( swipy.todos, "add remove reset change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
 
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
