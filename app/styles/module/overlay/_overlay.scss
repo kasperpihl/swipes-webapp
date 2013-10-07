@@ -127,6 +127,16 @@ body.overlay-open {
 	}
 }
 
+// Rounded corners
+.overlay .grid {
+	border-radius: 1em;
+	overflow: hidden;
+}
+
+.overlay.has-active-subview .grid {
+	display: none !important;
+}
+
 // Disabled grid items
 .overlay .grid a.disabled {
 	cursor: default;

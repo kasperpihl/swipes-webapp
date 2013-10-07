@@ -19,13 +19,3 @@ body.scheduler-open {
 	color: white;
 	.overlay-bg { background: rgba($lobster, 0.8); }
 }
-
-// Rounded corners
-.overlay.scheduler .grid a {
-	$radius: 1em;
-	
-	&:nth-child(1) { border-top-left-radius: $radius }
-	&:nth-child(3) { border-top-right-radius: $radius }
-	&:nth-child(7) { border-bottom-left-radius: $radius }
-	&:nth-child(9) { border-bottom-right-radius: $radius }
-}
