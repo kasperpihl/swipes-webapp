@@ -3,11 +3,11 @@
     var MainRouter;
     return MainRouter = Backbone.Router.extend({
       routes: {
-        "": "goto",
-        ":term": "goto",
-        "edit/:id": "edit",
         "settings": "settings",
-        "settings/:id": "settings"
+        "settings/:id": "settings",
+        "edit/:id": "edit",
+        ":term": "goto",
+        "": "goto"
       },
       goto: function(route) {
         if (route == null) {
@@ -22,7 +22,9 @@
       },
       settings: function(route) {
         Backbone.trigger("show-settings");
-        return Backbone.trigger("settings/view", route);
+        if (route) {
+          return Backbone.trigger("settings/view", route);
+        }
       }
     });
   });

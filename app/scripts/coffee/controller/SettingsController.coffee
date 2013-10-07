@@ -8,8 +8,8 @@ define ["underscore", "backbone", "view/scheduler/SettingsOverlay", "model/Setti
 			$("body").append @view.render().el
 
 			Backbone.on( "settings/view", @showView, @ )
-			Backbone.on( "show-settings", @show, @ )
-			Backbone.on( "hide-settings", @hide, @ )
+			Backbone.on( "show-settings", @view.show, @view )
+			Backbone.on( "hide-settings", @view.hide, @view )
 		showView: (view) ->
 			console.log "Show settings view: #{view}"
 		destroy: ->

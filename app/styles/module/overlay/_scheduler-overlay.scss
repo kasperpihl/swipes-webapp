@@ -1,108 +1,31 @@
+body.scheduler-open {
+
+	.overlay.scheduler {
+		visibility: visible;
+		.overlay-bg { opacity: 1; }
+	}
+	
+	&.hide-scheduler .overlay.scheduler {
+		.overlay-bg {
+			opacity: 0;
+			@include transition(opacity 0.35s ease-out 0.1s);
+		}
+
+		.overlay-content { display: none; }
+	}
+}
+
 .overlay.scheduler {
 	color: white;
-	
 	.overlay-bg { background: rgba($lobster, 0.8); }
 }
 
-// Grid styles
-.overlay .grid {
-	@extend .clearfix;
-	
-	margin: 0 auto;
-	width: 96%;
-	@include breakpoint(min-width, 427px) { 
-		width: emCalc(410px); 
-	}
-
-
-	a {
-		display: block;
-		width: 33.3%;
-		float: left;
-
-		// Proportional height
-		height: 0;
-		padding-bottom: 33.3%;
-	
-		color: white;
-		text-align: center;
-
-		@include transition(all 0.2s ease-out);
-
-		&:hover {
-			text-decoration: none;
-			
-			&:not(.disabled) {
-				background: rgba(white, 0.5);
-				
-			}
-		}
-	}
-
-	.option {
-		padding: 21% 0 0;
-		@include breakpoint(min-width, 410px) { padding: 18% 0 0; }
-
-		p {
-			margin: 0;
-			font-size: 0.75em;
-			
-			@include breakpoint(min-width, 410px) { 
-				font-size: 0.9em;
-			}
-		}
-	}
-}
-
-// Grid lines
-.overlay .grid a {
-	&:nth-child(3n-1) {
-		border-left: thin solid rgba(white, 0.5);
-		border-right: thin solid rgba(white, 0.5);
-	}
-
-	&:nth-child(4), &:nth-child(5), &:nth-child(6) {
-		border-top: thin solid rgba(white, 0.5);
-		border-bottom: thin solid rgba(white, 0.5);
-	}
-}
-
-// Icons
-.overlay .grid div[class^="icon-"] {
-	font-size: 2em;
-	margin-bottom: -0.2em;
-	
-	@include breakpoint(min-width, 410px) { 
-		font-size: 3em;
-	}
-}
-
-// Disabled grid items
-.overlay .grid a.disabled {
-	cursor: default;
-}
-
 // Rounded corners
-.overlay .grid a {
+.overlay.scheduler .grid a {
 	$radius: 1em;
 	
 	&:nth-child(1) { border-top-left-radius: $radius }
 	&:nth-child(3) { border-top-right-radius: $radius }
 	&:nth-child(7) { border-bottom-left-radius: $radius }
 	&:nth-child(9) { border-bottom-right-radius: $radius }
-}
-
-// Grid intro animation
-.overlay .grid {
-	display: none;
-
-	body.overlay-open & {
-		display: block;
-		
-		@extend .animated;
-		@extend .scaleDown;
-		
-		@include experimental(animation-delay, 0.1s);
-		@include experimental(animation-duration, 0.35s);
-	}
 }

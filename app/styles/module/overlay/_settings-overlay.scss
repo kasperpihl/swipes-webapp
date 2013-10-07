@@ -1,53 +1,29 @@
-.overlay.settings {
-	color: white;
 	
-	.overlay-bg { background: rgba($lobster, 0.8); }
+body.settings-open {
+
+	.overlay.settings {
+		visibility: visible;
+		.overlay-bg { opacity: 1; }
+	}
+	
+	&.hide-settings .overlay.settings {
+		.overlay-bg {
+			opacity: 0;
+			@include transition(opacity 0.35s ease-out 0.1s);
+		}
+
+		.overlay-content { display: none; }
+	}
 }
 
-// Grid styles
-.settings .grid {
-	
+.overlay.settings {
+	color: white;
+	.overlay-bg { background: rgba($gray-warm, 0.8); }
 }
 
 // Grid lines
 .overlay .grid a {
-	// &:nth-child(3n-1) {
-	// 	border-left: thin solid rgba(white, 0.5);
-	// 	border-right: thin solid rgba(white, 0.5);
-	// }
-
-	// &:nth-child(4), &:nth-child(5), &:nth-child(6) {
-	// 	border-top: thin solid rgba(white, 0.5);
-	// 	border-bottom: thin solid rgba(white, 0.5);
-	// }
-}
-
-// Icons
-.overlay .grid div[class^="icon-"] {
-	
-}
-
-// Rounded corners
-.overlay .grid a {
-	// $radius: 1em;
-	
-	// &:nth-child(1) { border-top-left-radius: $radius }
-	// &:nth-child(3) { border-top-right-radius: $radius }
-	// &:nth-child(7) { border-bottom-left-radius: $radius }
-	// &:nth-child(9) { border-bottom-right-radius: $radius }
-}
-
-// Grid intro animation
-.overlay .grid {
-	display: none;
-
-	body.overlay-open & {
-		display: block;
-		
-		@extend .animated;
-		@extend .scaleDown;
-		
-		@include experimental(animation-delay, 0.1s);
-		@include experimental(animation-duration, 0.35s);
+	&:nth-child(4), &:nth-child(5), &:nth-child(6) { 
+		border-bottom: none; 
 	}
 }

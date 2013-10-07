@@ -13,8 +13,8 @@
         });
         $("body").append(this.view.render().el);
         Backbone.on("settings/view", this.showView, this);
-        Backbone.on("show-settings", this.show, this);
-        return Backbone.on("hide-settings", this.hide, this);
+        Backbone.on("show-settings", this.view.show, this.view);
+        return Backbone.on("hide-settings", this.view.hide, this.view);
       };
 
       SettingsController.prototype.showView = function(view) {

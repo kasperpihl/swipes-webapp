@@ -10,7 +10,8 @@
         var _this = this;
         this.setTemplate();
         this.bindEvents();
-        this.init();
+        this.showClassName = "overlay-open";
+        this.hideClassName = "hide-overlay";
         return $(document).on('keyup', function(e) {
           if (e.keyCode === 27 && _this.$el.html) {
             return _this.hide(true);
@@ -19,7 +20,6 @@
       },
       setTemplate: function() {},
       bindEvents: function() {},
-      init: function() {},
       render: function() {
         var html;
         if (this.template) {
@@ -33,11 +33,11 @@
           return;
         }
         this.shown = true;
-        $("body").removeClass("hide-overlay");
+        $("body").removeClass(this.hideClassName);
         if (this.hideTimer != null) {
           clearTimeout(this.hideTimer);
         }
-        $("body").toggleClass('overlay-open', true);
+        $("body").toggleClass(this.showClassName, true);
         return this.afterShow();
       },
       afterShow: function() {},
@@ -50,9 +50,9 @@
           return;
         }
         this.shown = false;
-        $("body").addClass("hide-overlay");
+        $("body").addClass(this.hideClassName);
         return this.hideTimer = setTimeout(function() {
-          $("body").toggleClass('overlay-open', false);
+          $("body").toggleClass(_this.showClassName, false);
           return _this.afterHide();
         }, 400);
       },

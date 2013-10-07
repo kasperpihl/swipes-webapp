@@ -5,6 +5,11 @@
       events: {
         "click .grid > a:not(.disabled)": "selectOption"
       },
+      initialize: function() {
+        Overlay.prototype.initialize.apply(this, arguments);
+        this.showClassName = "scheduler-open";
+        return this.hideClassName = "hide-scheduler";
+      },
       bindEvents: function() {
         _.bindAll(this, "handleResize");
         return $(window).on("resize", this.handleResize);

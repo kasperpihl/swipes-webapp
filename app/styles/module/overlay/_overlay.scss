@@ -22,20 +22,26 @@
 	z-index: 1;
 }
 
-body.overlay-open {
+body.overlay-open, body.settings-open, body.scheduler-open {
 	.container {
 		-webkit-filter: blur(10px);
 	}
 
+	&.hide-overlay, &.hide-settings, &.hide-scheduler {
+		.container {
+			-webkit-filter: none;
+		}
+	}
+		
+}
+
+body.overlay-open {
 	.overlay { visibility: visible; }
 	.overlay-bg { 
 		opacity: 1;
 	}
 
 	&.hide-overlay {
-		.container {
-			-webkit-filter: none;
-		}
 
 		.overlay-bg {
 			opacity: 0;
@@ -45,5 +51,112 @@ body.overlay-open {
 		.overlay-content {
 			display: none;
 		}
+	}
+}
+
+// Grid
+// Grid styles
+.overlay .grid {
+	@extend .clearfix;
+	
+	margin: 0 auto;
+	width: 96%;
+	@include breakpoint(min-width, 427px) { 
+		width: emCalc(410px); 
+	}
+
+
+	a {
+		display: block;
+		width: 33.3%;
+		float: left;
+
+		// Proportional height
+		height: 0;
+		padding-bottom: 33.3%;
+	
+		color: white;
+		text-align: center;
+
+		@include transition(all 0.2s ease-out);
+
+		&:hover {
+			text-decoration: none;
+			
+			&:not(.disabled) {
+				background: rgba(white, 0.5);	
+			}
+		}
+	}
+
+	.option {
+		padding: 21% 0 0;
+		@include breakpoint(min-width, 410px) { padding: 18% 0 0; }
+
+		p {
+			margin: 0;
+			font-size: 0.75em;
+			
+			@include breakpoint(min-width, 410px) { 
+				font-size: 0.9em;
+			}
+		}
+	}
+}
+
+// Grid lines
+.overlay .grid a {
+	&:nth-child(3n-1) {
+		border-left: thin solid rgba(white, 0.5);
+		border-right: thin solid rgba(white, 0.5);
+	}
+
+	&:nth-child(4), &:nth-child(5), &:nth-child(6) {
+		border-top: thin solid rgba(white, 0.5);
+		border-bottom: thin solid rgba(white, 0.5);
+	}
+}
+
+// Icons
+.overlay .grid div[class^="icon-"] {
+	font-size: 2em;
+	margin-bottom: -0.2em;
+	
+	@include breakpoint(min-width, 410px) { 
+		font-size: 3em;
+	}
+}
+
+// Disabled grid items
+.overlay .grid a.disabled {
+	cursor: default;
+}
+
+// Grid intro animation
+.overlay.scheduler .grid {
+	display: none;
+
+	body.scheduler-open & {
+		display: block;
+		
+		@extend .animated;
+		@extend .scaleDown;
+		
+		@include experimental(animation-delay, 0.1s);
+		@include experimental(animation-duration, 0.35s);
+	}
+}
+
+.overlay.settings .grid {
+	display: none;
+
+	body.settings-open & {
+		display: block;
+		
+		@extend .animated;
+		@extend .fadeIn;
+		
+		@include experimental(animation-delay, 0.1s);
+		@include experimental(animation-duration, 0.35s);
 	}
 }

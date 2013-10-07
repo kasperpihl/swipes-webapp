@@ -3,6 +3,11 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		className: 'overlay scheduler'
 		events: 
 			"click .grid > a:not(.disabled)": "selectOption"
+		initialize: ->
+			Overlay::initialize.apply( @, arguments )
+
+			@showClassName = "scheduler-open"
+			@hideClassName = "hide-scheduler"
 		bindEvents: ->
 			_.bindAll( @, "handleResize" )
 			$(window).on( "resize", @handleResize )
