@@ -5,7 +5,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			"keyup input": "search"
 			"change input": "search"
 		initialize: ->
-			console.log "New Search Filter view created"
 			@input = $ "form input"
 		search: (e) ->
 			e.preventDefault()

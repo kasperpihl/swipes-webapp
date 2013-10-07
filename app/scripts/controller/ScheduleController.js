@@ -1,12 +1,12 @@
 (function() {
   define(["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/ScheduleModel"], function(_, Backbone, ScheduleOverlayView, ScheduleModel) {
-    var ViewController;
-    return ViewController = (function() {
-      function ViewController(opts) {
+    var ScheduleController;
+    return ScheduleController = (function() {
+      function ScheduleController(opts) {
         this.init();
       }
 
-      ViewController.prototype.init = function() {
+      ScheduleController.prototype.init = function() {
         this.model = new ScheduleModel();
         this.view = new ScheduleOverlayView({
           model: this.model
@@ -17,12 +17,12 @@
         return Backbone.on("select-date", this.selectDate, this);
       };
 
-      ViewController.prototype.showScheduleView = function(tasks) {
+      ScheduleController.prototype.showScheduleView = function(tasks) {
         this.view.currentTasks = this.currentTasks = tasks;
         return this.view.show();
       };
 
-      ViewController.prototype.pickOption = function(option) {
+      ScheduleController.prototype.pickOption = function(option) {
         var date, task, _i, _len, _ref;
         if (!this.currentTasks) {
           return;
@@ -43,16 +43,16 @@
         return this.view.hide();
       };
 
-      ViewController.prototype.selectDate = function() {
+      ScheduleController.prototype.selectDate = function() {
         return console.log("Select a date");
       };
 
-      ViewController.prototype.destroy = function() {
+      ScheduleController.prototype.destroy = function() {
         this.view.remove();
         return Backbone.off(null, null, this);
       };
 
-      return ViewController;
+      return ScheduleController;
 
     })();
   });

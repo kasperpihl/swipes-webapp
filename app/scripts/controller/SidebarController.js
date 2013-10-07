@@ -3,7 +3,6 @@
     var SidebarController;
     return SidebarController = (function() {
       function SidebarController() {
-        console.log("New sidebar controller created");
         this.view = new SidebarView({
           el: $(".sidebar")
         });

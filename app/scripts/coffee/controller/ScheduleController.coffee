@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/ScheduleModel"], (_, Backbone, ScheduleOverlayView, ScheduleModel) ->
-	class ViewController
+	class ScheduleController
 		constructor: (opts) ->
 			@init()
 

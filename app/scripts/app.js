@@ -1,5 +1,5 @@
 (function() {
-  define(["controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/ErrorController"], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, ErrorController) {
+  define(["controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController"], function(ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
@@ -18,6 +18,7 @@
         this.input = new TaskInputController();
         this.sidebar = new SidebarController();
         this.filter = new FilterController();
+        this.settings = new SettingsController();
         if (!Backbone.History.started) {
           return Backbone.history.start({
             pushState: false

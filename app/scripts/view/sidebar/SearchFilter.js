@@ -7,7 +7,6 @@
         "change input": "search"
       },
       initialize: function() {
-        console.log("New Search Filter view created");
         return this.input = $("form input");
       },
       search: function(e) {
