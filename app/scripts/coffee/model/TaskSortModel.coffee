@@ -54,12 +54,10 @@ define ["underscore"], (_) ->
 						# First see if we can find a task without order to fit the spot
 						task = withoutOrder.pop()
 						task.set( "order", i )
-						console.log "Found an empty spot at #{i}. We have a task without order that we can fit in: ", task.get "title"
 						continue
 
 					else
 						# We couldn't, then move around items in current list
-						console.log "Found an empty spot at #{i}. Swapping current task from #{order} to #{i}"
 						@swapSpots( i, order, orders )
 						task.set( "order", i )
 
@@ -86,13 +84,11 @@ define ["underscore"], (_) ->
 					spot = @findSpotForTask( order, ordersMinusCurrent )
 					
 					# Replace old spot with new spot
-					console.log "Spot #{order} was occupied. swapped for #{spot}"
 					@swapSpots( spot, order, orders )
 					
 					task.set( "order", spot )
 				else if order is todos.length - 1
 					# Order was assigned to the last spot in the list and that spot isnt taken
-					console.log "Spot set to last in line (#{order}) for #{task.get 'title'}"
 					task.set( "order", order )
 					
 				# Curr spot is available. Do nothing.

@@ -34,8 +34,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				isRejected = model.get( "title" ).toLowerCase().indexOf( @searchFilter ) is -1
 				model.set( "rejectedBySearch", isRejected )
 
-			console.log "Search for #{@searchFilter} — Matches: ", swipy.todos.where( { rejectedBySearch:no } )
-
 		removeTagsFilter: (tag) ->
 			@tagsFilter = _.without( @tagsFilter, tag )
 

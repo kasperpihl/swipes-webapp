@@ -20,8 +20,6 @@
         } else if (trigger.hasClass("log-out")) {
           e.preventDefault();
           return console.log("Log out");
-        } else if (trigger.hasClass("settings")) {
-          return console.log("Go to settings");
         }
       }
     });

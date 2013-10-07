@@ -17,5 +17,3 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			else if trigger.hasClass "log-out"
 				e.preventDefault()
 				console.log "Log out"
-			else if trigger.hasClass "settings"
-				console.log "Go to settings"

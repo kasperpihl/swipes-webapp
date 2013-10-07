@@ -48,14 +48,11 @@
       FilterController.prototype.applySearchFilter = function(filter) {
         var _this = this;
         this.searchFilter = filter;
-        swipy.todos.each(function(model) {
+        return swipy.todos.each(function(model) {
           var isRejected;
           isRejected = model.get("title").toLowerCase().indexOf(_this.searchFilter) === -1;
           return model.set("rejectedBySearch", isRejected);
         });
-        return console.log("Search for " + this.searchFilter + " — Matches: ", swipy.todos.where({
-          rejectedBySearch: false
-        }));
       };
 
       FilterController.prototype.removeTagsFilter = function(tag) {
