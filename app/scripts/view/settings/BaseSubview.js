@@ -14,7 +14,7 @@
         return this.transitionIn();
       },
       transitionIn: function() {
-        return TweenLite.fromTo(this.$el, 0.3, {
+        return TweenLite.fromTo(this.$el, 0.2, {
           alpha: 0
         }, {
           alpha: 1
@@ -23,7 +23,7 @@
       transitionOut: function() {
         var dfd;
         dfd = new $.Deferred();
-        TweenLite.to(this.$el, 0.3, {
+        TweenLite.to(this.$el, 0.2, {
           alpha: 0,
           onComplete: dfd.resolve
         });
