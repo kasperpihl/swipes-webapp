@@ -1,10 +1,12 @@
 ul.faq, ol.faq {
 	$dot-size: emCalc(14px);
-
 	list-style: none;
 	padding: 0;
 
-	li { margin: 0 0 1.3em }
+	li { 
+		margin: 0 0 1.3em;
+		@include perspective(500);
+	}
 
 	header { cursor: pointer; }
 	
@@ -25,7 +27,10 @@ ul.faq, ol.faq {
 	}
 	
 	section { 
-		display: none; 
+		overflow: hidden;
+		
+		@include transform-origin(top, center);
+
 		padding-left: $dot-size * 2.7;
 		margin-bottom: 3.2em;
 	}
@@ -36,10 +41,6 @@ ul.faq, ol.faq {
 		}
 
 		section {
-			@extend .animated;
-			@extend .fadeIn;
-			@include experimental(animation-duration, 0.5s);
-
 			display: block;
 		}
 	}

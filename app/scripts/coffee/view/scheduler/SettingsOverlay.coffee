@@ -2,7 +2,9 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/settings-overl
 	Overlay.extend
 		className: 'overlay settings'
 		initialize: ->
-			Overlay::initialize.apply( @, arguments )
+			@setTemplate()
+			@bindEvents()
+			
 			@showClassName = "settings-open"
 			@hideClassName = "hide-settings"
 		bindEvents: ->

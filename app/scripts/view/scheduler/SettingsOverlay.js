@@ -3,7 +3,8 @@
     return Overlay.extend({
       className: 'overlay settings',
       initialize: function() {
-        Overlay.prototype.initialize.apply(this, arguments);
+        this.setTemplate();
+        this.bindEvents();
         this.showClassName = "settings-open";
         return this.hideClassName = "hide-settings";
       },

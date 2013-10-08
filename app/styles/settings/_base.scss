@@ -19,7 +19,7 @@
 			@include breakpoint(desktop) { font-size: 4em; }
 		}
 
-		#{headers()} { 
+		h2 { 
 			margin: 0 0 2em; 
 			@include breakpoint( min-height, emCalc(800px) ) { margin-bottom: 3.2em; }
 		}
