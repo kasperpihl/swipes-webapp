@@ -1,0 +1,63 @@
+.day-picker {
+	@extend .clearfix;
+	list-style: none;
+	padding: 0;
+	
+	margin-top: 1.1em;
+	@include breakpoint(tablet) {
+		margin-top: emCalc(35px);
+	}
+	
+	li {
+		$height: emCalc(47px);
+
+		cursor: pointer;
+
+		float: left;
+		display: block;
+		
+		width: 14.28%;		
+		height: $height;
+		
+		font-size: 0.85em;
+		@include breakpoint(min-width, emCalc(480px)) {
+			font-size: 1em;
+		}
+
+		line-height: $height;
+		text-align: center;
+		color: white;
+		text-transform: uppercase;
+
+		border-left: thin solid lighten($gray-lighter, 10%);
+		
+		&:hover {
+			text-decoration: none;
+		}
+
+		&.selected {
+			background: $green;
+			color: white;
+		}
+
+	}
+
+	li:first-child, li.selected { border-left: none; }
+
+	@include breakpoint(max-width, 624px) {
+		li a {
+			border-bottom: thin solid lighten($gray-lighter, 10%);
+		}
+
+		// li:nth-child(3n + 1) a {
+		// 	border-left: none;
+		// }
+		
+		// li:nth-last-child(1) a, 
+		// li:nth-last-child(2) a, 
+		// li:nth-last-child(3) a {
+		// 	border-bottom: none;
+		// }
+
+	}
+}
