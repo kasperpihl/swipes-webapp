@@ -1,0 +1,52 @@
+.settings .overlay-content > article {
+	margin: emCalc(25px) auto 0;
+	@include breakpoint( min-height, emCalc(800px) ) { margin-top: emCalc(45px); }
+	@include breakpoint( min-height, emCalc(1000px) ) { margin-top: emCalc(66px); }
+	
+
+	width: 92%;
+	max-width: emCalc(600px);
+	@include transition(0.3s max-width ease-out);
+
+	@include breakpoint(tablet-horizontal) { max-width: emCalc(750px); }
+	@include breakpoint(desktop-wide) { max-width: emCalc(900px); }
+	
+	header {
+		text-align: center;
+		
+		.icon {
+			font-size: 3em;
+			@include breakpoint(desktop) { font-size: 4em; }
+		}
+
+		#{headers()} { 
+			margin: 0 0 2em; 
+			@include breakpoint( min-height, emCalc(800px) ) { margin-bottom: 3.2em; }
+		}
+	}
+
+
+	> footer nav {
+		margin-top: 2em;
+		text-align: center;
+
+		a { margin-left: 4.7em; }
+		a:first-child { margin-left: 0; }
+		
+		@include breakpoint(tablet) {
+			margin-top: 5.3em;
+			a { margin-left: 8em; }
+		}
+
+	}
+	
+	.round-btn {
+		color: white;
+		border-color: white;
+
+		&:hover {
+			background: white;
+			color: $gray-cool;
+		}
+	}
+}

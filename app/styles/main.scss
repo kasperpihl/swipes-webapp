@@ -38,6 +38,8 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 // Settings
 @import "module/overlay/settings-overlay";
+@import "settings/base";
+@import "settings/subscription";
 
 // Sidebar
 @import "sidebar/sidebar-base";
