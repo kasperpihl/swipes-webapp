@@ -1,0 +1,46 @@
+ul.faq, ol.faq {
+	$dot-size: emCalc(14px);
+
+	list-style: none;
+	padding: 0;
+
+	li { margin: 0 0 1.3em }
+
+	header { cursor: pointer; }
+	
+	header h4 { 
+		margin: 0 0 0.4em;
+		text-align: left;
+
+		&:before {
+			display: inline-block;
+			content: "";
+
+			width: $dot-size; height: $dot-size;
+			border-radius: $dot-size;
+			border: 2px solid white;
+
+			margin-right: $dot-size;
+		}
+	}
+	
+	section { 
+		display: none; 
+		padding-left: $dot-size * 2.7;
+		margin-bottom: 3.2em;
+	}
+
+	li.toggled {
+		h4:before {
+			background: white;
+		}
+
+		section {
+			@extend .animated;
+			@extend .fadeIn;
+			@include experimental(animation-duration, 0.5s);
+
+			display: block;
+		}
+	}
+}
