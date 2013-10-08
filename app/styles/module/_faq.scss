@@ -11,18 +11,23 @@ ul.faq, ol.faq {
 	header { cursor: pointer; }
 	
 	header h4 { 
+		position: relative;
 		margin: 0 0 0.4em;
 		text-align: left;
+		padding-left: $dot-size * 2;
+
+		@include hyphenation();
 
 		&:before {
+			position: absolute;
 			display: inline-block;
 			content: "";
 
 			width: $dot-size; height: $dot-size;
 			border-radius: $dot-size;
 			border: 2px solid white;
-
-			margin-right: $dot-size;
+			left: 0; top: 50%;
+			margin-top: 0 - ( $dot-size / 2 );
 		}
 	}
 	
