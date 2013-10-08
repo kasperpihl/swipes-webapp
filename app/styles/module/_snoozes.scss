@@ -49,6 +49,7 @@ ul.snoozes {
 			@include experimental(animation-duration, 0.3s);
 
 			display: block;
+			padding: 3.25em 0 1.7em;
 		}
 
 		button {
