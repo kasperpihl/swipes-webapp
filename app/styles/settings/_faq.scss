@@ -1,0 +1,9 @@
+.settings .faq {
+	section #{headers()} {
+		margin-bottom: 0;
+	}
+}
+
+.settings .overlay-content > article.faq {
+	max-width: emCalc(590px) !important;
+}
