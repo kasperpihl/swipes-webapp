@@ -4,3 +4,6 @@
 [submodule "app/styles/animate"]
 	path = app/styles/animate
 	url = git@github.com:Ahrengot/animate.sass.git
+[submodule "app/scripts/plugins/slider-control"]
+	path = app/scripts/plugins/slider-control
+	url = git@github.com:Ahrengot/Simple-Slider-Control.git
