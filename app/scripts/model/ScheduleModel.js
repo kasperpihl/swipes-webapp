@@ -66,11 +66,11 @@
             newDate.minute(newDate.minute() + snoozes.laterTodayDelay.minutes);
             break;
           case "this evening":
-            if (newDate.hour() >= snoozes.evening) {
+            if (newDate.hour() >= snoozes.weekday.evening) {
               newDate.add("days", 1);
             }
-            newDate.hour(snoozes.evening.hour);
-            newDate.minute(snoozes.evening.minute);
+            newDate.hour(snoozes.weekday.evening.hour);
+            newDate.minute(snoozes.weekday.evening.minute);
             newDate = newDate.startOf("minute");
             break;
           case "tomorrow":

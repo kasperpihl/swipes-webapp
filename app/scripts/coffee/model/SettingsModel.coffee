@@ -3,15 +3,15 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		url: "test"
 		defaults: 
 			snoozes:
-				evening: 
-					hour: 18
-					minute: 0
 				laterTodayDelay: 
 					hours: 3
 					minutes: 0
 				weekday: 
 					morning: 
 						hour: 9
+						minute: 0
+					evening: 
+						hour: 18
 						minute: 0
 					startDay: 
 						name: "Monday"

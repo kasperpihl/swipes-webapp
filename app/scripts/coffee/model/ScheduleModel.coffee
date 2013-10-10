@@ -31,9 +31,9 @@ define ["underscore", "momentjs"], (_, Moment) ->
 					newDate.hour( newDate.hour() + snoozes.laterTodayDelay.hours )
 					newDate.minute( newDate.minute() + snoozes.laterTodayDelay.minutes )
 				when "this evening"
-					if newDate.hour() >= snoozes.evening then newDate.add( "days", 1 )
-					newDate.hour snoozes.evening.hour
-					newDate.minute snoozes.evening.minute
+					if newDate.hour() >= snoozes.weekday.evening then newDate.add( "days", 1 )
+					newDate.hour snoozes.weekday.evening.hour
+					newDate.minute snoozes.weekday.evening.minute
 					newDate = newDate.startOf "minute"
 				when "tomorrow"
 					newDate.add( "days", 1 )
