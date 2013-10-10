@@ -27,7 +27,8 @@ require.config({
         'gsap-draggable': '../bower_components/greensock-js/src/uncompressed/utils/Draggable',
         text: '../bower_components/requirejs-text/text',
         momentjs: '../bower_components/momentjs/moment',
-        'requirejs-text': '../bower_components/requirejs-text/text'
+        'requirejs-text': '../bower_components/requirejs-text/text',
+        'slider-control': 'plugins/slider-control/app/scripts/SliderControl'
     },
     shim: {
         bootstrapAffix: {
