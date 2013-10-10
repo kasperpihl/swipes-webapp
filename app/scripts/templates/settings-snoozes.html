@@ -3,12 +3,41 @@
 	<h2 class="h4">Snoozes</h2>
 </header>
 
+<% 
+	function formatTime(hour, minute, addAmPm) {
+		if (addAmPm == null) {
+			addAmPm = true
+		}
+
+		hour = parseInt( hour, 10 )
+
+		if ( minute < 10 ) {
+			minute = "0" + minute
+		}
+
+		if ( addAmPm ) {
+			if ( hour === 0 ) {
+				return "12:" + minute + " AM"
+			} else if (hour <= 11) {
+				return hour + ":" + minute + " AM"
+			} else if (hour === 12) {
+				return "12:" + minute + " PM"
+			} else {
+				return (hour - 12) + ":" + minute + " PM"
+			}
+		} else {
+			return hour + ":" + minute
+		}
+		
+	}
+%>
+
 <section>
 	<ul class="snoozes">
 		<li class="day">
 			<header>
 				<h3 class="h5">Start my day at</h3>
-				<button>9:00 AM</button>
+				<button><%= formatTime( snoozes.weekday.morning.hour, snoozes.weekday.morning.minute ) %></button>
 			</header>
 			<section>
 				<div class="range-slider">
@@ -20,7 +49,7 @@
 		<li class="evening">
 			<header>
 				<h3 class="h5">Start my evening at</h3>
-				<button>6:00 PM</button>
+				<button><%= formatTime( snoozes.weekday.evening.hour, snoozes.weekday.evening.minute ) %></button>
 			</header>
 			<section>
 				<div class="range-slider">
@@ -32,7 +61,7 @@
 		<li class="weekends">
 			<header>
 				<h3 class="h5">Start my weekend at</h3>
-				<button>10:00 AM</button>
+				<button><%= formatTime( snoozes.weekend.morning.hour, snoozes.weekend.morning.minute ) %></button>
 			</header>
 			<section>
 				<div class="range-slider">
@@ -44,24 +73,24 @@
 		<li class="week-start-day">
 			<header>
 				<h3 class="h5">My week starts</h3>
-				<button>Monday</button>
+				<button><%= snoozes.weekday.startDay.name %></button>
 			</header>
 			<section>
 				<ol class="day-picker">
-					<li class="selected" data-day="Monday">Mon</li>
-					<li data-day="Tuesday">Tue</li>
-					<li data-day="Wednesday">Wed</li>
-					<li data-day="Thursday">Thu</li>
-					<li data-day="Friday">Fri</li>
-					<li data-day="Saturday">Sat</li>
-					<li data-day="Sunday">Sun</li>
+					<li class="selected" data-name="Monday">Mon</li>
+					<li data-name="Tuesday">Tue</li>
+					<li data-name="Wednesday">Wed</li>
+					<li data-name="Thursday">Thu</li>
+					<li data-name="Friday">Fri</li>
+					<li data-name="Saturday">Sat</li>
+					<li data-name="Sunday">Sun</li>
 				</ol>
 			</section>
 		</li>
 		<li class="later-today">
 			<header>
 				<h3 class="h5">Snooze Later Today</h3>
-				<button>+3:00h</button>
+				<button>+<%=formatTime(snoozes.laterTodayDelay.hours, snoozes.laterTodayDelay.minutes, false) %>h</button>
 			</header>
 			<section>
 				<div class="range-slider">
