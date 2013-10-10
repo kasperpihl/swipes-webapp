@@ -2,21 +2,6 @@
   define(["underscore", "momentjs"], function(_, Moment) {
     var ScheduleModel;
     return ScheduleModel = (function() {
-      ScheduleModel.prototype.rules = {
-        evening: 18,
-        laterTodayDelay: 3,
-        startOfWeek: 1,
-        startOfWeekend: 6,
-        weekday: {
-          start: "Monday",
-          morning: 9
-        },
-        weekend: {
-          start: "Saturday",
-          morning: 10
-        }
-      };
-
       function ScheduleModel(settings) {
         this.settings = settings;
         this.validateSettings();
@@ -76,41 +61,41 @@
         }
         switch (option) {
           case "later today":
-            newDate.hour(newDate.hour() + this.rules.laterTodayDelay);
+            newDate.hour(newDate.hour() + swipy.settings.model.get("laterTodayDelay"));
             break;
           case "this evening":
-            if (newDate.hour() >= this.rules.evening) {
+            if (newDate.hour() >= swipy.settings.get("snoozes").evening) {
               newDate.add("days", 1);
             }
-            newDate.hour(this.rules.evening);
+            newDate.hour(swipy.settings.get("snoozes").evening);
             newDate = newDate.startOf("hour");
             break;
           case "tomorrow":
             newDate.add("days", 1);
-            newDate.hour(this.rules.weekday.morning);
+            newDate.hour(swipy.settings.get("snoozes").weekday.morning);
             newDate = newDate.startOf("hour");
             break;
           case "day after tomorrow":
             newDate.add("days", 2);
-            newDate.hour(this.rules.weekday.morning);
+            newDate.hour(swipy.settings.get("snoozes").weekday.morning);
             newDate = newDate.startOf("hour");
             break;
           case "this weekend":
-            if (newDate.day() === this.rules.startOfWeekend) {
+            if (newDate.day() === swipy.settings.get("snoozes").startOfWeekend) {
               newDate.add("days", 7);
             } else {
-              newDate.day(this.rules.weekend.start);
+              newDate.day(swipy.settings.get("snoozes").weekend.start);
             }
-            newDate.hour(this.rules.weekend.morning);
+            newDate.hour(swipy.settings.get("snoozes").weekend.morning);
             newDate = newDate.startOf("hour");
             break;
           case "next week":
-            if (newDate.day() === this.rules.startOfWeek) {
+            if (newDate.day() === swipy.settings.get("snoozes").startOfWeek) {
               newDate.add("days", 7);
             } else {
-              newDate.day(this.rules.weekday.start);
+              newDate.day(swipy.settings.get("snoozes").weekday.start);
             }
-            newDate.hour(this.rules.weekday.morning);
+            newDate.hour(swipy.settings.get("snoozes").weekday.morning);
             newDate = newDate.startOf("hour");
             break;
           default:

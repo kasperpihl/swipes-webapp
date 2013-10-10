@@ -9,6 +9,12 @@ define ["underscore", "backbone", "view/scheduler/SettingsOverlay", "model/Setti
 
 			Backbone.on( "show-settings", @view.show, @view )
 			Backbone.on( "hide-settings", @view.hide, @view )
+
+			_.bindAll( @, "get", "set" )
+		get: ->
+			@model.get arguments...
+		set: ->
+			@model.set arguments...
 		destroy: ->
 			@view.remove()
 			Backbone.off( null, null, @ )

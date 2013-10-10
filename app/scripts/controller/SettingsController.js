@@ -13,7 +13,18 @@
         });
         $("body").append(this.view.render().el);
         Backbone.on("show-settings", this.view.show, this.view);
-        return Backbone.on("hide-settings", this.view.hide, this.view);
+        Backbone.on("hide-settings", this.view.hide, this.view);
+        return _.bindAll(this, "get", "set");
+      };
+
+      SettingsController.prototype.get = function() {
+        var _ref;
+        return (_ref = this.model).get.apply(_ref, arguments);
+      };
+
+      SettingsController.prototype.set = function() {
+        var _ref;
+        return (_ref = this.model).set.apply(_ref, arguments);
       };
 
       SettingsController.prototype.destroy = function() {
