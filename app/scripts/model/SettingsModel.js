@@ -4,17 +4,33 @@
       url: "test",
       defaults: {
         snoozes: {
-          evening: 18,
-          laterTodayDelay: 3,
-          startOfWeek: 1,
-          startOfWeekend: 6,
+          evening: {
+            hour: 18,
+            minute: 0
+          },
+          laterTodayDelay: {
+            hours: 3,
+            minutes: 0
+          },
           weekday: {
-            start: "Monday",
-            morning: 9
+            morning: {
+              hour: 9,
+              minute: 0
+            },
+            startDay: {
+              name: "Monday",
+              number: 1
+            }
           },
           weekend: {
-            start: "Saturday",
-            morning: 10
+            morning: {
+              hour: 10,
+              minute: 0
+            },
+            startDay: {
+              name: "Saturday",
+              number: 6
+            }
           }
         },
         hasPlus: false

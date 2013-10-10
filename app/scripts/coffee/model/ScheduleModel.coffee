@@ -25,40 +25,46 @@ define ["underscore", "momentjs"], (_, Moment) ->
 			else
 				newDate = moment()
 
-			# Check settings for 'this evening' setting, but for now just use 18:00
+			snoozes = swipy.settings.get "snoozes"
 			switch option
 				when "later today"
-					newDate.hour( newDate.hour() + swipy.settings.model.get("laterTodayDelay") )
+					newDate.hour( newDate.hour() + snoozes.laterTodayDelay.hours )
+					newDate.minute( newDate.minute() + snoozes.laterTodayDelay.minutes )
 				when "this evening"
-					if newDate.hour() >= swipy.settings.get("snoozes").evening then newDate.add( "days", 1 )
-					newDate.hour swipy.settings.get("snoozes").evening
-					newDate = newDate.startOf "hour"
+					if newDate.hour() >= snoozes.evening then newDate.add( "days", 1 )
+					newDate.hour snoozes.evening.hour
+					newDate.minute snoozes.evening.minute
+					newDate = newDate.startOf "minute"
 				when "tomorrow"
 					newDate.add( "days", 1 )
-					newDate.hour swipy.settings.get("snoozes").weekday.morning
-					newDate = newDate.startOf "hour"
+					newDate.hour snoozes.weekday.morning.hour
+					newDate.minute snoozes.weekday.morning.minute
+					newDate = newDate.startOf "minute"
 				when "day after tomorrow"
 					newDate.add( "days", 2 )
-					newDate.hour swipy.settings.get("snoozes").weekday.morning
-					newDate = newDate.startOf "hour"
+					newDate.hour snoozes.weekday.morning.hour
+					newDate.minute snoozes.weekday.morning.minute
+					newDate = newDate.startOf "minute"
 				when "this weekend"
 					# If we're on weekend start date, fast-forward 7 days.
-					if newDate.day() is swipy.settings.get("snoozes").startOfWeekend
+					if newDate.day() is snoozes.weekend.startDay.number
 						newDate.add( "days", 7 )
 					else
-						newDate.day swipy.settings.get("snoozes").weekend.start
+						newDate.day snoozes.weekend.startDay.name
 					
-					newDate.hour swipy.settings.get("snoozes").weekend.morning
-					newDate = newDate.startOf "hour"
+					newDate.hour snoozes.weekend.morning.hour
+					newDate.minute snoozes.weekend.morning.minute
+					newDate = newDate.startOf "minute"
 				when "next week"
 					# If we're on week start date, fast-forward 7 days.
-					if newDate.day() is swipy.settings.get("snoozes").startOfWeek
+					if newDate.day() is snoozes.weekday.startDay.number
 						newDate.add( "days", 7 )
 					else
-						newDate.day swipy.settings.get("snoozes").weekday.start
+						newDate.day snoozes.weekday.start
 					
-					newDate.hour swipy.settings.get("snoozes").weekday.morning
-					newDate = newDate.startOf "hour"
+					newDate.hour snoozes.weekday.morning.hour
+					newDate.minute snoozes.weekday.morning.minute
+					newDate = newDate.startOf "minute"
 				else 
 					# Catch any errors and return null, because then they aren't lost, just simply 
 					# put in the 'unspecified' pile

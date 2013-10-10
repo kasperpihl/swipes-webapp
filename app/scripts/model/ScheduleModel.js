@@ -53,50 +53,57 @@
       };
 
       ScheduleModel.prototype.getDateFromScheduleOption = function(option, now) {
-        var newDate;
+        var newDate, snoozes;
         if (now) {
           newDate = moment(now);
         } else {
           newDate = moment();
         }
+        snoozes = swipy.settings.get("snoozes");
         switch (option) {
           case "later today":
-            newDate.hour(newDate.hour() + swipy.settings.model.get("laterTodayDelay"));
+            newDate.hour(newDate.hour() + snoozes.laterTodayDelay.hours);
+            newDate.minute(newDate.minute() + snoozes.laterTodayDelay.minutes);
             break;
           case "this evening":
-            if (newDate.hour() >= swipy.settings.get("snoozes").evening) {
+            if (newDate.hour() >= snoozes.evening) {
               newDate.add("days", 1);
             }
-            newDate.hour(swipy.settings.get("snoozes").evening);
-            newDate = newDate.startOf("hour");
+            newDate.hour(snoozes.evening.hour);
+            newDate.minute(snoozes.evening.minute);
+            newDate = newDate.startOf("minute");
             break;
           case "tomorrow":
             newDate.add("days", 1);
-            newDate.hour(swipy.settings.get("snoozes").weekday.morning);
-            newDate = newDate.startOf("hour");
+            newDate.hour(snoozes.weekday.morning.hour);
+            newDate.minute(snoozes.weekday.morning.minute);
+            newDate = newDate.startOf("minute");
             break;
           case "day after tomorrow":
             newDate.add("days", 2);
-            newDate.hour(swipy.settings.get("snoozes").weekday.morning);
-            newDate = newDate.startOf("hour");
+            newDate.hour(snoozes.weekday.morning.hour);
+            newDate.minute(snoozes.weekday.morning.minute);
+            newDate = newDate.startOf("minute");
             break;
           case "this weekend":
-            if (newDate.day() === swipy.settings.get("snoozes").startOfWeekend) {
+            if (newDate.day() === snoozes.weekend.startDay.number) {
               newDate.add("days", 7);
             } else {
-              newDate.day(swipy.settings.get("snoozes").weekend.start);
+              newDate.day(snoozes.weekend.startDay.name);
             }
-            newDate.hour(swipy.settings.get("snoozes").weekend.morning);
-            newDate = newDate.startOf("hour");
+            newDate.hour(snoozes.weekend.morning.hour);
+            newDate.minute(snoozes.weekend.morning.minute);
+            newDate = newDate.startOf("minute");
             break;
           case "next week":
-            if (newDate.day() === swipy.settings.get("snoozes").startOfWeek) {
+            if (newDate.day() === snoozes.weekday.startDay.number) {
               newDate.add("days", 7);
             } else {
-              newDate.day(swipy.settings.get("snoozes").weekday.start);
+              newDate.day(snoozes.weekday.start);
             }
-            newDate.hour(swipy.settings.get("snoozes").weekday.morning);
-            newDate = newDate.startOf("hour");
+            newDate.hour(snoozes.weekday.morning.hour);
+            newDate.minute(snoozes.weekday.morning.minute);
+            newDate = newDate.startOf("minute");
             break;
           default:
             return null;
