@@ -105,7 +105,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					deferredArr.push view.swipeRight("scheduled")
+					deferredArr.push view.swipeRight("scheduled", no)
 
 			$.when( deferredArr... ).then => Backbone.trigger( "show-scheduler", tasks )
 

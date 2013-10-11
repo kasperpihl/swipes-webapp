@@ -68,8 +68,11 @@
         return this.$el.remove();
       },
       customCleanUp: function() {},
-      swipeLeft: function(className) {
+      swipeLeft: function(className, fadeOut) {
         var content, dfd, timeline;
+        if (fadeOut == null) {
+          fadeOut = true;
+        }
         dfd = new $.Deferred();
         content = this.$el.find(".todo-content");
         if (className) {
@@ -78,16 +81,21 @@
         timeline = new TimelineLite({
           onComplete: dfd.resolve
         });
-        timeline.to(content, 0.4, {
+        timeline.to(content, 0.3, {
           left: this.$el.outerWidth()
         });
-        timeline.to(this.$el, 0.4, {
-          alpha: 0
-        }, "-=0.2");
+        if (fadeOut) {
+          timeline.to(this.$el, 0.4, {
+            alpha: 0
+          }, "-=0.2");
+        }
         return dfd.promise();
       },
-      swipeRight: function(className) {
+      swipeRight: function(className, fadeOut) {
         var content, dfd, timeline;
+        if (fadeOut == null) {
+          fadeOut = true;
+        }
         dfd = new $.Deferred();
         content = this.$el.find(".todo-content");
         if (className) {
@@ -96,12 +104,14 @@
         timeline = new TimelineLite({
           onComplete: dfd.resolve
         });
-        timeline.to(content, 0.4, {
+        timeline.to(content, 0.3, {
           left: 0 - this.$el.outerWidth()
         });
-        timeline.to(this.$el, 0.4, {
-          alpha: 0
-        }, "-=0.2");
+        if (fadeOut) {
+          timeline.to(this.$el, 0.4, {
+            alpha: 0
+          }, "-=0.2");
+        }
         return dfd.promise();
       },
       reset: function() {

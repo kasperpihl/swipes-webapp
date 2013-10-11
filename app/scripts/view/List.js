@@ -159,7 +159,7 @@
             (function() {
               var m;
               m = task;
-              return deferredArr.push(view.swipeRight("scheduled"));
+              return deferredArr.push(view.swipeRight("scheduled", false));
             })();
           }
         }
