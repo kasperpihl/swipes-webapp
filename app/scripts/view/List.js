@@ -132,9 +132,12 @@
                 _this = this;
               m = task;
               return view.swipeLeft("todo").then(function() {
+                var oneSecondAgo;
+                oneSecondAgo = new Date();
+                oneSecondAgo.setSeconds(oneSecondAgo.getSeconds() - 1);
                 return m.set({
                   completionDate: null,
-                  schedule: new Date()
+                  schedule: oneSecondAgo
                 });
               });
             })());

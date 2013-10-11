@@ -24,7 +24,6 @@ define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/Sched
 			for task in @currentTasks
 				task.unset( "schedule", {silent: yes} )
 				task.set { schedule: date, completionDate: null }
-
 			
 			@view.currentTasks = undefined
 			@view.hide()

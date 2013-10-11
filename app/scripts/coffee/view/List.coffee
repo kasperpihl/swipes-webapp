@@ -91,9 +91,9 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 				if view? then do ->
 					m = task
 					view.swipeLeft("todo").then => 
-						m.set
-							completionDate: null
-							schedule: new Date()
+						oneSecondAgo = new Date()
+						oneSecondAgo.setSeconds oneSecondAgo.getSeconds() - 1
+						m.set { completionDate: null, schedule: oneSecondAgo }
 
 		scheduleTasks: (tasks) ->
 			deferredArr = []
