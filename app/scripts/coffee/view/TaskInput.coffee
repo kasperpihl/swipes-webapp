@@ -5,7 +5,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			"submit": "triggerAddTask"
 		initialize: ->
 			@input = @$el.find "input"
-			@input.focus()
 		triggerAddTask: (e) ->
 			e.preventDefault()
 			return if @input.val() is ""

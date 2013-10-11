@@ -22,6 +22,7 @@ define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/tod
 			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
 		render: ->
 			@renderList()
+			$("#add-task input").focus()
 			return @
 		sortTasks: (tasks) ->
 			return _.sortBy tasks, (model) -> model.get( "schedule" )?.getTime()

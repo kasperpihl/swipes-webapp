@@ -15,6 +15,7 @@
       },
       render: function() {
         this.renderList();
+        $("#add-task input").focus();
         return this;
       },
       sortTasks: function(tasks) {

@@ -6,8 +6,7 @@
         "submit": "triggerAddTask"
       },
       initialize: function() {
-        this.input = this.$el.find("input");
-        return this.input.focus();
+        return this.input = this.$el.find("input");
       },
       triggerAddTask: function(e) {
         e.preventDefault();
