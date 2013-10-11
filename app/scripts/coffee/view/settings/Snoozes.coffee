@@ -5,17 +5,25 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 			"click button": "toggleSection"
 		initialize: ->
 			BaseView::initialize.apply( @, arguments )
-
-			_.bindAll( @, "setupSliders", "updateStartDay" )
-
+			_.bindAll( @, "setupSliders", "updateValue" )
 			@transitionInDfd.then @setupSliders
-			
-			@listenTo( swipy.settings.model, "change:snoozes", @render )
 		getFloatFromTime: (hour, minute) ->
-			0.8
+			( hour / 24 ) + ( minute / 60 / 24 )
 		getTimeFromFloat: (val) ->
-			hour: 23
-			minute: 0
+			# There are 1440 minutes in a day
+			minutesTotal = 1440 * val
+			return { hour: Math.floor( minutesTotal / 60 ), minute: Math.floor( minutesTotal % 60 ) }
+		getFormattedTime: (hour, minute, addAmPm = yes) ->
+			if minute < 10 then minute = "0" + minute
+
+			if addAmPm
+				if hour is 0 then return "12:" + minute + " AM"
+				else if hour <= 11 then return hour + ":" + minute + " AM"
+				else if hour is 12 then return "12:" + minute + " PM"
+				else return hour - 12 + ":" + minute + " PM"
+			
+			else
+				return hour + ":" + minute
 		getSliderVal: (sliderId) ->
 			snoozes = swipy.settings.get "snoozes"
 
@@ -23,14 +31,22 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 				when "start-day"
 					@getFloatFromTime( snoozes.weekday.morning.hour, snoozes.weekday.morning.minute )
 		setupSliders: ->
-			startDayOpts = 
-				onDrag: @updateStartDay
-				onDragEnd: @updateStartDay
 			startDayEl = @el.querySelector ".day .range-slider"
+			startDayOpts = 
+				onDrag: => @updateValue( "start-day", arguments... )
+				onDragEnd: => @updateValue( "start-day", arguments... )
 			
 			@startDaySlider = new SliderControl( startDayEl, startDayOpts, @getSliderVal "start-day" )
-		updateStartDay: ->
-			console.log @startDaySlider.value
+		updateValue: (sliderId) ->
+			snoozes = swipy.settings.get "snoozes"
+			swipy.settings.unset( "snoozes", { silent: yes } )
+
+			switch sliderId
+				when "start-day"
+					time = @getTimeFromFloat @startDaySlider.value
+					@$el.find(".day button").text @getFormattedTime( time.hour, time.minute )
+
+			swipy.settings.set( "snoozes", snoozes )		
 		setTemplate: ->
 			@template = _.template Tmpl
 		render: ->
@@ -39,3 +55,6 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 			@transitionIn()
 		toggleSection: (e) ->
 			$(e.currentTarget.parentNode.parentNode).toggleClass "toggled"
+		cleanUp: ->
+			@startDaySlider.destroy()
+			BaseView::cleanUp.apply( @, arguments )

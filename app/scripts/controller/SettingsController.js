@@ -27,6 +27,11 @@
         return (_ref = this.model).set.apply(_ref, arguments);
       };
 
+      SettingsController.prototype.unset = function() {
+        var _ref;
+        return (_ref = this.model).unset.apply(_ref, arguments);
+      };
+
       SettingsController.prototype.destroy = function() {
         this.view.remove();
         return Backbone.off(null, null, this);
