@@ -23,6 +23,21 @@
 .overlay-content {
 	position: relative;
 	z-index: 1;
+
+	> a.back {
+		position: fixed;
+		left: 1em; bottom: 1em;
+		
+		color: white;
+		line-height: 1;
+		text-decoration: none;
+
+		@include transition(left 0.15s ease-out);
+
+		&:hover {
+			left: 0.7em;
+		}
+	}
 }
 
 body.overlay-open, body.settings-open, body.scheduler-open {
