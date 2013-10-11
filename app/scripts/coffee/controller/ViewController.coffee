@@ -39,13 +39,13 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 			require ["view/#{ viewName }"], (View) =>
 				newView = new View( el: "ol.todo-list.#{ slug }" )
 
-				if @currView? 
+				if @currView?
 					@transitionOut( @currView ).then =>
 						@transitionIn( newView ).then ->
-							newView.transitionInComplete?.call(newView)
+							newView.transitionInComplete?.call newView
 				else
 					@transitionIn( newView ).then ->
-						newView.transitionInComplete?.call(newView)
+						newView.transitionInComplete?.call newView
 
 		transitionOut: (view) ->
 			dfd = new $.Deferred()
