@@ -10,7 +10,7 @@ define ["jquery", "backbone"], ($, Backbone) ->
 		updateNavigation: (slug) =>
 			@navLinks.each ->
 				link = $ @
-				isCurrLink = if link.attr( "href" )[1...] is slug then yes else no
+				isCurrLink = if link.attr( "href" )[1...] is "list/#{slug}" then yes else no
 				link.toggleClass( "active", isCurrLink )
 		
 		

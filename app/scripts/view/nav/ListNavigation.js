@@ -21,7 +21,7 @@
         return this.navLinks.each(function() {
           var isCurrLink, link;
           link = $(this);
-          isCurrLink = link.attr("href").slice(1) === slug ? true : false;
+          isCurrLink = link.attr("href").slice(1) === ("list/" + slug) ? true : false;
           return link.toggleClass("active", isCurrLink);
         });
       };
