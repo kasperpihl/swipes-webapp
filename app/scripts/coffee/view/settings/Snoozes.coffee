@@ -5,8 +5,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 			"click button": "toggleSection"
 		initialize: ->
 			BaseView::initialize.apply( @, arguments )
-			_.bindAll( @, "setupSliders", "updateValue" )
-			@transitionInDfd.then @setupSliders
+			_.bindAll( @, "updateValue" )
 		getFloatFromTime: (hour, minute) ->
 			( hour / 24 ) + ( minute / 60 / 24 )
 		getTimeFromFloat: (val) ->
@@ -30,31 +29,82 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 			switch sliderId
 				when "start-day"
 					@getFloatFromTime( snoozes.weekday.morning.hour, snoozes.weekday.morning.minute )
-		setupSliders: ->
-			startDayEl = @el.querySelector ".day .range-slider"
-			startDayOpts = 
-				onDrag: => @updateValue( "start-day", arguments... )
-				onDragEnd: => @updateValue( "start-day", arguments... )
-			
-			@startDaySlider = new SliderControl( startDayEl, startDayOpts, @getSliderVal "start-day" )
-		updateValue: (sliderId) ->
+				when "start-evening"
+					@getFloatFromTime( snoozes.weekday.evening.hour, snoozes.weekday.evening.minute )
+				when "start-weekend"
+					@getFloatFromTime( snoozes.weekend.morning.hour, snoozes.weekend.morning.minute )
+				when "delay"
+					@getFloatFromTime( snoozes.laterTodayDelay.hours, snoozes.laterTodayDelay.minutes )
+		updateValue: (sliderId, updateModel = no) ->
 			snoozes = swipy.settings.get "snoozes"
-			swipy.settings.unset( "snoozes", { silent: yes } )
 
 			switch sliderId
 				when "start-day"
 					time = @getTimeFromFloat @startDaySlider.value
+					snoozes.weekday.morning = time
 					@$el.find(".day button").text @getFormattedTime( time.hour, time.minute )
+				when "start-evening"
+					time = @getTimeFromFloat @startEveSlider.value
+					snoozes.weekday.evening = time
+					@$el.find(".evening button").text @getFormattedTime( time.hour, time.minute )
+				when "start-weekend"
+					time = @getTimeFromFloat @startWeekendSlider.value
+					snoozes.weekend.morning = time
+					@$el.find(".weekends button").text @getFormattedTime( time.hour, time.minute )
+				when "delay"
+					time = @getTimeFromFloat @delaySlider.value
+					snoozes.laterTodayDelay.hours = time.hour
+					snoozes.laterTodayDelay.minutes = time.minute
+					@$el.find(".later-today button").text "+#{ @getFormattedTime( time.hour, time.minute, no ) }h"
 
-			swipy.settings.set( "snoozes", snoozes )		
+			if updateModel 
+				swipy.settings.unset( "snoozes", { silent: yes } )
+				swipy.settings.set( "snoozes", snoozes )
 		setTemplate: ->
 			@template = _.template Tmpl
 		render: ->
-			console.log "Rendering snoozes"
 			@$el.html @template { snoozes: swipy.settings.get "snoozes" }
 			@transitionIn()
 		toggleSection: (e) ->
-			$(e.currentTarget.parentNode.parentNode).toggleClass "toggled"
+			$parent = $(e.currentTarget.parentNode.parentNode).toggleClass "toggled"
+			
+			if $parent.hasClass "toggled"
+				if $parent.hasClass "day"
+					el = @el.querySelector ".day .range-slider"
+					opts = 
+						onDrag: => @updateValue( "start-day", arguments... )
+						onDragEnd: => @updateValue( "start-day", yes, arguments... )
+
+					@startDaySlider.destroy() if @startDaySlider?
+					@startDaySlider = new SliderControl( el, opts, @getSliderVal "start-day" )
+
+				else if $parent.hasClass "evening"
+					el = @el.querySelector ".evening .range-slider"
+					opts = 
+						onDrag: => @updateValue( "start-evening", arguments... )
+						onDragEnd: => @updateValue( "start-evening", yes, arguments... )
+
+					@startEveSlider.destroy() if @startEveSlider?
+					@startEveSlider = new SliderControl( el, opts, @getSliderVal "start-evening" )
+
+				else if $parent.hasClass "weekends"
+					el = @el.querySelector ".weekends .range-slider"
+					opts = 
+						onDrag: => @updateValue( "start-weekend", arguments... )
+						onDragEnd: => @updateValue( "start-weekend", yes, arguments... )
+
+					@startWeekendSlider.destroy() if @startWeekendSlider?
+					@startWeekendSlider = new SliderControl( el, opts, @getSliderVal "start-weekend" )
+
+				else if $parent.hasClass "later-today"
+					el = @el.querySelector ".later-today .range-slider"
+					opts = 
+						onDrag: => @updateValue( "delay", arguments... )
+						onDragEnd: => @updateValue( "delay", yes, arguments... )
+
+					@delaySlider.destroy() if @delaySlider?
+					@delaySlider = new SliderControl( el, opts, @getSliderVal "delay" )
+
 		cleanUp: ->
 			@startDaySlider.destroy()
 			BaseView::cleanUp.apply( @, arguments )
