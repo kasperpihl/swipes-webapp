@@ -26,7 +26,6 @@
 		position: absolute;
 		bottom: 0; left: 0; right: 0;
 		
-		height: 1px;
 		@include background-image( 
 			linear-gradient(left, transparent, $gray-lighter 15%, transparent 105%) 
 		);
