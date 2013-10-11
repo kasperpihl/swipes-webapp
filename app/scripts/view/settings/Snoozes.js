@@ -7,29 +7,44 @@
       },
       initialize: function() {
         BaseView.prototype.initialize.apply(this, arguments);
-        return this.setupSliders();
+        _.bindAll(this, "setupSliders", "updateStartDay");
+        this.transitionInDfd.then(this.setupSliders);
+        return this.listenTo(swipy.settings.model, "change:snoozes", this.render);
       },
-      getPercentFromTime: function(hour, minute) {
+      getFloatFromTime: function(hour, minute) {
         return 0.8;
+      },
+      getTimeFromFloat: function(val) {
+        return {
+          hour: 23,
+          minute: 0
+        };
       },
       getSliderVal: function(sliderId) {
         var snoozes;
         snoozes = swipy.settings.get("snoozes");
         switch (sliderId) {
           case "start-day":
-            return this.getPercentFromTime(snoozes.weekday.morning.hour, snoozes.weekday.morning.minute);
+            return this.getFloatFromTime(snoozes.weekday.morning.hour, snoozes.weekday.morning.minute);
         }
       },
       setupSliders: function() {
-        var startDayEl, startDayOpts, startDaySlider;
-        startDayOpts = {};
+        var startDayEl, startDayOpts;
+        startDayOpts = {
+          onDrag: this.updateStartDay,
+          onDragEnd: this.updateStartDay
+        };
         startDayEl = this.el.querySelector(".day .range-slider");
-        return startDaySlider = new SliderControl(startDayEl, startDayOpts, this.getSliderVal("start-day"));
+        return this.startDaySlider = new SliderControl(startDayEl, startDayOpts, this.getSliderVal("start-day"));
+      },
+      updateStartDay: function() {
+        return console.log(this.startDaySlider.value);
       },
       setTemplate: function() {
         return this.template = _.template(Tmpl);
       },
       render: function() {
+        console.log("Rendering snoozes");
         this.$el.html(this.template({
           snoozes: swipy.settings.get("snoozes")
         }));

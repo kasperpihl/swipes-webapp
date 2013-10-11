@@ -4,6 +4,7 @@
       tagName: "article",
       initialize: function() {
         this.setTemplate();
+        this.transitionInDfd = new $.Deferred();
         return this.render();
       },
       setTemplate: function() {},
@@ -17,7 +18,8 @@
         return TweenLite.fromTo(this.$el, 0.2, {
           alpha: 0
         }, {
-          alpha: 1
+          alpha: 1,
+          onComplete: this.transitionInDfd.resolve
         });
       },
       transitionOut: function() {
