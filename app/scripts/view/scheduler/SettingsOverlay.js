@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "view/Overlay", "text!templates/settings-overlay.html"], function(_, Backbone, Overlay, SettingsOverlayTmpl) {
+  define(["underscore", "backbone", "view/Overlay", "text!templates/settings-overlay.html", "view/settings/BaseSubview", "view/settings/Faq", "view/settings/Policy", "view/settings/Snoozes", "view/settings/Subscription", "view/settings/Support"], function(_, Backbone, Overlay, SettingsOverlayTmpl) {
     return Overlay.extend({
       className: 'overlay settings',
       initialize: function() {
@@ -46,13 +46,16 @@
       killSubView: function() {
         var dfd,
           _this = this;
+        dfd = new $.Deferred();
         if (this.subview != null) {
-          return this.subview.remove().then(function() {
-            return _this.$el.removeClass("has-active-subview");
+          this.subview.remove().then(function() {
+            _this.$el.removeClass("has-active-subview");
+            _this.subview = null;
+            return dfd.resolve();
           });
+          return dfd.promise();
         } else {
           this.$el.removeClass("has-active-subview");
-          dfd = new $.Deferred();
           dfd.resolve();
           return dfd.promise();
         }

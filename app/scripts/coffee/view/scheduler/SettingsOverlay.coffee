@@ -1,4 +1,16 @@
-define ["underscore", "backbone", "view/Overlay", "text!templates/settings-overlay.html"], (_, Backbone, Overlay, SettingsOverlayTmpl) ->
+define [
+	"underscore"
+	"backbone"
+	"view/Overlay"
+	"text!templates/settings-overlay.html"
+	# Pre-load subviews
+	"view/settings/BaseSubview"
+	"view/settings/Faq"
+	"view/settings/Policy"
+	"view/settings/Snoozes"
+	"view/settings/Subscription"
+	"view/settings/Support"
+	], (_, Backbone, Overlay, SettingsOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay settings'
 		initialize: ->
@@ -31,11 +43,15 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/settings-overl
 					@$el.find( ".overlay-content" ).append @subview.el
 					@$el.addClass "has-active-subview"
 		killSubView: ->
-			if @subview? 
-				@subview.remove().then => @$el.removeClass "has-active-subview"
+			dfd = new $.Deferred()
+			if @subview?
+				@subview.remove().then => 
+					@$el.removeClass "has-active-subview"
+					@subview = null
+					dfd.resolve()
+				return dfd.promise()
 			else 
 				@$el.removeClass "has-active-subview"
-				dfd = new $.Deferred()
 				dfd.resolve()
 				return dfd.promise()
 
