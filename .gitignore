@@ -2,5 +2,6 @@ dist
 .tmp
 .sass-cache
 .DS_Store
+parse/public
 *.sublime-project
 *.sublime-workspace
