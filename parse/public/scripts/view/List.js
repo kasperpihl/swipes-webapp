@@ -6,7 +6,7 @@
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
         this.renderList = _.debounce(this.renderList, 300);
-        this.listenTo(swipy.todos, "add remove reset change:completionDate change:schedule", this.renderList);
+        this.listenTo(swipy.todos, "add remove reset change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", this.renderList);
         this.listenTo(Backbone, "complete-task", this.completeTasks);
         this.listenTo(Backbone, "todo-task", this.markTaskAsTodo);
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
@@ -54,6 +54,9 @@
           _this.$el.empty();
           _this.killSubViews();
           todos = _this.getTasks();
+          todos = _.reject(todos, function(m) {
+            return m.get("rejectedByTag") || m.get("rejectedBySearch");
+          });
           _.invoke(todos, "set", {
             selected: false
           });

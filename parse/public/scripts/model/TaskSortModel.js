@@ -75,10 +75,8 @@
             if (withoutOrder.length) {
               task = withoutOrder.pop();
               task.set("order", i);
-              console.log("Found an empty spot at " + i + ". We have a task without order that we can fit in: ", task.get("title"));
               continue;
             } else {
-              console.log("Found an empty spot at " + i + ". Swapping current task from " + order + " to " + i);
               this.swapSpots(i, order, orders);
               task.set("order", i);
             }
@@ -97,11 +95,9 @@
           ordersMinusCurrent = this.subtractOnce(orders, order);
           if (_.contains(ordersMinusCurrent, order)) {
             spot = this.findSpotForTask(order, ordersMinusCurrent);
-            console.log("Spot " + order + " was occupied. swapped for " + spot);
             this.swapSpots(spot, order, orders);
             task.set("order", spot);
           } else if (order === todos.length - 1) {
-            console.log("Spot set to last in line (" + order + ") for " + (task.get('title')));
             task.set("order", order);
           } else {
             continue;

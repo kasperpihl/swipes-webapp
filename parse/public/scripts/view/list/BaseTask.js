@@ -4,6 +4,7 @@
       tagName: "li",
       initialize: function() {
         _.bindAll(this, "onSelected", "setBounds", "toggleSelected", "edit", "handleAction");
+        this.listenTo(this.model, "change:tags change:timeStr", this.render, this);
         this.listenTo(this.model, "change:selected", this.onSelected);
         $(window).on("resize", this.setBounds);
         this.setTemplate();
