@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html"], function(_, DefaultView, ActionBar, ToDoListTmpl) {
+  define(["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html", "view/list/DesktopTask"], function(_, DefaultView, ActionBar, ToDoListTmpl) {
     return DefaultView.extend({
       init: function() {
         this.transitionDeferred = new $.Deferred();

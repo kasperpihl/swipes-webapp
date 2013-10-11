@@ -1,4 +1,11 @@
-define ["backbone", "gsap"], (Backbone, TweenLite) ->
+define [
+	"backbone"
+	"gsap"
+	# Cache views
+	"view/Todo"
+	"view/Completed"
+	"view/Schedule"
+	], (Backbone, TweenLite) ->
 	class ViewController
 		constructor: (opts) ->
 			@init()

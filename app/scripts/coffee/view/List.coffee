@@ -1,4 +1,11 @@
-define ["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html"], (_, DefaultView, ActionBar, ToDoListTmpl) ->
+define [
+	"underscore"
+	"view/Default"
+	"view/list/ActionBar"
+	"text!templates/todo-list.html"
+	# Cache views
+	"view/list/DesktopTask"
+	], (_, DefaultView, ActionBar, ToDoListTmpl) ->
 	DefaultView.extend
 		init: ->
 			# This deferred is resolved after view has been transitioned in
