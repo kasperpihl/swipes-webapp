@@ -3,6 +3,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 		className: "snoozes"
 		events:
 			"click button": "toggleSection"
+			"click .day-picker li": "toggleDay"
 		initialize: ->
 			BaseView::initialize.apply( @, arguments )
 			_.bindAll( @, "updateValue" )
@@ -104,7 +105,21 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 
 					@delaySlider.destroy() if @delaySlider?
 					@delaySlider = new SliderControl( el, opts, @getSliderVal "delay" )
+		toggleDay: (e) ->
+			$(".day-picker li").removeClass "selected"
+			$(e.currentTarget).addClass "selected"
+			dayName = e.currentTarget.getAttribute "data-name"
+			dayNum = e.currentTarget.getAttribute "data-num"
 
+			@$el.find( ".week-start-day button" ).text dayName
+
+			snoozes = swipy.settings.get "snoozes"
+			snoozes.weekday.startDay = { name: dayName, number: dayNum }
+			swipy.settings.unset( "snoozes", { silent: yes } )
+			swipy.settings.set( "snoozes", snoozes )
 		cleanUp: ->
-			@startDaySlider.destroy()
+			@startDaySlider?.destroy()
+			@startEveSlider?.destroy()
+			@startWeekendSlider?.destroy()
+			@delaySlider?.destroy()
 			BaseView::cleanUp.apply( @, arguments )

@@ -5,7 +5,8 @@
     return BaseView.extend({
       className: "snoozes",
       events: {
-        "click button": "toggleSection"
+        "click button": "toggleSection",
+        "click .day-picker li": "toggleDay"
       },
       initialize: function() {
         BaseView.prototype.initialize.apply(this, arguments);
@@ -165,8 +166,37 @@
           }
         }
       },
+      toggleDay: function(e) {
+        var dayName, dayNum, snoozes;
+        $(".day-picker li").removeClass("selected");
+        $(e.currentTarget).addClass("selected");
+        dayName = e.currentTarget.getAttribute("data-name");
+        dayNum = e.currentTarget.getAttribute("data-num");
+        this.$el.find(".week-start-day button").text(dayName);
+        snoozes = swipy.settings.get("snoozes");
+        snoozes.weekday.startDay = {
+          name: dayName,
+          number: dayNum
+        };
+        swipy.settings.unset("snoozes", {
+          silent: true
+        });
+        return swipy.settings.set("snoozes", snoozes);
+      },
       cleanUp: function() {
-        this.startDaySlider.destroy();
+        var _ref, _ref1, _ref2, _ref3;
+        if ((_ref = this.startDaySlider) != null) {
+          _ref.destroy();
+        }
+        if ((_ref1 = this.startEveSlider) != null) {
+          _ref1.destroy();
+        }
+        if ((_ref2 = this.startWeekendSlider) != null) {
+          _ref2.destroy();
+        }
+        if ((_ref3 = this.delaySlider) != null) {
+          _ref3.destroy();
+        }
         return BaseView.prototype.cleanUp.apply(this, arguments);
       }
     });
