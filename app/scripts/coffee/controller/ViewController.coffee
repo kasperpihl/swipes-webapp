@@ -57,7 +57,7 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 					view.remove()
 					dfd.resolve()
 
-			TweenLite.to( view.$el, 0.15, opts )
+			TweenLite.to( view.$el, 0, opts )
 			
 			return dfd.promise()
 		transitionIn: (view) ->
@@ -68,7 +68,7 @@ define ["backbone", "gsap"], (Backbone, TweenLite) ->
 				onComplete: dfd.resolve
 
 			view.$el.removeClass "hidden"
-			TweenLite.fromTo( view.$el, 0.4, { alpha: 0 }, opts )
+			TweenLite.fromTo( view.$el, 0, { alpha: 0 }, opts )
 			
 			@currView = view
 			

@@ -101,7 +101,7 @@
             return dfd.resolve();
           }
         };
-        TweenLite.to(view.$el, 0.15, opts);
+        TweenLite.to(view.$el, 0, opts);
         return dfd.promise();
       };
 
@@ -113,7 +113,7 @@
           onComplete: dfd.resolve
         };
         view.$el.removeClass("hidden");
-        TweenLite.fromTo(view.$el, 0.4, {
+        TweenLite.fromTo(view.$el, 0, {
           alpha: 0
         }, opts);
         this.currView = view;
