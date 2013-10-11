@@ -29,7 +29,7 @@
         return this.el;
       },
       back: function() {
-        return swipy.router.navigate("todo", true);
+        return history.back();
       },
       save: function() {
         var atts, opts,

@@ -22,7 +22,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 
 			return @el
 		back: ->
-			swipy.router.navigate( "todo", yes )
+			history.back()
 		save: ->
 			atts = {
 				title: @getTitle()
