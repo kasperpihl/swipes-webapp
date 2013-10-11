@@ -7,6 +7,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		initialize: ->
 			_.bindAll( @, "handleAction" )
 			$( ".open-sidebar" ).on( "click", @handleAction )
+			
 		handleAction: (e) ->
 			trigger = $ e.currentTarget
 

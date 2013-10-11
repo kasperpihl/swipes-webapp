@@ -2,7 +2,7 @@
 	display: none;
 	body.sidebar-open & { display: block; }
 
-	position: absolute;
+	position: fixed;
 	left: 0;
 
 	min-height: 100%;
