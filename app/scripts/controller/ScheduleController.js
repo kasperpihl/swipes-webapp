@@ -37,7 +37,10 @@
           task.unset("schedule", {
             silent: true
           });
-          task.set("schedule", date);
+          task.set({
+            schedule: date,
+            completionDate: null
+          });
         }
         this.view.currentTasks = void 0;
         return this.view.hide();
