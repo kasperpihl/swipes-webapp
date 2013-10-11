@@ -3,7 +3,6 @@
     return Backbone.View.extend({
       events: {
         "click .close-sidebar": "handleAction",
-        "click .settings": "handleAction",
         "click .log-out": "handleAction"
       },
       initialize: function() {

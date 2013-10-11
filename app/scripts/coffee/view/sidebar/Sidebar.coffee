@@ -2,7 +2,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		events: 
 			"click .close-sidebar": "handleAction"
-			"click .settings": "handleAction"
 			"click .log-out": "handleAction"
 		initialize: ->
 			_.bindAll( @, "handleAction" )
