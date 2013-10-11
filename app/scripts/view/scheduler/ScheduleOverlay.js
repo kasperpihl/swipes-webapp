@@ -3,7 +3,8 @@
     return Overlay.extend({
       className: 'overlay scheduler',
       events: {
-        "click .grid > a:not(.disabled)": "selectOption"
+        "click .grid > a:not(.disabled)": "selectOption",
+        "click .overlay-bg": "hide"
       },
       initialize: function() {
         Overlay.prototype.initialize.apply(this, arguments);
@@ -34,6 +35,9 @@
         return Backbone.trigger("pick-schedule-option", option);
       },
       hide: function(cancelled) {
+        if (cancelled == null) {
+          cancelled = true;
+        }
         if (cancelled && (this.currentTasks != null)) {
           Backbone.trigger("scheduler-cancelled", this.currentTasks);
         }

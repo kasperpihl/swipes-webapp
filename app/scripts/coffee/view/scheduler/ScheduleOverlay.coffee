@@ -3,6 +3,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		className: 'overlay scheduler'
 		events: 
 			"click .grid > a:not(.disabled)": "selectOption"
+			"click .overlay-bg": "hide"
 		initialize: ->
 			Overlay::initialize.apply( @, arguments )
 
@@ -24,7 +25,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		selectOption: (e) ->
 			option = e.currentTarget.getAttribute 'data-option'
 			Backbone.trigger( "pick-schedule-option", option )
-		hide: (cancelled) ->
+		hide: (cancelled = yes) ->
 			if cancelled and @currentTasks?
 				Backbone.trigger( "scheduler-cancelled", @currentTasks )
 
