@@ -51,9 +51,8 @@
 			background: $yellow;
 			color: white;
 
-			.schedule & {
-				background: $lobster;
-			}
+			.scheduled & { background: $lobster; }
+			.completed & { background: $green; }
 		}
 
 	}
