@@ -115,8 +115,6 @@ require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, Debug
     'use strict';
     window.$ = window.jQuery = $;
     
-    $(function() {
-        window.swipy = new App();
-        window.debugHelper = new DebugHelper();
-    });
+    window.swipy = new App();
+    window.debugHelper = new DebugHelper();
 });
