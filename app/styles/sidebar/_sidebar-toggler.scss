@@ -1,8 +1,9 @@
 .open-sidebar {
 	$size: emCalc(40px);
-	$padding: emCalc(20px);
-	position: absolute;
+	$padding: 0.5em;
+	position: fixed;
 	display: block;
+	body.sidebar-open & { display: none; }
 
 	width: $size; height: $size;
 	top: $padding; left: $padding;
@@ -22,20 +23,5 @@
 		text-decoration: none;
 		color: white;
 		background: lighten($green, 7%);
-	}
-}
-
-html.cssanimations {
-	body.sidebar-open .open-sidebar {
-		@extend .animated;
-		@extend .scaleDownOut;
-		@include experimental(animation-duration, 0.45s);
-		pointer-events: none;
-	}
-}
-
-html.no-cssanimations {
-	body.sidebar-open .open-sidebar {
-		display: none;
 	}
 }
