@@ -43,6 +43,19 @@
           }
         });
       },
+      getState: function() {
+        var schedule;
+        schedule = this.getValidatedSchedule();
+        if (this.get("completionDate")) {
+          return "completed";
+        } else {
+          if (schedule && schedule.getTime() <= new Date().getTime()) {
+            return "active";
+          } else {
+            return "scheduled";
+          }
+        }
+      },
       getDefaultSchedule: function() {
         var now;
         now = new Date();

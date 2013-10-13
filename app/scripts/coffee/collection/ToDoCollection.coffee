@@ -6,27 +6,11 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 			@on( "add", (model) -> model.save() )
 			@on( "destroy", (model) => @remove model )
 		getActive: -> 
-			now = new Date().getTime()
-			@filter (m) => 
-				schedule = m.getValidatedSchedule()
-				
-				if not schedule or m.get "completionDate"
-					return false
-				else
-					return schedule.getTime() <= now
+			@filter (m) => m.getState() is "active"
 		getScheduled: -> 
-			now = new Date().getTime()
-			
-			@filter (m) =>
-				return false if m.get "completionDate"
-
-				schedule = m.getValidatedSchedule()
-				return true if schedule is null # Means 'unspecified'
-				return schedule.getTime() > now
+			@filter (m) => m.getState() is "scheduled"
 		getCompleted: -> 
-			@filter (m) =>
-				m.get("completionDate")?
-
+			@filter (m) => m.getState() is "completed"
 		bumpOrder: (direction = "down", startFrom = 0) ->
 			if direction is "down"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom
