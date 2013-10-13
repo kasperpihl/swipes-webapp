@@ -6,7 +6,7 @@
 	
 	<h1 class="h2 title">
 		<span class="priority"></span>
-		<span contenteditable="true"><%= title %></span>
+		<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">
 	</h1>
 	
 	<% if (scheduleStr) { %>
@@ -43,7 +43,7 @@
 	
 	<section>
 		<div class="notes icon-note has-icon">
-			<p contenteditable="true"><% notes ? print(notes) : print("Add a note") %></p>
+			<textarea class="borderless" placeholder="Add a note"><%= notes %></textarea>
 		</div>
 	</section>
 

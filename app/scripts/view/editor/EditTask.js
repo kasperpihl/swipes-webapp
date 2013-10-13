@@ -22,9 +22,6 @@
         });
       },
       render: function() {
-        if (this.template == null) {
-          return this.el;
-        }
         this.$el.html(this.template(this.model.toJSON()));
         return this.el;
       },
@@ -38,6 +35,7 @@
           title: this.getTitle(),
           notes: this.getNotes()
         };
+        console.log("Saving ", atts);
         opts = {
           success: function() {
             return _this.back();
@@ -50,10 +48,10 @@
         return this.model.save(atts, opts);
       },
       getTitle: function() {
-        return this.$el.find(".title").text();
+        return this.$el.find(".title input").val();
       },
       getNotes: function() {
-        return this.$el.find(".notes p").text();
+        return this.$el.find(".notes textarea").val();
       },
       remove: function() {
         this.cleanUp();

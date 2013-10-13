@@ -44,19 +44,21 @@
 	}
 
 	> nav {
-		margin-top: 2em;
 		text-align: center;
 
 		a { margin-left: 4.7em; }
 		a:first-child { margin-left: 0; }
 		
 		@include breakpoint(tablet) {
-			margin-top: 5.3em;
 			a { margin-left: 8em; }
 		}
 	}
 
-	[contenteditable="true"] {
+	textarea, input {
+		color: inherit;
+		text-indent: 0;
+		width: 100%;
+
 		@include transition(color 0.2s ease-out);
 
 		&:focus, &:hover {
@@ -67,5 +69,9 @@
 			border:none;
 			outline:none;
 		}
+	}
+
+	textarea {
+		min-height: 6em;
 	}
 }

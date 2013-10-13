@@ -15,11 +15,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 		createTagEditor: ->
 			@tagEditor = new TagEditor { el: @$el.find(".icon-tags"), model: @model }
 		render: ->
-			# If template isnt set yet, just return the empty element
-			return @el if !@template?
-			
 			@$el.html @template @model.toJSON()
-
 			return @el
 		back: ->
 			history.back()
@@ -28,6 +24,8 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 				title: @getTitle()
 				notes: @getNotes()
 			}
+
+			console.log "Saving ", atts
 
 			opts = {
 				success: =>
@@ -39,9 +37,9 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 
 			@model.save( atts, opts )
 		getTitle: ->
-			@$el.find( ".title" ).text()
+			@$el.find( ".title input" ).val()
 		getNotes: ->
-			@$el.find( ".notes p" ).text()
+			@$el.find( ".notes textarea" ).val()
 		remove: ->
 			@cleanUp()
 			@$el.remove()
