@@ -4,7 +4,7 @@ define [
 	# Cache views
 	"view/Todo"
 	"view/Completed"
-	"view/Schedule"
+	"view/Scheduled"
 	], (Backbone, TweenLite) ->
 	class ViewController
 		constructor: (opts) ->

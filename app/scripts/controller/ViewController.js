@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "gsap", "view/Todo", "view/Completed", "view/Schedule"], function(Backbone, TweenLite) {
+  define(["backbone", "gsap", "view/Todo", "view/Completed", "view/Scheduled"], function(Backbone, TweenLite) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
