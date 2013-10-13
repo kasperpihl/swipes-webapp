@@ -6,6 +6,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 			"click .cancel": "back"
 			"click .save": "save"
 		initialize: ->
+			@$el.addClass @model.getState()
 			@setTemplate()
 			@render()
 			

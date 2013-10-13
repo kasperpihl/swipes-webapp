@@ -8,6 +8,7 @@
         "click .save": "save"
       },
       initialize: function() {
+        this.$el.addClass(this.model.getState());
         this.setTemplate();
         this.render();
         return this.createTagEditor();

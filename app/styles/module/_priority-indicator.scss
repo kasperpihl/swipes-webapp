@@ -9,7 +9,7 @@
 	width: $size; height: $size;
 	
 	background: $yellow;
-	.schedule & { background: $lobster }
+	.scheduled & { background: $lobster }
 	.completed & { background: $green }
 
 	border: $border-size solid $gray;
