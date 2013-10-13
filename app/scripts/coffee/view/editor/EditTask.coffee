@@ -39,9 +39,9 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 
 			@model.save( atts, opts )
 		getTitle: ->
-			@$el.find( ".title" )[0].innerText
+			@$el.find( ".title" ).text()
 		getNotes: ->
-			@$el.find( ".notes p" )[0].innerText
+			@$el.find( ".notes p" ).text()
 		remove: ->
 			@cleanUp()
 			@$el.remove()

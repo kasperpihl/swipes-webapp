@@ -50,10 +50,10 @@
         return this.model.save(atts, opts);
       },
       getTitle: function() {
-        return this.$el.find(".title")[0].innerText;
+        return this.$el.find(".title").text();
       },
       getNotes: function() {
-        return this.$el.find(".notes p")[0].innerText;
+        return this.$el.find(".notes p").text();
       },
       remove: function() {
         this.cleanUp();

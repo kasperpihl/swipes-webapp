@@ -12,7 +12,7 @@
       },
       toggleFilter: function(e) {
         var el, tag;
-        tag = $.trim(e.currentTarget.innerText);
+        tag = $.trim($(e.currentTarget).text());
         el = $(e.currentTarget).toggleClass("selected");
         if (el.hasClass("selected")) {
           return Backbone.trigger("apply-filter", "tag", tag);
@@ -44,7 +44,7 @@
       removeTag: function(e) {
         var tag, tagName, wasSelected;
         e.stopPropagation();
-        tagName = $.trim(e.currentTarget.parentNode.innerText);
+        tagName = $.trim($(e.currentTarget.parentNode).text());
         tag = swipy.tags.findWhere({
           title: tagName
         });

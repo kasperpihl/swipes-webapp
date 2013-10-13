@@ -8,7 +8,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@listenTo( swipy.tags, "add remove reset", @render, @ )
 			@render()
 		toggleFilter: (e) ->
-			tag = $.trim e.currentTarget.innerText
+			tag = $.trim $( e.currentTarget ).text()
 			el = $( e.currentTarget ).toggleClass "selected"
 
 			if el.hasClass "selected"
@@ -28,7 +28,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				swipy.tags.add { title: tagName }
 		removeTag: (e) ->
 			e.stopPropagation()
-			tagName = $.trim e.currentTarget.parentNode.innerText
+			tagName = $.trim $( e.currentTarget.parentNode ).text()
 			tag = swipy.tags.findWhere {title: tagName}
 
 			wasSelected = $(e.currentTarget.parentNode).hasClass "selected"
