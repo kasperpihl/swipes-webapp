@@ -40,11 +40,11 @@
         return icon.addClass(flag === true ? "icon-plus" : "icon-minus");
       },
       addTag: function(e) {
-        return this.addTagToModel(e.currentTarget.innerText);
+        return this.addTagToModel($(e.currentTarget).text());
       },
       removeTag: function(e) {
         var tag, tags;
-        tag = $.trim(e.currentTarget.parentNode.innerText);
+        tag = $.trim($(e.currentTarget.parentNode).text());
         tags = _.without(this.model.get("tags"), tag);
         this.model.unset("tags", {
           silent: true
@@ -110,11 +110,7 @@
         list = this.$el.find(".tag-pool .rounded-tags");
         list.empty();
         allTags = swipy.tags.pluck("title");
-        if (this.model.has("tags")) {
-          unusedTags = _.without.apply(_, [allTags].concat(__slice.call(this.model.get("tags"))));
-        } else {
-          unusedTags = allTags;
-        }
+        unusedTags = this.model.has("tags") ? _.without.apply(_, [allTags].concat(__slice.call(this.model.get("tags")))) : allTags;
         for (_i = 0, _len = unusedTags.length; _i < _len; _i++) {
           tagname = unusedTags[_i];
           this.renderTag(tagname, list);
@@ -127,8 +123,7 @@
         if (removable == null) {
           removable = false;
         }
-        tag = document.createElement("li");
-        tag.innerText = tagName;
+        tag = $("<li>" + tagName + "</li>");
         parent.append(tag);
         if (removable) {
           removeBtn = "					<a class='remove' href='JavaScript:void(0);' title='Remove'>						<span class='icon-cross'></span>					</a>				";

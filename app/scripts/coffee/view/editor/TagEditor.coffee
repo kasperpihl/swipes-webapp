@@ -32,10 +32,10 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			icon.addClass( if flag is on then "icon-plus" else "icon-minus" )
 		
 		addTag: (e) ->
-			@addTagToModel e.currentTarget.innerText
+			@addTagToModel $( e.currentTarget ).text()
 		
 		removeTag: (e) ->
-			tag = $.trim e.currentTarget.parentNode.innerText
+			tag = $.trim $( e.currentTarget.parentNode ).text()
 			tags = _.without( @model.get( "tags" ), tag )
 			
 			@model.unset( "tags", { silent: yes } )
@@ -92,13 +92,8 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			list.empty()
 			
 			allTags = swipy.tags.pluck "title"
-			if @model.has "tags"
-				unusedTags = _.without( allTags, @model.get("tags")... )
-			else
-				unusedTags = allTags
-
-			for tagname in unusedTags
-				@renderTag( tagname, list )
+			unusedTags = if @model.has( "tags" ) then _.without( allTags, @model.get("tags")... ) else allTags
+			@renderTag( tagname, list ) for tagname in unusedTags
 
 			tagInput = "
 				<li class='tag-input'>
@@ -110,8 +105,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			list.append tagInput
 		
 		renderTag: (tagName, parent, removable = no) ->
-			tag = document.createElement "li"
-			tag.innerText = tagName
+			tag = $( "<li>#{ tagName }</li>" )
 			parent.append tag
 
 			if removable
