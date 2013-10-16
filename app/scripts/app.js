@@ -20,9 +20,7 @@
         this.filter = new FilterController();
         this.settings = new SettingsController();
         if (!Backbone.History.started) {
-          return Backbone.history.start({
-            pushState: false
-          });
+          return Backbone.history.start();
         }
       };
 

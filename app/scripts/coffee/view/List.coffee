@@ -5,6 +5,7 @@ define [
 	"text!templates/todo-list.html"
 	# Cache views
 	"view/list/DesktopTask"
+	"view/list/TouchTask"
 	], (_, DefaultView, ActionBar, ToDoListTmpl) ->
 	DefaultView.extend
 		init: ->
@@ -86,10 +87,7 @@ define [
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeLeft("completed").then => 
-						m.set
-							completionDate: new Date()
-							schedule: null
+					view.swipeLeft("completed").then -> m.set { completionDate: new Date(), schedule: null }
 
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
@@ -98,7 +96,7 @@ define [
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeLeft("todo").then => 
+					view.swipeLeft("todo").then -> 
 						oneSecondAgo = new Date()
 						oneSecondAgo.setSeconds oneSecondAgo.getSeconds() - 1
 						m.set { completionDate: null, schedule: oneSecondAgo }

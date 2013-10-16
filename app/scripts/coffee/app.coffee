@@ -30,6 +30,6 @@ define [
 			@settings = new SettingsController()
 
 			unless Backbone.History.started 
-				Backbone.history.start { pushState: no }
+				Backbone.history.start()
 		fetchTodos: ->
 			@todos.fetch()

@@ -14,12 +14,15 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@init()
 			@render()
 
+			@bindEvents()
+
+		bindEvents: ->
 			# Bind all events manually, so events extending me can use the
 			# events hash freely
 			@$el.on( "click", ".todo-content", @toggleSelected )
 			@$el.on( "dblclick", "h2", @edit )
 			@$el.on( "click", ".action", @handleAction )
-		
+
 		setTemplate: ->
 			@template = _.template TaskTmpl
 

@@ -10,6 +10,9 @@
         this.setTemplate();
         this.init();
         this.render();
+        return this.bindEvents();
+      },
+      bindEvents: function() {
         this.$el.on("click", ".todo-content", this.toggleSelected);
         this.$el.on("dblclick", "h2", this.edit);
         return this.$el.on("click", ".action", this.handleAction);

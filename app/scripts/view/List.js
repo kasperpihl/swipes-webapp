@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html", "view/list/DesktopTask"], function(_, DefaultView, ActionBar, ToDoListTmpl) {
+  define(["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html", "view/list/DesktopTask", "view/list/TouchTask"], function(_, DefaultView, ActionBar, ToDoListTmpl) {
     return DefaultView.extend({
       init: function() {
         this.transitionDeferred = new $.Deferred();
@@ -105,13 +105,12 @@
           view = this.getViewForModel(task);
           if (view != null) {
             _results.push((function() {
-              var m,
-                _this = this;
+              var m;
               m = task;
               return view.swipeLeft("completed").then(function() {
                 return m.set({
                   completionDate: new Date(),
-                  schedule: null
+                  schedule: null 
                 });
               });
             })());
@@ -129,8 +128,7 @@
           view = this.getViewForModel(task);
           if (view != null) {
             _results.push((function() {
-              var m,
-                _this = this;
+              var m;
               m = task;
               return view.swipeLeft("todo").then(function() {
                 var oneSecondAgo;

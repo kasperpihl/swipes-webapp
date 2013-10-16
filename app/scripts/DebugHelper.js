@@ -1,5 +1,5 @@
 (function() {
-  define(['underscore', 'backbone'], function(_, Backbone) {
+  define(function() {
     var DebugHelper;
     return DebugHelper = (function() {
       function DebugHelper() {

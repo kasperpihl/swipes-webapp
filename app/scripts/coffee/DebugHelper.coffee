@@ -1,7 +1,4 @@
-define [
-	'underscore'
-	'backbone'
-	], (_, Backbone) ->
+define ->
 	class DebugHelper
 		constructor: ->
 			@setDummyTodos()
