@@ -874,7 +874,7 @@
     });
     return require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
       return describe("Tag Editor overlay", function() {
-        return describe("selecting shared tags", function() {
+        describe("Marking shared tags selected", function() {
           it("Should detect if any tasks have no tags", function() {
             var d, data, models, overlay;
             data = helpers.getDummyModels();
@@ -921,6 +921,12 @@
             });
             return expect(overlay.getTagsAppliedToAll()).to.have.length(1);
           });
+        });
+        return describe("Handling interaction / Updating models", function() {
+          it("Should detect if clicked tag is currently selected");
+          it("Should remove clicked tag from all tasks if clicked tag is marked selected");
+          it("Should add clicked tag to all tasks unless tag is marked selected");
+          return it("Should add new tag to all selected tasks if a new tag is created");
         });
       });
     });

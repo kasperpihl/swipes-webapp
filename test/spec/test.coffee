@@ -744,7 +744,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	require ["view/list/TagEditorOverlay"], (TagEditorOverlay) ->
 		describe "Tag Editor overlay", ->
-			describe "selecting shared tags", ->
+			describe "Marking shared tags selected", ->
 				it "Should detect if any tasks have no tags", ->
 					data = helpers.getDummyModels()
 					models = ( new ToDoModel d for d in data )
@@ -767,5 +767,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					overlay = new TagEditorOverlay { models: models }
 
 					expect(overlay.getTagsAppliedToAll()).to.have.length 1
+
+			describe "Handling interaction / Updating models", ->
+				it "Should detect if clicked tag is currently selected"
+				it "Should remove clicked tag from all tasks if clicked tag is marked selected"
+				it "Should add clicked tag to all tasks unless tag is marked selected"
+				it "Should add new tag to all selected tasks if a new tag is created"
 
 
