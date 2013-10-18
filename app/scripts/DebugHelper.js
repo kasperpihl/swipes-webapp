@@ -4,11 +4,6 @@
     return DebugHelper = (function() {
       function DebugHelper() {
         this.setDummyTodos();
-        require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
-          return new TagEditorOverlay({
-            models: swipy.todos.models
-          });
-        });
       }
 
       DebugHelper.prototype.setDummyTodos = function() {
@@ -33,7 +28,6 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["work", "Project y19"],
             notes: ""
           }, {
             title: "Buy a new Helmet",
@@ -67,7 +61,6 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Random tag", "work"],
             notes: ""
           }, {
             title: "Check that insurance covers bike",
