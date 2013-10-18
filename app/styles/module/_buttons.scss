@@ -28,4 +28,15 @@
 	// Some icons have fucked up vertical alignment, so we need to manually adjust.
 	.icon-cross { position: relative; top: 0.1em; }
 	.icon-arr-left { position: relative; top: 0.1em; }
+
+	&.inverted {
+		color: white;
+		border-color: white;
+
+		&:hover {
+			color: $gray-light;
+			background: white;
+			border-color: transparent;
+		}
+	}
 }
