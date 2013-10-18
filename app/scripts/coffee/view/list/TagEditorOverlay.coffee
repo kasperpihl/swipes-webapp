@@ -22,8 +22,8 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			# Then, go over each task and find out if there are any tags shared by all of them
 			_.intersection tagLists...
 		render: ->
-			console.log @getTagsAppliedToAll()
-			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAllTasks: @getTagsAppliedToAll() } )
+			console.log "Shared tags: ", @getTagsAppliedToAll()
+			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
 			$("body").append @$el
 			@show()
 			return @

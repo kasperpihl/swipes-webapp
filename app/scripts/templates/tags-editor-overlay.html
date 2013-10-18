@@ -1,7 +1,20 @@
 <div class="overlay-bg"></div>
-<div class="overlay-content">
+<div class="overlay-content row">
 	
-	<h1>Tag editor</h1>
-	<p>&hellip;</p>
+	<div class="wrap col-xs-12 col-sm-6 col-sm-offset-3">
+		<ol class="rounded-tags">
+			
+			<% _.each(allTags, function(tag) { %>
+				
+				<% if ( _.contains( tagsAppliedToAll, tag.title ) ) { %>
+					<li class="selected"><%= tag.title %></li>
+				<% } else { %>
+					<li><%= tag.title %></li>
+				<% } %>
+
+			<% }) %>
+
+		</ol>
+	</div>
 
 </div>

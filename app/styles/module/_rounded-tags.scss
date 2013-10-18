@@ -14,12 +14,14 @@
 		
 		padding: emCalc(9px) emCalc(12px);
 		background: $gray-lighter;
+		@include transition(background 0.15s ease-out);
 		border-radius: 0.5em;
 
 		color: white;
 		font-size: 0.8em;
 		font-family: $font-light;
 
+		cursor: pointer;
 
 		a.remove {
 			display: inline-block;
@@ -38,11 +40,8 @@
 			}
 		}
 
-		&:hover {
-			a.remove {
-				opacity: 1;
-				width: 1.3em;
-			}
+		&:hover, &.selected {
+			background: $gray-warm;
 		}
 	}
 

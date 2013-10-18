@@ -28,10 +28,10 @@
         return _.intersection.apply(_, tagLists);
       },
       render: function() {
-        console.log(this.getTagsAppliedToAll());
+        console.log("Shared tags: ", this.getTagsAppliedToAll());
         this.$el.html(this.template({
           allTags: swipy.tags.toJSON(),
-          tagsAppliedToAllTasks: this.getTagsAppliedToAll()
+          tagsAppliedToAll: this.getTagsAppliedToAll()
         }));
         $("body").append(this.$el);
         this.show();

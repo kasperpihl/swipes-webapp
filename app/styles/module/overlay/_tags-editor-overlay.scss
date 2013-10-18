@@ -18,4 +18,15 @@ body.tags-editor-open {
 
 .overlay.tags-editor {
 	.overlay-bg { background: rgba(white, 0.75); }
+
+	.overlay-content {
+
+	}
+
+	.wrap {
+		max-width: 90%;
+		@include breakpoint(max-width, 767px) { margin: auto; }
+		@include breakpoint(min-width, emCalc(400px)) { max-width: 70%; }
+	}
 }
+
