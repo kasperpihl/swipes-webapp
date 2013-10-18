@@ -1,0 +1,21 @@
+	
+body.tags-editor-open {
+
+	.overlay.tags-editor {
+		visibility: visible;
+		.overlay-bg { opacity: 1; }
+	}
+	
+	&.hide-tags-editor .overlay.tags-editor {
+		.overlay-bg {
+			opacity: 0;
+			@include transition(opacity 0.35s ease-out 0.1s);
+		}
+
+		.overlay-content { display: none; }
+	}
+}
+
+.overlay.tags-editor {
+	.overlay-bg { background: rgba(white, 0.75); }
+}

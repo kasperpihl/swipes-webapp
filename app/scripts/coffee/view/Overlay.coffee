@@ -36,21 +36,29 @@ define ["backbone"], (Backbone) ->
 		afterShow: ->
 			# Hook for views extending me
 		hide: (cancelled = no) ->
-			if not @shown then return
+			dfd = new $.Deferred()
+			if not @shown
+				dfd.resolve()
+				return dfd.promise()
+			
 			@shown = no
 
 			$("body").addClass @hideClassName
 			@hideTimer = setTimeout =>
 					$("body").toggleClass( @showClassName, no )
 					@afterHide()
+					dfd.resolve()
 				, 400
 					
+			return dfd.promise()
 		afterHide: ->
 			# Hook for views extending me
 		cleanUp: ->
 			@stopListening()
 			$(document).off()
 		destroy: ->
+			console.log "Destroy begun"
 			@hide().done => 
+				console.log "Destroy done"
 				@cleanUp()
-				@$el.empty()
+				@$el.remove()

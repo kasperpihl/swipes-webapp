@@ -4,6 +4,11 @@
     return DebugHelper = (function() {
       function DebugHelper() {
         this.setDummyTodos();
+        require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
+          return new TagEditorOverlay({
+            models: swipy.todos.models
+          });
+        });
       }
 
       DebugHelper.prototype.setDummyTodos = function() {

@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "view/scheduler/SettingsOverlay", "model/SettingsModel"], function(_, Backbone, SettingsOverlayView, SettingsModel) {
+  define(["underscore", "backbone", "view/settings/SettingsOverlay", "model/SettingsModel"], function(_, Backbone, SettingsOverlayView, SettingsModel) {
     var SettingsController;
     return SettingsController = (function() {
       function SettingsController(opts) {

@@ -42,19 +42,24 @@
       },
       afterShow: function() {},
       hide: function(cancelled) {
-        var _this = this;
+        var dfd,
+          _this = this;
         if (cancelled == null) {
           cancelled = false;
         }
+        dfd = new $.Deferred();
         if (!this.shown) {
-          return;
+          dfd.resolve();
+          return dfd.promise();
         }
         this.shown = false;
         $("body").addClass(this.hideClassName);
-        return this.hideTimer = setTimeout(function() {
+        this.hideTimer = setTimeout(function() {
           $("body").toggleClass(_this.showClassName, false);
-          return _this.afterHide();
+          _this.afterHide();
+          return dfd.resolve();
         }, 400);
+        return dfd.promise();
       },
       afterHide: function() {},
       cleanUp: function() {
@@ -63,9 +68,11 @@
       },
       destroy: function() {
         var _this = this;
+        console.log("Destroy begun");
         return this.hide().done(function() {
+          console.log("Destroy done");
           _this.cleanUp();
-          return _this.$el.empty();
+          return _this.$el.remove();
         });
       }
     });

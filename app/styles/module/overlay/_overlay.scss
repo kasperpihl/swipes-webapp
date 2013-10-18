@@ -40,12 +40,12 @@
 	}
 }
 
-body.overlay-open, body.settings-open, body.scheduler-open {
+body.overlay-open, body.settings-open, body.scheduler-open, body.tags-editor-open {
 	.container {
-		-webkit-filter: blur(10px);
+		-webkit-filter: blur(5px);
 	}
 
-	&.hide-overlay, &.hide-settings, &.hide-scheduler {
+	&.hide-overlay, &.hide-settings, &.hide-scheduler, &.hide-tags-editor {
 		.container {
 			-webkit-filter: none;
 		}

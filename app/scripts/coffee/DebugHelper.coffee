@@ -2,6 +2,9 @@ define ->
 	class DebugHelper
 		constructor: ->
 			@setDummyTodos()
+
+			require ["view/list/TagEditorOverlay"], (TagEditorOverlay) ->
+				new TagEditorOverlay( models: swipy.todos.models )
 		setDummyTodos: ->
 			# Reset collection with dummy data
 			swipy.todos.reset @getDummyData()

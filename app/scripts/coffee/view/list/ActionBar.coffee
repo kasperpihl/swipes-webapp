@@ -1,4 +1,4 @@
-define ["underscore", "backbone"], (_, Backbone) ->
+define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, TagEditorOverlay) ->
 	Backbone.View.extend
 		el: ".action-bar"
 		events: 
@@ -30,7 +30,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			targetCid = swipy.todos.findWhere( selected: yes ).cid
 			swipy.router.navigate( "edit/#{ targetCid }", yes )
 		editTags: ->
-			alert "We are adding multiple task tagging soon :)"
+			@tagEditor = new TagEditorOverlay( models: swipy.todos.where( selected: yes ) )
 		deleteTasks: ->
 			targets = swipy.todos.where( selected: yes )
 			if confirm "Delete #{targets.length} tasks?"

@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone"], function(_, Backbone) {
+  define(["underscore", "backbone", "view/list/TagEditorOverlay"], function(_, Backbone, TagEditorOverlay) {
     return Backbone.View.extend({
       el: ".action-bar",
       events: {
@@ -47,7 +47,11 @@
         return swipy.router.navigate("edit/" + targetCid, true);
       },
       editTags: function() {
-        return alert("We are adding multiple task tagging soon :)");
+        return this.tagEditor = new TagEditorOverlay({
+          models: swipy.todos.where({
+            selected: true
+          })
+        });
       },
       deleteTasks: function() {
         var model, order, targets, _i, _len;

@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "view/scheduler/SettingsOverlay", "model/SettingsModel"], (_, Backbone, SettingsOverlayView, SettingsModel) ->
+define ["underscore", "backbone", "view/settings/SettingsOverlay", "model/SettingsModel"], (_, Backbone, SettingsOverlayView, SettingsModel) ->
 	class SettingsController
 		constructor: (opts) ->
 			@init()
