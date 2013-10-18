@@ -781,7 +781,7 @@
         });
       });
     });
-    return require(["controller/TaskInputController"], function(TaskInputController) {
+    require(["controller/TaskInputController"], function(TaskInputController) {
       return describe("Task Input", function() {
         var callback, taskInput;
         taskInput = null;
@@ -868,6 +868,58 @@
             expect(model.get("tags")).to.have.length(2);
             expect(model.get("tags")).to.include("tags");
             return expect(model.get("tags")).to.include("rags");
+          });
+        });
+      });
+    });
+    return require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
+      return describe("Tag Editor overlay", function() {
+        return describe("selecting shared tags", function() {
+          it("Should detect if any tasks have no tags", function() {
+            var d, data, models, overlay;
+            data = helpers.getDummyModels();
+            models = (function() {
+              var _i, _len, _results;
+              _results = [];
+              for (_i = 0, _len = data.length; _i < _len; _i++) {
+                d = data[_i];
+                _results.push(new ToDoModel(d));
+              }
+              return _results;
+            })();
+            models[0].unset("tags");
+            overlay = new TagEditorOverlay({
+              models: models
+            });
+            return expect(overlay.getTagsAppliedToAll()).to.have.length(0);
+          });
+          return it("Should detect if any tags are shared between the selected tasks", function() {
+            var d, data, models, overlay;
+            data = [
+              {
+                title: "Task 1",
+                tags: ["tag1", "tag2"]
+              }, {
+                title: "Task 2",
+                tags: ["tag2"]
+              }, {
+                title: "Task 3",
+                tags: ["tag2", "tag3"]
+              }
+            ];
+            models = (function() {
+              var _i, _len, _results;
+              _results = [];
+              for (_i = 0, _len = data.length; _i < _len; _i++) {
+                d = data[_i];
+                _results.push(new ToDoModel(d));
+              }
+              return _results;
+            })();
+            overlay = new TagEditorOverlay({
+              models: models
+            });
+            return expect(overlay.getTagsAppliedToAll()).to.have.length(1);
           });
         });
       });

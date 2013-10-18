@@ -742,3 +742,30 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					expect( model.get "tags" ).to.include "tags"
 					expect( model.get "tags" ).to.include "rags"
 
+	require ["view/list/TagEditorOverlay"], (TagEditorOverlay) ->
+		describe "Tag Editor overlay", ->
+			describe "selecting shared tags", ->
+				it "Should detect if any tasks have no tags", ->
+					data = helpers.getDummyModels()
+					models = ( new ToDoModel d for d in data )
+					models[0].unset "tags"
+					overlay = new TagEditorOverlay { models: models }
+					expect(overlay.getTagsAppliedToAll()).to.have.length 0
+
+				it "Should detect if any tags are shared between the selected tasks", ->
+					data = [
+							title: "Task 1"
+							tags: ["tag1", "tag2"]
+						,
+							title: "Task 2"
+							tags: ["tag2"]
+						,
+							title: "Task 3"
+							tags: ["tag2", "tag3"]
+					]
+					models = ( new ToDoModel d for d in data )
+					overlay = new TagEditorOverlay { models: models }
+
+					expect(overlay.getTagsAppliedToAll()).to.have.length 1
+
+
