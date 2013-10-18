@@ -34,7 +34,7 @@ define ->
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
-					#tags: ["Personal", "Bike", "Outside"]
+					tags: ["Personal", "Bike", "Outside"]
 					notes: ""
 				,
 					title: "Renew Wired Magazine subscription"
@@ -59,6 +59,7 @@ define ->
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
+					tags: ["Random tag"]
 					notes: ""
 				,
 					title: "Check that insurance covers bike"
@@ -66,6 +67,7 @@ define ->
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
+					tags: ["Ahrengotti Del Barista e Assasino"]
 					notes: ""
 				,
 					title: "Dirt Jumps, Dirt Jumps, Dirt Jumps!"
@@ -73,6 +75,7 @@ define ->
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
+					tags: ["Random tag 2"]
 					notes: ""
 			]
 		
