@@ -90,6 +90,9 @@
         var tags;
         if (model.has("tags")) {
           tags = model.get("tags");
+          if (_.contains(tags, tagName)) {
+            return;
+          }
           tags.push(tagName);
           model.unset("tags", {
             silent: true

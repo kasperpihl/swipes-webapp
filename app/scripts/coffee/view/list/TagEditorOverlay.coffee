@@ -61,6 +61,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 		addTagToModel: (tagName, model) ->
 			if model.has "tags"
 				tags = model.get "tags"
+				if _.contains( tags, tagName ) then return
 				tags.push tagName
 				model.unset( "tags", { silent: yes } )
 				model.set( "tags", tags )
