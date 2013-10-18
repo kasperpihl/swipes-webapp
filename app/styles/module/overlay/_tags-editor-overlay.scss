@@ -34,6 +34,10 @@ body.tags-editor-open {
 		
 		padding: 1em 1em 0.4em;
 		border-radius: 0.5em;
+
+		@include breakpoint(tablet) {
+			padding: 3em 3em 2.4em;
+		}
 	}
 }
 
