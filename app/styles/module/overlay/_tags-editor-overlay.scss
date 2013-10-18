@@ -17,16 +17,23 @@ body.tags-editor-open {
 }
 
 .overlay.tags-editor {
-	.overlay-bg { background: rgba(white, 0.75); }
+	.overlay-bg { background: rgba( $gray-md-dark, 0.6 ); }
 
 	.overlay-content {
 
 	}
 
 	.wrap {
-		max-width: 90%;
-		@include breakpoint(max-width, 767px) { margin: auto; }
-		@include breakpoint(min-width, emCalc(400px)) { max-width: 70%; }
+		max-width: 95%;
+		@include breakpoint(min-width, emCalc(400px)) { max-width: 85%; }
+		@include breakpoint(min-width, emCalc(550px)) { max-width: emCalc(486px); }
+
+		background: white;
+		
+		margin: 0 auto 2.5em;
+		
+		padding: 1em 1em 0.4em;
+		border-radius: 0.5em;
 	}
 }
 
