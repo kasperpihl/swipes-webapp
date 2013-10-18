@@ -19,8 +19,20 @@
       setTemplate: function() {
         return this.template = _.template(TagsEditorOverlayTmpl);
       },
+      getTagsAppliedToAll: function() {
+        var tagLists;
+        tagLists = _.invoke(this.options.models, "get", "tags");
+        if (_.contains(tagLists, null)) {
+          return [];
+        }
+        return _.intersection.apply(_, tagLists);
+      },
       render: function() {
-        this.$el.html(this.template({}));
+        console.log(this.getTagsAppliedToAll());
+        this.$el.html(this.template({
+          allTags: swipy.tags.toJSON(),
+          tagsAppliedToAllTasks: this.getTagsAppliedToAll()
+        }));
         $("body").append(this.$el);
         this.show();
         return this;

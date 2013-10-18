@@ -14,8 +14,16 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			$(window).on( "resize", @handleResize )
 		setTemplate: ->
 			@template = _.template TagsEditorOverlayTmpl
+		getTagsAppliedToAll: ->
+			# First check that all currently selected tasks have tags applied
+			tagLists = _.invoke( @options.models, "get", "tags" )
+			return [] if _.contains( tagLists, null )
+				
+			# Then, go over each task and find out if there are any tags shared by all of them
+			_.intersection tagLists...
 		render: ->
-			@$el.html @template( {} )
+			console.log @getTagsAppliedToAll()
+			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAllTasks: @getTagsAppliedToAll() } )
 			$("body").append @$el
 			@show()
 			return @
