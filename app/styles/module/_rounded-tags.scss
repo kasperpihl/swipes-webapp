@@ -40,7 +40,11 @@
 			}
 		}
 
-		&:hover, &.selected {
+		&:hover {
+			background: $gray-light;
+		}
+
+		&.selected {
 			background: $gray-warm;
 		}
 	}

@@ -68,9 +68,7 @@
       },
       destroy: function() {
         var _this = this;
-        console.log("Destroy begun");
         return this.hide().done(function() {
-          console.log("Destroy done");
           _this.cleanUp();
           return _this.$el.remove();
         });

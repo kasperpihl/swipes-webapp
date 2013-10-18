@@ -3,7 +3,9 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 		className: 'overlay tags-editor'
 		events: 
 			"click .overlay-bg": "hide"
-			"click .close": "hide"
+			"click .save": "hide"
+			"click .rounded-tags li:not(.tag-input)": "toggleTag"
+			"submit form": "createTag"
 		initialize: ->
 			Overlay::initialize.apply( @, arguments )
 			@showClassName = "tags-editor-open"
@@ -21,16 +23,57 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 				
 			# Then, go over each task and find out if there are any tags shared by all of them
 			_.intersection tagLists...
-		render: ->
-			console.log "Shared tags: ", @getTagsAppliedToAll()
+		render: () ->
 			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
-			$("body").append @$el
+			
+			if not @addedToDom
+				$("body").append @$el
+				@addedToDom = yes
+			
 			@show()
-			return @
-		afterShow: ->
 			@handleResize()
+			@$el.find( ".tag-input input" ).focus()
+			return @
 		afterHide: ->
 			@destroy()
+		toggleTag: (e) ->
+			target = $ e.currentTarget
+			remove = target.hasClass "selected"
+			tag = target.text()
+			
+			console.log "Toggle #{tag} ", !remove
+
+			if remove then @removeTagFromModels tag
+			else @addTagToModels( tag, no )
+		createTag: (e) ->
+			e.preventDefault()
+			tagName = @$el.find("form.add-tag input").val()
+			return if tagName is ""
+
+			@addTagToModels tagName
+		addTagToModels: (tagName, addToCollection = yes) ->
+			if addToCollection and _.contains( swipy.tags.pluck( "title" ), tagName )
+				return alert "That tag already exists"
+			else
+				@addTagToModel( tagName, model ) for model in @options.models
+				if addToCollection then swipy.tags.getTagsFromTasks()
+				@render()
+		addTagToModel: (tagName, model) ->
+			if model.has "tags"
+				tags = model.get "tags"
+				tags.push tagName
+				model.unset( "tags", { silent: yes } )
+				model.set( "tags", tags )
+			else
+				return model.set( "tags", [tagName] )
+		removeTagFromModels: (tag) ->
+			for model in @options.models
+				tags = model.get "tags"
+				newTags = _.without( tags, tag )
+				model.unset( "tags", { silent: yes } )
+				model.set( "tags", newTags )
+
+			@render()
 		handleResize: ->
 			return unless @shown
 			

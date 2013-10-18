@@ -57,8 +57,6 @@ define ["backbone"], (Backbone) ->
 			@stopListening()
 			$(document).off()
 		destroy: ->
-			console.log "Destroy begun"
 			@hide().done => 
-				console.log "Destroy done"
 				@cleanUp()
 				@$el.remove()

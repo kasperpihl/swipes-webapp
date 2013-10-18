@@ -55,13 +55,11 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			tags.push tagName
 			@model.unset( "tags", { silent: yes } )
 
-			# If it's a new tag, add it to the stack
-			if addToCollection 
-				unless _.contains( swipy.tags.pluck( "title" ), tagName )
-					swipy.tags.add { title: tagName }
-			
-			# This trigger re-rendering
+			# This triggers re-rendering
 			@model.set( "tags", tags )
+			
+			# If it's a new tag, add it to the stack
+			if addToCollection then swipy.tags.getTagsFromTasks()
 		
 		render: ->
 			@renderTags()

@@ -73,14 +73,10 @@
         this.model.unset("tags", {
           silent: true
         });
+        this.model.set("tags", tags);
         if (addToCollection) {
-          if (!_.contains(swipy.tags.pluck("title"), tagName)) {
-            swipy.tags.add({
-              title: tagName
-            });
-          }
+          return swipy.tags.getTagsFromTasks();
         }
-        return this.model.set("tags", tags);
       },
       render: function() {
         this.renderTags();

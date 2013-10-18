@@ -4,6 +4,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@getTagsFromTasks()
 			@on( "remove", @handleTagDeleted, @ )
 		getTagsFromTasks: ->
+
+
 			tags = []
 			swipy.todos.each (m) ->
 				if m.has "tags" then tags.push tag for tag in m.get "tags"
@@ -12,7 +14,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			tags = _.unique tags
 			
 			# Finally add tags to our collection
-			@add { title: tagname } for tagname in tags
+			tagObjs = ( { title: tagname } for tagname in tags )
+			@reset tagObjs
 
 		handleTagDeleted: (model) ->
 			tagName = model.get "title"

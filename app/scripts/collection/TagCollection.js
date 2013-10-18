@@ -6,7 +6,7 @@
         return this.on("remove", this.handleTagDeleted, this);
       },
       getTagsFromTasks: function() {
-        var tagname, tags, _i, _len, _results;
+        var tagObjs, tagname, tags;
         tags = [];
         swipy.todos.each(function(m) {
           var tag, _i, _len, _ref, _results;
@@ -21,14 +21,18 @@
           }
         });
         tags = _.unique(tags);
-        _results = [];
-        for (_i = 0, _len = tags.length; _i < _len; _i++) {
-          tagname = tags[_i];
-          _results.push(this.add({
-            title: tagname
-          }));
-        }
-        return _results;
+        tagObjs = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = tags.length; _i < _len; _i++) {
+            tagname = tags[_i];
+            _results.push({
+              title: tagname
+            });
+          }
+          return _results;
+        })();
+        return this.reset(tagObjs);
       },
       handleTagDeleted: function(model) {
         var affectedTasks, oldTags, tagName, task, _i, _len, _results;
