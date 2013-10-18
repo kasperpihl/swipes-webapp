@@ -492,12 +492,13 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 				# If 1 and 2 is correct we know that 3 is too.
 
-	require ["model/ScheduleModel", "momentjs"], (ScheduleModel, Moment) ->
+	require ["model/ScheduleModel", "model/SettingsModel", "momentjs"], (ScheduleModel, SettingsModel, Moment) ->
 		describe "Schedule model", ->
-			model = null
+			model = settings = null
 
 			beforeEach ->
 				model = new ScheduleModel()
+				settings = new SettingsModel()
 
 			after ->
 				$(".overlay.scheduler").remove()
@@ -558,7 +559,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 			it "Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", ->
 				saturday = moment().endOf "week"
-				saturday.day(6).hour(model.rules.weekend.morning)
+				saturday.day(6).hour(settings.get("snoozes").weekend.morning.hour)
 				newDate = model.getDateFromScheduleOption( "this weekend", saturday )
 
 				expect( newDate ).to.exist
@@ -570,7 +571,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 			it "Should return a new date this following monday at 9:00 when scheduling for 'next week'", ->
 				monday = moment().startOf "week"
-				monday.day(1).hour(model.rules.weekday.morning) # Defautl is sunday. Upgrade that to monday.
+				monday.day(1).hour(settings.get("snoozes").weekday.morning.hour) # Defautl is sunday. Upgrade that to monday.
 				newDate = model.getDateFromScheduleOption( "next week", monday )
 
 				expect( newDate ).to.exist

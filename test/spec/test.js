@@ -623,12 +623,13 @@
         });
       });
     });
-    require(["model/ScheduleModel", "momentjs"], function(ScheduleModel, Moment) {
+    require(["model/ScheduleModel", "model/SettingsModel", "momentjs"], function(ScheduleModel, SettingsModel, Moment) {
       return describe("Schedule model", function() {
-        var model;
-        model = null;
+        var model, settings;
+        model = settings = null;
         beforeEach(function() {
-          return model = new ScheduleModel();
+          model = new ScheduleModel();
+          return settings = new SettingsModel();
         });
         after(function() {
           return $(".overlay.scheduler").remove();
@@ -684,7 +685,7 @@
         it("Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", function() {
           var newDate, parsedNewDate, saturday;
           saturday = moment().endOf("week");
-          saturday.day(6).hour(model.rules.weekend.morning);
+          saturday.day(6).hour(settings.get("snoozes").weekend.morning.hour);
           newDate = model.getDateFromScheduleOption("this weekend", saturday);
           expect(newDate).to.exist;
           parsedNewDate = moment(newDate);
@@ -695,7 +696,7 @@
         it("Should return a new date this following monday at 9:00 when scheduling for 'next week'", function() {
           var monday, newDate, parsedNewDate;
           monday = moment().startOf("week");
-          monday.day(1).hour(model.rules.weekday.morning);
+          monday.day(1).hour(settings.get("snoozes").weekday.morning.hour);
           newDate = model.getDateFromScheduleOption("next week", monday);
           expect(newDate).to.exist;
           parsedNewDate = moment(newDate);
