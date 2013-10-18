@@ -1,17 +1,13 @@
-
-require [
-	"jquery", 
-	"underscore", 
-	"backbone",
-	"model/ToDoModel"
-
-	], ($, _, Backbone, ToDoModel) ->
+define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone, ToDoModel) ->
 	
 	contentHolder = $("#content-holder")
 
 	helpers = 
 		getDummyModels: ->
-			[
+			future = new Date()
+			future.setDate( future.getDate() + 1 )
+
+			return [
 					title: "Follow up on Martin"
 					order: 0
 					schedule: new Date()
@@ -32,7 +28,7 @@ require [
 				,
 					title: "Dummy task #2"
 					order: 1
-					schedule: new Date("October 13, 2013 11:13:00")
+					schedule: future
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
@@ -281,7 +277,7 @@ require [
 	#
 	# Scheduled list View
 	#
-	require ["view/Schedule"], (ScheduleView) ->
+	require ["view/Scheduled"], (ScheduleView) ->
 		laterToday = new Date()
 		tomorrow = new Date()
 		nextMonth = new Date()

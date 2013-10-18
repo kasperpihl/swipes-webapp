@@ -1,9 +1,12 @@
 (function() {
-  require(["jquery", "underscore", "backbone", "model/ToDoModel"], function($, _, Backbone, ToDoModel) {
+  define(["jquery", "underscore", "backbone", "model/ToDoModel"], function($, _, Backbone, ToDoModel) {
     var contentHolder, helpers;
     contentHolder = $("#content-holder");
     helpers = {
       getDummyModels: function() {
+        var future;
+        future = new Date();
+        future.setDate(future.getDate() + 1);
         return [
           {
             title: "Follow up on Martin",
@@ -26,7 +29,7 @@
           }, {
             title: "Dummy task #2",
             order: 1,
-            schedule: new Date("October 13, 2013 11:13:00"),
+            schedule: future,
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
@@ -298,7 +301,7 @@
     				expect( children ).to.have.length.lessThan 1
     */
 
-    require(["view/Schedule"], function(ScheduleView) {
+    require(["view/Scheduled"], function(ScheduleView) {
       var laterToday, nextMonth, now, todos, tomorrow, view;
       laterToday = new Date();
       tomorrow = new Date();

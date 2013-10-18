@@ -33,18 +33,18 @@
 
 	<!-- include spec files here... -->
 	<script>
-		require(["../../test/spec/test"], function() {
-
+		setTimeout(function() {
 			// Timeout to make sure scripts have been pulled in by require first
-			setTimeout(function() {
+			require(["../../test/spec/test"], function() {
+				console.log("Test spec loaded");
 				// We don't want popups when testing
 				swipy.errors.destroy()
 				swipy.errors = null
 				
 				// Start tests
 				mocha.globals(["*"]).run();
-			}, 1850);
-		});
+			});
+		}, 850);
 	</script>
 
 	<script>
