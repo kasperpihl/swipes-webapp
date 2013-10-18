@@ -42,7 +42,7 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Personal", "Bike", "Outside"],
+            tags: ["Personal", "work", "Bike", "Outside"],
             notes: ""
           }, {
             title: "Renew Wired Magazine subscription",
@@ -59,7 +59,7 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Errand", "City"],
+            tags: ["Errand", "City", "work"],
             notes: ""
           }, {
             title: "Buy a biiiiiiiike!!!",
@@ -67,7 +67,7 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Random tag"],
+            tags: ["Random tag", "work"],
             notes: ""
           }, {
             title: "Check that insurance covers bike",
@@ -75,7 +75,7 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Ahrengotti Del Barista e Assasino"],
+            tags: ["Ahrengotti Del Barista e Assasino", "work"],
             notes: ""
           }, {
             title: "Dirt Jumps, Dirt Jumps, Dirt Jumps!",
@@ -83,7 +83,7 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["Random tag 2"],
+            tags: ["Random tag 2", "work"],
             notes: ""
           }
         ];
