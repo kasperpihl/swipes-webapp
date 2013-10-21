@@ -61,10 +61,10 @@
       },
       render: function() {
         if (this.template == null) {
-          return this.el;
+          return this;
         }
         this.$el.html(this.template(this.model.toJSON()));
-        return this.el;
+        return this;
       },
       remove: function() {
         this.cleanUp();

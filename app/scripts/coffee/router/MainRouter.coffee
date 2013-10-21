@@ -5,7 +5,7 @@ define ['backbone'], (Backbone) ->
 			"settings/:id": "settings"
 			"edit/:id": "edit"
 			"list/:id": "gotoList"
-			"": "root"
+			"*": "root"
 		root: ->
 			@navigate( "list/todo", yes )
 		gotoList: (id) -> 

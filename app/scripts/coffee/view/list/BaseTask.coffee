@@ -61,11 +61,9 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		
 		render: ->
 			# If template isnt set yet, just return the empty element
-			return @el if !@template?
-			
+			return @ unless @template?
 			@$el.html @template @model.toJSON()
-
-			return @el
+			return @
 		
 		remove: ->
 			@cleanUp()

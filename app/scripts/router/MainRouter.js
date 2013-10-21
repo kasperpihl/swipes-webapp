@@ -7,7 +7,7 @@
         "settings/:id": "settings",
         "edit/:id": "edit",
         "list/:id": "gotoList",
-        "": "root"
+        "*": "root"
       },
       root: function() {
         return this.navigate("list/todo", true);
