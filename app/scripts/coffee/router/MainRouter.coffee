@@ -15,6 +15,7 @@ define ['backbone'], (Backbone) ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
 		edit: (taskId) ->
+			console.log "Edit task #{taskId}"
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
 		settings: (subview) ->
@@ -24,7 +25,7 @@ define ['backbone'], (Backbone) ->
 		updateHistory: ->
 			@history.push arguments
 		back: ->
-			if @history.length > 1
+			if @history.length > 0
 				window.history.back()
 			
 			else

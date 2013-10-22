@@ -21,6 +21,7 @@
         return Backbone.trigger("navigate/view", id);
       },
       edit: function(taskId) {
+        console.log("Edit task " + taskId);
         Backbone.trigger("hide-settings");
         return Backbone.trigger("edit/task", taskId);
       },
@@ -35,7 +36,7 @@
         return this.history.push(arguments);
       },
       back: function() {
-        if (this.history.length > 1) {
+        if (this.history.length > 0) {
           return window.history.back();
         } else {
           return this.navigate('list/todo', {
