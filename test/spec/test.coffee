@@ -785,6 +785,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 		after (done) ->
 			swipy.router.once "route:root", -> done()
+			swipy.router.navigate( "test/reset", yes )
 			swipy.router.navigate( "", yes )
 
 		it "Should make sure everything is reset before we start testing routes", ->
@@ -831,5 +832,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					done()
 				, 150
 
-		it "Should have a catch-all which forwards to 'list/todo'"
+		it "Should have a catch-all which forwards to 'list/todo'", ->
+			eventTriggered = no
+			Backbone.once( "navigate/view", (id) => if id is "todo" then eventTriggered = yes )
+
+			location.hash = "random/jibberish"
+
+			_.defer -> expect( eventTriggered ).to.be.true
 

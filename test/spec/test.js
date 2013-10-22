@@ -14,6 +14,7 @@
         swipy.router.once("route:root", function() {
           return done();
         });
+        swipy.router.navigate("test/reset", true);
         return swipy.router.navigate("", true);
       });
       it("Should make sure everything is reset before we start testing routes", function() {});
@@ -64,7 +65,20 @@
           return done();
         }, 150);
       });
-      return it("Should have a catch-all which forwards to 'list/todo'");
+      return it("Should have a catch-all which forwards to 'list/todo'", function() {
+        var eventTriggered,
+          _this = this;
+        eventTriggered = false;
+        Backbone.once("navigate/view", function(id) {
+          if (id === "todo") {
+            return eventTriggered = true;
+          }
+        });
+        location.hash = "random/jibberish";
+        return _.defer(function() {
+          return expect(eventTriggered).to.be["true"];
+        });
+      });
     });
   });
 
