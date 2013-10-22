@@ -33,10 +33,12 @@
         if (this.sortController != null) {
           this.sortController.destroy();
         }
-        return this.transitionDeferred.done(function() {
-          _this.disableNativeClickHandlers();
-          return _this.sortController = new ListSortController(_this.$el, _this.subviews);
-        });
+        if (this.transitionDeferred != null) {
+          return this.transitionDeferred.done(function() {
+            _this.disableNativeClickHandlers();
+            return _this.sortController = new ListSortController(_this.$el, _this.subviews);
+          });
+        }
       },
       disableNativeClickHandlers: function() {
         var view, _i, _len, _ref, _results;
