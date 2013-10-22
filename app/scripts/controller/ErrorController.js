@@ -6,9 +6,9 @@
         Backbone.on("throw-error", this.throwError, this);
       }
 
-      TaskInputController.prototype.throwError = function(err) {
-        console.warn(err);
-        return alert(err);
+      TaskInputController.prototype.throwError = function() {
+        console.warn(arguments);
+        return alert(arguments[0]);
       };
 
       TaskInputController.prototype.destroy = function() {
