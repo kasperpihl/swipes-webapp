@@ -1,11 +1,10 @@
 define ['backbone'], (Backbone) ->
 	MainRouter = Backbone.Router.extend
 		routes:
-			"settings": "settings"
-			"settings/:id": "settings"
+			"settings(/:id)": "settings"
 			"edit/:id": "edit"
 			"list/:id": "gotoList"
-			"*": "root"
+			"*all": "root"
 		root: ->
 			@navigate( "list/todo", yes )
 		gotoList: (id) -> 

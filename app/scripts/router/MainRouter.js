@@ -3,11 +3,10 @@
     var MainRouter;
     return MainRouter = Backbone.Router.extend({
       routes: {
-        "settings": "settings",
-        "settings/:id": "settings",
+        "settings(/:id)": "settings",
         "edit/:id": "edit",
         "list/:id": "gotoList",
-        "*": "root"
+        "*all": "root"
       },
       root: function() {
         return this.navigate("list/todo", true);
