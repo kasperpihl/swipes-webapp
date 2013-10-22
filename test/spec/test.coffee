@@ -776,17 +776,17 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	describe "Router", ->
 		before ->
-			swipy.router.navigate( "", yes )
+			location.hash = ""
 			swipy.router.route( "test/reset", "reset test", -> )
 
 		# Make sure to reset route before each test
 		beforeEach ->
-			swipy.router.navigate( "test/reset", yes )
+			location.hash = "test/reset"
 
 		after (done) ->
 			swipy.router.once "route:root", -> done()
-			swipy.router.navigate( "test/reset", yes )
-			swipy.router.navigate( "", yes )
+			location.hash = "test/reset"
+			location.hash = ""
 
 		it "Should make sure everything is reset before we start testing routes", ->
 			expect( swipy.settings.view.shown ).to.be.falsy
@@ -855,6 +855,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 						done()
 					, 150
 
+		
 		it "Should go back to list view when calling save on task editor", (done) ->
 			# First, set the current route to a todo list, so that we have something to 
 			# go back to when the editor is saved
@@ -896,4 +897,49 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( wentByRoot ).to.be.true
 				expect( eventTriggered ).to.be.true
 
-		it "The router should have a custom history lookup, so we can call swipy.router.back() and make sure not to go outside our current domain, unlike history.back in the browser"
+		it "The router should have a custom history lookup, so we can call swipy.router.back() and make sure not to go outside our current domain, unlike history.back in the browser", (done) ->
+			expect( swipy.router ).to.respondTo "back"
+			expect( swipy.router ).to.have.property "history"
+
+
+			lastRouteDfd = new $.Deferred()
+			routerTriggeredTimes = 0
+			Backbone.on( "navigate/view edit/task show-settings", -> routerTriggeredTimes++ )
+			
+			testRoutes = ["list/todo", "list/scheduled", "edit/#{swipy.todos.at(0).cid}", "list/completed", "list/todo", "settings", "list/scheduled"]
+			
+			console.group "Building router history"
+			for route, i in testRoutes
+				do ->
+					# Save refs so they aren't overwritten in next loop iteration
+					count = i
+					path = route
+
+					setTimeout -> 
+							if count is 0
+								# Reset router history
+								swipy.router.history = []
+
+							location.hash = path
+							if count is testRoutes.length - 1
+								setTimeout( lastRouteDfd.resolve, 100 )
+						, i * 200
+					
+			lastRouteDfd.promise().done ->
+				expect( routerTriggeredTimes ).to.equal testRoutes.length
+
+				expect( swipy.router.history ).to.have.length testRoutes.length
+				console.groupEnd()
+
+				console.log "location hash is #{location.hash}"
+				expect( location.hash ).to.equal "#" + testRoutes[testRoutes.length - 1]
+
+				swipy.router.back()
+				console.log "location hash is #{location.hash}"
+				expect( location.hash ).to.equal "#" + testRoutes[testRoutes.length - 2]
+
+				swipy.router.back()
+				console.log "location hash is #{location.hash}"
+				expect( Backbone.history.fragment ).to.equal "#" + testRoutes[testRoutes.length - 3]
+
+				done()
