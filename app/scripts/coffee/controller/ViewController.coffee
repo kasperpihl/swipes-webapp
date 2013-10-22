@@ -31,13 +31,13 @@ define [
 						editView = new EditTaskView( model: model )
 						$("#main-content").prepend editView.el
 						@transitionIn( editView ).then ->
-							editView.transitionInComplete?.call(editView)
+							editView.transitionInComplete?.call editView
 			else
 				require ["view/editor/EditTask"], (EditTaskView) =>
 					editView = new EditTaskView( model: model )
 					$("#main-content").prepend editView.el
 					@transitionIn( editView ).then ->
-						editView.transitionInComplete?.call(editView)
+						editView.transitionInComplete?.call editView
 		
 		transitionViews: (slug) ->
 			# Make first letter uppercase
