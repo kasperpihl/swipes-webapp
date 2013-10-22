@@ -53,14 +53,6 @@
       },
       getNotes: function() {
         return this.$el.find(".notes textarea").val();
-      },
-      remove: function() {
-        this.cleanUp();
-        return this.$el.remove();
-      },
-      cleanUp: function() {
-        this.model.off();
-        return this.undelegateEvents();
       }
     });
   });

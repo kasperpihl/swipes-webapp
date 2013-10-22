@@ -41,9 +41,3 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 			@$el.find( ".title input" ).val()
 		getNotes: ->
 			@$el.find( ".notes textarea" ).val()
-		remove: ->
-			@cleanUp()
-			@$el.remove()
-		cleanUp: ->
-			@model.off()
-			@undelegateEvents()
