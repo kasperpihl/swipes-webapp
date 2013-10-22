@@ -29,8 +29,8 @@ define [
 				return console.warn "Model with id #{taskId} couldn't be found — Returning to root"
 
 			if @currView? 
-				@transitionOut( @currView ).then => @createTaskEditor()
-			else @createTaskEditor()
+				@transitionOut( @currView ).then => @createTaskEditor model
+			else @createTaskEditor model
 				
 		createTaskEditor: (model) ->
 			editView = new EditTaskView( model: model )

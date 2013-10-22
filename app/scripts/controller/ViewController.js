@@ -38,10 +38,10 @@
         }
         if (this.currView != null) {
           return this.transitionOut(this.currView).then(function() {
-            return _this.createTaskEditor();
+            return _this.createTaskEditor(model);
           });
         } else {
-          return this.createTaskEditor();
+          return this.createTaskEditor(model);
         }
       };
 
