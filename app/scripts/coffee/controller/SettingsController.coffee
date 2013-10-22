@@ -10,7 +10,7 @@ define ["underscore", "backbone", "view/settings/SettingsOverlay", "model/Settin
 			Backbone.on( "show-settings", @view.show, @view )
 			Backbone.on( "hide-settings", @view.hide, @view )
 
-			_.bindAll( @, "get", "set" )
+			_.bindAll( @, "get", "set", "unset" )
 		get: ->
 			@model.get arguments...
 		set: ->

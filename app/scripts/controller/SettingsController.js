@@ -14,7 +14,7 @@
         $("body").append(this.view.render().el);
         Backbone.on("show-settings", this.view.show, this.view);
         Backbone.on("hide-settings", this.view.hide, this.view);
-        return _.bindAll(this, "get", "set");
+        return _.bindAll(this, "get", "set", "unset");
       };
 
       SettingsController.prototype.get = function() {
