@@ -19,15 +19,15 @@ define [
 			@fetchTodos()
 			
 		init: ->
-			# @tags = new TagCollection()
-			# @viewController = new ViewController()
-			# @nav = new ListNavigation()
+			@tags = new TagCollection()
+			@viewController = new ViewController()
+			@nav = new ListNavigation()
 			@router = new MainRouter()
-			# @scheduler = new ScheduleController()
-			# @input = new TaskInputController()
-			# @sidebar = new SidebarController()
-			# @filter = new FilterController()
-			# @settings = new SettingsController()
+			@scheduler = new ScheduleController()
+			@input = new TaskInputController()
+			@sidebar = new SidebarController()
+			@filter = new FilterController()
+			@settings = new SettingsController()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Backbone.History.started then Backbone.history.stop()
