@@ -9,10 +9,14 @@
         "*all": "root"
       },
       initialize: function() {
-        return console.log("Router initialized ...");
+        this.history = [];
+        return this.on("route", this.updateHistory);
       },
-      root: function() {},
+      root: function() {
+        return this.navigate("list/todo", true);
+      },
       gotoList: function(id) {
+        console.log("Go to list " + id);
         Backbone.trigger("hide-settings");
         return Backbone.trigger("navigate/view", id);
       },
@@ -20,11 +24,24 @@
         Backbone.trigger("hide-settings");
         return Backbone.trigger("edit/task", taskId);
       },
-      settings: function(route) {
+      settings: function(subview) {
         console.log("Going to settings");
         Backbone.trigger("show-settings");
-        if (route) {
-          return Backbone.trigger("settings/view", route);
+        if (subview) {
+          return Backbone.trigger("settings/view", subview);
+        }
+      },
+      updateHistory: function() {
+        return this.history.push(arguments);
+      },
+      back: function() {
+        if (this.history.length > 1) {
+          return window.history.back();
+        } else {
+          return this.navigate('list/todo', {
+            trigger: true,
+            replace: true
+          });
         }
       }
     });

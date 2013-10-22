@@ -6,16 +6,30 @@ define ['backbone'], (Backbone) ->
 			"list/:id": "gotoList"
 			"*all": "root"
 		initialize: ->
-			console.log "Router initialized ..."
+			@history = []
+			@on( "route", @updateHistory )
 		root: ->
-			# @navigate( "list/todo", yes )
-		gotoList: (id) -> 
+			@navigate( "list/todo", yes )
+		gotoList: (id) ->
+			console.log "Go to list #{id}"
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
 		edit: (taskId) ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
-		settings: (route) ->
+		settings: (subview) ->
 			console.log "Going to settings"
 			Backbone.trigger "show-settings"
-			if route then Backbone.trigger( "settings/view", route )
+			if subview then Backbone.trigger( "settings/view", subview )
+		updateHistory: ->
+			@history.push arguments
+		back: ->
+			if @history.length > 1
+				window.history.back()
+			
+			else
+				# If we don't have any history, go to the root
+				# Use replaceState if available so the navigation doesn't create an extra history entry
+				this.navigate( 'list/todo', {trigger:true, replace:true} )
+
+
