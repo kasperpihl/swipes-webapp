@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "gsap", "view/Todo", "view/Completed", "view/Scheduled"], function(Backbone, TweenLite) {
+  define(["backbone", "gsap", "view/editor/EditTask", "view/Todo", "view/Completed", "view/Scheduled"], function(Backbone, TweenLite, EditTaskView) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
@@ -38,31 +38,23 @@
         }
         if (this.currView != null) {
           return this.transitionOut(this.currView).then(function() {
-            return require(["view/editor/EditTask"], function(EditTaskView) {
-              var editView;
-              editView = new EditTaskView({
-                model: model
-              });
-              $("#main-content").prepend(editView.el);
-              return _this.transitionIn(editView).then(function() {
-                var _ref1;
-                return (_ref1 = editView.transitionInComplete) != null ? _ref1.call(editView) : void 0;
-              });
-            });
+            return _this.createTaskEditor();
           });
         } else {
-          return require(["view/editor/EditTask"], function(EditTaskView) {
-            var editView;
-            editView = new EditTaskView({
-              model: model
-            });
-            $("#main-content").prepend(editView.el);
-            return _this.transitionIn(editView).then(function() {
-              var _ref1;
-              return (_ref1 = editView.transitionInComplete) != null ? _ref1.call(editView) : void 0;
-            });
-          });
+          return this.createTaskEditor();
         }
+      };
+
+      ViewController.prototype.createTaskEditor = function(model) {
+        var editView;
+        editView = new EditTaskView({
+          model: model
+        });
+        $("#main-content").prepend(editView.el);
+        return this.transitionIn(editView).then(function() {
+          var _ref;
+          return (_ref = editView.transitionInComplete) != null ? _ref.call(editView) : void 0;
+        });
       };
 
       ViewController.prototype.transitionViews = function(slug) {

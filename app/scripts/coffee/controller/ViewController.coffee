@@ -2,10 +2,11 @@ define [
 	"backbone"
 	"gsap"
 	# Cache views
+	"view/editor/EditTask"
 	"view/Todo"
 	"view/Completed"
 	"view/Scheduled"
-	], (Backbone, TweenLite) ->
+	], (Backbone, TweenLite, EditTaskView) ->
 	class ViewController
 		constructor: (opts) ->
 			@init()
@@ -27,19 +28,15 @@ define [
 				swipy.router.navigate( "", yes )
 				return console.warn "Model with id #{taskId} couldn't be found — Returning to root"
 
-			if @currView?
-				@transitionOut( @currView ).then =>
-					require ["view/editor/EditTask"], (EditTaskView) =>
-						editView = new EditTaskView( model: model )
-						$("#main-content").prepend editView.el
-						@transitionIn( editView ).then ->
-							editView.transitionInComplete?.call editView
-			else
-				require ["view/editor/EditTask"], (EditTaskView) =>
-					editView = new EditTaskView( model: model )
-					$("#main-content").prepend editView.el
-					@transitionIn( editView ).then ->
-						editView.transitionInComplete?.call editView
+			if @currView? 
+				@transitionOut( @currView ).then => @createTaskEditor()
+			else @createTaskEditor()
+				
+		createTaskEditor: (model) ->
+			editView = new EditTaskView( model: model )
+			$("#main-content").prepend editView.el
+			@transitionIn( editView ).then ->
+				editView.transitionInComplete?.call editView
 		
 		transitionViews: (slug) ->
 			# Make first letter uppercase
