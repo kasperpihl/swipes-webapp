@@ -1,7 +1,10 @@
 define ["view/List"], (ListView) ->
 	ListView.extend
 		sortTasks: (tasks) ->
-			return _.sortBy( tasks, (model) -> model.get( "completionDate" )?.getTime() ).reverse()
+			result = _.sortBy tasks, (model) -> 
+				model.get( "completionDate" )?.getTime()
+
+			return result.reverse()
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "completionStr" )

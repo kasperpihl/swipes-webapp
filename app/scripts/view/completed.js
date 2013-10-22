@@ -2,10 +2,12 @@
   define(["view/List"], function(ListView) {
     return ListView.extend({
       sortTasks: function(tasks) {
-        return _.sortBy(tasks, function(model) {
+        var result;
+        result = _.sortBy(tasks, function(model) {
           var _ref;
           return (_ref = model.get("completionDate")) != null ? _ref.getTime() : void 0;
-        }).reverse();
+        });
+        return result.reverse();
       },
       groupTasks: function(tasksArr) {
         var deadline, tasks, tasksByDate;
