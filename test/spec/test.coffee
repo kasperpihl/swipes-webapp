@@ -777,7 +777,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	describe "Router", ->
 		before ->
 			swipy.router.navigate( "", yes )
-			swipy.router.route( "test/reset", "reset test", -> console.log "Reset router for test" )
+			swipy.router.route( "test/reset", "reset test", -> )
 
 		# Make sure to reset route before each test
 		beforeEach ->
@@ -789,7 +789,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			swipy.router.navigate( "", yes )
 
 		it "Should make sure everything is reset before we start testing routes", ->
-			# expect( swipy.settings.view.shown ).to.be.falsy
+			expect( swipy.settings.view.shown ).to.be.falsy
 
 		it "Should trigger appropiate logic when navigating to 'settings'", ->
 			eventTriggered = no
@@ -798,12 +798,12 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			location.hash = "settings"
 			
 			# Use defer to make sure we've cleared the current event loop
-			_.defer -> expect( eventTriggered ).to.be.true
-			# expect( swipy.settings.view ).to.have.property( "shown", yes )
+			_.defer -> 
+				expect( eventTriggered ).to.be.true
+				expect( swipy.settings.view ).to.have.property( "shown", yes )
 
 		it "Should should not open any settings sub view when just navigating to 'settings'", ->
-			location.hash = "settings"
-			# expect( swipy.settings.view.subview ).to.not.exist
+			expect( swipy.settings.view.subview ).to.not.exist
 
 		it "Should trigger appropiate logic when navigating to 'settings/:-id'", (done) ->
 			eventTriggered = no
@@ -811,32 +811,89 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			
 			location.hash = "settings/faq"
 			
-			_.defer -> expect( eventTriggered ).to.be.true
-			# expect( swipy.settings.view ).to.have.property( "shown", yes )
+			_.defer -> 
+				expect( eventTriggered ).to.be.true
+				expect( swipy.settings.view ).to.have.property( "shown", yes )
 
+			# Give require a chance to load in the sub view script first ...
 			setTimeout ->
-					# expect( swipy.settings.view.subview ).to.exist
-					# expect( swipy.settings.view.subview.$el.hasClass "faq" ).to.be.true
+					expect( swipy.settings.view.subview ).to.exist
+					expect( swipy.settings.view.subview.$el.hasClass "faq" ).to.be.true
 					done()
 				, 150
 
 		it "Should trigger appropiate logic when navigating to 'list/:id'", (done) ->
 			eventTriggered = no
-			Backbone.once( "navigate/view", (id) => if id is "schedule" then eventTriggered = yes )
+			Backbone.once( "navigate/view", (id) => if id is "scheduled" then eventTriggered = yes )
 
-			location.hash = "list/schedule"
+			location.hash = "list/scheduled"
 
 			_.defer -> expect( eventTriggered ).to.be.true
 
-			setTimeout ->
-					done()
-				, 150
+			# Give require a chance to load in the list view script first ...
+			require ["view/Scheduled"], (ScheduledListView) ->
+				setTimeout ->
+						expect( swipy.viewController.currView ).to.exist
+						expect( swipy.viewController.currView ).to.be.instanceOf ScheduledListView
+						done()
+					, 150
+		it "Should trigger appropiate logic when navigating to 'edit/:id'", (done) ->
+			testTaskId = swipy.todos.at(0).cid
+			
+			eventTriggered = no
+			Backbone.once( "edit/task", (id) => if id is testTaskId then eventTriggered = yes )
+
+			location.hash = "edit/#{ testTaskId }"
+
+			_.defer -> expect( eventTriggered ).to.be.true
+
+			# Give require a chance to load in the list view script first ...
+			require ["view/editor/EditTask"], (TaskEditor) ->
+				setTimeout ->
+						expect( swipy.viewController.currView ).to.exist
+						expect( swipy.viewController.currView ).to.be.instanceOf TaskEditor
+						done()
+					, 150
+
+		it "Should go back to list view when calling save on task editor", (done) ->
+			# First, set the current route to a todo list, so that we have something to 
+			# go back to when the editor is saved
+			location.hash = "list/todo"
+
+			# Then, load in the editor view
+			editTaskRoute = "edit/#{ swipy.todos.at( 0 ).cid }"
+			location.hash = editTaskRoute
+			require ["view/editor/EditTask", "view/Todo"], (TaskEditor, TodoList) ->
+				editor = swipy.viewController.currView
+
+				expect( editor ).to.be.instanceOf TaskEditor
+				expect( $("body").hasClass "edit-mode" ).to.be.true
+
+				editor.save().then ->
+
+					# Allow save success callbacks to do their thing first ...
+					setTimeout ->
+							newRoute = location.hash[1...]
+							
+							expect( newRoute ).to.not.equal editTaskRoute
+							expect( swipy.viewController.currView ).to.exist
+							expect( Backbone.history.fragment ).to.equal "list/todo"
+							expect( swipy.viewController.currView ).to.be.instanceOf TodoList
+							expect( $("body").hasClass "edit-mode" ).to.be.false
+							
+							done()
+						, 150
 
 		it "Should have a catch-all which forwards to 'list/todo'", ->
+			wentByRoot = no
 			eventTriggered = no
 			Backbone.once( "navigate/view", (id) => if id is "todo" then eventTriggered = yes )
+			swipy.router.once "route:root", -> wentByRoot = yes
 
 			location.hash = "random/jibberish"
 
-			_.defer -> expect( eventTriggered ).to.be.true
+			_.defer -> 
+				expect( wentByRoot ).to.be.true
+				expect( eventTriggered ).to.be.true
 
+		it "The router should have a custom history lookup, so we can call swipy.router.back() and make sure not to go outside our current domain, unlike history.back in the browser"
