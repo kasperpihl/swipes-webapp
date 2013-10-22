@@ -23,7 +23,9 @@ define [
 			$("body").addClass "edit-mode"
 
 			model = m for m in swipy.todos.models when m.cid is taskId
-			if not model? then return console.warn "Model with id #{taskId} couldn't be foudn"
+			if not model? 
+				swipy.router.navigate( "", yes )
+				return console.warn "Model with id #{taskId} couldn't be found — Returning to root"
 
 			if @currView?
 				@transitionOut( @currView ).then =>

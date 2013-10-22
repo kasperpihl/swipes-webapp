@@ -33,7 +33,8 @@
           }
         }
         if (model == null) {
-          return console.warn("Model with id " + taskId + " couldn't be foudn");
+          swipy.router.navigate("", true);
+          return console.warn("Model with id " + taskId + " couldn't be found — Returning to root");
         }
         if (this.currView != null) {
           return this.transitionOut(this.currView).then(function() {
