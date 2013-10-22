@@ -5,10 +5,11 @@ define ['backbone'], (Backbone) ->
 			"edit/:id": "edit"
 			"list/:id": "gotoList"
 			"*all": "root"
+		initialize: ->
+			console.log "Router initialized ..."
 		root: ->
-			@navigate( "list/todo", yes )
+			# @navigate( "list/todo", yes )
 		gotoList: (id) -> 
-			console.log "goto #{id}"
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
 		edit: (taskId) ->

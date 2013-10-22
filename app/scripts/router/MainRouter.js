@@ -8,11 +8,11 @@
         "list/:id": "gotoList",
         "*all": "root"
       },
-      root: function() {
-        return this.navigate("list/todo", true);
+      initialize: function() {
+        return console.log("Router initialized ...");
       },
+      root: function() {},
       gotoList: function(id) {
-        console.log("goto " + id);
         Backbone.trigger("hide-settings");
         return Backbone.trigger("navigate/view", id);
       },

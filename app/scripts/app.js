@@ -10,18 +10,13 @@
       }
 
       Swipes.prototype.init = function() {
-        this.tags = new TagCollection();
-        this.viewController = new ViewController();
-        this.nav = new ListNavigation();
         this.router = new MainRouter();
-        this.scheduler = new ScheduleController();
-        this.input = new TaskInputController();
-        this.sidebar = new SidebarController();
-        this.filter = new FilterController();
-        this.settings = new SettingsController();
-        if (!Backbone.History.started) {
-          return Backbone.history.start();
+        if (Backbone.History.started) {
+          Backbone.history.stop();
         }
+        return Backbone.history.start({
+          pushState: false
+        });
       };
 
       Swipes.prototype.fetchTodos = function() {
