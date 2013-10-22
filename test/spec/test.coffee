@@ -774,4 +774,65 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				it "Should add clicked tag to all tasks unless tag is marked selected"
 				it "Should add new tag to all selected tasks if a new tag is created"
 
+	describe "Router", ->
+		before ->
+			swipy.router.navigate( "", yes )
+			swipy.router.route( "test/reset", "reset test", -> console.log "Reset router for test" )
+
+		# Make sure to reset route before each test
+		beforeEach ->
+			swipy.router.navigate( "test/reset", yes )
+
+		after (done) ->
+			swipy.router.once "route:root", -> done()
+			swipy.router.navigate( "", yes )
+
+		it "Should make sure everything is reset before we start testing routes", ->
+			expect( swipy.settings.view.shown ).to.be.falsy
+
+		it "Should trigger appropiate logic when navigating to 'settings'", ->
+			eventTriggered = no
+			Backbone.once( "show-settings", => eventTriggered = yes )
+			
+			# swipy.router.navigate( "settings", yes )
+			location.hash = "settings"
+			
+			expect( eventTriggered ).to.be.true
+			expect( swipy.settings.view ).to.have.property( "shown", yes )
+
+		it "Should should not open any settings sub view when just navigating to 'settings'", ->
+			# swipy.router.navigate( "settings", yes )
+			location.hash = "settings"
+			expect( swipy.settings.view.subview ).to.not.exist
+
+		it "Should trigger appropiate logic when navigating to 'settings/:-id'", (done) ->
+			eventTriggered = no
+			Backbone.once( "show-settings", => eventTriggered = yes )
+			
+			#swipy.router.navigate( "settings/faq", yes )
+			location.hash = "settings/faq"
+			
+			expect( eventTriggered ).to.be.true
+			expect( swipy.settings.view ).to.have.property( "shown", yes )
+
+			setTimeout ->
+					expect( swipy.settings.view.subview ).to.exist
+					expect( swipy.settings.view.subview.$el.hasClass "faq" ).to.be.true
+					done()
+				, 150
+
+		it "Should trigger appropiate logic when navigating to 'list/:id'", (done) ->
+			eventTriggered = no
+			Backbone.once( "navigate/view", (id) => if id is "schedule" then eventTriggered = yes )
+
+			location.hash = "list/schedule"
+			#swipy.router.navigate( "list/schedule", yes )
+
+			expect( eventTriggered ).to.be.true
+
+			setTimeout ->
+					done()
+				, 150
+
+		it "Should have a catch-all which forwards to 'list/todo'"
 

@@ -872,7 +872,7 @@
         });
       });
     });
-    return require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
+    require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
       return describe("Tag Editor overlay", function() {
         describe("Marking shared tags selected", function() {
           it("Should detect if any tasks have no tags", function() {
@@ -929,6 +929,73 @@
           return it("Should add new tag to all selected tasks if a new tag is created");
         });
       });
+    });
+    return describe("Router", function() {
+      before(function() {
+        swipy.router.navigate("", true);
+        return swipy.router.route("test/reset", "reset test", function() {
+          return console.log("Reset router for test");
+        });
+      });
+      beforeEach(function() {
+        return swipy.router.navigate("test/reset", true);
+      });
+      after(function(done) {
+        swipy.router.once("route:root", function() {
+          return done();
+        });
+        return swipy.router.navigate("", true);
+      });
+      it("Should make sure everything is reset before we start testing routes", function() {
+        return expect(swipy.settings.view.shown).to.be.falsy;
+      });
+      it("Should trigger appropiate logic when navigating to 'settings'", function() {
+        var eventTriggered,
+          _this = this;
+        eventTriggered = false;
+        Backbone.once("show-settings", function() {
+          return eventTriggered = true;
+        });
+        location.hash = "settings";
+        expect(eventTriggered).to.be["true"];
+        return expect(swipy.settings.view).to.have.property("shown", true);
+      });
+      it("Should should not open any settings sub view when just navigating to 'settings'", function() {
+        location.hash = "settings";
+        return expect(swipy.settings.view.subview).to.not.exist;
+      });
+      it("Should trigger appropiate logic when navigating to 'settings/:-id'", function(done) {
+        var eventTriggered,
+          _this = this;
+        eventTriggered = false;
+        Backbone.once("show-settings", function() {
+          return eventTriggered = true;
+        });
+        location.hash = "settings/faq";
+        expect(eventTriggered).to.be["true"];
+        expect(swipy.settings.view).to.have.property("shown", true);
+        return setTimeout(function() {
+          expect(swipy.settings.view.subview).to.exist;
+          expect(swipy.settings.view.subview.$el.hasClass("faq")).to.be["true"];
+          return done();
+        }, 150);
+      });
+      it("Should trigger appropiate logic when navigating to 'list/:id'", function(done) {
+        var eventTriggered,
+          _this = this;
+        eventTriggered = false;
+        Backbone.once("navigate/view", function(id) {
+          if (id === "schedule") {
+            return eventTriggered = true;
+          }
+        });
+        location.hash = "list/schedule";
+        expect(eventTriggered).to.be["true"];
+        return setTimeout(function() {
+          return done();
+        }, 150);
+      });
+      return it("Should have a catch-all which forwards to 'list/todo'");
     });
   });
 
