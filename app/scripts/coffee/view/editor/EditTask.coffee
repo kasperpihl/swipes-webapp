@@ -21,19 +21,13 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 		back: ->
 			history.back()
 		save: ->
-			atts = {
-				title: @getTitle()
-				notes: @getNotes()
-			}
+			atts = { title: @getTitle(), notes: @getNotes() }
 
 			console.log "Saving ", atts
 
 			opts = {
-				success: =>
-					@back()
-				error: =>
-					console.warn "Error saving ", arguments
-					alert "Something went wrong. Please try again in a little bit."
+				success: => @back()
+				error: -> swipy.errors.throw "Something went wrong. Please try again in a little bit.", arguments
 			}
 
 			@model.save( atts, opts )

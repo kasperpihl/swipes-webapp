@@ -42,8 +42,7 @@
             return _this.back();
           },
           error: function() {
-            console.warn("Error saving ", arguments);
-            return alert("Something went wrong. Please try again in a little bit.");
+            return swipy.errors["throw"]("Something went wrong. Please try again in a little bit.", arguments);
           }
         };
         return this.model.save(atts, opts);
