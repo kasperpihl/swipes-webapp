@@ -1,11 +1,11 @@
 define ["underscore", "view/List", "controller/ListSortController", "model/TaskSortModel"], (_, ListView, ListSortController, TaskSortModel) ->
 	ListView.extend
-		init: ->
+		initialize: ->
 			@sorter = new TaskSortModel()
-			ListView::init.apply( @, arguments )
+			ListView::initialize.apply( @, arguments )
 		sortTasks: (tasks) ->
 			return _.sortBy( tasks, (model) -> model.get "order" )
-		
+
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
@@ -18,7 +18,7 @@ define ["underscore", "view/List", "controller/ListSortController", "model/TaskS
 
 		afterRenderList: (todos) ->
 			return unless todos.length
-			
+
 			# Alright, by now all todos have a set order. Continue on ...
 			@sortController.destroy() if @sortController?
 
@@ -26,12 +26,13 @@ define ["underscore", "view/List", "controller/ListSortController", "model/TaskS
 			if @transitionDeferred? then @transitionDeferred.done =>
 				@disableNativeClickHandlers()
 				@sortController = new ListSortController( @$el, @subviews )
-		
+
 		disableNativeClickHandlers: ->
 			# SortController takes over click interaction, so disable the default behaviour
 			view.$el.off( "click", ".todo-content" ) for view in @subviews
-				
+
 		customCleanUp: ->
+			console.log "Cleaning up view"
 			@sortController.destroy() if @sortController?
 			@sortController = null
 

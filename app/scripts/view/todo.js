@@ -1,9 +1,9 @@
 (function() {
   define(["underscore", "view/List", "controller/ListSortController", "model/TaskSortModel"], function(_, ListView, ListSortController, TaskSortModel) {
     return ListView.extend({
-      init: function() {
+      initialize: function() {
         this.sorter = new TaskSortModel();
-        return ListView.prototype.init.apply(this, arguments);
+        return ListView.prototype.initialize.apply(this, arguments);
       },
       sortTasks: function(tasks) {
         return _.sortBy(tasks, function(model) {
@@ -51,6 +51,7 @@
         return _results;
       },
       customCleanUp: function() {
+        console.log("Cleaning up view");
         if (this.sortController != null) {
           this.sortController.destroy();
         }

@@ -1,14 +1,10 @@
 define [
 	"underscore"
-	"view/Default"
 	"view/list/ActionBar"
 	"text!templates/todo-list.html"
-	# Cache views
-	"view/list/DesktopTask"
-	"view/list/TouchTask"
-	], (_, DefaultView, ActionBar, ToDoListTmpl) ->
-	DefaultView.extend
-		init: ->
+	], (_, ActionBar, ToDoListTmpl) ->
+	Backbone.View.extend
+		initialize: ->
 			# This deferred is resolved after view has been transitioned in
 			@transitionDeferred = new $.Deferred()
 
@@ -52,11 +48,11 @@ define [
 				todos = @getTasks()
 
 				# Rejects models filtered out by tag or search
-				todos = _.reject todos, (m) -> 
+				todos = _.reject todos, (m) ->
 					# console.log "Is #{ m.get 'title' } rejected by tags? ", m.get "rejectedByTag"
 					m.get( "rejectedByTag" ) or m.get( "rejectedBySearch" )
-				
-				# Deselect any selected items 
+
+				# Deselect any selected items
 				_.invoke( todos, "set", { selected: no } )
 
 				@beforeRenderList todos
@@ -65,14 +61,14 @@ define [
 					tasksJSON = _.invoke( group.tasks, "toJSON" )
 					$html = $( @template { title: group.deadline, tasks: tasksJSON } )
 					list = $html.find "ol"
-					
+
 					for model in group.tasks
 						view = new TaskView( { model } )
 						@subviews.push view
 						list.append view.el
 
 					@$el.append $html
-					
+
 				@afterRenderList todos
 
 		beforeRenderList: (todos) ->
@@ -83,7 +79,7 @@ define [
 		completeTasks: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task
-				
+
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
@@ -92,21 +88,21 @@ define [
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task
-				
+
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeLeft("todo").then -> 
+					view.swipeLeft("todo").then ->
 						oneSecondAgo = new Date()
 						oneSecondAgo.setSeconds oneSecondAgo.getSeconds() - 1
 						m.set { completionDate: null, schedule: oneSecondAgo }
 
 		scheduleTasks: (tasks) ->
 			deferredArr = []
-			
+
 			for task in tasks
 				view = @getViewForModel task
-				
+
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
@@ -127,7 +123,12 @@ define [
 			@subviews = []
 		customCleanUp: ->
 			# Extend this in subviews
+			#
+		remove: ->
+			@cleanUp()
+			@$el.remove()
 		cleanUp: ->
+			console.error "Running cleanUp logic"
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
 
@@ -136,15 +137,13 @@ define [
 
 			# Unbind all events
 			@stopListening()
-			
+			@undelegateEvents()
+
 			# Deactivate actionbar (Do this before killing subviews)
-			@actionbar.kill()
+			@actionbar?.kill()
 
 			# Deselect all todos, so selection isnt messed up in new view
 			swipy.todos.invoke( "set", { selected: no } )
-			
+
 			# Run clean-up routine on sub views
 			@killSubViews()
-
-			# Clean up DOM element
-			@$el.empty()

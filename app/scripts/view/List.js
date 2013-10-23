@@ -1,7 +1,7 @@
 (function() {
-  define(["underscore", "view/Default", "view/list/ActionBar", "text!templates/todo-list.html", "view/list/DesktopTask", "view/list/TouchTask"], function(_, DefaultView, ActionBar, ToDoListTmpl) {
-    return DefaultView.extend({
-      init: function() {
+  define(["underscore", "view/list/ActionBar", "text!templates/todo-list.html"], function(_, ActionBar, ToDoListTmpl) {
+    return Backbone.View.extend({
+      initialize: function() {
         this.transitionDeferred = new $.Deferred();
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
@@ -193,16 +193,24 @@
         return this.subviews = [];
       },
       customCleanUp: function() {},
+      remove: function() {
+        this.cleanUp();
+        return this.$el.remove();
+      },
       cleanUp: function() {
+        var _ref;
+        console.error("Running cleanUp logic");
         this.customCleanUp();
         this.transitionDeferred = null;
         this.stopListening();
-        this.actionbar.kill();
+        this.undelegateEvents();
+        if ((_ref = this.actionbar) != null) {
+          _ref.kill();
+        }
         swipy.todos.invoke("set", {
           selected: false
         });
-        this.killSubViews();
-        return this.$el.empty();
+        return this.killSubViews();
       }
     });
   });
