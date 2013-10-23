@@ -16,7 +16,6 @@
 
       ViewController.prototype.goto = function(slug) {
         var _this = this;
-        $("body").removeClass("edit-mode");
         return this.loadView(slug).then(function(View) {
           var newView;
           newView = new View({
@@ -25,14 +24,12 @@
           if (_this.currView != null) {
             return _this.transitionOut(_this.currView).then(function() {
               return _this.transitionIn(newView).then(function() {
-                var _ref;
-                return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
+                return newView.transitionInComplete.call(newView);
               });
             });
           } else {
             return _this.transitionIn(newView).then(function() {
-              var _ref;
-              return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
+              return newView.transitionInComplete.call(newView);
             });
           }
         });
@@ -41,7 +38,6 @@
       ViewController.prototype.editTask = function(taskId) {
         var m, model, _i, _len, _ref,
           _this = this;
-        $("body").addClass("edit-mode");
         _ref = swipy.todos.models;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           m = _ref[_i];

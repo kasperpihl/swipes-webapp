@@ -8,25 +8,21 @@ define [
 
 		init: ->
 			# Listen for navigation events
-			# Backbone.on "navigate/view", (slug) -> console.log( slug )
 			Backbone.on( 'navigate/view', @goto, @ )
 			Backbone.on( 'edit/task', (taskId) => @editTask taskId )
 
 		goto: (slug) ->
-			$("body").removeClass "edit-mode"
 			@loadView(slug).then (View) =>
 				newView = new View( el: "ol.todo-list.#{ slug }" )
 
 				if @currView? then @transitionOut( @currView ).then =>
 					@transitionIn( newView ).then ->
-						newView.transitionInComplete?.call newView
+						newView.transitionInComplete.call newView
 
 				else @transitionIn( newView ).then ->
-					newView.transitionInComplete?.call newView
+					newView.transitionInComplete.call newView
 
 		editTask: (taskId) ->
-			$("body").addClass "edit-mode"
-
 			model = m for m in swipy.todos.models when m.cid is taskId
 			if not model?
 				swipy.router.navigate( "", yes )
