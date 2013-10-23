@@ -4,8 +4,8 @@
       sortTasks: function(tasks) {
         var result;
         result = _.sortBy(tasks, function(model) {
-          var _ref;
-          return (_ref = model.get("completionDate")) != null ? _ref.getTime() : void 0;
+          var _base;
+          return typeof (_base = model.get("completionDate")).getTime === "function" ? _base.getTime() : void 0;
         });
         return result.reverse();
       },

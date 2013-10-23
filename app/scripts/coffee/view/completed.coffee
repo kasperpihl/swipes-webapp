@@ -1,10 +1,10 @@
 define ["view/List"], (ListView) ->
 	ListView.extend
 		sortTasks: (tasks) ->
-			result = _.sortBy tasks, (model) -> 
-				model.get( "completionDate" )?.getTime()
+			result = _.sortBy tasks, (model) ->
+				model.get( "completionDate" ).getTime?()
 
-			return result.reverse()
+			result.reverse()
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			tasksByDate = _.groupBy( tasksArr, (m) -> m.get "completionStr" )
@@ -14,11 +14,11 @@ define ["view/List"], (ListView) ->
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task
-				
+
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeRight("todo").then => 
+					view.swipeRight("todo").then =>
 						m.set
 							completionDate: null
 							schedule: new Date()
