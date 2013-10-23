@@ -5,7 +5,7 @@
       routes: {
         "settings(/:id)": "settings",
         "edit/:id": "edit",
-        "list/:id": "gotoList",
+        "list/:id": "list",
         "*all": "root"
       },
       initialize: function() {
@@ -13,9 +13,10 @@
         return this.on("route", this.updateHistory);
       },
       root: function() {
+        console.log("Root");
         return this.navigate("list/todo", true);
       },
-      gotoList: function(id) {
+      list: function(id) {
         console.log("Go to list " + id);
         Backbone.trigger("hide-settings");
         return Backbone.trigger("navigate/view", id);
@@ -32,8 +33,17 @@
           return Backbone.trigger("settings/view", subview);
         }
       },
-      updateHistory: function() {
-        return this.history.push(arguments);
+      updateHistory: function(method, page) {
+        if (method !== "root") {
+          return this.history.push(this.getRouteStr(method, page[0]));
+        }
+      },
+      getRouteStr: function(method, page) {
+        if (page) {
+          return "" + method + "/" + page;
+        } else {
+          return method;
+        }
       },
       back: function() {
         if (this.history.length > 0) {
