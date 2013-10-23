@@ -6,6 +6,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 			"click .cancel": "back"
 			"click .save": "save"
 		initialize: ->
+			$("body").addClass "edit-mode"
 			@$el.addClass @model.getState()
 			@setTemplate()
 			@render()
@@ -18,11 +19,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 			@createTagEditor()
 			return @el
 		back: ->
-			if swipy.router.history.length > 1
-				prevRoute = swipy.router.history[ swipy.router.history.length - 2 ]
-				swipy.router.navigate( prevRoute, yes )
-			else
-				location.hash = ""
+			swipy.router.back()
 		save: ->
 			atts = { title: @getTitle(), notes: @getNotes() }
 
@@ -40,3 +37,8 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 			@$el.find( ".title input" ).val()
 		getNotes: ->
 			@$el.find( ".notes textarea" ).val()
+		remove: ->
+			$("body").removeClass "edit-mode"
+			@undelegateEvents()
+			@stopListening()
+			@$el.remove()

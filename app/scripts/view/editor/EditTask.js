@@ -8,6 +8,7 @@
         "click .save": "save"
       },
       initialize: function() {
+        $("body").addClass("edit-mode");
         this.$el.addClass(this.model.getState());
         this.setTemplate();
         return this.render();
@@ -27,13 +28,7 @@
         return this.el;
       },
       back: function() {
-        var prevRoute;
-        if (swipy.router.history.length > 1) {
-          prevRoute = swipy.router.history[swipy.router.history.length - 2];
-          return swipy.router.navigate(prevRoute, true);
-        } else {
-          return location.hash = "";
-        }
+        return swipy.router.back();
       },
       save: function() {
         var atts, opts,
@@ -61,6 +56,12 @@
       },
       getNotes: function() {
         return this.$el.find(".notes textarea").val();
+      },
+      remove: function() {
+        $("body").removeClass("edit-mode");
+        this.undelegateEvents();
+        this.stopListening();
+        return this.$el.remove();
       }
     });
   });
