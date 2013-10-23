@@ -9,10 +9,9 @@ define ['backbone'], (Backbone) ->
 			@history = []
 			@on( "route", @updateHistory )
 		root: ->
-			console.log "Root"
-			@navigate( "list/todo", yes )
+			@navigate( "list/todo", { trigger: yes, replaceState: no } )
 		list: (id) ->
-			console.log "Go to list #{id}"
+			# console.log "Go to list #{id}"
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
 		edit: (taskId) ->

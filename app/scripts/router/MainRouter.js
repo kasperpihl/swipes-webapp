@@ -13,11 +13,12 @@
         return this.on("route", this.updateHistory);
       },
       root: function() {
-        console.log("Root");
-        return this.navigate("list/todo", true);
+        return this.navigate("list/todo", {
+          trigger: true,
+          replaceState: false
+        });
       },
       list: function(id) {
-        console.log("Go to list " + id);
         Backbone.trigger("hide-settings");
         return Backbone.trigger("navigate/view", id);
       },
