@@ -39,10 +39,16 @@ define [
 		getTasks: ->
 			# Fetch todos that are active
 			return swipy.todos.getActive()
-		renderList: ->
-			type = if Modernizr.touch then "Touch" else "Desktop"
 
-			require ["view/list/#{type}Task"], (TaskView) =>
+		loadTaskView: ->
+			dfd = new $.Deferred()
+
+			if Modernizr.touch then require ["view/list/DesktopTask"], (TaskView) -> dfd.resolve TaskView
+			else require ["view/list/TouchTask"], (TaskView) -> dfd.resolve TaskView
+
+			return dfd.promise()
+		renderList: ->
+			@loadTaskView.done (TaskView) =>
 				# Remove any old HTML before appending new stuff.
 				@$el.empty()
 				@killSubViews()

@@ -47,11 +47,23 @@
       getTasks: function() {
         return swipy.todos.getActive();
       },
+      loadTaskView: function() {
+        var dfd;
+        dfd = new $.Deferred();
+        if (Modernizr.touch) {
+          require(["view/list/DesktopTask"], function(TaskView) {
+            return dfd.resolve(TaskView);
+          });
+        } else {
+          require(["view/list/TouchTask"], function(TaskView) {
+            return dfd.resolve(TaskView);
+          });
+        }
+        return dfd.promise();
+      },
       renderList: function() {
-        var type,
-          _this = this;
-        type = Modernizr.touch ? "Touch" : "Desktop";
-        return require(["view/list/" + type + "Task"], function(TaskView) {
+        var _this = this;
+        return this.loadTaskView.done(function(TaskView) {
           var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
           _this.$el.empty();
           _this.killSubViews();
