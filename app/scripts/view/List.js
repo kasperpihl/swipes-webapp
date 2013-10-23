@@ -11,7 +11,8 @@
         this.listenTo(Backbone, "todo-task", this.markTaskAsTodo);
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
-        return this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
+        this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
+        return this.render();
       },
       render: function() {
         this.renderList();
@@ -195,11 +196,10 @@
       customCleanUp: function() {},
       remove: function() {
         this.cleanUp();
-        return this.$el.remove();
+        return this.$el.empty();
       },
       cleanUp: function() {
         var _ref;
-        console.error("Running cleanUp logic");
         this.customCleanUp();
         this.transitionDeferred = null;
         this.stopListening();

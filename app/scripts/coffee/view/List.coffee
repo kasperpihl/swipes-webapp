@@ -24,6 +24,8 @@ define [
 			@listenTo( Backbone, "schedule-task", @scheduleTasks )
 			@listenTo( Backbone, "schedule-task", @scheduleTasks )
 			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
+
+			@render()
 		render: ->
 			@renderList()
 			$("#add-task input").focus()
@@ -126,9 +128,8 @@ define [
 			#
 		remove: ->
 			@cleanUp()
-			@$el.remove()
+			@$el.empty()
 		cleanUp: ->
-			console.error "Running cleanUp logic"
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
 

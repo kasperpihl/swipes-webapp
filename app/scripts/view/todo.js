@@ -2,7 +2,6 @@
   define(["underscore", "view/List", "controller/ListSortController", "model/TaskSortModel"], function(_, ListView, ListSortController, TaskSortModel) {
     return ListView.extend({
       initialize: function() {
-        this.sorter = new TaskSortModel();
         return ListView.prototype.initialize.apply(this, arguments);
       },
       sortTasks: function(tasks) {
@@ -19,9 +18,7 @@
           }
         ];
       },
-      setTodoOrder: function(todos) {
-        return this.sorter.setTodoOrder(todos);
-      },
+      setTodoOrder: function(todos) {},
       beforeRenderList: function(todos) {
         return this.setTodoOrder(todos);
       },
@@ -34,10 +31,7 @@
           this.sortController.destroy();
         }
         if (this.transitionDeferred != null) {
-          return this.transitionDeferred.done(function() {
-            _this.disableNativeClickHandlers();
-            return _this.sortController = new ListSortController(_this.$el, _this.subviews);
-          });
+          return this.transitionDeferred.done(function() {});
         }
       },
       disableNativeClickHandlers: function() {
@@ -51,7 +45,6 @@
         return _results;
       },
       customCleanUp: function() {
-        console.log("Cleaning up view");
         if (this.sortController != null) {
           this.sortController.destroy();
         }
