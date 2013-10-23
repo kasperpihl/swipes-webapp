@@ -3,14 +3,14 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		tagName: "li"
 		initialize: ->
 			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "edit", "handleAction" )
-			
+
 			# Bind events that should re-render the view
 			@listenTo( @model, "change:tags change:timeStr", @render, @ )
 
 			@listenTo( @model, "change:selected", @onSelected )
 			$(window).on "resize", @setBounds
 
-			@setTemplate()	
+			@setTemplate()
 			@init()
 			@render()
 
@@ -28,10 +28,10 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
-		
+
 		init: ->
 			# Hook for views extending me
-		
+
 		toggleSelected: ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
@@ -40,13 +40,13 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			# Set trigger. One or more elements, but always wrapped in an array ready to loop over.
 			trigger = [@model]
 			selectedTasks = swipy.todos.where( selected: yes )
-			if selectedTasks.length 
+			if selectedTasks.length
 				selectedTasks = _.reject( selectedTasks, (m) => m.cid is @model.cid )
 				trigger.push task for task in selectedTasks
 
 			# Actual trigger logic
 			if $( e.currentTarget ).hasClass "schedule"
-				
+
 				Backbone.trigger( "schedule-task", trigger )
 			else if $( e.currentTarget ).hasClass "complete"
 				Backbone.trigger( "complete-task", trigger )
@@ -55,44 +55,44 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
-		
+
 		edit: ->
 			swipy.router.navigate( "edit/#{ @model.cid }", yes )
-		
+
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
 			@$el.html @template @model.toJSON()
 			return @
-		
+
 		remove: ->
 			@cleanUp()
 			@$el.remove()
-		
+
 		customCleanUp: ->
 			# Hook for views extending me
-		
+
 		swipeLeft: (className, fadeOut = yes) ->
 			dfd = new $.Deferred()
-			
+
 			content = @$el.find ".todo-content"
 			if className then @$el.addClass className
 
 			timeline = new TimelineLite { onComplete: dfd.resolve }
 			timeline.to( content, 0.3, { left: @$el.outerWidth() } )
 			if fadeOut then timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
-			
+
 			return dfd.promise()
 		swipeRight: (className, fadeOut = yes) ->
 			dfd = new $.Deferred()
-			
+
 			content = @$el.find ".todo-content"
 			if className then @$el.addClass className
 
 			timeline = new TimelineLite { onComplete: dfd.resolve }
 			timeline.to( content, 0.3, { left: 0 - @$el.outerWidth() } )
 			if fadeOut then timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
-			
+
 			return dfd.promise()
 
 		reset: ->
@@ -102,7 +102,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@$el.css( "opacity", "" )
 
 		cleanUp: ->
-			$(window).off()
+			$(window).off( "resize", @setBounds )
 			@$el.off()
 			@undelegateEvents()
 			@stopListening()
