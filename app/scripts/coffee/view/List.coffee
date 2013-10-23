@@ -1,8 +1,10 @@
 define [
 	"underscore"
 	"view/list/ActionBar"
+	"view/list/DesktopTask"
+	"view/list/TouchTask"
 	"text!templates/todo-list.html"
-	], (_, ActionBar, ToDoListTmpl) ->
+	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
 	Backbone.View.extend
 		initialize: ->
 			# This deferred is resolved after view has been transitioned in
@@ -40,42 +42,34 @@ define [
 			# Fetch todos that are active
 			return swipy.todos.getActive()
 
-		loadTaskView: ->
-			dfd = new $.Deferred()
-
-			if Modernizr.touch then require ["view/list/DesktopTask"], (TaskView) -> dfd.resolve TaskView
-			else require ["view/list/TouchTask"], (TaskView) -> dfd.resolve TaskView
-
-			return dfd.promise()
 		renderList: ->
-			@loadTaskView.done (TaskView) =>
-				# Remove any old HTML before appending new stuff.
-				@$el.empty()
-				@killSubViews()
+			# Remove any old HTML before appending new stuff.
+			@$el.empty()
+			@killSubViews()
 
-				todos = @getTasks()
+			todos = @getTasks()
 
-				# Rejects models filtered out by tag or search
-				todos = _.reject todos, (m) ->
-					# console.log "Is #{ m.get 'title' } rejected by tags? ", m.get "rejectedByTag"
-					m.get( "rejectedByTag" ) or m.get( "rejectedBySearch" )
+			# Rejects models filtered out by tag or search
+			todos = _.reject todos, (m) ->
+				# console.log "Is #{ m.get 'title' } rejected by tags? ", m.get "rejectedByTag"
+				m.get( "rejectedByTag" ) or m.get( "rejectedBySearch" )
 
-				# Deselect any selected items
-				_.invoke( todos, "set", { selected: no } )
+			# Deselect any selected items
+			_.invoke( todos, "set", { selected: no } )
 
-				@beforeRenderList todos
+			@beforeRenderList todos
 
-				for group in @groupTasks todos
-					tasksJSON = _.invoke( group.tasks, "toJSON" )
-					$html = $( @template { title: group.deadline, tasks: tasksJSON } )
-					list = $html.find "ol"
+			for group in @groupTasks todos
+				tasksJSON = _.invoke( group.tasks, "toJSON" )
+				$html = $( @template { title: group.deadline, tasks: tasksJSON } )
+				list = $html.find "ol"
 
-					for model in group.tasks
-						view = new TaskView( { model } )
-						@subviews.push view
-						list.append view.el
+				for model in group.tasks
+					view = if Modernizr.touch then new TouchTaskView( { model } ) else new DesktopTaskView( { model } )
+					@subviews.push view
+					list.append view.el
 
-					@$el.append $html
+				@$el.append $html
 
 				@afterRenderList todos
 

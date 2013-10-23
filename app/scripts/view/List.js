@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "view/list/ActionBar", "text!templates/todo-list.html"], function(_, ActionBar, ToDoListTmpl) {
+  define(["underscore", "view/list/ActionBar", "view/list/DesktopTask", "view/list/TouchTask", "text!templates/todo-list.html"], function(_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) {
     return Backbone.View.extend({
       initialize: function() {
         this.transitionDeferred = new $.Deferred();
@@ -47,56 +47,43 @@
       getTasks: function() {
         return swipy.todos.getActive();
       },
-      loadTaskView: function() {
-        var dfd;
-        dfd = new $.Deferred();
-        if (Modernizr.touch) {
-          require(["view/list/DesktopTask"], function(TaskView) {
-            return dfd.resolve(TaskView);
-          });
-        } else {
-          require(["view/list/TouchTask"], function(TaskView) {
-            return dfd.resolve(TaskView);
-          });
-        }
-        return dfd.promise();
-      },
       renderList: function() {
-        var _this = this;
-        return this.loadTaskView.done(function(TaskView) {
-          var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
-          _this.$el.empty();
-          _this.killSubViews();
-          todos = _this.getTasks();
-          todos = _.reject(todos, function(m) {
-            return m.get("rejectedByTag") || m.get("rejectedBySearch");
-          });
-          _.invoke(todos, "set", {
-            selected: false
-          });
-          _this.beforeRenderList(todos);
-          _ref = _this.groupTasks(todos);
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            group = _ref[_i];
-            tasksJSON = _.invoke(group.tasks, "toJSON");
-            $html = $(_this.template({
-              title: group.deadline,
-              tasks: tasksJSON 
-            }));
-            list = $html.find("ol");
-            _ref1 = group.tasks;
-            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-              model = _ref1[_j];
-              view = new TaskView({
-                model: model
-              });
-              _this.subviews.push(view);
-              list.append(view.el);
-            }
-            _this.$el.append($html);
-          }
-          return _this.afterRenderList(todos);
+        var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1, _results;
+        this.$el.empty();
+        this.killSubViews();
+        todos = this.getTasks();
+        todos = _.reject(todos, function(m) {
+          return m.get("rejectedByTag") || m.get("rejectedBySearch");
         });
+        _.invoke(todos, "set", {
+          selected: false
+        });
+        this.beforeRenderList(todos);
+        _ref = this.groupTasks(todos);
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          group = _ref[_i];
+          tasksJSON = _.invoke(group.tasks, "toJSON");
+          $html = $(this.template({
+            title: group.deadline,
+            tasks: tasksJSON 
+          }));
+          list = $html.find("ol");
+          _ref1 = group.tasks;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            model = _ref1[_j];
+            view = Modernizr.touch ? new TouchTaskView({
+              model: model
+            }) : new DesktopTaskView({
+              model: model
+            });
+            this.subviews.push(view);
+            list.append(view.el);
+          }
+          this.$el.append($html);
+          _results.push(this.afterRenderList(todos));
+        }
+        return _results;
       },
       beforeRenderList: function(todos) {},
       afterRenderList: function(todos) {},
