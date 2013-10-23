@@ -10,8 +10,7 @@
       initialize: function() {
         this.$el.addClass(this.model.getState());
         this.setTemplate();
-        this.render();
-        return this.createTagEditor();
+        return this.render();
       },
       setTemplate: function() {
         return this.template = _.template(TaskTmpl);
@@ -24,10 +23,17 @@
       },
       render: function() {
         this.$el.html(this.template(this.model.toJSON()));
+        this.createTagEditor();
         return this.el;
       },
       back: function() {
-        return history.back();
+        var prevRoute;
+        if (swipy.router.history.length > 1) {
+          prevRoute = swipy.router.history[swipy.router.history.length - 2];
+          return swipy.router.navigate(prevRoute, true);
+        } else {
+          return location.hash = "";
+        }
       },
       save: function() {
         var atts, opts,
@@ -46,6 +52,9 @@
           }
         };
         return this.model.save(atts, opts);
+      },
+      transitionInComplete: function() {
+        return console.log("Edit view finished transitionIn");
       },
       getTitle: function() {
         return this.$el.find(".title input").val();
