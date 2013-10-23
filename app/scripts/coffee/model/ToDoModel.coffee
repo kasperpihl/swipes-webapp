@@ -1,6 +1,6 @@
 define ["backbone", "momentjs"], (Backbone, Moment) ->
 	Backbone.Model.extend
-		defaults: 
+		defaults:
 			title: ""
 			order: undefined
 			schedule: null
@@ -11,14 +11,14 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			tags: null
 			notes: ""
 			deleted: no
-		
+
 		initialize: ->
 			# Schedule defaults to a new date object 1 second in the past
 			if @get( "schedule" ) is null
 				@set( "schedule", @getDefaultSchedule() )
 
 			# Convert schedule to date obj if for some reason it's a string
-			if typeof @get( "schedule" ) is "string" 
+			if typeof @get( "schedule" ) is "string"
 				@set( "schedule", new Date @get( "schedule" ) )
 
 			@setScheduleStr()
@@ -29,12 +29,12 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				@setTimeStr()
 				@set( "selected", no )
 
-			@on "change:completionDate", => 
+			@on "change:completionDate", =>
 				@setCompletionStr()
 				@setCompletionTimeStr()
 				@set( "selected", no )
-			
-			if @has "completionDate" 
+
+			if @has "completionDate"
 				@setCompletionStr()
 				@setCompletionTimeStr()
 
@@ -44,7 +44,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 		getState: ->
 			schedule = @getValidatedSchedule()
-			
+
 			# Check if completed
 			if @get "completionDate"
 				return "completed"
@@ -60,23 +60,23 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			now = new Date()
 			now.setSeconds now.getSeconds() - 1
 			return now
-		
+
 		getValidatedSchedule: ->
 			schedule = @get "schedule"
-			
+
 			if typeof schedule is "string"
 				@set( "schedule", new Date schedule )
 
 			return @get "schedule"
 
 		getDayWithoutTime: (moment) ->
-			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm", 
+			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm",
 			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
 			return moment.calendar().match( /\w+/ )[0]
-		
+
 		setScheduleStr: ->
 			schedule = @get "schedule"
-			if !schedule 
+			if !schedule
 				if @get "completionDate"
 					@set( "scheduleStr", "the past" )
 					return @get "scheduleStr"
@@ -103,11 +103,11 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			if dayWithoutTime is "Today" then dayWithoutTime = "Later today"
 
 			@set( "scheduleStr", dayWithoutTime )
-		
+
 		setTimeStr: ->
 			schedule = @get "schedule"
 			if !schedule then return @set( "timeStr", undefined )
-			
+
 			# We have a schedule set, update timeStr prop
 			@set( "timeStr", moment( schedule ).format "h:mmA" )
 
