@@ -125,7 +125,7 @@
         return this.$el.css("opacity", "");
       },
       cleanUp: function() {
-        $(window).off();
+        $(window).off("resize", this.setBounds);
         this.$el.off();
         this.undelegateEvents();
         this.stopListening();
