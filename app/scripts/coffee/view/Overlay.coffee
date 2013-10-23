@@ -7,12 +7,12 @@ define ["backbone"], (Backbone) ->
 		initialize: ->
 			@setTemplate()
 			@bindEvents()
-			
+
 			@showClassName = "overlay-open"
 			@hideClassName = "hide-overlay"
-			
+
 			# Remove overlay on ESC key
-			$(document).on 'keyup', (e) =>
+			$(document).on 'keyup.overlay', (e) =>
 				if e.keyCode is 27 and @$el.html then @hide yes
 		setTemplate: ->
 			# Hook for views extending me
@@ -22,7 +22,7 @@ define ["backbone"], (Backbone) ->
 			if @template
 				html = @template {}
 				@$el.html html
-			
+
 			return @
 		show: ->
 			if @shown then return
@@ -30,7 +30,7 @@ define ["backbone"], (Backbone) ->
 
 			$("body").removeClass @hideClassName
 			if @hideTimer? then clearTimeout @hideTimer
-			
+
 			$("body").toggleClass( @showClassName, yes )
 			@afterShow()
 		afterShow: ->
@@ -40,7 +40,7 @@ define ["backbone"], (Backbone) ->
 			if not @shown
 				dfd.resolve()
 				return dfd.promise()
-			
+
 			@shown = no
 
 			$("body").addClass @hideClassName
@@ -49,14 +49,14 @@ define ["backbone"], (Backbone) ->
 					@afterHide()
 					dfd.resolve()
 				, 400
-					
+
 			return dfd.promise()
 		afterHide: ->
 			# Hook for views extending me
 		cleanUp: ->
 			@stopListening()
-			$(document).off()
+			$(document).off(".overlay")
 		destroy: ->
-			@hide().done => 
+			@hide().done =>
 				@cleanUp()
 				@$el.remove()

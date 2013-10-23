@@ -1,7 +1,7 @@
 define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overlay.html"], (_, Backbone, Overlay, ScheduleOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay scheduler'
-		events: 
+		events:
 			"click .grid > a:not(.disabled)": "selectOption"
 			"click .overlay-bg": "hide"
 		initialize: ->
@@ -18,7 +18,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 			if @template
 				html = @template @model.toJSON()
 				@$el.html html
-			
+
 			return @
 		afterShow: ->
 			@handleResize()
@@ -32,13 +32,13 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 			Overlay::hide.apply( @, arguments )
 		handleResize: ->
 			return unless @shown
-			
+
 			content = @$el.find ".overlay-content"
 			offset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
 			content.css( "margin-top", offset )
 		cleanUp: ->
-			$(window).off()
+			$(window).off( "resize", @handleResize )
 
 			# Same as super() in real OOP programming
 			Overlay::cleanUp.apply( @, arguments )
-			
+

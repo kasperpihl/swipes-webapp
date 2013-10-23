@@ -126,7 +126,7 @@
         return content.css("margin-top", offset);
       },
       cleanUp: function() {
-        $(window).off();
+        $(window).off("resize", this.handleResize);
         return Overlay.prototype.cleanUp.apply(this, arguments);
       }
     });

@@ -1,7 +1,7 @@
 define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-overlay.html"], (_, Backbone, Overlay, TagsEditorOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay tags-editor'
-		events: 
+		events:
 			"click .overlay-bg": "hide"
 			"click .save": "hide"
 			"click .rounded-tags li:not(.tag-input)": "toggleTag"
@@ -20,16 +20,16 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			# First check that all currently selected tasks have tags applied
 			tagLists = _.invoke( @options.models, "get", "tags" )
 			return [] if _.contains( tagLists, null )
-				
+
 			# Then, go over each task and find out if there are any tags shared by all of them
 			_.intersection tagLists...
 		render: () ->
 			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
-			
+
 			if not @addedToDom
 				$("body").append @$el
 				@addedToDom = yes
-			
+
 			@show()
 			@handleResize()
 			@$el.find( ".tag-input input" ).focus()
@@ -40,7 +40,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			target = $ e.currentTarget
 			remove = target.hasClass "selected"
 			tag = target.text()
-			
+
 			console.log "Toggle #{tag} ", !remove
 
 			if remove then @removeTagFromModels tag
@@ -77,13 +77,13 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			@render()
 		handleResize: ->
 			return unless @shown
-			
+
 			content = @$el.find ".overlay-content"
 			offset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
 			content.css( "margin-top", offset )
 		cleanUp: ->
-			$(window).off()
+			$(window).off("resize", @handleResize)
 
 			# Same as super() in real OOP programming
 			Overlay::cleanUp.apply( @, arguments )
-			
+

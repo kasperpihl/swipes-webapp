@@ -12,7 +12,7 @@
         this.bindEvents();
         this.showClassName = "overlay-open";
         this.hideClassName = "hide-overlay";
-        return $(document).on('keyup', function(e) {
+        return $(document).on('keyup.overlay', function(e) {
           if (e.keyCode === 27 && _this.$el.html) {
             return _this.hide(true);
           }
@@ -64,7 +64,7 @@
       afterHide: function() {},
       cleanUp: function() {
         this.stopListening();
-        return $(document).off();
+        return $(document).off(".overlay");
       },
       destroy: function() {
         var _this = this;

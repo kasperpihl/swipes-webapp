@@ -1,13 +1,13 @@
 define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 	class ListSortModel
-		
+
 		constructor: (@container, @views) ->
 			@rows = @getRows()
 			@setBounds()
 			@setRowTops()
 
 			debouncedSetBounds = _.debounce( @setBounds, 300 )
-			$(window).on( "resize scroll", => debouncedSetBounds() )
+			$(window).on( "resize.sortmodel scroll.sortmodel", => debouncedSetBounds() )
 		getRows: ->
 			@rowHeight = @views[0].$el.height()
 			rows = ( i * @rowHeight for view, i in @views )
@@ -16,8 +16,8 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 		setBounds: =>
 			# Check if bounds is set. They won't be if element is hidden etc.
 			bounds = @container[0].getClientRects()[0]? or { top: 0 }
-			
-			@bounds = 
+
+			@bounds =
 				top: Math.max( bounds.top, window.pageYOffset )
 				bottom: window.innerHeight + window.pageYOffset
 
@@ -44,7 +44,7 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			for rowTop, index in @rows
 				dist = Math.abs( yPos - rowTop )
 				distances.push dist
-				distancesWithIndex.push { index, dist  } 
+				distancesWithIndex.push { index, dist  }
 
 			minDist = Math.min distances...
 
@@ -63,7 +63,7 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			else if newOrder > oldOrder
 				for affectedView in @getViewsBetween( oldOrder, newOrder, view.model.cid )
 					affectedView.model.set( "order", affectedView.model.get( "order" ) - 1 )
-			
+
 			# Silently set order for this view, because we don't want to trigger the handler that tweens the position for it.
 			view.model.set( { order: newOrder }, { silent: yes } )
 
@@ -79,5 +79,5 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			TweenLite.to( window, 0.1, { scrollTo: newScroll, ease:Linear.easeNone } )
 
 		destroy: ->
-			$(window).off()
-					
+			$(window).off(".sortmodel")
+

@@ -14,7 +14,7 @@
         this.setBounds();
         this.setRowTops();
         debouncedSetBounds = _.debounce(this.setBounds, 300);
-        $(window).on("resize scroll", function() {
+        $(window).on("resize.sortmodel scroll.sortmodel", function() {
           return debouncedSetBounds();
         });
       }
@@ -149,7 +149,7 @@
       };
 
       ListSortModel.prototype.destroy = function() {
-        return $(window).off();
+        return $(window).off(".sortmodel");
       };
 
       return ListSortModel;
