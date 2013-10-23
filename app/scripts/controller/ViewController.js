@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "gsap", "view/editor/EditTask", "view/Todo", "view/Completed", "view/Scheduled"], function(Backbone, TweenLite, EditTaskView) {
+  define(["backbone", "gsap"], function(Backbone, TweenLite, EditTaskView) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
@@ -8,17 +8,34 @@
 
       ViewController.prototype.init = function() {
         var _this = this;
-        Backbone.on('navigate/view', function(slug) {
-          return _this.goto(slug);
-        });
+        Backbone.on('navigate/view', this.goto, this);
         return Backbone.on('edit/task', function(taskId) {
           return _this.editTask(taskId);
         });
       };
 
       ViewController.prototype.goto = function(slug) {
+        var _this = this;
         $("body").removeClass("edit-mode");
-        return this.transitionViews(slug);
+        return this.loadView(slug).then(function(View) {
+          var newView;
+          newView = new View({
+            el: "ol.todo-list." + slug
+          });
+          if (_this.currView != null) {
+            return _this.transitionOut(_this.currView).then(function() {
+              return _this.transitionIn(newView).then(function() {
+                var _ref;
+                return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
+              });
+            });
+          } else {
+            return _this.transitionIn(newView).then(function() {
+              var _ref;
+              return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
+            });
+          }
+        });
       };
 
       ViewController.prototype.editTask = function(taskId) {
@@ -38,48 +55,45 @@
         }
         if (this.currView != null) {
           return this.transitionOut(this.currView).then(function() {
-            return _this.createTaskEditor(model);
+            return _this.loadTaskEditor(model);
           });
         } else {
-          return this.createTaskEditor(model);
+          return this.loadTaskEditor(model);
         }
       };
 
-      ViewController.prototype.createTaskEditor = function(model) {
-        var editView;
-        editView = new EditTaskView({
-          model: model
-        });
-        $("#main-content").prepend(editView.el);
-        return this.transitionIn(editView).then(function() {
-          var _ref;
-          return (_ref = editView.transitionInComplete) != null ? _ref.call(editView) : void 0;
+      ViewController.prototype.loadTaskEditor = function(model) {
+        var _this = this;
+        return require(["view/editor/EditTask"], function(EditTaskView) {
+          var editView;
+          editView = new EditTaskView({
+            model: model
+          });
+          $("#main-content").prepend(editView.el);
+          return _this.transitionIn(editView).then(function() {
+            var _ref;
+            return (_ref = editView.transitionInComplete) != null ? _ref.call(editView) : void 0;
+          });
         });
       };
 
-      ViewController.prototype.transitionViews = function(slug) {
-        var viewName,
-          _this = this;
-        viewName = slug[0].toUpperCase() + slug.slice(1);
-        return require(["view/" + viewName], function(View) {
-          var newView;
-          newView = new View({
-            el: "ol.todo-list." + slug
+      ViewController.prototype.loadView = function(slug) {
+        var dfd;
+        dfd = new $.Deferred();
+        if (slug === "scheduled") {
+          require(["view/Scheduled"], function(View) {
+            return dfd.resolve(View);
           });
-          if (_this.currView != null) {
-            return _this.transitionOut(_this.currView).then(function() {
-              return _this.transitionIn(newView).then(function() {
-                var _ref;
-                return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
-              });
-            });
-          } else {
-            return _this.transitionIn(newView).then(function() {
-              var _ref;
-              return (_ref = newView.transitionInComplete) != null ? _ref.call(newView) : void 0;
-            });
-          }
-        });
+        } else if (slug === "completed") {
+          require(["view/Completed"], function(View) {
+            return dfd.resolve(View);
+          });
+        } else {
+          require(["view/Todo"], function(View) {
+            return dfd.resolve(View);
+          });
+        }
+        return dfd.promise();
       };
 
       ViewController.prototype.transitionOut = function(view) {
