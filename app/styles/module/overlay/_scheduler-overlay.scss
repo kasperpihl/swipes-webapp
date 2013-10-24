@@ -19,5 +19,20 @@ body.scheduler-open {
 	color: white;
 	.overlay-bg { background: rgba($lobster, 0.8); }
 
+	.date-picker {
+		display: none;
+		margin: 0 auto;
+		width: 96%;
+		@include breakpoint(min-width, 427px) { width: emCalc(410px); }
+	}
 
+	&.show-datepicker {
+		.date-picker {
+			display: block;
+		}
+
+		.grid {
+			display: none !important;
+		}
+	}
 }

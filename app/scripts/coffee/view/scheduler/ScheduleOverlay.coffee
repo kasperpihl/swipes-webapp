@@ -4,6 +4,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		events:
 			"click .grid > a:not(.disabled)": "selectOption"
 			"click .overlay-bg": "hide"
+			"click .date-picker .back": "hideDatePicker"
 		initialize: ->
 			Overlay::initialize.apply( @, arguments )
 

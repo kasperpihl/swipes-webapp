@@ -4,7 +4,8 @@
       className: 'overlay scheduler',
       events: {
         "click .grid > a:not(.disabled)": "selectOption",
-        "click .overlay-bg": "hide"
+        "click .overlay-bg": "hide",
+        "click .date-picker .back": "hideDatePicker"
       },
       initialize: function() {
         Overlay.prototype.initialize.apply(this, arguments);
