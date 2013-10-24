@@ -18,12 +18,17 @@ body.scheduler-open {
 .overlay.scheduler {
 	color: white;
 	.overlay-bg { background: rgba($lobster, 0.8); }
+}
 
+.overlay {
 	.date-picker {
 		display: none;
 		margin: 0 auto;
 		width: 96%;
-		@include breakpoint(min-width, 427px) { width: emCalc(410px); }
+		@include breakpoint(min-width, 427px) {
+			width: emCalc(410px);
+			padding: 1.4em;
+		}
 	}
 
 	&.show-datepicker {
@@ -35,4 +40,5 @@ body.scheduler-open {
 			display: none !important;
 		}
 	}
+
 }

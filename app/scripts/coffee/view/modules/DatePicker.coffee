@@ -7,8 +7,11 @@ define ["underscore", "backbone", "view/modules/Calendar", "text!templates/datep
 		setTemplate: ->
 			@template = _.template DatePickerTmpl
 		render: ->
-			console.log @template {}
+			# Render base HTML
 			@$el.html @template {}
+
+			# Add Calendar view
 			@calendar = new CalendarView()
 			@$el.find( ".content" ).append @calendar.el
+
 			return @

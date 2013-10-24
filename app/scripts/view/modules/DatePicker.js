@@ -10,7 +10,6 @@
         return this.template = _.template(DatePickerTmpl);
       },
       render: function() {
-        console.log(this.template({}));
         this.$el.html(this.template({}));
         this.calendar = new CalendarView();
         this.$el.find(".content").append(this.calendar.el);
