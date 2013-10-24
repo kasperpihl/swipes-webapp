@@ -3,7 +3,7 @@ define ["underscore", "momentjs"], (_, Moment) ->
 		constructor: (@settings) ->
 			@validateSettings()
 			@data = @getData()
-			
+
 		validateSettings: ->
 
 		getData: ->
@@ -51,7 +51,7 @@ define ["underscore", "momentjs"], (_, Moment) ->
 						newDate.add( "days", 7 )
 					else
 						newDate.day snoozes.weekend.startDay.name
-					
+
 					newDate.hour snoozes.weekend.morning.hour
 					newDate.minute snoozes.weekend.morning.minute
 					newDate = newDate.startOf "minute"
@@ -61,12 +61,12 @@ define ["underscore", "momentjs"], (_, Moment) ->
 						newDate.add( "days", 7 )
 					else
 						newDate.day snoozes.weekday.start
-					
+
 					newDate.hour snoozes.weekday.morning.hour
 					newDate.minute snoozes.weekday.morning.minute
 					newDate = newDate.startOf "minute"
-				else 
-					# Catch any errors and return null, because then they aren't lost, just simply 
+				else
+					# Catch any errors and return null, because then they aren't lost, just simply
 					# put in the 'unspecified' pile
 					return null
 
@@ -76,13 +76,13 @@ define ["underscore", "momentjs"], (_, Moment) ->
 
 			switch time
 				when "This Evening"
-					return if now.hour() >= 18 then "Tomorrow Evening" else "This Evening"
+					return if now.hour() >= 18 then "Tomorrow Eve" else "This Evening"
 				when "Day After Tomorrow"
 					dayAfterTomorrow = moment( now ).add( "days", 2 )
 					return dayAfterTomorrow.format "dddd"
 				when "This Weekend"
 					return if now.day() < 5 then "This Weekend" else "Next Weekend"
-				else 
+				else
 					return time
 
 		toJSON: ->
