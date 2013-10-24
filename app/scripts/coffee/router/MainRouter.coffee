@@ -9,30 +9,32 @@ define ['backbone'], (Backbone) ->
 			@history = []
 			@on( "route", @updateHistory )
 		root: ->
-			@navigate( "list/todo", { trigger: yes, replaceState: no } )
-		list: (id) ->
-			# console.log "Go to list #{id}"
+			@navigate( "list/todo", { trigger: yes, replace: yes } )
+		list: (id = "todo") ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
 		edit: (taskId) ->
-			console.log "Edit task #{taskId}"
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
 		settings: (subview) ->
-			console.log "Going to settings"
 			Backbone.trigger "show-settings"
 			if subview then Backbone.trigger( "settings/view", subview )
 		updateHistory: (method, page) ->
-			unless method is "root" then @history.push @getRouteStr( method, page[0] )
+			# We skip root, because it's just a redirect to another route.
+			return false if method is "root"
+
+			newRoute = @getRouteStr( method, page[0] )
+
+			# We don't want multiple instances of the same route after
+			# each other that calling router.back() would otherwise create.
+			@history.push newRoute unless @getCurrRoute() is newRoute
 		getRouteStr: (method, page) ->
 			if page then "#{method}/#{page}" else method
+		getCurrRoute: ->
+			@history[ @history.length - 1 ]
 		back: ->
-			if @history.length > 0
-				window.history.back()
-
+			if @history.length > 1
+				@history.pop()
+				@navigate( @history[@history.length - 1], { trigger: yes, replace: yes } )
 			else
-				# If we don't have any history, go to the root
-				# Use replaceState if available so the navigation doesn't create an extra history entry
-				this.navigate( 'list/todo', {trigger:true, replace:true} )
-
-
+				@root()

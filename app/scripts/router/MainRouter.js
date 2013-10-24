@@ -15,28 +15,34 @@
       root: function() {
         return this.navigate("list/todo", {
           trigger: true,
-          replaceState: false
+          replace: true
         });
       },
       list: function(id) {
+        if (id == null) {
+          id = "todo";
+        }
         Backbone.trigger("hide-settings");
         return Backbone.trigger("navigate/view", id);
       },
       edit: function(taskId) {
-        console.log("Edit task " + taskId);
         Backbone.trigger("hide-settings");
         return Backbone.trigger("edit/task", taskId);
       },
       settings: function(subview) {
-        console.log("Going to settings");
         Backbone.trigger("show-settings");
         if (subview) {
           return Backbone.trigger("settings/view", subview);
         }
       },
       updateHistory: function(method, page) {
-        if (method !== "root") {
-          return this.history.push(this.getRouteStr(method, page[0]));
+        var newRoute;
+        if (method === "root") {
+          return false;
+        }
+        newRoute = this.getRouteStr(method, page[0]);
+        if (this.getCurrRoute() !== newRoute) {
+          return this.history.push(newRoute);
         }
       },
       getRouteStr: function(method, page) {
@@ -46,14 +52,18 @@
           return method;
         }
       },
+      getCurrRoute: function() {
+        return this.history[this.history.length - 1];
+      },
       back: function() {
-        if (this.history.length > 0) {
-          return window.history.back();
-        } else {
-          return this.navigate('list/todo', {
+        if (this.history.length > 1) {
+          this.history.pop();
+          return this.navigate(this.history[this.history.length - 1], {
             trigger: true,
             replace: true
           });
+        } else {
+          return this.root();
         }
       }
     });
