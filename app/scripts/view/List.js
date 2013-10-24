@@ -5,7 +5,7 @@
         this.transitionDeferred = new $.Deferred();
         this.template = _.template(ToDoListTmpl);
         this.subviews = [];
-        this.renderList = _.debounce(this.renderList, 300);
+        this.renderList = _.debounce(this.renderList, 5);
         this.listenTo(swipy.todos, "add remove reset change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", this.renderList);
         this.listenTo(Backbone, "complete-task", this.completeTasks);
         this.listenTo(Backbone, "todo-task", this.markTaskAsTodo);
@@ -48,7 +48,7 @@
         return swipy.todos.getActive();
       },
       renderList: function() {
-        var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1, _results;
+        var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
         this.$el.empty();
         this.killSubViews();
         todos = this.getTasks();
@@ -60,7 +60,6 @@
         });
         this.beforeRenderList(todos);
         _ref = this.groupTasks(todos);
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           group = _ref[_i];
           tasksJSON = _.invoke(group.tasks, "toJSON");
@@ -81,9 +80,8 @@
             list.append(view.el);
           }
           this.$el.append($html);
-          _results.push(this.afterRenderList(todos));
         }
-        return _results;
+        return this.afterRenderList(todos);
       },
       beforeRenderList: function(todos) {},
       afterRenderList: function(todos) {},

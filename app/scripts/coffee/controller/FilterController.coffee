@@ -3,7 +3,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		constructor: ->
 			@tagsFilter = []
 			@searchFilter = ""
-			
+
 			@debouncedSearch = _.debounce( @applySearchFilter, 100 )
 			@debouncedClearSearch = _.debounce( @removeSearchFilter, 100 )
 
@@ -18,10 +18,10 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		applyTagsFilter: (addTag) ->
 			if (addTag) and not _.contains( @tagsFilter, addTag )
 				@tagsFilter.push addTag
-			
+
 			for task in swipy.todos.models
 				reject = yes
-				
+
 				if task.has( "tags" ) and _.intersection( task.get( "tags" ), @tagsFilter ).length is @tagsFilter.length
 					reject = no
 
@@ -29,7 +29,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 		applySearchFilter: (filter) ->
 			@searchFilter = filter
-			
+
 			swipy.todos.each (model) =>
 				isRejected = model.get( "title" ).toLowerCase().indexOf( @searchFilter ) is -1
 				model.set( "rejectedBySearch", isRejected )
@@ -45,5 +45,5 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		removeSearchFilter: (filter) ->
 			@searchFilter = ""
 			swipy.todos.invoke( "set", "rejectedBySearch", no )
-			
+
 		getTasksThatMatchTags: (tagsArr) ->

@@ -16,8 +16,8 @@ define [
 			# Store subviews in this array so we can kill them (and free up memory) when we no longer need them
 			@subviews = []
 
-			# Render the list whenever it updates
-			@renderList = _.debounce( @renderList, 300 )
+			# Render the list whenever it updates, 5ms is just enough to work around mutiple events firing frequently
+			@renderList = _.debounce( @renderList, 5 )
 			@listenTo( swipy.todos, "add remove reset change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
 
 			# Handle task actions
@@ -71,7 +71,7 @@ define [
 
 				@$el.append $html
 
-				@afterRenderList todos
+			@afterRenderList todos
 
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
