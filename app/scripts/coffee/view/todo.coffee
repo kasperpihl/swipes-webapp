@@ -14,6 +14,9 @@ define ["underscore", "view/List", "controller/ListSortController", "model/TaskS
 			@sorter.setTodoOrder todos
 
 		beforeRenderList: (todos) ->
+			# Make sure all todos are unselected before rendering the list
+			swipy.todos.invoke( "set", "selected", no )
+
 			@setTodoOrder todos
 
 		afterRenderList: (todos) ->

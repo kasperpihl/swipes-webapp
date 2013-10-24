@@ -1,7 +1,7 @@
 define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, TagEditorOverlay) ->
 	Backbone.View.extend
 		el: ".action-bar"
-		events: 
+		events:
 			"click .edit": "editTask"
 			"click .tags": "editTags"
 			"click .delete": "deleteTasks"
@@ -14,7 +14,7 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 				if swipy.todos.where( selected: yes ).length is 0
 					@hide()
 			else
-				if swipy.todos.where( selected: yes ).length is 1
+				if swipy.todos.where( selected: yes ).length > 0
 					@show()
 		show: ->
 			@$el.toggleClass( "fadeout", no )

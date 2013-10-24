@@ -71,6 +71,30 @@
             tags: ["Ahrengotti Del Barista e Assasino", "work"],
             notes: ""
           }, {
+            title: "Build webapp",
+            schedule: new Date("September 17, 2013 23:59:02"),
+            completionDate: new Date("July 15, 2013 11:51:34"),
+            repeatOption: "never",
+            repeatDate: null,
+            tags: ["Ahrengotti Del Barista e Assasino", "work"],
+            notes: ""
+          }, {
+            title: "Learn to make Tiramisú",
+            schedule: new Date("September 17, 2013 23:59:02"),
+            completionDate: new Date("September 18, 2013 09:51:34"),
+            repeatOption: "never",
+            repeatDate: null,
+            tags: ["Food", "Die hipsters"],
+            notes: ""
+          }, {
+            title: "Learn who Martin is",
+            schedule: new Date("September 17, 2013 23:59:02"),
+            completionDate: new Date("September 2, 2013 09:51:34"),
+            repeatOption: "never",
+            repeatDate: null,
+            tags: ["Work"],
+            notes: ""
+          }, {
             title: "Dirt Jumps, Dirt Jumps, Dirt Jumps!",
             schedule: new Date("September 17, 2013 23:59:02"),
             completionDate: null,
