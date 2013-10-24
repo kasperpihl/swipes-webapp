@@ -22,7 +22,7 @@
         } else {
           if (swipy.todos.where({
             selected: true
-          }).length === 1) {
+          }).length > 0) {
             return this.show();
           }
         }

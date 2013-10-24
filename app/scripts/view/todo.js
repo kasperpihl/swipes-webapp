@@ -23,6 +23,7 @@
         return this.sorter.setTodoOrder(todos);
       },
       beforeRenderList: function(todos) {
+        swipy.todos.invoke("set", "selected", false);
         return this.setTodoOrder(todos);
       },
       afterRenderList: function(todos) {
