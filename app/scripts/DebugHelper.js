@@ -4,10 +4,24 @@
     return DebugHelper = (function() {
       function DebugHelper() {
         this.setDummyTodos();
+        this.forceCalendar();
       }
 
       DebugHelper.prototype.setDummyTodos = function() {
         return swipy.todos.reset(this.getDummyData());
+      };
+
+      DebugHelper.prototype.forceCalendar = function() {
+        location.hash = "list/todo";
+        return setTimeout(function() {
+          var list, tasks;
+          tasks = swipy.todos.getActive().slice(0, 2);
+          list = swipy.viewController.currView;
+          list.scheduleTasks(tasks);
+          return setTimeout(function() {
+            return Backbone.trigger("select-date");
+          }, 1400);
+        }, 800);
       };
 
       DebugHelper.prototype.getDummyData = function() {

@@ -2,9 +2,31 @@ define ->
 	class DebugHelper
 		constructor: ->
 			@setDummyTodos()
+			@forceCalendar()
 		setDummyTodos: ->
 			# Reset collection with dummy data
 			swipy.todos.reset @getDummyData()
+		forceCalendar: ->
+			# Go to todo view
+			location.hash = "list/todo"
+
+			setTimeout ->
+					# Get 2 tasks that are due now
+					tasks = swipy.todos.getActive()[0..1]
+
+					# Get list view
+					list = swipy.viewController.currView
+
+					# Schedule the tasks
+					list.scheduleTasks tasks
+
+
+					# Wait 0.8 seconds
+					setTimeout ->
+							# Trigger 'Pick A Date' option
+							Backbone.trigger( "select-date" )
+						, 1400
+				, 800
 		getDummyData: ->
 			[
 					title: "Follow up on Martin"
