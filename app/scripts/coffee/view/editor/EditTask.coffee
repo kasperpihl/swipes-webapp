@@ -32,7 +32,7 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 
 			@model.save( atts, opts )
 		transitionInComplete: ->
-			console.log "Edit view finished transitionIn"
+
 		getTitle: ->
 			@$el.find( ".title input" ).val()
 		getNotes: ->

@@ -1,8 +1,8 @@
 define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone, ToDoModel) ->
-	
+
 	# contentHolder = $("#content-holder")
 
-	# helpers = 
+	# helpers =
 	# 	getDummyModels: ->
 	# 		future = new Date()
 	# 		future.setDate( future.getDate() + 1 )
@@ -59,19 +59,19 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# #
 	# # The Basics
 	# #
-	# describe "Basics", ->	
+	# describe "Basics", ->
 	# 	it "App should be up and running", ->
 	# 		# Overwrite todos with dummy data
 	# 		swipy.todos.reset helpers.getDummyModels()
-			
+
 	# 		expect( swipy ).to.exist
 
 	# 	it "Should have scheduled tasks for testing", ->
 	# 		expect( swipy.todos.getScheduled() ).to.have.length.above 0
-		
+
 	# 	it "Should have active tasks for testing", ->
 	# 		expect( swipy.todos.getActive() ).to.have.length.above 0
-		
+
 	# 	it "Should have completed tasks for testing", ->
 	# 		expect( swipy.todos.getCompleted() ).to.have.length.above 0
 
@@ -83,13 +83,13 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	# 	it "Should create scheduleStr property when instantiated", ->
 	# 		expect( model.get("scheduleStr") ).to.equal "the past"
-		
+
 	# 	it "Should update scheduleStr when schedule property is changed", ->
 	# 		date = model.get "schedule"
 
 	# 		# unset for change event to occur
 	# 		model.unset "schedule"
-			
+
 	# 		date.setDate date.getDate()+1
 	# 		model.set( "schedule", date )
 
@@ -100,16 +100,16 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	# 	it "Should update timeStr when schedule property is changed", ->
 	# 		timeBeforeChange = model.get "timeStr"
-			
+
 	# 		date = model.get "schedule"
 	# 		# Unset because its an object and wont trigger a change if we just update the object itself.
 	# 		model.unset "schedule"
 
 	# 		date.setHours date.getHours() - 1
 	# 		model.set( "schedule", date )
-			
+
 	# 		timeAfterChange = model.get "timeStr"
-			
+
 	# 		expect( timeBeforeChange ).to.not.equal timeAfterChange
 
 	# 	it "Should update completedStr when completionDate is changed", ->
@@ -137,15 +137,15 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			scheduledTask = new ToDoModel { title: "scheduled task", schedule: future }
 	# 			todoTask = new ToDoModel { title: "todo task", schedule: now }
 	# 			completedTask = new ToDoModel { title: "completed task", completionDate: past }
-				
+
 	# 			todos = new ToDoCollection [scheduledTask, todoTask, completedTask]
 
 	# 		it "getActive() should return all tasks to do right now", ->
 	# 			expect(todos.getActive().length).to.equal 1
-			
+
 	# 		it "getScheduled() Should return all scheduled tasks", ->
 	# 			expect(todos.getScheduled().length).to.equal 1
-			
+
 	# 		it "getCompleted() Should return all completed tasks", ->
 	# 			expect(todos.getCompleted().length).to.equal 1
 
@@ -159,18 +159,18 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 		do ->
 	# 			model = new ToDoModel helpers.getDummyModels()[0]
 	# 			view = new View { model }
-				
+
 	# 			describe "To Do View: Selecting", ->
 
 	# 				list.append view.el
 	# 				view.$el.find( ".todo-content" ).click()
-				
+
 	# 				it "Should toggle selected property on model when clicked", ->
 	# 					expect( model.get "selected" ).to.be.true
-					
+
 	# 				it "Should toggle selected class on element when clicked", ->
 	# 					expect( view.$el.hasClass "selected" ).to.be.true
-				
+
 
 	# 		do ->
 	# 			todos = views = null
@@ -200,7 +200,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 					count++ for view in views when view.$el.hasClass "hover-schedule"
 
 	# 					expect( count ).to.equal 0
-					
+
 
 	# 				it "Should get the 'hover-left' CSS class when 'hover-complete' event is triggered when selected", ->
 	# 					# Make 2 views selected
@@ -208,7 +208,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 					views[1].model.set( "selected", true )
 
 	# 					Backbone.trigger "hover-complete"
-						
+
 	# 					count = 0
 	# 					count++ for view in views when view.$el.hasClass "hover-left"
 
@@ -234,7 +234,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 					views[1].model.set( "selected", true )
 
 	# 					Backbone.trigger "hover-schedule"
-						
+
 	# 					count = 0
 	# 					count++ for view in views when view.$el.hasClass "hover-right"
 
@@ -257,18 +257,18 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# #
 	# # Any list View
 	# #
-	
+
 	# ###
 	# require ["view/List", "model/ToDoModel"], (ListView, ToDo) ->
 	# 	contentHolder.empty()
 	# 	list = new ListView();
 	# 	list.$el.appendTo contentHolder
-			
+
 	# 	describe "Base list view", ->
 	# 		children = list.$el.find "ol li"
 	# 		it "should add appropiate children rendering", ->
 	# 			expect( children ).to.have.length.above 0
-			
+
 	# 		it "Should remove all nested children as part of the cleanUp routine", ->
 	# 			list.cleanUp()
 	# 			expect( children ).to.have.length.lessThan 1
@@ -289,8 +289,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	# 	todos = [
 	# 		new ToDoModel( { title: "In a month", schedule: nextMonth } )
-	# 		new ToDoModel( { title: "Tomorrow", schedule: tomorrow } ), 
-	# 		new ToDoModel( { title: "In 1 hour", schedule: laterToday } ), 
+	# 		new ToDoModel( { title: "Tomorrow", schedule: tomorrow } ),
+	# 		new ToDoModel( { title: "In 1 hour", schedule: laterToday } ),
 	# 	]
 
 	# 	view = new ScheduleView()
@@ -318,7 +318,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			expect(result[0].tasks[2].get "title").to.equal "three"
 
 	# 		it "Should make sure no two todos have the same order id", ->
-	# 			list = [ 
+	# 			list = [
 	# 				new ToDoModel( { order: 0 } ),
 	# 				new ToDoModel( { order: 0 } ),
 	# 				new ToDoModel( { order: 2 } ),
@@ -342,7 +342,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			second.setSeconds( second.getSeconds() + 1 )
 	# 			third.setSeconds( third.getSeconds() + 2 )
 
-	# 			list = [ 
+	# 			list = [
 	# 				new ToDoModel( { title: "third", schedule: third } ),
 	# 				new ToDoModel( { title: "second", schedule: second } )
 	# 				new ToDoModel( { title: "first", schedule: first } )
@@ -364,7 +364,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	# 			second.setSeconds( second.getSeconds() + 1 )
 
-	# 			list = [ 
+	# 			list = [
 	# 				new ToDoModel( { title: "third", schedule: second } ),
 	# 				new ToDoModel( { title: "first", schedule: first } ),
 	# 				new ToDoModel( { title: "second (has order)", order: 1 } ),
@@ -384,7 +384,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			expect( fourthModel.get "order" ).to.equal 3
 
 	# 		it "Should take models with order 3,4,5,6 and change them to 0,1,2,3", ->
-	# 			list = [ 
+	# 			list = [
 	# 				new ToDoModel( { title: "first", order: 3 } ),
 	# 				new ToDoModel( { title: "second", order: 4 } ),
 	# 				new ToDoModel( { title: "third", order: 5 } ),
@@ -404,7 +404,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			expect( fourth.get "order" ).to.equal 3
 
 	# 		it "Should take models with order 0,1,11,5 and change them to 0,1,2,3", ->
-	# 			list = [ 
+	# 			list = [
 	# 				new ToDoModel( { title: "first", order: 0 } ),
 	# 				new ToDoModel( { title: "second", order: 1 } ),
 	# 				new ToDoModel( { title: "third", order: 5 } ),
@@ -424,7 +424,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			expect( fourth.get "order" ).to.equal 3
 
 	# 		it "Should take models with order undefined,1,undefined,5 and change them to 0,1,2,3", ->
-	# 			list = [ 
+	# 			list = [
 	# 				new ToDoModel( { title: "first" } ),
 	# 				new ToDoModel( { title: "second", order: 1 } ),
 	# 				new ToDoModel( { title: "third" } ),
@@ -444,7 +444,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			expect( fourth.get "order" ).to.equal 3
 
 	# 		it "Should take models with order 2,2,2,2 and change them to 0,1,2,3", ->
-	# 			list = [ 
+	# 			list = [
 	# 				new ToDoModel( { title: "first", order: 2 } ),
 	# 				new ToDoModel( { title: "second", order: 2 } ),
 	# 				new ToDoModel( { title: "jtown", order: 2 } ),
@@ -462,7 +462,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			expect( second.get "order" ).to.equal 1
 	# 			expect( third.get "order" ).to.equal 2
 	# 			expect( fourth.get "order" ).to.equal 3
-	
+
 	# #
 	# # Completed list View
 	# #
@@ -478,8 +478,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	# 	todos = [
 	# 		new ToDoModel( { title: "Last month", completionDate: prevMonth } )
-	# 		new ToDoModel( { title: "Yesterday", completionDate: yesterday } ), 
-	# 		new ToDoModel( { title: "An hour ago", completionDate: earlierToday } ), 
+	# 		new ToDoModel( { title: "Yesterday", completionDate: yesterday } ),
+	# 		new ToDoModel( { title: "An hour ago", completionDate: earlierToday } ),
 	# 	]
 
 	# 	view = new CompletedView()
@@ -502,11 +502,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	# 		after ->
 	# 			$(".overlay.scheduler").remove()
-			
+
 	# 		it "Should return a new date 3 hours in the future when scheduling for 'later today'", ->
 	# 			now = moment()
 	# 			newDate = model.getDateFromScheduleOption( "later today", now )
-				
+
 	# 			expect( newDate ).to.exist
 
 	# 			parsedNewDate = moment newDate
@@ -517,7 +517,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			today = moment()
 	# 			today.hour 17
 	# 			newDate = model.getDateFromScheduleOption( "this evening", today )
-				
+
 	# 			expect( newDate ).to.exist
 
 	# 			parsedNewDate = moment newDate
@@ -530,7 +530,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 			today = moment()
 	# 			today.hour 19
 	# 			newDate = model.getDateFromScheduleOption( "this evening", today )
-				
+
 	# 			expect( newDate ).to.exist
 
 	# 			parsedNewDate = moment newDate
@@ -540,7 +540,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 		it "Should return a new date the day after at 09:00 when scheduling for 'tomorrow'", ->
 	# 			today = moment()
 	# 			newDate = model.getDateFromScheduleOption( "tomorrow", today )
-				
+
 	# 			expect( newDate ).to.exist
 
 	# 			parsedNewDate = moment newDate
@@ -550,7 +550,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 		it "Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", ->
 	# 			today = moment()
 	# 			newDate = model.getDateFromScheduleOption "day after tomorrow"
-				
+
 	# 			expect( newDate ).to.exist
 
 	# 			parsedNewDate = moment newDate
@@ -584,7 +584,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	# 		it "Should return null when scheduling for 'unspecified'", ->
 	# 			expect( model.getDateFromScheduleOption "unspecified" ).to.equal null
-			
+
 	# 		describe "converting time", ->
 	# 			it "Should should not convert 'This evening' when it's before 18:00 hours", ->
 	# 				expect( model.getDynamicTime( "This Evening", moment("2013-01-01 17:59") ) ).to.equal "This Evening"
@@ -611,44 +611,44 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 				now = moment().minute(23)
 	# 				newDate = model.getDateFromScheduleOption( "later today", now )
 	# 				parsedNewDate = moment newDate
-					
-	# 				expect( parsedNewDate.diff(now, "hours") ).to.equal 3				
+
+	# 				expect( parsedNewDate.diff(now, "hours") ).to.equal 3
 	# 				expect( parsedNewDate.minute() ).to.equal 23
 
 	# 			it "Should set minutes and seconds to 0 when selecting 'this evening'", ->
 	# 				now = moment().hour(12).minute(23).second(23)
 	# 				newDate = model.getDateFromScheduleOption( "this evening", now )
 	# 				parsedNewDate = moment newDate
-					
-	# 				expect( parsedNewDate.hour() ).to.equal 18				
+
+	# 				expect( parsedNewDate.hour() ).to.equal 18
 	# 				expect( parsedNewDate.minute() ).to.equal 0
 	# 				expect( parsedNewDate.second() ).to.equal 0
 
 	# 			it "Should set minutes and seconds to 0 when selecting 'tomorrow'", ->
 	# 				newDate = model.getDateFromScheduleOption( "tomorrow", moment().minute(23).second(23) )
 	# 				parsedNewDate = moment newDate
-					
+
 	# 				expect( parsedNewDate.minute() ).to.equal 0
 	# 				expect( parsedNewDate.second() ).to.equal 0
 
 	# 			it "Should set minutes and seconds to 0 when selecting 'day after tomorrow'", ->
 	# 				newDate = model.getDateFromScheduleOption( "day after tomorrow", moment().minute(23).second(23) )
 	# 				parsedNewDate = moment newDate
-					
+
 	# 				expect( parsedNewDate.minute() ).to.equal 0
 	# 				expect( parsedNewDate.second() ).to.equal 0
 
 	# 			it "Should set minutes and seconds to 0 when selecting 'this weekend'", ->
 	# 				newDate = model.getDateFromScheduleOption( "this weekend", moment().minute(23).second(23) )
 	# 				parsedNewDate = moment newDate
-					
+
 	# 				expect( parsedNewDate.minute() ).to.equal 0
 	# 				expect( parsedNewDate.second() ).to.equal 0
 
 	# 			it "Should set minutes and seconds to 0 when selecting 'next week'", ->
 	# 				newDate = model.getDateFromScheduleOption( "next week", moment().minute(23).second(23) )
 	# 				parsedNewDate = moment newDate
-					
+
 	# 				expect( parsedNewDate.minute() ).to.equal 0
 	# 				expect( parsedNewDate.second() ).to.equal 0
 
@@ -656,7 +656,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 	describe "Task Input", ->
 	# 		taskInput = null
 	# 		callback = null
-			
+
 	# 		before ->
 	# 			$("body").append("<form id='add-task'><input></form>")
 	# 			taskInput = new TaskInputController()
@@ -702,7 +702,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 					expect(result).to.include "tags"
 	# 					expect(result).to.include "racks"
 	# 					expect(result).to.include "stacks"
-					
+
 	# 				it "Should be able to parse tags with spaces", ->
 	# 					result = taskInput.parseTags "I love #tags, #racks and stacks"
 	# 					expect(result).to.have.length 2
@@ -727,11 +727,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# 				it "Should parse title without including 1 tag", ->
 	# 					result = taskInput.parseTitle "I love #tags"
 	# 					expect(result).to.equal "I love"
-					
+
 	# 				it "Should parse title without including multiple tags", ->
 	# 					result = taskInput.parseTitle "I also love #tags, #rags"
 	# 					expect(result).to.equal "I also love"
-					
+
 	# 				# it "Should parse title if it's defined after tags"
 
 	# 			it "Should add a new item to swipy.todos list when create-task event is fired", ->
@@ -782,6 +782,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 		# Make sure to reset route before each test
 		beforeEach ->
 			location.hash = "test/reset"
+			swipy.router.history = []
 
 		after (done) ->
 			swipy.router.once "route:root", -> done()
@@ -794,11 +795,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 		it "Should trigger appropiate logic when navigating to 'settings'", ->
 			eventTriggered = no
 			Backbone.once( "show-settings", => eventTriggered = yes )
-			
+
 			location.hash = "settings"
-			
+
 			# Use defer to make sure we've cleared the current event loop
-			_.defer -> 
+			_.defer ->
 				expect( eventTriggered ).to.be.true
 				expect( swipy.settings.view ).to.have.property( "shown", yes )
 
@@ -808,10 +809,10 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 		it "Should trigger appropiate logic when navigating to 'settings/:-id'", (done) ->
 			eventTriggered = no
 			Backbone.once( "show-settings", => eventTriggered = yes )
-			
+
 			location.hash = "settings/faq"
-			
-			_.defer -> 
+
+			_.defer ->
 				expect( eventTriggered ).to.be.true
 				expect( swipy.settings.view ).to.have.property( "shown", yes )
 
@@ -839,7 +840,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					, 150
 		it "Should trigger appropiate logic when navigating to 'edit/:id'", (done) ->
 			testTaskId = swipy.todos.at(0).cid
-			
+
 			eventTriggered = no
 			Backbone.once( "edit/task", (id) => if id is testTaskId then eventTriggered = yes )
 
@@ -855,46 +856,52 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 						done()
 					, 150
 
-		
+
 		it "Should go back to list view when calling save on task editor", (done) ->
-			# First, set the current route to a todo list, so that we have something to 
+			# First, set the current route to a todo list, so that we have something to
 			# go back to when the editor is saved
 			location.hash = "list/todo"
 
-			# Then, load in the editor view
-			editTaskRoute = "edit/#{ swipy.todos.at( 0 ).cid }"
-			location.hash = editTaskRoute
-			require ["view/editor/EditTask", "view/Todo"], (TaskEditor, TodoList) ->
-				editor = swipy.viewController.currView
+			# Give router a chance to update
+			_.defer ->
 
-				expect( editor ).to.be.instanceOf TaskEditor
-				expect( $("body").hasClass "edit-mode" ).to.be.true
+				# Update route to trigger editor
+				editTaskRoute = "edit/#{ swipy.todos.at( 1 ).cid }"
+				location.hash = editTaskRoute
 
-				editor.save().then ->
-
-					# Allow save success callbacks to do their thing first ...
+				# Then, make sure we've loaded in the editor view
+				require ["view/editor/EditTask", "view/Todo"], (TaskEditor, TodoList) ->
 					setTimeout ->
-							newRoute = location.hash[1...]
-							
-							expect( newRoute ).to.not.equal editTaskRoute
-							expect( swipy.viewController.currView ).to.exist
-							expect( Backbone.history.fragment ).to.equal "list/todo"
-							expect( swipy.viewController.currView ).to.be.instanceOf TodoList
-							expect( $("body").hasClass "edit-mode" ).to.be.false
-							
-							done()
-						, 150
+							editor = swipy.viewController.currView
 
-		it "Should have a catch-all which forwards to 'list/todo'", ->
-			wentByRoot = no
+							expect( swipy.router.history ).to.have.length 2
+							expect( editor ).to.be.instanceOf TaskEditor
+							expect( $("body").hasClass "edit-mode" ).to.be.true
+
+							# Save editor (Which should trigger a router.back() call on success)
+							editor.save().then ->
+
+								# Allow save success callbacks to do their thing first ...
+								setTimeout ->
+										newRoute = location.hash[1...]
+
+										expect( newRoute ).to.not.equal editTaskRoute
+										expect( swipy.viewController.currView ).to.exist
+										expect( Backbone.history.fragment ).to.equal "list/todo"
+										expect( swipy.viewController.currView ).to.be.instanceOf TodoList
+										expect( $("body").hasClass "edit-mode" ).to.be.false
+
+										done()
+									, 150
+						, 500
+
+		it "Should have a catch-all which results in 'list/todo'", ->
 			eventTriggered = no
 			Backbone.once( "navigate/view", (id) => if id is "todo" then eventTriggered = yes )
-			swipy.router.once "route:root", -> wentByRoot = yes
 
 			location.hash = "random/jibberish"
 
-			_.defer -> 
-				expect( wentByRoot ).to.be.true
+			_.defer ->
 				expect( eventTriggered ).to.be.true
 
 		it "The router should have a custom history lookup, so we can call swipy.router.back() and make sure not to go outside our current domain, unlike history.back in the browser", (done) ->
@@ -905,17 +912,16 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			lastRouteDfd = new $.Deferred()
 			routerTriggeredTimes = 0
 			Backbone.on( "navigate/view edit/task show-settings", -> routerTriggeredTimes++ )
-			
-			testRoutes = ["list/todo", "list/scheduled", "edit/#{swipy.todos.at(0).cid}", "list/completed", "list/todo", "settings", "list/scheduled"]
-			
-			console.group "Building router history"
+
+			testRoutes = ["", "list/scheduled", "edit/#{swipy.todos.at(0).cid}", "list/scheduled", "list/completed", "", "settings"]
+
 			for route, i in testRoutes
 				do ->
 					# Save refs so they aren't overwritten in next loop iteration
 					count = i
 					path = route
 
-					setTimeout -> 
+					setTimeout ->
 							if count is 0
 								# Reset router history
 								swipy.router.history = []
@@ -924,22 +930,22 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 							if count is testRoutes.length - 1
 								setTimeout( lastRouteDfd.resolve, 100 )
 						, i * 200
-					
+
 			lastRouteDfd.promise().done ->
 				expect( routerTriggeredTimes ).to.equal testRoutes.length
-
 				expect( swipy.router.history ).to.have.length testRoutes.length
-				console.groupEnd()
 
-				console.log "location hash is #{location.hash}"
-				expect( location.hash ).to.equal "#" + testRoutes[testRoutes.length - 1]
+				fixRoute = (route) -> if route is "" then return "list/todo" else return route
+
+				expect( location.hash ).to.equal "#" + fixRoute testRoutes[testRoutes.length - 1]
+
+				window.dontdontstopmenow = yes
+				swipy.router.back()
+				expect( location.hash ).to.equal "#" + fixRoute testRoutes[testRoutes.length - 2]
 
 				swipy.router.back()
-				console.log "location hash is #{location.hash}"
-				expect( location.hash ).to.equal "#" + testRoutes[testRoutes.length - 2]
 
-				swipy.router.back()
-				console.log "location hash is #{location.hash}"
-				expect( Backbone.history.fragment ).to.equal "#" + testRoutes[testRoutes.length - 3]
+				# Make sure backbone.hisotry is also in sync
+				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()

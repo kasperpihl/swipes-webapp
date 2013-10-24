@@ -6,7 +6,8 @@
         return swipy.router.route("test/reset", "reset test", function() {});
       });
       beforeEach(function() {
-        return location.hash = "test/reset";
+        location.hash = "test/reset";
+        return swipy.router.history = [];
       });
       after(function(done) {
         swipy.router.once("route:root", function() {
@@ -96,45 +97,45 @@
         });
       });
       it("Should go back to list view when calling save on task editor", function(done) {
-        var editTaskRoute;
         location.hash = "list/todo";
-        editTaskRoute = "edit/" + (swipy.todos.at(0).cid);
-        location.hash = editTaskRoute;
-        return require(["view/editor/EditTask", "view/Todo"], function(TaskEditor, TodoList) {
-          var editor;
-          editor = swipy.viewController.currView;
-          expect(editor).to.be.instanceOf(TaskEditor);
-          expect($("body").hasClass("edit-mode")).to.be["true"];
-          return editor.save().then(function() {
+        return _.defer(function() {
+          var editTaskRoute;
+          editTaskRoute = "edit/" + (swipy.todos.at(1).cid);
+          location.hash = editTaskRoute;
+          return require(["view/editor/EditTask", "view/Todo"], function(TaskEditor, TodoList) {
             return setTimeout(function() {
-              var newRoute;
-              newRoute = location.hash.slice(1);
-              expect(newRoute).to.not.equal(editTaskRoute);
-              expect(swipy.viewController.currView).to.exist;
-              expect(Backbone.history.fragment).to.equal("list/todo");
-              expect(swipy.viewController.currView).to.be.instanceOf(TodoList);
-              expect($("body").hasClass("edit-mode")).to.be["false"];
-              return done();
-            }, 150);
+              var editor;
+              editor = swipy.viewController.currView;
+              expect(swipy.router.history).to.have.length(2);
+              expect(editor).to.be.instanceOf(TaskEditor);
+              expect($("body").hasClass("edit-mode")).to.be["true"];
+              return editor.save().then(function() {
+                return setTimeout(function() {
+                  var newRoute;
+                  newRoute = location.hash.slice(1);
+                  expect(newRoute).to.not.equal(editTaskRoute);
+                  expect(swipy.viewController.currView).to.exist;
+                  expect(Backbone.history.fragment).to.equal("list/todo");
+                  expect(swipy.viewController.currView).to.be.instanceOf(TodoList);
+                  expect($("body").hasClass("edit-mode")).to.be["false"];
+                  return done();
+                }, 150);
+              });
+            }, 500);
           });
         });
       });
-      it("Should have a catch-all which forwards to 'list/todo'", function() {
-        var eventTriggered, wentByRoot,
+      it("Should have a catch-all which results in 'list/todo'", function() {
+        var eventTriggered,
           _this = this;
-        wentByRoot = false;
         eventTriggered = false;
         Backbone.once("navigate/view", function(id) {
           if (id === "todo") {
             return eventTriggered = true;
           }
         });
-        swipy.router.once("route:root", function() {
-          return wentByRoot = true;
-        });
         location.hash = "random/jibberish";
         return _.defer(function() {
-          expect(wentByRoot).to.be["true"];
           return expect(eventTriggered).to.be["true"];
         });
       });
@@ -147,8 +148,7 @@
         Backbone.on("navigate/view edit/task show-settings", function() {
           return routerTriggeredTimes++;
         });
-        testRoutes = ["list/todo", "list/scheduled", "edit/" + (swipy.todos.at(0).cid), "list/completed", "list/todo", "settings", "list/scheduled"];
-        console.group("Building router history");
+        testRoutes = ["", "list/scheduled", "edit/" + (swipy.todos.at(0).cid), "list/scheduled", "list/completed", "", "settings"];
         _fn = function() {
           var count, path;
           count = i;
@@ -168,17 +168,22 @@
           _fn();
         }
         return lastRouteDfd.promise().done(function() {
+          var fixRoute;
           expect(routerTriggeredTimes).to.equal(testRoutes.length);
           expect(swipy.router.history).to.have.length(testRoutes.length);
-          console.groupEnd();
-          console.log("location hash is " + location.hash);
-          expect(location.hash).to.equal("#" + testRoutes[testRoutes.length - 1]);
+          fixRoute = function(route) {
+            if (route === "") {
+              return "list/todo";
+            } else {
+              return route;
+            }
+          };
+          expect(location.hash).to.equal("#" + fixRoute(testRoutes[testRoutes.length - 1]));
+          window.dontdontstopmenow = true;
           swipy.router.back();
-          console.log("location hash is " + location.hash);
-          expect(location.hash).to.equal("#" + testRoutes[testRoutes.length - 2]);
+          expect(location.hash).to.equal("#" + fixRoute(testRoutes[testRoutes.length - 2]));
           swipy.router.back();
-          console.log("location hash is " + location.hash);
-          expect(Backbone.history.fragment).to.equal("#" + testRoutes[testRoutes.length - 3]);
+          expect(Backbone.history.fragment).to.equal(fixRoute(testRoutes[testRoutes.length - 3]));
           return done();
         });
       });

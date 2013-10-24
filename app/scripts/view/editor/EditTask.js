@@ -48,9 +48,7 @@
         };
         return this.model.save(atts, opts);
       },
-      transitionInComplete: function() {
-        return console.log("Edit view finished transitionIn");
-      },
+      transitionInComplete: function() {},
       getTitle: function() {
         return this.$el.find(".title input").val();
       },
