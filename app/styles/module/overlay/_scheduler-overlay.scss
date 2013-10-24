@@ -4,7 +4,7 @@ body.scheduler-open {
 		visibility: visible;
 		.overlay-bg { opacity: 1; }
 	}
-	
+
 	&.hide-scheduler .overlay.scheduler {
 		.overlay-bg {
 			opacity: 0;
@@ -18,4 +18,6 @@ body.scheduler-open {
 .overlay.scheduler {
 	color: white;
 	.overlay-bg { background: rgba($lobster, 0.8); }
+
+
 }

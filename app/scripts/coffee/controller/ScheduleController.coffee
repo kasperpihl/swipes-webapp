@@ -18,17 +18,17 @@ define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/Sched
 			return unless @currentTasks
 			if option is "pick a date"
 				return Backbone.trigger( "select-date" )
-			
+
 			date = @model.getDateFromScheduleOption option
-			
+
 			for task in @currentTasks
 				task.unset( "schedule", {silent: yes} )
 				task.set { schedule: date, completionDate: null }
-			
+
 			@view.currentTasks = undefined
 			@view.hide()
 		selectDate: ->
-			console.log "Select a date"
+			@view.showDatePicker()
 		destroy: ->
 			@view.remove()
 			Backbone.off( null, null, @ )

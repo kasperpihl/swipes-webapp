@@ -30,6 +30,15 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 				Backbone.trigger( "scheduler-cancelled", @currentTasks )
 
 			Overlay::hide.apply( @, arguments )
+		showDatePicker: ->
+			if not @datePicker? then require ["view/modules/DatePicker"], (DatePicker) =>
+				@datePicker = new DatePicker()
+				@$el.find( ".overlay-content" ).append @datePicker.el
+				@$el.addClass "show-datepicker"
+			else
+				@$el.addClass "show-datepicker"
+		hideDatePicker: ->
+			@$el.removeClass "show-datepicker"
 		handleResize: ->
 			return unless @shown
 
@@ -38,6 +47,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 			content.css( "margin-top", offset )
 		cleanUp: ->
 			$(window).off( "resize", @handleResize )
+			@datePicker.remove()
 
 			# Same as super() in real OOP programming
 			Overlay::cleanUp.apply( @, arguments )

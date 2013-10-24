@@ -47,7 +47,7 @@
       };
 
       ScheduleController.prototype.selectDate = function() {
-        return console.log("Select a date");
+        return this.view.showDatePicker();
       };
 
       ScheduleController.prototype.destroy = function() {

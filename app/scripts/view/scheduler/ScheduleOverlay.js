@@ -43,6 +43,21 @@
         }
         return Overlay.prototype.hide.apply(this, arguments);
       },
+      showDatePicker: function() {
+        var _this = this;
+        if (this.datePicker == null) {
+          return require(["view/modules/DatePicker"], function(DatePicker) {
+            _this.datePicker = new DatePicker();
+            _this.$el.find(".overlay-content").append(_this.datePicker.el);
+            return _this.$el.addClass("show-datepicker");
+          });
+        } else {
+          return this.$el.addClass("show-datepicker");
+        }
+      },
+      hideDatePicker: function() {
+        return this.$el.removeClass("show-datepicker");
+      },
       handleResize: function() {
         var content, offset;
         if (!this.shown) {
@@ -54,6 +69,7 @@
       },
       cleanUp: function() {
         $(window).off("resize", this.handleResize);
+        this.datePicker.remove();
         return Overlay.prototype.cleanUp.apply(this, arguments);
       }
     });
