@@ -3,7 +3,6 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 		tagName: "article"
 		className: "task-editor"
 		events:
-			"click .cancel": "back"
 			"click .save": "save"
 		initialize: ->
 			$("body").addClass "edit-mode"
@@ -18,15 +17,13 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 			@$el.html @template @model.toJSON()
 			@createTagEditor()
 			return @el
-		back: ->
-			swipy.router.back()
 		save: ->
 			atts = { title: @getTitle(), notes: @getNotes() }
 
 			console.log "Saving ", atts
 
 			opts = {
-				success: => @back()
+				success: => swipy.router.back()
 				error: -> swipy.errors.throw "Something went wrong. Please try again in a little bit.", arguments
 			}
 

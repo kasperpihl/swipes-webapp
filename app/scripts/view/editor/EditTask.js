@@ -4,7 +4,6 @@
       tagName: "article",
       className: "task-editor",
       events: {
-        "click .cancel": "back",
         "click .save": "save"
       },
       initialize: function() {
@@ -27,9 +26,6 @@
         this.createTagEditor();
         return this.el;
       },
-      back: function() {
-        return swipy.router.back();
-      },
       save: function() {
         var atts, opts,
           _this = this;
@@ -40,7 +36,7 @@
         console.log("Saving ", atts);
         opts = {
           success: function() {
-            return _this.back();
+            return swipy.router.back();
           },
           error: function() {
             return swipy.errors["throw"]("Something went wrong. Please try again in a little bit.", arguments);

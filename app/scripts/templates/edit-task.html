@@ -3,18 +3,18 @@
 </div>
 
 <div class="editor-content">
-	
+
 	<h1 class="h2 title">
 		<span class="priority"></span>
 		<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">
 	</h1>
-	
+
 	<% if (scheduleStr) { %>
 		<section>
 			<time class="icon-schedule has-icon no-select"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
 		</section>
 	<% } %>
-	
+
 	<section>
 		<div class="repeat-picker icon-repeat has-icon">
 			<p>Repeat every &hellip;</p>
@@ -28,7 +28,7 @@
 			</ul>
 		</div>
 	</section>
-	
+
 	<section>
 		<div class="icon-tags has-icon">
 
@@ -39,8 +39,8 @@
 				</ul>
 			</aside>
 		</div>
-	</section>	
-	
+	</section>
+
 	<section>
 		<div class="notes icon-note has-icon">
 			<textarea class="borderless" placeholder="Add a note"><%= notes %></textarea>
@@ -50,9 +50,6 @@
 </div>
 
 <nav>
-	<a href="JavaScript:void(0);" class="cancel round-btn">
-		<span class="icon-cross"></span>
-	</a>
 	<a href="JavaScript:void(0);" class="save round-btn">
 		<span class="icon-checkmark"></span>
 	</a>
