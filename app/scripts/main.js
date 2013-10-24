@@ -28,7 +28,8 @@ require.config({
         text: '../bower_components/requirejs-text/text',
         momentjs: '../bower_components/momentjs/moment',
         'requirejs-text': '../bower_components/requirejs-text/text',
-        'slider-control': 'plugins/slider-control/app/scripts/SliderControl'
+        'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
+        clndr: '../bower_components/clndr/clndr'
     },
     shim: {
         bootstrapAffix: {
@@ -99,7 +100,7 @@ require.config({
             exports: 'TweenLite'
         },
         timelinelite: {
-            exports: "TimelineLite"
+            exports: 'TimelineLite'
         },
         'gsap-draggable': {
             deps: [
@@ -107,15 +108,20 @@ require.config({
                 'gsap-throwprops'
             ],
             exports: 'Draggable'
+        },
+        clndr: {
+            deps: [
+                'momentjs'
+            ]
         }
     }
 });
 
 require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, DebugHelper) {
     'use strict';
-    
+
     window.$ = window.jQuery = $;
-    
+
     window.swipy = new App();
     window.debugHelper = new DebugHelper();
 });
