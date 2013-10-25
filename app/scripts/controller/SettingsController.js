@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "view/settings/SettingsOverlay", "model/SettingsModel"], function(_, Backbone, SettingsOverlayView, SettingsModel) {
+  define(["underscore", "backbone", "model/SettingsModel"], function(_, Backbone, SettingsModel) {
     var SettingsController;
     return SettingsController = (function() {
       function SettingsController(opts) {
@@ -29,13 +29,18 @@
       };
 
       SettingsController.prototype.show = function() {
+        var _this = this;
         if (this.view == null) {
-          this.view = new SettingsOverlayView({
-            model: this.model
+          return require(["view/settings/SettingsOverlay"], function(SettingsOverlayView) {
+            _this.view = new SettingsOverlayView({
+              model: _this.model
+            });
+            $("body").append(_this.view.render().el);
+            return _this.view.show();
           });
-          $("body").append(this.view.render().el);
+        } else {
+          return this.view.show();
         }
-        return this.view.show();
       };
 
       SettingsController.prototype.hide = function() {

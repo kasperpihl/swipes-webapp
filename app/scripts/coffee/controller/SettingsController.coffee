@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "view/settings/SettingsOverlay", "model/SettingsModel"], (_, Backbone, SettingsOverlayView, SettingsModel) ->
+define ["underscore", "backbone", "model/SettingsModel"], (_, Backbone, SettingsModel) ->
 	class SettingsController
 		constructor: (opts) ->
 			@init()
@@ -16,11 +16,13 @@ define ["underscore", "backbone", "view/settings/SettingsOverlay", "model/Settin
 		unset: ->
 			@model.unset arguments...
 		show: ->
-			if not @view?
+			if not @view? then require ["view/settings/SettingsOverlay"], (SettingsOverlayView) =>
 				@view = new SettingsOverlayView( model: @model )
 				$("body").append @view.render().el
+				@view.show()
+			else
+				@view.show()
 
-			@view.show()
 		hide: ->
 			@view?.hide()
 		destroy: ->
