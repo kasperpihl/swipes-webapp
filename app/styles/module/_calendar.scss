@@ -1,16 +1,16 @@
 .clndr {
 	nav {
 		@extend .clearfix;
-		margin-bottom: 3px;
+		margin: 0 auto 3px;
+		width: 94%;
 
-		.previous {
+		.previous, .next {
 			@extend .noselect;
 			float: left;
 			width: 10%;
-			text-align: left;
 			cursor: pointer;
-
-			&:hover { background-color: #f4f4f4; }
+			@include transition(color 0.2s ease-out);
+			&:hover { color: $gray; }
 		}
 
 		.month {
@@ -20,13 +20,7 @@
 		}
 
 		.next {
-			@extend .noselect;
-			float: left;
-			width: 10%;
 			text-align: right;
-			cursor: pointer;
-
-			&:hover { background-color: #f4f4f4; }
 		}
 	}
 
@@ -34,9 +28,7 @@
 		@extend .clearfix;
 		text-align: center;
 
-		.days, .day-names {
-			@extend .clearfix;
-		}
+		.days, .day-names { @extend .clearfix; }
 
 		.header-day, .day {
 			float: left;
@@ -49,40 +41,47 @@
 		}
 
 		.header-day {
-			color: $gray;
+			// color: $gray-warm;
+			font-size: 80%;
+			text-transform: lowercase;
+			font-family: $font-bold;
 		}
 
 		.day {
-			&.today, &.event {
-				border-radius: 2em;
+			cursor: pointer;
+			position: relative;
+
+			&:before {
+				display: block;
+				position: absolute;
+				content: "";
+
+				border-radius: 2.5em;
+
+				width: 90%;
+				height: 90%;
+				left: 5%;
+				top: 5%;
+
+				z-index: 0;
+			}
+
+			.number {
+				position: relative;
+				z-index: 1;
+			}
+
+			&.selected, &.event {
 				color: white;
-
-				// Fix to allow a little spacing around circle
-				width: 13.5%;
-				padding-bottom: 6.8%;
 			}
 
-			&.event {
-				background-color: $green;
-			}
-
-			&.today {
-				background-color: $lobster;
-			}
+			&.event:before { background-color: $green; }
+			&.selected:before { background-color: $lobster; }
 		}
 
 		.empty, .adjacent-month {
-			background: #ddd;
-		}
-	}
-
-	.clndr-today-button {
-		width: 100%;
-		text-align: center;
-		cursor: pointer;
-
-		&:hover {
-			background-color: #ddd;
+			background: $gray-lighter;
+			color: $gray-light;
 		}
 	}
 }
