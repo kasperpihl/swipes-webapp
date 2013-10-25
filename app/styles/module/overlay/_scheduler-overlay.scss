@@ -25,9 +25,11 @@ body.scheduler-open {
 		display: none;
 		margin: 0 auto;
 		width: 96%;
-		@include breakpoint(min-width, 427px) {
-			width: emCalc(410px);
-			padding: 1.4em;
+		@include breakpoint(min-width, emCalc(425px)) {
+			max-width: emCalc(405px);
+			.content {
+				padding: emCalc(46px) emCalc(25px);
+			}
 		}
 	}
 

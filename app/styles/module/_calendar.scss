@@ -1,6 +1,4 @@
 .clndr {
-	$item-size: 2em;
-
 	nav {
 		@extend .clearfix;
 		margin-bottom: 3px;
@@ -38,8 +36,7 @@
 
 		.days, .day-names {
 			@extend .clearfix;
-			position: relative;
-			}
+		}
 
 		.header-day, .day {
 			float: left;
@@ -57,7 +54,7 @@
 
 		.day {
 			&.today, &.event {
-				border-radius: $item-size;
+				border-radius: 2em;
 				color: white;
 			}
 
