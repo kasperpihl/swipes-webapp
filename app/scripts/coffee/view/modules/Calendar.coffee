@@ -13,8 +13,21 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			# thisMonth = moment().format( "YYYY-MM" )
 			return {
 				template: CalendarTmpl
+				targets:
+					nextButton: "next"
+					previousButton: "previous"
+
+					###
+					nextYearButton: "clndr-next-year-button"
+					previousYearButton: "clndr-previous-year-button"
+					todayButton: "clndr-today-button"
+					###
+					day: "day"
+					empty: "empty"
 				clickEvents:
 					click: @handleClickDay
+				doneRendering: @afterRender()
+				daysOfTheWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 			}
 		createCalendar: ->
 			@clndr = this.$el.clndr @getCalendarOpts()
@@ -108,3 +121,5 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		render: ->
 			@createCalendar()
 			return @
+		afterRender: ->
+			console.log "Calendar rendered"

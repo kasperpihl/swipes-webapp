@@ -16,9 +16,23 @@
       getCalendarOpts: function() {
         return {
           template: CalendarTmpl,
+          targets: {
+            nextButton: "next",
+            previousButton: "previous",
+            /*
+            					nextYearButton: "clndr-next-year-button"
+            					previousYearButton: "clndr-previous-year-button"
+            					todayButton: "clndr-today-button"
+            */
+
+            day: "day",
+            empty: "empty"
+          },
           clickEvents: {
             click: this.handleClickDay
-          }
+          },
+          doneRendering: this.afterRender(),
+          daysOfTheWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         };
       },
       createCalendar: function() {
@@ -112,6 +126,9 @@
       render: function() {
         this.createCalendar();
         return this;
+      },
+      afterRender: function() {
+        return console.log("Calendar rendered");
       }
     });
   });
