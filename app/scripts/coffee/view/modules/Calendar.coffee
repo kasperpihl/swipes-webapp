@@ -6,10 +6,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			_.bindAll( @, "handleClickDay", "handleMonthChanged", "handleYearChanged" )
 
 			@today = moment()
-			@setTemplate()
 			@render()
-		setTemplate: ->
-			@template = _.template CalendarTmpl
 		getCalendarOpts: ->
 			return {
 				template: CalendarTmpl
@@ -17,7 +14,6 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 					nextButton: "next"
 					previousButton: "previous"
 					day: "day"
-					empty: "empty"
 				clickEvents:
 					click: @handleClickDay
 					onYearChange: @handleYearChanged
@@ -30,7 +26,6 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			@clndr = @$el.clndr @getCalendarOpts()
 		getElementFromMoment: (moment) ->
 			dateStr = moment.format "YYYY-MM-DD"
-			# debugger
 			@days.filter -> $(@).attr( "id" ).indexOf( dateStr ) isnt -1
 		selectDay: (moment, element) ->
 			@days = @$el.find ".day"
@@ -44,6 +39,13 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		handleClickDay: (day) ->
 			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )
+
+			# Auto switch to next/prev month if adjecent month is clicked
+			$el = $ day.element
+			if $el.hasClass "adjacent-month"
+				console.log "Switch by adjacent"
+				if $el.hasClass "last-month" then @clndr.back()
+				else @clndr.forward()
 		handleYearChanged: (moment) ->
 			console.log "Switched year to ", moment.year()
 		handleMonthChanged: (moment) ->

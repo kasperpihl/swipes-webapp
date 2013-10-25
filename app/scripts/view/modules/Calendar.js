@@ -6,11 +6,7 @@
       initialize: function() {
         _.bindAll(this, "handleClickDay", "handleMonthChanged", "handleYearChanged");
         this.today = moment();
-        this.setTemplate();
         return this.render();
-      },
-      setTemplate: function() {
-        return this.template = _.template(CalendarTmpl);
       },
       getCalendarOpts: function() {
         var _this = this;
@@ -19,8 +15,7 @@
           targets: {
             nextButton: "next",
             previousButton: "previous",
-            day: "day",
-            empty: "empty"
+            day: "day"
           },
           clickEvents: {
             click: this.handleClickDay,
@@ -55,10 +50,20 @@
         return this.$el.toggleClass("displaying-curr-month", moment.isSame(this.today, "month"));
       },
       handleClickDay: function(day) {
+        var $el;
         if ($(day.element).hasClass("past")) {
           return false;
         }
-        return this.selectDay(day.date, day.element);
+        this.selectDay(day.date, day.element);
+        $el = $(day.element);
+        if ($el.hasClass("adjacent-month")) {
+          console.log("Switch by adjacent");
+          if ($el.hasClass("last-month")) {
+            return this.clndr.back();
+          } else {
+            return this.clndr.forward();
+          }
+        }
       },
       handleYearChanged: function(moment) {
         return console.log("Switched year to ", moment.year());

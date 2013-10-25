@@ -13,6 +13,5 @@ define ["underscore", "backbone", "view/modules/Calendar", "text!templates/datep
 			# Add Calendar view
 			@calendar = new CalendarView()
 			@$el.find( ".content" ).append @calendar.el
-			@calendar.render()
 
 			return @
