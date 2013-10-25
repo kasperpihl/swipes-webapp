@@ -3,7 +3,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		tagName: "div"
 		className: "calendar-wrap"
 		initialize: ->
-			_.bindAll( @, "afterRender", "handleClickDay", "handleMonthChanged", "handleYearChanged" )
+			_.bindAll( @, "handleClickDay", "handleMonthChanged", "handleYearChanged" )
 
 			@today = moment()
 			@setTemplate()
@@ -23,26 +23,39 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 					onYearChange: @handleYearChanged
 					onMonthChange: @handleMonthChanged
 				doneRendering: @afterRender
+				ready: => @selectDay @today
 				daysOfTheWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 			}
 		createCalendar: ->
 			@clndr = this.$el.clndr @getCalendarOpts()
 		getElementFromMoment: (moment) ->
 			dateStr = moment.format "YYYY-MM-DD"
+			# debugger
 			@days.filter -> $(@).attr( "id" ).indexOf( dateStr ) isnt -1
 		selectDay: (moment, element) ->
+			@days = @$el.find ".day"
+
 			@days.removeClass "selected"
-			el = element or @getElementFromMoment moment
-			$(el).addClass( "selected")
+			if not element? then element = @getElementFromMoment moment
+			$( element ).addClass( "selected")
+			@selectedDay = moment
 		handleClickDay: (day) ->
 			@selectDay( day.date, day.element )
 		handleYearChanged: (moment) ->
 			console.log "Switched year to ", moment.year()
 		handleMonthChanged: (moment) ->
+			# Push selected day to new month.
+			newDate = moment
+
+			# Check if newMonth has as many days as current month
+			# (I.e. switching from a 31 day month to a 29 day month)
+			newDate.date @selectedDay.date()
+
+			# Also check that we don't select a date prior to today
+			if newDate.isBefore @today then newDate = @today
+
 			console.log "Switched month to ", moment.month()
+			@selectDay newDate
 		render: ->
 			@createCalendar()
 			return @
-		afterRender: ->
-			@days = @$el.find ".day"
-			@selectDay @today

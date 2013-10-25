@@ -4,7 +4,7 @@
       tagName: "div",
       className: "calendar-wrap",
       initialize: function() {
-        _.bindAll(this, "afterRender", "handleClickDay", "handleMonthChanged", "handleYearChanged");
+        _.bindAll(this, "handleClickDay", "handleMonthChanged", "handleYearChanged");
         this.today = moment();
         this.setTemplate();
         return this.render();
@@ -13,6 +13,7 @@
         return this.template = _.template(CalendarTmpl);
       },
       getCalendarOpts: function() {
+        var _this = this;
         return {
           template: CalendarTmpl,
           targets: {
@@ -27,6 +28,9 @@
             onMonthChange: this.handleMonthChanged
           },
           doneRendering: this.afterRender,
+          ready: function() {
+            return _this.selectDay(_this.today);
+          },
           daysOfTheWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         };
       },
@@ -41,10 +45,13 @@
         });
       },
       selectDay: function(moment, element) {
-        var el;
+        this.days = this.$el.find(".day");
         this.days.removeClass("selected");
-        el = element || this.getElementFromMoment(moment);
-        return $(el).addClass("selected");
+        if (element == null) {
+          element = this.getElementFromMoment(moment);
+        }
+        $(element).addClass("selected");
+        return this.selectedDay = moment;
       },
       handleClickDay: function(day) {
         return this.selectDay(day.date, day.element);
@@ -53,15 +60,18 @@
         return console.log("Switched year to ", moment.year());
       },
       handleMonthChanged: function(moment) {
-        return console.log("Switched month to ", moment.month());
+        var newDate;
+        newDate = moment;
+        newDate.date(this.selectedDay.date());
+        if (newDate.isBefore(this.today)) {
+          newDate = this.today;
+        }
+        console.log("Switched month to ", moment.month());
+        return this.selectDay(newDate);
       },
       render: function() {
         this.createCalendar();
         return this;
-      },
-      afterRender: function() {
-        this.days = this.$el.find(".day");
-        return this.selectDay(this.today);
       }
     });
   });
