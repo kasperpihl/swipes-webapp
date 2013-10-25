@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/ScheduleModel"], function(_, Backbone, ScheduleOverlayView, ScheduleModel) {
+  define(["underscore", "backbone", "model/ScheduleModel"], function(_, Backbone, ScheduleModel) {
     var ScheduleController;
     return ScheduleController = (function() {
       function ScheduleController(opts) {
@@ -8,18 +8,30 @@
 
       ScheduleController.prototype.init = function() {
         this.model = new ScheduleModel();
-        this.view = new ScheduleOverlayView({
-          model: this.model
-        });
-        $("body").append(this.view.render().el);
         Backbone.on("show-scheduler", this.showScheduleView, this);
         Backbone.on("pick-schedule-option", this.pickOption, this);
         return Backbone.on("select-date", this.selectDate, this);
       };
 
       ScheduleController.prototype.showScheduleView = function(tasks) {
-        this.view.currentTasks = this.currentTasks = tasks;
-        return this.view.show();
+        var loadViewDfd,
+          _this = this;
+        loadViewDfd = new $.Deferred();
+        if (this.view == null) {
+          require(["view/scheduler/ScheduleOverlay"], function(ScheduleOverlayView) {
+            _this.view = new ScheduleOverlayView({
+              model: _this.model
+            });
+            $("body").append(_this.view.render().el);
+            return loadViewDfd.resolve();
+          });
+        } else {
+          loadViewDfd.resolve();
+        }
+        return loadViewDfd.promise().done(function() {
+          _this.view.show();
+          return _this.view.currentTasks = _this.currentTasks = tasks;
+        });
       };
 
       ScheduleController.prototype.pickOption = function(option) {
@@ -51,7 +63,10 @@
       };
 
       ScheduleController.prototype.destroy = function() {
-        this.view.remove();
+        var _ref;
+        if ((_ref = this.view) != null) {
+          _ref.remove();
+        }
         return Backbone.off(null, null, this);
       };
 
