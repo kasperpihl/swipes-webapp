@@ -51,9 +51,13 @@
           element = this.getElementFromMoment(moment);
         }
         $(element).addClass("selected");
-        return this.selectedDay = moment;
+        this.selectedDay = moment;
+        return this.$el.toggleClass("displaying-curr-month", moment.isSame(this.today, "month"));
       },
       handleClickDay: function(day) {
+        if ($(day.element).hasClass("past")) {
+          return false;
+        }
         return this.selectDay(day.date, day.element);
       },
       handleYearChanged: function(moment) {

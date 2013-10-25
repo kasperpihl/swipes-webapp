@@ -27,7 +27,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 				daysOfTheWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 			}
 		createCalendar: ->
-			@clndr = this.$el.clndr @getCalendarOpts()
+			@clndr = @$el.clndr @getCalendarOpts()
 		getElementFromMoment: (moment) ->
 			dateStr = moment.format "YYYY-MM-DD"
 			# debugger
@@ -39,7 +39,10 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			if not element? then element = @getElementFromMoment moment
 			$( element ).addClass( "selected")
 			@selectedDay = moment
+
+			@$el.toggleClass( "displaying-curr-month", moment.isSame( @today, "month" ) )
 		handleClickDay: (day) ->
+			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )
 		handleYearChanged: (moment) ->
 			console.log "Switched year to ", moment.year()
