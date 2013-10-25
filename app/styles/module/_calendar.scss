@@ -1,0 +1,87 @@
+.clndr {
+	$item-size: 2em;
+
+	nav {
+		@extend .clearfix;
+		margin-bottom: 3px;
+
+		.previous {
+			@extend .noselect;
+			float: left;
+			width: 10%;
+			text-align: left;
+			cursor: pointer;
+
+			&:hover { background-color: #f4f4f4; }
+		}
+
+		.month {
+			float: left;
+			width: 80%;
+			text-align: center;
+		}
+
+		.next {
+			@extend .noselect;
+			float: left;
+			width: 10%;
+			text-align: right;
+			cursor: pointer;
+
+			&:hover { background-color: #f4f4f4; }
+		}
+	}
+
+	.calendar-grid {
+		@extend .clearfix;
+		text-align: center;
+
+		.days, .day-names {
+			@extend .clearfix;
+			position: relative;
+			}
+
+		.header-day, .day {
+			float: left;
+
+			width: 14.285%;
+			height: 0;
+			padding-top: 7.143%;
+			padding-bottom: 7.143%;
+			line-height: 0;
+		}
+
+		.header-day {
+			color: $gray;
+		}
+
+		.day {
+			&.today, &.event {
+				border-radius: $item-size;
+				color: white;
+			}
+
+			&.event {
+				background-color: $green;
+			}
+
+			&.today {
+				background-color: $lobster;
+			}
+		}
+
+		.empty, .adjacent-month {
+			background: #ddd;
+		}
+	}
+
+	.clndr-today-button {
+		width: 100%;
+		text-align: center;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #ddd;
+		}
+	}
+}

@@ -1,17 +1,22 @@
-<div class="clndr-controls">
-	<div class="clndr-previous-button">&lsaquo;</div>
+<nav>
+	<div class="previous">&lsaquo;</div>
 	<div class="month"><%= month %></div>
-	<div class="clndr-next-button">&rsaquo;</div>
-</div>
-<div class="clndr-grid">
-	<div class="days-of-the-week">
+	<div class="next">&rsaquo;</div>
+</nav>
+
+<section class="calendar-grid">
+	<header class="day-names">
+
 		<% _.each(daysOfTheWeek, function(day) { %>
-		<div class="header-day"><%= day %></div>
+			<div class="header-day"><%= day %></div>
 		<% }); %>
-		<div class="days">
-			<% _.each(days, function(day) { %>
+
+	</header>
+	<div class="days">
+
+		<% _.each(days, function(day) { %>
 			<div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %></div>
-			<% }); %>
-		</div>
+		<% }); %>
+
 	</div>
-</div>
+</section>
