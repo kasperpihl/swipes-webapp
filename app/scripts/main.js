@@ -29,7 +29,7 @@ require.config({
         momentjs: '../bower_components/momentjs/moment',
         'requirejs-text': '../bower_components/requirejs-text/text',
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
-        clndr: '../bower_components/clndr/clndr'
+        clndr: '../bower_components/clndr/src/clndr'
     },
     shim: {
         bootstrapAffix: {

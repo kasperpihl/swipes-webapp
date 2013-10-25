@@ -7,3 +7,6 @@
 [submodule "app/scripts/plugins/slider-control"]
 	path = app/scripts/plugins/slider-control
 	url = git@github.com:Ahrengot/Simple-Slider-Control.git
+[submodule "app/bower_components/clndr"]
+	path = app/bower_components/clndr
+	url = git@github.com:Ahrengot/CLNDR.git
