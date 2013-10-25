@@ -8,12 +8,8 @@
 
       SettingsController.prototype.init = function() {
         this.model = new SettingsModel();
-        this.view = new SettingsOverlayView({
-          model: this.model
-        });
-        $("body").append(this.view.render().el);
-        Backbone.on("show-settings", this.view.show, this.view);
-        Backbone.on("hide-settings", this.view.hide, this.view);
+        Backbone.on("show-settings", this.show, this);
+        Backbone.on("hide-settings", this.hide, this);
         return _.bindAll(this, "get", "set", "unset");
       };
 
@@ -32,8 +28,26 @@
         return (_ref = this.model).unset.apply(_ref, arguments);
       };
 
+      SettingsController.prototype.show = function() {
+        if (this.view == null) {
+          this.view = new SettingsOverlayView({
+            model: this.model
+          });
+          $("body").append(this.view.render().el);
+        }
+        return this.view.show();
+      };
+
+      SettingsController.prototype.hide = function() {
+        var _ref;
+        return (_ref = this.view) != null ? _ref.hide() : void 0;
+      };
+
       SettingsController.prototype.destroy = function() {
-        this.view.remove();
+        var _ref;
+        if ((_ref = this.view) != null) {
+          _ref.remove();
+        }
         return Backbone.off(null, null, this);
       };
 

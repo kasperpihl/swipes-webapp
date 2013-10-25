@@ -4,11 +4,9 @@ define ["underscore", "backbone", "view/settings/SettingsOverlay", "model/Settin
 			@init()
 		init: ->
 			@model = new SettingsModel()
-			@view = new SettingsOverlayView( model: @model )
-			$("body").append @view.render().el
 
-			Backbone.on( "show-settings", @view.show, @view )
-			Backbone.on( "hide-settings", @view.hide, @view )
+			Backbone.on( "show-settings", @show, @ )
+			Backbone.on( "hide-settings", @hide, @ )
 
 			_.bindAll( @, "get", "set", "unset" )
 		get: ->
@@ -17,6 +15,14 @@ define ["underscore", "backbone", "view/settings/SettingsOverlay", "model/Settin
 			@model.set arguments...
 		unset: ->
 			@model.unset arguments...
+		show: ->
+			if not @view?
+				@view = new SettingsOverlayView( model: @model )
+				$("body").append @view.render().el
+
+			@view.show()
+		hide: ->
+			@view?.hide()
 		destroy: ->
-			@view.remove()
+			@view?.remove()
 			Backbone.off( null, null, @ )
