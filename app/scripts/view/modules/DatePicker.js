@@ -13,6 +13,7 @@
         this.$el.html(this.template({}));
         this.calendar = new CalendarView();
         this.$el.find(".content").append(this.calendar.el);
+        this.calendar.render();
         return this;
       }
     });
