@@ -56,6 +56,10 @@
 			&.today, &.event {
 				border-radius: 2em;
 				color: white;
+
+				// Fix to allow a little spacing around circle
+				width: 13.5%;
+				padding-bottom: 6.8%;
 			}
 
 			&.event {
