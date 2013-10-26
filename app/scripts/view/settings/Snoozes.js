@@ -18,10 +18,17 @@
       getTimeFromFloat: function(val) {
         var minutesTotal;
         minutesTotal = 1440 * val;
-        return {
-          hour: Math.floor(minutesTotal / 60),
-          minute: Math.floor(minutesTotal % 60)
-        };
+        if (val < 1) {
+          return {
+            hour: Math.floor(minutesTotal / 60),
+            minute: Math.floor(minutesTotal % 60)
+          };
+        } else {
+          return {
+            hour: 23,
+            minute: 55
+          };
+        }
       },
       getFormattedTime: function(hour, minute, addAmPm) {
         if (addAmPm == null) {
@@ -31,7 +38,7 @@
           minute = "0" + minute;
         }
         if (addAmPm) {
-          if (hour === 0) {
+          if (hour === 0 || hour === 24) {
             return "12:" + minute + " AM";
           } else if (hour <= 11) {
             return hour + ":" + minute + " AM";
