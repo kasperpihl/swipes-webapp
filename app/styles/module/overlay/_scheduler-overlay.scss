@@ -28,7 +28,11 @@ body.scheduler-open {
 		@include breakpoint(min-width, emCalc(425px)) {
 			max-width: emCalc(405px);
 			.content {
-				padding: emCalc(46px) emCalc(25px);
+				padding: emCalc(58px) emCalc(20px);
+			}
+
+			.calendar-wrap {
+				padding: 0 emCalc(24px);
 			}
 		}
 	}
