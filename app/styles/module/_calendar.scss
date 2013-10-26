@@ -24,7 +24,23 @@
 	.month {
 		float: left;
 		width: 80%;
+
 		text-align: center;
+		text-transform: uppercase;
+		font-family: $font-bold;
+
+		.selected-date, time {
+			display: inline-block;
+			height: 0.85em;
+			font-size: 1em;
+			line-height: 1em;
+		}
+
+		.selected-date + time {
+			border-left: thin solid $gray-warm;
+			padding-left: 0.7em;
+			margin-left: 0.7em;
+		}
 	}
 
 	.next {
