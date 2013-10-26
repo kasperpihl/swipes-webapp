@@ -35,7 +35,10 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			$( element ).addClass( "selected")
 			@selectedDay = moment
 
+			# This class disables the "Previous month" button, if we're at the current month
 			@$el.toggleClass( "displaying-curr-month", moment.isSame( @today, "month" ) )
+
+			@renderDate()
 		handleClickDay: (day) ->
 			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )
@@ -43,7 +46,6 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			# Auto switch to next/prev month if adjecent month is clicked
 			$el = $ day.element
 			if $el.hasClass "adjacent-month"
-				console.log "Switch by adjacent"
 				if $el.hasClass "last-month" then @clndr.back()
 				else @clndr.forward()
 		handleYearChanged: (moment) ->
@@ -64,3 +66,5 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		render: ->
 			@createCalendar()
 			return @
+		renderDate: ->
+			@$el.find(".month .selected-date").text @selectedDay.format("MMM Do")

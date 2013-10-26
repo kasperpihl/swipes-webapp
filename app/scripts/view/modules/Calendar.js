@@ -47,7 +47,8 @@
         }
         $(element).addClass("selected");
         this.selectedDay = moment;
-        return this.$el.toggleClass("displaying-curr-month", moment.isSame(this.today, "month"));
+        this.$el.toggleClass("displaying-curr-month", moment.isSame(this.today, "month"));
+        return this.renderDate();
       },
       handleClickDay: function(day) {
         var $el;
@@ -57,7 +58,6 @@
         this.selectDay(day.date, day.element);
         $el = $(day.element);
         if ($el.hasClass("adjacent-month")) {
-          console.log("Switch by adjacent");
           if ($el.hasClass("last-month")) {
             return this.clndr.back();
           } else {
@@ -81,6 +81,9 @@
       render: function() {
         this.createCalendar();
         return this;
+      },
+      renderDate: function() {
+        return this.$el.find(".month .selected-date").text(this.selectedDay.format("MMM Do"));
       }
     });
   });
