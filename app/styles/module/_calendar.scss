@@ -37,7 +37,7 @@
 		}
 
 		.selected-date + time {
-			border-left: thin solid $gray-warm;
+			border-left: 2px solid lighten( $gray-warm, 35% );
 			padding-left: 0.7em;
 			margin-left: 0.7em;
 		}
