@@ -5,8 +5,10 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		initialize: ->
 			_.bindAll( @, "handleClickDay", "handleMonthChanged", "handleYearChanged" )
 
+			@listenTo( @model, "change:date", @renderDate )
+			@listenTo( @model, "change:time", @renderTime )
+
 			@today = moment()
-			@render()
 		getCalendarOpts: ->
 			return {
 				template: CalendarTmpl
@@ -27,6 +29,22 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		getElementFromMoment: (moment) ->
 			dateStr = moment.format "YYYY-MM-DD"
 			@days.filter -> $(@).attr( "id" ).indexOf( dateStr ) isnt -1
+		getTimeObj: (moment) ->
+			snoozes = swipy.settings.get "snoozes"
+
+			if @selectedDay.day() < 5
+				hour: snoozes.weekday.morning.hour
+				minute: snoozes.weekday.morning.minute
+			else
+				hour: snoozes.weekend.morning.hour
+				minute: snoozes.weekend.morning.minute
+		getFormattedTime: (hour, minute) ->
+			if minute < 10 then minute = "0" + minute
+
+			if hour is 0 or hour is 24 then return "12:" + minute + " AM"
+			else if hour <= 11 then return hour + ":" + minute + " AM"
+			else if hour is 12 then return "12:" + minute + " PM"
+			else return hour - 12 + ":" + minute + " PM"
 		selectDay: (moment, element) ->
 			@days = @$el.find ".day"
 
@@ -38,7 +56,13 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			# This class disables the "Previous month" button, if we're at the current month
 			@$el.toggleClass( "displaying-curr-month", moment.isSame( @today, "month" ) )
 
-			@renderDate()
+			@model.unset( "date", { silent: yes } )
+			@model.set( "date", @selectedDay )
+
+			if @model.get "userManuallySetTime"
+				@renderTime()
+			else
+				@model.set( "time", @getTimeObj @selectedDay )
 		handleClickDay: (day) ->
 			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )
@@ -61,10 +85,16 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			# Also check that we don't select a date prior to today
 			if newDate.isBefore @today then newDate = @today
 
-			console.log "Switched month to ", moment.month()
 			@selectDay newDate
 		render: ->
 			@createCalendar()
 			return @
 		renderDate: ->
 			@$el.find(".month .selected-date").text @selectedDay.format("MMM Do")
+		renderTime: ->
+			time = @model.get "time"
+			@$el.find(".month time").text @getFormattedTime( time.hour, time.minute )
+		remove: ->
+			@undelegateEvents()
+			@stopListening()
+			@$el.remove()

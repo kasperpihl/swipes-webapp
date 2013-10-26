@@ -34,8 +34,11 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		showDatePicker: ->
 			if not @datePicker? then require ["view/modules/DatePicker"], (DatePicker) =>
 				@datePicker = new DatePicker()
+
 				@$el.find( ".overlay-content" ).append @datePicker.el
 				@$el.addClass "show-datepicker"
+
+				@datePicker.render()
 			else
 				@$el.addClass "show-datepicker"
 		hideDatePicker: ->

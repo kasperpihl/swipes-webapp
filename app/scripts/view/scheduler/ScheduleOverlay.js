@@ -50,7 +50,8 @@
           return require(["view/modules/DatePicker"], function(DatePicker) {
             _this.datePicker = new DatePicker();
             _this.$el.find(".overlay-content").append(_this.datePicker.el);
-            return _this.$el.addClass("show-datepicker");
+            _this.$el.addClass("show-datepicker");
+            return _this.datePicker.render();
           });
         } else {
           return this.$el.addClass("show-datepicker");

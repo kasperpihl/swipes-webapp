@@ -5,8 +5,9 @@
       className: "calendar-wrap",
       initialize: function() {
         _.bindAll(this, "handleClickDay", "handleMonthChanged", "handleYearChanged");
-        this.today = moment();
-        return this.render();
+        this.listenTo(this.model, "change:date", this.renderDate);
+        this.listenTo(this.model, "change:time", this.renderTime);
+        return this.today = moment();
       },
       getCalendarOpts: function() {
         var _this = this;
@@ -39,6 +40,35 @@
           return $(this).attr("id").indexOf(dateStr) !== -1;
         });
       },
+      getTimeObj: function(moment) {
+        var snoozes;
+        snoozes = swipy.settings.get("snoozes");
+        if (this.selectedDay.day() < 5) {
+          return {
+            hour: snoozes.weekday.morning.hour,
+            minute: snoozes.weekday.morning.minute
+          };
+        } else {
+          return {
+            hour: snoozes.weekend.morning.hour,
+            minute: snoozes.weekend.morning.minute
+          };
+        }
+      },
+      getFormattedTime: function(hour, minute) {
+        if (minute < 10) {
+          minute = "0" + minute;
+        }
+        if (hour === 0 || hour === 24) {
+          return "12:" + minute + " AM";
+        } else if (hour <= 11) {
+          return hour + ":" + minute + " AM";
+        } else if (hour === 12) {
+          return "12:" + minute + " PM";
+        } else {
+          return hour - 12 + ":" + minute + " PM";
+        }
+      },
       selectDay: function(moment, element) {
         this.days = this.$el.find(".day");
         this.days.removeClass("selected");
@@ -48,7 +78,15 @@
         $(element).addClass("selected");
         this.selectedDay = moment;
         this.$el.toggleClass("displaying-curr-month", moment.isSame(this.today, "month"));
-        return this.renderDate();
+        this.model.unset("date", {
+          silent: true
+        });
+        this.model.set("date", this.selectedDay);
+        if (this.model.get("userManuallySetTime")) {
+          return this.renderTime();
+        } else {
+          return this.model.set("time", this.getTimeObj(this.selectedDay));
+        }
       },
       handleClickDay: function(day) {
         var $el;
@@ -75,7 +113,6 @@
         if (newDate.isBefore(this.today)) {
           newDate = this.today;
         }
-        console.log("Switched month to ", moment.month());
         return this.selectDay(newDate);
       },
       render: function() {
@@ -84,6 +121,16 @@
       },
       renderDate: function() {
         return this.$el.find(".month .selected-date").text(this.selectedDay.format("MMM Do"));
+      },
+      renderTime: function() {
+        var time;
+        time = this.model.get("time");
+        return this.$el.find(".month time").text(this.getFormattedTime(time.hour, time.minute));
+      },
+      remove: function() {
+        this.undelegateEvents();
+        this.stopListening();
+        return this.$el.remove();
       }
     });
   });
