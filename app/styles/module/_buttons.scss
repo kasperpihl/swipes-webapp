@@ -45,7 +45,7 @@ nav.centered-buttons {
 	text-align: center;
 
 	a { margin-left: 4.7em; }
-	a:first-child { margin-left: 0; }
+	a:first-child { margin-left: 0 !important; }
 
 	@include breakpoint(tablet) {
 		a { margin-left: 8em; }
