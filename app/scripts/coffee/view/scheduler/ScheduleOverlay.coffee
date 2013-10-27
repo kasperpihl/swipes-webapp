@@ -37,6 +37,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 				moment.minute time.minute
 
 				option = moment
+				@hideDatePicker()
 			else
 				option = target.attr "data-option"
 

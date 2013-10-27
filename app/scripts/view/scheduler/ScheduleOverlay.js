@@ -42,6 +42,7 @@
           moment.hour(time.hour);
           moment.minute(time.minute);
           option = moment;
+          this.hideDatePicker();
         } else {
           option = target.attr("data-option");
         }
