@@ -1,11 +1,11 @@
 .round-btn {
 	$size: emCalc(60px);
 
-	width: $size; 
+	width: $size;
 	height: $size;
 	border-radius: $size;
 	border: 2px solid $gray-light;
-	
+
 	display: inline-block;
 	text-align: center;
 	line-height: $size;
@@ -24,7 +24,7 @@
 
 	span { font-size: 1.35em; }
 
-	
+
 	// Some icons have fucked up vertical alignment, so we need to manually adjust.
 	.icon-cross { position: relative; top: 0.1em; }
 	.icon-arr-left { position: relative; top: 0.1em; }
@@ -38,5 +38,16 @@
 			background: white;
 			border-color: transparent;
 		}
+	}
+}
+
+nav.centered-buttons {
+	text-align: center;
+
+	a { margin-left: 4.7em; }
+	a:first-child { margin-left: 0; }
+
+	@include breakpoint(tablet) {
+		a { margin-left: 8em; }
 	}
 }

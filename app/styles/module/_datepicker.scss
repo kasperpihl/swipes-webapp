@@ -6,4 +6,12 @@
 
 		padding: 0.8em;
 	}
+
+	nav.centered-buttons {
+		margin-top: 1.8em;
+
+		@include breakpoint(tablet) {
+			a { margin-left: 5.5em; }
+		}
+	}
 }
