@@ -947,9 +947,9 @@
         return location.hash = "";
       });
       it("Should make sure everything is reset before we start testing routes", function() {
-        return expect(swipy.settings.view.shown).to.be.falsy;
+        return expect(swipy.settings.view).to.be.undefined;
       });
-      it("Should trigger appropiate logic when navigating to 'settings'", function() {
+      it("Should trigger appropiate logic when navigating to 'settings'", function(done) {
         var eventTriggered,
           _this = this;
         eventTriggered = false;
@@ -959,7 +959,10 @@
         location.hash = "settings";
         return _.defer(function() {
           expect(eventTriggered).to.be["true"];
-          return expect(swipy.settings.view).to.have.property("shown", true);
+          return setTimeout(function() {
+            expect(swipy.settings.view).to.have.property("shown", true);
+            return done();
+          }, 500);
         });
       });
       it("Should should not open any settings sub view when just navigating to 'settings'", function() {

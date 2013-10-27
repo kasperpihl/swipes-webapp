@@ -790,9 +790,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			location.hash = ""
 
 		it "Should make sure everything is reset before we start testing routes", ->
-			expect( swipy.settings.view.shown ).to.be.falsy
+			expect( swipy.settings.view ).to.be.undefined
 
-		it "Should trigger appropiate logic when navigating to 'settings'", ->
+		it "Should trigger appropiate logic when navigating to 'settings'", (done) ->
 			eventTriggered = no
 			Backbone.once( "show-settings", => eventTriggered = yes )
 
@@ -801,7 +801,12 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			# Use defer to make sure we've cleared the current event loop
 			_.defer ->
 				expect( eventTriggered ).to.be.true
-				expect( swipy.settings.view ).to.have.property( "shown", yes )
+
+				# Give require.js some time to pull in the view
+				setTimeout ->
+						expect( swipy.settings.view ).to.have.property( "shown", yes )
+						done()
+					, 500
 
 		it "Should should not open any settings sub view when just navigating to 'settings'", ->
 			expect( swipy.settings.view.subview ).to.not.exist
