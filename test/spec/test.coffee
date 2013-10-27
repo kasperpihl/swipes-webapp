@@ -590,7 +590,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					expect( model.getDynamicTime( "This Evening", moment("2013-01-01 17:59") ) ).to.equal "This Evening"
 
 				it "Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", ->
-					expect( model.getDynamicTime( "This Evening", moment("2013-01-01 18:00") ) ).to.equal "Tomorrow Evening"
+					expect( model.getDynamicTime( "This Evening", moment("2013-01-01 18:00") ) ).to.equal "Tomorrow Eve"
 
 				it "Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", ->
 					adjustedTime = moment()
