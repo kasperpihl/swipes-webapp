@@ -6,8 +6,15 @@
 	body.sidebar-open & { display: none; }
 
 	width: $size; height: $size;
-	top: $padding; left: $padding;
+	bottom: $padding;
+	left: $padding;
 	background: $green;
+	z-index: 9999;
+
+	@include breakpoint(tablet) {
+		top: $padding;
+		bottom: auto;
+	}
 
 	color: white;
 	text-align: center;
