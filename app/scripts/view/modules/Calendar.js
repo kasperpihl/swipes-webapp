@@ -42,17 +42,18 @@
         });
       },
       getTimeObj: function(moment) {
-        var snoozes;
+        var day, snoozes;
         snoozes = swipy.settings.get("snoozes");
-        if (this.selectedDay.day() < 5) {
-          return {
-            hour: snoozes.weekday.morning.hour,
-            minute: snoozes.weekday.morning.minute
-          };
-        } else {
+        day = this.selectedDay.day();
+        if (day === 0 || day === 6) {
           return {
             hour: snoozes.weekend.morning.hour,
             minute: snoozes.weekend.morning.minute
+          };
+        } else {
+          return {
+            hour: snoozes.weekday.morning.hour,
+            minute: snoozes.weekday.morning.minute
           };
         }
       },

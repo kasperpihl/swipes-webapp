@@ -32,13 +32,15 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			@days.filter -> $(@).attr( "id" ).indexOf( dateStr ) isnt -1
 		getTimeObj: (moment) ->
 			snoozes = swipy.settings.get "snoozes"
+			day = @selectedDay.day()
 
-			if @selectedDay.day() < 5
-				hour: snoozes.weekday.morning.hour
-				minute: snoozes.weekday.morning.minute
-			else
+					  # sunday    # Saturday
+			if day is 0 or day is 6
 				hour: snoozes.weekend.morning.hour
 				minute: snoozes.weekend.morning.minute
+			else
+				hour: snoozes.weekday.morning.hour
+				minute: snoozes.weekday.morning.minute
 		getFormattedTime: (hour, minute) ->
 			if minute < 10 then minute = "0" + minute
 
