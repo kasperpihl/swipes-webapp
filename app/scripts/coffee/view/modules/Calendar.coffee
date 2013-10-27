@@ -20,9 +20,10 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 					click: @handleClickDay
 					onYearChange: @handleYearChanged
 					onMonthChange: @handleMonthChanged
+				weekOffset: swipy.settings.get( "snoozes" ).weekday.startDay.number
 				doneRendering: @afterRender
 				ready: => @selectDay @today
-				daysOfTheWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+				daysOfTheWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 			}
 		createCalendar: ->
 			@clndr = @$el.clndr @getCalendarOpts()

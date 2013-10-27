@@ -23,11 +23,12 @@
             onYearChange: this.handleYearChanged,
             onMonthChange: this.handleMonthChanged
           },
+          weekOffset: swipy.settings.get("snoozes").weekday.startDay.number,
           doneRendering: this.afterRender,
           ready: function() {
             return _this.selectDay(_this.today);
           },
-          daysOfTheWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+          daysOfTheWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         };
       },
       createCalendar: function() {
