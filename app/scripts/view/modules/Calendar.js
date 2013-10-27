@@ -86,7 +86,8 @@
         if (this.model.get("userManuallySetTime")) {
           return this.renderTime();
         } else {
-          return this.model.set("time", this.getTimeObj(this.selectedDay));
+          this.model.set("time", this.getTimeObj(this.selectedDay));
+          return this.model.set("timeEditedBy", "calendar");
         }
       },
       handleClickDay: function(day) {

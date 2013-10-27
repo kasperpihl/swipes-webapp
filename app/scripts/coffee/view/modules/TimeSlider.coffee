@@ -29,7 +29,10 @@ define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"
 			time = @getTimeFromFloat @slider.value
 			@model.unset( "time", { silent: yes } )
 			@model.set( "time", time )
+			@model.set( "timeEditedBy", "timeslider" )
 		updateSlider: (model, time) ->
+			return unless model.get( "timeEditedBy" ) isnt "timeslider"
+
 			value = @getFloatFromTime( time.hour, time.minute )
 			unless @slider?
 				@slider = new SliderControl( @el, @getOpts(), value )

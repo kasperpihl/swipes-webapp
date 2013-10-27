@@ -64,6 +64,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 				@renderTime()
 			else
 				@model.set( "time", @getTimeObj @selectedDay )
+				@model.set( "timeEditedBy", "calendar" )
 		handleClickDay: (day) ->
 			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )

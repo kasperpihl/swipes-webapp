@@ -47,10 +47,14 @@
         this.model.unset("time", {
           silent: true
         });
-        return this.model.set("time", time);
+        this.model.set("time", time);
+        return this.model.set("timeEditedBy", "timeslider");
       },
       updateSlider: function(model, time) {
         var value;
+        if (model.get("timeEditedBy") === "timeslider") {
+          return;
+        }
         value = this.getFloatFromTime(time.hour, time.minute);
         if (this.slider == null) {
           return this.slider = new SliderControl(this.el, this.getOpts(), value);
