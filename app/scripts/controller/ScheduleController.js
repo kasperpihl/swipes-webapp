@@ -42,7 +42,11 @@
         if (option === "pick a date") {
           return Backbone.trigger("select-date");
         }
-        date = this.model.getDateFromScheduleOption(option);
+        if (typeof option === "string") {
+          date = this.model.getDateFromScheduleOption(option);
+        } else if (typeof option === "object") {
+          date = option.toDate();
+        }
         _ref = this.currentTasks;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           task = _ref[_i];
@@ -59,7 +63,7 @@
       };
 
       ScheduleController.prototype.selectDate = function() {
-        return console.log("Select a date");
+        return this.view.showDatePicker();
       };
 
       ScheduleController.prototype.destroy = function() {

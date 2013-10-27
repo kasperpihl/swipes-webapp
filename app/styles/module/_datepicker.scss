@@ -1,0 +1,17 @@
+.date-picker {
+	.content {
+		background: white;
+		border-radius: 0.4em;
+		color: $gray-warm;
+
+		padding: 0.8em;
+	}
+
+	nav.centered-buttons {
+		margin-top: 1.8em;
+
+		@include breakpoint(tablet) {
+			a { margin-left: 5.5em; }
+		}
+	}
+}

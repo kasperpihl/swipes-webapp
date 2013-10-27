@@ -28,7 +28,10 @@ define ["underscore", "backbone", "model/ScheduleModel"], (_, Backbone, Schedule
 			if option is "pick a date"
 				return Backbone.trigger( "select-date" )
 
-			date = @model.getDateFromScheduleOption option
+			if typeof option is "string"
+				date = @model.getDateFromScheduleOption option
+			else if typeof option is "object"
+				date = option.toDate()
 
 			for task in @currentTasks
 				task.unset( "schedule", {silent: yes} )
@@ -37,7 +40,7 @@ define ["underscore", "backbone", "model/ScheduleModel"], (_, Backbone, Schedule
 			@view.currentTasks = undefined
 			@view.hide()
 		selectDate: ->
-			console.log "Select a date"
+			@view.showDatePicker()
 		destroy: ->
 			@view?.remove()
 			Backbone.off( null, null, @ )

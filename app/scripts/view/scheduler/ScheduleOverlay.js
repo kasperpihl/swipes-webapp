@@ -4,7 +4,9 @@
       className: 'overlay scheduler',
       events: {
         "click .grid > a:not(.disabled)": "selectOption",
-        "click .overlay-bg": "hide"
+        "click .overlay-bg": "hide",
+        "click .date-picker .back": "hideDatePicker",
+        "click .date-picker .save": "selectOption"
       },
       initialize: function() {
         Overlay.prototype.initialize.apply(this, arguments);
@@ -30,8 +32,20 @@
         return this.handleResize();
       },
       selectOption: function(e) {
-        var option;
-        option = e.currentTarget.getAttribute('data-option');
+        var moment, option, target, time;
+        target = $(e.currentTarget);
+        if (target.hasClass("save") && (this.datePicker != null)) {
+          moment = this.datePicker.calendar.selectedDay;
+          time = this.datePicker.model.get("time");
+          moment.millisecond(0);
+          moment.second(0);
+          moment.hour(time.hour);
+          moment.minute(time.minute);
+          option = moment;
+          this.hideDatePicker();
+        } else {
+          option = target.attr("data-option");
+        }
         return Backbone.trigger("pick-schedule-option", option);
       },
       hide: function(cancelled) {
@@ -42,6 +56,22 @@
           Backbone.trigger("scheduler-cancelled", this.currentTasks);
         }
         return Overlay.prototype.hide.apply(this, arguments);
+      },
+      showDatePicker: function() {
+        var _this = this;
+        if (this.datePicker == null) {
+          return require(["view/modules/DatePicker"], function(DatePicker) {
+            _this.datePicker = new DatePicker();
+            _this.$el.find(".overlay-content").append(_this.datePicker.el);
+            _this.$el.addClass("show-datepicker");
+            return _this.datePicker.render();
+          });
+        } else {
+          return this.$el.addClass("show-datepicker");
+        }
+      },
+      hideDatePicker: function() {
+        return this.$el.removeClass("show-datepicker");
       },
       handleResize: function() {
         var content, offset;
@@ -54,6 +84,7 @@
       },
       cleanUp: function() {
         $(window).off("resize", this.handleResize);
+        this.datePicker.remove();
         return Overlay.prototype.cleanUp.apply(this, arguments);
       }
     });

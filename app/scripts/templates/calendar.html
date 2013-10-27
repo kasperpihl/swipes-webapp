@@ -1,0 +1,28 @@
+<nav>
+	<div class="previous"><span class="icon-triangle-left"></span></div>
+	<div class="month">
+		<span class="selected-date"></span><time>9:00AM</time>
+	</div>
+	<div class="next"><span class="icon-triangle-right"></span></div>
+</nav>
+
+<section class="calendar-grid">
+	<header class="day-names">
+
+		<% _.each(daysOfTheWeek, function(day) { %>
+			<div class="header-day"><%= day %></div>
+		<% }); %>
+
+	</header>
+	<div class="days">
+
+		<% _.each(days, function(day) { %>
+			<div class="<%= day.classes %>" id="<%= day.id %>">
+				<div class="number">
+					<%= day.day %>
+				</div>
+			</div>
+		<% }); %>
+
+	</div>
+</section>

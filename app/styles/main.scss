@@ -7,7 +7,6 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "functions";
 @import "mixins";
 @import "fonts";
-@import "colors";
 
 @import "settings";
 @import 'sass-bootstrap/lib/bootstrap';
@@ -40,6 +39,9 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "module/overlay/overlay";
 @import "module/overlay/scheduler-overlay";
 @import "module/overlay/tags-editor-overlay";
+
+@import "module/calendar";
+@import "module/datepicker";
 
 // Settings
 @import "module/overlay/settings-overlay";

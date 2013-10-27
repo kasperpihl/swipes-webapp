@@ -119,7 +119,7 @@
         switch (time) {
           case "This Evening":
             if (now.hour() >= 18) {
-              return "Tomorrow Evening";
+              return "Tomorrow Eve";
             } else {
               return "This Evening";
             }

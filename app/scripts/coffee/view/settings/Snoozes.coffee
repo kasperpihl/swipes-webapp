@@ -12,16 +12,21 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 		getTimeFromFloat: (val) ->
 			# There are 1440 minutes in a day
 			minutesTotal = 1440 * val
-			return { hour: Math.floor( minutesTotal / 60 ), minute: Math.floor( minutesTotal % 60 ) }
+
+			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
+			if val < 1
+				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.floor( minutesTotal % 60 ) }
+			else
+				{ hour: 23, minute: 55 }
 		getFormattedTime: (hour, minute, addAmPm = yes) ->
 			if minute < 10 then minute = "0" + minute
 
 			if addAmPm
-				if hour is 0 then return "12:" + minute + " AM"
+				if hour is 0 or hour is 24 then return "12:" + minute + " AM"
 				else if hour <= 11 then return hour + ":" + minute + " AM"
 				else if hour is 12 then return "12:" + minute + " PM"
 				else return hour - 12 + ":" + minute + " PM"
-			
+
 			else
 				return hour + ":" + minute
 		getSliderVal: (sliderId) ->
@@ -58,7 +63,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 					snoozes.laterTodayDelay.minutes = time.minute
 					@$el.find(".later-today button").text "+#{ @getFormattedTime( time.hour, time.minute, no ) }h"
 
-			if updateModel 
+			if updateModel
 				swipy.settings.unset( "snoozes", { silent: yes } )
 				swipy.settings.set( "snoozes", snoozes )
 		setTemplate: ->
@@ -68,11 +73,11 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 			@transitionIn()
 		toggleSection: (e) ->
 			$parent = $(e.currentTarget.parentNode.parentNode).toggleClass "toggled"
-			
+
 			if $parent.hasClass "toggled"
 				if $parent.hasClass "day"
 					el = @el.querySelector ".day .range-slider"
-					opts = 
+					opts =
 						onDrag: => @updateValue( "start-day", arguments... )
 						onDragEnd: => @updateValue( "start-day", yes, arguments... )
 
@@ -81,7 +86,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 
 				else if $parent.hasClass "evening"
 					el = @el.querySelector ".evening .range-slider"
-					opts = 
+					opts =
 						onDrag: => @updateValue( "start-evening", arguments... )
 						onDragEnd: => @updateValue( "start-evening", yes, arguments... )
 
@@ -90,7 +95,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 
 				else if $parent.hasClass "weekends"
 					el = @el.querySelector ".weekends .range-slider"
-					opts = 
+					opts =
 						onDrag: => @updateValue( "start-weekend", arguments... )
 						onDragEnd: => @updateValue( "start-weekend", yes, arguments... )
 
@@ -99,7 +104,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 
 				else if $parent.hasClass "later-today"
 					el = @el.querySelector ".later-today .range-slider"
-					opts = 
+					opts =
 						onDrag: => @updateValue( "delay", arguments... )
 						onDragEnd: => @updateValue( "delay", yes, arguments... )
 
