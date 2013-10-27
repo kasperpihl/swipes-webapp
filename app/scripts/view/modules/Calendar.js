@@ -110,6 +110,7 @@
         var newDate;
         newDate = moment;
         newDate.date(this.selectedDay.date());
+        console.error("Not checking for date max");
         if (newDate.isBefore(this.today)) {
           newDate = this.today;
         }

@@ -24,7 +24,7 @@ define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"
 			result = @getFloatFromTime( day.morning.hour, day.morning.minute )
 			return result
 		updateValue: ->
-			unless @model.has "userManuallySetTime" then @model.set( "userManuallySetTime", yes )
+			unless @model.get "userManuallySetTime" then @model.set( "userManuallySetTime", yes )
 
 			time = @getTimeFromFloat @slider.value
 			@model.unset( "time", { silent: yes } )

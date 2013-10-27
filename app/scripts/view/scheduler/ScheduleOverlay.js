@@ -5,7 +5,8 @@
       events: {
         "click .grid > a:not(.disabled)": "selectOption",
         "click .overlay-bg": "hide",
-        "click .date-picker .back": "hideDatePicker"
+        "click .date-picker .back": "hideDatePicker",
+        "click .date-picker .save": "selectOption"
       },
       initialize: function() {
         Overlay.prototype.initialize.apply(this, arguments);
@@ -31,8 +32,19 @@
         return this.handleResize();
       },
       selectOption: function(e) {
-        var option;
-        option = e.currentTarget.getAttribute('data-option');
+        var moment, option, target, time;
+        target = $(e.currentTarget);
+        if (target.hasClass("save") && (this.datePicker != null)) {
+          moment = this.datePicker.calendar.selectedDay;
+          time = this.datePicker.model.get("time");
+          moment.millisecond(0);
+          moment.second(0);
+          moment.hour(time.hour);
+          moment.minute(time.minute);
+          option = moment;
+        } else {
+          option = target.attr("data-option");
+        }
         return Backbone.trigger("pick-schedule-option", option);
       },
       hide: function(cancelled) {

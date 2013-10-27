@@ -40,7 +40,7 @@
       },
       updateValue: function() {
         var time;
-        if (!this.model.has("userManuallySetTime")) {
+        if (!this.model.get("userManuallySetTime")) {
           this.model.set("userManuallySetTime", true);
         }
         time = this.getTimeFromFloat(this.slider.value);

@@ -81,6 +81,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			# Check if newMonth has as many days as current month
 			# (I.e. switching from a 31 day month to a 29 day month)
 			newDate.date @selectedDay.date()
+			console.error "Not checking for date max"
 
 			# Also check that we don't select a date prior to today
 			if newDate.isBefore @today then newDate = @today

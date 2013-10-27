@@ -19,7 +19,10 @@ define ["underscore", "backbone", "view/scheduler/ScheduleOverlay", "model/Sched
 			if option is "pick a date"
 				return Backbone.trigger( "select-date" )
 
-			date = @model.getDateFromScheduleOption option
+			if typeof option is "string"
+				date = @model.getDateFromScheduleOption option
+			else if typeof option is "object"
+				date = option.toDate()
 
 			for task in @currentTasks
 				task.unset( "schedule", {silent: yes} )

@@ -5,6 +5,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 			"click .grid > a:not(.disabled)": "selectOption"
 			"click .overlay-bg": "hide"
 			"click .date-picker .back": "hideDatePicker"
+			"click .date-picker .save": "selectOption"
 		initialize: ->
 			Overlay::initialize.apply( @, arguments )
 
@@ -24,7 +25,21 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 		afterShow: ->
 			@handleResize()
 		selectOption: (e) ->
-			option = e.currentTarget.getAttribute 'data-option'
+			target = $ e.currentTarget
+
+			if target.hasClass( "save" ) and @datePicker?
+				moment = @datePicker.calendar.selectedDay
+				time = @datePicker.model.get "time"
+
+				moment.millisecond 0
+				moment.second 0
+				moment.hour time.hour
+				moment.minute time.minute
+
+				option = moment
+			else
+				option = target.attr "data-option"
+
 			Backbone.trigger( "pick-schedule-option", option )
 		hide: (cancelled = yes) ->
 			if cancelled and @currentTasks?
