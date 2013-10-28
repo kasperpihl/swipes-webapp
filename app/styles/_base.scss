@@ -12,7 +12,7 @@ html.touch body {
 	.sidebar-open & {
 		padding-left: $sidebar-width + 15px;
 
-		@include breakpoint(desktop) { 
+		@include breakpoint(desktop) {
 			left: $sidebar-width-big + 30px;
 		}
 	}
@@ -33,7 +33,8 @@ div[role=main] {
 
 	header.add-new {
 		margin: emCalc(5px) 0 emCalc(10px);
-		@include breakpoint(tablet) { margin: emCalc(58px) 0 emCalc(43px); }
+		@include transition(margin 0.4s ease-out);
+		@include breakpoint(min-height, emCalc(768px)) { margin: emCalc(58px) 0 emCalc(43px); }
 
 		body.edit-mode & {
 			margin: 0;
@@ -42,11 +43,12 @@ div[role=main] {
 
 	> nav {
 		margin-bottom: emCalc(10px);
+		@include transition(margin-bottom 0.4s ease-out);
 		body.edit-mode & {
 			margin-bottom: 0;
 		}
-		
-		@include breakpoint(tablet) { margin-bottom: emCalc(40px); }
+
+		@include breakpoint(min-height, emCalc(768px)) { margin-bottom: emCalc(40px); }
 	}
 
 	padding-bottom: 11em;
