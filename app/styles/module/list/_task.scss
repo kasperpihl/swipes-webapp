@@ -15,7 +15,8 @@ $list-item-height-lg: 105px;
 	}
 
 	.priority {
-		margin-left: 19.5%;
+		margin-left: 10%;
+		@include breakpoint(tablet) { margin-left: 19.5%; }
 	}
 
 	time, .tags { display: inline-block; }
@@ -53,7 +54,8 @@ $list-item-height-lg: 105px;
 // List item content
 .todo-content {
 	position: relative;
-	padding: 1.8em 3em 0 28%;
+	padding: 1.8em 3em 0 20%;
+	@include breakpoint(tablet) { padding-left: 28% }
 	height: $list-item-height;
 
 	@include breakpoint(min-height, 800px) {
