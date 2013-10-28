@@ -5,15 +5,17 @@
 	> h1, > h2, > h3 {
 		position: absolute;
 		display: block;
-		right: 0;
+		right: 10px;
+
+		@include breakpoint(min-width, emCalc(715px)) { right: 0; }
 
 		z-index: 2000;
-		
+
 		margin-top: 0;
 		padding: 0.05em 0.5em 0.1em;
-		
+
 		background: $yellow;
-		
+
 		font-size: 1.13em;
 		height: 1.3em;
 		color: $gray;
@@ -32,19 +34,19 @@
 
 	.scheduled & {
 		border-top-color: $lobster;
-		
-		> h1, > h2, > h3 { 
-			background: $lobster; color: white; 
-			
+
+		> h1, > h2, > h3 {
+			background: $lobster; color: white;
+
 			&:before { @include divider-triangle($lobster) }
 		}
 	}
 
 	.completed & {
 		border-top-color: $green;
-		
-		> h1, > h2, > h3 { 
-			background: $green; color: white; 
+
+		> h1, > h2, > h3 {
+			background: $green; color: white;
 
 			&:before { @include divider-triangle($green) }
 		}
