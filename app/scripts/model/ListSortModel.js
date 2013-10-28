@@ -4,6 +4,8 @@
   define(["underscore", "backbone", "gsap-scroll", "gsap"], function(_, Backbone) {
     var ListSortModel;
     return ListSortModel = (function() {
+      ListSortModel.HEIGHT_BREAKPOINT = 800;
+
       function ListSortModel(container, views) {
         var debouncedSetBounds,
           _this = this;
@@ -12,10 +14,19 @@
         this.setBounds = __bind(this.setBounds, this);
         this.rows = this.getRows();
         this.setBounds();
-        this.setRowTops();
         debouncedSetBounds = _.debounce(this.setBounds, 300);
         $(window).on("resize.sortmodel scroll.sortmodel", function() {
           return debouncedSetBounds();
+        });
+        this.currRowHeight = window.innerHeight < ListSortModel.HEIGHT_BREAKPOINT ? "small" : "big";
+        $(window).on("resize.sortmodel", function() {
+          if (window.innerHeight < ListSortModel.HEIGHT_BREAKPOINT && _this.currRowHeight !== "small") {
+            _this.currRowHeight = "small";
+            return Backbone.trigger("redraw-sortable-list");
+          } else if (window.innerHeight >= ListSortModel.HEIGHT_BREAKPOINT && _this.currRowHeight !== "big") {
+            _this.currRowHeight = "big";
+            return Backbone.trigger("redraw-sortable-list");
+          }
         });
       }
 
@@ -44,16 +55,6 @@
           top: Math.max(bounds.top, window.pageYOffset),
           bottom: window.innerHeight + window.pageYOffset
         };
-      };
-
-      ListSortModel.prototype.setRowTops = function() {
-        var view, _i, _len, _ref;
-        _ref = this.views;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          view.top = parseInt(view.$el.position().top);
-        }
-        return this.views;
       };
 
       ListSortModel.prototype.getViewAtPos = function(order) {

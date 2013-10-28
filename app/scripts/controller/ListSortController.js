@@ -7,10 +7,11 @@
       function ListSortController(container, views) {
         this.onDragStart = __bind(this.onDragStart, this);
         this.onClick = __bind(this.onClick, this);
+        Backbone.on("redraw-sortable-list", this.redraw, this);
         this.model = new ListSortModel(container, views);
         this.listenForOrderChanges();
         this.setInitialOrder();
-        this.init();
+        this.createDraggables();
       }
 
       ListSortController.prototype.setInitialOrder = function() {
@@ -30,10 +31,10 @@
         return _results;
       };
 
-      ListSortController.prototype.init = function() {
+      ListSortController.prototype.createDraggables = function() {
         var dragOpts, draggable, self, view, _i, _len, _ref, _results;
         if (this.draggables != null) {
-          this.destroy();
+          this.killDraggables();
         }
         self = this;
         this.draggables = [];
@@ -66,6 +67,14 @@
           _results.push(this.draggables.push(draggable));
         }
         return _results;
+      };
+
+      ListSortController.prototype.redraw = function() {
+        this.killDraggables();
+        this.model.rows = this.model.getRows();
+        this.setInitialOrder();
+        this.createDraggables();
+        return console.log("Redraw the list");
       };
 
       ListSortController.prototype.listenForOrderChanges = function() {
@@ -131,15 +140,32 @@
         });
       };
 
-      ListSortController.prototype.destroy = function() {
+      ListSortController.prototype.killDraggables = function() {
         var draggable, _i, _len, _ref;
-        this.stopListenForOrderChanges();
         _ref = this.draggables;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           draggable = _ref[_i];
           draggable.disable();
         }
         this.draggables = null;
+        return this.removeInlineStyles();
+      };
+
+      ListSortController.prototype.removeInlineStyles = function() {
+        var view, _i, _len, _ref, _results;
+        _ref = this.model.views;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          _results.push(view.$el.removeAttr("style"));
+        }
+        return _results;
+      };
+
+      ListSortController.prototype.destroy = function() {
+        this.stopListenForOrderChanges();
+        this.killDraggables();
+        Backbone.off("redraw-sortable-list", this.redraw);
         this.model.destroy();
         return this.model = null;
       };

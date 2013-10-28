@@ -1,13 +1,21 @@
 define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 	class ListSortModel
-
+		@HEIGHT_BREAKPOINT = 800
 		constructor: (@container, @views) ->
 			@rows = @getRows()
 			@setBounds()
-			@setRowTops()
 
 			debouncedSetBounds = _.debounce( @setBounds, 300 )
 			$(window).on( "resize.sortmodel scroll.sortmodel", => debouncedSetBounds() )
+
+			@currRowHeight = if window.innerHeight < ListSortModel.HEIGHT_BREAKPOINT then "small" else "big"
+			$(window).on "resize.sortmodel", =>
+				if window.innerHeight < ListSortModel.HEIGHT_BREAKPOINT and @currRowHeight isnt "small"
+					@currRowHeight = "small"
+					Backbone.trigger "redraw-sortable-list"
+				else if window.innerHeight >= ListSortModel.HEIGHT_BREAKPOINT and @currRowHeight isnt "big"
+					@currRowHeight = "big"
+					Backbone.trigger "redraw-sortable-list"
 		getRows: ->
 			@rowHeight = @views[0].$el.height()
 			rows = ( i * @rowHeight for view, i in @views )
@@ -20,11 +28,6 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			@bounds =
 				top: Math.max( bounds.top, window.pageYOffset )
 				bottom: window.innerHeight + window.pageYOffset
-
-		setRowTops: ->
-			for view in @views
-				view.top = parseInt view.$el.position().top
-			return @views
 
 		getViewAtPos: (order) ->
 			return view for view in @views when view.model.get( "order" ) is order
