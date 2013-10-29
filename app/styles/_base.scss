@@ -24,7 +24,7 @@ div[role=main] {
 	position: relative;
 
 	@include breakpoint(desktop) {
-		@include transition(max-width 0.5s ease-out);
+		@include transition(max-width 0.5s ease-in-out);
 	}
 
 	@include breakpoint(desktop-wide) {
@@ -33,7 +33,7 @@ div[role=main] {
 
 	header.add-new {
 		margin: emCalc(5px) 0 emCalc(10px);
-		@include transition(margin 0.4s ease-out);
+		@include transition(margin 0.4s ease-in-out);
 		@include breakpoint(min-height, emCalc(768px)) { margin: emCalc(58px) 0 emCalc(43px); }
 
 		body.edit-mode & {
@@ -43,7 +43,7 @@ div[role=main] {
 
 	> nav {
 		margin-bottom: emCalc(10px);
-		@include transition(margin-bottom 0.4s ease-out);
+		@include transition(margin-bottom 0.4s ease-in-out);
 
 		@include breakpoint(min-height, emCalc(768px)) { margin-bottom: emCalc(40px); }
 	}
