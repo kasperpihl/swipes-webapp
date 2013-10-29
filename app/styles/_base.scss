@@ -37,16 +37,13 @@ div[role=main] {
 		@include breakpoint(min-height, emCalc(768px)) { margin: emCalc(58px) 0 emCalc(43px); }
 
 		body.edit-mode & {
-			margin: 0;
+			margin: emCalc(5px) 0 emCalc(10px);
 		}
 	}
 
 	> nav {
 		margin-bottom: emCalc(10px);
 		@include transition(margin-bottom 0.4s ease-out);
-		body.edit-mode & {
-			margin-bottom: 0;
-		}
 
 		@include breakpoint(min-height, emCalc(768px)) { margin-bottom: emCalc(40px); }
 	}
