@@ -2,8 +2,8 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 	Overlay.extend
 		className: 'overlay tags-editor'
 		events:
-			"click .overlay-bg": "hide"
-			"click .save": "hide"
+			"click .overlay-bg": "destroy"
+			"click .save": "destroy"
 			"click .rounded-tags li:not(.tag-input)": "toggleTag"
 			"submit form": "createTag"
 		initialize: ->
@@ -35,7 +35,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			@$el.find( ".tag-input input" ).focus()
 			return @
 		afterHide: ->
-			@destroy()
+			Backbone.trigger "redraw-sortable-list"
 		toggleTag: (e) ->
 			target = $ e.currentTarget
 			remove = target.hasClass "selected"

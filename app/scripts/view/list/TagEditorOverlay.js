@@ -3,8 +3,8 @@
     return Overlay.extend({
       className: 'overlay tags-editor',
       events: {
-        "click .overlay-bg": "hide",
-        "click .save": "hide",
+        "click .overlay-bg": "destroy",
+        "click .save": "destroy",
         "click .rounded-tags li:not(.tag-input)": "toggleTag",
         "submit form": "createTag"
       },
@@ -44,7 +44,7 @@
         return this;
       },
       afterHide: function() {
-        return this.destroy();
+        return Backbone.trigger("redraw-sortable-list");
       },
       toggleTag: function(e) {
         var remove, tag, target;
