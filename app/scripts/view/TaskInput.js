@@ -3,22 +3,66 @@
     return Backbone.View.extend({
       el: "#add-task",
       events: {
-        "submit": "triggerAddTask"
+        "submit": "triggerAddTask",
+        "keyup input": "resizeText"
       },
       initialize: function() {
-        return this.input = this.$el.find("input");
+        this.input = this.$el.find("input");
+        this.input.val("Here a shitload of text that should be resized");
+        return this.resizeText();
       },
       triggerAddTask: function(e) {
         e.preventDefault();
         if (this.input.val() === "") {
           return;
         }
+        _.bindAll(this, "resizeText");
         Backbone.trigger("create-task", this.input.val());
-        return this.input.val("");
+        this.input.val("");
+        return $(window).on("resize.taskinput", this.resizeText);
+      },
+      getFontSizeRange: function() {
+        if (window.innerHeight < 768) {
+          return {
+            min: 20,
+            max: 40,
+            charLimit: 20,
+            minChars: 8
+          };
+        } else if (window.innerHeight < 1024) {
+          return {
+            min: 35,
+            max: 70,
+            charLimit: 24,
+            minChars: 15
+          };
+        } else {
+          return {
+            min: 35,
+            max: 100,
+            charLimit: 20,
+            minChars: 15
+          };
+        }
+      },
+      getFontSize: function() {
+        var diff, numChars, range, shrinkage;
+        numChars = this.input.val().length;
+        range = this.getFontSizeRange();
+        if (numChars < range.minChars) {
+          return "";
+        }
+        shrinkage = (numChars - range.minChars) / range.charLimit;
+        diff = range.max - range.min;
+        return Math.max(range.max - (diff * shrinkage), range.min);
+      },
+      resizeText: function() {
+        return this.input.css("font-size", this.getFontSize());
       },
       remove: function() {
         this.undelegateEvents();
-        return this.$el.remove();
+        this.$el.remove();
+        return $(window).off("resize.taskinput");
       }
     });
   });
