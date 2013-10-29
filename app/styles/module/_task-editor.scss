@@ -1,13 +1,13 @@
 .task-editor {
 	$padding: 66px;
 
-	color: $gray-light;
+	color: $gray-warm;
 
 	.title {
 		position: relative;
 		font-size: emCalc(20px);
 		padding-left: $padding;
-		
+
 		margin-bottom: emCalc(24px);
 		margin-top: 0.8em;
 
@@ -36,7 +36,7 @@
 
 		> section {
 			margin-bottom: 1em;
-			
+
 			@include breakpoint(tablet) {
 				margin-bottom: emCalc(36px);
 			}
@@ -48,7 +48,7 @@
 
 		a { margin-left: 4.7em; }
 		a:first-child { margin-left: 0; }
-		
+
 		@include breakpoint(tablet) {
 			a { margin-left: 8em; }
 		}
@@ -64,7 +64,7 @@
 		&:focus, &:hover {
 			color: $gray-dark;
 		}
-		
+
 		&:active, &:focus {
 			border:none;
 			outline:none;

@@ -7,9 +7,7 @@
         "keyup input": "resizeText"
       },
       initialize: function() {
-        this.input = this.$el.find("input");
-        this.input.val("Here a shitload of text that should be resized");
-        return this.resizeText();
+        return this.input = this.$el.find("input");
       },
       triggerAddTask: function(e) {
         e.preventDefault();

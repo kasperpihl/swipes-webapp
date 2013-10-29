@@ -6,9 +6,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			"keyup input": "resizeText"
 		initialize: ->
 			@input = @$el.find "input"
-
-			@input.val "Here a shitload of text that should be resized"
-			@resizeText()
 		triggerAddTask: (e) ->
 			e.preventDefault()
 			return if @input.val() is ""
