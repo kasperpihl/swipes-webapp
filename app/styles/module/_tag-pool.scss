@@ -1,24 +1,15 @@
 .tag-pool {
 	display: none;
 
-	background: lighten($gray-lighter, 10%);
-	padding: 1.5em 0.8em 0.8em;
+	background: lighten($gray-lighter, 13%);
+	padding: 0.8em 0.8em 0.4em;
+	border-radius: 0.5em;
 
 	.show-pool & {
 		display: block;
 	}
-	
+
 	.rounded-tags {
 		margin: 0;
-	}
-
-	.rounded-tags li {
-		background: $gray-warm;
-		cursor: pointer;
-		@include transition(background 0.15s ease-out);
-
-		&:hover {
-			background: darken($gray-warm, 7%);
-		}
 	}
 }

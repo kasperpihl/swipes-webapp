@@ -1,6 +1,6 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
-		events: 
+		events:
 			"click li": "toggleFilter"
 			"click .remove": "removeTag"
 			"submit form": "createTag"
@@ -45,19 +45,13 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		render: ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
-			
+
 			@renderTag tag, list for tag in swipy.tags.models
 			@renderTagInput list
 
 			return @el
 		renderTag: (tag, list) ->
-			list.append "
-				<li>
-					<a class='remove' href='JavaScript:void(0);' title='Remove'>
-						<span class='icon-cross'></span>
-					</a>
-					#{ tag.get 'title' }
-				</li>"
+			list.append "<li>#{ tag.get 'title' }</li>"
 		renderTagInput: (list) ->
 			list.append "
 				<li class='tag-input'>

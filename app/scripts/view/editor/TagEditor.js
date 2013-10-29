@@ -7,7 +7,7 @@
         "click .add-new-tag": "toggleTagPool",
         "submit .add-tag": "createTag",
         "click .tag-pool li:not(.tag-input)": "addTag",
-        "click .remove": "removeTag"
+        "click .applied-tags > li": "removeTag"
       },
       initialize: function() {
         this.toggled = false;
@@ -44,7 +44,7 @@
       },
       removeTag: function(e) {
         var tag, tags;
-        tag = $.trim($(e.currentTarget.parentNode).text());
+        tag = $.trim($(e.currentTarget).text());
         tags = _.without(this.model.get("tags"), tag);
         this.model.unset("tags", {
           silent: true
@@ -94,7 +94,7 @@
           _ref = this.model.get("tags");
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             tagname = _ref[_i];
-            this.renderTag(tagname, list, true);
+            this.renderTag(tagname, list, "selected");
           }
         }
         icon = "<span class='" + (this.toggled ? "icon-minus" : "icon-plus") + "'></span>";
@@ -114,17 +114,13 @@
         tagInput = "				<li class='tag-input'>					<form class='add-tag'>						<input type='text' placeholder='Add new tag'>					</form>				</li>			";
         return list.append(tagInput);
       },
-      renderTag: function(tagName, parent, removable) {
-        var removeBtn, tag;
-        if (removable == null) {
-          removable = false;
+      renderTag: function(tagName, parent, className) {
+        var tag;
+        if (className == null) {
+          className = "";
         }
-        tag = $("<li>" + tagName + "</li>");
-        parent.append(tag);
-        if (removable) {
-          removeBtn = "					<a class='remove' href='JavaScript:void(0);' title='Remove'>						<span class='icon-cross'></span>					</a>				";
-          return $(tag).prepend(removeBtn);
-        }
+        tag = $("<li class='" + className + "'>" + tagName + "</li>");
+        return parent.append(tag);
       },
       cleanUp: function() {
         this.model.off();

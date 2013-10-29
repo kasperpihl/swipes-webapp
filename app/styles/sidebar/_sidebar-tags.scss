@@ -5,13 +5,19 @@
 			background: $blue-dark;
 			margin: 0 0.25em 0.25em 0;
 			color: rgba(white, 0.5);
+			border: none;
+			font-family: $font-light;
 
 			@include transition(all 0.08s ease-out);
 
 			&:hover { color: white; }
 			&.selected { background: darken($blue-dark, 7%); color: white; }
-
 			a.remove:hover { color: $gray-lighter; }
+
+			&.tag-input {
+				background: $yellow !important;
+				color: white;
+			}
 		}
 	}
 }

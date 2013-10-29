@@ -77,7 +77,7 @@
         return this.el;
       },
       renderTag: function(tag, list) {
-        return list.append("				<li>					<a class='remove' href='JavaScript:void(0);' title='Remove'>						<span class='icon-cross'></span>					</a>					" + (tag.get('title')) + "				</li>");
+        return list.append("<li>" + (tag.get('title')) + "</li>");
       },
       renderTagInput: function(list) {
         return list.append("				<li class='tag-input'>					<form class='add-tag'>						<input type='text' placeholder='Add new tag'>					</form>				</li>");

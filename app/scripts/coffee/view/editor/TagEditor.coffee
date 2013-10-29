@@ -1,53 +1,53 @@
 define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone, TaskTmpl) ->
 	Backbone.View.extend
-		events: 
+		events:
 			"click .add-new-tag": "toggleTagPool"
 			"submit .add-tag": "createTag"
 			"click .tag-pool li:not(.tag-input)": "addTag"
-			"click .remove": "removeTag"
-		
+			"click .applied-tags > li": "removeTag"
+
 		initialize: ->
 			@toggled = no
 			@model.on( "change:tags", @render, @ )
 			@render()
-		
+
 		toggleTagPool: ->
 			if @toggled then @hideTagPool() else @showTagPool()
-		
+
 		showTagPool: ->
 			@toggleButton off
 			@$el.addClass "show-pool"
 			@$el.find("form.add-tag input").focus()
 			@toggled = yes
-		
+
 		hideTagPool: ->
 			@toggleButton on
 			@$el.removeClass "show-pool"
 			@$el.find("form.add-tag input").blur()
 			@toggled = no
-		
+
 		toggleButton: (flag) ->
 			icon = @$el.find ".add-new-tag span"
 			icon.removeClass "icon-plus icon-minus"
 			icon.addClass( if flag is on then "icon-plus" else "icon-minus" )
-		
+
 		addTag: (e) ->
 			@addTagToModel $( e.currentTarget ).text()
-		
+
 		removeTag: (e) ->
-			tag = $.trim $( e.currentTarget.parentNode ).text()
+			tag = $.trim $( e.currentTarget ).text()
 			tags = _.without( @model.get( "tags" ), tag )
-			
+
 			@model.unset( "tags", { silent: yes } )
 			@model.set( "tags", tags )
-		
+
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
 			return if tagName is ""
 
 			@addTagToModel tagName
-		
+
 		addTagToModel: (tagName, addToCollection = yes) ->
 			tags = @model.get( "tags" ) or []
 			if _.contains( tags, tagName ) then return alert "You've already added that tag"
@@ -57,10 +57,10 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 
 			# This triggers re-rendering
 			@model.set( "tags", tags )
-			
+
 			# If it's a new tag, add it to the stack
 			if addToCollection then swipy.tags.getTagsFromTasks()
-		
+
 		render: ->
 			@renderTags()
 			@renderTagPool()
@@ -68,13 +68,13 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			if @toggled then @$el.find("form.add-tag input").focus()
 
 			return @el
-		
+
 		renderTags: ->
 			list = @$el.find " > .rounded-tags"
 			list.empty()
 
 			if @model.has "tags" then for tagname in @model.get "tags"
-				@renderTag( tagname, list, yes )
+				@renderTag( tagname, list, "selected" )
 
 			icon = "<span class='" + ( if @toggled then "icon-minus" else "icon-plus" ) + "'></span>"
 			poolToggler = "
@@ -84,11 +84,11 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 			"
 
 			list.append poolToggler
-		
+
 		renderTagPool: ->
 			list = @$el.find(".tag-pool .rounded-tags")
 			list.empty()
-			
+
 			allTags = swipy.tags.pluck "title"
 			unusedTags = if @model.has( "tags" ) then _.without( allTags, @model.get("tags")... ) else allTags
 			@renderTag( tagname, list ) for tagname in unusedTags
@@ -101,19 +101,11 @@ define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone
 				</li>
 			"
 			list.append tagInput
-		
-		renderTag: (tagName, parent, removable = no) ->
-			tag = $( "<li>#{ tagName }</li>" )
+
+		renderTag: (tagName, parent, className = "") ->
+			tag = $( "<li class='#{ className }'>#{ tagName }</li>" )
 			parent.append tag
 
-			if removable
-				removeBtn = "
-					<a class='remove' href='JavaScript:void(0);' title='Remove'>
-						<span class='icon-cross'></span>
-					</a>
-				"
-				$(tag).prepend removeBtn
-		
 		cleanUp: ->
 			@model.off()
 			@undelegateEvents()

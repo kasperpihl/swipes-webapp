@@ -5,59 +5,48 @@
 
 	li {
 		@extend .no-select;
-		
+
 		list-style: none;
 		display: block;
 		float: left;
 
 		margin: 0 0.7em 0.7em 0;
-		
+
 		padding: emCalc(9px) emCalc(12px);
-		background: $gray-lighter;
+		background: transparent;
 		@include transition(background 0.15s ease-out);
 		border-radius: 0.5em;
 
-		color: white;
+		color: $gray-warm;
 		font-size: 0.8em;
-		font-family: $font-light;
-
+		font-family: $font-normal;
 		cursor: pointer;
 
-		a.remove {
-			display: inline-block;
-			width: 0;
-			opacity: 0;
-			
-			font-size: 0.8em;
-			line-height: 1em;
-			color: $gray-light;
-			text-decoration: none;
-			
-			@include transition(all 0.2s ease-out);
-			
-			&:hover {
-				color: $gray;
-			}
-		}
+		border: thin solid $gray-warm;
+
+		@include transition(background 0.15s ease-out);
 
 		&:hover {
-			background: $gray-light;
+			color: $gray-dark;
 		}
 
 		&.selected {
 			background: $gray-warm;
+			color: white;
 		}
 	}
 
+
+
 	li.tag-input {
-		background: $yellow !important;
+		background: $gray-warm !important;
 	}
 
 	.add-new-tag {
 		position: relative;
 		background: $yellow;
+		border: none;
 		padding: 0;
-
 
 		.icon-plus {
 			position: relative;
@@ -74,10 +63,11 @@
 			color: white;
 			padding: emCalc(9px) emCalc(12px);
 
-			&:hover {
-				color: white;
-				text-decoration: none;
-			}
+		}
+
+		&:hover {
+			background: $yellow;
+			a { color: white; text-decoration: none; }
 		}
 	}
 }
@@ -94,7 +84,15 @@
 		outline: none;
 		border: none;
 		background: transparent;
-		color: $gray-dark;
+		color: #ddd;
+
+		@include input-placeholder {
+			color: #ddd;
+		}
+
+		&:focus, &:hover {
+			color: white;
+		}
 
 		@include input-placeholder() {
 			color: $gray;
@@ -111,6 +109,6 @@
 	left: 50%;
 	margin-left: -0.7em;
 	margin-top: emCalc(6px);
-	
-	@include triangle(1.6em, 0.72em, up, lighten($gray-lighter, 10%));
+
+	@include triangle(1.6em, 0.72em, up, lighten($gray-lighter, 13%));
 }
