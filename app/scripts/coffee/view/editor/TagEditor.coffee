@@ -107,5 +107,5 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			parent.append tag
 
 		cleanUp: ->
-			@model.off()
+			@model.off( null, null, @ )
 			@undelegateEvents()

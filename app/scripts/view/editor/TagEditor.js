@@ -123,7 +123,7 @@
         return parent.append(tag);
       },
       cleanUp: function() {
-        this.model.off();
+        this.model.off(null, null, this);
         return this.undelegateEvents();
       }
     });
