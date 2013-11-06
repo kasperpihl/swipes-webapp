@@ -1,7 +1,7 @@
 (function() {
   var __slice = [].slice;
 
-  define(["underscore", "backbone", "text!templates/edit-task.html"], function(_, Backbone, TaskTmpl) {
+  define(["underscore", "backbone"], function(_, Backbone) {
     return Backbone.View.extend({
       events: {
         "click .add-new-tag": "toggleTagPool",

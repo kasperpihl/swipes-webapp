@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/edit-task.html"], (_, Backbone, TaskTmpl) ->
+define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
 		events:
 			"click .add-new-tag": "toggleTagPool"
