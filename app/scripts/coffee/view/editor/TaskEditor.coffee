@@ -5,6 +5,8 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 		events:
 			"click .save": "save"
 			"click time": "reschedule"
+			"blur .title input": "updateTitle"
+			"blur .notes textarea": "updateNotes"
 		initialize: ->
 			$("body").addClass "edit-mode"
 			@$el.addClass @model.getState()
@@ -26,18 +28,20 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 			@createTagEditor()
 			return @el
 		save: ->
-			atts = { title: @getTitle(), notes: @getNotes() }
-
 			opts = {
 				success: => swipy.router.back()
 				error: -> swipy.errors.throw "Something went wrong. Please try again in a little bit.", arguments
 			}
 
-			@model.save( atts, opts )
+			@model.save( {}, opts )
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
 
+		updateTitle: ->
+			@model.set( "title", @getTitle() )
+		updateNotes: ->
+			@model.set( "notes", @getNotes() )
 		getTitle: ->
 			@$el.find( ".title input" ).val()
 		getNotes: ->

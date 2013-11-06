@@ -5,7 +5,9 @@
       className: "task-editor",
       events: {
         "click .save": "save",
-        "click time": "reschedule"
+        "click time": "reschedule",
+        "blur .title input": "updateTitle",
+        "blur .notes textarea": "updateNotes"
       },
       initialize: function() {
         $("body").addClass("edit-mode");
@@ -36,12 +38,8 @@
         return this.el;
       },
       save: function() {
-        var atts, opts,
+        var opts,
           _this = this;
-        atts = {
-          title: this.getTitle(),
-          notes: this.getNotes()
-        };
         opts = {
           success: function() {
             return swipy.router.back();
@@ -50,12 +48,18 @@
             return swipy.errors["throw"]("Something went wrong. Please try again in a little bit.", arguments);
           }
         };
-        return this.model.save(atts, opts);
+        return this.model.save({}, opts);
       },
       reschedule: function() {
         return Backbone.trigger("show-scheduler", [this.model]);
       },
       transitionInComplete: function() {},
+      updateTitle: function() {
+        return this.model.set("title", this.getTitle());
+      },
+      updateNotes: function() {
+        return this.model.set("notes", this.getNotes());
+      },
       getTitle: function() {
         return this.$el.find(".title input").val();
       },
