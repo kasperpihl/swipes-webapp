@@ -1,16 +1,17 @@
-define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/TagEditor"], (_, Backbone, TaskTmpl, TagEditor) ->
+define ["underscore", "backbone", "text!templates/task-editor.html", "view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, TagEditor) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
 		events:
 			"click .save": "save"
+			"click time": "reschedule"
 		initialize: ->
 			$("body").addClass "edit-mode"
 			@$el.addClass @model.getState()
 			@setTemplate()
 			@render()
 		setTemplate: ->
-			@template = _.template TaskTmpl
+			@template = _.template TaskEditorTmpl
 		createTagEditor: ->
 			@tagEditor = new TagEditor { el: @$el.find(".icon-tags"), model: @model }
 		render: ->
@@ -28,6 +29,8 @@ define ["underscore", "backbone", "text!templates/edit-task.html", "view/editor/
 			}
 
 			@model.save( atts, opts )
+		reschedule: ->
+			console.log "Reschedule ", @model
 		transitionInComplete: ->
 
 		getTitle: ->

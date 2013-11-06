@@ -33,7 +33,7 @@ define [
 			else @loadTaskEditor model
 
 		loadTaskEditor: (model) ->
-			require ["view/editor/EditTask"], (EditTaskView) =>
+			require ["view/editor/TaskEditor"], (EditTaskView) =>
 				editView = new EditTaskView( model: model )
 				$("#main-content").prepend editView.el
 				@transitionIn( editView ).then ->

@@ -60,7 +60,7 @@
 
       ViewController.prototype.loadTaskEditor = function(model) {
         var _this = this;
-        return require(["view/editor/EditTask"], function(EditTaskView) {
+        return require(["view/editor/TaskEditor"], function(EditTaskView) {
           var editView;
           editView = new EditTaskView({
             model: model
