@@ -16,6 +16,8 @@
     "requirejs-text": "~2.0.10",
     "backbone": "~1.1.0",
     "underscore": "~1.5.2",
-    "clndr": "~1.0.12"
+    "clndr": "~1.0.12",
+    "sinon-chai": "~2.4.0",
+    "sinon": "~1.7.3"
   }
 }

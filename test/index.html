@@ -26,6 +26,8 @@
 
 	<!-- assertion framework -->
 	<script src="lib/chai.js"></script>
+	<script src="../app/bower_components/sinon-chai/lib/sinon-chai.js"></script>
+	<script src="../app/bower_components/sinon/lib/sinon.js"></script>
 	<script>var expect = chai.expect</script>
 
 	<!-- include source files here... -->
@@ -39,7 +41,7 @@
 				// We don't want popups when testing
 				swipy.errors.destroy()
 				swipy.errors = null
-				
+
 				// Start tests
 				mocha.globals(["*"]).run();
 			});
