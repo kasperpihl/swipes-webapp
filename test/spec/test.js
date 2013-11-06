@@ -872,6 +872,57 @@
         });
       });
     });
+    require(["view/editor/TaskEditor"], function(TaskEditor) {
+      return describe("Task Editor", function() {
+        var editor, model, renderSpy;
+        editor = renderSpy = null;
+        model = new ToDoModel(helpers.getDummyModels()[0]);
+        beforeEach(function() {
+          renderSpy = sinon.spy(TaskEditor.prototype, "render");
+          return editor = new TaskEditor({
+            model: model
+          });
+        });
+        afterEach(function() {
+          TaskEditor.prototype.render.restore();
+          if (editor != null) {
+            editor.remove();
+          }
+          return editor = null;
+        });
+        it("Should pop up the scheduler when clicking scheduled time, so that the user can easily reschedule", function() {
+          var schedulerTrigged;
+          schedulerTrigged = false;
+          Backbone.on("show-scheduler", function() {
+            return schedulerTrigged = true;
+          });
+          editor.$el.find("time").click();
+          return require(["view/scheduler/ScheduleOverlay"], function(ScheduleOverlayView) {
+            return _.defer(function() {
+              expect(schedulerTrigged).to.be["true"];
+              return expect(swipy.scheduler.view.shown).to.be["true"];
+            });
+          });
+        });
+        it("Should re-render the HTML of the editor when the schedule is changed", function() {
+          var future;
+          expect(renderSpy).to.have.been.calledOnce;
+          model.unset("schedule", {
+            silent: true
+          });
+          future = new Date();
+          future.setDate(future.getDate() + 1);
+          model.set("schedule", future);
+          return expect(renderSpy).to.have.been.calledTwice;
+        });
+        it("Should remain in the task editor after changing the schedule");
+        it("Should set/clear the repeat option when picking one");
+        return it("Should throw an error message if the changes can't be saved to the server");
+      });
+    });
+    describe("Task repeat logic", function() {
+      return it("Should repeat tasks ...");
+    });
     require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
       return describe("Tag Editor overlay", function() {
         describe("Marking shared tags selected", function() {
@@ -1021,7 +1072,7 @@
         _.defer(function() {
           return expect(eventTriggered).to.be["true"];
         });
-        return require(["view/editor/EditTask"], function(TaskEditor) {
+        return require(["view/editor/TaskEditor"], function(TaskEditor) {
           return setTimeout(function() {
             expect(swipy.viewController.currView).to.exist;
             expect(swipy.viewController.currView).to.be.instanceOf(TaskEditor);
@@ -1035,7 +1086,7 @@
           var editTaskRoute;
           editTaskRoute = "edit/" + (swipy.todos.at(1).cid);
           location.hash = editTaskRoute;
-          return require(["view/editor/EditTask", "view/Todo"], function(TaskEditor, TodoList) {
+          return require(["view/editor/TaskEditor", "view/Todo"], function(TaskEditor, TodoList) {
             return setTimeout(function() {
               var editor;
               editor = swipy.viewController.currView;

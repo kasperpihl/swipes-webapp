@@ -11,10 +11,17 @@
         $("body").addClass("edit-mode");
         this.$el.addClass(this.model.getState());
         this.setTemplate();
-        return this.render();
+        this.render();
+        return this.listenTo(this.model, "change:schedule", this.render);
       },
       setTemplate: function() {
         return this.template = _.template(TaskEditorTmpl);
+      },
+      killTagEditor: function() {
+        if (this.tagEditor != null) {
+          this.tagEditor.cleanUp();
+          return this.tagEditor.remove();
+        }
       },
       createTagEditor: function() {
         return this.tagEditor = new TagEditor({
@@ -24,6 +31,7 @@
       },
       render: function() {
         this.$el.html(this.template(this.model.toJSON()));
+        this.killTagEditor();
         this.createTagEditor();
         return this.el;
       },
@@ -34,7 +42,6 @@
           title: this.getTitle(),
           notes: this.getNotes()
         };
-        console.log("Saving ", atts);
         opts = {
           success: function() {
             return swipy.router.back();
@@ -46,7 +53,7 @@
         return this.model.save(atts, opts);
       },
       reschedule: function() {
-        return console.log("Reschedule ", this.model);
+        return Backbone.trigger("show-scheduler", [this.model]);
       },
       transitionInComplete: function() {},
       getTitle: function() {

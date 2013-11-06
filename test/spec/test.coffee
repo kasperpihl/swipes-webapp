@@ -742,6 +742,52 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					expect( model.get "tags" ).to.include "tags"
 					expect( model.get "tags" ).to.include "rags"
 
+	require ["view/editor/TaskEditor"], (TaskEditor) ->
+		describe "Task Editor", ->
+			editor = renderSpy = null
+			model = new ToDoModel helpers.getDummyModels()[0]
+
+			beforeEach ->
+				# Set up the spy. Needs to happen before view is created.
+				renderSpy = sinon.spy( TaskEditor.prototype, "render" )
+				editor = new TaskEditor { model: model }
+
+			afterEach ->
+				# Unwrap the spy
+				TaskEditor.prototype.render.restore()
+				editor?.remove()
+				editor = null
+
+			it "Should pop up the scheduler when clicking scheduled time, so that the user can easily reschedule", ->
+				schedulerTrigged = no
+				Backbone.on "show-scheduler", -> schedulerTrigged = yes
+
+				editor.$el.find("time").click()
+
+				require ["view/scheduler/ScheduleOverlay"], (ScheduleOverlayView) ->
+					_.defer ->
+						expect( schedulerTrigged ).to.be.true
+						expect( swipy.scheduler.view.shown ).to.be.true
+
+			it "Should re-render the HTML of the editor when the schedule is changed", ->
+				expect( renderSpy ).to.have.been.calledOnce
+
+				# Update schedule to 1 day in the future
+				model.unset( "schedule", { silent: yes } )
+				future = new Date()
+				future.setDate( future.getDate() + 1 )
+				model.set( "schedule", future )
+
+				expect( renderSpy ).to.have.been.calledTwice
+
+			it "Should remain in the task editor after changing the schedule"
+
+			it "Should set/clear the repeat option when picking one"
+			it "Should throw an error message if the changes can't be saved to the server"
+
+	describe "Task repeat logic", ->
+		it "Should repeat tasks ..."
+
 	require ["view/list/TagEditorOverlay"], (TagEditorOverlay) ->
 		describe "Tag Editor overlay", ->
 			describe "Marking shared tags selected", ->
@@ -854,7 +900,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			_.defer -> expect( eventTriggered ).to.be.true
 
 			# Give require a chance to load in the list view script first ...
-			require ["view/editor/EditTask"], (TaskEditor) ->
+			require ["view/editor/TaskEditor"], (TaskEditor) ->
 				setTimeout ->
 						expect( swipy.viewController.currView ).to.exist
 						expect( swipy.viewController.currView ).to.be.instanceOf TaskEditor
@@ -875,7 +921,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				location.hash = editTaskRoute
 
 				# Then, make sure we've loaded in the editor view
-				require ["view/editor/EditTask", "view/Todo"], (TaskEditor, TodoList) ->
+				require ["view/editor/TaskEditor", "view/Todo"], (TaskEditor, TodoList) ->
 					setTimeout ->
 							editor = swipy.viewController.currView
 
