@@ -11,7 +11,7 @@ exports.sendTemplate = function(templateName,email,subject,callback){
 		"template_content": [],
 		"message":{
 			"subject":subject,
-			"from_email":"hello@swipesapp.com",
+			"from_email":"support@swipesapp.com",
 			"from_name":"The Swipes Team",
 			"to":[{
 				"email":email
@@ -26,9 +26,9 @@ exports.sendTemplate = function(templateName,email,subject,callback){
 			"preserve_recipients": null,
 			"tracking_domain": null,
 			"signing_domain": null,
-			"merge": true,
-			"async":true
-		}
+			"merge": true
+		},
+		"async":true
 	};
 	Parse.Cloud.httpRequest({
 		url:'https://mandrillapp.com/api/1.0/messages/send-template.json',
