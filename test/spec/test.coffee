@@ -55,6 +55,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				dfd.resolve()
 
 			return dfd.promise()
+	###
 
 	#
 	# The Basics
@@ -74,6 +75,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 		it "Should have completed tasks for testing", ->
 			expect( swipy.todos.getCompleted() ).to.have.length.above 0
+
 
 	#
 	# To Do Model
@@ -258,7 +260,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	# Any list View
 	#
 
-	###
 	require ["view/List", "model/ToDoModel"], (ListView, ToDo) ->
 		contentHolder.empty()
 		list = new ListView();
@@ -272,7 +273,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			it "Should remove all nested children as part of the cleanUp routine", ->
 				list.cleanUp()
 				expect( children ).to.have.length.lessThan 1
-	###
 
 	#
 	# Scheduled list View
@@ -788,6 +788,20 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	describe "Task repeat logic", ->
 		it "Should repeat tasks ..."
 
+	###
+
+	describe "Tag Filter", ->
+		it "Should add new tags to the global tags collection"
+		it "Should remove tags from the global tags collection"
+		it "Should re-render whenever tags in the global collection are added, removed or reset"
+
+		describe "Narrowing down available tags after filtering", ->
+			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected."
+			it "Should show all tags again if the last tag is de-selected"
+
+
+	###
+
 	require ["view/list/TagEditorOverlay"], (TagEditorOverlay) ->
 		describe "Tag Editor overlay", ->
 			describe "Marking shared tags selected", ->
@@ -1000,3 +1014,5 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
+
+	###
