@@ -19,6 +19,41 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		validateTag: (model) ->
 			if @where( { title: model.get "title" } ).length > 1
 				@remove( model, { silent: yes } )
+
+		###*
+		 * Looks at a tag (Or an array of tags), finds all the tasks that are tagged with those tags.
+		 * (If multiple tags are passed, the tasks must have all of the tags applied to them)
+		 * The method then finds and returns a list of other tags that those tasks have been tagged with.
+		 *
+		 * For example, if we have three tasks like this
+		 * Task 1
+		 * 		- tags: Nina
+		 * Task 2
+		 * 		- tagged: Nina, Pinta
+		 * Task 3
+		 * 		- tagged: Nina, Pinta, Santa-Maria
+		 *
+		 * If you call getSibling( "Nina" ) you will get
+		 * [ "Pinta", "Santa-Maria" ] as the return value.
+		 *
+		 *
+		 * @param  {String/Array} tags a string or an array of strings (Tagnames)
+		 *
+		 * @return {array}     an array with the results. No results will return an empty array
+		###
+		getSiblings: (tags) ->
+			# If string, wrap it in an array so we can loop over it
+			if typeof tags isnt "object" then tags = [tags]
+
+			result = []
+			for task in swipy.todos.getTasksTaggedWith tags
+				result.push tag for tag in task.get "tags"
+
+			# Make sure we have no duplicates
+			result = _.unique result
+
+			# Finally remove the initial tag from the results.
+			return _.without( result, tags... )
 		handleTagDeleted: (model) ->
 			tagName = model.get "title"
 

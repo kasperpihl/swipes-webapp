@@ -11,10 +11,18 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 			@filter (m) => m.getState() is "scheduled"
 		getCompleted: ->
 			@filter (m) => m.getState() is "completed"
-		getTasksTaggedWith: (tag) ->
+		getTasksTaggedWith: (tags, filterOnlyCurrentTasks) ->
+			console.warn "Still need to implement filterOnlyCurrentTasks"
+
 			@filter (m) ->
 				return false unless m.has "tags"
-				return _.contains( m.get( "tags" ), tag )
+
+				# If string, wrap it in an array so we can loop over it
+				if typeof tags isnt "object" then tags = [tags]
+
+				# This multi-dimensional loop returns true if
+				# the model has all of the provided tags in it's tags property
+				return _.all( tags, (tag) -> _.contains( m.get( "tags" ), tag )  )
 		bumpOrder: (direction = "down", startFrom = 0) ->
 			if direction is "down"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom

@@ -867,7 +867,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( swipy.todos.where { rejectedByTag: yes } ).to.have.length 0
 
 		describe "Narrowing down available tags after filtering", ->
-			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", ->
+			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", (done) ->
 				require ["view/sidebar/TagFilter"], (TagFilter) ->
 					# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
 					savedRender = swipy.sidebar.tagFilter.__proto__.render
@@ -879,8 +879,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					# Filter renders automatically upon instantiation
 					expect( renderSpy ).to.have.been.calledOnce
 
+					# Do a top level filter. Only 1 tag selected.
 					Backbone.trigger( "apply-filter", "tag", "Nina" )
-
 					_.defer ->
 						expect( renderSpy ).to.have.been.calledTwice
 
@@ -893,27 +893,47 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 						expect( tags ).to.contain "Pinta"
 						expect( tags ).to.contain "Santa-Maria"
 
-						# Do a deeper filter — Both #Nina & #Pinta are now selected
+						# Do a deeper filter — Both #Nina & #Pinta are now selected.
+						# It should render the same result as above ...
 						Backbone.trigger( "apply-filter", "tag", "Pinta" )
 						_.defer ->
 							tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
 
-							expect( tags ).to.have.length 2
+							console.log "Nested test 1"
+							expect( tags ).to.have.length 3
+							expect( tags ).to.contain "Nina"
 							expect( tags ).to.contain "Pinta"
 							expect( tags ).to.contain "Santa-Maria"
 
-							expect( tags ).to.not.contain "Nina"
+							# Do another deep filter — #Pinta & #Santa-Maria are now selected.
+							# It should only show #Pinta and #Sata-Maria, hence #Nina should be removed
+							Backbone.trigger( "remove-filter", "tag", "Nina" )
+							Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
+							_.defer ->
+								console.log "Nested test 2 – swipy.filter.tagsFilter"
+								expect( swipy.filter.tagsFilter ).to.have.length 2
+								expect( swipy.filter.tagsFilter ).to.contain "Pinta"
+								expect( swipy.filter.tagsFilter ).to.contain "Santa-Maria"
 
+								tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
 
-							# Remove spy
-							TagFilter.prototype.render.restore()
+								console.log "Nested test 2 – rendered HTML"
+								expect( tags ).to.have.length 2
+								expect( tags ).to.contain "Pinta"
+								expect( tags ).to.contain "Santa-Maria"
 
-							# Reset HTML
-							filter.remove()
-							$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+								expect( tags ).to.not.contain "Nina"
 
-							# Re-enable render method on swipys tagFilter
-							swipy.sidebar.tagFilter.render = savedRender
+								# Remove spy
+								TagFilter.prototype.render.restore()
+
+								# Reset HTML
+								filter.remove()
+								$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+								# Re-enable render method on swipys tagFilter
+								swipy.sidebar.tagFilter.render = savedRender
+								done()
 
 			it "Should show all tags again if the last tag is de-selected"
 				# 1. Lav en spy på TagFilter.prototype.render

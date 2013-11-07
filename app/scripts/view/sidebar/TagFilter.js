@@ -67,24 +67,12 @@
         }
       },
       isValid: function(tag) {
-        var otherTag, otherTags, result, task, _i, _j, _len, _len1, _ref;
+        var siblingTags;
         if (_.contains(swipy.filter.tagsFilter, tag)) {
           return true;
         } else {
-          otherTags = [];
-          result = false;
-          _ref = swipy.todos.getTasksTaggedWith(tag);
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            task = _ref[_i];
-            otherTags = _.union(otherTags, task.get("tags"));
-          }
-          for (_j = 0, _len1 = otherTags.length; _j < _len1; _j++) {
-            otherTag = otherTags[_j];
-            if (_.contains(swipy.filter.tagsFilter, otherTag)) {
-              result = true;
-            }
-          }
-          return result;
+          siblingTags = swipy.tags.getSiblings(tag);
+          return _.intersection(siblingTags, swipy.filter.tagsFilter).length > 0;
         }
       },
       render: function() {

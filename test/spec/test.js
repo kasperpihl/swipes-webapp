@@ -878,7 +878,7 @@
         });
       });
       return describe("Narrowing down available tags after filtering", function() {
-        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", function() {
+        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", function(done) {
           return require(["view/sidebar/TagFilter"], function(TagFilter) {
             var filter, renderSpy, savedRender;
             savedRender = swipy.sidebar.tagFilter.__proto__.render;
@@ -918,14 +918,39 @@
                   }
                   return _results;
                 })();
-                expect(tags).to.have.length(2);
+                console.log("Nested test 1");
+                expect(tags).to.have.length(3);
+                expect(tags).to.contain("Nina");
                 expect(tags).to.contain("Pinta");
                 expect(tags).to.contain("Santa-Maria");
-                expect(tags).to.not.contain("Nina");
-                TagFilter.prototype.render.restore();
-                filter.remove();
-                $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
-                return swipy.sidebar.tagFilter.render = savedRender;
+                Backbone.trigger("remove-filter", "tag", "Nina");
+                Backbone.trigger("apply-filter", "tag", "Santa-Maria");
+                return _.defer(function() {
+                  console.log("Nested test 2 – swipy.filter.tagsFilter");
+                  expect(swipy.filter.tagsFilter).to.have.length(2);
+                  expect(swipy.filter.tagsFilter).to.contain("Pinta");
+                  expect(swipy.filter.tagsFilter).to.contain("Santa-Maria");
+                  tags = (function() {
+                    var _i, _len, _ref, _results;
+                    _ref = filter.$el.find("li:not(.tag-input)");
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                      tag = _ref[_i];
+                      _results.push($(tag).text());
+                    }
+                    return _results;
+                  })();
+                  console.log("Nested test 2 – rendered HTML");
+                  expect(tags).to.have.length(2);
+                  expect(tags).to.contain("Pinta");
+                  expect(tags).to.contain("Santa-Maria");
+                  expect(tags).to.not.contain("Nina");
+                  TagFilter.prototype.render.restore();
+                  filter.remove();
+                  $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
+                  swipy.sidebar.tagFilter.render = savedRender;
+                  return done();
+                });
               });
             });
           });

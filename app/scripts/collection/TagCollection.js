@@ -1,4 +1,6 @@
 (function() {
+  var __slice = [].slice;
+
   define(["underscore", "backbone"], function(_, Backbone) {
     return Backbone.Collection.extend({
       initialize: function() {
@@ -43,6 +45,46 @@
             silent: true
           });
         }
+      },
+      /**
+      		 * Looks at a tag (Or an array of tags), finds all the tasks that are tagged with those tags.
+      		 * (If multiple tags are passed, the tasks must have all of the tags applied to them)
+      		 * The method then finds and returns a list of other tags that those tasks have been tagged with.
+      		 *
+      		 * For example, if we have three tasks like this
+      		 * Task 1
+      		 * 		- tags: Nina
+      		 * Task 2
+      		 * 		- tagged: Nina, Pinta
+      		 * Task 3
+      		 * 		- tagged: Nina, Pinta, Santa-Maria
+      		 *
+      		 * If you call getSibling( "Nina" ) you will get
+      		 * [ "Pinta", "Santa-Maria" ] as the return value.
+      		 *
+      		 *
+      		 * @param  {String/Array} tags a string or an array of strings (Tagnames)
+      		 *
+      		 * @return {array}     an array with the results. No results will return an empty array
+      */
+
+      getSiblings: function(tags) {
+        var result, tag, task, _i, _j, _len, _len1, _ref, _ref1;
+        if (typeof tags !== "object") {
+          tags = [tags];
+        }
+        result = [];
+        _ref = swipy.todos.getTasksTaggedWith(tags);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          task = _ref[_i];
+          _ref1 = task.get("tags");
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            tag = _ref1[_j];
+            result.push(tag);
+          }
+        }
+        result = _.unique(result);
+        return _.without.apply(_, [result].concat(__slice.call(tags)));
       },
       handleTagDeleted: function(model) {
         var affectedTasks, oldTags, tagName, task, _i, _len, _results;

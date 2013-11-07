@@ -30,12 +30,18 @@
           return m.getState() === "completed";
         });
       },
-      getTasksTaggedWith: function(tag) {
+      getTasksTaggedWith: function(tags, filterOnlyCurrentTasks) {
+        console.warn("Still need to implement filterOnlyCurrentTasks");
         return this.filter(function(m) {
           if (!m.has("tags")) {
             return false;
           }
-          return _.contains(m.get("tags"), tag);
+          if (typeof tags !== "object") {
+            tags = [tags];
+          }
+          return _.all(tags, function(tag) {
+            return _.contains(m.get("tags"), tag);
+          });
         });
       },
       bumpOrder: function(direction, startFrom) {
