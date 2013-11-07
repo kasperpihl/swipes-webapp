@@ -22,6 +22,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 			@setScheduleStr()
 			@setTimeStr()
+			@syncTags()
 
 			@on "change:schedule", =>
 				@setScheduleStr()
@@ -72,6 +73,10 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm",
 			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
 			return moment.calendar().match( /\w+/ )[0]
+
+		syncTags: ->
+			if @has( "tags" ) and swipy?.tags
+				swipy.tags.add { title: tagName } for tagName in @get "tags"
 
 		setScheduleStr: ->
 			schedule = @get "schedule"

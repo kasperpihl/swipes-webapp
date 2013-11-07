@@ -76,6 +76,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 		it "Should have completed tasks for testing", ->
 			expect( swipy.todos.getCompleted() ).to.have.length.above 0
 
+	###
 
 	#
 	# To Do Model
@@ -118,6 +119,16 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			model.set( "completionDate", new Date() )
 			expect( model.get "completionStr" ).to.exist
 			expect( model.get "completionTimeStr" ).to.exist
+
+		it "Should make sure the tags all are in the global tags collection, and add them if not.", ->
+			dummyTagName = "wtf123-" + new Date().getTime()
+
+			expect( swipy.tags.pluck "title" ).to.not.contain dummyTagName
+			Backbone.trigger( "create-task", "Test that we add tags properly #" + dummyTagName )
+			expect( swipy.tags.pluck "title" ).to.contain dummyTagName
+
+
+	###
 
 	#
 	# To Do Collection
@@ -821,6 +832,43 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 		describe "Narrowing down available tags after filtering", ->
 			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", ->
 
+				Backbone.trigger( "create-task", "TagTester1 #Nina" )
+				Backbone.trigger( "create-task", "TagTester2 #Nina, #Pinta" )
+				Backbone.trigger( "create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria" )
+
+				# Make sure we have our 3 tasks all set up
+				taskTitles = swipy.todos.pluck "title"
+				expect( taskTitles ).to.include "TagTester1"
+				expect( taskTitles ).to.include "TagTester2"
+				expect( taskTitles ).to.include "TagTester3"
+
+				# Make sure we have our 3 tags all set up
+				tagTitles = swipy.tags.pluck "title"
+				expect( tagTitles ).to.include "Nina"
+				expect( tagTitles ).to.include "Pinta"
+				expect( tagTitles ).to.include "Santa-Maria"
+
+				###
+
+				Brug taskInput til at oprette tasks?
+
+				Opret 3 nye tasks
+					1. TagTester1 - Tags: Nina
+					2. TagTester2 -	Tags: Nina, Pinta
+					3. TagTester3 - Tags: Nina, Pinta, Santa-Maria
+
+			 	1. Filtrer med første tag
+			 		Tjek at alle 3 tasks er rejectedByTag: no
+
+				2. Filtrer med tag nummer 2
+				 	Tjek at 2 tasks er rejectedByTag: no
+				 	Tjek at 1 task er rejectedByTag: yes
+
+				3. Filtrer med tag nummer 3
+				 	Tjek at 1 task er rejectedByTag: no
+				 	Tjek at 2 tasks er rejectedByTag: yes
+
+				###
 
 			it "Should show all tags again if the last tag is de-selected"
 

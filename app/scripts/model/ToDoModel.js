@@ -23,6 +23,7 @@
         }
         this.setScheduleStr();
         this.setTimeStr();
+        this.syncTags();
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
@@ -72,6 +73,20 @@
       },
       getDayWithoutTime: function(moment) {
         return moment.calendar().match(/\w+/)[0];
+      },
+      syncTags: function() {
+        var tagName, _i, _len, _ref, _results;
+        if (this.has("tags") && (typeof swipy !== "undefined" && swipy !== null ? swipy.tags : void 0)) {
+          _ref = this.get("tags");
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            tagName = _ref[_i];
+            _results.push(swipy.tags.add({
+              title: tagName
+            }));
+          }
+          return _results;
+        }
       },
       setScheduleStr: function() {
         var dayWithoutTime, now, parsedDate, result, schedule;
