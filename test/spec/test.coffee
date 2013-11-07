@@ -791,12 +791,37 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	###
 
 	describe "Tag Filter", ->
-		it "Should add new tags to the global tags collection"
-		it "Should remove tags from the global tags collection"
-		it "Should re-render whenever tags in the global collection are added, removed or reset"
+		it "Should add new tags to the global tags collection", ->
+			swipy.sidebar.tagFilter.addTag "My Test Tag zyxvy"
+			expect( swipy.tags.pluck "title" ).to.include "My Test Tag zyxvy"
+
+		it "Should re-render whenever tags in the global collection are added or removed", (done) ->
+			require ["view/sidebar/TagFilter"], (TagFilter) ->
+				renderSpy = sinon.spy( TagFilter.prototype, "render" )
+				filter = new TagFilter()
+
+				# Filter renders automatically upon instantiation
+				expect( renderSpy ).to.have.been.calledOnce
+
+				# Set up unique dummy title
+				dummyTitle = "dummy-" + new Date().getTime()
+
+				# Render should be called after a new tag was added
+				swipy.tags.add { title: dummyTitle }
+				expect( renderSpy ).to.have.been.calledTwice
+
+				# Render should be called after a tag was removed
+				swipy.tags.remove swipy.tags.findWhere { title: dummyTitle }
+				expect( renderSpy ).to.have.been.calledThrice
+
+				TagFilter.prototype.render.restore()
+
+				done()
 
 		describe "Narrowing down available tags after filtering", ->
-			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected."
+			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", ->
+
+
 			it "Should show all tags again if the last tag is de-selected"
 
 

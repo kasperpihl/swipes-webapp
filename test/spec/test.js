@@ -796,11 +796,31 @@
     */
 
     return describe("Tag Filter", function() {
-      it("Should add new tags to the global tags collection");
-      it("Should remove tags from the global tags collection");
-      it("Should re-render whenever tags in the global collection are added, removed or reset");
+      it("Should add new tags to the global tags collection", function() {
+        swipy.sidebar.tagFilter.addTag("My Test Tag zyxvy");
+        return expect(swipy.tags.pluck("title")).to.include("My Test Tag zyxvy");
+      });
+      it("Should re-render whenever tags in the global collection are added or removed", function(done) {
+        return require(["view/sidebar/TagFilter"], function(TagFilter) {
+          var dummyTitle, filter, renderSpy;
+          renderSpy = sinon.spy(TagFilter.prototype, "render");
+          filter = new TagFilter();
+          expect(renderSpy).to.have.been.calledOnce;
+          dummyTitle = "dummy-" + new Date().getTime();
+          swipy.tags.add({
+            title: dummyTitle
+          });
+          expect(renderSpy).to.have.been.calledTwice;
+          swipy.tags.remove(swipy.tags.findWhere({
+            title: dummyTitle
+          }));
+          expect(renderSpy).to.have.been.calledThrice;
+          TagFilter.prototype.render.restore();
+          return done();
+        });
+      });
       return describe("Narrowing down available tags after filtering", function() {
-        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.");
+        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", function() {});
         return it("Should show all tags again if the last tag is de-selected");
       });
     });
