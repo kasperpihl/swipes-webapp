@@ -3,7 +3,8 @@
     return Backbone.Collection.extend({
       initialize: function() {
         this.getTagsFromTasks();
-        return this.on("remove", this.handleTagDeleted, this);
+        this.on("remove", this.handleTagDeleted, this);
+        return this.on("add", this.validateTag, this);
       },
       getTagsFromTasks: function() {
         var tagObjs, tagname, tags;
@@ -33,6 +34,15 @@
           return _results;
         })();
         return this.reset(tagObjs);
+      },
+      validateTag: function(model) {
+        if (this.where({
+          title: model.get("title")
+        }).length > 1) {
+          return this.remove(model, {
+            silent: true
+          });
+        }
       },
       handleTagDeleted: function(model) {
         var affectedTasks, oldTags, tagName, task, _i, _len, _results;
