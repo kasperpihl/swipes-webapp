@@ -3,6 +3,20 @@
 // For example:
 Parse.Cloud.useMasterKey();
 require('cloud/app.js');
+Parse.Cloud.beforeSave("ToDo",function(request,response){
+  var user = request.user;
+  if(!user && !request.master) return sendError(response,'You have to be logged in');
+  var todo = request.object;
+  if(todo.isNew() && user) todo.set('owner',user);
+  response.success();
+});
+Parse.Cloud.beforeSave("Tag",function(request,response){
+  var user = request.user;
+  if(!user && !request.master) return sendError(response,'You have to be logged in');
+  var tag = request.object;
+  if(tag.isNew() && user) tag.set('owner',user);
+  response.success();
+});
 Parse.Cloud.define("subscribe", function(request, response) {
   var email = request.params.email;
   if(!email) return response.error('Must include email');
@@ -25,30 +39,17 @@ Parse.Cloud.define("subscribe", function(request, response) {
     }
   });
 });
-Parse.Cloud.define('batchUsers',function(request,response){
-  var query = new Parse.Query(Parse.User);
-  query.limit(1000);
-  query.find({success:function(objects){
-    if(objects && objects.length > 0){
-      var emails = [];
-      for(var i = 0 ; i < objects.length ; i++){
-        var user = objects[i];
-        emails[i] = user.get('username');
-      }
-      var conf = req('conf');
-      var keys = conf.keys;
-      var mailchimp = req('mailchimp');
-      mailchimp.batchSubscribe(keys.userList,emails,function(result,error){
-        if(error) response.error(error);
-        else response.success(result);
-      })
-      
-    }
-  },error:function(error){
-    response.error(error);
-  }})
 
-})
+
+Parse.Cloud.define("unsubscribe",function(request,response){
+  var email = request.params.email;
+  if(!email) return response.error('Must include email');
+  var mailjet = req('mailjet');
+  mailjet.request("listsUnsubcontact",{"id":"370097","contact":email},function(result,error){
+    if(error) response.error(error);
+    else response.success(result);
+  });
+});
 Parse.Cloud.beforeSave("Signup",function(request,response){
   var mailchimp = req('mailchimp');
   var conf = require('cloud/conf.js');
@@ -65,9 +66,9 @@ Parse.Cloud.beforeSave(Parse.User,function(request,response){
       var conf = require('cloud/conf.js');
       var keys = conf.keys;
       var mandrill = req('mandrill');
-      var mailchimp = req('mailchimp');
-      mandrill.sendTemplate("welcome-email",object.get('username'),"Welcome on board!");
-      mailchimp.subscribe(keys.userList,object.get('username'),object.get('gender'));
+      var mailjet = req('mailjet');
+      mailjet.request("listsAddcontact",{"id":"370097","contact":object.get('username')});
+      mandrill.sendTemplate("welcome-email-new",object.get('username'),"Welcome to Swipes!");
     }
   }
   response.success();
