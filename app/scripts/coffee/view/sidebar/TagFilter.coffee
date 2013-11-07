@@ -5,7 +5,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			"click .remove": "removeTag"
 			"submit form": "createTag"
 		initialize: ->
-			@listenTo( swipy.tags, "add remove reset", @render, @ )
+			@listenTo( swipy.tags, "add remove reset", @render )
 			@render()
 		toggleFilter: (e) ->
 			tag = $.trim $( e.currentTarget ).text()
@@ -20,12 +20,9 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			tagName = @$el.find("form.add-tag input").val()
 			return if tagName is ""
 
-			@addTagToModel tagName
-		addTagToModel: (tagName, addToCollection = yes) ->
-			if _.contains( swipy.tags.pluck( "title" ), tagName )
-				return alert "That tag already exists"
-			else
-				swipy.tags.add { title: tagName }
+			@addTag tagName
+		addTag: (tagName) ->
+			swipy.tags.add { title: tagName }
 		removeTag: (e) ->
 			e.stopPropagation()
 			tagName = $.trim $( e.currentTarget.parentNode ).text()

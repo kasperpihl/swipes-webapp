@@ -7,7 +7,7 @@
         "submit form": "createTag"
       },
       initialize: function() {
-        this.listenTo(swipy.tags, "add remove reset", this.render, this);
+        this.listenTo(swipy.tags, "add remove reset", this.render);
         return this.render();
       },
       toggleFilter: function(e) {
@@ -27,19 +27,12 @@
         if (tagName === "") {
           return;
         }
-        return this.addTagToModel(tagName);
+        return this.addTag(tagName);
       },
-      addTagToModel: function(tagName, addToCollection) {
-        if (addToCollection == null) {
-          addToCollection = true;
-        }
-        if (_.contains(swipy.tags.pluck("title"), tagName)) {
-          return alert("That tag already exists");
-        } else {
-          return swipy.tags.add({
-            title: tagName
-          });
-        }
+      addTag: function(tagName) {
+        return swipy.tags.add({
+          title: tagName
+        });
       },
       removeTag: function(e) {
         var tag, tagName, wasSelected;
