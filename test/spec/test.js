@@ -1,5 +1,5 @@
 (function() {
-  define(["jquery", "underscore", "backbone", "model/ToDoModel"], function($, _, Backbone, ToDoModel) {
+  define(["jquery", "underscore", "backbone", "model/ToDoModel", "view/sidebar/TagFilter"], function($, _, Backbone, ToDoModel, TagFilter) {
     var contentHolder, helpers;
     contentHolder = $("#content-holder");
     helpers = {
@@ -81,49 +81,56 @@
     
     		it "Should have completed tasks for testing", ->
     			expect( swipy.todos.getCompleted() ).to.have.length.above 0
-    */
-
-    describe("List Item model", function() {
-      var model;
-      model = new ToDoModel();
-      it("Should create scheduleStr property when instantiated", function() {
-        return expect(model.get("scheduleStr")).to.equal("the past");
-      });
-      it("Should update scheduleStr when schedule property is changed", function() {
-        var date;
-        date = model.get("schedule");
-        model.unset("schedule");
-        date.setDate(date.getDate() + 1);
-        model.set("schedule", date);
-        return expect(model.get("scheduleStr")).to.equal("Tomorrow");
-      });
-      it("Should create timeStr property when model is instantiated", function() {
-        return expect(model.get("timeStr")).to.exist;
-      });
-      it("Should update timeStr when schedule property is changed", function() {
-        var date, timeAfterChange, timeBeforeChange;
-        timeBeforeChange = model.get("timeStr");
-        date = model.get("schedule");
-        model.unset("schedule");
-        date.setHours(date.getHours() - 1);
-        model.set("schedule", date);
-        timeAfterChange = model.get("timeStr");
-        return expect(timeBeforeChange).to.not.equal(timeAfterChange);
-      });
-      it("Should update completedStr when completionDate is changed", function() {
-        model.set("completionDate", new Date());
-        expect(model.get("completionStr")).to.exist;
-        return expect(model.get("completionTimeStr")).to.exist;
-      });
-      return it("Should make sure the tags all are in the global tags collection, and add them if not.", function() {
-        var dummyTagName;
-        dummyTagName = "wtf123-" + new Date().getTime();
-        expect(swipy.tags.pluck("title")).to.not.contain(dummyTagName);
-        Backbone.trigger("create-task", "Test that we add tags properly #" + dummyTagName);
-        return expect(swipy.tags.pluck("title")).to.contain(dummyTagName);
-      });
-    });
-    /*
+    
+    	#
+    	# To Do Model
+    	#
+    	describe "List Item model", ->
+    		model = new ToDoModel()
+    
+    		it "Should create scheduleStr property when instantiated", ->
+    			expect( model.get("scheduleStr") ).to.equal "the past"
+    
+    		it "Should update scheduleStr when schedule property is changed", ->
+    			date = model.get "schedule"
+    
+    			# unset for change event to occur
+    			model.unset "schedule"
+    
+    			date.setDate date.getDate()+1
+    			model.set( "schedule", date )
+    
+    			expect( model.get("scheduleStr") ).to.equal "Tomorrow"
+    
+    		it "Should create timeStr property when model is instantiated", ->
+    			expect( model.get("timeStr") ).to.exist
+    
+    		it "Should update timeStr when schedule property is changed", ->
+    			timeBeforeChange = model.get "timeStr"
+    
+    			date = model.get "schedule"
+    			# Unset because its an object and wont trigger a change if we just update the object itself.
+    			model.unset "schedule"
+    
+    			date.setHours date.getHours() - 1
+    			model.set( "schedule", date )
+    
+    			timeAfterChange = model.get "timeStr"
+    
+    			expect( timeBeforeChange ).to.not.equal timeAfterChange
+    
+    		it "Should update completedStr when completionDate is changed", ->
+    			model.set( "completionDate", new Date() )
+    			expect( model.get "completionStr" ).to.exist
+    			expect( model.get "completionTimeStr" ).to.exist
+    
+    		it "Should make sure the tags all are in the global tags collection, and add them if not.", ->
+    			dummyTagName = "wtf123-" + new Date().getTime()
+    
+    			expect( swipy.tags.pluck "title" ).to.not.contain dummyTagName
+    			Backbone.trigger( "create-task", "Test that we add tags properly #" + dummyTagName )
+    			expect( swipy.tags.pluck "title" ).to.contain dummyTagName
+    
     
     	#
     	# To Do Collection
@@ -796,35 +803,32 @@
     */
 
     return describe("Tag Filter", function() {
+      Backbone.trigger("create-task", "TagTester1 #Nina");
+      Backbone.trigger("create-task", "TagTester2 #Nina, #Pinta");
+      Backbone.trigger("create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria");
       it("Should add new tags to the global tags collection", function() {
         swipy.sidebar.tagFilter.addTag("My Test Tag zyxvy");
         return expect(swipy.tags.pluck("title")).to.include("My Test Tag zyxvy");
       });
-      it("Should re-render whenever tags in the global collection are added or removed", function(done) {
-        return require(["view/sidebar/TagFilter"], function(TagFilter) {
-          var dummyTitle, filter, renderSpy;
-          renderSpy = sinon.spy(TagFilter.prototype, "render");
-          filter = new TagFilter();
-          expect(renderSpy).to.have.been.calledOnce;
-          dummyTitle = "dummy-" + new Date().getTime();
-          swipy.tags.add({
-            title: dummyTitle
-          });
-          expect(renderSpy).to.have.been.calledTwice;
-          swipy.tags.remove(swipy.tags.findWhere({
-            title: dummyTitle
-          }));
-          expect(renderSpy).to.have.been.calledThrice;
-          TagFilter.prototype.render.restore();
-          return done();
+      it("Should re-render whenever tags in the global collection are added or removed", function() {
+        var dummyTitle, filter, renderSpy;
+        renderSpy = sinon.spy(TagFilter.prototype, "render");
+        filter = new TagFilter();
+        expect(renderSpy).to.have.been.calledOnce;
+        dummyTitle = "dummy-" + new Date().getTime();
+        swipy.tags.add({
+          title: dummyTitle
         });
+        expect(renderSpy).to.have.been.calledTwice;
+        swipy.tags.remove(swipy.tags.findWhere({
+          title: dummyTitle
+        }));
+        expect(renderSpy).to.have.been.calledThrice;
+        return TagFilter.prototype.render.restore();
       });
-      return describe("Narrowing down available tags after filtering", function() {
-        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", function() {
+      describe("Filtering tasks", function() {
+        it("If one or more tags are selected, it should only show the tasks that has all of those filters", function() {
           var tagTitles, taskTitles;
-          Backbone.trigger("create-task", "TagTester1 #Nina");
-          Backbone.trigger("create-task", "TagTester2 #Nina, #Pinta");
-          Backbone.trigger("create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria");
           taskTitles = swipy.todos.pluck("title");
           expect(taskTitles).to.include("TagTester1");
           expect(taskTitles).to.include("TagTester2");
@@ -832,29 +836,43 @@
           tagTitles = swipy.tags.pluck("title");
           expect(tagTitles).to.include("Nina");
           expect(tagTitles).to.include("Pinta");
-          return expect(tagTitles).to.include("Santa-Maria");
-          /*
-          
-          				Brug taskInput til at oprette tasks?
-          
-          				Opret 3 nye tasks
-          					1. TagTester1 - Tags: Nina
-          					2. TagTester2 -	Tags: Nina, Pinta
-          					3. TagTester3 - Tags: Nina, Pinta, Santa-Maria
-          
-          			 	1. Filtrer med første tag
-          			 		Tjek at alle 3 tasks er rejectedByTag: no
-          
-          				2. Filtrer med tag nummer 2
-          				 	Tjek at 2 tasks er rejectedByTag: no
-          				 	Tjek at 1 task er rejectedByTag: yes
-          
-          				3. Filtrer med tag nummer 3
-          				 	Tjek at 1 task er rejectedByTag: no
-          				 	Tjek at 2 tasks er rejectedByTag: yes
-          */
-
+          expect(tagTitles).to.include("Santa-Maria");
+          Backbone.trigger("apply-filter", "tag", "Nina");
+          expect(swipy.todos.where({
+            rejectedByTag: false
+          })).to.have.length(3);
+          Backbone.trigger("apply-filter", "tag", "Pinta");
+          expect(swipy.todos.where({
+            rejectedByTag: false
+          })).to.have.length(2);
+          expect(swipy.todos.findWhere({
+            title: "TagTester1"
+          }).get("rejectedByTag")).to.be["true"];
+          Backbone.trigger("apply-filter", "tag", "Santa-Maria");
+          expect(swipy.todos.where({
+            rejectedByTag: false
+          })).to.have.length(1);
+          return expect(swipy.todos.findWhere({
+            title: "TagTester2"
+          }).get("rejectedByTag")).to.be["true"];
         });
+        return it("Should reject no tasks when the last filter is de-selected", function() {
+          var tagFilter, _i, _len, _ref;
+          expect(swipy.todos.where({
+            rejectedByTag: false
+          })).to.have.length(1);
+          _ref = swipy.filter.tagsFilter;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            tagFilter = _ref[_i];
+            Backbone.trigger("remove-filter", "tag", tagFilter);
+          }
+          return expect(swipy.todos.where({
+            rejectedByTag: true
+          })).to.have.length(0);
+        });
+      });
+      return describe("Narrowing down available tags after filtering", function() {
+        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.");
         return it("Should show all tags again if the last tag is de-selected");
       });
     });

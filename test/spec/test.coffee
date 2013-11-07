@@ -1,4 +1,4 @@
-define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone, ToDoModel) ->
+define ["jquery", "underscore", "backbone", "model/ToDoModel", "view/sidebar/TagFilter"], ($, _, Backbone, ToDoModel, TagFilter) ->
 
 	contentHolder = $("#content-holder")
 
@@ -76,8 +76,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 		it "Should have completed tasks for testing", ->
 			expect( swipy.todos.getCompleted() ).to.have.length.above 0
 
-	###
-
 	#
 	# To Do Model
 	#
@@ -127,8 +125,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			Backbone.trigger( "create-task", "Test that we add tags properly #" + dummyTagName )
 			expect( swipy.tags.pluck "title" ).to.contain dummyTagName
 
-
-	###
 
 	#
 	# To Do Collection
@@ -802,12 +798,15 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	###
 
 	describe "Tag Filter", ->
+		Backbone.trigger( "create-task", "TagTester1 #Nina" )
+		Backbone.trigger( "create-task", "TagTester2 #Nina, #Pinta" )
+		Backbone.trigger( "create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria" )
+
 		it "Should add new tags to the global tags collection", ->
 			swipy.sidebar.tagFilter.addTag "My Test Tag zyxvy"
 			expect( swipy.tags.pluck "title" ).to.include "My Test Tag zyxvy"
 
-		it "Should re-render whenever tags in the global collection are added or removed", (done) ->
-			require ["view/sidebar/TagFilter"], (TagFilter) ->
+		it "Should re-render whenever tags in the global collection are added or removed", ->
 				renderSpy = sinon.spy( TagFilter.prototype, "render" )
 				filter = new TagFilter()
 
@@ -827,14 +826,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 				TagFilter.prototype.render.restore()
 
-				done()
-
-		describe "Narrowing down available tags after filtering", ->
-			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", ->
-
-				Backbone.trigger( "create-task", "TagTester1 #Nina" )
-				Backbone.trigger( "create-task", "TagTester2 #Nina, #Pinta" )
-				Backbone.trigger( "create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria" )
+		describe "Filtering tasks", ->
+			it "If one or more tags are selected, it should only show the tasks that has all of those filters", ->
 
 				# Make sure we have our 3 tasks all set up
 				taskTitles = swipy.todos.pluck "title"
@@ -848,29 +841,46 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( tagTitles ).to.include "Pinta"
 				expect( tagTitles ).to.include "Santa-Maria"
 
-				###
+				# Filter for first tag. None of the 3 tasks should be rejected.
+				Backbone.trigger( "apply-filter", "tag", "Nina" )
+				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 3
 
-				Brug taskInput til at oprette tasks?
+				# Filter for second tag. TagTester1 should be rejected
+				Backbone.trigger( "apply-filter", "tag", "Pinta" )
+				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 2
+				expect( swipy.todos.findWhere( { title: "TagTester1" } ).get "rejectedByTag" ).to.be.true
 
-				Opret 3 nye tasks
-					1. TagTester1 - Tags: Nina
-					2. TagTester2 -	Tags: Nina, Pinta
-					3. TagTester3 - Tags: Nina, Pinta, Santa-Maria
+				# Filter for second tag. TagTester1 and TagTester2 should be rejected
+				Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
+				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 1
+				expect( swipy.todos.findWhere( { title: "TagTester2" } ).get "rejectedByTag" ).to.be.true
 
-			 	1. Filtrer med første tag
-			 		Tjek at alle 3 tasks er rejectedByTag: no
+			it "Should reject no tasks when the last filter is de-selected", ->
+				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 1
 
-				2. Filtrer med tag nummer 2
-				 	Tjek at 2 tasks er rejectedByTag: no
-				 	Tjek at 1 task er rejectedByTag: yes
+				for tagFilter in swipy.filter.tagsFilter
+					Backbone.trigger( "remove-filter", "tag", tagFilter )
 
-				3. Filtrer med tag nummer 3
-				 	Tjek at 1 task er rejectedByTag: no
-				 	Tjek at 2 tasks er rejectedByTag: yes
+				expect( swipy.todos.where { rejectedByTag: yes } ).to.have.length 0
 
-				###
+		describe "Narrowing down available tags after filtering", ->
+			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected."
+				# 1. Lav en spy på TagFilter.prototype.render
+				# 2. Filter på #Pinta
+				# 	- Tjek at Render er blevet kaldt
+				# 	- Tjek at KUN #Pinta, #Nina og #Santa-Maria er synlige
+				# 3. Filter på #Nina
+				# 	- Tjek at KUN #Nina og #Santa-Maria er synlige
+				# 4. Filter på #Santa-Maria
+				# 	- Tjek at KUN #Santa-Maria er synlig
+				# 5. Fjern spy på TagFilter.prototype.render
 
 			it "Should show all tags again if the last tag is de-selected"
+				# 1. Lav en spy på TagFilter.prototype.render
+				# 2. Filter på #Santa-Maria
+				# 3. Fjern filter på #Santa-Maria
+				# 4. Tjek at alle tags er renderet
+				# 5. Fjern spy på TagFilter.prototype.render
 
 
 	###
