@@ -1,5 +1,5 @@
 (function() {
-  define(["jquery", "underscore", "backbone", "model/ToDoModel", "view/sidebar/TagFilter"], function($, _, Backbone, ToDoModel, TagFilter) {
+  define(["jquery", "underscore", "backbone", "model/ToDoModel"], function($, _, Backbone, ToDoModel) {
     var contentHolder, helpers;
     contentHolder = $("#content-holder");
     helpers = {
@@ -811,20 +811,26 @@
         return expect(swipy.tags.pluck("title")).to.include("My Test Tag zyxvy");
       });
       it("Should re-render whenever tags in the global collection are added or removed", function() {
-        var dummyTitle, filter, renderSpy;
-        renderSpy = sinon.spy(TagFilter.prototype, "render");
-        filter = new TagFilter();
-        expect(renderSpy).to.have.been.calledOnce;
-        dummyTitle = "dummy-" + new Date().getTime();
-        swipy.tags.add({
-          title: dummyTitle
+        return require(["view/sidebar/TagFilter"], function(TagFilter) {
+          var dummyTitle, filter, renderSpy;
+          renderSpy = sinon.spy(TagFilter.prototype, "render");
+          filter = new TagFilter({
+            el: $(".sidebar .tags-filter")
+          });
+          expect(renderSpy).to.have.been.calledOnce;
+          dummyTitle = "dummy-" + new Date().getTime();
+          swipy.tags.add({
+            title: dummyTitle
+          });
+          expect(renderSpy).to.have.been.calledTwice;
+          swipy.tags.remove(swipy.tags.findWhere({
+            title: dummyTitle
+          }));
+          expect(renderSpy).to.have.been.calledThrice;
+          TagFilter.prototype.render.restore();
+          filter.remove();
+          return $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
         });
-        expect(renderSpy).to.have.been.calledTwice;
-        swipy.tags.remove(swipy.tags.findWhere({
-          title: dummyTitle
-        }));
-        expect(renderSpy).to.have.been.calledThrice;
-        return TagFilter.prototype.render.restore();
       });
       describe("Filtering tasks", function() {
         it("If one or more tags are selected, it should only show the tasks that has all of those filters", function() {
@@ -872,7 +878,38 @@
         });
       });
       return describe("Narrowing down available tags after filtering", function() {
-        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.");
+        it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", function() {
+          return require(["view/sidebar/TagFilter"], function(TagFilter) {
+            var filter, renderSpy, savedRender, tag, tags;
+            savedRender = swipy.sidebar.tagFilter.__proto__.render;
+            swipy.sidebar.tagFilter.render = function() {};
+            renderSpy = sinon.spy(TagFilter.prototype, "render");
+            filter = new TagFilter({
+              el: $(".sidebar .tags-filter")
+            });
+            expect(renderSpy).to.have.been.calledOnce;
+            Backbone.trigger("apply-filter", "tag", "Nina");
+            expect(renderSpy).to.have.been.calledTwice;
+            tags = (function() {
+              var _i, _len, _ref, _results;
+              _ref = filter.$el.find("li:not(.tag-input)");
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                tag = _ref[_i];
+                _results.push($(tag).text());
+              }
+              return _results;
+            })();
+            expect(tags).to.have.length(3);
+            expect(tags).to.contain("Nina");
+            expect(tags).to.contain("Pinta");
+            expect(tags).to.contain("Santa-Maria");
+            TagFilter.prototype.render.restore();
+            filter.remove();
+            $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
+            return swipy.sidebar.tagFilter.render = savedRender;
+          });
+        });
         return it("Should show all tags again if the last tag is de-selected");
       });
     });

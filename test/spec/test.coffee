@@ -1,4 +1,4 @@
-define ["jquery", "underscore", "backbone", "model/ToDoModel", "view/sidebar/TagFilter"], ($, _, Backbone, ToDoModel, TagFilter) ->
+define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone, ToDoModel) ->
 
 	contentHolder = $("#content-holder")
 
@@ -807,8 +807,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "view/sidebar/Tag
 			expect( swipy.tags.pluck "title" ).to.include "My Test Tag zyxvy"
 
 		it "Should re-render whenever tags in the global collection are added or removed", ->
+			require ["view/sidebar/TagFilter"], (TagFilter) ->
 				renderSpy = sinon.spy( TagFilter.prototype, "render" )
-				filter = new TagFilter()
+				filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
 
 				# Filter renders automatically upon instantiation
 				expect( renderSpy ).to.have.been.calledOnce
@@ -825,6 +826,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "view/sidebar/Tag
 				expect( renderSpy ).to.have.been.calledThrice
 
 				TagFilter.prototype.render.restore()
+				filter.remove()
+				$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
 
 		describe "Filtering tasks", ->
 			it "If one or more tags are selected, it should only show the tasks that has all of those filters", ->
@@ -864,16 +867,39 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "view/sidebar/Tag
 				expect( swipy.todos.where { rejectedByTag: yes } ).to.have.length 0
 
 		describe "Narrowing down available tags after filtering", ->
-			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected."
-				# 1. Lav en spy på TagFilter.prototype.render
-				# 2. Filter på #Pinta
-				# 	- Tjek at Render er blevet kaldt
-				# 	- Tjek at KUN #Pinta, #Nina og #Santa-Maria er synlige
-				# 3. Filter på #Nina
-				# 	- Tjek at KUN #Nina og #Santa-Maria er synlige
-				# 4. Filter på #Santa-Maria
-				# 	- Tjek at KUN #Santa-Maria er synlig
-				# 5. Fjern spy på TagFilter.prototype.render
+			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", ->
+				require ["view/sidebar/TagFilter"], (TagFilter) ->
+					# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
+					savedRender = swipy.sidebar.tagFilter.__proto__.render
+					swipy.sidebar.tagFilter.render = ->
+
+					renderSpy = sinon.spy( TagFilter.prototype, "render" )
+					filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
+
+					# Filter renders automatically upon instantiation
+					expect( renderSpy ).to.have.been.calledOnce
+
+					Backbone.trigger( "apply-filter", "tag", "Nina" )
+					expect( renderSpy ).to.have.been.calledTwice
+
+					# tags is an array of the text content found inside every <li> in the HTML for the filter. This represents real DOM elements,
+					# but in a way that's easier to work with.
+					tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+
+					expect( tags ).to.have.length 3
+					expect( tags ).to.contain "Nina"
+					expect( tags ).to.contain "Pinta"
+					expect( tags ).to.contain "Santa-Maria"
+
+					# Remove spy
+					TagFilter.prototype.render.restore()
+
+					# Reset HTML
+					filter.remove()
+					$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+					# Re-enable render method on swipys tagFilter
+					swipy.sidebar.tagFilter.render = savedRender
 
 			it "Should show all tags again if the last tag is de-selected"
 				# 1. Lav en spy på TagFilter.prototype.render
