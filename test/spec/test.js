@@ -880,7 +880,7 @@
       return describe("Narrowing down available tags after filtering", function() {
         it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", function() {
           return require(["view/sidebar/TagFilter"], function(TagFilter) {
-            var filter, renderSpy, savedRender, tag, tags;
+            var filter, renderSpy, savedRender;
             savedRender = swipy.sidebar.tagFilter.__proto__.render;
             swipy.sidebar.tagFilter.render = function() {};
             renderSpy = sinon.spy(TagFilter.prototype, "render");
@@ -889,25 +889,28 @@
             });
             expect(renderSpy).to.have.been.calledOnce;
             Backbone.trigger("apply-filter", "tag", "Nina");
-            expect(renderSpy).to.have.been.calledTwice;
-            tags = (function() {
-              var _i, _len, _ref, _results;
-              _ref = filter.$el.find("li:not(.tag-input)");
-              _results = [];
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                tag = _ref[_i];
-                _results.push($(tag).text());
-              }
-              return _results;
-            })();
-            expect(tags).to.have.length(3);
-            expect(tags).to.contain("Nina");
-            expect(tags).to.contain("Pinta");
-            expect(tags).to.contain("Santa-Maria");
-            TagFilter.prototype.render.restore();
-            filter.remove();
-            $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
-            return swipy.sidebar.tagFilter.render = savedRender;
+            return _.defer(function() {
+              var tag, tags;
+              expect(renderSpy).to.have.been.calledTwice;
+              tags = (function() {
+                var _i, _len, _ref, _results;
+                _ref = filter.$el.find("li:not(.tag-input)");
+                _results = [];
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  tag = _ref[_i];
+                  _results.push($(tag).text());
+                }
+                return _results;
+              })();
+              expect(tags).to.have.length(3);
+              expect(tags).to.contain("Nina");
+              expect(tags).to.contain("Pinta");
+              expect(tags).to.contain("Santa-Maria");
+              TagFilter.prototype.render.restore();
+              filter.remove();
+              $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
+              return swipy.sidebar.tagFilter.render = savedRender;
+            });
           });
         });
         return it("Should show all tags again if the last tag is de-selected");

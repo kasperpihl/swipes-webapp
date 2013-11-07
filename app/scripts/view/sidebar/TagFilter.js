@@ -8,13 +8,22 @@
       },
       initialize: function() {
         this.listenTo(swipy.tags, "add remove reset", this.render);
+        this.listenTo(Backbone, "apply-filter remove-filter", this.handleFilterChange);
         return this.render();
+      },
+      handleFilterChange: function(type) {
+        var _this = this;
+        return _.defer(function() {
+          if (type === "tag") {
+            return _this.render();
+          }
+        });
       },
       toggleFilter: function(e) {
         var el, tag;
         tag = $.trim($(e.currentTarget).text());
-        el = $(e.currentTarget).toggleClass("selected");
-        if (el.hasClass("selected")) {
+        el = $(e.currentTarget);
+        if (!el.hasClass("selected")) {
           return Backbone.trigger("apply-filter", "tag", tag);
         } else {
           return Backbone.trigger("remove-filter", "tag", tag);
@@ -57,20 +66,55 @@
           });
         }
       },
+      isValid: function(tag) {
+        var otherTag, otherTags, result, task, _i, _j, _len, _len1, _ref;
+        if (_.contains(swipy.filter.tagsFilter, tag)) {
+          return true;
+        } else {
+          otherTags = [];
+          result = false;
+          _ref = swipy.todos.getTasksTaggedWith(tag);
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            task = _ref[_i];
+            otherTags = _.union(otherTags, task.get("tags"));
+          }
+          for (_j = 0, _len1 = otherTags.length; _j < _len1; _j++) {
+            otherTag = otherTags[_j];
+            if (_.contains(swipy.filter.tagsFilter, otherTag)) {
+              result = true;
+            }
+          }
+          return result;
+        }
+      },
       render: function() {
-        var list, tag, _i, _len, _ref;
+        var list, tag, _i, _j, _len, _len1, _ref, _ref1, _ref2;
         list = this.$el.find(".rounded-tags");
         list.empty();
-        _ref = swipy.tags.models;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          tag = _ref[_i];
-          this.renderTag(tag, list);
+        if (((_ref = swipy.filter) != null ? _ref.tagsFilter.length : void 0) > 0) {
+          _ref1 = swipy.tags.pluck("title");
+          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+            tag = _ref1[_i];
+            if (this.isValid(tag)) {
+              this.renderTag(tag, list);
+            }
+          }
+        } else {
+          _ref2 = swipy.tags.pluck("title");
+          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+            tag = _ref2[_j];
+            this.renderTag(tag, list);
+          }
+          this.renderTagInput(list);
         }
-        this.renderTagInput(list);
-        return this.el;
+        return this;
       },
       renderTag: function(tag, list) {
-        return list.append("<li>" + (tag.get('title')) + "</li>");
+        if ((swipy.filter != null) && _.contains(swipy.filter.tagsFilter, tag)) {
+          return list.append("<li class='selected'>" + tag + "</li>");
+        } else {
+          return list.append("<li>" + tag + "</li>");
+        }
       },
       renderTagInput: function(list) {
         return list.append("				<li class='tag-input'>					<form class='add-tag'>						<input type='text' placeholder='Add new tag'>					</form>				</li>");

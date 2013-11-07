@@ -6,12 +6,16 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			"submit form": "createTag"
 		initialize: ->
 			@listenTo( swipy.tags, "add remove reset", @render )
+			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 			@render()
+		handleFilterChange: (type) ->
+			_.defer =>
+				if type is "tag" then @render()
 		toggleFilter: (e) ->
 			tag = $.trim $( e.currentTarget ).text()
-			el = $( e.currentTarget ).toggleClass "selected"
+			el = $( e.currentTarget )
 
-			if el.hasClass "selected"
+			unless el.hasClass "selected"
 				Backbone.trigger( "apply-filter", "tag", tag )
 			else
 				Backbone.trigger( "remove-filter", "tag", tag )
@@ -37,18 +41,40 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				error: (model, response) ->
 					alert "Something went wrong trying to delete the tag '#{ model.get 'title' }' please try again."
 					console.warn "Error deleting tag — Response: ", response
+		isValid: (tag) ->
+			# If the current is in the filter, it validates.
+			if _.contains( swipy.filter.tagsFilter, tag )
+				return yes
 
+			# Else, find all
+			else
+				otherTags = []
+				result = false
+				for task in swipy.todos.getTasksTaggedWith tag
+					otherTags = _.union( otherTags, task.get "tags" )
 
+				for otherTag in otherTags
+					if _.contains( swipy.filter.tagsFilter, otherTag )
+						result = yes
+
+				return result
 		render: ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
 
-			@renderTag tag, list for tag in swipy.tags.models
-			@renderTagInput list
+			# If we have a tag filter, make sure tags validate before rendering them.
+			if swipy.filter?.tagsFilter.length > 0
+				@renderTag tag, list for tag in swipy.tags.pluck "title" when @isValid tag
+			else
+				@renderTag tag, list for tag in swipy.tags.pluck "title"
+				@renderTagInput list
 
-			return @el
+			return @
 		renderTag: (tag, list) ->
-			list.append "<li>#{ tag.get 'title' }</li>"
+			if swipy.filter? and _.contains( swipy.filter.tagsFilter, tag )
+				list.append "<li class='selected'>#{ tag }</li>"
+			else
+				list.append "<li>#{ tag }</li>"
 		renderTagInput: (list) ->
 			list.append "
 				<li class='tag-input'>

@@ -880,26 +880,28 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					expect( renderSpy ).to.have.been.calledOnce
 
 					Backbone.trigger( "apply-filter", "tag", "Nina" )
-					expect( renderSpy ).to.have.been.calledTwice
 
-					# tags is an array of the text content found inside every <li> in the HTML for the filter. This represents real DOM elements,
-					# but in a way that's easier to work with.
-					tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+					_.defer ->
+						expect( renderSpy ).to.have.been.calledTwice
 
-					expect( tags ).to.have.length 3
-					expect( tags ).to.contain "Nina"
-					expect( tags ).to.contain "Pinta"
-					expect( tags ).to.contain "Santa-Maria"
+						# tags is an array of the text content found inside every <li> in the HTML for the filter. This represents real DOM elements,
+						# but in a way that's easier to work with.
+						tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
 
-					# Remove spy
-					TagFilter.prototype.render.restore()
+						expect( tags ).to.have.length 3
+						expect( tags ).to.contain "Nina"
+						expect( tags ).to.contain "Pinta"
+						expect( tags ).to.contain "Santa-Maria"
 
-					# Reset HTML
-					filter.remove()
-					$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+						# Remove spy
+						TagFilter.prototype.render.restore()
 
-					# Re-enable render method on swipys tagFilter
-					swipy.sidebar.tagFilter.render = savedRender
+						# Reset HTML
+						filter.remove()
+						$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+						# Re-enable render method on swipys tagFilter
+						swipy.sidebar.tagFilter.render = savedRender
 
 			it "Should show all tags again if the last tag is de-selected"
 				# 1. Lav en spy på TagFilter.prototype.render
