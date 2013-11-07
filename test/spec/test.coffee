@@ -880,6 +880,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					expect( renderSpy ).to.have.been.calledOnce
 
 					# Do a top level filter. Only 1 tag selected.
+					console.clear()
 					Backbone.trigger( "apply-filter", "tag", "Nina" )
 					_.defer ->
 						expect( renderSpy ).to.have.been.calledTwice
@@ -899,41 +900,51 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 						_.defer ->
 							tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
 
-							console.log "Nested test 1"
 							expect( tags ).to.have.length 3
 							expect( tags ).to.contain "Nina"
 							expect( tags ).to.contain "Pinta"
 							expect( tags ).to.contain "Santa-Maria"
 
 							# Do another deep filter — #Pinta & #Santa-Maria are now selected.
-							# It should only show #Pinta and #Sata-Maria, hence #Nina should be removed
 							Backbone.trigger( "remove-filter", "tag", "Nina" )
 							Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
 							_.defer ->
-								console.log "Nested test 2 – swipy.filter.tagsFilter"
 								expect( swipy.filter.tagsFilter ).to.have.length 2
 								expect( swipy.filter.tagsFilter ).to.contain "Pinta"
 								expect( swipy.filter.tagsFilter ).to.contain "Santa-Maria"
 
 								tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
 
-								console.log "Nested test 2 – rendered HTML"
-								expect( tags ).to.have.length 2
+								expect( tags ).to.have.length 3
+								expect( tags ).to.contain "Nina"
 								expect( tags ).to.contain "Pinta"
 								expect( tags ).to.contain "Santa-Maria"
 
-								expect( tags ).to.not.contain "Nina"
+								# Do another deep filter — #Nina, #Pinta & #Santa-Maria are now selected.
+								Backbone.trigger( "apply-filter", "tag", "Nina" )
+								_.defer ->
+									expect( swipy.filter.tagsFilter ).to.have.length 3
+									expect( swipy.filter.tagsFilter ).to.contain "Nina"
+									expect( swipy.filter.tagsFilter ).to.contain "Pinta"
+									expect( swipy.filter.tagsFilter ).to.contain "Santa-Maria"
 
-								# Remove spy
-								TagFilter.prototype.render.restore()
+									tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
 
-								# Reset HTML
-								filter.remove()
-								$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+									expect( tags ).to.have.length 3
+									expect( tags ).to.contain "Nina"
+									expect( tags ).to.contain "Pinta"
+									expect( tags ).to.contain "Santa-Maria"
 
-								# Re-enable render method on swipys tagFilter
-								swipy.sidebar.tagFilter.render = savedRender
-								done()
+									# Remove spy
+									TagFilter.prototype.render.restore()
+
+									# Reset HTML
+									filter.remove()
+									$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+									# Re-enable render method on swipys tagFilter
+									swipy.sidebar.tagFilter.render = savedRender
+									done()
 
 			it "Should show all tags again if the last tag is de-selected"
 				# 1. Lav en spy på TagFilter.prototype.render

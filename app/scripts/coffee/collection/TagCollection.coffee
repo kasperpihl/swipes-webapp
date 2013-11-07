@@ -38,22 +38,31 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		 *
 		 *
 		 * @param  {String/Array} tags a string or an array of strings (Tagnames)
+		 * @param  {Boolean} excludeOriginals if false, the original tags, the ones the siblings are based on, will be included in the result
 		 *
 		 * @return {array}     an array with the results. No results will return an empty array
 		###
-		getSiblings: (tags) ->
+		getSiblings: (tags, excludeOriginals = yes) ->
 			# If string, wrap it in an array so we can loop over it
 			if typeof tags isnt "object" then tags = [tags]
 
 			result = []
 			for task in swipy.todos.getTasksTaggedWith tags
-				result.push tag for tag in task.get "tags"
+				result.push task.get "tags"
+
+			# Make sure only to include the tags that are applied to ALL of the tasks
+			result = _.flatten result
 
 			# Make sure we have no duplicates
 			result = _.unique result
 
+			console.log "based on ", tags, " the result is: ", result
+
 			# Finally remove the initial tag from the results.
-			return _.without( result, tags... )
+			if excludeOriginals
+				return _.without( result, tags... )
+			else
+				return result
 		handleTagDeleted: (model) ->
 			tagName = model.get "title"
 

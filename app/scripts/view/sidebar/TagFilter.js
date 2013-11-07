@@ -66,26 +66,18 @@
           });
         }
       },
-      isValid: function(tag) {
-        var siblingTags;
-        if (_.contains(swipy.filter.tagsFilter, tag)) {
-          return true;
-        } else {
-          siblingTags = swipy.tags.getSiblings(tag);
-          return _.intersection(siblingTags, swipy.filter.tagsFilter).length > 0;
-        }
+      getValidatedTags: function() {
+        return swipy.tags.getSiblings(swipy.filter.tagsFilter, false);
       },
       render: function() {
         var list, tag, _i, _j, _len, _len1, _ref, _ref1, _ref2;
         list = this.$el.find(".rounded-tags");
         list.empty();
         if (((_ref = swipy.filter) != null ? _ref.tagsFilter.length : void 0) > 0) {
-          _ref1 = swipy.tags.pluck("title");
+          _ref1 = this.getValidatedTags();
           for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
             tag = _ref1[_i];
-            if (this.isValid(tag)) {
-              this.renderTag(tag, list);
-            }
+            this.renderTag(tag, list);
           }
         } else {
           _ref2 = swipy.tags.pluck("title");

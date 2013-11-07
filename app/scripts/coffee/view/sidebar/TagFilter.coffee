@@ -41,22 +41,15 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				error: (model, response) ->
 					alert "Something went wrong trying to delete the tag '#{ model.get 'title' }' please try again."
 					console.warn "Error deleting tag — Response: ", response
-		isValid: (tag) ->
-			# If the tag is in the filter, it validates.
-			if _.contains( swipy.filter.tagsFilter, tag )
-				return yes
-			else
-				# If the tag isn't in the filter, check if any of it's siblings are,
-				# because that means we can filter 1 level deeper.
-				siblingTags = swipy.tags.getSiblings( tag )
-				return _.intersection( siblingTags, swipy.filter.tagsFilter ).length > 0
+		getValidatedTags: ->
+			swipy.tags.getSiblings( swipy.filter.tagsFilter, no )
 		render: ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
 
 			# If we have a tag filter, make sure tags validate before rendering them.
 			if swipy.filter?.tagsFilter.length > 0
-				@renderTag tag, list for tag in swipy.tags.pluck "title" when @isValid tag
+				@renderTag tag, list for tag in @getValidatedTags()
 			else
 				@renderTag tag, list for tag in swipy.tags.pluck "title"
 				@renderTagInput list

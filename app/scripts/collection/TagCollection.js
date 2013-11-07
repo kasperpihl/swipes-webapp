@@ -64,12 +64,16 @@
       		 *
       		 *
       		 * @param  {String/Array} tags a string or an array of strings (Tagnames)
+      		 * @param  {Boolean} excludeOriginals if false, the original tags, the ones the siblings are based on, will be included in the result
       		 *
       		 * @return {array}     an array with the results. No results will return an empty array
       */
 
-      getSiblings: function(tags) {
-        var result, tag, task, _i, _j, _len, _len1, _ref, _ref1;
+      getSiblings: function(tags, excludeOriginals) {
+        var result, task, _i, _len, _ref;
+        if (excludeOriginals == null) {
+          excludeOriginals = true;
+        }
         if (typeof tags !== "object") {
           tags = [tags];
         }
@@ -77,14 +81,16 @@
         _ref = swipy.todos.getTasksTaggedWith(tags);
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           task = _ref[_i];
-          _ref1 = task.get("tags");
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            tag = _ref1[_j];
-            result.push(tag);
-          }
+          result.push(task.get("tags"));
         }
+        result = _.flatten(result);
         result = _.unique(result);
-        return _.without.apply(_, [result].concat(__slice.call(tags)));
+        console.log("based on ", tags, " the result is: ", result);
+        if (excludeOriginals) {
+          return _.without.apply(_, [result].concat(__slice.call(tags)));
+        } else {
+          return result;
+        }
       },
       handleTagDeleted: function(model) {
         var affectedTasks, oldTags, tagName, task, _i, _len, _results;
