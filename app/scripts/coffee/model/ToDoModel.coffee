@@ -3,7 +3,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 		defaults:
 			title: ""
 			order: undefined
-			schedule: null
+			schedule: "default"
 			completionDate: null
 			repeatOption: "never"
 			repeatDate: null
@@ -13,8 +13,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			deleted: no
 
 		initialize: ->
-			# Schedule defaults to a new date object 1 second in the past
-			if @get( "schedule" ) is null
+			if @get( "schedule" ) is "default"
 				@set( "schedule", @getDefaultSchedule() )
 
 			# Convert schedule to date obj if for some reason it's a string

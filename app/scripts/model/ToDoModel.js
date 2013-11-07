@@ -4,7 +4,7 @@
       defaults: {
         title: "",
         order: void 0,
-        schedule: null,
+        schedule: "default",
         completionDate: null,
         repeatOption: "never",
         repeatDate: null,
@@ -15,7 +15,7 @@
       },
       initialize: function() {
         var _this = this;
-        if (this.get("schedule") === null) {
+        if (this.get("schedule") === "default") {
           this.set("schedule", this.getDefaultSchedule());
         }
         if (typeof this.get("schedule") === "string") {
