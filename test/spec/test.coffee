@@ -893,15 +893,27 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 						expect( tags ).to.contain "Pinta"
 						expect( tags ).to.contain "Santa-Maria"
 
-						# Remove spy
-						TagFilter.prototype.render.restore()
+						# Do a deeper filter — Both #Nina & #Pinta are now selected
+						Backbone.trigger( "apply-filter", "tag", "Pinta" )
+						_.defer ->
+							tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
 
-						# Reset HTML
-						filter.remove()
-						$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+							expect( tags ).to.have.length 2
+							expect( tags ).to.contain "Pinta"
+							expect( tags ).to.contain "Santa-Maria"
 
-						# Re-enable render method on swipys tagFilter
-						swipy.sidebar.tagFilter.render = savedRender
+							expect( tags ).to.not.contain "Nina"
+
+
+							# Remove spy
+							TagFilter.prototype.render.restore()
+
+							# Reset HTML
+							filter.remove()
+							$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+							# Re-enable render method on swipys tagFilter
+							swipy.sidebar.tagFilter.render = savedRender
 
 			it "Should show all tags again if the last tag is de-selected"
 				# 1. Lav en spy på TagFilter.prototype.render

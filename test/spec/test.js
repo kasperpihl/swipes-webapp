@@ -906,10 +906,27 @@
               expect(tags).to.contain("Nina");
               expect(tags).to.contain("Pinta");
               expect(tags).to.contain("Santa-Maria");
-              TagFilter.prototype.render.restore();
-              filter.remove();
-              $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
-              return swipy.sidebar.tagFilter.render = savedRender;
+              Backbone.trigger("apply-filter", "tag", "Pinta");
+              return _.defer(function() {
+                tags = (function() {
+                  var _i, _len, _ref, _results;
+                  _ref = filter.$el.find("li:not(.tag-input)");
+                  _results = [];
+                  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                    tag = _ref[_i];
+                    _results.push($(tag).text());
+                  }
+                  return _results;
+                })();
+                expect(tags).to.have.length(2);
+                expect(tags).to.contain("Pinta");
+                expect(tags).to.contain("Santa-Maria");
+                expect(tags).to.not.contain("Nina");
+                TagFilter.prototype.render.restore();
+                filter.remove();
+                $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
+                return swipy.sidebar.tagFilter.render = savedRender;
+              });
             });
           });
         });
