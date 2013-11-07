@@ -5,12 +5,16 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 		initialize: ->
 			@on( "add", (model) -> model.save() )
 			@on( "destroy", (model) => @remove model )
-		getActive: -> 
+		getActive: ->
 			@filter (m) => m.getState() is "active"
-		getScheduled: -> 
+		getScheduled: ->
 			@filter (m) => m.getState() is "scheduled"
-		getCompleted: -> 
+		getCompleted: ->
 			@filter (m) => m.getState() is "completed"
+		getTasksTaggedWith: (tag) ->
+			@filter (m) ->
+				return false unless m.has "tags"
+				return _.contains( m.get( "tags" ), tag )
 		bumpOrder: (direction = "down", startFrom = 0) ->
 			if direction is "down"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom

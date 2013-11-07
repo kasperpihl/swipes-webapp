@@ -30,6 +30,14 @@
           return m.getState() === "completed";
         });
       },
+      getTasksTaggedWith: function(tag) {
+        return this.filter(function(m) {
+          if (!m.has("tags")) {
+            return false;
+          }
+          return _.contains(m.get("tags"), tag);
+        });
+      },
       bumpOrder: function(direction, startFrom) {
         var model, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
         if (direction == null) {
