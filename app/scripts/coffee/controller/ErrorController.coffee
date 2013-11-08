@@ -1,5 +1,5 @@
 define ["underscore", "backbone"], (_, Backbone) ->
-	class TaskInputController
+	class ErrorController
 		constructor: ->
 			Backbone.on( "throw-error", @throwError, @ )
 		throwError: ->
