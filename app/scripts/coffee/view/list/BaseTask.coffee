@@ -72,17 +72,6 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		customCleanUp: ->
 			# Hook for views extending me
 
-		swipeLeft: (className, fadeOut = yes) ->
-			dfd = new $.Deferred()
-
-			content = @$el.find ".todo-content"
-			if className then @$el.addClass className
-
-			timeline = new TimelineLite { onComplete: dfd.resolve }
-			timeline.to( content, 0.3, { left: @$el.outerWidth() } )
-			if fadeOut then timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
-
-			return dfd.promise()
 		swipeRight: (className, fadeOut = yes) ->
 			dfd = new $.Deferred()
 
@@ -90,8 +79,19 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			if className then @$el.addClass className
 
 			timeline = new TimelineLite { onComplete: dfd.resolve }
-			timeline.to( content, 0.3, { left: 0 - @$el.outerWidth() } )
-			if fadeOut then timeline.to( @$el, 0.4, { alpha: 0 }, "-=0.2" )
+			timeline.to( content, 0.3, { left: @$el.outerWidth(), ease: Power2.easeInOut } )
+			if fadeOut then timeline.to( @$el, 0.2, { alpha: 0, height: 0 }, "-=0.1" )
+
+			return dfd.promise()
+		swipeLeft: (className, fadeOut = yes) ->
+			dfd = new $.Deferred()
+
+			content = @$el.find ".todo-content"
+			if className then @$el.addClass className
+
+			timeline = new TimelineLite { onComplete: dfd.resolve }
+			timeline.to( content, 0.3, { left: 0 - @$el.outerWidth(), ease: Power2.easeInOut } )
+			if fadeOut then timeline.to( @$el, 0.2, { alpha: 0, height: 0 }, "-=0.1" )
 
 			return dfd.promise()
 

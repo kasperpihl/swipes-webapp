@@ -71,29 +71,6 @@
         return this.$el.remove();
       },
       customCleanUp: function() {},
-      swipeLeft: function(className, fadeOut) {
-        var content, dfd, timeline;
-        if (fadeOut == null) {
-          fadeOut = true;
-        }
-        dfd = new $.Deferred();
-        content = this.$el.find(".todo-content");
-        if (className) {
-          this.$el.addClass(className);
-        }
-        timeline = new TimelineLite({
-          onComplete: dfd.resolve
-        });
-        timeline.to(content, 0.3, {
-          left: this.$el.outerWidth()
-        });
-        if (fadeOut) {
-          timeline.to(this.$el, 0.4, {
-            alpha: 0
-          }, "-=0.2");
-        }
-        return dfd.promise();
-      },
       swipeRight: function(className, fadeOut) {
         var content, dfd, timeline;
         if (fadeOut == null) {
@@ -108,12 +85,39 @@
           onComplete: dfd.resolve
         });
         timeline.to(content, 0.3, {
-          left: 0 - this.$el.outerWidth()
+          left: this.$el.outerWidth(),
+          ease: Power2.easeInOut
         });
         if (fadeOut) {
-          timeline.to(this.$el, 0.4, {
-            alpha: 0
-          }, "-=0.2");
+          timeline.to(this.$el, 0.2, {
+            alpha: 0,
+            height: 0
+          }, "-=0.1");
+        }
+        return dfd.promise();
+      },
+      swipeLeft: function(className, fadeOut) {
+        var content, dfd, timeline;
+        if (fadeOut == null) {
+          fadeOut = true;
+        }
+        dfd = new $.Deferred();
+        content = this.$el.find(".todo-content");
+        if (className) {
+          this.$el.addClass(className);
+        }
+        timeline = new TimelineLite({
+          onComplete: dfd.resolve
+        });
+        timeline.to(content, 0.3, {
+          left: 0 - this.$el.outerWidth(),
+          ease: Power2.easeInOut
+        });
+        if (fadeOut) {
+          timeline.to(this.$el, 0.2, {
+            alpha: 0,
+            height: 0
+          }, "-=0.1");
         }
         return dfd.promise();
       },
