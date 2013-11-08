@@ -18,7 +18,7 @@ define ["view/List"], (ListView) ->
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeRight("todo").then =>
+					view.swipeLeft("todo").then =>
 						m.set
 							completionDate: null
 							schedule: new Date()

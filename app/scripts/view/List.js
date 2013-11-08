@@ -105,7 +105,7 @@
             _results.push((function() {
               var m;
               m = task;
-              return view.swipeLeft("completed").then(function() {
+              return view.swipeRight("completed").then(function() {
                 return m.set({
                   completionDate: new Date(),
                   schedule: null 
@@ -128,7 +128,7 @@
             _results.push((function() {
               var m;
               m = task;
-              return view.swipeLeft("todo").then(function() {
+              return view.swipeRight("todo").then(function() {
                 var oneSecondAgo;
                 oneSecondAgo = new Date();
                 oneSecondAgo.setSeconds(oneSecondAgo.getSeconds() - 1);
@@ -155,7 +155,7 @@
             (function() {
               var m;
               m = task;
-              return deferredArr.push(view.swipeRight("scheduled", false));
+              return deferredArr.push(view.swipeLeft("scheduled", false));
             })();
           }
         }
