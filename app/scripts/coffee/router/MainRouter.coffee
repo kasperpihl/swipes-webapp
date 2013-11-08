@@ -7,7 +7,7 @@ define ['backbone'], (Backbone) ->
 			"*all": "root"
 		initialize: ->
 			@history = []
-			@on( "route", @updateHistory )
+			@on( "route", @updateHistory, @ )
 		root: ->
 			@navigate( "list/todo", { trigger: yes, replace: yes } )
 		list: (id = "todo") ->
@@ -38,3 +38,5 @@ define ['backbone'], (Backbone) ->
 				@navigate( @history[@history.length - 1], { trigger: yes, replace: yes } )
 			else
 				@root()
+		destroy: ->
+			@off( "route" )

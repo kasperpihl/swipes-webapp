@@ -1,12 +1,12 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
-		events: 
+		events:
 			"click .close-sidebar": "handleAction"
 			"click .log-out": "handleAction"
 		initialize: ->
 			_.bindAll( @, "handleAction" )
 			$( ".open-sidebar" ).on( "click", @handleAction )
-			
+
 		handleAction: (e) ->
 			trigger = $ e.currentTarget
 
@@ -17,3 +17,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			else if trigger.hasClass "log-out"
 				e.preventDefault()
 				console.log "Log out"
+
+		destroy: ->
+			@stopListening();
+			$( ".open-sidebar" ).off( "click", @handleAction )

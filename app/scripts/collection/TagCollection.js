@@ -108,6 +108,9 @@
           _results.push(task.set("tags", _.without(oldTags, tagName)));
         }
         return _results;
+      },
+      destroy: function() {
+        return this.off(null, null, this);
       }
     });
   });

@@ -10,6 +10,7 @@
       }
 
       Swipes.prototype.init = function() {
+        this.cleanUp();
         this.tags = new TagCollection();
         this.viewController = new ViewController();
         this.nav = new ListNavigation();
@@ -19,12 +20,43 @@
         this.sidebar = new SidebarController();
         this.filter = new FilterController();
         this.settings = new SettingsController();
-        if (Backbone.History.started) {
-          Backbone.history.stop();
-        }
         return Backbone.history.start({
           pushState: false
         });
+      };
+
+      Swipes.prototype.cleanUp = function() {
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+        if ((_ref = this.tags) != null) {
+          _ref.destroy();
+        }
+        if ((_ref1 = this.viewController) != null) {
+          _ref1.destroy();
+        }
+        if ((_ref2 = this.nav) != null) {
+          _ref2.destroy();
+        }
+        if ((_ref3 = this.router) != null) {
+          _ref3.destroy();
+        }
+        if ((_ref4 = this.scheduler) != null) {
+          _ref4.destroy();
+        }
+        if ((_ref5 = this.input) != null) {
+          _ref5.destroy();
+        }
+        if ((_ref6 = this.sidebar) != null) {
+          _ref6.destroy();
+        }
+        if ((_ref7 = this.filter) != null) {
+          _ref7.destroy();
+        }
+        if ((_ref8 = this.settings) != null) {
+          _ref8.destroy();
+        }
+        if (Backbone.History.started) {
+          return Backbone.history.stop();
+        }
       };
 
       Swipes.prototype.fetchTodos = function() {

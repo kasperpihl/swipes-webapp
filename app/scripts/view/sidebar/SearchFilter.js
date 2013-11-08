@@ -15,6 +15,10 @@
         value = this.input.val();
         eventName = value.length ? "apply-filter" : "remove-filter";
         return Backbone.trigger(eventName, "search", value.toLowerCase());
+      },
+      destroy: function() {
+        this.stopListening();
+        return this.undelegateEvents();
       }
     });
   });

@@ -21,4 +21,4 @@ define ["view/List"], (ListView) ->
 					view.swipeLeft("todo").then =>
 						m.set
 							completionDate: null
-							schedule: new Date()
+							schedule: m.getDefaultSchedule()

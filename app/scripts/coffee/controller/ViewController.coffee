@@ -1,7 +1,8 @@
 define [
+	"underscore"
 	"backbone"
 	"gsap"
-	], (Backbone, TweenLite, EditTaskView) ->
+	], (_, Backbone, TweenLite, EditTaskView) ->
 	class ViewController
 		constructor: (opts) ->
 			@init()
@@ -9,7 +10,7 @@ define [
 		init: ->
 			# Listen for navigation events
 			Backbone.on( 'navigate/view', @goto, @ )
-			Backbone.on( 'edit/task', (taskId) => @editTask taskId )
+			Backbone.on( 'edit/task', @editTask, @ )
 
 		goto: (slug) ->
 			@loadView(slug).then (View) =>
@@ -73,3 +74,6 @@ define [
 			@currView = view
 
 			return dfd.promise()
+		destroy: ->
+			@currView?.remove()
+			Backbone.off( null, null, @ )

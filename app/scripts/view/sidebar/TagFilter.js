@@ -99,10 +99,9 @@
       renderTagInput: function(list) {
         return list.append("				<li class='tag-input'>					<form class='add-tag'>						<input type='text' placeholder='Add new tag'>					</form>				</li>");
       },
-      remove: function() {
+      destroy: function() {
         this.stopListening();
-        this.undelegateEvents();
-        return this.$el.remove();
+        return this.undelegateEvents();
       }
     });
   });

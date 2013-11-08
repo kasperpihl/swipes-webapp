@@ -14,6 +14,12 @@
         });
       }
 
+      SidebarController.prototype.destroy = function() {
+        this.view.destroy();
+        this.tagFilter.destroy();
+        return this.searchFilter.destroy();
+      };
+
       return SidebarController;
 
     })();

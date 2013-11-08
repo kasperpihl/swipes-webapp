@@ -67,9 +67,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 						<input type='text' placeholder='Add new tag'>
 					</form>
 				</li>"
-		remove: ->
+		destroy: ->
 			@stopListening()
 			@undelegateEvents()
-			@$el.remove()
 
 

@@ -61,6 +61,10 @@
         });
       };
 
+      TaskInputController.prototype.destroy = function() {
+        return Backbone.off(null, null, this);
+      };
+
       return TaskInputController;
 
     })();

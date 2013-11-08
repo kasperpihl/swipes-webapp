@@ -26,6 +26,10 @@
         });
       };
 
+      ListNavigation.prototype.destroy = function() {
+        return Backbone.off(null, null, this);
+      };
+
       return ListNavigation;
 
     })();

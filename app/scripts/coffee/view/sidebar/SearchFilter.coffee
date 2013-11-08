@@ -1,6 +1,6 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	Backbone.View.extend
-		events: 
+		events:
 			"submit form": "search"
 			"keyup input": "search"
 			"change input": "search"
@@ -12,3 +12,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			eventName = if value.length then "apply-filter" else "remove-filter"
 			Backbone.trigger( eventName, "search", value.toLowerCase() )
+		destroy: ->
+			@stopListening()
+			@undelegateEvents()

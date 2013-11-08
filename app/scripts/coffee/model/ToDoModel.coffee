@@ -30,9 +30,10 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				@set( "selected", no )
 
 			@on "change:completionDate", =>
+				@set( "selected", no )
+				# These methods will unset the properties if no completionDate is defined
 				@setCompletionStr()
 				@setCompletionTimeStr()
-				@set( "selected", no )
 
 			if @has "completionDate"
 				@setCompletionStr()
@@ -117,7 +118,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 		setCompletionStr: ->
 			completionDate = @get "completionDate"
-			if !completionDate then return @set( "completionStr", undefined )
+			if !completionDate then return @unset "completionStr"
 
 			now = moment()
 			parsedDate = moment completionDate
@@ -139,7 +140,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 		setCompletionTimeStr: ->
 			completionDate = @get "completionDate"
-			if !completionDate then return @set( "completionTimeStr", undefined )
+			if !completionDate then return @unset "completionTimeStr"
 
 			# We have a completionDate set, update timeStr prop
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )

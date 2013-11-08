@@ -20,6 +20,10 @@
           e.preventDefault();
           return console.log("Log out");
         }
+      },
+      destroy: function() {
+        this.stopListening();
+        return $(".open-sidebar").off("click", this.handleAction);
       }
     });
   });

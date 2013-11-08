@@ -69,7 +69,9 @@
         return swipy.todos.invoke("set", "rejectedBySearch", false);
       };
 
-      FilterController.prototype.getTasksThatMatchTags = function(tagsArr) {};
+      FilterController.prototype.destroy = function() {
+        return Backbone.off(null, null, this);
+      };
 
       return FilterController;
 

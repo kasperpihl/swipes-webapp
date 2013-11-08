@@ -10,7 +10,7 @@
       },
       initialize: function() {
         this.history = [];
-        return this.on("route", this.updateHistory);
+        return this.on("route", this.updateHistory, this);
       },
       root: function() {
         return this.navigate("list/todo", {
@@ -65,6 +65,9 @@
         } else {
           return this.root();
         }
+      },
+      destroy: function() {
+        return this.off("route");
       }
     });
   });

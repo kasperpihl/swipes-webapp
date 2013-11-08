@@ -30,9 +30,9 @@
           return _this.set("selected", false);
         });
         this.on("change:completionDate", function() {
+          _this.set("selected", false);
           _this.setCompletionStr();
-          _this.setCompletionTimeStr();
-          return _this.set("selected", false);
+          return _this.setCompletionTimeStr();
         });
         if (this.has("completionDate")) {
           this.setCompletionStr();
@@ -130,7 +130,7 @@
         var completionDate, dayWithoutTime, now, parsedDate, result;
         completionDate = this.get("completionDate");
         if (!completionDate) {
-          return this.set("completionStr", void 0);
+          return this.unset("completionStr");
         }
         now = moment();
         parsedDate = moment(completionDate);
@@ -152,7 +152,7 @@
         var completionDate;
         completionDate = this.get("completionDate");
         if (!completionDate) {
-          return this.set("completionTimeStr", void 0);
+          return this.unset("completionTimeStr");
         }
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       }

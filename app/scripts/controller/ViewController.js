@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "gsap"], function(Backbone, TweenLite, EditTaskView) {
+  define(["underscore", "backbone", "gsap"], function(_, Backbone, TweenLite, EditTaskView) {
     var ViewController;
     return ViewController = (function() {
       function ViewController(opts) {
@@ -7,11 +7,8 @@
       }
 
       ViewController.prototype.init = function() {
-        var _this = this;
         Backbone.on('navigate/view', this.goto, this);
-        return Backbone.on('edit/task', function(taskId) {
-          return _this.editTask(taskId);
-        });
+        return Backbone.on('edit/task', this.editTask, this);
       };
 
       ViewController.prototype.goto = function(slug) {
@@ -121,6 +118,14 @@
         }, opts);
         this.currView = view;
         return dfd.promise();
+      };
+
+      ViewController.prototype.destroy = function() {
+        var _ref;
+        if ((_ref = this.currView) != null) {
+          _ref.remove();
+        }
+        return Backbone.off(null, null, this);
       };
 
       return ViewController;

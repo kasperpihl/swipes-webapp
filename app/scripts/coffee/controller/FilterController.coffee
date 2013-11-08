@@ -46,4 +46,5 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@searchFilter = ""
 			swipy.todos.invoke( "set", "rejectedBySearch", no )
 
-		getTasksThatMatchTags: (tagsArr) ->
+		destroy: ->
+			Backbone.off( null, null, @ )

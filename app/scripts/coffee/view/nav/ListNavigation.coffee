@@ -12,5 +12,6 @@ define ["jquery", "backbone"], ($, Backbone) ->
 				link = $ @
 				isCurrLink = if link.attr( "href" )[1...] is "list/#{slug}" then yes else no
 				link.toggleClass( "active", isCurrLink )
-		
-		
+		destroy: ->
+			Backbone.off( null, null, @ )
+

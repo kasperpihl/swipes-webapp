@@ -45,7 +45,7 @@
               return view.swipeLeft("todo").then(function() {
                 return m.set({
                   completionDate: null,
-                  schedule: new Date()
+                  schedule: m.getDefaultSchedule()
                 });
               });
             })());
