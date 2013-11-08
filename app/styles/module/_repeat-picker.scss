@@ -28,9 +28,9 @@
 		float: left;
 		display: block;
 
-		width: 33.333%;
-		@include breakpoint(min-width, 625px) {
-			width: 16.6667%;
+		width: 25%;
+		@include breakpoint(min-width, emCalc(650px)) {
+			width: 14.28%;
 		}
 
 		height: $height;
@@ -39,6 +39,10 @@
 		text-align: center;
 		font-family: $font-bold;
 		color: $gray-warm;
+		font-size: 80%;
+		@include breakpoint(min-width, emCalc(400px)) {
+			font-size: 100%;
+		}
 
 		border-left: thin solid lighten($gray-lighter, 10%);
 
@@ -59,13 +63,28 @@
 
 	li:first-child a, a.selected { border-left: none; }
 
-	@include breakpoint(max-width, 624px) {
+	@include breakpoint(max-width, emCalc(650px)) {
 		li a {
 			border-bottom: thin solid lighten($gray-lighter, 10%);
 		}
 
-		li:nth-child(3n + 1) a {
+		li:nth-child(4n + 1) a {
 			border-left: none;
+		}
+
+		li:last-child a {
+			position: relative;
+
+			// Sir Hack-alot want's it this way
+			// because box sizing would cause border-right to be offset by
+			// 1px.
+			&:after {
+				position: absolute;
+				right: -1px; top: 0;
+				width: 1px; height: 100%;
+				background: lighten($gray-lighter, 10%);
+				content: "";
+			}
 		}
 
 		li:nth-last-child(1) a,
