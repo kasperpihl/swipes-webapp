@@ -946,12 +946,40 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 									swipy.sidebar.tagFilter.render = savedRender
 									done()
 
-			it "Should show all tags again if the last tag is de-selected"
-				# 1. Lav en spy på TagFilter.prototype.render
-				# 2. Filter på #Santa-Maria
-				# 3. Fjern filter på #Santa-Maria
-				# 4. Tjek at alle tags er renderet
-				# 5. Fjern spy på TagFilter.prototype.render
+			it "Should show all tags again if the last tag is de-selected", (done) ->
+				require ["view/sidebar/TagFilter"], (TagFilter) ->
+					# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
+					savedRender = swipy.sidebar.tagFilter.__proto__.render
+					swipy.sidebar.tagFilter.render = ->
+
+					renderSpy = sinon.spy( TagFilter.prototype, "render" )
+					filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
+
+					# Filter renders automatically upon instantiation
+					expect( renderSpy ).to.have.been.calledOnce
+
+					# Get original tag count
+					origTagCount = filter.$el.find("li:not(.tag-input)").length
+
+					# Do a top level filter. Only 1 tag selected.
+					Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
+					Backbone.trigger( "remove-filter", "tag", "Santa-Maria" )
+					_.defer ->
+
+						expect( renderSpy ).to.have.been.calledThrice
+						tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+						expect( tags ).to.have.length origTagCount
+
+						# Remove spy
+						TagFilter.prototype.render.restore()
+
+						# Reset HTML
+						filter.remove()
+						$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+						# Re-enable render method on swipys tagFilter
+						swipy.sidebar.tagFilter.render = savedRender
+						done()
 
 
 	###

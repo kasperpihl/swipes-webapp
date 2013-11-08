@@ -974,7 +974,41 @@
             });
           });
         });
-        return it("Should show all tags again if the last tag is de-selected");
+        return it("Should show all tags again if the last tag is de-selected", function(done) {
+          return require(["view/sidebar/TagFilter"], function(TagFilter) {
+            var filter, origTagCount, renderSpy, savedRender;
+            savedRender = swipy.sidebar.tagFilter.__proto__.render;
+            swipy.sidebar.tagFilter.render = function() {};
+            renderSpy = sinon.spy(TagFilter.prototype, "render");
+            filter = new TagFilter({
+              el: $(".sidebar .tags-filter")
+            });
+            expect(renderSpy).to.have.been.calledOnce;
+            origTagCount = filter.$el.find("li:not(.tag-input)").length;
+            Backbone.trigger("apply-filter", "tag", "Santa-Maria");
+            Backbone.trigger("remove-filter", "tag", "Santa-Maria");
+            return _.defer(function() {
+              var tag, tags;
+              expect(renderSpy).to.have.been.calledThrice;
+              tags = (function() {
+                var _i, _len, _ref, _results;
+                _ref = filter.$el.find("li:not(.tag-input)");
+                _results = [];
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  tag = _ref[_i];
+                  _results.push($(tag).text());
+                }
+                return _results;
+              })();
+              expect(tags).to.have.length(origTagCount);
+              TagFilter.prototype.render.restore();
+              filter.remove();
+              $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
+              swipy.sidebar.tagFilter.render = savedRender;
+              return done();
+            });
+          });
+        });
       });
     });
     /*
