@@ -55,8 +55,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				dfd.resolve()
 
 			return dfd.promise()
-	###
-
 	#
 	# The Basics
 	#
@@ -266,20 +264,18 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	#
 	# Any list View
 	#
-
 	require ["view/List", "model/ToDoModel"], (ListView, ToDo) ->
 		contentHolder.empty()
 		list = new ListView();
 		list.$el.appendTo contentHolder
 
 		describe "Base list view", ->
-			children = list.$el.find "ol li"
-			it "should add appropiate children rendering", ->
-				expect( children ).to.have.length.above 0
+			it "should add children when rendering", ->
+				expect( list.$el.find "ol li" ).to.have.length.above 0
 
 			it "Should remove all nested children as part of the cleanUp routine", ->
 				list.cleanUp()
-				expect( children ).to.have.length.lessThan 1
+				expect( list.$el.find "ol li" ).to.have.length.lessThan 1
 
 	#
 	# Scheduled list View
@@ -795,12 +791,16 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 	describe "Task repeat logic", ->
 		it "Should repeat tasks ..."
 
-	###
-
 	describe "Tag Filter", ->
-		Backbone.trigger( "create-task", "TagTester1 #Nina" )
-		Backbone.trigger( "create-task", "TagTester2 #Nina, #Pinta" )
-		Backbone.trigger( "create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria" )
+		beforeEach ->
+			Backbone.trigger( "create-task", "TagTester1 #Nina" )
+			Backbone.trigger( "create-task", "TagTester2 #Nina, #Pinta" )
+			Backbone.trigger( "create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria" )
+
+		afterEach ->
+			swipy.todos.findWhere( title: "TagTester1" ).destroy()
+			swipy.todos.findWhere( title: "TagTester2" ).destroy()
+			swipy.todos.findWhere( title: "TagTester3" ).destroy()
 
 		it "Should add new tags to the global tags collection", ->
 			swipy.sidebar.tagFilter.addTag "My Test Tag zyxvy"
@@ -828,6 +828,41 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				TagFilter.prototype.render.restore()
 				filter.remove()
 				$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+		it "Should show all tags again if the last tag is de-selected", (done) ->
+			require ["view/sidebar/TagFilter"], (TagFilter) ->
+				# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
+				savedRender = swipy.sidebar.tagFilter.__proto__.render
+				swipy.sidebar.tagFilter.render = ->
+
+				renderSpy = sinon.spy( TagFilter.prototype, "render" )
+				filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
+
+				# Filter renders automatically upon instantiation
+				expect( renderSpy ).to.have.been.calledOnce
+
+				# Get original tag count
+				origTagCount = filter.$el.find("li:not(.tag-input)").length
+
+				# Do a top level filter. Only 1 tag selected.
+				Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
+				Backbone.trigger( "remove-filter", "tag", "Santa-Maria" )
+				_.defer ->
+
+					expect( renderSpy ).to.have.been.calledThrice
+					tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+					expect( tags ).to.have.length origTagCount
+
+					# Remove spy
+					TagFilter.prototype.render.restore()
+
+					# Reset HTML
+					filter.remove()
+					$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+
+					# Re-enable render method on swipys tagFilter
+					swipy.sidebar.tagFilter.render = savedRender
+					done()
 
 		describe "Filtering tasks", ->
 			it "If one or more tags are selected, it should only show the tasks that has all of those filters", ->
@@ -857,14 +892,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
 				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 1
 				expect( swipy.todos.findWhere( { title: "TagTester2" } ).get "rejectedByTag" ).to.be.true
-
-			it "Should reject no tasks when the last filter is de-selected", ->
-				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 1
-
-				for tagFilter in swipy.filter.tagsFilter
-					Backbone.trigger( "remove-filter", "tag", tagFilter )
-
-				expect( swipy.todos.where { rejectedByTag: yes } ).to.have.length 0
 
 		describe "Narrowing down available tags after filtering", ->
 			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", (done) ->
@@ -945,44 +972,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 									# Re-enable render method on swipys tagFilter
 									swipy.sidebar.tagFilter.render = savedRender
 									done()
-
-			it "Should show all tags again if the last tag is de-selected", (done) ->
-				require ["view/sidebar/TagFilter"], (TagFilter) ->
-					# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
-					savedRender = swipy.sidebar.tagFilter.__proto__.render
-					swipy.sidebar.tagFilter.render = ->
-
-					renderSpy = sinon.spy( TagFilter.prototype, "render" )
-					filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
-
-					# Filter renders automatically upon instantiation
-					expect( renderSpy ).to.have.been.calledOnce
-
-					# Get original tag count
-					origTagCount = filter.$el.find("li:not(.tag-input)").length
-
-					# Do a top level filter. Only 1 tag selected.
-					Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
-					Backbone.trigger( "remove-filter", "tag", "Santa-Maria" )
-					_.defer ->
-
-						expect( renderSpy ).to.have.been.calledThrice
-						tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
-						expect( tags ).to.have.length origTagCount
-
-						# Remove spy
-						TagFilter.prototype.render.restore()
-
-						# Reset HTML
-						filter.remove()
-						$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
-
-						# Re-enable render method on swipys tagFilter
-						swipy.sidebar.tagFilter.render = savedRender
-						done()
-
-
-	###
 
 	require ["view/list/TagEditorOverlay"], (TagEditorOverlay) ->
 		describe "Tag Editor overlay", ->
@@ -1196,5 +1185,3 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
-
-	###

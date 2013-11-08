@@ -56,8 +56,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			# Make sure we have no duplicates
 			result = _.unique result
 
-			console.log "based on ", tags, " the result is: ", result
-
 			# Finally remove the initial tag from the results.
 			if excludeOriginals
 				return _.without( result, tags... )

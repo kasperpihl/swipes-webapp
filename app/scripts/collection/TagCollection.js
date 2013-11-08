@@ -85,7 +85,6 @@
         }
         result = _.flatten(result);
         result = _.unique(result);
-        console.log("based on ", tags, " the result is: ", result);
         if (excludeOriginals) {
           return _.without.apply(_, [result].concat(__slice.call(tags)));
         } else {
