@@ -68,7 +68,7 @@ define ->
 					notes: ""
 				,
 					title: "Finalize Swipes Web App"
-					schedule: new Date("November 29, 2013 09:00:00")
+					schedule: new Date("November 21, 2013 09:00:00")
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
