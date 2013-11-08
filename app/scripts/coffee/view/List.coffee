@@ -85,7 +85,7 @@ define [
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeLeft("completed").then -> m.set { completionDate: new Date(), schedule: null }
+					view.swipeRight("completed").then -> m.set { completionDate: new Date(), schedule: null }
 
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
@@ -94,7 +94,7 @@ define [
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeLeft("todo").then ->
+					view.swipeRight("todo").then ->
 						oneSecondAgo = new Date()
 						oneSecondAgo.setSeconds oneSecondAgo.getSeconds() - 1
 						m.set { completionDate: null, schedule: oneSecondAgo }
@@ -108,7 +108,7 @@ define [
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					deferredArr.push view.swipeRight("scheduled", no)
+					deferredArr.push view.swipeLeft("scheduled", no)
 
 			$.when( deferredArr... ).then => Backbone.trigger( "show-scheduler", tasks )
 
