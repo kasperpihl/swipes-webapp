@@ -889,6 +889,7 @@
             state: "completed"
           });
           task.set("repeatOption", "every day");
+          task.set("completionDate", new Date());
           return duplicate = task.getRepeatableDuplicate();
         });
         afterEach(function() {
@@ -925,15 +926,35 @@
           expect(duplicate.has("state")).to.be["false"];
           return expect(duplicate.getState()).to.equal("scheduled");
         });
-        it("Should NOT retain schedule when duplicating a task");
-        it("Should NOT retain scheduleStr when duplicating a task");
-        it("Should NOT retain timeStr when duplicating a task");
-        it("Should NOT retain completionDate when duplicating a task");
-        it("Should NOT retain completionStr when duplicating a task");
-        it("Should NOT retain completionTimeStr when duplicating a task");
-        it("Should NOT retain repeatDate when duplicating a task");
-        it("Should NOT retain repeatCount when duplicating a task");
-        return it("Should update repeatCount++ every time a the same task is duplicated/repeated");
+        it("Should NOT retain schedule when duplicating a task", function() {
+          expect(duplicate.has("schedule")).to.be["true"];
+          return expect(task.get("schedule").getTime()).to.not.equal(duplicate.get("schedule").getTime());
+        });
+        it("Should NOT retain scheduleStr when duplicating a task", function() {
+          expect(duplicate.has("scheduleStr")).to.be["true"];
+          return expect(task.get("scheduleStr")).to.not.equal(duplicate.get("scheduleStr"));
+        });
+        it("Should NOT retain completionDate when duplicating a task", function() {
+          return expect(duplicate.has("completionDate")).to.be["false"];
+        });
+        it("Should NOT retain completionStr when duplicating a task", function() {
+          return expect(duplicate.has("completionStr")).to.be["false"];
+        });
+        it("Should NOT retain completionTimeStr when duplicating a task", function() {
+          return expect(duplicate.has("completionTimeStr")).to.be["false"];
+        });
+        it("Should NOT retain repeatDate when duplicating a task", function() {
+          expect(duplicate.has("repeatDate")).to.be["true"];
+          return expect(task.get("repeatDate").getTime()).to.not.equal(duplicate.get("repeatDate").getTime());
+        });
+        it("Should NOT retain repeatCount when duplicating a task", function() {
+          expect(task.has("repeatCount")).to.be["true"];
+          expect(duplicate.has("repeatCount")).to.be["true"];
+          return expect(task.get("repeatCount")).to.not.equal(duplicate.get("repeatCount"));
+        });
+        return it("Should update repeatCount++ every time a the same task is duplicated/repeated", function() {
+          return expect(duplicate.get("repeatCount")).to.equal(task.get("repeatCount") + 1);
+        });
       });
       describe("Duplicating a task based on repeatDate and repeatOption", function() {
         describe("Repeat option: 'every day'", function() {
