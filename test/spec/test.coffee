@@ -56,6 +56,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 			return dfd.promise()
 
+	###
+
 	#
 	# The Basics
 	#
@@ -807,8 +809,71 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			it "Should set/clear the repeat option when picking one"
 			it "Should throw an error message if the changes can't be saved to the server"
 
-	describe "Task repeat logic", ->
-		it "Should repeat tasks ..."
+	###
+
+	describe "Repeating tasks", ->
+		describe "Repeat Picker user interface", ->
+			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option"
+			it "Should update the UI when the models repeatOption prop changes"
+
+		describe "Setting and changing repeat options on ToDo Model ", ->
+			it "Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'"
+			it "Should change the repeatDate, if it already exists when the repeatOption is set to something other than 'never'"
+			it "Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones"
+
+		describe "Duplicating tasks", ->
+			it "Should retain title when duplicating a task"
+			it "Should retain tags when duplicating a task"
+			it "Should retain notes when duplicating a task"
+			it "Should retain order when duplicating a task"
+			it "Should retain repeatOption when duplicating a task"
+
+			it "Should NOT retain state when duplicating a task"
+
+			it "Should NOT retain schedule when duplicating a task"
+			it "Should NOT retain scheduleStr when duplicating a task"
+			it "Should NOT retain timeStr when duplicating a task"
+
+			it "Should NOT retain completionDate when duplicating a task"
+			it "Should NOT retain completionStr when duplicating a task"
+			it "Should NOT retain completionTimeStr when duplicating a task"
+			it "Should NOT retain repeatDate when duplicating a task"
+			it "Should NOT retain repeatCount when duplicating a task"
+
+			it "Should update repeatCount++ every time a the same task is duplicated/repeated"
+
+		describe "Duplicating a task based on repeatDate and repeatOption", ->
+			describe "Repeat option: 'every day'", ->
+				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/11/2013"
+				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)"
+				it "if repeatDate is 11/12/2013, it should still create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/09/2013 (Completed too early)"
+				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)"
+
+			describe "Repeat option: 'mon-fri or sat+sun'", ->
+				it "if repeatDate is monday 11/18/2013, it should create a duplicate task, scheduled for that day, if current task is completed saturday 11/16/2013"
+				it "if repeatDate is saturday 11/16/2013, it should create a duplicate task, scheduled for that day, if current task is completed tuesday 11/12/2013"
+
+			describe "Repeat option: 'every week'", ->
+				it "if repeatDate is tuesday 11/19/2013, it should create a duplicate task, scheduled for that day, if current task is completed wednesday 11/06/2013"
+				it "if repeatDate is tuesday 11/19/2013, it should create a duplicate task, scheduled for 11/26/2013, if current task is completed wednesday 11/20/2013 (Later than scheduled repeatDate)"
+
+			describe "Repeat option: 'every month'", ->
+				it "if repeatDate is 11/18/2013, it should create a duplicate task, scheduled for that day, if current task is completed before 11/18/2013"
+				it "if repeatDate is 11/18/2013, it should create a duplicate task, scheduled for 12/18/2013, if current task is completed after 11/18/2013"
+				it "if repeatDate is 12/31/2013, it should create a duplicate task, scheduled for 01/30/2014 — Handling the difference between number of days in a month nicely"
+
+			describe "Repeat option: 'every year'", ->
+				it "if repeatDate is 11/18/2014, it should create a duplicate task, scheduled for that day, if current task is completed before 11/18/2014"
+				it "if repeatDate is 11/18/2014, it should create a duplicate task, scheduled for 12/18/2015, if current task is completed after 11/18/2014"
+				it "if repeatDate is only existant because of a leap year, we should schedule for the day before"
+					# 29. feb hver 4. år — Og altid den 29. feb.
+
+		describe "Un-setting repeat options on ToDo Model", ->
+			it "Should change repeatDate to 'null' of repeatOption is set to 'never'"
+			it "Should delete duplicated (repeated) tasks when repeatOption is set to 'never'"
+
+
+	###
 
 	describe "Tag Filter", ->
 		beforeEach ->
@@ -1204,3 +1269,5 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
+
+	###
