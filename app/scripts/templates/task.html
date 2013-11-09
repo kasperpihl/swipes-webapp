@@ -1,4 +1,4 @@
-<% if (scheduleStr === "the past" && !completionDate) { %>
+<% if (state !== "completed") { %>
 <a href="JavaScript:void(0);" class="action complete" title="Mark todo as completed">
 	<span class="icon-checkmark"></span>
 </a>
@@ -15,9 +15,9 @@
 <div class="todo-content">
 	<h2><span class="priority"></span><%= title %></h2>
 
-	<% if (completionDate) { %>
+	<% if (state === "completed") { %>
 		<time><%= completionTimeStr %></time>
-	<% } else if (timeStr && scheduleStr !== "the past" && scheduleStr !== "today") { %>
+	<% } else if (state === "scheduled") { %>
 		<time><%= timeStr %></time>
 	<% } %>
 

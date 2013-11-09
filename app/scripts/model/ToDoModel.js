@@ -92,18 +92,10 @@
         var dayWithoutTime, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
         if (!schedule) {
-          if (this.get("completionDate")) {
-            this.set("scheduleStr", "the past");
-            return this.get("scheduleStr");
-          } else {
-            return this.set("scheduleStr", "unspecified");
-          }
+          return this.set("scheduleStr", "unspecified");
         }
         now = moment();
         parsedDate = moment(schedule);
-        if (parsedDate.isBefore()) {
-          return this.set("scheduleStr", "the past");
-        }
         if (Math.abs(parsedDate.diff(now, "days")) >= 7) {
           if (parsedDate.year() > now.year()) {
             result = parsedDate.format("MMM Do 'YY");
@@ -113,7 +105,7 @@
           return this.set("scheduleStr", result);
         }
         dayWithoutTime = this.getDayWithoutTime(parsedDate);
-        if (dayWithoutTime === "Today") {
+        if (dayWithoutTime === "Today" && !parsedDate.isBefore()) {
           dayWithoutTime = "Later today";
         }
         return this.set("scheduleStr", dayWithoutTime);
@@ -155,6 +147,10 @@
           return this.unset("completionTimeStr");
         }
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
+      },
+      toJSON: function() {
+        this.set("state", this.getState());
+        return Backbone.Model.prototype.toJSON.apply(this, arguments);
       }
     });
   });

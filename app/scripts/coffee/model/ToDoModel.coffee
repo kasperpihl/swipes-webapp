@@ -82,17 +82,11 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 		setScheduleStr: ->
 			schedule = @get "schedule"
 			if !schedule
-				if @get "completionDate"
-					@set( "scheduleStr", "the past" )
-					return @get "scheduleStr"
-				else
-					return @set( "scheduleStr", "unspecified" )
+				return @set( "scheduleStr", "unspecified" )
 
 			now = moment()
 			parsedDate = moment schedule
 
-			# Check if parsedDate is in the past
-			if parsedDate.isBefore() then return @set( "scheduleStr", "the past" )
 
 			# If difference is more than 1 week, we want different formatting
 			if Math.abs( parsedDate.diff( now, "days" ) ) >= 7
@@ -104,8 +98,9 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 			dayWithoutTime = @getDayWithoutTime parsedDate
 
-			# Change "Today" to "Later today"
-			if dayWithoutTime is "Today" then dayWithoutTime = "Later today"
+			# Change "Today" to "Later today" if it's later than current time.
+			if dayWithoutTime is "Today" and not parsedDate.isBefore()
+				dayWithoutTime = "Later today"
 
 			@set( "scheduleStr", dayWithoutTime )
 
@@ -144,3 +139,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 			# We have a completionDate set, update timeStr prop
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
+
+		toJSON: ->
+			@set( "state", @getState() )
+			Backbone.Model::toJSON.apply( @, arguments )
