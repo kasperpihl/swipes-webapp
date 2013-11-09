@@ -878,12 +878,53 @@
         return it("Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones");
       });
       describe("Duplicating tasks", function() {
-        it("Should retain title when duplicating a task");
-        it("Should retain tags when duplicating a task");
-        it("Should retain notes when duplicating a task");
-        it("Should retain order when duplicating a task");
-        it("Should retain repeatOption when duplicating a task");
-        it("Should NOT retain state when duplicating a task");
+        var duplicate, task;
+        task = duplicate = null;
+        beforeEach(function() {
+          task = new ToDoModel({
+            title: "test title",
+            notes: "test notes",
+            tags: ["tag1", "tag2"],
+            order: 2,
+            state: "completed"
+          });
+          task.set("repeatOption", "every day");
+          return duplicate = task.getRepeatableDuplicate();
+        });
+        afterEach(function() {
+          task.destroy();
+          return duplicate.destroy();
+        });
+        it("Shouldn't allow you to create a duplicate, if the task has no repeatDate", function() {
+          return expect(new ToDoModel().getRepeatableDuplicate).to["throw"](Error);
+        });
+        it("Should return a new instance of ToDo Model when calling 'getRepeatableDuplicate()'", function() {
+          expect(task).to.respondTo("getRepeatableDuplicate");
+          return expect(duplicate).to.be.instanceOf(ToDoModel);
+        });
+        it("Should retain title when duplicating a task", function() {
+          expect(task.get("title")).to.have.length.above(0);
+          return expect(task.get("title")).to.equal(duplicate.get("title"));
+        });
+        it("Should retain tags when duplicating a task", function() {
+          expect(task.get("tags")).to.have.length.above(0);
+          return expect(task.get("tags")).to.have.length(duplicate.get("tags").length);
+        });
+        it("Should retain notes when duplicating a task", function() {
+          expect(task.get("notes")).to.have.length.above(0);
+          return expect(task.get("notes")).to.equal(duplicate.get("notes"));
+        });
+        it("Should retain order when duplicating a task", function() {
+          expect(task.get("order")).to.not.be.falsy;
+          return expect(task.get("order")).to.equal(duplicate.get("order"));
+        });
+        it("Should retain repeatOption when duplicating a task", function() {
+          return expect(task.get("repeatOption")).to.equal(duplicate.get("repeatOption"));
+        });
+        it("Should NOT retain state when duplicating a task", function() {
+          expect(duplicate.has("state")).to.be["false"];
+          return expect(duplicate.getState()).to.equal("scheduled");
+        });
         it("Should NOT retain schedule when duplicating a task");
         it("Should NOT retain scheduleStr when duplicating a task");
         it("Should NOT retain timeStr when duplicating a task");

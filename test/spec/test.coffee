@@ -842,7 +842,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 		describe "Setting and changing repeat options on ToDo Model ", ->
 			task = null
-
 			beforeEach -> task = new ToDoModel()
 			afterEach -> task.destroy()
 
@@ -866,13 +865,50 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			it "Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones"
 
 		describe "Duplicating tasks", ->
-			it "Should retain title when duplicating a task"
-			it "Should retain tags when duplicating a task"
-			it "Should retain notes when duplicating a task"
-			it "Should retain order when duplicating a task"
-			it "Should retain repeatOption when duplicating a task"
+			task = duplicate = null
+			beforeEach ->
+				task = new ToDoModel
+					title: "test title"
+					notes: "test notes"
+					tags: ["tag1", "tag2"]
+					order: 2
+					state: "completed"
 
-			it "Should NOT retain state when duplicating a task"
+				task.set( "repeatOption", "every day" )
+				duplicate = task.getRepeatableDuplicate()
+			afterEach ->
+				task.destroy()
+				duplicate.destroy()
+
+			it "Shouldn't allow you to create a duplicate, if the task has no repeatDate", ->
+				expect( new ToDoModel().getRepeatableDuplicate ).to.throw Error
+
+			it "Should return a new instance of ToDo Model when calling 'getRepeatableDuplicate()'", ->
+				expect( task ).to.respondTo "getRepeatableDuplicate"
+				expect( duplicate ).to.be.instanceOf ToDoModel
+
+			it "Should retain title when duplicating a task", ->
+				expect( task.get "title" ).to.have.length.above 0
+				expect( task.get "title" ).to.equal duplicate.get "title"
+
+			it "Should retain tags when duplicating a task", ->
+				expect( task.get "tags" ).to.have.length.above 0
+				expect( task.get "tags" ).to.have.length duplicate.get("tags").length
+
+			it "Should retain notes when duplicating a task", ->
+				expect( task.get "notes" ).to.have.length.above 0
+				expect( task.get "notes" ).to.equal duplicate.get "notes"
+
+			it "Should retain order when duplicating a task", ->
+				expect( task.get "order" ).to.not.be.falsy
+				expect( task.get "order" ).to.equal duplicate.get "order"
+
+			it "Should retain repeatOption when duplicating a task", ->
+				expect( task.get "repeatOption" ).to.equal duplicate.get "repeatOption"
+
+			it "Should NOT retain state when duplicating a task", ->
+				expect( duplicate.has "state" ).to.be.false
+				expect( duplicate.getState() ).to.equal "scheduled"
 
 			it "Should NOT retain schedule when duplicating a task"
 			it "Should NOT retain scheduleStr when duplicating a task"
