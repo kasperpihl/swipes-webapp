@@ -34,6 +34,8 @@
           _this.setCompletionStr();
           return _this.setCompletionTimeStr();
         });
+        this.on("change:repeatOption", this.setRepeatOption);
+        this.on("destroy", this.cleanUp);
         if (this.has("completionDate")) {
           this.setCompletionStr();
           this.setCompletionTimeStr();
@@ -148,9 +150,13 @@
         }
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       },
+      setRepeatOption: function() {},
       toJSON: function() {
         this.set("state", this.getState());
         return Backbone.Model.prototype.toJSON.apply(this, arguments);
+      },
+      cleanUp: function() {
+        return this.off();
       }
     });
   });
