@@ -56,8 +56,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 			return dfd.promise()
 
-	###
-
 	#
 	# The Basics
 	#
@@ -76,8 +74,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 		it "Should have completed tasks for testing", ->
 			expect( swipy.todos.getCompleted() ).to.have.length.above 0
-
-	###
 
 	#
 	# To Do Model
@@ -146,8 +142,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( swipy.tags.pluck "title" ).to.not.contain dummyTagName
 				Backbone.trigger( "create-task", "Test that we add tags properly #" + dummyTagName )
 				expect( swipy.tags.pluck "title" ).to.contain dummyTagName
-
-	###
 
 	#
 	# To Do Collection
@@ -1210,5 +1204,3 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
-
-	###
