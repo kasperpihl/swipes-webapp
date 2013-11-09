@@ -817,8 +817,37 @@
 
     return describe("Repeating tasks", function() {
       describe("Repeat Picker user interface", function() {
-        it("Should change the models repeatOption and repeatDate properties when clicking a repeat option");
-        return it("Should update the UI when the models repeatOption prop changes");
+        it("Should change the models repeatOption and repeatDate properties when clicking a repeat option", function(done) {
+          var targetModel;
+          targetModel = swipy.todos.at(0);
+          targetModel.set("repeatOption", "never");
+          swipy.router.navigate("edit/" + targetModel.cid, true);
+          return require(["view/editor/TaskEditor"], function() {
+            var editor;
+            expect(targetModel.get("repeatOption")).to.equal("never");
+            expect(targetModel.get("repeatDate")).to.be.falsy;
+            expect(targetModel.get("repeatCount")).to.equal(0);
+            editor = swipy.viewController.currView.$el;
+            editor.find(".repeat-picker a").filter(function() {
+              return $(this).data("option") === "every day";
+            }).click();
+            expect(targetModel.get("repeatOption")).to.equal("every day");
+            return done();
+          });
+        });
+        return it("Should update the UI when the models repeatOption prop changes", function(done) {
+          var targetModel;
+          targetModel = swipy.todos.at(0);
+          targetModel.set("repeatOption", "never");
+          swipy.router.navigate("edit/" + targetModel.cid, true);
+          return require(["view/editor/TaskEditor"], function() {
+            var editor;
+            editor = swipy.viewController.currView.$el;
+            targetModel.set("repeatOption", "every week");
+            expect(editor.find("a[data-option='every week']").hasClass("selected")).to.be["true"];
+            return done();
+          });
+        });
       });
       describe("Setting and changing repeat options on ToDo Model ", function() {
         it("Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'");

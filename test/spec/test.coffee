@@ -813,8 +813,32 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 
 	describe "Repeating tasks", ->
 		describe "Repeat Picker user interface", ->
-			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option"
-			it "Should update the UI when the models repeatOption prop changes"
+			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
+				targetModel = swipy.todos.at(0)
+				targetModel.set( "repeatOption", "never" )
+				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
+
+				require ["view/editor/TaskEditor"], ->
+					expect( targetModel.get "repeatOption" ).to.equal "never"
+					expect( targetModel.get "repeatDate" ).to.be.falsy
+					expect( targetModel.get "repeatCount" ).to.equal 0
+
+					editor = swipy.viewController.currView.$el
+					editor.find(".repeat-picker a").filter( -> $(@).data( "option" ) is "every day" ).click()
+
+					expect( targetModel.get "repeatOption" ).to.equal "every day"
+					done()
+
+			it "Should update the UI when the models repeatOption prop changes", (done) ->
+				targetModel = swipy.todos.at(0)
+				targetModel.set( "repeatOption", "never" )
+				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
+
+				require ["view/editor/TaskEditor"], ->
+					editor = swipy.viewController.currView.$el
+					targetModel.set( "repeatOption", "every week" )
+					expect( editor.find("a[data-option='every week']").hasClass "selected" ).to.be.true
+					done()
 
 		describe "Setting and changing repeat options on ToDo Model ", ->
 			it "Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'"
