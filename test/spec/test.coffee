@@ -55,6 +55,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				dfd.resolve()
 
 			return dfd.promise()
+
+	###
+
 	#
 	# The Basics
 	#
@@ -74,55 +77,77 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 		it "Should have completed tasks for testing", ->
 			expect( swipy.todos.getCompleted() ).to.have.length.above 0
 
+	###
+
 	#
 	# To Do Model
 	#
-	describe "List Item model", ->
+	describe "Task model", ->
 		model = new ToDoModel()
 
-		it "Should create scheduleStr property when instantiated", ->
-			expect( model.get("scheduleStr") ).to.equal "the past"
+		describe "scheduleStr property", ->
+			it "Should create scheduleStr property when instantiated, and the default should be: 'Today'", ->
+				expect( model.get("scheduleStr") ).to.equal "Today"
 
-		it "Should update scheduleStr when schedule property is changed", ->
-			date = model.get "schedule"
+			it "Should update scheduleStr when schedule property is changed", ->
+				date = model.get "schedule"
 
-			# unset for change event to occur
-			model.unset "schedule"
+				# unset for change event to occur
+				model.unset "schedule"
 
-			date.setDate date.getDate()+1
-			model.set( "schedule", date )
+				date.setDate date.getDate()+1
+				model.set( "schedule", date )
 
-			expect( model.get("scheduleStr") ).to.equal "Tomorrow"
+				expect( model.get("scheduleStr") ).to.equal "Tomorrow"
 
-		it "Should create timeStr property when model is instantiated", ->
-			expect( model.get("timeStr") ).to.exist
+			describe "differentiate scheduleStr for 'Today' base current time vs. task time", ->
+				it "Should set scheduleStr to be 'Today' if the task is due today, prior to or equal to the current time", ->
+					earlierToday = new Date()
+					earlierToday.setMinutes earlierToday.getMinutes() - 1
+					taskForEarlierToday = new ToDoModel( schedule: earlierToday )
 
-		it "Should update timeStr when schedule property is changed", ->
-			timeBeforeChange = model.get "timeStr"
+					expect( taskForEarlierToday.get("scheduleStr") ).to.equal "Today"
 
-			date = model.get "schedule"
-			# Unset because its an object and wont trigger a change if we just update the object itself.
-			model.unset "schedule"
+				it "Should set scheduleStr to be 'Later today' if the task is due today, later than the current time", ->
+					laterToday = new Date()
+					laterToday.setMinutes laterToday.getMinutes() + 1
+					taskForLaterToday = new ToDoModel( schedule: laterToday )
 
-			date.setHours date.getHours() - 1
-			model.set( "schedule", date )
+					expect( taskForLaterToday.get("scheduleStr") ).to.equal "Later today"
 
-			timeAfterChange = model.get "timeStr"
+		describe "timeStr property", ->
+			it "Should create timeStr property when model is instantiated", ->
+				expect( model.get("timeStr") ).to.exist
 
-			expect( timeBeforeChange ).to.not.equal timeAfterChange
+			it "Should update timeStr when schedule property is changed", ->
+				timeBeforeChange = model.get "timeStr"
 
-		it "Should update completedStr when completionDate is changed", ->
-			model.set( "completionDate", new Date() )
-			expect( model.get "completionStr" ).to.exist
-			expect( model.get "completionTimeStr" ).to.exist
+				date = model.get "schedule"
+				# Unset because its an object and wont trigger a change if we just update the object itself.
+				model.unset "schedule"
 
-		it "Should make sure the tags all are in the global tags collection, and add them if not.", ->
-			dummyTagName = "wtf123-" + new Date().getTime()
+				date.setHours date.getHours() - 1
+				model.set( "schedule", date )
 
-			expect( swipy.tags.pluck "title" ).to.not.contain dummyTagName
-			Backbone.trigger( "create-task", "Test that we add tags properly #" + dummyTagName )
-			expect( swipy.tags.pluck "title" ).to.contain dummyTagName
+				timeAfterChange = model.get "timeStr"
 
+				expect( timeBeforeChange ).to.not.equal timeAfterChange
+
+		describe "completedStr property", ->
+			it "Should update completedStr when completionDate is changed", ->
+				model.set( "completionDate", new Date() )
+				expect( model.get "completionStr" ).to.exist
+				expect( model.get "completionTimeStr" ).to.exist
+
+		describe "tags", ->
+			it "Should make sure the models tags all exist in the global tags collection — And add them if they don't", ->
+				dummyTagName = "wtf123-" + new Date().getTime()
+
+				expect( swipy.tags.pluck "title" ).to.not.contain dummyTagName
+				Backbone.trigger( "create-task", "Test that we add tags properly #" + dummyTagName )
+				expect( swipy.tags.pluck "title" ).to.contain dummyTagName
+
+	###
 
 	#
 	# To Do Collection
@@ -1185,3 +1210,5 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
+
+	###
