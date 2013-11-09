@@ -5,6 +5,7 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 		initialize: ->
 			@on( "add", (model) -> model.save() )
 			@on( "destroy", (model) => @remove model )
+			@on( "change:completionDate", @spawnRepeatTask )
 		getActive: ->
 			@filter (m) => m.getState() is "active"
 		getScheduled: ->
@@ -30,3 +31,6 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 			else if direction is "up"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
 					model.set( "order", model.get( "order" ) - 1 )
+
+		spawnRepeatTask: (model, completionDate) ->
+			if model.get "repeatDate" then @add model.getRepeatableDuplicate().attributes

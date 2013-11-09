@@ -8,9 +8,10 @@
         this.on("add", function(model) {
           return model.save();
         });
-        return this.on("destroy", function(model) {
+        this.on("destroy", function(model) {
           return _this.remove(model);
         });
+        return this.on("change:completionDate", this.spawnRepeatTask);
       },
       getActive: function() {
         var _this = this;
@@ -72,6 +73,11 @@
             }
           }
           return _results1;
+        }
+      },
+      spawnRepeatTask: function(model, completionDate) {
+        if (model.get("repeatDate")) {
+          return this.add(model.getRepeatableDuplicate().attributes);
         }
       }
     });

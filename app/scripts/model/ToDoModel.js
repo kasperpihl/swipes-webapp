@@ -21,7 +21,7 @@
         if (typeof this.get("schedule") === "string") {
           this.set("schedule", new Date(this.get("schedule")));
         }
-        if (this.has("repeatOption")) {
+        if (this.get("repeatOption") !== "never") {
           this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
         }
         this.setScheduleStr();
@@ -187,7 +187,7 @@
       sanitizeDataForDuplication: function(data) {
         var prop, sanitizedData, _i, _len, _ref;
         sanitizedData = _.clone(data);
-        _ref = ["state", "schedule", "scheduleStr", "completionDate", "completionStr", "completionTimeStr", "repeatDate"];
+        _ref = ["id", "state", "schedule", "scheduleStr", "completionDate", "completionStr", "completionTimeStr", "repeatDate"];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           prop = _ref[_i];
           if (sanitizedData[prop]) {
@@ -203,7 +203,7 @@
       },
       getRepeatableDuplicate: function() {
         if (this.has("repeatDate")) {
-          return new this.constructor(this.sanitizeDataForDuplication(_.clone(this.attributes)));
+          return new this.constructor(this.sanitizeDataForDuplication(this.toJSON()));
         } else {
           throw new Error("You're trying to repeat a task that doesn't have a repeat date");
         }
