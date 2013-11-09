@@ -21,6 +21,9 @@
         if (typeof this.get("schedule") === "string") {
           this.set("schedule", new Date(this.get("schedule")));
         }
+        if (this.has("repeatOption")) {
+          this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
+        }
         this.setScheduleStr();
         this.setTimeStr();
         this.syncTags();
@@ -150,6 +153,9 @@
         }
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       },
+      setRepeatOption: function(model, option) {
+        return this.set("repeatDate", this.getNextDate(option));
+      },
       getNextWeekday: function() {
         console.warn("next week day not implemented yet!");
         return new moment().toDate();
@@ -178,8 +184,29 @@
             return null;
         }
       },
-      setRepeatOption: function(model, option) {
-        return this.set("repeatDate", this.getNextDate(option));
+      sanitizeDataForDuplication: function(data) {
+        var prop, sanitizedData, _i, _len, _ref;
+        sanitizedData = _.clone(data);
+        _ref = ["state", "schedule", "scheduleStr", "completionDate", "completionStr", "completionTimeStr", "repeatDate"];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          prop = _ref[_i];
+          if (sanitizedData[prop]) {
+            delete sanitizedData[prop];
+          }
+        }
+        sanitizedData.schedule = this.getScheduleBasedOnRepeatDate(data.repeatDate);
+        sanitizedData.repeatCount++;
+        return sanitizedData;
+      },
+      getScheduleBasedOnRepeatDate: function(repeatDate) {
+        return repeatDate;
+      },
+      getRepeatableDuplicate: function() {
+        if (this.has("repeatDate")) {
+          return new this.constructor(this.sanitizeDataForDuplication(_.clone(this.attributes)));
+        } else {
+          throw new Error("You're trying to repeat a task that doesn't have a repeat date");
+        }
       },
       toJSON: function() {
         this.set("state", this.getState());

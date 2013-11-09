@@ -13,12 +13,16 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			deleted: no
 
 		initialize: ->
-			if @get( "schedule" ) is "default"
-				@set( "schedule", @getDefaultSchedule() )
+			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
+			# because null should be an allowed without triggering any logic, as null is used for
+			# tasks scheduled as 'unspecified'
+			if @get( "schedule" ) is "default" then @set( "schedule", @getDefaultSchedule() )
 
 			# Convert schedule to date obj if for some reason it's a string
-			if typeof @get( "schedule" ) is "string"
-				@set( "schedule", new Date @get( "schedule" ) )
+			if typeof @get( "schedule" ) is "string" then @set( "schedule", new Date @get( "schedule" ) )
+
+			# If model was created as a duplicate/repeat task, set up the new repeatDate
+			if @has( "repeatOption" ) then @set( "repeatDate", @getNextDate( @get "repeatOption" ) )
 
 			@setScheduleStr()
 			@setTimeStr()
@@ -143,6 +147,9 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			# We have a completionDate set, update timeStr prop
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
 
+		setRepeatOption: (model, option) ->
+			@set( "repeatDate", @getNextDate option )
+
 		getNextWeekday: ->
 			console.warn "next week day not implemented yet!"
 			new moment().toDate()
@@ -163,8 +170,28 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				when "sat+sun" then @getNextWeekendday()
 				# "never" + catch-all
 				else null
-		setRepeatOption: (model, option) ->
-			@set( "repeatDate", @getNextDate option )
+
+		sanitizeDataForDuplication: (data) ->
+			sanitizedData = _.clone data
+
+			for prop in ["state", "schedule", "scheduleStr", "completionDate", "completionStr", "completionTimeStr", "repeatDate"]
+				delete sanitizedData[prop] if sanitizedData[prop]
+
+			sanitizedData.schedule = @getScheduleBasedOnRepeatDate data.repeatDate
+			sanitizedData.repeatCount++
+
+			return sanitizedData
+
+		getScheduleBasedOnRepeatDate: (repeatDate) ->
+			return repeatDate
+
+		getRepeatableDuplicate: ->
+			if @has "repeatDate"
+				return new this.constructor @sanitizeDataForDuplication( _.clone @attributes )
+			else
+				throw new Error "You're trying to repeat a task that doesn't have a repeat date"
+				return
+
 		toJSON: ->
 			@set( "state", @getState() )
 			Backbone.Model::toJSON.apply( @, arguments )
