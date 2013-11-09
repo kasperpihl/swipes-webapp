@@ -982,9 +982,20 @@
           return it("if repeatDate is only existant because of a leap year, we should schedule for the day before");
         });
       });
-      return describe("Un-setting repeat options on ToDo Model", function() {
-        it("Should change repeatDate to 'null' of repeatOption is set to 'never'");
+      describe("Un-setting repeat options on ToDo Model", function() {
+        it("Should change repeatDate to 'null' of repeatOption is set to 'never'", function() {
+          var task;
+          task = new ToDoModel({
+            repeatOption: "every week"
+          });
+          expect(task.get("repeatDate")).to.be.instanceOf(Date);
+          task.set("repeatOption", "never");
+          return expect(task.get("repeatDate")).to.equal(null);
+        });
         return it("Should delete duplicated (repeated) tasks when repeatOption is set to 'never'");
+      });
+      return describe("Completing a task with repeat set and automatically spawning a new task", function() {
+        return it("TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'");
       });
     });
     /*

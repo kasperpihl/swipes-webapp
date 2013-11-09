@@ -968,8 +968,16 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					# 29. feb hver 4. år — Og altid den 29. feb.
 
 		describe "Un-setting repeat options on ToDo Model", ->
-			it "Should change repeatDate to 'null' of repeatOption is set to 'never'"
+			it "Should change repeatDate to 'null' of repeatOption is set to 'never'", ->
+				task = new ToDoModel( repeatOption: "every week" )
+				expect( task.get "repeatDate" ).to.be.instanceOf Date
+				task.set( "repeatOption", "never" )
+				expect( task.get "repeatDate" ).to.equal null
 			it "Should delete duplicated (repeated) tasks when repeatOption is set to 'never'"
+
+		describe "Completing a task with repeat set and automatically spawning a new task", ->
+			it "TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'"
+
 
 
 	###
