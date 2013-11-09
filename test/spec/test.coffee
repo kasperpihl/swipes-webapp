@@ -873,8 +873,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					tags: ["tag1", "tag2"]
 					order: 2
 					state: "completed"
+					repeatOption: "every day"
 
-				task.set( "repeatOption", "every day" )
 				task.set( "completionDate", new Date() )
 
 				duplicate = task.getRepeatableDuplicate()
@@ -911,6 +911,10 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			it "Should NOT retain state when duplicating a task", ->
 				expect( duplicate.has "state" ).to.be.false
 				expect( duplicate.getState() ).to.equal "scheduled"
+
+			it "Should NOT retain model ID when duplicating a task", ->
+				if task.id?
+					expect( duplicate.id ).to.not.exist
 
 			it "Should NOT retain schedule when duplicating a task", ->
 				expect( duplicate.has "schedule" ).to.be.true
@@ -976,7 +980,46 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 			it "Should delete duplicated (repeated) tasks when repeatOption is set to 'never'"
 
 		describe "Completing a task with repeat set and automatically spawning a new task", ->
-			it "TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'"
+			it "TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'", (done) ->
+				require ["collection/ToDoCollection"], (ToDoCollection) ->
+					spawnSpy = sinon.spy( ToDoCollection.prototype, "spawnRepeatTask" )
+
+					expect( spawnSpy ).to.not.have.been.called
+
+					todoCollection = new ToDoCollection()
+					todoCollection.add { title: "auto spawn tester", repeatOption: "every day" }
+
+					expect( todoCollection.models ).to.have.length 1
+
+					todoCollection.at(0).set( "completionDate", new Date() )
+
+					expect( spawnSpy ).to.have.been.calledOnce
+					expect( todoCollection.models ).to.have.length 2
+
+					# Clean up this mess
+					ToDoCollection::spawnRepeatTask.restore()
+					todoCollection.off()
+					todoCollection = null
+
+					done()
+
+			it "TodoCollection should listen for tasks that are completed and do nothing if repeatOption is 'never'", (done) ->
+				require ["collection/ToDoCollection"], (ToDoCollection) ->
+					spawnSpy = sinon.spy( ToDoCollection.prototype, "spawnRepeatTask" )
+
+					todoCollection = new ToDoCollection()
+					todoCollection.add { title: "auto spawn tester 2" }
+					todoCollection.at(0).set( "completionDate", new Date() )
+
+					expect( spawnSpy ).to.have.been.calledOnce
+					expect( todoCollection.models ).to.have.length 1
+
+					# Clean up this mess
+					ToDoCollection::spawnRepeatTask.restore()
+					todoCollection.off()
+					todoCollection = null
+
+					done()
 
 
 

@@ -886,9 +886,9 @@
             notes: "test notes",
             tags: ["tag1", "tag2"],
             order: 2,
-            state: "completed"
+            state: "completed",
+            repeatOption: "every day"
           });
-          task.set("repeatOption", "every day");
           task.set("completionDate", new Date());
           return duplicate = task.getRepeatableDuplicate();
         });
@@ -925,6 +925,11 @@
         it("Should NOT retain state when duplicating a task", function() {
           expect(duplicate.has("state")).to.be["false"];
           return expect(duplicate.getState()).to.equal("scheduled");
+        });
+        it("Should NOT retain model ID when duplicating a task", function() {
+          if (task.id != null) {
+            return expect(duplicate.id).to.not.exist;
+          }
         });
         it("Should NOT retain schedule when duplicating a task", function() {
           expect(duplicate.has("schedule")).to.be["true"];
@@ -995,7 +1000,43 @@
         return it("Should delete duplicated (repeated) tasks when repeatOption is set to 'never'");
       });
       return describe("Completing a task with repeat set and automatically spawning a new task", function() {
-        return it("TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'");
+        it("TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'", function(done) {
+          return require(["collection/ToDoCollection"], function(ToDoCollection) {
+            var spawnSpy, todoCollection;
+            spawnSpy = sinon.spy(ToDoCollection.prototype, "spawnRepeatTask");
+            expect(spawnSpy).to.not.have.been.called;
+            todoCollection = new ToDoCollection();
+            todoCollection.add({
+              title: "auto spawn tester",
+              repeatOption: "every day"
+            });
+            expect(todoCollection.models).to.have.length(1);
+            todoCollection.at(0).set("completionDate", new Date());
+            expect(spawnSpy).to.have.been.calledOnce;
+            expect(todoCollection.models).to.have.length(2);
+            ToDoCollection.prototype.spawnRepeatTask.restore();
+            todoCollection.off();
+            todoCollection = null;
+            return done();
+          });
+        });
+        return it("TodoCollection should listen for tasks that are completed and do nothing if repeatOption is 'never'", function(done) {
+          return require(["collection/ToDoCollection"], function(ToDoCollection) {
+            var spawnSpy, todoCollection;
+            spawnSpy = sinon.spy(ToDoCollection.prototype, "spawnRepeatTask");
+            todoCollection = new ToDoCollection();
+            todoCollection.add({
+              title: "auto spawn tester 2"
+            });
+            todoCollection.at(0).set("completionDate", new Date());
+            expect(spawnSpy).to.have.been.calledOnce;
+            expect(todoCollection.models).to.have.length(1);
+            ToDoCollection.prototype.spawnRepeatTask.restore();
+            todoCollection.off();
+            todoCollection = null;
+            return done();
+          });
+        });
       });
     });
     /*
