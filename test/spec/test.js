@@ -876,7 +876,7 @@
           return expect(task.get("repeatDate")).to.be.falsy;
         });
         describe("updating repeatDate", function() {
-          return it("For a task scheduled for 11/12/2013 with a repeatOption of 'every day' the initial repeatDate should be 11/13/2013", function() {
+          it("When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should be 11/13/2013", function() {
             var repeatDate;
             task.set("schedule", new Date("11/12/2013"));
             task.set("repeatOption", "every day");
@@ -884,6 +884,45 @@
             expect(repeatDate.getMonth()).to.equal(10);
             expect(repeatDate.getDate()).to.equal(13);
             return expect(repeatDate.getFullYear()).to.equal(2013);
+          });
+          it("When changing schedule to 11/12/2013 and with a repeatOption of 'every week' the new repeatDate should be 11/19/2013", function() {
+            var repeatDate;
+            task.set("schedule", new Date("11/12/2013"));
+            task.set("repeatOption", "every week");
+            repeatDate = task.get("repeatDate");
+            expect(repeatDate.getMonth()).to.equal(10);
+            expect(repeatDate.getDate()).to.equal(19);
+            return expect(repeatDate.getFullYear()).to.equal(2013);
+          });
+          it("When changing schedule to 11/12/2013 and with a repeatOption of 'every month' the new repeatDate should be 12/12/2013", function() {
+            var repeatDate;
+            task.set("schedule", new Date("11/12/2013"));
+            task.set("repeatOption", "every month");
+            repeatDate = task.get("repeatDate");
+            expect(repeatDate.getMonth()).to.equal(11);
+            expect(repeatDate.getDate()).to.equal(12);
+            return expect(repeatDate.getFullYear()).to.equal(2013);
+          });
+          it("When changing schedule to 11/12/2013 and with a repeatOption of 'every year' the new repeatDate should be 11/12/2014", function() {
+            var repeatDate;
+            task.set("schedule", new Date("11/12/2013"));
+            task.set("repeatOption", "every year");
+            repeatDate = task.get("repeatDate");
+            expect(repeatDate.getMonth()).to.equal(10);
+            expect(repeatDate.getDate()).to.equal(12);
+            return expect(repeatDate.getFullYear()).to.equal(2014);
+          });
+          return describe("handling difference in month lengths", function() {
+            return it("When changing schedule to 10/31/2013 and with a repeatOption of 'every month' the new repeatDate should be 11/30/2013", function() {
+              var repeatDate;
+              task.set("schedule", new Date("10/31/2013"));
+              task.set("repeatOption", "every month");
+              repeatDate = task.get("repeatDate");
+              console.log(repeatDate);
+              expect(repeatDate.getMonth()).to.equal(10);
+              expect(repeatDate.getDate()).to.equal(30);
+              return expect(repeatDate.getFullYear()).to.equal(2013);
+            });
           });
         });
         return it("Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones");
