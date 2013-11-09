@@ -5,6 +5,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 		events:
 			"click .save": "save"
 			"click time": "reschedule"
+			"click .repeat-picker a": "setRepeat"
 			"blur .title input": "updateTitle"
 			"blur .notes textarea": "updateNotes"
 		initialize: ->
@@ -13,7 +14,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 			@setTemplate()
 
 			@render()
-			@listenTo( @model, "change:schedule", @render )
+			@listenTo( @model, "change:schedule change:repeatOption", @render )
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
 		killTagEditor: ->
@@ -38,6 +39,8 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
 
+		setRepeat: (e) ->
+			@model.set( "repeatOption", $(e.currentTarget).data "option" )
 		updateTitle: ->
 			@model.set( "title", @getTitle() )
 		updateNotes: ->

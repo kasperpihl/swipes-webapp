@@ -6,6 +6,7 @@
       events: {
         "click .save": "save",
         "click time": "reschedule",
+        "click .repeat-picker a": "setRepeat",
         "blur .title input": "updateTitle",
         "blur .notes textarea": "updateNotes"
       },
@@ -14,7 +15,7 @@
         this.$el.addClass(this.model.getState());
         this.setTemplate();
         this.render();
-        return this.listenTo(this.model, "change:schedule", this.render);
+        return this.listenTo(this.model, "change:schedule change:repeatOption", this.render);
       },
       setTemplate: function() {
         return this.template = _.template(TaskEditorTmpl);
@@ -54,6 +55,9 @@
         return Backbone.trigger("show-scheduler", [this.model]);
       },
       transitionInComplete: function() {},
+      setRepeat: function(e) {
+        return this.model.set("repeatOption", $(e.currentTarget).data("option"));
+      },
       updateTitle: function() {
         return this.model.set("title", this.getTitle());
       },

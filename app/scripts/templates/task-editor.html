@@ -19,13 +19,13 @@
 		<div class="repeat-picker icon-repeat has-icon">
 			<p>Repeat every &hellip;</p>
 			<ul>
-				<li><a href="JavaScript:void(0);">never</a></li>
-				<li><a class="selected" href="JavaScript:void(0);">day</a></li>
-				<li><a href="JavaScript:void(0);">mon-fri</a></li>
-				<li><a href="JavaScript:void(0);">sat+sun</a></li>
-				<li><a href="JavaScript:void(0);">week</a></li>
-				<li><a href="JavaScript:void(0);">month</a></li>
-				<li><a href="JavaScript:void(0);">year</a></li>
+				<li><a <% if (repeatOption === "never") print("class='selected'") %> href="JavaScript:void(0);" data-option="never">never</a></li>
+				<li><a <% if (repeatOption === "every day") print("class='selected'") %> href="JavaScript:void(0);" data-option="every day">day</a></li>
+				<li><a <% if (repeatOption === "mon-fri") print("class='selected'") %> href="JavaScript:void(0);" data-option="mon-fri">mon-fri</a></li>
+				<li><a <% if (repeatOption === "sat+sun") print("class='selected'") %> href="JavaScript:void(0);" data-option="sat+sun">sat+sun</a></li>
+				<li><a <% if (repeatOption === "every week") print("class='selected'") %> href="JavaScript:void(0);" data-option="every week">week</a></li>
+				<li><a <% if (repeatOption === "every month") print("class='selected'") %> href="JavaScript:void(0);" data-option="every month">month</a></li>
+				<li><a <% if (repeatOption === "every year") print("class='selected'") %> href="JavaScript:void(0);" data-option="every year">year</a></li>
 			</ul>
 		</div>
 	</section>
