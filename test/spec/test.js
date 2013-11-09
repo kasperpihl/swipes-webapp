@@ -850,8 +850,31 @@
         });
       });
       describe("Setting and changing repeat options on ToDo Model ", function() {
-        it("Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'");
-        it("Should change the repeatDate, if it already exists when the repeatOption is set to something other than 'never'");
+        var task;
+        task = null;
+        beforeEach(function() {
+          return task = new ToDoModel();
+        });
+        afterEach(function() {
+          return task.destroy();
+        });
+        it("Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'", function() {
+          expect(task.get("repeatDate")).to.be.falsy;
+          task.set("repeatOption", "every day");
+          return expect(task.get("repeatDate")).to.exist;
+        });
+        it("Should change the repeatDate, if it already exists when the repeatOption is set to something other than 'never'", function() {
+          var originalRepeatDate;
+          task.set("repeatOption", "every day");
+          originalRepeatDate = task.get("repeatDate");
+          task.set("repeatOption", "every week");
+          return expect(originalRepeatDate.getTime()).to.not.equal(task.get("repeatDate").getTime());
+        });
+        it("Should delete any existing repeatDate when setting repeatOption to 'never'", function() {
+          task.set("repeatOption", "every day");
+          task.set("repeatOption", "never");
+          return expect(task.get("repeatDate")).to.be.falsy;
+        });
         return it("Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones");
       });
       describe("Duplicating tasks", function() {

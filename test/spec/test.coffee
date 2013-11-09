@@ -841,8 +841,28 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 					done()
 
 		describe "Setting and changing repeat options on ToDo Model ", ->
-			it "Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'"
-			it "Should change the repeatDate, if it already exists when the repeatOption is set to something other than 'never'"
+			task = null
+
+			beforeEach -> task = new ToDoModel()
+			afterEach -> task.destroy()
+
+			it "Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'", ->
+				expect( task.get "repeatDate" ).to.be.falsy
+				task.set( "repeatOption", "every day" )
+				expect( task.get "repeatDate" ).to.exist
+
+			it "Should change the repeatDate, if it already exists when the repeatOption is set to something other than 'never'", ->
+				task.set( "repeatOption", "every day" )
+				originalRepeatDate = task.get "repeatDate"
+
+				task.set( "repeatOption", "every week" )
+				expect( originalRepeatDate.getTime() ).to.not.equal task.get( "repeatDate" ).getTime()
+
+			it "Should delete any existing repeatDate when setting repeatOption to 'never'", ->
+				task.set( "repeatOption", "every day" )
+				task.set( "repeatOption", "never" )
+				expect( task.get "repeatDate" ).to.be.falsy
+
 			it "Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones"
 
 		describe "Duplicating tasks", ->
