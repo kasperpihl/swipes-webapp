@@ -166,7 +166,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				when "every week" then date.add( "weeks", 1 ).toDate()
 				when "every month" then date.add( "months", 1 ).toDate()
 				when "every year" then date.add( "years", 1 ).toDate()
-				when "min-fri" then @getNextWeekday()
+				when "mon-fri" then @getNextWeekday()
 				when "sat+sun" then @getNextWeekendday()
 				# "never" + catch-all
 				else null
