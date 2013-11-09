@@ -150,7 +150,37 @@
         }
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       },
-      setRepeatOption: function() {},
+      getNextWeekday: function() {
+        console.warn("next week day not implemented yet!");
+        return new moment().toDate();
+      },
+      getNextWeekendday: function() {
+        console.warn("next weekend day not implemented yet!");
+        return new moment().toDate();
+      },
+      getNextDate: function(option) {
+        var date;
+        date = new moment();
+        switch (option) {
+          case "every day":
+            return date.add("days", 1).toDate();
+          case "every week":
+            return date.add("weeks", 1).toDate();
+          case "every month":
+            return date.add("months", 1).toDate();
+          case "every year":
+            return date.add("years", 1).toDate();
+          case "min-fri":
+            return this.getNextWeekday();
+          case "sat+sun":
+            return this.getNextWeekendday();
+          default:
+            return null;
+        }
+      },
+      setRepeatOption: function(model, option) {
+        return this.set("repeatDate", this.getNextDate(option));
+      },
       toJSON: function() {
         this.set("state", this.getState());
         return Backbone.Model.prototype.toJSON.apply(this, arguments);

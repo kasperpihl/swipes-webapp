@@ -35,6 +35,9 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				@setCompletionStr()
 				@setCompletionTimeStr()
 
+			@on( "change:repeatOption", @setRepeatOption )
+			@on( "destroy", @cleanUp )
+
 			if @has "completionDate"
 				@setCompletionStr()
 				@setCompletionTimeStr()
@@ -140,6 +143,31 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			# We have a completionDate set, update timeStr prop
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
 
+		getNextWeekday: ->
+			console.warn "next week day not implemented yet!"
+			new moment().toDate()
+
+		getNextWeekendday: ->
+			console.warn "next weekend day not implemented yet!"
+			new moment().toDate()
+
+		getNextDate: (option) ->
+			date = new moment()
+
+			switch option
+				when "every day" then date.add( "days", 1 ).toDate()
+				when "every week" then date.add( "weeks", 1 ).toDate()
+				when "every month" then date.add( "months", 1 ).toDate()
+				when "every year" then date.add( "years", 1 ).toDate()
+				when "min-fri" then @getNextWeekday()
+				when "sat+sun" then @getNextWeekendday()
+				# "never" + catch-all
+				else null
+		setRepeatOption: (model, option) ->
+			@set( "repeatDate", @getNextDate option )
 		toJSON: ->
 			@set( "state", @getState() )
 			Backbone.Model::toJSON.apply( @, arguments )
+
+		cleanUp: ->
+			@off()
