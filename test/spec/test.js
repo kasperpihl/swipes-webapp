@@ -1,5 +1,5 @@
 (function() {
-  define(["jquery", "underscore", "backbone", "model/ToDoModel"], function($, _, Backbone, ToDoModel) {
+  define(["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], function($, _, Backbone, ToDoModel, moment) {
     var contentHolder, helpers;
     contentHolder = $("#content-holder");
     helpers = {
@@ -875,6 +875,17 @@
           task.set("repeatOption", "never");
           return expect(task.get("repeatDate")).to.be.falsy;
         });
+        describe("updating repeatDate", function() {
+          return it("For a task scheduled for 11/12/2013 with a repeatOption of 'every day' the initial repeatDate should be 11/13/2013", function() {
+            var repeatDate;
+            task.set("schedule", new Date("11/12/2013"));
+            task.set("repeatOption", "every day");
+            repeatDate = task.get("repeatDate");
+            expect(repeatDate.getMonth()).to.equal(10);
+            expect(repeatDate.getDate()).to.equal(13);
+            return expect(repeatDate.getFullYear()).to.equal(2013);
+          });
+        });
         return it("Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones");
       });
       describe("Duplicating tasks", function() {
@@ -962,7 +973,18 @@
         });
       });
       describe("Duplicating a task based on repeatDate and repeatOption", function() {
+        var task;
+        task = null;
+        beforeEach(function() {
+          return task = new ToDoModel();
+        });
+        afterEach(function() {
+          return task.destroy();
+        });
         describe("Repeat option: 'every day'", function() {
+          beforeEach(function() {
+            return task.set("repeatOption", "every day");
+          });
           it("if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/11/2013");
           it("if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)");
           it("if repeatDate is 11/12/2013, it should still create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/09/2013 (Completed too early)");

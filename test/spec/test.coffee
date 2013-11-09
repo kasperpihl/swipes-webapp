@@ -1,4 +1,4 @@
-define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone, ToDoModel) ->
+define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, _, Backbone, ToDoModel, moment) ->
 
 	contentHolder = $("#content-holder")
 
@@ -862,6 +862,16 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				task.set( "repeatOption", "never" )
 				expect( task.get "repeatDate" ).to.be.falsy
 
+			describe "updating repeatDate", ->
+				it "For a task scheduled for 11/12/2013 with a repeatOption of 'every day' the initial repeatDate should be 11/13/2013", ->
+					task.set( "schedule", new Date("11/12/2013") )
+					task.set( "repeatOption", "every day" )
+
+					repeatDate = task.get "repeatDate"
+					expect( repeatDate.getMonth() ).to.equal 10
+					expect( repeatDate.getDate() ).to.equal 13
+					expect( repeatDate.getFullYear() ).to.equal 2013
+
 			it "Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones"
 
 		describe "Duplicating tasks", ->
@@ -946,8 +956,18 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel"], ($, _, Backbone,
 				expect( duplicate.get "repeatCount" ).to.equal ( task.get( "repeatCount" ) + 1 )
 
 		describe "Duplicating a task based on repeatDate and repeatOption", ->
+			task = null
+
+			beforeEach ->
+				task = new ToDoModel()
+			afterEach ->
+				task.destroy()
+
 			describe "Repeat option: 'every day'", ->
+				beforeEach -> task.set( "repeatOption", "every day" )
+
 				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/11/2013"
+
 				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)"
 				it "if repeatDate is 11/12/2013, it should still create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/09/2013 (Completed too early)"
 				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)"

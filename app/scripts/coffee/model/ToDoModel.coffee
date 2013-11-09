@@ -31,6 +31,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
+				@updateRepeatDate()
 				@set( "selected", no )
 
 			@on "change:completionDate", =>
@@ -150,6 +151,12 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 		setRepeatOption: (model, option) ->
 			@set( "repeatDate", @getNextDate option )
 
+		updateRepeatDate: ->
+			if @get( "schedule" ) and @get( "repeatOption" ) isnt "never"
+				@set( "repeatDate", @getNextDate( @get "repeatOption" ) )
+			else
+				@set( "repeatDate", null )
+
 		getNextWeekday: ->
 			console.warn "next week day not implemented yet!"
 			new moment().toDate()
@@ -159,7 +166,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			new moment().toDate()
 
 		getNextDate: (option) ->
-			date = new moment()
+			date = moment @get "schedule"
 
 			switch option
 				when "every day" then date.add( "days", 1 ).toDate()
@@ -183,6 +190,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			return sanitizedData
 
 		getScheduleBasedOnRepeatDate: (repeatDate) ->
+			# Look at completionDate and determine the correct date.
 			return repeatDate
 
 		getRepeatableDuplicate: ->

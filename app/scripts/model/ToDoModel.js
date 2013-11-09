@@ -30,6 +30,7 @@
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
+          _this.updateRepeatDate();
           return _this.set("selected", false);
         });
         this.on("change:completionDate", function() {
@@ -156,6 +157,13 @@
       setRepeatOption: function(model, option) {
         return this.set("repeatDate", this.getNextDate(option));
       },
+      updateRepeatDate: function() {
+        if (this.get("schedule") && this.get("repeatOption") !== "never") {
+          return this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
+        } else {
+          return this.set("repeatDate", null);
+        }
+      },
       getNextWeekday: function() {
         console.warn("next week day not implemented yet!");
         return new moment().toDate();
@@ -166,7 +174,7 @@
       },
       getNextDate: function(option) {
         var date;
-        date = new moment();
+        date = moment(this.get("schedule"));
         switch (option) {
           case "every day":
             return date.add("days", 1).toDate();
