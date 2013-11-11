@@ -56,8 +56,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 			return dfd.promise()
 
-	###
-
 	#
 	# The Basics
 	#
@@ -809,8 +807,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			it "Should set/clear the repeat option when picking one"
 			it "Should throw an error message if the changes can't be saved to the server"
 
-	###
-
 	describe "Repeating tasks", ->
 		describe "Repeat Picker user interface", ->
 			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
@@ -1276,9 +1272,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					done()
 
 
-
-	###
-
 	describe "Tag Filter", ->
 		beforeEach ->
 			Backbone.trigger( "create-task", "TagTester1 #Nina" )
@@ -1673,5 +1666,3 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
-
-	###
