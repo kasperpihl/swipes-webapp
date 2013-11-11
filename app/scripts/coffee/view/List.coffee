@@ -85,7 +85,8 @@ define [
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeRight("completed").then -> m.set { completionDate: new Date(), schedule: null }
+					view.swipeRight( "completed" ).then ->
+						m.set( "completionDate", new Date() )
 
 		markTaskAsTodo: (tasks) ->
 			for task in tasks

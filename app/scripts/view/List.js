@@ -106,10 +106,7 @@
               var m;
               m = task;
               return view.swipeRight("completed").then(function() {
-                return m.set({
-                  completionDate: new Date(),
-                  schedule: null 
-                });
+                return m.set("completionDate", new Date());
               });
             })());
           } else {
