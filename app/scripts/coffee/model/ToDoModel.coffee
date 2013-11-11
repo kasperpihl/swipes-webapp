@@ -177,12 +177,12 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				@getNextWeekendDay completionDate
 
 		getNextWeekDay: (date) ->
-			console.warn "next week day not implemented yet!"
-			new moment().toDate()
+			# If date is friday, go to next monday, else go to tomorrow
+			return date.add( "days", if date.day() is 5 then 3 else 1 ).toDate()
 
 		getNextWeekendDay: (date) ->
-			console.warn "next weekend day not implemented yet!"
-			new moment().toDate()
+			# If date is sunday, go to next saturday, else go to tomorrow (Which will always be sunday)
+			return date.add( "days", if date.day() is 0 then 6 else 1 ).toDate()
 
 		getNextDate: (option) ->
 			# Task was completed before scheduled time

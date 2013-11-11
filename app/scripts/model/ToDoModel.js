@@ -192,12 +192,10 @@
         }
       },
       getNextWeekDay: function(date) {
-        console.warn("next week day not implemented yet!");
-        return new moment().toDate();
+        return date.add("days", date.day() === 5 ? 3 : 1).toDate();
       },
       getNextWeekendDay: function(date) {
-        console.warn("next weekend day not implemented yet!");
-        return new moment().toDate();
+        return date.add("days", date.day() === 0 ? 6 : 1).toDate();
       },
       getNextDate: function(option) {
         var completionDate, date, repeatDate;
