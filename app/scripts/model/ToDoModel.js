@@ -30,12 +30,16 @@
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
+          if (!_this.has("completionDate")) {
+            _this.updateRepeatDate();
+          }
           return _this.set("selected", false);
         });
         this.on("change:completionDate", function() {
-          _this.set("selected", false);
+          _this.updateRepeatDate();
           _this.setCompletionStr();
-          return _this.setCompletionTimeStr();
+          _this.setCompletionTimeStr();
+          return _this.set("selected", false);
         });
         this.on("change:repeatOption", this.setRepeatOption);
         this.on("destroy", this.cleanUp);
@@ -154,32 +158,85 @@
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       },
       setRepeatOption: function(model, option) {
-        return this.set("repeatDate", this.getNextDate(option));
+        if (this.has("completionDate")) {
+          this.set("repeatOption", this.previous("repeatOption"), {
+            silent: true
+          });
+          return console.warn("Can't set repeatOption after a completionDate has been defined");
+        } else {
+          return this.set("repeatDate", this.getNextDate(option));
+        }
       },
-      getNextWeekday: function() {
-        console.warn("next week day not implemented yet!");
-        return new moment().toDate();
+      updateRepeatDate: function() {
+        if (this.has("schedule") || this.has("completionDate") && this.get("repeatOption") !== "never") {
+          return this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
+        } else {
+          return this.set("repeatDate", null);
+        }
       },
-      getNextWeekendday: function() {
-        console.warn("next weekend day not implemented yet!");
-        return new moment().toDate();
+      isWeekend: function(schedule) {
+        if (schedule.getDay() === 0 || schedule.getDay() === 6) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      isWeekday: function(schedule) {
+        return !this.isWeekend(schedule);
+      },
+      getMonFriSatSunFromDate: function(schedule, completionDate) {
+        if (this.isWeekday(schedule)) {
+          return this.getNextWeekDay(completionDate);
+        } else {
+          return this.getNextWeekendDay(completionDate);
+        }
+      },
+      getNextWeekDay: function(date) {
+        return date.add("days", date.day() === 5 ? 3 : 1).toDate();
+      },
+      getNextWeekendDay: function(date) {
+        return date.add("days", date.day() === 0 ? 6 : 1).toDate();
       },
       getNextDate: function(option) {
-        var date;
-        date = new moment();
+        var completionDate, date, diff, repeatDate, type;
+        if (this.has("completionDate")) {
+          repeatDate = this.get("repeatDate");
+          completionDate = this.get("completionDate");
+          if (repeatDate) {
+            if (repeatDate.getTime() > completionDate.getTime()) {
+              return repeatDate;
+            } else {
+              switch (option) {
+                case "every week":
+                case "every month":
+                case "every year":
+                  date = moment(this.get("schedule"));
+                  break;
+                default:
+                  date = moment(completionDate);
+              }
+            }
+          } else {
+            date = moment(completionDate);
+          }
+        } else {
+          date = moment(this.get("schedule"));
+        }
         switch (option) {
           case "every day":
             return date.add("days", 1).toDate();
           case "every week":
-            return date.add("weeks", 1).toDate();
           case "every month":
-            return date.add("months", 1).toDate();
           case "every year":
-            return date.add("years", 1).toDate();
-          case "min-fri":
-            return this.getNextWeekday();
-          case "sat+sun":
-            return this.getNextWeekendday();
+            type = option.replace("every ", "") + "s";
+            if (this.has("completionDate")) {
+              diff = moment(this.get("completionDate")).diff(date, type, true);
+            } else {
+              diff = 1;
+            }
+            return date.add(type, Math.ceil(diff)).toDate();
+          case "mon-fri or sat+sun":
+            return this.getMonFriSatSunFromDate(this.get("schedule"), date);
           default:
             return null;
         }

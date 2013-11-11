@@ -31,13 +31,14 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
+				@updateRepeatDate() unless @has "completionDate"
 				@set( "selected", no )
 
 			@on "change:completionDate", =>
-				@set( "selected", no )
-				# These methods will unset the properties if no completionDate is defined
+				@updateRepeatDate()
 				@setCompletionStr()
 				@setCompletionTimeStr()
+				@set( "selected", no )
 
 			@on( "change:repeatOption", @setRepeatOption )
 			@on( "destroy", @cleanUp )
@@ -148,26 +149,71 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
 
 		setRepeatOption: (model, option) ->
-			@set( "repeatDate", @getNextDate option )
+			if @has "completionDate"
+				@set( "repeatOption", @previous( "repeatOption" ), { silent: yes } )
+				return console.warn "Can't set repeatOption after a completionDate has been defined"
+			else
+				@set( "repeatDate", @getNextDate option )
 
-		getNextWeekday: ->
-			console.warn "next week day not implemented yet!"
-			new moment().toDate()
+		updateRepeatDate: ->
+			if @has( "schedule" ) or @has( "completionDate" ) and @get( "repeatOption" ) isnt "never"
+				@set( "repeatDate", @getNextDate( @get "repeatOption" ) )
 
-		getNextWeekendday: ->
-			console.warn "next weekend day not implemented yet!"
-			new moment().toDate()
+			# schedule: "undefined" || schedule: "location"
+			else
+				@set( "repeatDate", null )
+
+		isWeekend: (schedule) ->
+			if schedule.getDay() is 0 or schedule.getDay() is 6 then return yes
+			else return no
+
+		isWeekday: (schedule) ->
+			return !@isWeekend schedule
+
+		getMonFriSatSunFromDate: ( schedule, completionDate ) ->
+			if @isWeekday schedule
+				@getNextWeekDay completionDate
+			else
+				@getNextWeekendDay completionDate
+
+		getNextWeekDay: (date) ->
+			# If date is friday, go to next monday, else go to tomorrow
+			return date.add( "days", if date.day() is 5 then 3 else 1 ).toDate()
+
+		getNextWeekendDay: (date) ->
+			# If date is sunday, go to next saturday, else go to tomorrow (Which will always be sunday)
+			return date.add( "days", if date.day() is 0 then 6 else 1 ).toDate()
 
 		getNextDate: (option) ->
-			date = new moment()
+			# Task was completed before scheduled time
+			if @has "completionDate"
+				repeatDate = @get "repeatDate"
+				completionDate = @get "completionDate"
+
+				if repeatDate
+					if repeatDate.getTime() > completionDate.getTime() then return repeatDate
+					else switch option
+						when "every week", "every month", "every year"
+							date = moment @get "schedule"
+						else
+							date = moment completionDate
+				else
+					date = moment completionDate
+			else
+				date = moment @get "schedule"
 
 			switch option
 				when "every day" then date.add( "days", 1 ).toDate()
-				when "every week" then date.add( "weeks", 1 ).toDate()
-				when "every month" then date.add( "months", 1 ).toDate()
-				when "every year" then date.add( "years", 1 ).toDate()
-				when "mon-fri" then @getNextWeekday()
-				when "sat+sun" then @getNextWeekendday()
+				when "every week", "every month", "every year"
+					type = option.replace( "every ", "" ) + "s"
+					if @has "completionDate"
+						# In this case, date is the scheduled date
+						diff = moment( @get "completionDate" ).diff( date, type, yes )
+					else
+						diff = 1
+
+					date.add( type, Math.ceil diff ).toDate()
+				when "mon-fri or sat+sun" then @getMonFriSatSunFromDate( @get( "schedule" ), date )
 				# "never" + catch-all
 				else null
 
@@ -183,6 +229,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			return sanitizedData
 
 		getScheduleBasedOnRepeatDate: (repeatDate) ->
+			# Look at completionDate and determine the correct date.
 			return repeatDate
 
 		getRepeatableDuplicate: ->

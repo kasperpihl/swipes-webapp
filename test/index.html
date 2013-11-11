@@ -65,17 +65,25 @@
 
 	<!-- include spec files here... -->
 	<script>
-		setTimeout(function() {
-			// Timeout to make sure scripts have been pulled in by require first
-			require(["../../test/spec/test"], function() {
-				// We don't want popups when testing
-				swipy.errors.destroy()
-				swipy.errors = null
+		var tryStarting = function() {
+			if ( typeof swipy !== "undefined" && swipy !== null ) {
+				require(["../../test/spec/test"], function() {
+					// We don't want popups when testing
+					swipy.errors.destroy()
+					swipy.errors = null
 
-				// Start tests
-				mocha.globals(["*"]).run();
-			});
-		}, 600);
+					// Start tests
+					mocha.globals(["*"]).run();
+					console.timeEnd("Starting test took");
+				});
+			} else {
+				setTimeout( arguments.callee, 100);
+			}
+		}
+
+
+		// Timeout to make sure scripts have been pulled in by require first
+		setTimeout( tryStarting, 100 );
 	</script>
 
 	<script>
