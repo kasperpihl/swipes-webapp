@@ -657,161 +657,163 @@
         });
       });
     });
-    require(["model/ScheduleModel", "model/SettingsModel", "momentjs"], function(ScheduleModel, SettingsModel, Moment) {
-      return describe("Schedule model", function() {
-        var model, settings;
-        model = settings = null;
-        beforeEach(function() {
+    describe("Schedule model", function() {
+      var model, settings;
+      model = settings = moment = null;
+      beforeEach(function(done) {
+        return require(["model/ScheduleModel", "model/SettingsModel"], function(ScheduleModel, SettingsModel) {
           model = new ScheduleModel();
-          return settings = new SettingsModel();
+          settings = new SettingsModel();
+          moment = window.moment;
+          return done();
         });
-        after(function() {
-          return $(".overlay.scheduler").remove();
+      });
+      after(function() {
+        return $(".overlay.scheduler").remove();
+      });
+      it("Should return a new date 3 hours in the future when scheduling for 'later today'", function() {
+        var newDate, now, parsedNewDate, threeHoursInMs;
+        now = moment();
+        newDate = model.getDateFromScheduleOption("later today", now);
+        expect(newDate).to.exist;
+        parsedNewDate = moment(newDate);
+        threeHoursInMs = 3 * 60 * 60 * 1000;
+        return expect(parsedNewDate.diff(now)).to.equal(threeHoursInMs);
+      });
+      it("Should return a new date the same day at 18:00 when scheduling for 'this evening' (before 18.00)", function() {
+        var newDate, parsedNewDate, today;
+        today = moment();
+        today.hour(17);
+        newDate = model.getDateFromScheduleOption("this evening", today);
+        expect(newDate).to.exist;
+        parsedNewDate = moment(newDate);
+        expect(parsedNewDate.hour()).to.equal(18);
+        return expect(parsedNewDate.day()).to.equal(today.day());
+      });
+      it("Should set minutes and seconds to 0 when delaying a task to later today", function() {});
+      it("Should return a new date the day after at 18:00 when scheduling for 'tomorrow evening' (after 18.00)", function() {
+        var newDate, parsedNewDate, today;
+        today = moment();
+        today.hour(19);
+        newDate = model.getDateFromScheduleOption("this evening", today);
+        expect(newDate).to.exist;
+        parsedNewDate = moment(newDate);
+        expect(parsedNewDate.hour()).to.equal(18);
+        return expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 1);
+      });
+      it("Should return a new date the day after at 09:00 when scheduling for 'tomorrow'", function() {
+        var newDate, parsedNewDate, today;
+        today = moment();
+        newDate = model.getDateFromScheduleOption("tomorrow", today);
+        expect(newDate).to.exist;
+        parsedNewDate = moment(newDate);
+        expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 1);
+        return expect(parsedNewDate.hour()).to.equal(9);
+      });
+      it("Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", function() {
+        var newDate, parsedNewDate, today;
+        today = moment();
+        newDate = model.getDateFromScheduleOption("day after tomorrow");
+        expect(newDate).to.exist;
+        parsedNewDate = moment(newDate);
+        expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 2);
+        return expect(parsedNewDate.hour()).to.equal(9);
+      });
+      it("Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", function() {
+        var newDate, parsedNewDate, saturday;
+        saturday = moment().endOf("week");
+        saturday.day(6).hour(settings.get("snoozes").weekend.morning.hour);
+        newDate = model.getDateFromScheduleOption("this weekend", saturday);
+        expect(newDate).to.exist;
+        parsedNewDate = moment(newDate);
+        expect(parsedNewDate.day()).to.equal(6);
+        expect(Math.floor(saturday.diff(parsedNewDate, "days", true))).to.equal(-7);
+        return expect(parsedNewDate.hour()).to.equal(10);
+      });
+      it("Should return a new date this following monday at 9:00 when scheduling for 'next week'", function() {
+        var monday, newDate, parsedNewDate;
+        monday = moment().startOf("week");
+        monday.day(1).hour(settings.get("snoozes").weekday.morning.hour);
+        newDate = model.getDateFromScheduleOption("next week", monday);
+        expect(newDate).to.exist;
+        parsedNewDate = moment(newDate);
+        expect(parsedNewDate.dayOfYear()).not.to.equal(monday.dayOfYear());
+        expect(parsedNewDate.day()).to.equal(1);
+        expect(Math.floor(monday.diff(parsedNewDate, "days", true))).to.equal(-7);
+        return expect(parsedNewDate.hour()).to.equal(9);
+      });
+      it("Should return null when scheduling for 'unspecified'", function() {
+        return expect(model.getDateFromScheduleOption("unspecified")).to.equal(null);
+      });
+      describe("converting time", function() {
+        it("Should should not convert 'This evening' when it's before 18:00 hours", function() {
+          return expect(model.getDynamicTime("This Evening", moment("2013-01-01 17:59"))).to.equal("This Evening");
         });
-        it("Should return a new date 3 hours in the future when scheduling for 'later today'", function() {
-          var newDate, now, parsedNewDate, threeHoursInMs;
-          now = moment();
+        it("Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", function() {
+          return expect(model.getDynamicTime("This Evening", moment("2013-01-01 18:00"))).to.equal("Tomorrow Eve");
+        });
+        it("Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", function() {
+          var adjustedTime;
+          adjustedTime = moment();
+          adjustedTime.day("Monday");
+          return expect(model.getDynamicTime("Day After Tomorrow", adjustedTime)).to.equal("Wednesday");
+        });
+        it("Should not convert 'This Weekend' when we're on a monday-friday", function() {
+          var monday;
+          monday = moment().day("Monday");
+          return expect(model.getDynamicTime("This Weekend", monday)).to.equal("This Weekend");
+        });
+        return it("Should convert 'This Weekend' to 'Next Weekend' when we're on a saturday/sunday", function() {
+          var saturday;
+          saturday = moment().day("Saturday");
+          return expect(model.getDynamicTime("This Weekend", saturday)).to.equal("Next Weekend");
+        });
+      });
+      return describe("Rounding minutes and seconds", function() {
+        it("Should not alter minutes and seconds when delaying a task to later today", function() {
+          var newDate, now, parsedNewDate;
+          now = moment().minute(23);
           newDate = model.getDateFromScheduleOption("later today", now);
-          expect(newDate).to.exist;
           parsedNewDate = moment(newDate);
-          threeHoursInMs = 3 * 60 * 60 * 1000;
-          return expect(parsedNewDate.diff(now)).to.equal(threeHoursInMs);
+          expect(parsedNewDate.diff(now, "hours")).to.equal(3);
+          return expect(parsedNewDate.minute()).to.equal(23);
         });
-        it("Should return a new date the same day at 18:00 when scheduling for 'this evening' (before 18.00)", function() {
-          var newDate, parsedNewDate, today;
-          today = moment();
-          today.hour(17);
-          newDate = model.getDateFromScheduleOption("this evening", today);
-          expect(newDate).to.exist;
+        it("Should set minutes and seconds to 0 when selecting 'this evening'", function() {
+          var newDate, now, parsedNewDate;
+          now = moment().hour(12).minute(23).second(23);
+          newDate = model.getDateFromScheduleOption("this evening", now);
           parsedNewDate = moment(newDate);
           expect(parsedNewDate.hour()).to.equal(18);
-          return expect(parsedNewDate.day()).to.equal(today.day());
+          expect(parsedNewDate.minute()).to.equal(0);
+          return expect(parsedNewDate.second()).to.equal(0);
         });
-        it("Should set minutes and seconds to 0 when delaying a task to later today", function() {});
-        it("Should return a new date the day after at 18:00 when scheduling for 'tomorrow evening' (after 18.00)", function() {
-          var newDate, parsedNewDate, today;
-          today = moment();
-          today.hour(19);
-          newDate = model.getDateFromScheduleOption("this evening", today);
-          expect(newDate).to.exist;
+        it("Should set minutes and seconds to 0 when selecting 'tomorrow'", function() {
+          var newDate, parsedNewDate;
+          newDate = model.getDateFromScheduleOption("tomorrow", moment().minute(23).second(23));
           parsedNewDate = moment(newDate);
-          expect(parsedNewDate.hour()).to.equal(18);
-          return expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 1);
+          expect(parsedNewDate.minute()).to.equal(0);
+          return expect(parsedNewDate.second()).to.equal(0);
         });
-        it("Should return a new date the day after at 09:00 when scheduling for 'tomorrow'", function() {
-          var newDate, parsedNewDate, today;
-          today = moment();
-          newDate = model.getDateFromScheduleOption("tomorrow", today);
-          expect(newDate).to.exist;
+        it("Should set minutes and seconds to 0 when selecting 'day after tomorrow'", function() {
+          var newDate, parsedNewDate;
+          newDate = model.getDateFromScheduleOption("day after tomorrow", moment().minute(23).second(23));
           parsedNewDate = moment(newDate);
-          expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 1);
-          return expect(parsedNewDate.hour()).to.equal(9);
+          expect(parsedNewDate.minute()).to.equal(0);
+          return expect(parsedNewDate.second()).to.equal(0);
         });
-        it("Should return a new date 2 days from now at 09:00 when scheduling for 'day after tomorrow'", function() {
-          var newDate, parsedNewDate, today;
-          today = moment();
-          newDate = model.getDateFromScheduleOption("day after tomorrow");
-          expect(newDate).to.exist;
+        it("Should set minutes and seconds to 0 when selecting 'this weekend'", function() {
+          var newDate, parsedNewDate;
+          newDate = model.getDateFromScheduleOption("this weekend", moment().minute(23).second(23));
           parsedNewDate = moment(newDate);
-          expect(parsedNewDate.dayOfYear()).to.equal(today.dayOfYear() + 2);
-          return expect(parsedNewDate.hour()).to.equal(9);
+          expect(parsedNewDate.minute()).to.equal(0);
+          return expect(parsedNewDate.second()).to.equal(0);
         });
-        it("Should return a new date this following saturday at 10:00 when scheduling for 'this weekend'", function() {
-          var newDate, parsedNewDate, saturday;
-          saturday = moment().endOf("week");
-          saturday.day(6).hour(settings.get("snoozes").weekend.morning.hour);
-          newDate = model.getDateFromScheduleOption("this weekend", saturday);
-          expect(newDate).to.exist;
+        return it("Should set minutes and seconds to 0 when selecting 'next week'", function() {
+          var newDate, parsedNewDate;
+          newDate = model.getDateFromScheduleOption("next week", moment().minute(23).second(23));
           parsedNewDate = moment(newDate);
-          expect(parsedNewDate.day()).to.equal(6);
-          expect(Math.floor(saturday.diff(parsedNewDate, "days", true))).to.equal(-7);
-          return expect(parsedNewDate.hour()).to.equal(10);
-        });
-        it("Should return a new date this following monday at 9:00 when scheduling for 'next week'", function() {
-          var monday, newDate, parsedNewDate;
-          monday = moment().startOf("week");
-          monday.day(1).hour(settings.get("snoozes").weekday.morning.hour);
-          newDate = model.getDateFromScheduleOption("next week", monday);
-          expect(newDate).to.exist;
-          parsedNewDate = moment(newDate);
-          expect(parsedNewDate.dayOfYear()).not.to.equal(monday.dayOfYear());
-          expect(parsedNewDate.day()).to.equal(1);
-          expect(Math.floor(monday.diff(parsedNewDate, "days", true))).to.equal(-7);
-          return expect(parsedNewDate.hour()).to.equal(9);
-        });
-        it("Should return null when scheduling for 'unspecified'", function() {
-          return expect(model.getDateFromScheduleOption("unspecified")).to.equal(null);
-        });
-        describe("converting time", function() {
-          it("Should should not convert 'This evening' when it's before 18:00 hours", function() {
-            return expect(model.getDynamicTime("This Evening", moment("2013-01-01 17:59"))).to.equal("This Evening");
-          });
-          it("Should convert 'This evening' to 'Tomorrow eve' when it's after 18:00 hours", function() {
-            return expect(model.getDynamicTime("This Evening", moment("2013-01-01 18:00"))).to.equal("Tomorrow Eve");
-          });
-          it("Should convert 'Day After Tomorrow' to 'Wednesday' when we're on a monday", function() {
-            var adjustedTime;
-            adjustedTime = moment();
-            adjustedTime.day("Monday");
-            return expect(model.getDynamicTime("Day After Tomorrow", adjustedTime)).to.equal("Wednesday");
-          });
-          it("Should not convert 'This Weekend' when we're on a monday-friday", function() {
-            var monday;
-            monday = moment().day("Monday");
-            return expect(model.getDynamicTime("This Weekend", monday)).to.equal("This Weekend");
-          });
-          return it("Should convert 'This Weekend' to 'Next Weekend' when we're on a saturday/sunday", function() {
-            var saturday;
-            saturday = moment().day("Saturday");
-            return expect(model.getDynamicTime("This Weekend", saturday)).to.equal("Next Weekend");
-          });
-        });
-        return describe("Rounding minutes and seconds", function() {
-          it("Should not alter minutes and seconds when delaying a task to later today", function() {
-            var newDate, now, parsedNewDate;
-            now = moment().minute(23);
-            newDate = model.getDateFromScheduleOption("later today", now);
-            parsedNewDate = moment(newDate);
-            expect(parsedNewDate.diff(now, "hours")).to.equal(3);
-            return expect(parsedNewDate.minute()).to.equal(23);
-          });
-          it("Should set minutes and seconds to 0 when selecting 'this evening'", function() {
-            var newDate, now, parsedNewDate;
-            now = moment().hour(12).minute(23).second(23);
-            newDate = model.getDateFromScheduleOption("this evening", now);
-            parsedNewDate = moment(newDate);
-            expect(parsedNewDate.hour()).to.equal(18);
-            expect(parsedNewDate.minute()).to.equal(0);
-            return expect(parsedNewDate.second()).to.equal(0);
-          });
-          it("Should set minutes and seconds to 0 when selecting 'tomorrow'", function() {
-            var newDate, parsedNewDate;
-            newDate = model.getDateFromScheduleOption("tomorrow", moment().minute(23).second(23));
-            parsedNewDate = moment(newDate);
-            expect(parsedNewDate.minute()).to.equal(0);
-            return expect(parsedNewDate.second()).to.equal(0);
-          });
-          it("Should set minutes and seconds to 0 when selecting 'day after tomorrow'", function() {
-            var newDate, parsedNewDate;
-            newDate = model.getDateFromScheduleOption("day after tomorrow", moment().minute(23).second(23));
-            parsedNewDate = moment(newDate);
-            expect(parsedNewDate.minute()).to.equal(0);
-            return expect(parsedNewDate.second()).to.equal(0);
-          });
-          it("Should set minutes and seconds to 0 when selecting 'this weekend'", function() {
-            var newDate, parsedNewDate;
-            newDate = model.getDateFromScheduleOption("this weekend", moment().minute(23).second(23));
-            parsedNewDate = moment(newDate);
-            expect(parsedNewDate.minute()).to.equal(0);
-            return expect(parsedNewDate.second()).to.equal(0);
-          });
-          return it("Should set minutes and seconds to 0 when selecting 'next week'", function() {
-            var newDate, parsedNewDate;
-            newDate = model.getDateFromScheduleOption("next week", moment().minute(23).second(23));
-            parsedNewDate = moment(newDate);
-            expect(parsedNewDate.minute()).to.equal(0);
-            return expect(parsedNewDate.second()).to.equal(0);
-          });
+          expect(parsedNewDate.minute()).to.equal(0);
+          return expect(parsedNewDate.second()).to.equal(0);
         });
       });
     });
@@ -1586,7 +1588,6 @@
               el: $(".sidebar .tags-filter")
             });
             expect(renderSpy).to.have.been.calledOnce;
-            console.clear();
             Backbone.trigger("apply-filter", "tag", "Nina");
             return _.defer(function() {
               var tag, tags;

@@ -514,13 +514,15 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 				# If 1 and 2 is correct we know that 3 is too.
 
-	require ["model/ScheduleModel", "model/SettingsModel", "momentjs"], (ScheduleModel, SettingsModel, Moment) ->
-		describe "Schedule model", ->
-			model = settings = null
+	describe "Schedule model", ->
+			model = settings = moment = null
 
-			beforeEach ->
-				model = new ScheduleModel()
-				settings = new SettingsModel()
+			beforeEach (done) ->
+				require ["model/ScheduleModel", "model/SettingsModel"], (ScheduleModel, SettingsModel) ->
+					model = new ScheduleModel()
+					settings = new SettingsModel()
+					moment = window.moment
+					done()
 
 			after ->
 				$(".overlay.scheduler").remove()
@@ -1388,7 +1390,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( renderSpy ).to.have.been.calledOnce
 
 					# Do a top level filter. Only 1 tag selected.
-					console.clear()
 					Backbone.trigger( "apply-filter", "tag", "Nina" )
 					_.defer ->
 						expect( renderSpy ).to.have.been.calledTwice
