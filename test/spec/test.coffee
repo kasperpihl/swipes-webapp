@@ -56,6 +56,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 			return dfd.promise()
 
+	###
+
 	#
 	# The Basics
 	#
@@ -809,6 +811,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			it "Should set/clear the repeat option when picking one"
 			it "Should throw an error message if the changes can't be saved to the server"
 
+	###
+
 	describe "Repeating tasks", ->
 		describe "Repeat Picker user interface", ->
 			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
@@ -860,52 +864,44 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				task.set( "repeatOption", "never" )
 				expect( task.get "repeatDate" ).to.be.falsy
 
-			describe "updating repeatDate", ->
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should be 11/13/2013", ->
-					task.set( "schedule", new Date("11/12/2013") )
+			describe "updating schedule without changing repeatDate (Base schedule is monday 11/11/2013)", ->
+				beforeEach -> task.set( "repeatDate", new Date( "11/11/2013" ) )
+
+				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should still be 11/12/2013 (We let completionDate determine new repeatDate)", ->
 					task.set( "repeatOption", "every day" )
+					task.set( "schedule", new Date("11/12/2013") )
 
 					repeatDate = task.get "repeatDate"
 					expect( repeatDate.getMonth() ).to.equal 10
-					expect( repeatDate.getDate() ).to.equal 13
+					expect( repeatDate.getDate() ).to.equal 12
 					expect( repeatDate.getFullYear() ).to.equal 2013
 
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every week' the new repeatDate should be 11/19/2013", ->
-					task.set( "schedule", new Date("11/12/2013") )
+				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every week' the new repeatDate should still be 11/18/2013", ->
 					task.set( "repeatOption", "every week" )
+					task.set( "schedule", new Date("11/12/2013") )
 
 					repeatDate = task.get "repeatDate"
 					expect( repeatDate.getMonth() ).to.equal 10
-					expect( repeatDate.getDate() ).to.equal 19
-					expect( repeatDate.getFullYear() ).to.equal 2013,
+					expect( repeatDate.getDate() ).to.equal 18
+					expect( repeatDate.getFullYear() ).to.equal 2013
 
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every month' the new repeatDate should be 12/12/2013", ->
-					task.set( "schedule", new Date("11/12/2013") )
+				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every month' the new repeatDate should still be 11/11/2013", ->
 					task.set( "repeatOption", "every month" )
+					task.set( "schedule", new Date("11/12/2013") )
 
 					repeatDate = task.get "repeatDate"
 					expect( repeatDate.getMonth() ).to.equal 11
-					expect( repeatDate.getDate() ).to.equal 12
+					expect( repeatDate.getDate() ).to.equal 11
 					expect( repeatDate.getFullYear() ).to.equal 2013
 
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every year' the new repeatDate should be 11/12/2014", ->
-					task.set( "schedule", new Date("11/12/2013") )
+				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every year' the new repeatDate should be 11/11/2013", ->
 					task.set( "repeatOption", "every year" )
+					task.set( "schedule", new Date("11/12/2013") )
 
 					repeatDate = task.get "repeatDate"
 					expect( repeatDate.getMonth() ).to.equal 10
-					expect( repeatDate.getDate() ).to.equal 12
+					expect( repeatDate.getDate() ).to.equal 11
 					expect( repeatDate.getFullYear() ).to.equal 2014
-
-				describe "handling difference in month lengths", ->
-					it "When changing schedule to 10/31/2013 and with a repeatOption of 'every month' the new repeatDate should be 11/30/2013", ->
-						task.set( "schedule", new Date("10/31/2013") )
-						task.set( "repeatOption", "every month" )
-
-						repeatDate = task.get "repeatDate"
-						expect( repeatDate.getMonth() ).to.equal 10
-						expect( repeatDate.getDate() ).to.equal 30
-						expect( repeatDate.getFullYear() ).to.equal 2013
 
 		describe "Duplicating tasks", ->
 			task = duplicate = null
@@ -1064,9 +1060,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2013
 
 				it "should schedule duplicated task for saturday 11/16/2013 if scheduled for sunday 11/10/2013, but completed sunday 11/03/2013 (A week too early)", ->
-					task.set( "schedule", new Date "11/10/2013" )
-					task.set( "completionDate", new Date "11/03/2013" )
-					duplicate = task.getRepeatableDuplicate()
+					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/10/2013" }
+					newTask.set( "completionDate", new Date "11/03/2013" )
+					duplicate = newTask.getRepeatableDuplicate()
 					newSchedule = duplicate.get "schedule"
 
 					expect( newSchedule.getMonth() ).to.equal 10
@@ -1074,9 +1070,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2013
 
 				it "should schedule duplicated task for saturday 11/16/2013 if completed sunday 11/10/2013, but scheduled for monday 11/03/2013 (A week too late)", ->
-					task.set( "schedule", new Date "11/03/2013" )
-					task.set( "completionDate", new Date "11/10/2013" )
-					duplicate = task.getRepeatableDuplicate()
+					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/03/2013" }
+					newTask.set( "completionDate", new Date "11/10/2013" )
+					duplicate = newTask.getRepeatableDuplicate()
 					newSchedule = duplicate.get "schedule"
 
 					expect( newSchedule.getMonth() ).to.equal 10
@@ -1084,9 +1080,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2013
 
 				it "should schedule duplicated task for sunday 11/10/2013 if completed and scheduled for saturday 11/09/2013 (On time)", ->
-					task.set( "schedule", new Date "11/09/2013" )
-					task.set( "completionDate", new Date "11/09/2013" )
-					duplicate = task.getRepeatableDuplicate()
+					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/09/2013" }
+					newTask.set( "completionDate", new Date "11/09/2013" )
+					duplicate = newTask.getRepeatableDuplicate()
 					newSchedule = duplicate.get "schedule"
 
 					expect( newSchedule.getMonth() ).to.equal 10
@@ -1094,9 +1090,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2013
 
 				it "should schedule duplicated task for saturday 11/16/2013 if completed and scheduled for sunday 11/10/2013 (On time)", ->
-					task.set( "schedule", new Date "11/10/2013" )
-					task.set( "completionDate", new Date "11/10/2013" )
-					duplicate = task.getRepeatableDuplicate()
+					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/10/2013" }
+					newTask.set( "completionDate", new Date "11/10/2013" )
+					duplicate = newTask.getRepeatableDuplicate()
 					newSchedule = duplicate.get "schedule"
 
 					expect( newSchedule.getMonth() ).to.equal 10
@@ -1173,9 +1169,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2013
 
 				it "Should schedule duplicate for 11/30/2013, if scheduled for and completed on 10/31/2013 (Handling difference between number of days in a month nicely)", ->
-					task.set( "schedule", new Date "10/31/2013" )
-					task.set( "completionDate", new Date "10/31/2013" )
-					duplicate = task.getRepeatableDuplicate()
+					newTask = new ToDoModel { repeatOption: "every month", schedule: new Date "10/31/2013" }
+					newTask.set( "completionDate", new Date "10/31/2013" )
+					duplicate = newTask.getRepeatableDuplicate()
 					newSchedule = duplicate.get "schedule"
 
 					expect( newSchedule.getMonth() ).to.equal 10
@@ -1214,9 +1210,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2015
 
 				it "if repeatDate is only existant because of a leap year (for instance 02/29/2016), we should schedule for the day before the next year (02/28/2017)", ->
-					task.set( "schedule", new Date "02/29/2016" )
-					task.set( "completionDate", new Date "02/29/2016" )
-					duplicate = task.getRepeatableDuplicate()
+					newTask = new ToDoModel { repeatOption: "every year", schedule: new Date "02/29/2016" }
+					newTask.set( "completionDate", new Date "02/29/2016" )
+					duplicate = newTask.getRepeatableDuplicate()
 					newSchedule = duplicate.get "schedule"
 
 					expect( newSchedule.getMonth() ).to.equal 1
@@ -1273,6 +1269,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 					done()
 
+	###
 
 	describe "Tag Filter", ->
 		beforeEach ->
@@ -1667,3 +1664,5 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
+
+		###

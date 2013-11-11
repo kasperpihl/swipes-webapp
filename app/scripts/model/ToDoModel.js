@@ -18,9 +18,9 @@
         if (this.get("schedule") === "default") {
           this.set("schedule", this.getDefaultSchedule());
         }
-        if (typeof this.get("schedule") === "string") {
-          this.set("schedule", new Date(this.get("schedule")));
-        }
+        this.reviveDate("schedule");
+        this.reviveDate("completionDate");
+        this.reviveDate("repeatDate");
         if (this.get("repeatOption") !== "never") {
           this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
         }
@@ -30,9 +30,6 @@
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
-          if (!_this.has("completionDate")) {
-            _this.updateRepeatDate();
-          }
           return _this.set("selected", false);
         });
         this.on("change:completionDate", function() {
@@ -52,6 +49,11 @@
             return console.error("Model order value set to less than 0");
           }
         });
+      },
+      reviveDate: function(prop) {
+        if (typeof this.get(prop) === "string") {
+          return this.set(prop, new Date(this.get(prop)));
+        }
       },
       getState: function() {
         var schedule;
@@ -158,20 +160,13 @@
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       },
       setRepeatOption: function(model, option) {
-        if (this.has("completionDate")) {
-          this.set("repeatOption", this.previous("repeatOption"), {
-            silent: true
-          });
-          return console.warn("Can't set repeatOption after a completionDate has been defined");
-        } else {
-          return this.set("repeatDate", this.getNextDate(option));
-        }
+        return this.set("repeatDate", this.getNextDate(option));
       },
       updateRepeatDate: function() {
-        if (this.has("schedule") || this.has("completionDate") && this.get("repeatOption") !== "never") {
-          return this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
-        } else {
+        if (!this.has("schedule")) {
           return this.set("repeatDate", null);
+        } else if (this.has("schedule") || this.has("completionDate") && this.get("repeatOption") !== "never") {
+          return this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
         }
       },
       isWeekend: function(schedule) {
@@ -199,6 +194,9 @@
       },
       getNextDate: function(option) {
         var completionDate, date, diff, repeatDate, type;
+        this.reviveDate("schedule");
+        this.reviveDate("completionDate");
+        this.reviveDate("repeatDate");
         if (this.has("completionDate")) {
           repeatDate = this.get("repeatDate");
           completionDate = this.get("completionDate");
