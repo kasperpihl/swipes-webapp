@@ -814,7 +814,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 	describe "Repeating tasks", ->
 		describe "Repeat Picker user interface", ->
 			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
-				targetModel = swipy.todos.at(0)
+				targetModel = swipy.todos.getActive()[0]
 				targetModel.set( "repeatOption", "never" )
 				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
 
@@ -830,7 +830,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					done()
 
 			it "Should update the UI when the models repeatOption prop changes", (done) ->
-				targetModel = swipy.todos.at(0)
+				targetModel = swipy.todos.getActive()[0]
 				targetModel.set( "repeatOption", "never" )
 				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
 
@@ -861,6 +861,8 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				task.set( "repeatOption", "every day" )
 				task.set( "repeatOption", "never" )
 				expect( task.get "repeatDate" ).to.be.falsy
+
+			it "Should not update the repeatDate, repeatCount or repeatOption if schedule changes after a completionDate has been set – Or should it???"
 
 			describe "updating repeatDate", ->
 				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should be 11/13/2013", ->
@@ -905,12 +907,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 						task.set( "repeatOption", "every month" )
 
 						repeatDate = task.get "repeatDate"
-						console.log repeatDate
 						expect( repeatDate.getMonth() ).to.equal 10
 						expect( repeatDate.getDate() ).to.equal 30
 						expect( repeatDate.getFullYear() ).to.equal 2013
 
-			it "Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones"
+			it "Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones (Gøres let med en pointer til original task og et event dispatch ved ændring af repeatDate)"
 
 		describe "Duplicating tasks", ->
 			task = duplicate = null
@@ -961,8 +962,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				expect( duplicate.getState() ).to.equal "scheduled"
 
 			it "Should NOT retain model ID when duplicating a task", ->
-				if task.id?
-					expect( duplicate.id ).to.not.exist
+				if task.id? then expect( duplicate.id ).to.not.exist
 
 			it "Should NOT retain schedule when duplicating a task", ->
 				expect( duplicate.has "schedule" ).to.be.true
@@ -995,24 +995,60 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 		describe "Duplicating a task based on repeatDate and repeatOption", ->
 			task = null
+			beforeEach -> task = new ToDoModel( title: "test repeated every day" )
+			afterEach -> task.destroy()
 
-			beforeEach ->
-				task = new ToDoModel()
-			afterEach ->
-				task.destroy()
+			describe "Repeat option: 'every day' — Scheduled for 11/11/2013", ->
+				beforeEach ->
+					task.set { repeatOption: "every day", schedule: new Date "11/11/2013" }
 
-			describe "Repeat option: 'every day'", ->
-				beforeEach -> task.set( "repeatOption", "every day" )
+				it "Should schedule duplicated task for 11/12/2013, if current task is completed 11/11/2013", ->
+					task.set( "completionDate", new Date "11/11/2013" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
 
-				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/11/2013"
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 12
+					expect( newSchedule.getFullYear() ).to.equal 2013
 
-				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)"
-				it "if repeatDate is 11/12/2013, it should still create a duplicate task, scheduled for 11/12/2013, if current task is completed 11/09/2013 (Completed too early)"
-				it "if repeatDate is 11/12/2013, it should create a duplicate task, scheduled for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)"
+				it "Should schedule duplicated task for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)", ->
+					task.set( "completionDate", new Date "11/12/2013" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 13
+					expect( newSchedule.getFullYear() ).to.equal 2013
+
+				it "Should schedule duplicated task for 11/12/2013, if current task is completed 11/09/2013 (Completed too early, don't create new repeat before scheduled repeatDate)", ->
+					task.set( "completionDate", new Date "11/09/2013" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( task.get( "schedule" ).getTime() ).to.equal new Date( "11/11/2013" ).getTime()
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 12
+					expect( newSchedule.getFullYear() ).to.equal 2013
+
+				it "Should schedule duplicated task for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)", ->
+					task.set( "completionDate", new Date "01/22/2014" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 0
+					expect( newSchedule.getDate() ).to.equal 23
+					expect( newSchedule.getFullYear() ).to.equal 2014
 
 			describe "Repeat option: 'mon-fri or sat+sun'", ->
-				it "if repeatDate is monday 11/18/2013, it should create a duplicate task, scheduled for that day, if current task is completed saturday 11/16/2013"
-				it "if repeatDate is saturday 11/16/2013, it should create a duplicate task, scheduled for that day, if current task is completed tuesday 11/12/2013"
+				describe "mon-fri", ->
+					it "should schedule duplicated task for monday 11/18/2013 if scheduled for monday 11/11/2013, but completed sunday 11/10/2013 (Too early)"
+					it "should schedule duplicated task for monday 11/18/2013 if completed sunday 11/17/2013, but scheduled for monday 11/11/2013 (Too late)"
+					it "should schedule duplicated task for tuesday 11/12/2013 if completed and scheduled for monday 11/11/2013 (On time)"
+				describe "sat+sun", ->
+					it "should schedule duplicated task for saturday 11/16/2013 if scheduled for sunday 11/10/2013, but completed sunday 11/03/2013 (A week too early)"
+					it "should schedule duplicated task for saturday 11/16/2013 if completed sunday 11/10/2013, but scheduled for monday 11/03/2013 (A week too late)"
+					it "should schedule duplicated task for sunday 11/10/2013 if completed and scheduled for saturday 11/09/2013 (On time)"
+					it "should schedule duplicated task for saturday 11/16/2013 if completed and scheduled for sunday 11/10/2013 (On time)"
 
 			describe "Repeat option: 'every week'", ->
 				it "if repeatDate is tuesday 11/19/2013, it should create a duplicate task, scheduled for that day, if current task is completed wednesday 11/06/2013"
