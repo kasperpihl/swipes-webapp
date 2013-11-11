@@ -24,7 +24,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@reviveDate "repeatDate"
 
 			# If model was created as a duplicate/repeat task, set up the new repeatDate
-			if @get( "repeatOption" ) isnt "never" then @set( "repeatDate", @getNextDate( @get "repeatOption" ) )
+			if @get( "repeatOption" ) isnt "never" then @updateRepeatDate()
 
 			@setScheduleStr()
 			@setTimeStr()
@@ -41,6 +41,10 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				@setCompletionTimeStr()
 				@set( "selected", no )
 
+			@on "change:schedule", => @reviveDate "schedule"
+			@on "change:completionDate", => @reviveDate "completionDate"
+			@on "change:repeatDate", => @reviveDate "repeatDate"
+
 			@on( "change:repeatOption", @setRepeatOption )
 			@on( "destroy", @cleanUp )
 
@@ -53,8 +57,8 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 					console.error "Model order value set to less than 0"
 
 		reviveDate: (prop) ->
-			if typeof @get( prop ) is "string" then @set( prop, new Date @get( prop ) )
-
+			if typeof @get( prop ) is "string"
+				@set( prop, new Date( @get prop ), { silent: yes } )
 		getState: ->
 			schedule = @getValidatedSchedule()
 
@@ -153,15 +157,18 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
 
 		setRepeatOption: (model, option) ->
-			@set( "repeatDate", @getNextDate option )
-
-		updateRepeatDate: ->
-			# When schedule: "undefined" || schedule: "location"
-			if not @has "schedule"
+			if @get( "schedule" ) and option isnt "never"
+				@set( "repeatDate", @getNextDate option )
+			else
 				@set( "repeatDate", null )
 
-			else if @has( "schedule" ) or @has( "completionDate" ) and @get( "repeatOption" ) isnt "never"
-				@set( "repeatDate", @getNextDate( @get "repeatOption" ) )
+		updateRepeatDate: ->
+			option = @get "repeatOption"
+
+			if @get( "schedule" ) and option isnt "never"
+				@set( "repeatDate", @getNextDate option )
+			else
+				@set( "repeatDate", null )
 
 		isWeekend: (schedule) ->
 			if schedule.getDay() is 0 or schedule.getDay() is 6 then return yes
@@ -185,10 +192,6 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			return date.add( "days", if date.day() is 0 then 6 else 1 ).toDate()
 
 		getNextDate: (option) ->
-			@reviveDate "schedule"
-			@reviveDate "completionDate"
-			@reviveDate "repeatDate"
-
 			# Task was completed before scheduled time
 			if @has "completionDate"
 				repeatDate = @get "repeatDate"
@@ -217,7 +220,8 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 						diff = 1
 
 					date.add( type, Math.ceil diff ).toDate()
-				when "mon-fri or sat+sun" then @getMonFriSatSunFromDate( @get( "schedule" ), date )
+				when "mon-fri or sat+sun"
+					@getMonFriSatSunFromDate( @get( "schedule" ), date )
 				# "never" + catch-all
 				else null
 
