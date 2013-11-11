@@ -24,7 +24,10 @@
 					<li><a <% if (repeatOption === "every day") print("class='selected'") %> href="JavaScript:void(0);" data-option="every day">day</a></li>
 					<li><a <% if (repeatOption === "mon-fri or sat+sun") print("class='selected'") %> href="JavaScript:void(0);" data-option="mon-fri or sat+sun">
 						<%
-							date = repeatDate ? repeatDate : schedule
+							date = schedule
+							if ( repeatDate && repeatOption === "mon-fri or sat+sun" ) {
+								date = repeatDate
+							}
 							if ( typeof date === "string" ) date = new Date( date )
 							print( ( date.getDay() === 0 || date.getDay() === 6 ) ? "sat+sun" : "mon-fri" )
 						%>
