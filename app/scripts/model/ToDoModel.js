@@ -198,7 +198,7 @@
         return date.add("days", date.day() === 0 ? 6 : 1).toDate();
       },
       getNextDate: function(option) {
-        var completionDate, date, repeatDate, weekDiff;
+        var completionDate, date, monthDiff, repeatDate, weekDiff;
         if (this.has("completionDate")) {
           repeatDate = this.get("repeatDate");
           completionDate = this.get("completionDate");
@@ -233,7 +233,12 @@
             }
             return date.add("weeks", Math.ceil(weekDiff)).toDate();
           case "every month":
-            return date.add("months", 1).toDate();
+            if (this.has("completionDate")) {
+              monthDiff = moment(this.get("completionDate")).diff(date, "months", true);
+            } else {
+              monthDiff = 1;
+            }
+            return date.add("months", Math.ceil(monthDiff)).toDate();
           case "every year":
             return date.add("years", 1).toDate();
           case "mon-fri or sat+sun":

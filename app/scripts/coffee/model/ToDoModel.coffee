@@ -212,7 +212,14 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 						weekDiff = 1
 
 					date.add( "weeks", Math.ceil weekDiff ).toDate()
-				when "every month" then date.add( "months", 1 ).toDate()
+				when "every month"
+					if @has "completionDate"
+						# In this case, date is the scheduled date
+						monthDiff = moment( @get "completionDate" ).diff( date, "months", yes )
+					else
+						monthDiff = 1
+
+					date.add( "months", Math.ceil monthDiff ).toDate()
 				when "every year" then date.add( "years", 1 ).toDate()
 				when "mon-fri or sat+sun" then @getMonFriSatSunFromDate( @get( "schedule" ), date )
 				# "never" + catch-all
