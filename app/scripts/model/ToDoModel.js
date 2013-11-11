@@ -174,11 +174,28 @@
           return this.set("repeatDate", null);
         }
       },
-      getNextWeekday: function() {
+      isWeekend: function(schedule) {
+        if (schedule.getDay() === 0 || schedule.getDay() === 6) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      isWeekday: function(schedule) {
+        return !this.isWeekend(schedule);
+      },
+      getMonFriSatSunFromDate: function(schedule, completionDate) {
+        if (this.isWeekday(schedule)) {
+          return this.getNextWeekDay(completionDate);
+        } else {
+          return this.getNextWeekendDay(completionDate);
+        }
+      },
+      getNextWeekDay: function(date) {
         console.warn("next week day not implemented yet!");
         return new moment().toDate();
       },
-      getNextWeekendday: function() {
+      getNextWeekendDay: function(date) {
         console.warn("next weekend day not implemented yet!");
         return new moment().toDate();
       },
@@ -204,10 +221,8 @@
             return date.add("months", 1).toDate();
           case "every year":
             return date.add("years", 1).toDate();
-          case "mon-fri":
-            return this.getNextWeekday();
-          case "sat+sun":
-            return this.getNextWeekendday();
+          case "mon-fri or sat+sun":
+            return this.getMonFriSatSunFromDate(this.get("schedule"), date);
           default:
             return null;
         }

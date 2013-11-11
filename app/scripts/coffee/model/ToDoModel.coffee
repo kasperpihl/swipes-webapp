@@ -163,11 +163,24 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			else
 				@set( "repeatDate", null )
 
-		getNextWeekday: ->
+		isWeekend: (schedule) ->
+			if schedule.getDay() is 0 or schedule.getDay() is 6 then return yes
+			else return no
+
+		isWeekday: (schedule) ->
+			return !@isWeekend schedule
+
+		getMonFriSatSunFromDate: ( schedule, completionDate ) ->
+			if @isWeekday schedule
+				@getNextWeekDay completionDate
+			else
+				@getNextWeekendDay completionDate
+
+		getNextWeekDay: (date) ->
 			console.warn "next week day not implemented yet!"
 			new moment().toDate()
 
-		getNextWeekendday: ->
+		getNextWeekendDay: (date) ->
 			console.warn "next weekend day not implemented yet!"
 			new moment().toDate()
 
@@ -189,8 +202,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				when "every week" then date.add( "weeks", 1 ).toDate()
 				when "every month" then date.add( "months", 1 ).toDate()
 				when "every year" then date.add( "years", 1 ).toDate()
-				when "mon-fri" then @getNextWeekday()
-				when "sat+sun" then @getNextWeekendday()
+				when "mon-fri or sat+sun" then @getMonFriSatSunFromDate( @get( "schedule" ), date )
 				# "never" + catch-all
 				else null
 

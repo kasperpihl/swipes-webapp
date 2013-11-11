@@ -1040,15 +1040,39 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2014
 
 			describe "Repeat option: 'mon-fri or sat+sun'", ->
-				describe "mon-fri", ->
-					it "should schedule duplicated task for monday 11/18/2013 if scheduled for monday 11/11/2013, but completed sunday 11/10/2013 (Too early)"
-					it "should schedule duplicated task for monday 11/18/2013 if completed sunday 11/17/2013, but scheduled for monday 11/11/2013 (Too late)"
-					it "should schedule duplicated task for tuesday 11/12/2013 if completed and scheduled for monday 11/11/2013 (On time)"
-				describe "sat+sun", ->
-					it "should schedule duplicated task for saturday 11/16/2013 if scheduled for sunday 11/10/2013, but completed sunday 11/03/2013 (A week too early)"
-					it "should schedule duplicated task for saturday 11/16/2013 if completed sunday 11/10/2013, but scheduled for monday 11/03/2013 (A week too late)"
-					it "should schedule duplicated task for sunday 11/10/2013 if completed and scheduled for saturday 11/09/2013 (On time)"
-					it "should schedule duplicated task for saturday 11/16/2013 if completed and scheduled for sunday 11/10/2013 (On time)"
+				beforeEach -> task.set { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/11/2013" }
+
+				it "should schedule duplicated task for tuesday 11/12/2013 if scheduled for monday 11/11/2013, but completed sunday 11/10/2013 (Too early)", ->
+					task.set( "completionDate", new Date "11/10/2013" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 12
+					expect( newSchedule.getFullYear() ).to.equal 2013
+
+				it "should schedule duplicated task for monday 11/18/2013 if completed friday 11/15/2013, but scheduled for monday 11/11/2013 (Too late)", ->
+					task.set( "completionDate", new Date "11/15/2013" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 18
+					expect( newSchedule.getFullYear() ).to.equal 2013
+
+				it "should schedule duplicated task for tuesday 11/12/2013 if completed and scheduled for monday 11/11/2013 (On time)", ->
+					task.set( "completionDate", new Date "11/11/2013" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 12
+					expect( newSchedule.getFullYear() ).to.equal 2013
+
+				it "should schedule duplicated task for saturday 11/16/2013 if scheduled for sunday 11/10/2013, but completed sunday 11/03/2013 (A week too early)"
+				it "should schedule duplicated task for saturday 11/16/2013 if completed sunday 11/10/2013, but scheduled for monday 11/03/2013 (A week too late)"
+				it "should schedule duplicated task for sunday 11/10/2013 if completed and scheduled for saturday 11/09/2013 (On time)"
+				it "should schedule duplicated task for saturday 11/16/2013 if completed and scheduled for sunday 11/10/2013 (On time)"
 
 			describe "Repeat option: 'every week'", ->
 				it "if repeatDate is tuesday 11/19/2013, it should create a duplicate task, scheduled for that day, if current task is completed wednesday 11/06/2013"
