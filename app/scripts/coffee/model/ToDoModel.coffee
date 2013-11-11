@@ -190,8 +190,13 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 				repeatDate = @get "repeatDate"
 				completionDate = @get "completionDate"
 
-				if repeatDate and repeatDate.getTime() > completionDate.getTime()
-					return repeatDate
+				if repeatDate
+					if repeatDate.getTime() > completionDate.getTime() then return repeatDate
+					else switch option
+						when "every week", "every month", "every year"
+							date = moment @get "schedule"
+						else
+							date = moment completionDate
 				else
 					date = moment completionDate
 			else
@@ -199,7 +204,14 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 			switch option
 				when "every day" then date.add( "days", 1 ).toDate()
-				when "every week" then date.add( "weeks", 1 ).toDate()
+				when "every week"
+					if @has "completionDate"
+						# In this case, date is the scheduled date
+						weekDiff = moment( @get "completionDate" ).diff( date, "weeks", yes )
+					else
+						weekDiff = 1
+
+					date.add( "weeks", Math.ceil weekDiff ).toDate()
 				when "every month" then date.add( "months", 1 ).toDate()
 				when "every year" then date.add( "years", 1 ).toDate()
 				when "mon-fri or sat+sun" then @getMonFriSatSunFromDate( @get( "schedule" ), date )

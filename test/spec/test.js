@@ -1143,8 +1143,48 @@
           });
         });
         describe("Repeat option: 'every week'", function() {
-          it("if repeatDate is tuesday 11/19/2013, it should create a duplicate task, scheduled for that day, if current task is completed wednesday 11/06/2013");
-          return it("if repeatDate is tuesday 11/19/2013, it should create a duplicate task, scheduled for 11/26/2013, if current task is completed wednesday 11/20/2013 (Later than scheduled repeatDate)");
+          beforeEach(function() {
+            return task.set({
+              repeatOption: "every week",
+              schedule: new Date("11/12/2013")
+            });
+          });
+          it("should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for and completed 11/12/2013 (on time)", function() {
+            var duplicate, newSchedule;
+            task.set("completionDate", new Date("11/12/2013"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(19);
+            return expect(newSchedule.getFullYear()).to.equal(2013);
+          });
+          it("should still schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/13/2013 (wednesday, the day after)", function() {
+            var duplicate, newSchedule;
+            task.set("completionDate", new Date("11/13/2013"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(19);
+            return expect(newSchedule.getFullYear()).to.equal(2013);
+          });
+          it("should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/18/2013 (monday, the week after original schedule date)", function() {
+            var duplicate, newSchedule;
+            task.set("completionDate", new Date("11/18/2013"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(19);
+            return expect(newSchedule.getFullYear()).to.equal(2013);
+          });
+          return it("should schedule duplicated task for tuesday 11/26/2013 if current task is scheduled for 11/12/2013 but completed wednesday 11/20/2013 (1 week and 1 day after original schedule date)", function() {
+            var duplicate, newSchedule;
+            task.set("completionDate", new Date("11/20/2013"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(26);
+            return expect(newSchedule.getFullYear()).to.equal(2013);
+          });
         });
         describe("Repeat option: 'every month'", function() {
           it("if repeatDate is 11/18/2013, it should create a duplicate task, scheduled for that day, if current task is completed before 11/18/2013");

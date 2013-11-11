@@ -198,12 +198,24 @@
         return date.add("days", date.day() === 0 ? 6 : 1).toDate();
       },
       getNextDate: function(option) {
-        var completionDate, date, repeatDate;
+        var completionDate, date, repeatDate, weekDiff;
         if (this.has("completionDate")) {
           repeatDate = this.get("repeatDate");
           completionDate = this.get("completionDate");
-          if (repeatDate && repeatDate.getTime() > completionDate.getTime()) {
-            return repeatDate;
+          if (repeatDate) {
+            if (repeatDate.getTime() > completionDate.getTime()) {
+              return repeatDate;
+            } else {
+              switch (option) {
+                case "every week":
+                case "every month":
+                case "every year":
+                  date = moment(this.get("schedule"));
+                  break;
+                default:
+                  date = moment(completionDate);
+              }
+            }
           } else {
             date = moment(completionDate);
           }
@@ -214,7 +226,12 @@
           case "every day":
             return date.add("days", 1).toDate();
           case "every week":
-            return date.add("weeks", 1).toDate();
+            if (this.has("completionDate")) {
+              weekDiff = moment(this.get("completionDate")).diff(date, "weeks", true);
+            } else {
+              weekDiff = 1;
+            }
+            return date.add("weeks", Math.ceil(weekDiff)).toDate();
           case "every month":
             return date.add("months", 1).toDate();
           case "every year":
