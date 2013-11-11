@@ -31,14 +31,14 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
-				@updateRepeatDate()
+				@updateRepeatDate() unless @has "completionDate"
 				@set( "selected", no )
 
 			@on "change:completionDate", =>
-				@set( "selected", no )
-				# These methods will unset the properties if no completionDate is defined
+				@updateRepeatDate()
 				@setCompletionStr()
 				@setCompletionTimeStr()
+				@set( "selected", no )
 
 			@on( "change:repeatOption", @setRepeatOption )
 			@on( "destroy", @cleanUp )
@@ -149,11 +149,17 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
 
 		setRepeatOption: (model, option) ->
-			@set( "repeatDate", @getNextDate option )
+			if @has "completionDate"
+				@set( "repeatOption", @previous( "repeatOption" ), { silent: yes } )
+				return console.warn "Can't set repeatOption after a completionDate has been defined"
+			else
+				@set( "repeatDate", @getNextDate option )
 
 		updateRepeatDate: ->
-			if @get( "schedule" ) and @get( "repeatOption" ) isnt "never"
+			if @has( "schedule" ) or @has( "completionDate" ) and @get( "repeatOption" ) isnt "never"
 				@set( "repeatDate", @getNextDate( @get "repeatOption" ) )
+
+			# schedule: "undefined" || schedule: "location"
 			else
 				@set( "repeatDate", null )
 
@@ -166,14 +172,24 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			new moment().toDate()
 
 		getNextDate: (option) ->
-			date = moment @get "schedule"
+			# Task was completed before scheduled time
+			if @has "completionDate"
+				repeatDate = @get "repeatDate"
+				completionDate = @get "completionDate"
+
+				if repeatDate and repeatDate.getTime() > completionDate.getTime()
+					return repeatDate
+				else
+					date = moment completionDate
+			else
+				date = moment @get "schedule"
 
 			switch option
 				when "every day" then date.add( "days", 1 ).toDate()
 				when "every week" then date.add( "weeks", 1 ).toDate()
 				when "every month" then date.add( "months", 1 ).toDate()
 				when "every year" then date.add( "years", 1 ).toDate()
-				when "min-fri" then @getNextWeekday()
+				when "mon-fri" then @getNextWeekday()
 				when "sat+sun" then @getNextWeekendday()
 				# "never" + catch-all
 				else null

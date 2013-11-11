@@ -30,13 +30,16 @@
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
-          _this.updateRepeatDate();
+          if (!_this.has("completionDate")) {
+            _this.updateRepeatDate();
+          }
           return _this.set("selected", false);
         });
         this.on("change:completionDate", function() {
-          _this.set("selected", false);
+          _this.updateRepeatDate();
           _this.setCompletionStr();
-          return _this.setCompletionTimeStr();
+          _this.setCompletionTimeStr();
+          return _this.set("selected", false);
         });
         this.on("change:repeatOption", this.setRepeatOption);
         this.on("destroy", this.cleanUp);
@@ -155,10 +158,17 @@
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       },
       setRepeatOption: function(model, option) {
-        return this.set("repeatDate", this.getNextDate(option));
+        if (this.has("completionDate")) {
+          this.set("repeatOption", this.previous("repeatOption"), {
+            silent: true
+          });
+          return console.warn("Can't set repeatOption after a completionDate has been defined");
+        } else {
+          return this.set("repeatDate", this.getNextDate(option));
+        }
       },
       updateRepeatDate: function() {
-        if (this.get("schedule") && this.get("repeatOption") !== "never") {
+        if (this.has("schedule") || this.has("completionDate") && this.get("repeatOption") !== "never") {
           return this.set("repeatDate", this.getNextDate(this.get("repeatOption")));
         } else {
           return this.set("repeatDate", null);
@@ -173,8 +183,18 @@
         return new moment().toDate();
       },
       getNextDate: function(option) {
-        var date;
-        date = moment(this.get("schedule"));
+        var completionDate, date, repeatDate;
+        if (this.has("completionDate")) {
+          repeatDate = this.get("repeatDate");
+          completionDate = this.get("completionDate");
+          if (repeatDate && repeatDate.getTime() > completionDate.getTime()) {
+            return repeatDate;
+          } else {
+            date = moment(completionDate);
+          }
+        } else {
+          date = moment(this.get("schedule"));
+        }
         switch (option) {
           case "every day":
             return date.add("days", 1).toDate();
@@ -184,7 +204,7 @@
             return date.add("months", 1).toDate();
           case "every year":
             return date.add("years", 1).toDate();
-          case "min-fri":
+          case "mon-fri":
             return this.getNextWeekday();
           case "sat+sun":
             return this.getNextWeekendday();
