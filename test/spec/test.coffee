@@ -862,8 +862,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				task.set( "repeatOption", "never" )
 				expect( task.get "repeatDate" ).to.be.falsy
 
-			it "Should not update the repeatDate, repeatCount or repeatOption if schedule changes after a completionDate has been set – Or should it???"
-
 			describe "updating repeatDate", ->
 				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should be 11/13/2013", ->
 					task.set( "schedule", new Date("11/12/2013") )
@@ -910,8 +908,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 						expect( repeatDate.getMonth() ).to.equal 10
 						expect( repeatDate.getDate() ).to.equal 30
 						expect( repeatDate.getFullYear() ).to.equal 2013
-
-			it "Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones (Gøres let med en pointer til original task og et event dispatch ved ændring af repeatDate)"
 
 		describe "Duplicating tasks", ->
 			task = duplicate = null
@@ -1150,6 +1146,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 			describe "Repeat option: 'every month'", ->
 				beforeEach -> task.set { repeatOption: "every month", schedule: new Date "10/18/2013" }
+
 				it "Should schedule duplicate for 11/18/2013, if scheduled for and completed on 10/18/2013 (On time)", ->
 					task.set( "completionDate", new Date "10/18/2013" )
 					duplicate = task.getRepeatableDuplicate()
@@ -1188,12 +1185,45 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					expect( newSchedule.getFullYear() ).to.equal 2013
 
 			describe "Repeat option: 'every year'", ->
-				it "Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2013 (On time)"
-				it "Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2013 and completed before 11/18/2014 (less than 1 year late)"
-				it "Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2013 and completed on 11/19/2014 (more than 1 year late)"
+				beforeEach -> task.set { repeatOption: "every year", schedule: new Date "11/18/2013" }
 
-				it "if repeatDate is only existant because of a leap year, we should schedule for the day before"
-					# 29. feb hver 4. år — Og altid den 29. feb.
+				it "Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2013 (On time)", ->
+					task.set( "completionDate", new Date "11/18/2013" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 18
+					expect( newSchedule.getFullYear() ).to.equal 2014
+
+
+				it "Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2013 and completed on 11/17/2014 (less than 1 year late)", ->
+					task.set( "completionDate", new Date "11/17/2014" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 18
+					expect( newSchedule.getFullYear() ).to.equal 2014
+
+				it "Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2013 and completed on 11/19/2014 (more than 1 year late)", ->
+					task.set( "completionDate", new Date "11/19/2014" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 10
+					expect( newSchedule.getDate() ).to.equal 18
+					expect( newSchedule.getFullYear() ).to.equal 2015
+
+				it "if repeatDate is only existant because of a leap year (for instance 02/29/2016), we should schedule for the day before the next year (02/28/2017)", ->
+					task.set( "schedule", new Date "02/29/2016" )
+					task.set( "completionDate", new Date "02/29/2016" )
+					duplicate = task.getRepeatableDuplicate()
+					newSchedule = duplicate.get "schedule"
+
+					expect( newSchedule.getMonth() ).to.equal 1
+					expect( newSchedule.getDate() ).to.equal 28
+					expect( newSchedule.getFullYear() ).to.equal 2017
 
 		describe "Un-setting repeat options on ToDo Model", ->
 			it "Should change repeatDate to 'null' of repeatOption is set to 'never'", ->

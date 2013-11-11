@@ -875,8 +875,7 @@
           task.set("repeatOption", "never");
           return expect(task.get("repeatDate")).to.be.falsy;
         });
-        it("Should not update the repeatDate, repeatCount or repeatOption if schedule changes after a completionDate has been set – Or should it???");
-        describe("updating repeatDate", function() {
+        return describe("updating repeatDate", function() {
           it("When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should be 11/13/2013", function() {
             var repeatDate;
             task.set("schedule", new Date("11/12/2013"));
@@ -925,7 +924,6 @@
             });
           });
         });
-        return it("Should delete duplicated (repeated) tasks when repeatOption is changed, before creating new ones (Gøres let med en pointer til original task og et event dispatch ved ændring af repeatDate)");
       });
       describe("Duplicating tasks", function() {
         var duplicate, task;
@@ -1232,10 +1230,49 @@
           });
         });
         return describe("Repeat option: 'every year'", function() {
-          it("Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2013 (On time)");
-          it("Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2013 and completed before 11/18/2014 (less than 1 year late)");
-          it("Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2013 and completed on 11/19/2014 (more than 1 year late)");
-          return it("if repeatDate is only existant because of a leap year, we should schedule for the day before");
+          beforeEach(function() {
+            return task.set({
+              repeatOption: "every year",
+              schedule: new Date("11/18/2013")
+            });
+          });
+          it("Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2013 (On time)", function() {
+            var duplicate, newSchedule;
+            task.set("completionDate", new Date("11/18/2013"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(18);
+            return expect(newSchedule.getFullYear()).to.equal(2014);
+          });
+          it("Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2013 and completed on 11/17/2014 (less than 1 year late)", function() {
+            var duplicate, newSchedule;
+            task.set("completionDate", new Date("11/17/2014"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(18);
+            return expect(newSchedule.getFullYear()).to.equal(2014);
+          });
+          it("Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2013 and completed on 11/19/2014 (more than 1 year late)", function() {
+            var duplicate, newSchedule;
+            task.set("completionDate", new Date("11/19/2014"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(18);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
+          });
+          return it("if repeatDate is only existant because of a leap year (for instance 02/29/2016), we should schedule for the day before the next year (02/28/2017)", function() {
+            var duplicate, newSchedule;
+            task.set("schedule", new Date("02/29/2016"));
+            task.set("completionDate", new Date("02/29/2016"));
+            duplicate = task.getRepeatableDuplicate();
+            newSchedule = duplicate.get("schedule");
+            expect(newSchedule.getMonth()).to.equal(1);
+            expect(newSchedule.getDate()).to.equal(28);
+            return expect(newSchedule.getFullYear()).to.equal(2017);
+          });
         });
       });
       describe("Un-setting repeat options on ToDo Model", function() {
