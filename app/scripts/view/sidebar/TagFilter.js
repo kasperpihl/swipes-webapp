@@ -7,8 +7,14 @@
         "submit form": "createTag"
       },
       initialize: function() {
+        var _this = this;
         this.listenTo(swipy.tags, "add remove reset", this.render);
         this.listenTo(Backbone, "apply-filter remove-filter", this.handleFilterChange);
+        this.listenTo(Backbone, "navigate/view", function() {
+          return _.defer(function() {
+            return _this.render();
+          });
+        });
         return this.render();
       },
       handleFilterChange: function(type) {
@@ -66,25 +72,47 @@
           });
         }
       },
+      getTagsForCurrentTasks: function() {
+        var activeList, model, models, tag, tags, _i, _j, _len, _len1, _ref;
+        tags = [];
+        activeList = swipy.todos.getActiveList();
+        switch (activeList) {
+          case "todo":
+            models = swipy.todos.getActive();
+            break;
+          case "scheduled":
+            models = swipy.todos.getScheduled();
+            break;
+          default:
+            models = swipy.todos.getCompleted();
+        }
+        for (_i = 0, _len = models.length; _i < _len; _i++) {
+          model = models[_i];
+          if (model.has("tags")) {
+            _ref = model.get("tags");
+            for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+              tag = _ref[_j];
+              tags.push(tag);
+            }
+          }
+        }
+        return _.unique(tags);
+      },
       getValidatedTags: function() {
-        return swipy.tags.getSiblings(swipy.filter.tagsFilter, false);
+        if ((swipy.filter != null) && swipy.filter.tagsFilter.length) {
+          return swipy.tags.getSiblings(swipy.filter.tagsFilter, false);
+        } else {
+          return this.getTagsForCurrentTasks();
+        }
       },
       render: function() {
-        var list, tag, _i, _j, _len, _len1, _ref, _ref1, _ref2;
+        var list, tag, _i, _len, _ref;
         list = this.$el.find(".rounded-tags");
         list.empty();
-        if (((_ref = swipy.filter) != null ? _ref.tagsFilter.length : void 0) > 0) {
-          _ref1 = this.getValidatedTags();
-          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-            tag = _ref1[_i];
-            this.renderTag(tag, list);
-          }
-        } else {
-          _ref2 = swipy.tags.pluck("title");
-          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-            tag = _ref2[_j];
-            this.renderTag(tag, list);
-          }
+        _ref = this.getValidatedTags();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          tag = _ref[_i];
+          this.renderTag(tag, list);
         }
         return this;
       },

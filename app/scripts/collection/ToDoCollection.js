@@ -31,9 +31,39 @@
           return m.getState() === "completed";
         });
       },
+      getActiveList: function() {
+        var route;
+        route = swipy.router.getCurrRoute();
+        switch (route) {
+          case "":
+          case "list/todo":
+          case "list/scheduled":
+          case "list/completed":
+            if (route === "" || route === "list/todo") {
+              return "todo";
+            } else {
+              return route.replace("list/", "");
+            }
+            break;
+          default:
+            return "todo";
+        }
+      },
       getTasksTaggedWith: function(tags, filterOnlyCurrentTasks) {
-        console.warn("Still need to implement filterOnlyCurrentTasks");
-        return this.filter(function(m) {
+        var activeList, models;
+        activeList = this.getActiveList();
+        switch (activeList) {
+          case "todo":
+            models = this.getActive();
+            break;
+          case "scheduled":
+            models = this.getScheduled();
+            break;
+          default:
+            models = this.getCompleted();
+        }
+        console.log("Active list is " + activeList);
+        return _.filter(models, function(m) {
           if (!m.has("tags")) {
             return false;
           }

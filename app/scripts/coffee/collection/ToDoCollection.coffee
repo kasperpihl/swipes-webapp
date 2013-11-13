@@ -12,10 +12,26 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 			@filter (m) => m.getState() is "scheduled"
 		getCompleted: ->
 			@filter (m) => m.getState() is "completed"
+		getActiveList: ->
+			route = swipy.router.getCurrRoute()
+			switch route
+				when "", "list/todo", "list/scheduled", "list/completed"
+					if route is "" or route is "list/todo"
+						return "todo"
+					else
+						return route.replace( "list/", "" )
+				else return "todo"
 		getTasksTaggedWith: (tags, filterOnlyCurrentTasks) ->
-			console.warn "Still need to implement filterOnlyCurrentTasks"
+			activeList = @getActiveList()
 
-			@filter (m) ->
+			switch activeList
+				when "todo" then models = @getActive()
+				when "scheduled" then models = @getScheduled()
+				else models = @getCompleted()
+
+			console.log "Active list is #{activeList}"
+
+			_.filter models, (m) ->
 				return false unless m.has "tags"
 
 				# If string, wrap it in an array so we can loop over it
