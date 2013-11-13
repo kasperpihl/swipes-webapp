@@ -12,7 +12,6 @@
       },
       initialize: function() {
         $("body").addClass("edit-mode");
-        this.$el.addClass(this.model.getState());
         this.setTemplate();
         this.render();
         return this.listenTo(this.model, "change:schedule change:repeatOption", this.render);
@@ -32,8 +31,12 @@
           model: this.model
         });
       },
+      setStateClass: function() {
+        return this.$el.removeClass("active scheduled completed").addClass(this.model.getState());
+      },
       render: function() {
         this.$el.html(this.template(this.model.toJSON()));
+        this.setStateClass();
         this.killTagEditor();
         this.createTagEditor();
         return this.el;

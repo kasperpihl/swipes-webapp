@@ -55,7 +55,6 @@
         if (removeCSS == null) {
           removeCSS = false;
         }
-        console.log("Throw complete!");
         this.stopListenForOrderChanges();
         this.killDraggables(removeCSS);
         Backbone.off("redraw-sortable-list", this.redraw);

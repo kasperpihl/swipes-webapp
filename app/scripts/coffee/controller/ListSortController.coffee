@@ -25,7 +25,6 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 					break
 
 		deactivate: (removeCSS = no) =>
-			console.log "Throw complete!"
 			@stopListenForOrderChanges()
 			@killDraggables removeCSS
 			Backbone.off( "redraw-sortable-list", @redraw )
