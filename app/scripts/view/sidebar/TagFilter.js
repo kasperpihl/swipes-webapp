@@ -85,7 +85,6 @@
             tag = _ref2[_j];
             this.renderTag(tag, list);
           }
-          this.renderTagInput(list);
         }
         return this;
       },
@@ -95,9 +94,6 @@
         } else {
           return list.append("<li>" + tag + "</li>");
         }
-      },
-      renderTagInput: function(list) {
-        return list.append("				<li class='tag-input'>					<form class='add-tag'>						<input type='text' placeholder='Add new tag'>					</form>				</li>");
       },
       destroy: function() {
         this.stopListening();

@@ -9,6 +9,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 			@render()
 		handleFilterChange: (type) ->
+			# We defer 'till next event loop, because we need to make sure
+			# FilterController has done its thing first.
 			_.defer =>
 				if type is "tag" then @render()
 		toggleFilter: (e) ->
@@ -52,7 +54,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				@renderTag tag, list for tag in @getValidatedTags()
 			else
 				@renderTag tag, list for tag in swipy.tags.pluck "title"
-				@renderTagInput list
 
 			return @
 		renderTag: (tag, list) ->
@@ -60,13 +61,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				list.append "<li class='selected'>#{ tag }</li>"
 			else
 				list.append "<li>#{ tag }</li>"
-		renderTagInput: (list) ->
-			list.append "
-				<li class='tag-input'>
-					<form class='add-tag'>
-						<input type='text' placeholder='Add new tag'>
-					</form>
-				</li>"
 		destroy: ->
 			@stopListening()
 			@undelegateEvents()
