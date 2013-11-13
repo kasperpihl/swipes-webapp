@@ -7,18 +7,25 @@ Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
   var todo = request.object;
-  todo.set('attributeChanges',todo.changedAttributes());
+  makeAttributeChanges(todo);
   if(todo.isNew() && user) todo.set('owner',user);
   response.success();
 });
 function makeAttributeChanges(object){
-  var newChanges = object.changedAttributes();
+  var attributes = object.attributes;
+  var updateTime = new Date();
   var changes = object.get('attributeChanges');
   if(!changes) changes = {};
-  if(newChanges){
-    for(var i = 0 ; i < newChanges.length ; i++){
-
+  if(attributes){
+    var hasChanged = false;;
+    for(var i = 0 ; i < attributes.length ; i++){
+      var attribute = attributes[i];
+      if(object.dirty(attribute)){ 
+        hasChanged = true;
+        changes[attribute] = updateTime;
+      }
     }
+    if(hasChanged) object.set('attributeChanges',changes);
   }
 }
 Parse.Cloud.beforeSave("Tag",function(request,response){
