@@ -8,14 +8,22 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 		disableTouchListeners: ->
 			@model.container.hammer().off( "hold", @activate )
 		activate: (e) =>
-			console.log "hold — ", e
 			@disableTouchListeners()
-
 			@model.init()
 			Backbone.on( "redraw-sortable-list", @redraw, @ )
 			@listenForOrderChanges()
 			@setInitialOrder()
 			@createDraggables()
+			if e then @forceStartDrag e
+		forceStartDrag: (e) ->
+			draggable = @getDraggableFromId e.currentTarget.getAttribute "data-id"
+			draggable.startDrag e.gesture.srcEvent
+		getDraggableFromId: (id) ->
+			for d in @draggables
+				if d._eventTarget.getAttribute( "data-id" ) is id
+					return d
+					break
+
 		deactivate: (removeCSS = no) =>
 			console.log "Throw complete!"
 			@stopListenForOrderChanges()

@@ -22,13 +22,33 @@
       };
 
       ListSortController.prototype.activate = function(e) {
-        console.log("hold — ", e);
         this.disableTouchListeners();
         this.model.init();
         Backbone.on("redraw-sortable-list", this.redraw, this);
         this.listenForOrderChanges();
         this.setInitialOrder();
-        return this.createDraggables();
+        this.createDraggables();
+        if (e) {
+          return this.forceStartDrag(e);
+        }
+      };
+
+      ListSortController.prototype.forceStartDrag = function(e) {
+        var draggable;
+        draggable = this.getDraggableFromId(e.currentTarget.getAttribute("data-id"));
+        return draggable.startDrag(e.gesture.srcEvent);
+      };
+
+      ListSortController.prototype.getDraggableFromId = function(id) {
+        var d, _i, _len, _ref;
+        _ref = this.draggables;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          d = _ref[_i];
+          if (d._eventTarget.getAttribute("data-id") === id) {
+            return d;
+            break;
+          }
+        }
       };
 
       ListSortController.prototype.deactivate = function(removeCSS) {
