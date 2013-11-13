@@ -20,7 +20,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			# Bind all events manually, so events extending me can use the
 			# events hash freely
 			@$el.on( "click", ".todo-content", @toggleSelected )
-			@$el.on( "dblclick", "h2", @edit )
+			@$el.on( "dblclick", ".todo-content", @edit )
 			@$el.on( "click", ".action", @handleAction )
 
 		setTemplate: ->
@@ -63,6 +63,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
 			@$el.html @template @model.toJSON()
+			@$el.attr( "data-id", @model.cid )
 			return @
 
 		remove: ->

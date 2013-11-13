@@ -14,7 +14,7 @@
       },
       bindEvents: function() {
         this.$el.on("click", ".todo-content", this.toggleSelected);
-        this.$el.on("dblclick", "h2", this.edit);
+        this.$el.on("dblclick", ".todo-content", this.edit);
         return this.$el.on("click", ".action", this.handleAction);
       },
       setTemplate: function() {
@@ -64,6 +64,7 @@
           return this;
         }
         this.$el.html(this.template(this.model.toJSON()));
+        this.$el.attr("data-id", this.model.cid);
         return this;
       },
       remove: function() {
