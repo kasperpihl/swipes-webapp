@@ -7,11 +7,23 @@
       ListSortModel.HEIGHT_BREAKPOINT = 800;
 
       function ListSortModel(container, views) {
+        this.container = container;
+        this.setBounds = __bind(this.setBounds, this);
+        this.active = false;
+        this.setViews(views);
+      }
+
+      ListSortModel.prototype.setViews = function(views) {
+        this.views = views;
+        if (this.active) {
+          this.rows = this.getRows();
+          return this.setBounds();
+        }
+      };
+
+      ListSortModel.prototype.init = function() {
         var debouncedSetBounds,
           _this = this;
-        this.container = container;
-        this.views = views;
-        this.setBounds = __bind(this.setBounds, this);
         this.rows = this.getRows();
         this.setBounds();
         debouncedSetBounds = _.debounce(this.setBounds, 300);
@@ -28,7 +40,8 @@
             return Backbone.trigger("redraw-sortable-list");
           }
         });
-      }
+        return this.active = true;
+      };
 
       ListSortModel.prototype.getRows = function() {
         var i, rows, view;
@@ -150,7 +163,8 @@
       };
 
       ListSortModel.prototype.destroy = function() {
-        return $(window).off(".sortmodel");
+        $(window).off(".sortmodel");
+        return this.active = false;
       };
 
       return ListSortModel;

@@ -31,25 +31,17 @@
         if (!todos.length) {
           return;
         }
-        if (this.sortController != null) {
-          this.sortController.destroy();
-        }
         if (this.transitionDeferred != null) {
           return this.transitionDeferred.done(function() {
-            _this.disableNativeClickHandlers();
-            return _this.sortController = new ListSortController(_this.$el, _this.subviews);
+            if (_this.sortController != null) {
+              return _this.sortController.model.setViews(_this.subviews);
+            } else {
+              return _this.sortController = new ListSortController(_this.$el, _this.subviews, function() {
+                return _this.render();
+              });
+            }
           });
         }
-      },
-      disableNativeClickHandlers: function() {
-        var view, _i, _len, _ref, _results;
-        _ref = this.subviews;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          _results.push(view.$el.off("click", ".todo-content"));
-        }
-        return _results;
       },
       customCleanUp: function() {
         if (this.sortController != null) {

@@ -29,7 +29,8 @@ require.config({
         momentjs: '../bower_components/momentjs/moment',
         'requirejs-text': '../bower_components/requirejs-text/text',
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
-        clndr: '../bower_components/clndr/src/clndr'
+        clndr: '../bower_components/clndr/src/clndr',
+        hammerjs: '../bower_components/hammerjs/dist/jquery.hammer'
     },
     shim: {
         bootstrapAffix: {

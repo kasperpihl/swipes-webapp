@@ -1,7 +1,15 @@
 define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 	class ListSortModel
 		@HEIGHT_BREAKPOINT = 800
-		constructor: (@container, @views) ->
+		constructor: (@container, views) ->
+			@active = no
+			@setViews views
+		setViews: (views) ->
+			@views = views
+			if @active
+				@rows = @getRows()
+				@setBounds()
+		init: ->
 			@rows = @getRows()
 			@setBounds()
 
@@ -16,6 +24,8 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 				else if window.innerHeight >= ListSortModel.HEIGHT_BREAKPOINT and @currRowHeight isnt "big"
 					@currRowHeight = "big"
 					Backbone.trigger "redraw-sortable-list"
+
+			@active = yes
 		getRows: ->
 			@rowHeight = @views[0].$el.height()
 			rows = ( i * @rowHeight for view, i in @views )
@@ -83,4 +93,4 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 
 		destroy: ->
 			$(window).off(".sortmodel")
-
+			@active = no
