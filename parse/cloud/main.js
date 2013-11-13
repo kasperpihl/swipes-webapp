@@ -7,9 +7,20 @@ Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
   var todo = request.object;
+  todo.set('attributeChanges',todo.changedAttributes());
   if(todo.isNew() && user) todo.set('owner',user);
   response.success();
 });
+function makeAttributeChanges(object){
+  var newChanges = object.changedAttributes();
+  var changes = object.get('attributeChanges');
+  if(!changes) changes = {};
+  if(newChanges){
+    for(var i = 0 ; i < newChanges.length ; i++){
+
+    }
+  }
+}
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
@@ -39,8 +50,42 @@ Parse.Cloud.define("subscribe", function(request, response) {
     }
   });
 });
+Parse.Cloud.define('update',function(request,response){
+  var returnObj = {};
+  var user = Parse.User.current();
+  var updateTime = new Date(new Date().getTime());
+  if(!user) return sendError(response,'You have to be logged in');
+  
+  var skip = request.params.skip;
+  var lastUpdate;
+  if(request.params.lastUpdate) lastUpdate = new Date(request.params.lastUpdate);
+  
 
+  var queue = require('cloud/queue.js');
+  var tagQuery = new Parse.Query('Tag');
+  tagQuery.equalTo('owner',user);
+  tagQuery.limit(1000);
+  if(skip) tagQuery.skip(skip);
+  if(lastUpdate) tagQuery.greaterThan('updatedAt',lastUpdate);
+  queue.addToQueue(tagQuery);
 
+  var taskQuery = new Parse.Query('ToDo');
+  taskQuery.equalTo('user',user);
+  taskQuery.limit(1000);
+  if(skip) taskQuery.skip(skip);
+  if(lastUpdate) taskQuery.greaterThan('updatedAt',lastUpdate);
+  queue.addToQueue(taskQuery);
+
+  runQueue(queue.getQueue(),function(objects,error){
+    if(error) sendError(response,error);
+    else{
+      objects.updateTime = updateTime.toISOString();
+      if(getPoints) objects.points = user.get('points');
+      response.success(objects);
+      
+    }
+  },{recurring:3});
+});
 Parse.Cloud.define("unsubscribe",function(request,response){
   var email = request.params.email;
   if(!email) return response.error('Must include email');
@@ -94,4 +139,56 @@ function sendError(response,error){
       if(response) response.error(error);
     }
   });
+}
+function runQueue(queue,done,options){
+  function performQuery(object,callback){
+    var query = object.query;
+    var optionObject = {
+      success:function(result){
+        callback(object,result);
+      },
+      error:function(error){
+        callback(object,null,error);
+      }
+    };
+    if(object.count) query.count(optionObject);
+    else query.find(optionObject);
+  }
+  var recurring = 1;
+  if(options && options.recurring) recurring = options.recurring;
+  var k = 0;
+  var doneCounter = 0;
+  var calledDone= false;
+  var target = queue.length;
+  if(target === 0) return done(false,null);
+  var returnObj = {};
+  function checkDone(){
+    if(calledDone) return;
+    if(doneCounter == target){
+      done(returnObj,null);
+      calledDone = true;
+    }
+    else next();
+  }
+  function next(){
+    if(k>=target){
+      return;
+    }
+    performQuery(queue[k],function(object,result,error){
+      if(error && !calledDone){
+        done(null,error);
+        calledDone = true;
+      }
+      else{
+        returnObj[object.title] = result;
+        doneCounter++;
+        checkDone();
+      }
+      
+    });
+    k++;
+  }
+  for(var i = 0 ; i < recurring ; i++){
+    next();
+  }
 }
