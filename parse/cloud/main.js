@@ -1,4 +1,3 @@
-
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
 Parse.Cloud.useMasterKey();
@@ -7,7 +6,7 @@ Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
   var todo = request.object;
-  makeAttributeChanges(todo);
+  if(!request.master) makeAttributeChanges(todo);
   if(todo.isNew() && user) todo.set('owner',user);
   response.success();
 });
@@ -17,10 +16,9 @@ function makeAttributeChanges(object){
   var changes = object.get('attributeChanges');
   if(!changes) changes = {};
   if(attributes){
-    var hasChanged = false;;
-    for(var i = 0 ; i < attributes.length ; i++){
-      var attribute = attributes[i];
-      if(object.dirty(attribute)){ 
+    var hasChanged = false;
+    for(var attribute in attributes){
+      if(object.dirty(attribute) && attribute != 'attributeChanges'){ 
         hasChanged = true;
         changes[attribute] = updateTime;
       }
@@ -28,10 +26,26 @@ function makeAttributeChanges(object){
     if(hasChanged) object.set('attributeChanges',changes);
   }
 }
+function scrapeChanges(object,lastUpdateTime){
+  var attributes = object.attributes;
+  var updateTime = new Date();
+  if(!attributes['attributeChanges']) return;
+  if(!lastUpdateTime) return delete attributes['attributeChanges'];
+  var changes = object.get('attributeChanges');
+  if(!changes) changes = {};
+  if(attributes){
+    var hasChanged = false;
+    for(var attribute in attributes){
+      var lastChange = changes[attribute];
+      if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
+    }
+  }
+}
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
   var tag = request.object;
+  if(!request.master) makeAttributeChanges(tag);
   if(tag.isNew() && user) tag.set('owner',user);
   response.success();
 });
@@ -58,26 +72,26 @@ Parse.Cloud.define("subscribe", function(request, response) {
   });
 });
 Parse.Cloud.define('update',function(request,response){
-  var returnObj = {};
   var user = Parse.User.current();
   var updateTime = new Date(new Date().getTime());
-  if(!user) return sendError(response,'You have to be logged in');
+  //if(!user) return sendError(response,'You have to be logged in');
   
+
   var skip = request.params.skip;
-  var lastUpdate;
+  var lastUpdate = false;
   if(request.params.lastUpdate) lastUpdate = new Date(request.params.lastUpdate);
-  
+  var changesOnly = request.params.changesOnly ? lastUpdate : false;
 
   var queue = require('cloud/queue.js');
   var tagQuery = new Parse.Query('Tag');
-  tagQuery.equalTo('owner',user);
+  //tagQuery.equalTo('owner',user);
   tagQuery.limit(1000);
   if(skip) tagQuery.skip(skip);
   if(lastUpdate) tagQuery.greaterThan('updatedAt',lastUpdate);
   queue.addToQueue(tagQuery);
 
   var taskQuery = new Parse.Query('ToDo');
-  taskQuery.equalTo('user',user);
+  //taskQuery.equalTo('user',user);
   taskQuery.limit(1000);
   if(skip) taskQuery.skip(skip);
   if(lastUpdate) taskQuery.greaterThan('updatedAt',lastUpdate);
@@ -87,11 +101,10 @@ Parse.Cloud.define('update',function(request,response){
     if(error) sendError(response,error);
     else{
       objects.updateTime = updateTime.toISOString();
-      if(getPoints) objects.points = user.get('points');
       response.success(objects);
       
     }
-  },{recurring:3});
+  },{recurring:3,changesSince:changesOnly});
 });
 Parse.Cloud.define("unsubscribe",function(request,response){
   var email = request.params.email;
@@ -187,6 +200,12 @@ function runQueue(queue,done,options){
         calledDone = true;
       }
       else{
+        if(result.length > 0){
+          for(var i = 0 ; i < result.length ; i++){
+            var obj = result[i];
+            scrapeChanges(obj,options.changesSince);
+          }
+        }
         returnObj[object.title] = result;
         doneCounter++;
         checkDone();
