@@ -29,8 +29,6 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 				when "scheduled" then models = @getScheduled()
 				else models = @getCompleted()
 
-			console.log "Active list is #{activeList}"
-
 			_.filter models, (m) ->
 				return false unless m.has "tags"
 

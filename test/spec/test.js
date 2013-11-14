@@ -817,529 +817,495 @@
     			it "Should throw an error message if the changes can't be saved to the server"
     */
 
-    return describe("Repeating tasks", function() {
-      describe("Repeat Picker user interface", function() {
-        it("Should change the models repeatOption and repeatDate properties when clicking a repeat option", function(done) {
-          var targetModel;
-          targetModel = swipy.todos.getActive()[0];
-          targetModel.set("repeatOption", "never");
-          swipy.router.navigate("edit/" + targetModel.cid, true);
-          return require(["view/editor/TaskEditor"], function() {
-            var editor;
-            expect(targetModel.get("repeatOption")).to.equal("never");
-            expect(targetModel.get("repeatDate")).to.be.falsy;
-            expect(targetModel.get("repeatCount")).to.equal(0);
-            editor = swipy.viewController.currView.$el;
-            editor.find(".repeat-picker a").filter(function() {
-              return $(this).data("option") === "every day";
-            }).click();
-            expect(targetModel.get("repeatOption")).to.equal("every day");
-            return done();
-          });
-        });
-        return it("Should update the UI when the models repeatOption prop changes", function(done) {
-          var targetModel;
-          targetModel = swipy.todos.getActive()[0];
-          targetModel.set("repeatOption", "never");
-          swipy.router.navigate("edit/" + targetModel.cid, true);
-          return require(["view/editor/TaskEditor"], function() {
-            var editor;
-            editor = swipy.viewController.currView.$el;
-            targetModel.set("repeatOption", "every week");
-            expect(editor.find("a[data-option='every week']").hasClass("selected")).to.be["true"];
-            return done();
-          });
+    return describe("Automatically moving tasks from scheduled to active", function() {
+      var clock;
+      clock = null;
+      before(function(done) {
+        return require(["model/ClockWork"], function(ClockWork) {
+          clock = new ClockWork();
+          return done();
         });
       });
-      describe("Setting and changing repeat options on ToDo Model ", function() {
-        var task;
-        task = null;
-        beforeEach(function() {
-          return task = new ToDoModel();
-        });
-        afterEach(function() {
-          return task.destroy();
-        });
-        it("Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'", function() {
-          expect(task.get("repeatDate")).to.be.falsy;
-          task.set("repeatOption", "every day");
-          return expect(task.get("repeatDate")).to.exist;
-        });
-        it("Should change the repeatDate, if it already exists when the repeatOption is set to something other than 'never'", function() {
-          var originalRepeatDate;
-          task.set("repeatOption", "every day");
-          originalRepeatDate = task.get("repeatDate");
-          task.set("repeatOption", "every week");
-          return expect(originalRepeatDate.getTime()).to.not.equal(task.get("repeatDate").getTime());
-        });
-        it("Should delete any existing repeatDate when setting repeatOption to 'never'", function() {
-          task.set("repeatOption", "every day");
-          task.set("repeatOption", "never");
-          return expect(task.get("repeatDate")).to.be.falsy;
-        });
-        return describe("updating schedule without changing repeatDate (Base schedule is monday 11/11/2013)", function() {
-          beforeEach(function() {
-            return task.set("repeatDate", new Date("11/11/2013"));
-          });
-          it("When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should still be 11/12/2013 (We let completionDate determine new repeatDate)", function() {
-            var repeatDate;
-            task.set("repeatOption", "every day");
-            task.set("schedule", new Date("11/12/2013"));
-            repeatDate = task.get("repeatDate");
-            expect(repeatDate.getMonth()).to.equal(10);
-            expect(repeatDate.getDate()).to.equal(12);
-            return expect(repeatDate.getFullYear()).to.equal(2013);
-          });
-          it("When changing schedule to 11/12/2013 and with a repeatOption of 'every week' the new repeatDate should still be 11/18/2013", function() {
-            var repeatDate;
-            task.set("repeatOption", "every week");
-            task.set("schedule", new Date("11/12/2013"));
-            repeatDate = task.get("repeatDate");
-            expect(repeatDate.getMonth()).to.equal(10);
-            expect(repeatDate.getDate()).to.equal(18);
-            return expect(repeatDate.getFullYear()).to.equal(2013);
-          });
-          it("When changing schedule to 11/12/2013 and with a repeatOption of 'every month' the new repeatDate should still be 11/11/2013", function() {
-            var repeatDate;
-            task.set("repeatOption", "every month");
-            task.set("schedule", new Date("11/12/2013"));
-            repeatDate = task.get("repeatDate");
-            expect(repeatDate.getMonth()).to.equal(11);
-            expect(repeatDate.getDate()).to.equal(11);
-            return expect(repeatDate.getFullYear()).to.equal(2013);
-          });
-          return it("When changing schedule to 11/12/2013 and with a repeatOption of 'every year' the new repeatDate should be 11/11/2013", function() {
-            var repeatDate;
-            task.set("repeatOption", "every year");
-            task.set("schedule", new Date("11/12/2013"));
-            repeatDate = task.get("repeatDate");
-            expect(repeatDate.getMonth()).to.equal(10);
-            expect(repeatDate.getDate()).to.equal(11);
-            return expect(repeatDate.getFullYear()).to.equal(2014);
-          });
-        });
+      it("Should figure out the second count of the current minute and set a timer for the remaining seconds", function() {
+        var now, secondsLeftThisMinute;
+        now = new Date();
+        secondsLeftThisMinute = 60 - now.getSeconds();
+        expect(clock).to.have.property("timer");
+        return expect(Math.round(clock.timeToNextTick())).to.equal(secondsLeftThisMinute);
       });
-      describe("Duplicating tasks", function() {
-        var duplicate, task;
-        task = duplicate = null;
-        beforeEach(function() {
-          task = new ToDoModel({
-            title: "test title",
-            notes: "test notes",
-            tags: ["tag1", "tag2"],
-            order: 2,
-            state: "completed",
-            repeatOption: "every day"
-          });
-          task.set("completionDate", new Date());
-          return duplicate = task.getRepeatableDuplicate();
+      it("Should disptach a 'clockwork/update' event when ClockWork.tick() is called (Once every minute)", function() {
+        var eventTriggered;
+        eventTriggered = false;
+        Backbone.on("clockwork/update", function() {
+          return eventTriggered = true;
         });
-        afterEach(function() {
-          task.destroy();
-          return duplicate.destroy();
-        });
-        it("Shouldn't allow you to create a duplicate, if the task has no repeatDate", function() {
-          return expect(new ToDoModel().getRepeatableDuplicate).to["throw"](Error);
-        });
-        it("Should return a new instance of ToDo Model when calling 'getRepeatableDuplicate()'", function() {
-          expect(task).to.respondTo("getRepeatableDuplicate");
-          return expect(duplicate).to.be.instanceOf(ToDoModel);
-        });
-        it("Should retain title when duplicating a task", function() {
-          expect(task.get("title")).to.have.length.above(0);
-          return expect(task.get("title")).to.equal(duplicate.get("title"));
-        });
-        it("Should retain tags when duplicating a task", function() {
-          expect(task.get("tags")).to.have.length.above(0);
-          return expect(task.get("tags")).to.have.length(duplicate.get("tags").length);
-        });
-        it("Should retain notes when duplicating a task", function() {
-          expect(task.get("notes")).to.have.length.above(0);
-          return expect(task.get("notes")).to.equal(duplicate.get("notes"));
-        });
-        it("Should retain order when duplicating a task", function() {
-          expect(task.get("order")).to.not.be.falsy;
-          return expect(task.get("order")).to.equal(duplicate.get("order"));
-        });
-        it("Should retain repeatOption when duplicating a task", function() {
-          return expect(task.get("repeatOption")).to.equal(duplicate.get("repeatOption"));
-        });
-        it("Should NOT retain state when duplicating a task", function() {
-          expect(duplicate.has("state")).to.be["false"];
-          return expect(duplicate.getState()).to.equal("scheduled");
-        });
-        it("Should NOT retain model ID when duplicating a task", function() {
-          if (task.id != null) {
-            return expect(duplicate.id).to.not.exist;
-          }
-        });
-        it("Should NOT retain schedule when duplicating a task", function() {
-          expect(duplicate.has("schedule")).to.be["true"];
-          return expect(task.get("schedule").getTime()).to.not.equal(duplicate.get("schedule").getTime());
-        });
-        it("Should NOT retain scheduleStr when duplicating a task", function() {
-          expect(duplicate.has("scheduleStr")).to.be["true"];
-          return expect(task.get("scheduleStr")).to.not.equal(duplicate.get("scheduleStr"));
-        });
-        it("Should NOT retain completionDate when duplicating a task", function() {
-          return expect(duplicate.has("completionDate")).to.be["false"];
-        });
-        it("Should NOT retain completionStr when duplicating a task", function() {
-          return expect(duplicate.has("completionStr")).to.be["false"];
-        });
-        it("Should NOT retain completionTimeStr when duplicating a task", function() {
-          return expect(duplicate.has("completionTimeStr")).to.be["false"];
-        });
-        it("Should NOT retain repeatDate when duplicating a task", function() {
-          expect(duplicate.has("repeatDate")).to.be["true"];
-          return expect(task.get("repeatDate").getTime()).to.not.equal(duplicate.get("repeatDate").getTime());
-        });
-        it("Should NOT retain repeatCount when duplicating a task", function() {
-          expect(task.has("repeatCount")).to.be["true"];
-          expect(duplicate.has("repeatCount")).to.be["true"];
-          return expect(task.get("repeatCount")).to.not.equal(duplicate.get("repeatCount"));
-        });
-        return it("Should update repeatCount++ every time a the same task is duplicated/repeated", function() {
-          return expect(duplicate.get("repeatCount")).to.equal(task.get("repeatCount") + 1);
-        });
+        clock.timer.progress(1);
+        expect(clock.timesUpdated).to.equal(1);
+        return expect(eventTriggered).to.be["true"];
       });
-      describe("Duplicating a task based on repeatDate and repeatOption", function() {
-        var task;
-        task = null;
-        beforeEach(function() {
-          return task = new ToDoModel({
-            title: "test repeated every day"
-          });
-        });
-        afterEach(function() {
-          return task.destroy();
-        });
-        describe("Repeat option: 'every day' — Scheduled for 11/11/2013", function() {
-          beforeEach(function() {
-            return task.set({
-              repeatOption: "every day",
-              schedule: new Date("11/11/2013")
-            });
-          });
-          it("Should schedule duplicated task for 11/12/2013, if current task is completed 11/11/2013", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/11/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("Should schedule duplicated task for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/12/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(13);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("Should schedule duplicated task for 11/12/2013, if current task is completed 11/09/2013 (Completed too early, don't create new repeat before scheduled repeatDate)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/09/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(task.get("schedule").getTime()).to.equal(new Date("11/11/2013").getTime());
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          return it("Should schedule duplicated task for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("01/22/2014"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(0);
-            expect(newSchedule.getDate()).to.equal(23);
-            return expect(newSchedule.getFullYear()).to.equal(2014);
-          });
-        });
-        describe("Repeat option: 'mon-fri or sat+sun'", function() {
-          beforeEach(function() {
-            return task.set({
-              repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/11/2013")
-            });
-          });
-          it("should schedule duplicated task for tuesday 11/12/2013 if scheduled for monday 11/11/2013, but completed sunday 11/10/2013 (Too early)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/10/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("should schedule duplicated task for monday 11/18/2013 if completed friday 11/15/2013, but scheduled for monday 11/11/2013 (Too late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/15/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("should schedule duplicated task for tuesday 11/12/2013 if completed and scheduled for monday 11/11/2013 (On time)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/11/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("should schedule duplicated task for saturday 11/16/2013 if scheduled for sunday 11/10/2013, but completed sunday 11/03/2013 (A week too early)", function() {
-            var duplicate, newSchedule, newTask;
-            newTask = new ToDoModel({
-              repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/10/2013")
-            });
-            newTask.set("completionDate", new Date("11/03/2013"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(16);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("should schedule duplicated task for saturday 11/16/2013 if completed sunday 11/10/2013, but scheduled for monday 11/03/2013 (A week too late)", function() {
-            var duplicate, newSchedule, newTask;
-            newTask = new ToDoModel({
-              repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/03/2013")
-            });
-            newTask.set("completionDate", new Date("11/10/2013"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(16);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("should schedule duplicated task for sunday 11/10/2013 if completed and scheduled for saturday 11/09/2013 (On time)", function() {
-            var duplicate, newSchedule, newTask;
-            newTask = new ToDoModel({
-              repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/09/2013")
-            });
-            newTask.set("completionDate", new Date("11/09/2013"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(10);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          return it("should schedule duplicated task for saturday 11/16/2013 if completed and scheduled for sunday 11/10/2013 (On time)", function() {
-            var duplicate, newSchedule, newTask;
-            newTask = new ToDoModel({
-              repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/10/2013")
-            });
-            newTask.set("completionDate", new Date("11/10/2013"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(16);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-        });
-        describe("Repeat option: 'every week'", function() {
-          beforeEach(function() {
-            return task.set({
-              repeatOption: "every week",
-              schedule: new Date("11/12/2013")
-            });
-          });
-          it("should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for and completed 11/12/2013 (on time)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/12/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(19);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("should still schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/13/2013 (wednesday, the day after)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/13/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(19);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/18/2013 (monday, the week after original schedule date)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/18/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(19);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          return it("should schedule duplicated task for tuesday 11/26/2013 if current task is scheduled for 11/12/2013 but completed wednesday 11/20/2013 (1 week and 1 day after original schedule date)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/20/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(26);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-        });
-        describe("Repeat option: 'every month'", function() {
-          beforeEach(function() {
-            return task.set({
-              repeatOption: "every month",
-              schedule: new Date("10/18/2013")
-            });
-          });
-          it("Should schedule duplicate for 11/18/2013, if scheduled for and completed on 10/18/2013 (On time)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("10/18/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("Should schedule duplicate for 11/18/2013, if scheduled for 10/18/2013 and completed on 11/17/2013 (less than 1 month late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/17/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          it("Should schedule duplicate for 12/18/2013, if scheduled for 10/18/2013 and completed on 11/19/2013 (more than 1 month late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/19/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(11);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-          return it("Should schedule duplicate for 11/30/2013, if scheduled for and completed on 10/31/2013 (Handling difference between number of days in a month nicely)", function() {
-            var duplicate, newSchedule, newTask;
-            newTask = new ToDoModel({
-              repeatOption: "every month",
-              schedule: new Date("10/31/2013")
-            });
-            newTask.set("completionDate", new Date("10/31/2013"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(30);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
-          });
-        });
-        return describe("Repeat option: 'every year'", function() {
-          beforeEach(function() {
-            return task.set({
-              repeatOption: "every year",
-              schedule: new Date("11/18/2013")
-            });
-          });
-          it("Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2013 (On time)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/18/2013"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2014);
-          });
-          it("Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2013 and completed on 11/17/2014 (less than 1 year late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/17/2014"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2014);
-          });
-          it("Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2013 and completed on 11/19/2014 (more than 1 year late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/19/2014"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2015);
-          });
-          return it("if repeatDate is only existant because of a leap year (for instance 02/29/2016), we should schedule for the day before the next year (02/28/2017)", function() {
-            var duplicate, newSchedule, newTask;
-            newTask = new ToDoModel({
-              repeatOption: "every year",
-              schedule: new Date("02/29/2016")
-            });
-            newTask.set("completionDate", new Date("02/29/2016"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(1);
-            expect(newSchedule.getDate()).to.equal(28);
-            return expect(newSchedule.getFullYear()).to.equal(2017);
-          });
-        });
+      it("Should spawn a new timer when the current one finishes", function() {
+        clock.timer.progress(1);
+        return expect(clock.timer.progress()).to.equal(0);
       });
-      describe("Un-setting repeat options on ToDo Model", function() {
-        it("Should change repeatDate to 'null' of repeatOption is set to 'never'", function() {
-          var task;
-          task = new ToDoModel({
-            repeatOption: "every week"
-          });
-          expect(task.get("repeatDate")).to.be.instanceOf(Date);
-          task.set("repeatOption", "never");
-          return expect(task.get("repeatDate")).to.equal(null);
-        });
-        return it("Should delete duplicated (repeated) tasks when repeatOption is set to 'never'");
-      });
-      return describe("Completing a task with repeat set and automatically spawning a new task", function() {
-        it("TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'", function(done) {
-          return require(["collection/ToDoCollection"], function(ToDoCollection) {
-            var spawnSpy, todoCollection;
-            spawnSpy = sinon.spy(ToDoCollection.prototype, "spawnRepeatTask");
-            expect(spawnSpy).to.not.have.been.called;
-            todoCollection = new ToDoCollection();
-            todoCollection.add({
-              title: "auto spawn tester",
-              repeatOption: "every day"
-            });
-            expect(todoCollection.models).to.have.length(1);
-            todoCollection.at(0).set("completionDate", new Date());
-            expect(spawnSpy).to.have.been.calledOnce;
-            expect(todoCollection.models).to.have.length(2);
-            ToDoCollection.prototype.spawnRepeatTask.restore();
-            todoCollection.off();
-            todoCollection = null;
-            return done();
-          });
-        });
-        return it("TodoCollection should listen for tasks that are completed and do nothing if repeatOption is 'never'", function(done) {
-          return require(["collection/ToDoCollection"], function(ToDoCollection) {
-            var spawnSpy, todoCollection;
-            spawnSpy = sinon.spy(ToDoCollection.prototype, "spawnRepeatTask");
-            todoCollection = new ToDoCollection();
-            todoCollection.add({
-              title: "auto spawn tester 2"
-            });
-            todoCollection.at(0).set("completionDate", new Date());
-            expect(spawnSpy).to.have.been.calledOnce;
-            expect(todoCollection.models).to.have.length(1);
-            ToDoCollection.prototype.spawnRepeatTask.restore();
-            todoCollection.off();
-            todoCollection = null;
-            return done();
-          });
-        });
-      });
+      return it("Should handle time zone differences (So your desktop and phone will stay in sync if their time zones are off (Like when you just took the plane to a new time zone)");
     });
     /*
+    
+    	describe "Repeating tasks", ->
+    		describe "Repeat Picker user interface", ->
+    			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
+    				targetModel = swipy.todos.getActive()[0]
+    				targetModel.set( "repeatOption", "never" )
+    				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
+    
+    				require ["view/editor/TaskEditor"], ->
+    					expect( targetModel.get "repeatOption" ).to.equal "never"
+    					expect( targetModel.get "repeatDate" ).to.be.falsy
+    					expect( targetModel.get "repeatCount" ).to.equal 0
+    
+    					editor = swipy.viewController.currView.$el
+    					editor.find(".repeat-picker a").filter( -> $(@).data( "option" ) is "every day" ).click()
+    
+    					expect( targetModel.get "repeatOption" ).to.equal "every day"
+    					done()
+    
+    			it "Should update the UI when the models repeatOption prop changes", (done) ->
+    				targetModel = swipy.todos.getActive()[0]
+    				targetModel.set( "repeatOption", "never" )
+    				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
+    
+    				require ["view/editor/TaskEditor"], ->
+    					editor = swipy.viewController.currView.$el
+    					targetModel.set( "repeatOption", "every week" )
+    					expect( editor.find("a[data-option='every week']").hasClass "selected" ).to.be.true
+    					done()
+    
+    		describe "Setting and changing repeat options on ToDo Model ", ->
+    			task = null
+    			beforeEach -> task = new ToDoModel()
+    			afterEach -> task.destroy()
+    
+    			it "Should create a repeatDate, if it doesn't already exist when the repeatOption is set to something other than 'never'", ->
+    				expect( task.get "repeatDate" ).to.be.falsy
+    				task.set( "repeatOption", "every day" )
+    				expect( task.get "repeatDate" ).to.exist
+    
+    			it "Should change the repeatDate, if it already exists when the repeatOption is set to something other than 'never'", ->
+    				task.set( "repeatOption", "every day" )
+    				originalRepeatDate = task.get "repeatDate"
+    
+    				task.set( "repeatOption", "every week" )
+    				expect( originalRepeatDate.getTime() ).to.not.equal task.get( "repeatDate" ).getTime()
+    
+    			it "Should delete any existing repeatDate when setting repeatOption to 'never'", ->
+    				task.set( "repeatOption", "every day" )
+    				task.set( "repeatOption", "never" )
+    				expect( task.get "repeatDate" ).to.be.falsy
+    
+    			describe "updating schedule without changing repeatDate (Base schedule is monday 11/11/2013)", ->
+    				beforeEach -> task.set( "repeatDate", new Date( "11/11/2013" ) )
+    
+    				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should still be 11/12/2013 (We let completionDate determine new repeatDate)", ->
+    					task.set( "repeatOption", "every day" )
+    					task.set( "schedule", new Date("11/12/2013") )
+    
+    					repeatDate = task.get "repeatDate"
+    					expect( repeatDate.getMonth() ).to.equal 10
+    					expect( repeatDate.getDate() ).to.equal 12
+    					expect( repeatDate.getFullYear() ).to.equal 2013
+    
+    				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every week' the new repeatDate should still be 11/18/2013", ->
+    					task.set( "repeatOption", "every week" )
+    					task.set( "schedule", new Date("11/12/2013") )
+    
+    					repeatDate = task.get "repeatDate"
+    					expect( repeatDate.getMonth() ).to.equal 10
+    					expect( repeatDate.getDate() ).to.equal 18
+    					expect( repeatDate.getFullYear() ).to.equal 2013
+    
+    				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every month' the new repeatDate should still be 11/11/2013", ->
+    					task.set( "repeatOption", "every month" )
+    					task.set( "schedule", new Date("11/12/2013") )
+    
+    					repeatDate = task.get "repeatDate"
+    					expect( repeatDate.getMonth() ).to.equal 11
+    					expect( repeatDate.getDate() ).to.equal 11
+    					expect( repeatDate.getFullYear() ).to.equal 2013
+    
+    				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every year' the new repeatDate should be 11/11/2013", ->
+    					task.set( "repeatOption", "every year" )
+    					task.set( "schedule", new Date("11/12/2013") )
+    
+    					repeatDate = task.get "repeatDate"
+    					expect( repeatDate.getMonth() ).to.equal 10
+    					expect( repeatDate.getDate() ).to.equal 11
+    					expect( repeatDate.getFullYear() ).to.equal 2014
+    
+    		describe "Duplicating tasks", ->
+    			task = duplicate = null
+    			beforeEach ->
+    				task = new ToDoModel
+    					title: "test title"
+    					notes: "test notes"
+    					tags: ["tag1", "tag2"]
+    					order: 2
+    					state: "completed"
+    					repeatOption: "every day"
+    
+    				task.set( "completionDate", new Date() )
+    
+    				duplicate = task.getRepeatableDuplicate()
+    			afterEach ->
+    				task.destroy()
+    				duplicate.destroy()
+    
+    			it "Shouldn't allow you to create a duplicate, if the task has no repeatDate", ->
+    				expect( new ToDoModel().getRepeatableDuplicate ).to.throw Error
+    
+    			it "Should return a new instance of ToDo Model when calling 'getRepeatableDuplicate()'", ->
+    				expect( task ).to.respondTo "getRepeatableDuplicate"
+    				expect( duplicate ).to.be.instanceOf ToDoModel
+    
+    			it "Should retain title when duplicating a task", ->
+    				expect( task.get "title" ).to.have.length.above 0
+    				expect( task.get "title" ).to.equal duplicate.get "title"
+    
+    			it "Should retain tags when duplicating a task", ->
+    				expect( task.get "tags" ).to.have.length.above 0
+    				expect( task.get "tags" ).to.have.length duplicate.get("tags").length
+    
+    			it "Should retain notes when duplicating a task", ->
+    				expect( task.get "notes" ).to.have.length.above 0
+    				expect( task.get "notes" ).to.equal duplicate.get "notes"
+    
+    			it "Should retain order when duplicating a task", ->
+    				expect( task.get "order" ).to.not.be.falsy
+    				expect( task.get "order" ).to.equal duplicate.get "order"
+    
+    			it "Should retain repeatOption when duplicating a task", ->
+    				expect( task.get "repeatOption" ).to.equal duplicate.get "repeatOption"
+    
+    			it "Should NOT retain state when duplicating a task", ->
+    				expect( duplicate.has "state" ).to.be.false
+    				expect( duplicate.getState() ).to.equal "scheduled"
+    
+    			it "Should NOT retain model ID when duplicating a task", ->
+    				if task.id? then expect( duplicate.id ).to.not.exist
+    
+    			it "Should NOT retain schedule when duplicating a task", ->
+    				expect( duplicate.has "schedule" ).to.be.true
+    				expect( task.get( "schedule" ).getTime() ).to.not.equal duplicate.get( "schedule" ).getTime()
+    
+    			it "Should NOT retain scheduleStr when duplicating a task", ->
+    				expect( duplicate.has "scheduleStr" ).to.be.true
+    				expect( task.get( "scheduleStr" ) ).to.not.equal duplicate.get( "scheduleStr" )
+    
+    			it "Should NOT retain completionDate when duplicating a task", ->
+    				expect( duplicate.has "completionDate" ).to.be.false
+    
+    			it "Should NOT retain completionStr when duplicating a task", ->
+    				expect( duplicate.has "completionStr" ).to.be.false
+    
+    			it "Should NOT retain completionTimeStr when duplicating a task", ->
+    				expect( duplicate.has "completionTimeStr" ).to.be.false
+    
+    			it "Should NOT retain repeatDate when duplicating a task", ->
+    				expect( duplicate.has "repeatDate" ).to.be.true
+    				expect( task.get( "repeatDate" ).getTime() ).to.not.equal duplicate.get( "repeatDate" ).getTime()
+    
+    			it "Should NOT retain repeatCount when duplicating a task", ->
+    				expect( task.has "repeatCount" ).to.be.true
+    				expect( duplicate.has "repeatCount" ).to.be.true
+    				expect( task.get "repeatCount" ).to.not.equal duplicate.get "repeatCount"
+    
+    			it "Should update repeatCount++ every time a the same task is duplicated/repeated", ->
+    				expect( duplicate.get "repeatCount" ).to.equal ( task.get( "repeatCount" ) + 1 )
+    
+    		describe "Duplicating a task based on repeatDate and repeatOption", ->
+    			task = null
+    			beforeEach -> task = new ToDoModel( title: "test repeated every day" )
+    			afterEach -> task.destroy()
+    
+    			describe "Repeat option: 'every day' — Scheduled for 11/11/2013", ->
+    				beforeEach ->
+    					task.set { repeatOption: "every day", schedule: new Date "11/11/2013" }
+    
+    				it "Should schedule duplicated task for 11/12/2013, if current task is completed 11/11/2013", ->
+    					task.set( "completionDate", new Date "11/11/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 12
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "Should schedule duplicated task for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)", ->
+    					task.set( "completionDate", new Date "11/12/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 13
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "Should schedule duplicated task for 11/12/2013, if current task is completed 11/09/2013 (Completed too early, don't create new repeat before scheduled repeatDate)", ->
+    					task.set( "completionDate", new Date "11/09/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( task.get( "schedule" ).getTime() ).to.equal new Date( "11/11/2013" ).getTime()
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 12
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "Should schedule duplicated task for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)", ->
+    					task.set( "completionDate", new Date "01/22/2014" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 0
+    					expect( newSchedule.getDate() ).to.equal 23
+    					expect( newSchedule.getFullYear() ).to.equal 2014
+    
+    			describe "Repeat option: 'mon-fri or sat+sun'", ->
+    				beforeEach -> task.set { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/11/2013" }
+    
+    				it "should schedule duplicated task for tuesday 11/12/2013 if scheduled for monday 11/11/2013, but completed sunday 11/10/2013 (Too early)", ->
+    					task.set( "completionDate", new Date "11/10/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 12
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for monday 11/18/2013 if completed friday 11/15/2013, but scheduled for monday 11/11/2013 (Too late)", ->
+    					task.set( "completionDate", new Date "11/15/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 18
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for tuesday 11/12/2013 if completed and scheduled for monday 11/11/2013 (On time)", ->
+    					task.set( "completionDate", new Date "11/11/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 12
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for saturday 11/16/2013 if scheduled for sunday 11/10/2013, but completed sunday 11/03/2013 (A week too early)", ->
+    					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/10/2013" }
+    					newTask.set( "completionDate", new Date "11/03/2013" )
+    					duplicate = newTask.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 16
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for saturday 11/16/2013 if completed sunday 11/10/2013, but scheduled for monday 11/03/2013 (A week too late)", ->
+    					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/03/2013" }
+    					newTask.set( "completionDate", new Date "11/10/2013" )
+    					duplicate = newTask.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 16
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for sunday 11/10/2013 if completed and scheduled for saturday 11/09/2013 (On time)", ->
+    					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/09/2013" }
+    					newTask.set( "completionDate", new Date "11/09/2013" )
+    					duplicate = newTask.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 10
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for saturday 11/16/2013 if completed and scheduled for sunday 11/10/2013 (On time)", ->
+    					newTask = new ToDoModel { repeatOption: "mon-fri or sat+sun", schedule: new Date "11/10/2013" }
+    					newTask.set( "completionDate", new Date "11/10/2013" )
+    					duplicate = newTask.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 16
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    			describe "Repeat option: 'every week'", ->
+    				beforeEach -> task.set { repeatOption: "every week", schedule: new Date "11/12/2013" }
+    
+    				it "should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for and completed 11/12/2013 (on time)", ->
+    					task.set( "completionDate", new Date "11/12/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 19
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should still schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/13/2013 (wednesday, the day after)", ->
+    					task.set( "completionDate", new Date "11/13/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 19
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/18/2013 (monday, the week after original schedule date)", ->
+    					task.set( "completionDate", new Date "11/18/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 19
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "should schedule duplicated task for tuesday 11/26/2013 if current task is scheduled for 11/12/2013 but completed wednesday 11/20/2013 (1 week and 1 day after original schedule date)", ->
+    					task.set( "completionDate", new Date "11/20/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 26
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    			describe "Repeat option: 'every month'", ->
+    				beforeEach -> task.set { repeatOption: "every month", schedule: new Date "10/18/2013" }
+    
+    				it "Should schedule duplicate for 11/18/2013, if scheduled for and completed on 10/18/2013 (On time)", ->
+    					task.set( "completionDate", new Date "10/18/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 18
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "Should schedule duplicate for 11/18/2013, if scheduled for 10/18/2013 and completed on 11/17/2013 (less than 1 month late)", ->
+    					task.set( "completionDate", new Date "11/17/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 18
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "Should schedule duplicate for 12/18/2013, if scheduled for 10/18/2013 and completed on 11/19/2013 (more than 1 month late)", ->
+    					task.set( "completionDate", new Date "11/19/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 11
+    					expect( newSchedule.getDate() ).to.equal 18
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    				it "Should schedule duplicate for 11/30/2013, if scheduled for and completed on 10/31/2013 (Handling difference between number of days in a month nicely)", ->
+    					newTask = new ToDoModel { repeatOption: "every month", schedule: new Date "10/31/2013" }
+    					newTask.set( "completionDate", new Date "10/31/2013" )
+    					duplicate = newTask.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 30
+    					expect( newSchedule.getFullYear() ).to.equal 2013
+    
+    			describe "Repeat option: 'every year'", ->
+    				beforeEach -> task.set { repeatOption: "every year", schedule: new Date "11/18/2013" }
+    
+    				it "Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2013 (On time)", ->
+    					task.set( "completionDate", new Date "11/18/2013" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 18
+    					expect( newSchedule.getFullYear() ).to.equal 2014
+    
+    
+    				it "Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2013 and completed on 11/17/2014 (less than 1 year late)", ->
+    					task.set( "completionDate", new Date "11/17/2014" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 18
+    					expect( newSchedule.getFullYear() ).to.equal 2014
+    
+    				it "Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2013 and completed on 11/19/2014 (more than 1 year late)", ->
+    					task.set( "completionDate", new Date "11/19/2014" )
+    					duplicate = task.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 10
+    					expect( newSchedule.getDate() ).to.equal 18
+    					expect( newSchedule.getFullYear() ).to.equal 2015
+    
+    				it "if repeatDate is only existant because of a leap year (for instance 02/29/2016), we should schedule for the day before the next year (02/28/2017)", ->
+    					newTask = new ToDoModel { repeatOption: "every year", schedule: new Date "02/29/2016" }
+    					newTask.set( "completionDate", new Date "02/29/2016" )
+    					duplicate = newTask.getRepeatableDuplicate()
+    					newSchedule = duplicate.get "schedule"
+    
+    					expect( newSchedule.getMonth() ).to.equal 1
+    					expect( newSchedule.getDate() ).to.equal 28
+    					expect( newSchedule.getFullYear() ).to.equal 2017
+    
+    		describe "Un-setting repeat options on ToDo Model", ->
+    			it "Should change repeatDate to 'null' of repeatOption is set to 'never'", ->
+    				task = new ToDoModel( repeatOption: "every week" )
+    				expect( task.get "repeatDate" ).to.be.instanceOf Date
+    				task.set( "repeatOption", "never" )
+    				expect( task.get "repeatDate" ).to.equal null
+    			it "Should delete duplicated (repeated) tasks when repeatOption is set to 'never'"
+    
+    		describe "Completing a task with repeat set and automatically spawning a new task", ->
+    			it "TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'", (done) ->
+    				require ["collection/ToDoCollection"], (ToDoCollection) ->
+    					spawnSpy = sinon.spy( ToDoCollection.prototype, "spawnRepeatTask" )
+    
+    					expect( spawnSpy ).to.not.have.been.called
+    
+    					todoCollection = new ToDoCollection()
+    					todoCollection.add { title: "auto spawn tester", repeatOption: "every day" }
+    
+    					expect( todoCollection.models ).to.have.length 1
+    
+    					todoCollection.at(0).set( "completionDate", new Date() )
+    
+    					expect( spawnSpy ).to.have.been.calledOnce
+    					expect( todoCollection.models ).to.have.length 2
+    
+    					# Clean up this mess
+    					ToDoCollection::spawnRepeatTask.restore()
+    					todoCollection.off()
+    					todoCollection = null
+    
+    					done()
+    
+    			it "TodoCollection should listen for tasks that are completed and do nothing if repeatOption is 'never'", (done) ->
+    				require ["collection/ToDoCollection"], (ToDoCollection) ->
+    					spawnSpy = sinon.spy( ToDoCollection.prototype, "spawnRepeatTask" )
+    
+    					todoCollection = new ToDoCollection()
+    					todoCollection.add { title: "auto spawn tester 2" }
+    					todoCollection.at(0).set( "completionDate", new Date() )
+    
+    					expect( spawnSpy ).to.have.been.calledOnce
+    					expect( todoCollection.models ).to.have.length 1
+    
+    					# Clean up this mess
+    					ToDoCollection::spawnRepeatTask.restore()
+    					todoCollection.off()
+    					todoCollection = null
+    
+    					done()
     
     	describe "Tag Filter", ->
     		beforeEach ->

@@ -12,6 +12,7 @@
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
+        this.listenTo(Backbone, "clockwork/update", this.renderList);
         return this.render();
       },
       render: function() {
@@ -49,6 +50,7 @@
       },
       renderList: function() {
         var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
+        console.log("Rendering list");
         this.$el.empty();
         this.killSubViews();
         todos = this.getTasks();

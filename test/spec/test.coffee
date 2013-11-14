@@ -813,6 +813,36 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 	###
 
+
+	describe "Automatically moving tasks from scheduled to active", ->
+		clock = null
+		before (done) ->
+			require ["model/ClockWork"], (ClockWork) ->
+				clock = new ClockWork()
+				done()
+
+		it "Should figure out the second count of the current minute and set a timer for the remaining seconds", ->
+			now = new Date()
+			secondsLeftThisMinute = 60 - now.getSeconds()
+			expect( clock ).to.have.property "timer"
+			expect( Math.round clock.timeToNextTick() ).to.equal secondsLeftThisMinute
+
+		it "Should disptach a 'clockwork/update' event when ClockWork.tick() is called (Once every minute)", ->
+			eventTriggered = no
+			Backbone.on( "clockwork/update", -> eventTriggered = yes )
+			clock.timer.progress 1
+
+			expect( clock.timesUpdated ).to.equal 1
+			expect( eventTriggered ).to.be.true
+
+		it "Should spawn a new timer when the current one finishes", ->
+			clock.timer.progress 1
+			expect( clock.timer.progress() ).to.equal 0
+
+		it "Should handle time zone differences (So your desktop and phone will stay in sync if their time zones are off (Like when you just took the plane to a new time zone)"
+
+	###
+
 	describe "Repeating tasks", ->
 		describe "Repeat Picker user interface", ->
 			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
@@ -1268,8 +1298,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					todoCollection = null
 
 					done()
-
-	###
 
 	describe "Tag Filter", ->
 		beforeEach ->

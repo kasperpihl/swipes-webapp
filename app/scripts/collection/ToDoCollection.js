@@ -62,7 +62,6 @@
           default:
             models = this.getCompleted();
         }
-        console.log("Active list is " + activeList);
         return _.filter(models, function(m) {
           if (!m.has("tags")) {
             return false;
