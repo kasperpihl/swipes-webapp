@@ -90,7 +90,7 @@ Parse.Cloud.define('update',function(request,response){
   queue.addToQueue(tagQuery);
 
   var taskQuery = new Parse.Query('ToDo');
-  taskQuery.equalTo('user',user);
+  taskQuery.equalTo('owner',user);
   taskQuery.limit(1000);
   if(skip) taskQuery.skip(skip);
   if(lastUpdate) taskQuery.greaterThan('updatedAt',lastUpdate);
