@@ -34,9 +34,8 @@ function scrapeChanges(object,lastUpdateTime){
   var changes = object.get('attributeChanges');
   if(!changes) changes = {};
   if(attributes){
-    var hasChanged = false;
     for(var attribute in attributes){
-      var lastChange = changes[attribute];
+      var lastChange = changes[attribute];  
       if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
     }
   }
