@@ -1,4 +1,5 @@
 define [
+	"model/ClockWork"
 	"controller/ViewController"
 	"router/MainRouter"
 	"collection/ToDoCollection"
@@ -10,11 +11,12 @@ define [
 	"controller/FilterController"
 	"controller/SettingsController"
 	"controller/ErrorController"
-	], (ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
+	], (ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
 	class Swipes
 		constructor: ->
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()
+			@updateTimer = new ClockWork()
 			@todos.on( "reset", @init, @ )
 			@fetchTodos()
 

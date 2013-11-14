@@ -1,6 +1,6 @@
 /*!
- * VERSION: 0.8.5
- * DATE: 2013-08-16
+ * VERSION: 0.9.0
+ * DATE: 2013-10-21
  * JavaScript (also available in ActionScript 3 and 2)
  * UPDATES AND DOCS AT: http://www.greensock.com
  *
@@ -21,7 +21,6 @@
 				TweenPlugin.call(this, "throwProps");
 				this._overwriteProps.length = 0;
 			},
-			_RAD2DEG = 180 / Math.PI,
 			_max = 999999999999999,
 			_transforms = {x:1,y:1,z:2,scale:1,scaleX:1,scaleY:1,rotation:1,rotationZ:1,rotationX:2,rotationY:2,skewX:1,skewY:1},
 			_getClosest = function(n, values, max, min) {
@@ -93,7 +92,7 @@
 					ease = (vars.ease instanceof Ease) ? vars.ease : (!vars.ease) ? TweenLite.defaultEase : new Ease(vars.ease),
 					checkpoint = isNaN(throwPropsVars.checkpoint) ? 0.05 : Number(throwPropsVars.checkpoint),
 					resistance = isNaN(throwPropsVars.resistance) ? ThrowPropsPlugin.defaultResistance : Number(throwPropsVars.resistance),
-					p, curProp, curDuration, curVelocity, curResistance, curVal, end, curClippedDuration, tracker;
+					p, curProp, curDuration, curVelocity, curResistance, curVal, end, curClippedDuration, tracker, unitFactor;
 
 				for (p in throwPropsVars) {
 
@@ -123,15 +122,17 @@
 								curProp = _parseEnd(curProp, end, curProp.max, curProp.min);
 							}
 							if (curProp.max !== undefined && end > Number(curProp.max)) {
-								//if the value is already exceeding the max or the velocity is too low, the duration can end up being uncomfortably long but in most situations, users want the snapping to occur relatively quickly (0.75 seconds), so we implement a cap here to make things more intuitive.
-								curClippedDuration = (curVal > curProp.max || (curVelocity > -15 && curVelocity < 45)) ? (minDuration + (maxDuration - minDuration) * 0.1) : _calculateDuration(curVal, curProp.max, curVelocity, ease, checkpoint);
+								unitFactor = curProp.unitFactor || 1; //some values are measured in special units like radians in which case our thresholds need to be adjusted accordingly.
+								//if the value is already exceeding the max or the velocity is too low, the duration can end up being uncomfortably long but in most situations, users want the snapping to occur relatively quickly (0.75 seconds), so we implement a cap here to make things more intuitive. If the max and min match, it means we're animating to a particular value and we don't want to shorten the time unless the velocity is really slow. Example: a rotation where the start and natural end value are less than the snapping spot, but the natural end is pretty close to the snap.
+								curClippedDuration = ((curVal > curProp.max && curProp.min !== curProp.max) || (curVelocity * unitFactor > -15 && curVelocity * unitFactor < 45)) ? (minDuration + (maxDuration - minDuration) * 0.1) : _calculateDuration(curVal, curProp.max, curVelocity, ease, checkpoint);
 								if (curClippedDuration + overshootTolerance < clippedDuration) {
 									clippedDuration = curClippedDuration + overshootTolerance;
 								}
 
 							} else if (curProp.min !== undefined && end < Number(curProp.min)) {
+								unitFactor = curProp.unitFactor || 1; //some values are measured in special units like radians in which case our thresholds need to be adjusted accordingly.
 								//if the value is already exceeding the min or if the velocity is too low, the duration can end up being uncomfortably long but in most situations, users want the snapping to occur relatively quickly (0.75 seconds), so we implement a cap here to make things more intuitive.
-								curClippedDuration = (curVal < curProp.min || (curVelocity > -45 && curVelocity < 15)) ? (minDuration + (maxDuration - minDuration) * 0.1) : _calculateDuration(curVal, curProp.min, curVelocity, ease, checkpoint);
+								curClippedDuration = ((curVal < curProp.min && curProp.min !== curProp.max) || (curVelocity * unitFactor > -45 && curVelocity * unitFactor < 15)) ? (minDuration + (maxDuration - minDuration) * 0.1) : _calculateDuration(curVal, curProp.min, curVelocity, ease, checkpoint);
 								if (curClippedDuration + overshootTolerance < clippedDuration) {
 									clippedDuration = curClippedDuration + overshootTolerance;
 								}
@@ -164,7 +165,7 @@
 
 
 		p.constructor = ThrowPropsPlugin;
-		ThrowPropsPlugin.version = "0.8.5";
+		ThrowPropsPlugin.version = "0.9.0";
 		ThrowPropsPlugin.API = 2;
 		ThrowPropsPlugin._autoCSS = true; //indicates that this plugin can be inserted into the "css" object using the autoCSS feature of TweenLite
 		ThrowPropsPlugin.defaultResistance = 100;
@@ -212,7 +213,7 @@
 								velocities[p] = Number(val.velocity) || 0;
 							} else {
 								tracker = tracker || VelocityTracker.getByTarget(t);
-								velocities[p] = (tracker && tracker.isTrackingProp(p)) ? tracker.getVelocity(p) * ((p.indexOf("rotation") === 0) ? _RAD2DEG : 1) : 0; //rotational values are actually converted to radians in CSSPlugin, but our tracking velocity is in radians already, so make it into degrees to avoid a funky conversion
+								velocities[p] = (tracker && tracker.isTrackingProp(p)) ? tracker.getVelocity(p) : 0; //rotational values are actually converted to radians in CSSPlugin, but our tracking velocity is in radians already, so make it into degrees to avoid a funky conversion
 							}
 							if (val.end !== undefined) {
 								end[p] = val.end;
@@ -232,7 +233,7 @@
 						} else {
 							tracker = tracker || VelocityTracker.getByTarget(t);
 							if (tracker && tracker.isTrackingProp(p)) {
-								velocities[p] = tracker.getVelocity(p) * ((p.indexOf("rotation") === 0) ? _RAD2DEG : 1); //rotational values are actually converted to radians in CSSPlugin, but our tracking velocity is in radians already, so make it into degrees to avoid a funky conversion
+								velocities[p] = tracker.getVelocity(p); //rotational values are actually converted to radians in CSSPlugin, but our tracking velocity is in radians already, so make it into degrees to avoid a funky conversion
 							} else {
 								velocities[p] = val || 0;
 							}
@@ -268,7 +269,7 @@
 			var tween = new TweenLite(target, 1, vars);
 			tween.render(0, true, true); //we force a render so that the CSSPlugin instantiates and populates the _cssProxy and _cssVars which we need in order to calculate the tween duration. Remember, we can't use the regular target for calculating the duration because the current values wouldn't be able to be grabbed like target["propertyName"], as css properties can be complex like boxShadow:"10px 10px 20px 30px red" or backgroundPosition:"25px 50px". The proxy is the result of breaking all that complex data down and finding just the numeric values and assigning them to a generic proxy object with unique names. THAT is what the _calculateTweenDuration() can look at. We also needed to to the same break down of any min or max or velocity data
 			if (tween.vars.css) {
-				tween.duration(_calculateTweenDuration(_cssProxy, _cssVars, maxDuration, minDuration, overshootTolerance));
+				tween.duration(_calculateTweenDuration(_cssProxy, {throwProps:_cssVars, ease:vars.ease}, maxDuration, minDuration, overshootTolerance));
 				if (tween._delay && !tween.vars.immediateRender) {
 					tween.invalidate(); //if there's a delay, the starting values could be off, so invalidate() to force reinstantiation when the tween actually starts.
 				} else {
@@ -476,7 +477,7 @@
 				if (vp.css && _transforms[vp.p] && !t._gsTransform) {
 					TweenLite.set(t, {x:"+=0"}); //just forces CSSPlugin to create a _gsTransform for the element if it doesn't exist
 				}
-				vp.type = type || (vp.css && prop.indexOf("rotation") === 0) ? "rad" : "";
+				vp.type = type || (vp.css && prop.indexOf("rotation") === 0) ? "deg" : "";
 				vp.v1 = vp.v2 = vp.css ? _getStyle(t, vp.p) : isFunc ? t[vp.p]() : t[vp.p];
 			}
 		};
