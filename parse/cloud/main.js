@@ -73,7 +73,7 @@ Parse.Cloud.define("subscribe", function(request, response) {
 Parse.Cloud.define('update',function(request,response){
   var user = Parse.User.current();
   var updateTime = new Date(new Date().getTime());
-  //if(!user) return sendError(response,'You have to be logged in');
+  if(!user) return sendError(response,'You have to be logged in');
   
 
   var skip = request.params.skip;
@@ -83,14 +83,14 @@ Parse.Cloud.define('update',function(request,response){
 
   var queue = require('cloud/queue.js');
   var tagQuery = new Parse.Query('Tag');
-  //tagQuery.equalTo('owner',user);
+  tagQuery.equalTo('owner',user);
   tagQuery.limit(1000);
   if(skip) tagQuery.skip(skip);
   if(lastUpdate) tagQuery.greaterThan('updatedAt',lastUpdate);
   queue.addToQueue(tagQuery);
 
   var taskQuery = new Parse.Query('ToDo');
-  //taskQuery.equalTo('user',user);
+  taskQuery.equalTo('user',user);
   taskQuery.limit(1000);
   if(skip) taskQuery.skip(skip);
   if(lastUpdate) taskQuery.greaterThan('updatedAt',lastUpdate);
