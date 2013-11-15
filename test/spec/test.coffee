@@ -346,6 +346,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				done()
 		###
 		describe "Handling ToDoModel's order property", ->
+			it "Should have some tasks we can test with", ->
+				expect( view ).to.have.property "subviews"
+				models = _.pluck( view.subviews, "model" )
+				expect( models ).to.have.length.above 0
+
 			it "Should order tasks by models 'order' property", ->
 				result = view.groupTasks todos
 				expect(result[0].tasks[0].get "title").to.equal "one"
@@ -502,11 +507,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 		describe "Handling order for new tasks", ->
 			it "Should always put new tasks at the top", (done) ->
-				expect( view ).to.have.property "subviews"
-				models = _.pluck( view.subviews, "model" )
-				expect( models ).to.have.length.above 0
-				firstModel = m for m in models when m.get( "order" ) is 0
-
 				Backbone.trigger( "create-task", "number 1 for order testing" )
 
 				# There is a 5ms delay in the render of todo lists, so work that in
@@ -517,7 +517,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					, 10
 
 		describe "Handling order for tasks moving from scheduled to active when their time is up", ->
-			it "Shoudl always put the changed task at the top"
+			it "Shoudl always put the changed task at the top", ->
+
+
 			it "Shoudl be able to handle multiple tasks changing at the same time"
 
 	###

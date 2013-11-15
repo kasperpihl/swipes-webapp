@@ -355,6 +355,11 @@
       });
       /*
       		describe "Handling ToDoModel's order property", ->
+      			it "Should have some tasks we can test with", ->
+      				expect( view ).to.have.property "subviews"
+      				models = _.pluck( view.subviews, "model" )
+      				expect( models ).to.have.length.above 0
+      
       			it "Should order tasks by models 'order' property", ->
       				result = view.groupTasks todos
       				expect(result[0].tasks[0].get "title").to.equal "one"
@@ -510,22 +515,12 @@
 
       describe("Handling order for new tasks", function() {
         return it("Should always put new tasks at the top", function(done) {
-          var firstModel, m, models, _i, _len;
-          expect(view).to.have.property("subviews");
-          models = _.pluck(view.subviews, "model");
-          expect(models).to.have.length.above(0);
-          for (_i = 0, _len = models.length; _i < _len; _i++) {
-            m = models[_i];
-            if (m.get("order") === 0) {
-              firstModel = m;
-            }
-          }
           Backbone.trigger("create-task", "number 1 for order testing");
           return setTimeout(function() {
-            var newFirstModel, _j, _len1, _ref;
+            var m, newFirstModel, _i, _len, _ref;
             _ref = _.pluck(view.subviews, "model");
-            for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-              m = _ref[_j];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              m = _ref[_i];
               if (m.get("order") === 0) {
                 newFirstModel = m;
               }
@@ -536,7 +531,7 @@
         });
       });
       return describe("Handling order for tasks moving from scheduled to active when their time is up", function() {
-        it("Shoudl always put the changed task at the top");
+        it("Shoudl always put the changed task at the top", function() {});
         return it("Shoudl be able to handle multiple tasks changing at the same time");
       });
     });
