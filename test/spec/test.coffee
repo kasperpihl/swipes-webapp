@@ -517,10 +517,108 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					, 10
 
 		describe "Handling order for tasks moving from scheduled to active when their time is up", ->
-			it "Shoudl always put the changed task at the top", ->
+			beforeEach ->
+				# Clean out any tasks scheduled for within 5 seconds of now
+				now = new Date().getTime()
+				models = swipy.todos.filter (m) ->
+					if not m.has "schedule" then return no
+					return Math.abs( m.get("schedule").getTime() - now ) < 5000
 
+				# If we have any, push them 10 seconds into the future, so they dont mess up our tests
+				if models.length
+					future = new Date()
+					future.setSeconds( future.getSeconds() + 10 )
+					_.invoke( models, "set", { schedule: future } )
 
-			it "Shoudl be able to handle multiple tasks changing at the same time"
+			it "Should always put the tasks changed from scheduled to active at the top", (done) ->
+				models = swipy.todos.getActive()
+				lastModel = m for m in models when m.get( "order" ) is ( models.length - 1 )
+
+				# Schedule last model for 10ms in the future
+				future = new Date()
+				future.setMilliseconds( future.getMilliseconds() + 10 )
+				lastModel.set( "schedule", future )
+
+				# Verify that the model was moved out of the active list
+				expect( swipy.todos.getActive() ).to.have.length.below models.length
+
+				setTimeout ->
+						# Task is now due. Trigger the event that makes the lists re-render
+						Backbone.trigger( "clockwork/update" )
+
+						# Lists have a 5ms timeout to prevent rapid re-render,
+						# so let that time pass before next step
+						setTimeout ->
+								newModels = _.pluck( view.subviews, "model" )
+								expect( newModels ).have.length models.length
+								firstNewModel = m for m in newModels when m.get( "order" ) is 0
+								expect( firstNewModel.cid ).to.equal lastModel.cid
+								done()
+							, 10
+					, 15
+
+			it "Should be able to handle multiple tasks changing at the same time", (done) ->
+				# Schedule last model for 10ms in the future
+				future = new Date()
+				future.setMilliseconds( future.getMilliseconds() + 10 )
+				_.invoke( _.pluck( view.subviews, "model" ), "set", { schedule: future } )
+
+				# Verify that the models was moved out of the active list
+				expect( swipy.todos.getActive() ).to.have.length 0
+
+				setTimeout ->
+						# Task is now due. Trigger the event that makes the lists re-render
+						Backbone.trigger( "clockwork/update" )
+
+						# Lists have a 5ms timeout to prevent rapid re-render,
+						# so let that time pass before next step
+						setTimeout ->
+								# No errors means everything worked.
+								done()
+							, 10
+					, 15
+
+		describe "Handling order for tasks moving from completed to active", ->
+			beforeEach ->
+				# Clean out any tasks scheduled for within 5 seconds of now
+				now = new Date().getTime()
+				models = swipy.todos.filter (m) ->
+					if not m.has "schedule" then return no
+					return Math.abs( m.get("schedule").getTime() - now ) < 5000
+
+				# If we have any, push them 10 seconds into the future, so they dont mess up our tests
+				if models.length
+					future = new Date()
+					future.setSeconds( future.getSeconds() + 10 )
+					_.invoke( models, "set", { schedule: future } )
+
+			it "Should always put the tasks changed from scheduled to active at the top", (done) ->
+				# Move first completed task to active
+				firstCompleted = swipy.todos.getCompleted()[0]
+				firstCompleted.set { completionDate: null, schedule: firstCompleted.getDefaultSchedule() }
+
+				Backbone.trigger( "clockwork/update" )
+				# Lists have a 5ms timeout to prevent rapid re-render,
+				# so let that time pass before next step
+				setTimeout ->
+						newModels = _.pluck( view.subviews, "model" )
+						firstNewModel = m for m in newModels when m.get( "order" ) is 0
+						expect( firstNewModel.cid ).to.equal firstCompleted.cid
+						done()
+					, 10
+
+			it "Should be able to handle multiple tasks changing at the same time", (done) ->
+				# Move first completed task to active
+				allCompleted = swipy.todos.getCompleted()
+				_.invoke( allCompleted, "set", { completionDate: null, schedule: allCompleted[0].getDefaultSchedule() } )
+
+				Backbone.trigger( "clockwork/update" )
+				# Lists have a 5ms timeout to prevent rapid re-render,
+				# so let that time pass before next step
+				setTimeout ->
+						# No errors means everything worked.
+						done()
+					, 10
 
 	###
 

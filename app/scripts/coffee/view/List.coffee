@@ -28,7 +28,7 @@ define [
 			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
 
 			# Re-render list once per minute, activating any scheduled tasks.
-			@listenTo( Backbone, "clockwork/update", @renderList )
+			@listenTo( Backbone, "clockwork/update", @moveTasksFromScheduledToActive )
 
 			@render()
 		render: ->
@@ -44,7 +44,22 @@ define [
 		getTasks: ->
 			# Fetch todos that are active
 			return swipy.todos.getActive()
+		moveTasksFromScheduledToActive: ->
+			# Get all tasks that are scheduled within the current 1001ms (Includes stuff moved from completed)
+			movedFromScheduled = []
+			now = new Date().getTime()
+			for model in swipy.todos.getActive()
+				if now - model.get( "schedule" ).getTime() < 1001
+					movedFromScheduled.push model
 
+			# If we have tasks then bump all tasks +1 and
+			# set order: 0 and animateIn: yes for all of them
+			if movedFromScheduled.length
+				swipy.todos.bumpOrder()
+				_.invoke( movedFromScheduled, "set", { order: 0, animateIn: yes } )
+
+				# After changes, re-render the list
+				@renderList()
 		renderList: ->
 			# Remove any old HTML before appending new stuff.
 			@$el.empty()

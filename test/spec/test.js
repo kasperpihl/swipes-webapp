@@ -530,9 +530,121 @@
           }, 10);
         });
       });
-      return describe("Handling order for tasks moving from scheduled to active when their time is up", function() {
-        it("Shoudl always put the changed task at the top", function() {});
-        return it("Shoudl be able to handle multiple tasks changing at the same time");
+      describe("Handling order for tasks moving from scheduled to active when their time is up", function() {
+        beforeEach(function() {
+          var future, models, now;
+          now = new Date().getTime();
+          models = swipy.todos.filter(function(m) {
+            if (!m.has("schedule")) {
+              return false;
+            }
+            return Math.abs(m.get("schedule").getTime() - now) < 5000;
+          });
+          if (models.length) {
+            future = new Date();
+            future.setSeconds(future.getSeconds() + 10);
+            return _.invoke(models, "set", {
+              schedule: future
+            });
+          }
+        });
+        it("Should always put the tasks changed from scheduled to active at the top", function(done) {
+          var future, lastModel, m, models, _i, _len;
+          models = swipy.todos.getActive();
+          for (_i = 0, _len = models.length; _i < _len; _i++) {
+            m = models[_i];
+            if (m.get("order") === (models.length - 1)) {
+              lastModel = m;
+            }
+          }
+          future = new Date();
+          future.setMilliseconds(future.getMilliseconds() + 10);
+          lastModel.set("schedule", future);
+          expect(swipy.todos.getActive()).to.have.length.below(models.length);
+          return setTimeout(function() {
+            Backbone.trigger("clockwork/update");
+            return setTimeout(function() {
+              var firstNewModel, newModels, _j, _len1;
+              newModels = _.pluck(view.subviews, "model");
+              expect(newModels).have.length(models.length);
+              for (_j = 0, _len1 = newModels.length; _j < _len1; _j++) {
+                m = newModels[_j];
+                if (m.get("order") === 0) {
+                  firstNewModel = m;
+                }
+              }
+              expect(firstNewModel.cid).to.equal(lastModel.cid);
+              return done();
+            }, 10);
+          }, 15);
+        });
+        return it("Should be able to handle multiple tasks changing at the same time", function(done) {
+          var future;
+          future = new Date();
+          future.setMilliseconds(future.getMilliseconds() + 10);
+          _.invoke(_.pluck(view.subviews, "model"), "set", {
+            schedule: future
+          });
+          expect(swipy.todos.getActive()).to.have.length(0);
+          return setTimeout(function() {
+            Backbone.trigger("clockwork/update");
+            return setTimeout(function() {
+              return done();
+            }, 10);
+          }, 15);
+        });
+      });
+      return describe("Handling order for tasks moving from completed to active", function() {
+        beforeEach(function() {
+          var future, models, now;
+          now = new Date().getTime();
+          models = swipy.todos.filter(function(m) {
+            if (!m.has("schedule")) {
+              return false;
+            }
+            return Math.abs(m.get("schedule").getTime() - now) < 5000;
+          });
+          if (models.length) {
+            future = new Date();
+            future.setSeconds(future.getSeconds() + 10);
+            return _.invoke(models, "set", {
+              schedule: future
+            });
+          }
+        });
+        it("Should always put the tasks changed from scheduled to active at the top", function(done) {
+          var firstCompleted;
+          firstCompleted = swipy.todos.getCompleted()[0];
+          firstCompleted.set({
+            completionDate: null,
+            schedule: firstCompleted.getDefaultSchedule()
+          });
+          Backbone.trigger("clockwork/update");
+          return setTimeout(function() {
+            var firstNewModel, m, newModels, _i, _len;
+            newModels = _.pluck(view.subviews, "model");
+            for (_i = 0, _len = newModels.length; _i < _len; _i++) {
+              m = newModels[_i];
+              if (m.get("order") === 0) {
+                firstNewModel = m;
+              }
+            }
+            expect(firstNewModel.cid).to.equal(firstCompleted.cid);
+            return done();
+          }, 10);
+        });
+        return it("Should be able to handle multiple tasks changing at the same time", function(done) {
+          var allCompleted;
+          allCompleted = swipy.todos.getCompleted();
+          _.invoke(allCompleted, "set", {
+            completionDate: null,
+            schedule: allCompleted[0].getDefaultSchedule()
+          });
+          Backbone.trigger("clockwork/update");
+          return setTimeout(function() {
+            return done();
+          }, 10);
+        });
       });
     });
     /*

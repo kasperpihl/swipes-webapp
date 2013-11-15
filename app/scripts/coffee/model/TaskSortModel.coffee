@@ -38,14 +38,11 @@ define ["underscore"], (_) ->
 
 			return result
 		setTodoOrder: (todos) ->
-
 			orders = _.invoke( todos, "get", "order" )
 			orders = _.without( orders, undefined ) #Remove falsy values from array, like undefined.
 
 			ordersBefore = orders
-
 			withoutOrder = @sortBySchedule _.filter( todos, (m) -> not m.has "order" )
-
 
 			# 1st loop – Remove any white space from orders array (Turn [3,4,5] into [0,1,2])
 			for task, i in todos
@@ -77,9 +74,6 @@ define ["underscore"], (_) ->
 					order = todos.length - 1
 
 				ordersMinusCurrent = @subtractOnce( orders, order )
-
-				# if todos[3]?.get("title") is "fourth"
-				# 	debugger
 
 				if _.contains( ordersMinusCurrent, order )
 					# Position is taken. Find a new spot and update orders array.

@@ -12,7 +12,7 @@
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
-        this.listenTo(Backbone, "clockwork/update", this.renderList);
+        this.listenTo(Backbone, "clockwork/update", this.moveTasksFromScheduledToActive);
         return this.render();
       },
       render: function() {
@@ -47,6 +47,26 @@
       },
       getTasks: function() {
         return swipy.todos.getActive();
+      },
+      moveTasksFromScheduledToActive: function() {
+        var model, movedFromScheduled, now, _i, _len, _ref;
+        movedFromScheduled = [];
+        now = new Date().getTime();
+        _ref = swipy.todos.getActive();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          model = _ref[_i];
+          if (now - model.get("schedule").getTime() < 1001) {
+            movedFromScheduled.push(model);
+          }
+        }
+        if (movedFromScheduled.length) {
+          swipy.todos.bumpOrder();
+          _.invoke(movedFromScheduled, "set", {
+            order: 0,
+            animateIn: true
+          });
+          return this.renderList();
+        }
       },
       renderList: function() {
         var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
