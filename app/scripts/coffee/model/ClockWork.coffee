@@ -20,7 +20,6 @@ define ["underscore", "backbone", "gsap"], (_, Backbone) ->
 			if @timer and @timer.progress < 1
 				return @timer
 			else
-				console.log "Setting a timer for ", @getSecondsRemainingThisMin(), " seconds."
 				return TweenLite.to({a:0}, @getSecondsRemainingThisMin(), { a:1, onComplete: @tick, onCompleteScope: @, ease:Linear.easeNone } )
 		tick: ->
 			@timesUpdated++

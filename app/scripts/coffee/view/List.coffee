@@ -46,7 +46,6 @@ define [
 			return swipy.todos.getActive()
 
 		renderList: ->
-			console.log "Rendering list"
 			# Remove any old HTML before appending new stuff.
 			@$el.empty()
 			@killSubViews()

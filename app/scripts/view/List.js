@@ -50,7 +50,6 @@
       },
       renderList: function() {
         var $html, group, list, model, tasksJSON, todos, view, _i, _j, _len, _len1, _ref, _ref1;
-        console.log("Rendering list");
         this.$el.empty();
         this.killSubViews();
         todos = this.getTasks();
