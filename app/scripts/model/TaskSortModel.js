@@ -113,7 +113,6 @@
             task.set("order", spot);
           }
         }
-        console.groupEnd();
         return todos;
       };
 

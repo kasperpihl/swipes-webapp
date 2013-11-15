@@ -98,6 +98,4 @@ define ["underscore"], (_) ->
 					console.log "A task (#{task.get 'title'}) didn't have a spot, so we assigned it #{spot}"
 					task.set( "order", spot )
 
-			console.groupEnd()
-
 			return todos

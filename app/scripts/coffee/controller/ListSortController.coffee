@@ -86,7 +86,6 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			view.$el.addClass "selected"
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y )
-			# if Modernizr.touch then model.scrollWindow( @pointerY )
 			model.scrollWindow( @pointerY )
 		onDragEnd: (view, model) ->
 			model.reorderRows( view, @endY )

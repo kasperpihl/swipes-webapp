@@ -12,7 +12,7 @@
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
-        this.listenTo(Backbone, "clockwork/update", this.moveTasksFromScheduledToActive);
+        this.listenTo(Backbone, "clockwork/update", this.moveTasksToActive);
         return this.render();
       },
       render: function() {
@@ -48,23 +48,22 @@
       getTasks: function() {
         return swipy.todos.getActive();
       },
-      moveTasksFromScheduledToActive: function() {
-        var model, movedFromScheduled, now, _i, _len, _ref;
-        movedFromScheduled = [];
+      moveTasksToActive: function() {
+        var movedFromScheduled, now;
         now = new Date().getTime();
-        _ref = swipy.todos.getActive();
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          model = _ref[_i];
-          if (now - model.get("schedule").getTime() < 1001) {
-            movedFromScheduled.push(model);
-          }
-        }
+        movedFromScheduled = _.filter(this.getTasks(), function(m) {
+          return now - m.get("schedule").getTime() < 1001;
+        });
         if (movedFromScheduled.length) {
-          swipy.todos.bumpOrder();
-          _.invoke(movedFromScheduled, "set", {
-            order: 0,
-            animateIn: true
-          });
+          if (movedFromScheduled.length === 1 && movedFromScheduled[0].get("order") === 0) {
+            movedFromScheduled[0].set("animateIn", true);
+          } else {
+            swipy.todos.bumpOrder("down", 0, movedFromScheduled.length);
+            _.invoke(movedFromScheduled, "set", {
+              order: 0,
+              animateIn: true
+            });
+          }
           return this.renderList();
         }
       },
