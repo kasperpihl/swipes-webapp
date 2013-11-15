@@ -327,14 +327,25 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 				# If 1 and 2 is correct we know that 3 is too.
 
+	###
+
 	#
 	# To do list View
 	#
-	require ["view/Todo"], (ToDoView) ->
-		todos = [ new ToDoModel( title: "three" ), new ToDoModel( title: "two", order: 2 ), new ToDoModel( title: "one", order: 1 ) ]
-		view = new ToDoView()
+	describe "To Do list view", ->
+		todos = view = null
 
-		describe "To Do list view", ->
+		before (done) ->
+			require ["view/Todo"], (ToDoListView) ->
+				view = new ToDoListView()
+				todos = [
+					new ToDoModel( title: "three" ),
+					new ToDoModel( title: "two", order: 2 ),
+					new ToDoModel( title: "one", order: 1 )
+				]
+				done()
+		###
+		describe "Handling ToDoModel's order property", ->
 			it "Should order tasks by models 'order' property", ->
 				result = view.groupTasks todos
 				expect(result[0].tasks[0].get "title").to.equal "one"
@@ -486,6 +497,31 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				expect( second.get "order" ).to.equal 1
 				expect( third.get "order" ).to.equal 2
 				expect( fourth.get "order" ).to.equal 3
+
+		###
+
+		describe "Handling order for new tasks", ->
+			it "Should always put new tasks at the top", (done) ->
+				expect( view ).to.have.property "subviews"
+				models = _.pluck( view.subviews, "model" )
+				expect( models ).to.have.length.above 0
+				firstModel = m for m in models when m.get( "order" ) is 0
+
+				Backbone.trigger( "create-task", "number 1 for order testing" )
+
+				# There is a 5ms delay in the render of todo lists, so work that in
+				setTimeout ->
+						newFirstModel = m for m in _.pluck( view.subviews, "model" ) when m.get( "order" ) is 0
+						expect( newFirstModel.get "title" ).to.equal "number 1 for order testing"
+						done()
+					, 10
+
+		describe "Handling order for tasks moving from scheduled to active when their time is up", ->
+			it "Shoudl always put the changed task at the top"
+			it "Shoudl be able to handle multiple tasks changing at the same time"
+
+	###
+
 
 	#
 	# Completed list View
@@ -811,9 +847,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			it "Should set/clear the repeat option when picking one"
 			it "Should throw an error message if the changes can't be saved to the server"
 
-	###
-
-
 	describe "Automatically moving tasks from scheduled to active", ->
 		clock = null
 		before (done) ->
@@ -840,8 +873,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			expect( clock.timer.progress() ).to.equal 0
 
 		it "Should handle time zone differences (So your desktop and phone will stay in sync if their time zones are off (Like when you just took the plane to a new time zone)"
-
-	###
 
 	describe "Repeating tasks", ->
 		describe "Repeat Picker user interface", ->
