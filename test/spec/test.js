@@ -336,183 +336,276 @@
     return describe("To Do list view", function() {
       var todos, view;
       todos = view = null;
-      before(function(done) {
+      before(function() {
+        return todos = [
+          new ToDoModel({
+            title: "three"
+          }), new ToDoModel({
+            title: "two",
+            order: 2
+          }), new ToDoModel({
+            title: "one",
+            order: 1
+          })
+        ];
+      });
+      beforeEach(function(done) {
         return require(["view/Todo"], function(ToDoListView) {
           view = new ToDoListView();
-          todos = [
-            new ToDoModel({
-              title: "three"
-            }), new ToDoModel({
-              title: "two",
-              order: 2
-            }), new ToDoModel({
-              title: "one",
-              order: 1
-            })
-          ];
-          return done();
+          return setTimeout(done, 15);
         });
       });
-      /*
-      		describe "Handling ToDoModel's order property", ->
-      			it "Should have some tasks we can test with", ->
-      				expect( view ).to.have.property "subviews"
-      				models = _.pluck( view.subviews, "model" )
-      				expect( models ).to.have.length.above 0
-      
-      			it "Should order tasks by models 'order' property", ->
-      				result = view.groupTasks todos
-      				expect(result[0].tasks[0].get "title").to.equal "one"
-      				expect(result[0].tasks[1].get "title").to.equal "two"
-      				expect(result[0].tasks[2].get "title").to.equal "three"
-      
-      			it "Should make sure no two todos have the same order id", ->
-      				list = [
-      					new ToDoModel( { order: 0 } ),
-      					new ToDoModel( { order: 0 } ),
-      					new ToDoModel( { order: 2 } ),
-      					new ToDoModel( { order: 5 } )
-      				]
-      
-      				newTasks = view.setTodoOrder list
-      				orders = _.invoke( newTasks, "get", "order" )
-      
-      				expect(orders).to.have.length 4
-      				expect(orders).to.contain 0
-      				expect(orders).to.contain 1
-      				expect(orders).to.contain 2
-      				expect(orders).to.contain 3
-      
-      			it "Should order todos by schdule date if no order is defined", ->
-      				first = new Date()
-      				second = new Date()
-      				third = new Date()
-      
-      				second.setSeconds( second.getSeconds() + 1 )
-      				third.setSeconds( third.getSeconds() + 2 )
-      
-      				list = [
-      					new ToDoModel( { title: "third", schedule: third } ),
-      					new ToDoModel( { title: "second", schedule: second } )
-      					new ToDoModel( { title: "first", schedule: first } )
-      				]
-      
-      				result = view.setTodoOrder list
-      				firstModel = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
-      				secondModel = _.filter( result, (m) -> m.get( "title" ) is "second" )[0]
-      				thirdModel = _.filter( result, (m) -> m.get( "title" ) is "third" )[0]
-      
-      				expect( result ).to.have.length 3
-      				expect( firstModel.get "order" ).to.equal 0
-      				expect( secondModel.get "order" ).to.equal 1
-      				expect( thirdModel.get "order" ).to.equal 2
-      
-      			it "Should be able to mix in unordered and ordered items", ->
-      				first = new Date()
-      				second = new Date()
-      
-      				second.setSeconds( second.getSeconds() + 1 )
-      
-      				list = [
-      					new ToDoModel( { title: "third", schedule: second } ),
-      					new ToDoModel( { title: "first", schedule: first } ),
-      					new ToDoModel( { title: "second (has order)", order: 1 } ),
-      					new ToDoModel( { title: "fourth (has order)", order: 3 } )
-      				]
-      
-      				result = view.setTodoOrder list
-      				firstModel = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
-      				secondModel = _.filter( result, (m) -> m.get( "title" ) is "second (has order)" )[0]
-      				thirdModel = _.filter( result, (m) -> m.get( "title" ) is "third" )[0]
-      				fourthModel = _.filter( result, (m) -> m.get( "title" ) is "fourth (has order)" )[0]
-      
-      				expect( result ).to.have.length 4
-      				expect( firstModel.get "order" ).to.equal 0
-      				expect( secondModel.get "order" ).to.equal 1
-      				expect( thirdModel.get "order" ).to.equal 2
-      				expect( fourthModel.get "order" ).to.equal 3
-      
-      			it "Should take models with order 3,4,5,6 and change them to 0,1,2,3", ->
-      				list = [
-      					new ToDoModel( { title: "first", order: 3 } ),
-      					new ToDoModel( { title: "second", order: 4 } ),
-      					new ToDoModel( { title: "third", order: 5 } ),
-      					new ToDoModel( { title: "fourth", order: 6 } )
-      				]
-      
-      				result = view.setTodoOrder list
-      				first = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
-      				second = _.filter( result, (m) -> m.get( "title" ) is "second" )[0]
-      				third = _.filter( result, (m) -> m.get( "title" ) is "third" )[0]
-      				fourth = _.filter( result, (m) -> m.get( "title" ) is "fourth" )[0]
-      
-      				expect( result ).to.have.length 4
-      				expect( first.get "order" ).to.equal 0
-      				expect( second.get "order" ).to.equal 1
-      				expect( third.get "order" ).to.equal 2
-      				expect( fourth.get "order" ).to.equal 3
-      
-      			it "Should take models with order 0,1,11,5 and change them to 0,1,2,3", ->
-      				list = [
-      					new ToDoModel( { title: "first", order: 0 } ),
-      					new ToDoModel( { title: "second", order: 1 } ),
-      					new ToDoModel( { title: "third", order: 5 } ),
-      					new ToDoModel( { title: "fourth", order: 11 } )
-      				]
-      
-      				result = view.setTodoOrder list
-      				first = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
-      				second = _.filter( result, (m) -> m.get( "title" ) is "second" )[0]
-      				third = _.filter( result, (m) -> m.get( "title" ) is "third" )[0]
-      				fourth = _.filter( result, (m) -> m.get( "title" ) is "fourth" )[0]
-      
-      				expect( result ).to.have.length 4
-      				expect( first.get "order" ).to.equal 0
-      				expect( second.get "order" ).to.equal 1
-      				expect( third.get "order" ).to.equal 2
-      				expect( fourth.get "order" ).to.equal 3
-      
-      			it "Should take models with order undefined,1,undefined,5 and change them to 0,1,2,3", ->
-      				list = [
-      					new ToDoModel( { title: "first" } ),
-      					new ToDoModel( { title: "second", order: 1 } ),
-      					new ToDoModel( { title: "third" } ),
-      					new ToDoModel( { title: "fourth", order: 5 } )
-      				]
-      
-      				result = view.setTodoOrder list
-      				first = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
-      				second = _.filter( result, (m) -> m.get( "title" ) is "second" )[0]
-      				third = _.filter( result, (m) -> m.get( "title" ) is "third" )[0]
-      				fourth = _.filter( result, (m) -> m.get( "title" ) is "fourth" )[0]
-      
-      				expect( result ).to.have.length 4
-      				expect( first.get "order" ).to.equal 0
-      				expect( second.get "order" ).to.equal 1
-      				expect( third.get "order" ).to.equal 2
-      				expect( fourth.get "order" ).to.equal 3
-      
-      			it "Should take models with order 2,2,2,2 and change them to 0,1,2,3", ->
-      				list = [
-      					new ToDoModel( { title: "first", order: 2 } ),
-      					new ToDoModel( { title: "second", order: 2 } ),
-      					new ToDoModel( { title: "jtown", order: 2 } ),
-      					new ToDoModel( { title: "fourth", order: 2 } )
-      				]
-      
-      				result = view.setTodoOrder list
-      				first = _.filter( result, (m) -> m.get( "title" ) is "first" )[0]
-      				second = _.filter( result, (m) -> m.get( "title" ) is "second" )[0]
-      				third = _.filter( result, (m) -> m.get( "title" ) is "jtown" )[0]
-      				fourth = _.filter( result, (m) -> m.get( "title" ) is "fourth" )[0]
-      
-      				expect( result ).to.have.length 4
-      				expect( first.get "order" ).to.equal 0
-      				expect( second.get "order" ).to.equal 1
-      				expect( third.get "order" ).to.equal 2
-      				expect( fourth.get "order" ).to.equal 3
-      */
-
+      describe("Handling ToDoModel's order property", function() {
+        it("Should have some tasks we can test with", function() {
+          var models;
+          expect(view).to.have.property("subviews");
+          models = _.pluck(view.subviews, "model");
+          return expect(models).to.have.length.above(0);
+        });
+        it("Should order tasks by models 'order' property", function() {
+          var result;
+          result = view.groupTasks(todos);
+          expect(result[0].tasks[0].get("title")).to.equal("one");
+          expect(result[0].tasks[1].get("title")).to.equal("two");
+          return expect(result[0].tasks[2].get("title")).to.equal("three");
+        });
+        it("Should make sure no two todos have the same order id", function() {
+          var list, newTasks, orders;
+          list = [
+            new ToDoModel({
+              order: 0
+            }), new ToDoModel({
+              order: 0
+            }), new ToDoModel({
+              order: 2
+            }), new ToDoModel({
+              order: 5
+            })
+          ];
+          newTasks = view.setTodoOrder(list);
+          orders = _.invoke(newTasks, "get", "order");
+          expect(orders).to.have.length(4);
+          expect(orders).to.contain(0);
+          expect(orders).to.contain(1);
+          expect(orders).to.contain(2);
+          return expect(orders).to.contain(3);
+        });
+        it("Should order todos by schdule date if no order is defined", function() {
+          var first, firstModel, list, result, second, secondModel, third, thirdModel;
+          first = new Date();
+          second = new Date();
+          third = new Date();
+          second.setSeconds(second.getSeconds() + 1);
+          third.setSeconds(third.getSeconds() + 2);
+          list = [
+            new ToDoModel({
+              title: "third",
+              schedule: third
+            }), new ToDoModel({
+              title: "second",
+              schedule: second
+            }), new ToDoModel({
+              title: "first",
+              schedule: first
+            })
+          ];
+          result = view.setTodoOrder(list);
+          firstModel = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          secondModel = _.filter(result, function(m) {
+            return m.get("title") === "second";
+          })[0];
+          thirdModel = _.filter(result, function(m) {
+            return m.get("title") === "third";
+          })[0];
+          expect(result).to.have.length(3);
+          expect(firstModel.get("order")).to.equal(0);
+          expect(secondModel.get("order")).to.equal(1);
+          return expect(thirdModel.get("order")).to.equal(2);
+        });
+        it("Should be able to mix in unordered and ordered items", function() {
+          var first, firstModel, fourthModel, list, result, second, secondModel, thirdModel;
+          first = new Date();
+          second = new Date();
+          second.setSeconds(second.getSeconds() + 1);
+          list = [
+            new ToDoModel({
+              title: "third",
+              schedule: second
+            }), new ToDoModel({
+              title: "first",
+              schedule: first
+            }), new ToDoModel({
+              title: "second (has order)",
+              order: 1
+            }), new ToDoModel({
+              title: "fourth (has order)",
+              order: 3
+            })
+          ];
+          result = view.setTodoOrder(list);
+          firstModel = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          secondModel = _.filter(result, function(m) {
+            return m.get("title") === "second (has order)";
+          })[0];
+          thirdModel = _.filter(result, function(m) {
+            return m.get("title") === "third";
+          })[0];
+          fourthModel = _.filter(result, function(m) {
+            return m.get("title") === "fourth (has order)";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(firstModel.get("order")).to.equal(0);
+          expect(secondModel.get("order")).to.equal(1);
+          expect(thirdModel.get("order")).to.equal(2);
+          return expect(fourthModel.get("order")).to.equal(3);
+        });
+        it("Should take models with order 3,4,5,6 and change them to 0,1,2,3", function() {
+          var first, fourth, list, result, second, third;
+          list = [
+            new ToDoModel({
+              title: "first",
+              order: 3
+            }), new ToDoModel({
+              title: "second",
+              order: 4
+            }), new ToDoModel({
+              title: "third",
+              order: 5
+            }), new ToDoModel({
+              title: "fourth",
+              order: 6
+            })
+          ];
+          result = view.setTodoOrder(list);
+          first = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          second = _.filter(result, function(m) {
+            return m.get("title") === "second";
+          })[0];
+          third = _.filter(result, function(m) {
+            return m.get("title") === "third";
+          })[0];
+          fourth = _.filter(result, function(m) {
+            return m.get("title") === "fourth";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(first.get("order")).to.equal(0);
+          expect(second.get("order")).to.equal(1);
+          expect(third.get("order")).to.equal(2);
+          return expect(fourth.get("order")).to.equal(3);
+        });
+        it("Should take models with order 0,1,11,5 and change them to 0,1,2,3", function() {
+          var first, fourth, list, result, second, third;
+          list = [
+            new ToDoModel({
+              title: "first",
+              order: 0
+            }), new ToDoModel({
+              title: "second",
+              order: 1
+            }), new ToDoModel({
+              title: "third",
+              order: 5
+            }), new ToDoModel({
+              title: "fourth",
+              order: 11
+            })
+          ];
+          result = view.setTodoOrder(list);
+          first = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          second = _.filter(result, function(m) {
+            return m.get("title") === "second";
+          })[0];
+          third = _.filter(result, function(m) {
+            return m.get("title") === "third";
+          })[0];
+          fourth = _.filter(result, function(m) {
+            return m.get("title") === "fourth";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(first.get("order")).to.equal(0);
+          expect(second.get("order")).to.equal(1);
+          expect(third.get("order")).to.equal(2);
+          return expect(fourth.get("order")).to.equal(3);
+        });
+        it("Should take models with order undefined,1,undefined,5 and change them to 0,1,2,3", function() {
+          var first, fourth, list, result, second, third;
+          list = [
+            new ToDoModel({
+              title: "first"
+            }), new ToDoModel({
+              title: "second",
+              order: 1
+            }), new ToDoModel({
+              title: "third"
+            }), new ToDoModel({
+              title: "fourth",
+              order: 5
+            })
+          ];
+          result = view.setTodoOrder(list);
+          first = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          second = _.filter(result, function(m) {
+            return m.get("title") === "second";
+          })[0];
+          third = _.filter(result, function(m) {
+            return m.get("title") === "third";
+          })[0];
+          fourth = _.filter(result, function(m) {
+            return m.get("title") === "fourth";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(first.get("order")).to.equal(0);
+          expect(second.get("order")).to.equal(1);
+          expect(third.get("order")).to.equal(2);
+          return expect(fourth.get("order")).to.equal(3);
+        });
+        return it("Should take models with order 2,2,2,2 and change them to 0,1,2,3", function() {
+          var first, fourth, list, result, second, third;
+          list = [
+            new ToDoModel({
+              title: "first",
+              order: 2
+            }), new ToDoModel({
+              title: "second",
+              order: 2
+            }), new ToDoModel({
+              title: "jtown",
+              order: 2
+            }), new ToDoModel({
+              title: "fourth",
+              order: 2
+            })
+          ];
+          result = view.setTodoOrder(list);
+          first = _.filter(result, function(m) {
+            return m.get("title") === "first";
+          })[0];
+          second = _.filter(result, function(m) {
+            return m.get("title") === "second";
+          })[0];
+          third = _.filter(result, function(m) {
+            return m.get("title") === "jtown";
+          })[0];
+          fourth = _.filter(result, function(m) {
+            return m.get("title") === "fourth";
+          })[0];
+          expect(result).to.have.length(4);
+          expect(first.get("order")).to.equal(0);
+          expect(second.get("order")).to.equal(1);
+          expect(third.get("order")).to.equal(2);
+          return expect(fourth.get("order")).to.equal(3);
+        });
+      });
       describe("Handling order for new tasks", function() {
         return it("Should always put new tasks at the top", function(done) {
           Backbone.trigger("create-task", "number 1 for order testing");
@@ -531,7 +624,24 @@
         });
       });
       describe("Handling order for tasks moving from scheduled to active when their time is up", function() {
-        beforeEach(function() {
+        before(function() {
+          var oneMinAgo;
+          oneMinAgo = new Date();
+          oneMinAgo.setMinutes(oneMinAgo.getMinutes() - 1);
+          swipy.todos.add({
+            title: "one",
+            schedule: oneMinAgo
+          });
+          swipy.todos.add({
+            title: "two",
+            schedule: oneMinAgo
+          });
+          return swipy.todos.add({
+            title: "three",
+            schedule: oneMinAgo
+          });
+        });
+        beforeEach(function(done) {
           var future, models, now;
           now = new Date().getTime();
           models = swipy.todos.filter(function(m) {
@@ -543,14 +653,16 @@
           if (models.length) {
             future = new Date();
             future.setSeconds(future.getSeconds() + 10);
-            return _.invoke(models, "set", {
+            _.invoke(models, "set", {
               schedule: future
             });
           }
+          return setTimeout(done, 50);
         });
         it("Should always put the tasks changed from scheduled to active at the top", function(done) {
           var future, lastModel, m, models, _i, _len;
-          models = swipy.todos.getActive();
+          console.clear();
+          models = _.pluck(view.subviews, "model");
           for (_i = 0, _len = models.length; _i < _len; _i++) {
             m = models[_i];
             if (m.get("order") === (models.length - 1)) {
@@ -564,25 +676,19 @@
           return setTimeout(function() {
             Backbone.trigger("clockwork/update");
             return setTimeout(function() {
-              var firstNewModel, newModels, _j, _len1;
+              var newModels;
               newModels = _.pluck(view.subviews, "model");
-              expect(newModels).have.length(models.length);
-              for (_j = 0, _len1 = newModels.length; _j < _len1; _j++) {
-                m = newModels[_j];
-                if (m.get("order") === 0) {
-                  firstNewModel = m;
-                }
-              }
-              expect(firstNewModel.cid).to.equal(lastModel.cid);
+              expect(newModels.length).to.be.above(1);
+              expect(lastModel.get("order")).to.equal(0);
               return done();
-            }, 10);
+            }, 50);
           }, 15);
         });
         return it("Should be able to handle multiple tasks changing at the same time", function(done) {
           var future;
           future = new Date();
-          future.setMilliseconds(future.getMilliseconds() + 10);
-          _.invoke(_.pluck(view.subviews, "model"), "set", {
+          future.setMilliseconds(future.getMilliseconds() + 100);
+          _.invoke(swipy.todos.getActive(), "set", {
             schedule: future
           });
           expect(swipy.todos.getActive()).to.have.length(0);
@@ -590,7 +696,7 @@
             Backbone.trigger("clockwork/update");
             return setTimeout(function() {
               return done();
-            }, 10);
+            }, 50);
           }, 15);
         });
       });
@@ -631,7 +737,7 @@
             }
             expect(firstNewModel.cid).to.equal(firstCompleted.cid);
             return done();
-          }, 10);
+          }, 50);
         });
         return it("Should be able to handle multiple tasks changing at the same time", function(done) {
           var allCompleted;
@@ -643,12 +749,11 @@
           Backbone.trigger("clockwork/update");
           return setTimeout(function() {
             return done();
-          }, 10);
+          }, 50);
         });
       });
     });
     /*
-    
     
     	#
     	# Completed list View

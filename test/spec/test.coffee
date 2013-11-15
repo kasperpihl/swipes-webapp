@@ -335,16 +335,18 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 	describe "To Do list view", ->
 		todos = view = null
 
-		before (done) ->
+		before ->
+			todos = [
+				new ToDoModel( title: "three" ),
+				new ToDoModel( title: "two", order: 2 ),
+				new ToDoModel( title: "one", order: 1 )
+			]
+
+		beforeEach (done) ->
 			require ["view/Todo"], (ToDoListView) ->
 				view = new ToDoListView()
-				todos = [
-					new ToDoModel( title: "three" ),
-					new ToDoModel( title: "two", order: 2 ),
-					new ToDoModel( title: "one", order: 1 )
-				]
-				done()
-		###
+				setTimeout( done, 15 ) # Give list time to render
+
 		describe "Handling ToDoModel's order property", ->
 			it "Should have some tasks we can test with", ->
 				expect( view ).to.have.property "subviews"
@@ -503,8 +505,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				expect( third.get "order" ).to.equal 2
 				expect( fourth.get "order" ).to.equal 3
 
-		###
-
 		describe "Handling order for new tasks", ->
 			it "Should always put new tasks at the top", (done) ->
 				Backbone.trigger( "create-task", "number 1 for order testing" )
@@ -517,7 +517,15 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					, 10
 
 		describe "Handling order for tasks moving from scheduled to active when their time is up", ->
-			beforeEach ->
+			before ->
+				# Make sure we have some models in our list
+				oneMinAgo = new Date()
+				oneMinAgo.setMinutes oneMinAgo.getMinutes() - 1
+				swipy.todos.add { title: "one", schedule: oneMinAgo }
+				swipy.todos.add { title: "two", schedule: oneMinAgo }
+				swipy.todos.add { title: "three", schedule: oneMinAgo }
+
+			beforeEach (done) ->
 				# Clean out any tasks scheduled for within 5 seconds of now
 				now = new Date().getTime()
 				models = swipy.todos.filter (m) ->
@@ -530,8 +538,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					future.setSeconds( future.getSeconds() + 10 )
 					_.invoke( models, "set", { schedule: future } )
 
+				setTimeout( done, 50 )
+
 			it "Should always put the tasks changed from scheduled to active at the top", (done) ->
-				models = swipy.todos.getActive()
+				console.clear()
+				models = _.pluck( view.subviews, "model" )
 				lastModel = m for m in models when m.get( "order" ) is ( models.length - 1 )
 
 				# Schedule last model for 10ms in the future
@@ -545,23 +556,23 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				setTimeout ->
 						# Task is now due. Trigger the event that makes the lists re-render
 						Backbone.trigger( "clockwork/update" )
+						# view.moveTasksToActive()
 
 						# Lists have a 5ms timeout to prevent rapid re-render,
 						# so let that time pass before next step
 						setTimeout ->
 								newModels = _.pluck( view.subviews, "model" )
-								expect( newModels ).have.length models.length
-								firstNewModel = m for m in newModels when m.get( "order" ) is 0
-								expect( firstNewModel.cid ).to.equal lastModel.cid
+								expect( newModels.length ).to.be.above 1 # Expect length to be > 1, else our test will always pass no matter what.
+								expect( lastModel.get "order" ).to.equal 0
 								done()
-							, 10
+							, 50
 					, 15
 
 			it "Should be able to handle multiple tasks changing at the same time", (done) ->
 				# Schedule last model for 10ms in the future
 				future = new Date()
-				future.setMilliseconds( future.getMilliseconds() + 10 )
-				_.invoke( _.pluck( view.subviews, "model" ), "set", { schedule: future } )
+				future.setMilliseconds( future.getMilliseconds() + 100 )
+				_.invoke( swipy.todos.getActive(), "set", { schedule: future } )
 
 				# Verify that the models was moved out of the active list
 				expect( swipy.todos.getActive() ).to.have.length 0
@@ -575,7 +586,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 						setTimeout ->
 								# No errors means everything worked.
 								done()
-							, 10
+							, 50
 					, 15
 
 		describe "Handling order for tasks moving from completed to active", ->
@@ -605,7 +616,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 						firstNewModel = m for m in newModels when m.get( "order" ) is 0
 						expect( firstNewModel.cid ).to.equal firstCompleted.cid
 						done()
-					, 10
+					, 50
 
 			it "Should be able to handle multiple tasks changing at the same time", (done) ->
 				# Move first completed task to active
@@ -618,10 +629,9 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				setTimeout ->
 						# No errors means everything worked.
 						done()
-					, 10
+					, 50
 
 	###
-
 
 	#
 	# Completed list View
@@ -1824,4 +1834,4 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 				done()
 
-		###
+	###
