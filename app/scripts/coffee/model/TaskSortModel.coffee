@@ -4,12 +4,13 @@ define ["underscore"], (_) ->
 			result = _.sortBy( todos, (m) -> m.get("schedule").getTime() )
 			result.reverse()
 			return result
-			
+
 		getEmptySpotBefore: (order, orders) ->
 			if order is 0 then return undefined
 
 			return num for num in [0..order] when not _.contains( orders, num )
 
+			# If we didn't find any, return undefined.
 			return undefined
 
 		getEmptySpotAfter: (order, orders) ->
@@ -18,9 +19,10 @@ define ["underscore"], (_) ->
 
 		findSpotForTask: (order, orders) ->
 			emptySpotBefore = @getEmptySpotBefore( order, orders )
-			if emptySpotBefore? then return emptySpotBefore
-
-			return @getEmptySpotAfter( order, orders )
+			if emptySpotBefore?
+				return emptySpotBefore
+			else
+				return @getEmptySpotAfter( order, orders )
 
 		swapSpots: (newSpot, oldSpot, list) ->
 			oldIndex = _.indexOf( list, oldSpot )
@@ -41,7 +43,7 @@ define ["underscore"], (_) ->
 			orders = _.without( orders, undefined ) #Remove falsy values from array, like undefined.
 
 			ordersBefore = orders
-			
+
 			withoutOrder = @sortBySchedule _.filter( todos, (m) -> not m.has "order" )
 
 
@@ -49,8 +51,8 @@ define ["underscore"], (_) ->
 			for task, i in todos
 				order = task.get "order"
 
-				if not _.contains( orders, i ) 
-					if withoutOrder.length 
+				if not _.contains( orders, i )
+					if withoutOrder.length
 						# First see if we can find a task without order to fit the spot
 						task = withoutOrder.pop()
 						task.set( "order", i )
@@ -61,16 +63,16 @@ define ["underscore"], (_) ->
 						@swapSpots( i, order, orders )
 						task.set( "order", i )
 
-			
-			# 2nd loop — Reorder todos so no 2 todos have the same order and 
+
+			# 2nd loop — Reorder todos so no 2 todos have the same order and
 			# that no order is set higher than the number of todos in the list
 			for task in todos
 				order = task.get "order"
-				
+
 				if not order? then continue
-			
+
 				# Cap order value to number of tasks (-1 because arrays are 0-indexed)
-				if order >= todos.length 
+				if order >= todos.length
 					@swapSpots( todos.length - 1, order, orders )
 					order = todos.length - 1
 
@@ -82,15 +84,15 @@ define ["underscore"], (_) ->
 				if _.contains( ordersMinusCurrent, order )
 					# Position is taken. Find a new spot and update orders array.
 					spot = @findSpotForTask( order, ordersMinusCurrent )
-					
+
 					# Replace old spot with new spot
 					@swapSpots( spot, order, orders )
-					
+
 					task.set( "order", spot )
 				else if order is todos.length - 1
 					# Order was assigned to the last spot in the list and that spot isnt taken
 					task.set( "order", order )
-					
+
 				# Curr spot is available. Do nothing.
 				else continue
 
