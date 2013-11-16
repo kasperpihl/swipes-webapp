@@ -48,8 +48,10 @@ html.login {
 		}
 	}
 
-	h3 {
-		font-family: $font-light;
+	#login > h3 {
+		color: #36705c;
+		@include breakpoint(min-height, 1000px) { margin-bottom: 0.6em; }
+		font-family: $font-bold;
 	}
 
 	input {
@@ -74,6 +76,8 @@ html.login {
 			font: 1em/1 $font-bold;
 			text-transform: uppercase;
 
+			max-width: 70%;
+
 			@include breakpoint(min-height, 800px) {
 				padding: 0.65em;
 				margin-top: emCalc(32px);
@@ -82,7 +86,7 @@ html.login {
 
 			@include transition(background 0.15s ease-out);
 
-			&:focus, &:hover {
+			&:hover {
 				background: white;
 				color: #5cc6a2;
 			}
@@ -131,4 +135,22 @@ html.login {
 		}
 	}
 
+}
+
+// Handle logging in state.
+html.login body.busy {
+	input[type=email], input[type=password], .facebook a {
+		@include transition(opacity 0.3s ease-out);
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	input[type=submit] {
+		@include transition(border-color 0.3s ease-out);
+		border-color: #97dcc6;
+	}
+
+	.lost-password, .facebook h3 {
+		opacity: 0;
+	}
 }
