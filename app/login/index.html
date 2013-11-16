@@ -1,6 +1,6 @@
 <!doctype html>
-<!--[if IE 8]>         <html class="no-js ie8"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if IE 8]>         <html class="login no-js ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="login no-js"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,23 +26,28 @@
 	<![endif]-->
 
 	<div class="container">
+		<header class="logo">
+			<h1>Swipes</h1>
+			<h2>Plan Your Day in lightning speed</h2>
+		</header>
 
 		<section id="login">
-			<h1>Login to Swipes</h1>
-			<input type="email" id="email-login" placeholder="Email">
-			<input type="password" id="password-login" placeholder="Password">
-			<input type="button" value="Login" id="button-login">
+			<h3>Login or register</h3>
+			<form action="/">
+				<input type="email" class="borderless" id="email-login" placeholder="Email">
+				<input type="password" class="borderless" id="password-login" placeholder="Password">
+				<input type="submit" value="Continue">
+			</form>
 
-			<p>Or you can login with Facebook</p>
-			<input type="button" value="Login with Facebook" id="facebook-login" class="facebook-login">
+			<a href="#" title="Click here to retrieve your password" class="lost-password">Lost your password?</a>
 
-			<h1>Register to Swipes</h1>
-			<input type="text" id="email-register" placeholder="Email">
-			<input type="password" id="password-register" placeholder="Password">
-			<input type="button" value="Register" id="button-register">
-
-			<p>Or you can register with Facebook</p>
-			<input type="button" value="Register with Facebook" id="facebook-register" class="facebook-login">
+			<section class="facebook">
+				<h3 class="h5">Or login/register with:</h3>
+				<a href="#" id="facebook-login" title="Login/Register with Facebook">
+					<span class="icon-facebook-btn"></span>
+					<span class="text-hide">Facebook</span>
+				</a>
+			</section>
 		</section>
 
 	</div>
