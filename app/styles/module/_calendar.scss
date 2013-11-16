@@ -8,7 +8,7 @@
 	}
 
 	.previous, .next {
-		@extend .noselect;
+		@extend .no-select;
 		float: left;
 		width: 10%;
 		cursor: pointer;
