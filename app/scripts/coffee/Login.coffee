@@ -1,32 +1,37 @@
 LoginView = Parse.View.extend
 	el: "#login"
 	events:
-		"click #button-login": "login"
-		"click #button-register": "register"
-		"click .facebook-login": "facebookLogin"
-	initialize: -> @busy = no
-	login: -> @doAction "login"
-	register: -> @doAction "register"
-	facebookLogin: -> @doAction "facebookLogin"
-	doAction: (action) ->
-		if @busy then return console.warn "Can't do #{action} right now — I'm busy ..."
-		@busy = yes
+		"submit form": "doAction"
+		"click #facebook-login": "facebookLogin"
+	facebookLogin: (e) -> @doAction( e, "facebookLogin" )
+	setBusyState: ->
+		$("body").addClass "busy"
+		@$el.find("input[type=submit]").val "please wait ..."
+	removeBusyState: ->
+		$("body").removeClass "busy"
+		@$el.find("input[type=submit]").val "Continue"
+	doAction: (e, action = "login") ->
+		e.preventDefault()
+
+		if $("body").hasClass "busy" then return console.warn "Can't do #{action} right now — I'm busy ..."
+		@setBusyState()
+
 		switch action
 			when "login"
-				email = @$el.find( "#email-login" ).val()
-				password = @$el.find( "#password-login" ).val()
-				return unless @validateFields( email, password )
+				email = @$el.find( "#email" ).val()
+				password = @$el.find( "#password" ).val()
+				return @removeBusyState() unless @validateFields( email, password )
 
 				Parse.User.logIn( email, password, {
 					success: ->
 						location.href = "/"
 					error: (user, error) =>
-						@handleError( user, error )
+						@handleError( user, error, yes )
 				})
 			when "register"
-				email = @$el.find( "#email-register" ).val()
-				password = @$el.find( "#password-register" ).val()
-				return unless @validateFields( email, password )
+				email = @$el.find( "#email" ).val()
+				password = @$el.find( "#password" ).val()
+				return @removeBusyState() unless @validateFields( email, password )
 
 				@createUser( email, password ).signUp( null, {
 					success: ->
@@ -73,8 +78,13 @@ LoginView = Parse.View.extend
 	validateEmail: (email) ->
 		regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 		return regex.test email
-	handleError: (user, error) ->
-		@busy = no
+	handleError: (user, error, triedLogin = no) ->
+		if triedLogin
+			console.log "Tried logging in and failed. Will register user instead."
+			# Figure out if the error was that the user didn't exist. If true, do the login.
+
+		@removeBusyState()
+
 		if error and error.code then switch error.code
 			when 202 then alert "The email is already in use, please login instead"
 			when 101 then alert "Wrong email or password"

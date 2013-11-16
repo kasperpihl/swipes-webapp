@@ -4,49 +4,51 @@
   LoginView = Parse.View.extend({
     el: "#login",
     events: {
-      "click #button-login": "login",
-      "click #button-register": "register",
-      "click .facebook-login": "facebookLogin"
+      "submit form": "doAction",
+      "click #facebook-login": "facebookLogin"
     },
-    initialize: function() {
-      return this.busy = false;
+    facebookLogin: function(e) {
+      return this.doAction(e, "facebookLogin");
     },
-    login: function() {
-      return this.doAction("login");
+    setBusyState: function() {
+      $("body").addClass("busy");
+      return this.$el.find("input[type=submit]").val("please wait ...");
     },
-    register: function() {
-      return this.doAction("register");
+    removeBusyState: function() {
+      $("body").removeClass("busy");
+      return this.$el.find("input[type=submit]").val("Continue");
     },
-    facebookLogin: function() {
-      return this.doAction("facebookLogin");
-    },
-    doAction: function(action) {
+    doAction: function(e, action) {
       var email, password,
         _this = this;
-      if (this.busy) {
+      if (action == null) {
+        action = "login";
+      }
+      e.preventDefault();
+      if ($("body").hasClass("busy")) {
         return console.warn("Can't do " + action + " right now — I'm busy ...");
       }
-      this.busy = true;
+      this.setBusyState();
       switch (action) {
         case "login":
-          email = this.$el.find("#email-login").val();
-          password = this.$el.find("#password-login").val();
+          email = this.$el.find("#email").val();
+          password = this.$el.find("#password").val();
           if (!this.validateFields(email, password)) {
-            return;
+            return this.removeBusyState();
           }
           return Parse.User.logIn(email, password, {
             success: function() {
               return location.href = "/";
             },
             error: function(user, error) {
-              return _this.handleError(user, error);
+              return _this.handleError(user, error, true);
             }
           });
         case "register":
-          email = this.$el.find("#email-register").val();
-          password = this.$el.find("#password-register").val();
+          email = this.$el.find("#email").val();
+          password = this.$el.find("#password").val();
           if (!this.validateFields(email, password)) {
-            return;
+            return this.removeBusyState();
           }
           return this.createUser(email, password).signUp(null, {
             success: function() {
@@ -112,8 +114,14 @@
       regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return regex.test(email);
     },
-    handleError: function(user, error) {
-      this.busy = false;
+    handleError: function(user, error, triedLogin) {
+      if (triedLogin == null) {
+        triedLogin = false;
+      }
+      if (triedLogin) {
+        console.log("Tried logging in and failed. Will register user instead.");
+      }
+      this.removeBusyState();
       if (error && error.code) {
         switch (error.code) {
           case 202:
