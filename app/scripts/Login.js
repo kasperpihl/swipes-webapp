@@ -1,5 +1,5 @@
 (function() {
-  var LoginView, SwipesLogin;
+  var LoginView, SwipesLogin, login;
 
   LoginView = Parse.View.extend({
     el: "#login",
@@ -152,5 +152,7 @@
     facebookJS.src = '//connect.facebook.net/en_US/all.js';
     return firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
   })();
+
+  login = new SwipesLogin();
 
 }).call(this);

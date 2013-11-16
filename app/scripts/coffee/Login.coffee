@@ -93,3 +93,5 @@ do ->
 
 	firstScriptElement.parentNode.insertBefore( facebookJS, firstScriptElement )
 
+# Finally, instantiate a new SwipesLogin
+login = new SwipesLogin()
