@@ -7,7 +7,7 @@
 
 	<title>Log in | Swipes</title>
 
-	<meta name="description" content="">
+	<meta name="description" content="Log into Parse">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -55,6 +55,11 @@
 	<!-- endbower -->
 	<!-- endbuild -->
 
+	<script src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
+	<!-- build:js ../scripts/Login.js -->
+	<script src="../scripts/Login.js"></script>
+	<!-- endbuild -->
+
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 	<script>
 		(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -64,11 +69,5 @@
 		r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
 		ga('create','UA-XXXXX-X');ga('send','pageview');
 	</script>
-
-	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
-
-	<!-- build:js scripts/login.js -->
-	<script src="../scripts/Login.js"></script>
-	<!-- endbuild -->
 </body>
 </html>
