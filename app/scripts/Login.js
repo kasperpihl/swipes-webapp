@@ -1,5 +1,5 @@
 (function() {
-  var LoginView, SwipesLogin, login;
+  var LoginView, login;
 
   LoginView = Parse.View.extend({
     el: "#login",
@@ -9,8 +9,7 @@
       "click .facebook-login": "facebookLogin"
     },
     initialize: function() {
-      this.busy = false;
-      return _.bindAll(this, "handleFacebookLoginSuccess");
+      return this.busy = false;
     },
     login: function() {
       return this.doAction("login");
@@ -22,7 +21,8 @@
       return this.doAction("facebookLogin");
     },
     doAction: function(action) {
-      var email, password;
+      var email, password,
+        _this = this;
       if (this.busy) {
         return console.warn("Can't do " + action + " right now — I'm busy ...");
       }
@@ -35,9 +35,11 @@
             return;
           }
           return Parse.User.logIn(email, password, {
-            error: this.handleError,
             success: function() {
               return location.href = "/";
+            },
+            error: function(user, error) {
+              return _this.handleError(user, error);
             }
           });
         case "register":
@@ -47,15 +49,19 @@
             return;
           }
           return this.createUser(email, password).signUp(null, {
-            error: this.handleError,
             success: function() {
               return location.href = "/";
+            },
+            error: function(user, error) {
+              return _this.handleError(user, error);
             }
           });
         case "facebookLogin":
           return Parse.FacebookUtils.logIn(null, {
             success: this.handleFacebookLoginSuccess,
-            error: this.handleError
+            error: function(user, error) {
+              return _this.handleError(user, error);
+            }
           });
       }
     },
@@ -90,16 +96,18 @@
     },
     validateFields: function(email, password) {
       if (email.length === 0 || password.length === 0) {
+        this.busy = false;
         alert("Please fill out both fields");
         return false;
       }
       if (!this.validateEmail(email)) {
+        this.busy = false;
         alert("Please use a real email address");
         return false;
       }
       return true;
     },
-    validateEmail: function() {
+    validateEmail: function(email) {
       var regex;
       regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return regex.test(email);
@@ -118,16 +126,6 @@
       }
     }
   });
-
-  SwipesLogin = (function() {
-    function SwipesLogin() {
-      console.log("Login thingy ready...");
-      this.view = new LoginView();
-    }
-
-    return SwipesLogin;
-
-  })();
 
   Parse.initialize("0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag");
 
@@ -153,6 +151,6 @@
     return firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
   })();
 
-  login = new SwipesLogin();
+  login = new LoginView();
 
 }).call(this);
