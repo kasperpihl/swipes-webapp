@@ -81,6 +81,17 @@
         }
       };
 
+      ListSortModel.prototype.getViewFromId = function(id) {
+        var view, _i, _len, _ref;
+        _ref = this.views;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          if (view.el.getAttribute("data-id") === id) {
+            return view;
+          }
+        }
+      };
+
       ListSortModel.prototype.getViewsBetween = function(min, max, excludeId) {
         var order, view, views, _i, _len, _ref;
         views = [];

@@ -27,27 +27,9 @@
         Backbone.on("redraw-sortable-list", this.redraw, this);
         this.listenForOrderChanges();
         this.setInitialOrder();
-        this.createDraggables();
+        this.createDraggable(this.model.getViewFromId(e.currentTarget.getAttribute("data-id")));
         if (e) {
-          return this.forceStartDrag(e);
-        }
-      };
-
-      ListSortController.prototype.forceStartDrag = function(e) {
-        var draggable;
-        draggable = this.getDraggableFromId(e.currentTarget.getAttribute("data-id"));
-        return draggable.startDrag(e.gesture.srcEvent);
-      };
-
-      ListSortController.prototype.getDraggableFromId = function(id) {
-        var d, _i, _len, _ref;
-        _ref = this.draggables;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          d = _ref[_i];
-          if (d._eventTarget.getAttribute("data-id") === id) {
-            return d;
-            break;
-          }
+          return this.draggable.startDrag(e.gesture.srcEvent);
         }
       };
 
@@ -56,7 +38,7 @@
           removeCSS = false;
         }
         this.stopListenForOrderChanges();
-        this.killDraggables(removeCSS);
+        this.killDraggable(removeCSS);
         Backbone.off("redraw-sortable-list", this.redraw);
         this.model.destroy();
         return this.enableTouchListners();
@@ -79,46 +61,38 @@
         return _results;
       };
 
-      ListSortController.prototype.createDraggables = function() {
-        var dragOpts, draggable, self, view, _i, _len, _ref, _results,
+      ListSortController.prototype.createDraggable = function(view) {
+        var dragOpts, self,
           _this = this;
-        if (this.draggables != null) {
-          this.killDraggables();
+        if (this.draggable != null) {
+          this.killDraggable();
         }
         self = this;
-        this.draggables = [];
-        _ref = this.model.views;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          dragOpts = {
-            type: "top",
-            bounds: this.model.container,
-            edgeResistance: 0.75,
-            throwProps: true,
-            resistance: 3000,
-            snap: {
-              top: function(endValue) {
-                return Math.max(this.minY, Math.min(this.maxY, Math.round(endValue / self.model.rowHeight) * self.model.rowHeight));
-              }
-            },
-            onDragStartParams: [view, this.model.views],
-            onDragStart: this.onDragStart,
-            onDragParams: [view, this.model],
-            onDrag: this.onDrag,
-            onDragEndParams: [view, this.model],
-            onDragEnd: this.onDragEnd,
-            onThrowComplete: function() {
-              var _ref1;
-              _this.deactivate();
-              return (_ref1 = _this.onDragCompleteCallback) != null ? _ref1.call(_this) : void 0;
+        dragOpts = {
+          type: "top",
+          bounds: this.model.container,
+          edgeResistance: 0.75,
+          throwProps: true,
+          resistance: 3000,
+          snap: {
+            top: function(endValue) {
+              return Math.max(this.minY, Math.min(this.maxY, Math.round(endValue / self.model.rowHeight) * self.model.rowHeight));
             }
-          };
-          dragOpts.trigger = view.$el.find(".todo-content");
-          draggable = new Draggable(view.el, dragOpts);
-          _results.push(this.draggables.push(draggable));
-        }
-        return _results;
+          },
+          onDragStartParams: [view, this.model.views],
+          onDragStart: this.onDragStart,
+          onDragParams: [view, this.model],
+          onDrag: this.onDrag,
+          onDragEndParams: [view, this.model],
+          onDragEnd: this.onDragEnd,
+          onThrowComplete: function() {
+            var _ref;
+            _this.deactivate();
+            return (_ref = _this.onDragCompleteCallback) != null ? _ref.call(_this) : void 0;
+          }
+        };
+        dragOpts.trigger = view.$el.find(".todo-content");
+        return this.draggable = new Draggable(view.el, dragOpts);
       };
 
       ListSortController.prototype.redraw = function() {
@@ -179,15 +153,10 @@
         });
       };
 
-      ListSortController.prototype.killDraggables = function(removeCSS) {
-        var draggable, _i, _len, _ref;
-        if (this.draggables != null) {
-          _ref = this.draggables;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            draggable = _ref[_i];
-            draggable.disable();
-          }
-          this.draggables = null;
+      ListSortController.prototype.killDraggable = function(removeCSS) {
+        if (this.draggable != null) {
+          this.draggable.disable();
+          this.draggable = null;
           if (removeCSS) {
             return this.removeInlineStyles();
           }

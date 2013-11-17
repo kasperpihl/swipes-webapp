@@ -42,6 +42,10 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 		getViewAtPos: (order) ->
 			return view for view in @views when view.model.get( "order" ) is order
 
+		getViewFromId: (id) ->
+			for view in @views when view.el.getAttribute( "data-id" ) is id
+				return view
+
 		getViewsBetween: (min, max, excludeId) ->
 			views = []
 			for view in @views when view.model.cid isnt excludeId
