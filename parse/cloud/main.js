@@ -6,8 +6,19 @@ Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
   var todo = request.object;
-  if(!request.master) makeAttributeChanges(todo);
+  makeAttributeChanges(todo);
   if(todo.isNew() && user) todo.set('owner',user);
+  response.success();
+});
+Parse.Cloud.afterSave('ToDo',function(request){
+  if(request.object['attributeChanges']) delete request.object['attributeChanges'];
+});
+Parse.Cloud.beforeSave("Tag",function(request,response){
+  var user = request.user;
+  if(!user && !request.master) return sendError(response,'You have to be logged in');
+  var tag = request.object;
+  makeAttributeChanges(tag);
+  if(tag.isNew() && user) tag.set('owner',user);
   response.success();
 });
 function makeAttributeChanges(object){
@@ -40,14 +51,7 @@ function scrapeChanges(object,lastUpdateTime){
     }
   }
 }
-Parse.Cloud.beforeSave("Tag",function(request,response){
-  var user = request.user;
-  if(!user && !request.master) return sendError(response,'You have to be logged in');
-  var tag = request.object;
-  if(!request.master) makeAttributeChanges(tag);
-  if(tag.isNew() && user) tag.set('owner',user);
-  response.success();
-});
+
 Parse.Cloud.define("subscribe", function(request, response) {
   var email = request.params.email;
   if(!email) return response.error('Must include email');
