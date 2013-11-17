@@ -11,7 +11,7 @@ Parse.Cloud.beforeSave("ToDo",function(request,response){
   response.success();
 });
 Parse.Cloud.afterSave('ToDo',function(request){
-  if(request.object['attributeChanges']) delete request.object['attributeChanges'];
+  if(request.object.attributes['attributeChanges'])  delete request.object.attributes['attributeChanges'];
 });
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;

@@ -24,9 +24,11 @@ define ["underscore", "backbone", "gsap"], (_, Backbone) ->
 		tick: ->
 			@timesUpdated++
 			@timer = @getTimer()
+
 			Backbone.trigger( "clockwork/update", @ )
 		getSecondsRemainingThisMin: ->
-			60 - new Date().getSeconds()
+			result = 60 - new Date().getSeconds()
+			return if result is 0 then 59 else result
 		timeToNextTick: ->
 			@timer.duration() - @timer.time()
 		destroy: ->

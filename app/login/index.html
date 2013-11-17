@@ -1,0 +1,78 @@
+<!doctype html>
+<!--[if IE 8]>         <html class="login no-js ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="login no-js"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>Log in | Swipes</title>
+
+	<meta name="description" content="Log into Parse">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+
+	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+	<!-- build:css(.tmp) ../styles/main.css -->
+	<link rel="stylesheet" href="../styles/main.css">
+	<!-- endbuild -->
+
+	<!-- build:js ../scripts/vendor/modernizr.js -->
+	<script src="../bower_components/modernizr/modernizr.js"></script>
+	<!-- endbuild -->
+</head>
+
+<body>
+	<!--[if lt IE 10]>
+	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	<![endif]-->
+
+	<div class="container">
+		<header class="logo">
+			<h1>Swipes</h1>
+			<h2>Plan Your Day in lightning speed</h2>
+		</header>
+
+		<section id="login">
+			<h3>Login or register</h3>
+			<form action="/">
+				<input type="email" class="borderless" id="email-login" placeholder="Email">
+				<input type="password" class="borderless" id="password-login" placeholder="Password">
+				<input type="submit" value="Continue">
+			</form>
+
+			<a href="#" title="Click here to retrieve your password" class="lost-password">Lost your password?</a>
+
+			<section class="facebook">
+				<h3 class="h5">Or login/register with:</h3>
+				<a href="#" id="facebook-login" title="Login/Register with Facebook">
+					<span class="icon-facebook-btn"></span>
+					<span class="text-hide">Facebook</span>
+				</a>
+			</section>
+		</section>
+
+	</div>
+
+  	<div id="fb-root"></div>
+
+	<!-- build:js ../scripts/vendor.js -->
+	<!-- bower:js -->
+	<script src="../bower_components/jquery/jquery.js"></script>
+	<!-- endbower -->
+	<!-- endbuild -->
+
+	<script src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
+	<!-- build:js ../scripts/Login.js -->
+	<script src="../scripts/Login.js"></script>
+	<!-- endbuild -->
+
+	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+	<script>
+		(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+		e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+		e.src='//www.google-analytics.com/analytics.js';
+		r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+		ga('create','UA-XXXXX-X');ga('send','pageview');
+	</script>
+</body>
+</html>

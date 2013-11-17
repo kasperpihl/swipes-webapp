@@ -1,0 +1,164 @@
+html.login, html.login body {
+	min-height: 100%;
+}
+
+html.login {
+	body {
+		background: #69ceb5 image-url("login-bg.jpg") center no-repeat;
+		@include breakpoint(min-width, 1280px) {
+			background-image: image-url("login-bg-large.jpg");
+		}
+		background-size: cover;
+		color: white;
+	}
+
+	.container {
+		width: 84%;
+		max-width: emCalc(432px);
+		margin: auto;
+		text-align: center;
+	}
+
+	header.logo {
+		$src: "swipes-logo.png";
+		width: image-width($src) / 2;
+		height: image-height($src) / 6;
+		margin: 0.5em auto 0.5em;
+
+		@include breakpoint(min-height, 600px) {
+			height: image-height($src) / 3;
+			margin: 1.5em auto 3em;
+		}
+
+		@include breakpoint(min-height, 1000px) {
+			height: image-height($src) / 2.5;
+			margin: 3em auto 4em;
+		}
+
+		@include breakpoint(min-height, 1130px) {
+			height: image-height($src) / 2;
+			margin: 5.93333em auto 4.16667em;
+		}
+
+		background: image-url($src) no-repeat top center;
+		background-size: contain;
+
+		h1, h2 {
+			@include squish-text();
+		}
+	}
+
+	#login > h3 {
+		color: #36705c;
+		@include breakpoint(max-height, 700px) {
+			font-size: 100%;
+		}
+		@include breakpoint(min-height, 1000px) { margin-bottom: 0.6em; }
+		font-family: $font-bold;
+	}
+
+	input {
+		padding: emCalc(10px);
+		margin-bottom: emCalc(13px);
+
+		@include breakpoint(min-height, 800px) {
+			padding: emCalc(20px);
+		}
+
+		width: 100%;
+		background: white;
+		@include border-radius(emCalc(4px));
+
+		&[type=submit] {
+			padding: 0.75em;
+			border: 2px solid white;
+			outline: none;
+			background: transparent;
+
+			color: white;
+			font: 1em/1 $font-bold;
+			text-transform: uppercase;
+
+			max-width: 70%;
+
+			@include breakpoint(min-height, 800px) {
+				padding: 0.65em;
+				margin-top: emCalc(32px);
+				font-size: 1.4em;
+			}
+
+			@include transition(background 0.15s ease-out);
+
+			&:hover {
+				background: white;
+				color: #5cc6a2;
+			}
+		}
+	}
+
+	form {
+		margin-bottom: emCalc(5px);
+	}
+
+	.lost-password {
+		display: block;
+		color: #36705c;
+		margin-bottom: emCalc(35px);
+		@include breakpoint(min-height, 730px) { margin-bottom: emCalc(55px); }
+		@include breakpoint(min-height, 1130px) { margin-bottom: emCalc(115px); }
+		@include transition(opacity 0.15s ease-out);
+
+		&:hover {
+			opacity: 0.85;
+			text-decoration: none;
+		}
+	}
+
+	.facebook {
+		h3 {
+			margin-bottom: 0.15em;
+			font-family: $font-light;
+			@include breakpoint(max-height, 600px) { font-size: 85%; }
+			@include breakpoint(min-height, 600px) { margin-bottom: 1.5em; }
+		}
+
+		a {
+			display: block;
+			margin: auto;
+			width: 233px;
+			color: white;
+			font-size: 60px;
+
+			@include breakpoint(max-height, 700px) {
+				font-size: 50px;
+			}
+
+			line-height: 1;
+			@include transition(opacity 0.15s ease-out);
+
+			&:hover {
+				opacity: 0.85;
+				text-decoration: none;
+			}
+		}
+	}
+
+}
+
+// Handle logging in state.
+html.login body.busy {
+	input[type=email], input[type=password], .facebook a {
+		@include transition(opacity 0.3s ease-out);
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	input[type=submit] {
+		@include transition(border-color 0.3s ease-out);
+		border-color: #97dcc6;
+	}
+
+	.lost-password, .facebook h3 {
+		opacity: 0;
+	}
+}

@@ -38,8 +38,9 @@
         emptySpotBefore = this.getEmptySpotBefore(order, orders);
         if (emptySpotBefore != null) {
           return emptySpotBefore;
+        } else {
+          return this.getEmptySpotAfter(order, orders);
         }
-        return this.getEmptySpotAfter(order, orders);
       };
 
       TaskSortModel.prototype.swapSpots = function(newSpot, oldSpot, list) {
@@ -112,7 +113,6 @@
             task.set("order", spot);
           }
         }
-        console.groupEnd();
         return todos;
       };
 

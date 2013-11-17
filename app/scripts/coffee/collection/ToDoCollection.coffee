@@ -38,13 +38,13 @@ define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, Back
 				# This multi-dimensional loop returns true if
 				# the model has all of the provided tags in it's tags property
 				return _.all( tags, (tag) -> _.contains( m.get( "tags" ), tag )  )
-		bumpOrder: (direction = "down", startFrom = 0) ->
+		bumpOrder: (direction = "down", startFrom = 0, bumps = 1) ->
 			if direction is "down"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom
-					model.set( "order", model.get( "order" ) + 1 )
+					model.set( "order", model.get( "order" ) + bumps )
 			else if direction is "up"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
-					model.set( "order", model.get( "order" ) - 1 )
+					model.set( "order", model.get( "order" ) - bumps )
 
 		spawnRepeatTask: (model, completionDate) ->
 			if model.get "repeatDate" then @add model.getRepeatableDuplicate().attributes

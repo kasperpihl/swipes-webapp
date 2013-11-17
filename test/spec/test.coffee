@@ -56,8 +56,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 			return dfd.promise()
 
-	###
-
 	#
 	# The Basics
 	#
@@ -330,11 +328,27 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 	#
 	# To do list View
 	#
-	require ["view/Todo"], (ToDoView) ->
-		todos = [ new ToDoModel( title: "three" ), new ToDoModel( title: "two", order: 2 ), new ToDoModel( title: "one", order: 1 ) ]
-		view = new ToDoView()
+	describe "To Do list view", ->
+		todos = view = null
 
-		describe "To Do list view", ->
+		before ->
+			todos = [
+				new ToDoModel( title: "three" ),
+				new ToDoModel( title: "two", order: 2 ),
+				new ToDoModel( title: "one", order: 1 )
+			]
+
+		beforeEach (done) ->
+			require ["view/Todo"], (ToDoListView) ->
+				view = new ToDoListView()
+				setTimeout( done, 15 ) # Give list time to render
+
+		describe "Handling ToDoModel's order property", ->
+			it "Should have some tasks we can test with", ->
+				expect( view ).to.have.property "subviews"
+				models = _.pluck( view.subviews, "model" )
+				expect( models ).to.have.length.above 0
+
 			it "Should order tasks by models 'order' property", ->
 				result = view.groupTasks todos
 				expect(result[0].tasks[0].get "title").to.equal "one"
@@ -486,6 +500,142 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				expect( second.get "order" ).to.equal 1
 				expect( third.get "order" ).to.equal 2
 				expect( fourth.get "order" ).to.equal 3
+
+		describe "Handling order for new tasks", ->
+			it "Should always put new tasks at the top", (done) ->
+				Backbone.trigger( "create-task", "number 1 for order testing" )
+
+				# There is a 5ms delay in the render of todo lists, so work that in
+				setTimeout ->
+						newFirstModel = m for m in _.pluck( view.subviews, "model" ) when m.get( "order" ) is 0
+						expect( newFirstModel.get "title" ).to.equal "number 1 for order testing"
+						done()
+					, 10
+
+		describe "Handling order for tasks moving from scheduled to active when their time is up", ->
+			before ->
+				# Make sure we have some models in our list
+				oneMinAgo = new Date()
+				oneMinAgo.setMinutes oneMinAgo.getMinutes() - 1
+				swipy.todos.add { title: "one", schedule: oneMinAgo }
+				swipy.todos.add { title: "two", schedule: oneMinAgo }
+				swipy.todos.add { title: "three", schedule: oneMinAgo }
+
+			beforeEach (done) ->
+				# Clean out any tasks scheduled for within 5 seconds of now
+				now = new Date().getTime()
+				models = swipy.todos.filter (m) ->
+					if not m.has "schedule" then return no
+					return Math.abs( m.get("schedule").getTime() - now ) < 5000
+
+				# If we have any, push them 10 seconds into the future, so they dont mess up our tests
+				if models.length
+					future = new Date()
+					future.setSeconds( future.getSeconds() + 10 )
+					_.invoke( models, "set", { schedule: future } )
+
+				setTimeout( done, 50 )
+
+			it "Should always put the tasks changed from scheduled to active at the top", (done) ->
+				console.clear()
+				models = _.pluck( view.subviews, "model" )
+				lastModel = m for m in models when m.get( "order" ) is ( models.length - 1 )
+
+				# Schedule last model for 10ms in the future
+				future = new Date()
+				future.setMilliseconds( future.getMilliseconds() + 100 )
+				lastModel.set( "schedule", future )
+
+				# Verify that the model was moved out of the active list
+				expect( swipy.todos.getActive() ).to.have.length.below models.length
+
+				setTimeout ->
+						# Task is now due. Trigger the event that makes the lists re-render
+						view.moveTasksToActive()
+
+						# Lists have a 5ms timeout to prevent rapid re-render,
+						# so let that time pass before next step
+						setTimeout ->
+								newModels = _.pluck( view.subviews, "model" )
+								expect( newModels.length ).to.be.above 1 # Expect length to be > 1, else our test will always pass no matter what.
+								expect( lastModel.get "order" ).to.equal 0
+								done()
+							, 50
+					, 150
+
+			it "Should be able to handle multiple tasks changing at the same time", (done) ->
+				# Schedule last model for 10ms in the future
+				future = new Date()
+				future.setMilliseconds( future.getMilliseconds() + 100 )
+				_.invoke( swipy.todos.getActive(), "set", { schedule: future } )
+
+				# Verify that the models was moved out of the active list
+				expect( swipy.todos.getActive() ).to.have.length 0
+
+				setTimeout ->
+						# Task is now due. Trigger the event that makes the lists re-render
+						Backbone.trigger( "clockwork/update" )
+
+						# Lists have a 5ms timeout to prevent rapid re-render,
+						# so let that time pass before next step
+						setTimeout ->
+								# No errors means everything worked.
+								done()
+							, 50
+					, 15
+
+		describe "Handling order for tasks moving from completed to active", ->
+			beforeEach ->
+				# Clean out any tasks scheduled for within 5 seconds of now
+				now = new Date().getTime()
+				models = swipy.todos.filter (m) ->
+					if not m.has "schedule" then return no
+					return Math.abs( m.get("schedule").getTime() - now ) < 5000
+
+				# If we have any, push them 10 seconds into the future, so they dont mess up our tests
+				if models.length
+					future = new Date()
+					future.setSeconds( future.getSeconds() + 10 )
+					_.invoke( models, "set", { schedule: future } )
+
+			it "Should always put the tasks changed from scheduled to active at the top", (done) ->
+				swipy.todos.add { title: "dummy-completed-1", completionDate: new Date("11/10/2013") }
+				swipy.todos.add { title: "dummy-completed-2", completionDate: new Date("11/10/2013") }
+				swipy.todos.add { title: "dummy-completed-3", completionDate: new Date("11/10/2013") }
+
+				# Move first completed task to active
+				firstCompleted = swipy.todos.getCompleted()[0]
+				veryRecent = new Date()
+				veryRecent.setMilliseconds( veryRecent.getMilliseconds() - 50 )
+				firstCompleted.set { completionDate: null, schedule: veryRecent }
+
+				Backbone.trigger( "clockwork/update" )
+				# Lists have a 5ms timeout to prevent rapid re-render,
+				# so let that time pass before next step
+				setTimeout ->
+						newModels = _.pluck( view.subviews, "model" )
+						firstNewModel = m for m in newModels when m.get( "order" ) is 0
+						expect( firstNewModel.cid ).to.equal firstCompleted.cid
+						done()
+					, 50
+
+			it "Should be able to handle multiple tasks changing at the same time", (done) ->
+				swipy.todos.add { title: "dummy-completed-4", completionDate: new Date("11/10/2013") }
+				swipy.todos.add { title: "dummy-completed-5", completionDate: new Date("11/10/2013") }
+				swipy.todos.add { title: "dummy-completed-6", completionDate: new Date("11/10/2013") }
+
+				# Move first completed task to active
+				allCompleted = swipy.todos.getCompleted()
+				expect( allCompleted.length ).to.be.above 0
+				_.invoke( allCompleted, "set", { completionDate: null, schedule: allCompleted[0].getDefaultSchedule() } )
+
+				Backbone.trigger( "clockwork/update" )
+				# Lists have a 5ms timeout to prevent rapid re-render,
+				# so let that time pass before next step
+				setTimeout ->
+						# No errors means everything worked.
+						done()
+					, 50
 
 	#
 	# Completed list View
@@ -811,9 +961,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			it "Should set/clear the repeat option when picking one"
 			it "Should throw an error message if the changes can't be saved to the server"
 
-	###
-
-
 	describe "Automatically moving tasks from scheduled to active", ->
 		clock = null
 		before (done) ->
@@ -840,8 +987,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			expect( clock.timer.progress() ).to.equal 0
 
 		it "Should handle time zone differences (So your desktop and phone will stay in sync if their time zones are off (Like when you just took the plane to a new time zone)"
-
-	###
 
 	describe "Repeating tasks", ->
 		describe "Repeat Picker user interface", ->
@@ -893,45 +1038,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				task.set( "repeatOption", "every day" )
 				task.set( "repeatOption", "never" )
 				expect( task.get "repeatDate" ).to.be.falsy
-
-			describe "updating schedule without changing repeatDate (Base schedule is monday 11/11/2013)", ->
-				beforeEach -> task.set( "repeatDate", new Date( "11/11/2013" ) )
-
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every day' the new repeatDate should still be 11/12/2013 (We let completionDate determine new repeatDate)", ->
-					task.set( "repeatOption", "every day" )
-					task.set( "schedule", new Date("11/12/2013") )
-
-					repeatDate = task.get "repeatDate"
-					expect( repeatDate.getMonth() ).to.equal 10
-					expect( repeatDate.getDate() ).to.equal 12
-					expect( repeatDate.getFullYear() ).to.equal 2013
-
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every week' the new repeatDate should still be 11/18/2013", ->
-					task.set( "repeatOption", "every week" )
-					task.set( "schedule", new Date("11/12/2013") )
-
-					repeatDate = task.get "repeatDate"
-					expect( repeatDate.getMonth() ).to.equal 10
-					expect( repeatDate.getDate() ).to.equal 18
-					expect( repeatDate.getFullYear() ).to.equal 2013
-
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every month' the new repeatDate should still be 11/11/2013", ->
-					task.set( "repeatOption", "every month" )
-					task.set( "schedule", new Date("11/12/2013") )
-
-					repeatDate = task.get "repeatDate"
-					expect( repeatDate.getMonth() ).to.equal 11
-					expect( repeatDate.getDate() ).to.equal 11
-					expect( repeatDate.getFullYear() ).to.equal 2013
-
-				it "When changing schedule to 11/12/2013 and with a repeatOption of 'every year' the new repeatDate should be 11/11/2013", ->
-					task.set( "repeatOption", "every year" )
-					task.set( "schedule", new Date("11/12/2013") )
-
-					repeatDate = task.get "repeatDate"
-					expect( repeatDate.getMonth() ).to.equal 10
-					expect( repeatDate.getDate() ).to.equal 11
-					expect( repeatDate.getFullYear() ).to.equal 2014
 
 		describe "Duplicating tasks", ->
 			task = duplicate = null
@@ -1692,5 +1798,3 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()
-
-		###

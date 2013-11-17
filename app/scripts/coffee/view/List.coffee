@@ -28,7 +28,7 @@ define [
 			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
 
 			# Re-render list once per minute, activating any scheduled tasks.
-			@listenTo( Backbone, "clockwork/update", @renderList )
+			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
 			@render()
 		render: ->
@@ -44,9 +44,29 @@ define [
 		getTasks: ->
 			# Fetch todos that are active
 			return swipy.todos.getActive()
+		moveTasksToActive: ->
+			now = new Date().getTime()
+			# Get all tasks that are scheduled within the current 1001ms
+			# (Includes stuff moved from completed, which is defaulting to 1000ms in the past)
+			movedFromScheduled = _.filter @getTasks(), (m) ->
+				now - m.get( "schedule" ).getTime() < 1001
 
+			# If we have tasks then bump all tasks +1 and
+			# set order: 0 and animateIn: yes for all of them
+			if movedFromScheduled.length
+
+				# If we only moved 1 item, and it's order was already 0, no need to bump
+				if movedFromScheduled.length is 1 and movedFromScheduled[0].get("order") is 0
+					# ... Do nothing — This is only the case when we have multiple instances of
+					# a list at the same time. Like in our testing environment.
+					movedFromScheduled[0].set( "animateIn", yes )
+				else
+					swipy.todos.bumpOrder( "down", 0, movedFromScheduled.length )
+					_.invoke( movedFromScheduled, "set", { order: 0, animateIn: yes } )
+
+				# After changes, re-render the list
+				@renderList()
 		renderList: ->
-			console.log "Rendering list"
 			# Remove any old HTML before appending new stuff.
 			@$el.empty()
 			@killSubViews()
@@ -54,9 +74,7 @@ define [
 			todos = @getTasks()
 
 			# Rejects models filtered out by tag or search
-			todos = _.reject todos, (m) ->
-				# console.log "Is #{ m.get 'title' } rejected by tags? ", m.get "rejectedByTag"
-				m.get( "rejectedByTag" ) or m.get( "rejectedBySearch" )
+			todos = _.reject( todos, (m) -> m.get( "rejectedByTag" ) or m.get "rejectedBySearch" )
 
 			# Deselect any selected items
 			_.invoke( todos, "set", { selected: no } )

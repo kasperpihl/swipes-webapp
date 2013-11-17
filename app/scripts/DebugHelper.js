@@ -14,7 +14,6 @@
         return [
           {
             title: "Follow up on Martin",
-            order: 0,
             schedule: new Date("September 19, 2013 16:30:02"),
             completionDate: new Date("September 02, 2013 11:51:34"),
             repeatOption: "never",
@@ -48,7 +47,6 @@
             notes: ""
           }, {
             title: "Find a weekend getaway on Kayak.com",
-            order: 0,
             schedule: new Date("September 16, 2013 22:30:02"),
             completionDate: null,
             repeatOption: "never",
@@ -57,7 +55,6 @@
             notes: ""
           }, {
             title: "Prepare the Marketing Workshop",
-            order: 1,
             schedule: new Date("September 17, 2013 09:00:00"),
             completionDate: null,
             repeatOption: "never",

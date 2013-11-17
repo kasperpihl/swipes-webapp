@@ -29,7 +29,13 @@
       };
 
       ClockWork.prototype.getSecondsRemainingThisMin = function() {
-        return 60 - new Date().getSeconds();
+        var result;
+        result = 60 - new Date().getSeconds();
+        if (result === 0) {
+          return 59;
+        } else {
+          return result;
+        }
       };
 
       ClockWork.prototype.timeToNextTick = function() {
