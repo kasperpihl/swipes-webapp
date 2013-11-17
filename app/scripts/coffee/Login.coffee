@@ -24,7 +24,7 @@ LoginView = Parse.View.extend
 
 				Parse.User.logIn( email, password, {
 					success: ->
-						location.href = "/"
+						location.pathname = "/"
 					error: (user, error) =>
 						@handleError( user, error, yes )
 				})
@@ -35,7 +35,7 @@ LoginView = Parse.View.extend
 
 				@createUser( email, password ).signUp( null, {
 					success: ->
-						location.href = "/"
+						location.pathname = "/"
 					error: (user, error) =>
 						@handleError( user, error )
 				})

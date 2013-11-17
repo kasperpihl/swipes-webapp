@@ -38,7 +38,7 @@
           }
           return Parse.User.logIn(email, password, {
             success: function() {
-              return location.href = "/";
+              return location.pathname = "/";
             },
             error: function(user, error) {
               return _this.handleError(user, error, true);
@@ -52,7 +52,7 @@
           }
           return this.createUser(email, password).signUp(null, {
             success: function() {
-              return location.href = "/";
+              return location.pathname = "/";
             },
             error: function(user, error) {
               return _this.handleError(user, error);
