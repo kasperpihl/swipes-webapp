@@ -69,13 +69,13 @@
         }
         self = this;
         dragOpts = {
-          type: "top",
+          type: "y",
           bounds: this.model.container,
           edgeResistance: 0.75,
           throwProps: true,
           resistance: 3000,
           snap: {
-            top: function(endValue) {
+            y: function(endValue) {
               return Math.max(this.minY, Math.min(this.maxY, Math.round(endValue / self.model.rowHeight) * self.model.rowHeight));
             }
           },
@@ -96,10 +96,9 @@
       };
 
       ListSortController.prototype.redraw = function() {
-        this.killDraggables();
+        this.killDraggable();
         this.model.rows = this.model.getRows();
-        this.setInitialOrder();
-        return this.createDraggables();
+        return this.setInitialOrder();
       };
 
       ListSortController.prototype.listenForOrderChanges = function() {
@@ -149,7 +148,7 @@
         }
         dur = animate ? 0.3 : 0;
         return TweenLite.to(this.el, dur, {
-          top: newOrder * this.$el.height()
+          y: newOrder * this.$el.height()
         });
       };
 

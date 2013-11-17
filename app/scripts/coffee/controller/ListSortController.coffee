@@ -34,14 +34,14 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			self = @
 
 			dragOpts =
-				type: "top"
+				type: "y"
 				bounds: @model.container
 
 				# Throwing / Dragging
 				edgeResistance: 0.75
 				throwProps: yes
 				resistance: 3000
-				snap: top: (endValue) ->
+				snap: y: (endValue) ->
 					# Snap to closest row
 					return Math.max( @minY, Math.min( @maxY, Math.round( endValue / self.model.rowHeight ) * self.model.rowHeight ) );
 
@@ -59,10 +59,9 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			dragOpts.trigger = view.$el.find ".todo-content"
 			@draggable = new Draggable( view.el, dragOpts )
 		redraw: ->
-			@killDraggables()
+			@killDraggable()
 			@model.rows = @model.getRows()
 			@setInitialOrder()
-			@createDraggables()
 		listenForOrderChanges: ->
 			for view in @model.views
 				view.model.on( "change:order", @reorderView, view )
@@ -79,7 +78,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			view.$el.removeClass( "selected" ) unless view.model.get "selected"
 		reorderView: (model, newOrder, animate = yes) ->
 			dur = if animate then 0.3 else 0
-			TweenLite.to( @el, dur, { top: newOrder * @$el.height() } )
+			TweenLite.to( @el, dur, { y: newOrder * @$el.height() } )
 		killDraggable: (removeCSS) ->
 			if @draggable?
 				@draggable.disable()
