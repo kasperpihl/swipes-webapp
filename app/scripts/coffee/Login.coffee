@@ -65,12 +65,18 @@ LoginView = Parse.View.extend
 		user.set( "email", email )
 		return user
 	validateFields: (email, password) ->
+		if not email
+			alert "Please fill in you e-mail address"
+			return no
+
+		if not password
+			alert "Please fill in you password"
+			return no
+
 		if email.length is 0 or password.length is 0
-			@busy = no
 			alert "Please fill out both fields"
 			return no
 		if not @validateEmail email
-			@busy = no
 			alert "Please use a real email address"
 			return no
 		# Everything passed

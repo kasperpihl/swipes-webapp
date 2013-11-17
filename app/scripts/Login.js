@@ -97,13 +97,19 @@
       return user;
     },
     validateFields: function(email, password) {
+      if (!email) {
+        alert("Please fill in you e-mail address");
+        return false;
+      }
+      if (!password) {
+        alert("Please fill in you password");
+        return false;
+      }
       if (email.length === 0 || password.length === 0) {
-        this.busy = false;
         alert("Please fill out both fields");
         return false;
       }
       if (!this.validateEmail(email)) {
-        this.busy = false;
         alert("Please use a real email address");
         return false;
       }
