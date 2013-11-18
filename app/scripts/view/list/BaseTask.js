@@ -63,7 +63,7 @@
         if (this.template == null) {
           return this;
         }
-        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.html(this.template(this.model.toFullJSON()));
         this.$el.attr("data-id", this.model.cid);
         return this;
       },
