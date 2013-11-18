@@ -1,6 +1,14 @@
+/*
+ Brug evt:
+ http://stackoverflow.com/questions/15912222/how-do-i-save-just-a-subset-of-a-backbone-models-attributes-to-the-server-witho
+*/
+
+
 (function() {
-  define(["backbone", "momentjs"], function(Backbone, Moment) {
-    return Backbone.Model.extend({
+  define(["momentjs"], function() {
+    return Parse.Object.extend({
+      className: "ToDo",
+      attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority", "owner", "deleted"],
       defaults: {
         title: "",
         order: void 0,
@@ -11,6 +19,9 @@
         repeatCount: 0,
         tags: null,
         notes: "",
+        location: void 0,
+        priority: 0,
+        owner: Parse.User.current().id,
         deleted: false
       },
       initialize: function() {
@@ -254,15 +265,9 @@
         }
       },
       sanitizeDataForDuplication: function(data) {
-        var prop, sanitizedData, _i, _len, _ref;
+        var sanitizedData;
         sanitizedData = _.clone(data);
-        _ref = ["id", "state", "schedule", "scheduleStr", "completionDate", "completionStr", "completionTimeStr", "repeatDate"];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          prop = _ref[_i];
-          if (sanitizedData[prop]) {
-            delete sanitizedData[prop];
-          }
-        }
+        sanitizedData = _.pick(sanitizedData, this.attrWhitelist);
         sanitizedData.schedule = this.getScheduleBasedOnRepeatDate(data.repeatDate);
         sanitizedData.repeatCount++;
         return sanitizedData;
@@ -277,9 +282,13 @@
           throw new Error("You're trying to repeat a task that doesn't have a repeat date");
         }
       },
-      toJSON: function() {
+      toFullJSON: function() {
         this.set("state", this.getState());
-        return Backbone.Model.prototype.toJSON.apply(this, arguments);
+        return _.clone(this.attributes);
+      },
+      toJSON: function() {
+        console.log("toJSON called!!!", _.pick(this.attributes, this.attrWhitelist));
+        return _.pick(this.attributes, this.attrWhitelist);
       },
       cleanUp: function() {
         return this.off();

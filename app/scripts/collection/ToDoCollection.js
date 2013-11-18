@@ -26,10 +26,15 @@ App.collections.Tags = Parse.Collection.extend({
       model: ToDoModel,
       initialize: function() {
         var _this = this;
+        this.setQuery();
         this.on("destroy", function(model) {
           return _this.remove(model);
         });
         return this.on("change:completionDate", this.spawnRepeatTask);
+      },
+      setQuery: function() {
+        this.query = new Parse.Query(ToDoModel);
+        return this.query.equalTo("user", Parse.User.current());
       },
       getActive: function() {
         var _this = this;

@@ -24,8 +24,12 @@ define ["model/ToDoModel"], (ToDoModel) ->
 	Parse.Collection.extend
 		model: ToDoModel
 		initialize: ->
+			@setQuery()
 			@on( "destroy", (model) => @remove model )
 			@on( "change:completionDate", @spawnRepeatTask )
+		setQuery: ->
+			@query = new Parse.Query ToDoModel
+			@query.equalTo( "user", Parse.User.current() )
 		getActive: ->
 			@filter (m) => m.getState() is "active"
 		getScheduled: ->

@@ -2,9 +2,7 @@
   define(function() {
     var DebugHelper;
     return DebugHelper = (function() {
-      function DebugHelper() {
-        this.setDummyTodos();
-      }
+      function DebugHelper() {}
 
       DebugHelper.prototype.setDummyTodos = function() {
         return swipy.todos.reset(this.getDummyData());

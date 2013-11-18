@@ -1,7 +1,7 @@
 define ->
 	class DebugHelper
 		constructor: ->
-			@setDummyTodos()
+			# @setDummyTodos()
 		setDummyTodos: ->
 			# Reset collection with dummy data
 			swipy.todos.reset @getDummyData()

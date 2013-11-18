@@ -1,5 +1,26 @@
-define ["backbone", "momentjs"], (Backbone, Moment) ->
-	Backbone.Model.extend
+###
+ Brug evt:
+ http://stackoverflow.com/questions/15912222/how-do-i-save-just-a-subset-of-a-backbone-models-attributes-to-the-server-witho
+###
+
+define ["momentjs"], ->
+	Parse.Object.extend
+		className: "ToDo"
+		attrWhitelist: [
+			"title"
+			"order"
+			"schedule"
+			"completionDate"
+			"repeatOption"
+			"repeatDate"
+			"repeatCount"
+			"tags"
+			"notes"
+			"location"
+			"priority"
+			"owner"
+			"deleted"
+		]
 		defaults:
 			title: ""
 			order: undefined
@@ -10,8 +31,10 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			repeatCount: 0
 			tags: null
 			notes: ""
+			location: undefined
+			priority: 0
+			owner: Parse.User.current().id
 			deleted: no
-
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
 			# because null should be an allowed without triggering any logic, as null is used for
@@ -227,13 +250,9 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 		sanitizeDataForDuplication: (data) ->
 			sanitizedData = _.clone data
-
-			for prop in ["id", "state", "schedule", "scheduleStr", "completionDate", "completionStr", "completionTimeStr", "repeatDate"]
-				delete sanitizedData[prop] if sanitizedData[prop]
-
+			sanitizedData = _.pick( sanitizedData, @attrWhitelist )
 			sanitizedData.schedule = @getScheduleBasedOnRepeatDate data.repeatDate
 			sanitizedData.repeatCount++
-
 			return sanitizedData
 
 		getScheduleBasedOnRepeatDate: (repeatDate) ->
@@ -246,10 +265,11 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 			else
 				throw new Error "You're trying to repeat a task that doesn't have a repeat date"
 				return
-
-		toJSON: ->
+		toFullJSON: ->
 			@set( "state", @getState() )
-			Backbone.Model::toJSON.apply( @, arguments )
-
+			_.clone @attributes
+		toJSON: ->
+			console.log "toJSON called!!!", _.pick( @attributes, @attrWhitelist )
+			_.pick( @attributes, @attrWhitelist )
 		cleanUp: ->
 			@off()
