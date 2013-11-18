@@ -28,14 +28,14 @@ LoginView = Parse.View.extend
 					error: (user, error) => @handleError( user, error, { email, password } )
 				})
 			when "register"
+				console.log "Registering a new user"
 				email = @$el.find( "#email" ).val()
 				password = @$el.find( "#password" ).val()
 				return @removeBusyState() unless @validateFields( email, password )
 
-				@createUser( email, password ).signUp( null, {
-					success: -> location.pathname = "/"
-					error: (user, error) => @handleError( user, error )
-				})
+				@createUser( email, password ).signUp()
+				.done( -> location.pathname = "/" )
+				.fail (user, error) => @handleError( user, error )
 			when "facebookLogin"
 				Parse.FacebookUtils.logIn( null, {
 					success: @handleFacebookLoginSuccess
@@ -55,7 +55,7 @@ LoginView = Parse.View.extend
 		else
 			location.href = "/"
 	createUser: (email, password) ->
-		user = new Parse.user()
+		user = new Parse.User()
 		user.set( "username", email )
 		user.set( "password", password )
 		user.set( "email", email )
@@ -86,18 +86,20 @@ LoginView = Parse.View.extend
 			if error and error.code then switch error.code
 				when 101
 					if confirm "You're about to create a new user with the e-mail #{ triedLoginWithCredentials.email }. Do you want to continue?"
-						console.log "Registering a new user"
+						@removeBusyState()
 						return @doAction "register"
 					else
-						return @removeBusyState()
+						return
 				else return @showError error
-			else return alert "something went wrong. Please try again."
+			else
+				@removeBusyState()
+				return alert "something went wrong. Please try again."
 
 
+		@removeBusyState()
 		if error and error.code then return @showError error
 		else alert "something went wrong. Please try again."
 	showError: (error) ->
-		@removeBusyState()
 		switch error.code
 			when Parse.Error.USERNAME_TAKEN, Parse.Error.EMAIL_NOT_FOUND then alert "The password was wrong or the email/username was already taken"
 			when Parse.Error.INVALID_EMAIL_ADDRESS then alert "The provided email is invalid. Please check it, and try again"

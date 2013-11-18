@@ -48,18 +48,16 @@
             }
           });
         case "register":
+          console.log("Registering a new user");
           email = this.$el.find("#email").val();
           password = this.$el.find("#password").val();
           if (!this.validateFields(email, password)) {
             return this.removeBusyState();
           }
-          return this.createUser(email, password).signUp(null, {
-            success: function() {
-              return location.pathname = "/";
-            },
-            error: function(user, error) {
-              return _this.handleError(user, error);
-            }
+          return this.createUser(email, password).signUp().done(function() {
+            return location.pathname = "/";
+          }).fail(function(user, error) {
+            return _this.handleError(user, error);
           });
         case "facebookLogin":
           return Parse.FacebookUtils.logIn(null, {
@@ -93,7 +91,7 @@
     },
     createUser: function(email, password) {
       var user;
-      user = new Parse.user();
+      user = new Parse.User();
       user.set("username", email);
       user.set("password", password);
       user.set("email", email);
@@ -132,19 +130,21 @@
           switch (error.code) {
             case 101:
               if (confirm("You're about to create a new user with the e-mail " + triedLoginWithCredentials.email + ". Do you want to continue?")) {
-                console.log("Registering a new user");
+                this.removeBusyState();
                 return this.doAction("register");
               } else {
-                return this.removeBusyState();
+                return;
               }
               break;
             default:
               return this.showError(error);
           }
         } else {
+          this.removeBusyState();
           return alert("something went wrong. Please try again.");
         }
       }
+      this.removeBusyState();
       if (error && error.code) {
         return this.showError(error);
       } else {
@@ -152,7 +152,6 @@
       }
     },
     showError: function(error) {
-      this.removeBusyState();
       switch (error.code) {
         case Parse.Error.USERNAME_TAKEN:
         case Parse.Error.EMAIL_NOT_FOUND:

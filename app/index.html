@@ -93,6 +93,12 @@
 	<!-- endbower -->
 	<!-- endbuild -->
 
+	<script src="http://www.parsecdn.com/js/parse-1.2.13.min.js"></script>
+
+	<!-- build:js scripts/main.js -->
+	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+	<!-- endbuild -->
+
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 	<script>
 		(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -102,9 +108,5 @@
 		r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
 		ga('create','UA-XXXXX-X');ga('send','pageview');
 	</script>
-
-	<!-- build:js scripts/main.js -->
-	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
-	<!-- endbuild -->
 </body>
 </html>
