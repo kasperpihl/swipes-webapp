@@ -13,16 +13,16 @@
         return this.listenTo(swipy.todos, "change:selected", this.toggle);
       },
       toggle: function() {
+        var selectedTasks;
+        selectedTasks = swipy.todos.filter(function(m) {
+          return m.get("selected");
+        });
         if (this.shown) {
-          if (swipy.todos.where({
-            selected: true
-          }).length === 0) {
+          if (selectedTasks.length === 0) {
             return this.hide();
           }
         } else {
-          if (swipy.todos.where({
-            selected: true
-          }).length > 0) {
+          if (selectedTasks.length > 0) {
             return this.show();
           }
         }
@@ -41,26 +41,26 @@
       },
       editTask: function() {
         var targetCid;
-        targetCid = swipy.todos.findWhere({
-          selected: true
-        }).cid;
+        targetCid = swipy.todos.filter(function(m) {
+          return m.get("selected");
+        })[0].cid;
         return swipy.router.navigate("edit/" + targetCid, true);
       },
       editTags: function() {
         return this.tagEditor = new TagEditorOverlay({
-          models: swipy.todos.where({
-            selected: true
+          models: swipy.todos.filter(function(m) {
+            return m.get("selected");
           })
         });
       },
       deleteTasks: function() {
-        var model, order, targets, _i, _len;
-        targets = swipy.todos.where({
-          selected: true
+        var model, order, selectedTasks, _i, _len;
+        selectedTasks = swipy.todos.filter(function(m) {
+          return m.get("selected");
         });
-        if (confirm("Delete " + targets.length + " tasks?")) {
-          for (_i = 0, _len = targets.length; _i < _len; _i++) {
-            model = targets[_i];
+        if (confirm("Delete " + selectedTasks.length + " tasks?")) {
+          for (_i = 0, _len = selectedTasks.length; _i < _len; _i++) {
+            model = selectedTasks[_i];
             if (model.has("order")) {
               order = model.get("order");
               model.unset("order");

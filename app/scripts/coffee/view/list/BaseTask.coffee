@@ -39,7 +39,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		handleAction: (e) ->
 			# Set trigger. One or more elements, but always wrapped in an array ready to loop over.
 			trigger = [@model]
-			selectedTasks = swipy.todos.where( selected: yes )
+			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
 			if selectedTasks.length
 				selectedTasks = _.reject( selectedTasks, (m) => m.cid is @model.cid )
 				trigger.push task for task in selectedTasks

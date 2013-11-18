@@ -33,8 +33,8 @@
         var selectedTasks, task, trigger, _i, _len,
           _this = this;
         trigger = [this.model];
-        selectedTasks = swipy.todos.where({
-          selected: true
+        selectedTasks = swipy.todos.filter(function(m) {
+          return m.get("selected");
         });
         if (selectedTasks.length) {
           selectedTasks = _.reject(selectedTasks, function(m) {

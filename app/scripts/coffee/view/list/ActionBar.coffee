@@ -10,11 +10,12 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 			@hide()
 			@listenTo( swipy.todos, "change:selected", @toggle )
 		toggle: ->
+			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
 			if @shown
-				if swipy.todos.where( selected: yes ).length is 0
+				if selectedTasks.length is 0
 					@hide()
 			else
-				if swipy.todos.where( selected: yes ).length > 0
+				if selectedTasks.length > 0
 					@show()
 		show: ->
 			@$el.toggleClass( "fadeout", no )
@@ -27,14 +28,14 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 			@stopListening()
 			@hide()
 		editTask: ->
-			targetCid = swipy.todos.findWhere( selected: yes ).cid
+			targetCid = swipy.todos.filter( (m) -> m.get "selected" )[0].cid
 			swipy.router.navigate( "edit/#{ targetCid }", yes )
 		editTags: ->
-			@tagEditor = new TagEditorOverlay( models: swipy.todos.where( selected: yes ) )
+			@tagEditor = new TagEditorOverlay( models: swipy.todos.filter (m) -> m.get "selected" )
 		deleteTasks: ->
-			targets = swipy.todos.where( selected: yes )
-			if confirm "Delete #{targets.length} tasks?"
-				for model in targets
+			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			if confirm "Delete #{selectedTasks.length} tasks?"
+				for model in selectedTasks
 					if model.has "order"
 						order = model.get "order"
 						model.unset "order"
