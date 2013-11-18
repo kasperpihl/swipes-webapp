@@ -4,11 +4,11 @@
   LoginView = Parse.View.extend({
     el: "#login",
     events: {
-      "submit form": "doAction",
+      "submit form": "handleSubmitForm",
       "click #facebook-login": "facebookLogin"
     },
     facebookLogin: function(e) {
-      return this.doAction(e, "facebookLogin");
+      return this.doAction("facebookLogin");
     },
     setBusyState: function() {
       $("body").addClass("busy");
@@ -18,13 +18,13 @@
       $("body").removeClass("busy");
       return this.$el.find("input[type=submit]").val("Continue");
     },
-    doAction: function(e, action) {
+    handleSubmitForm: function(e) {
+      e.preventDefault();
+      return this.doAction("login");
+    },
+    doAction: function(action) {
       var email, password,
         _this = this;
-      if (action == null) {
-        action = "login";
-      }
-      e.preventDefault();
       if ($("body").hasClass("busy")) {
         return console.warn("Can't do " + action + " right now — I'm busy ...");
       }
@@ -41,7 +41,10 @@
               return location.pathname = "/";
             },
             error: function(user, error) {
-              return _this.handleError(user, error, true);
+              return _this.handleError(user, error, {
+                email: email,
+                password: password
+              });
             }
           });
         case "register":
@@ -120,23 +123,52 @@
       regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return regex.test(email);
     },
-    handleError: function(user, error, triedLogin) {
-      if (triedLogin == null) {
-        triedLogin = false;
+    handleError: function(user, error, triedLoginWithCredentials) {
+      if (triedLoginWithCredentials == null) {
+        triedLoginWithCredentials = false;
       }
-      if (triedLogin) {
-        console.log("Tried logging in and failed. Will register user instead.");
-      }
-      this.removeBusyState();
-      if (error && error.code) {
-        switch (error.code) {
-          case 202:
-            return alert("The email is already in use, please login instead");
-          case 101:
-            return alert("Wrong email or password");
-          default:
-            return alert("something went wrong. Please try again.");
+      if (triedLoginWithCredentials) {
+        if (error && error.code) {
+          switch (error.code) {
+            case 101:
+              if (confirm("You're about to create a new user with the e-mail " + triedLoginWithCredentials.email + ". Do you want to continue?")) {
+                console.log("Registering a new user");
+                return this.doAction("register");
+              } else {
+                return this.removeBusyState();
+              }
+              break;
+            default:
+              return this.showError(error);
+          }
+        } else {
+          return alert("something went wrong. Please try again.");
         }
+      }
+      if (error && error.code) {
+        return this.showError(error);
+      } else {
+        return alert("something went wrong. Please try again.");
+      }
+    },
+    showError: function(error) {
+      this.removeBusyState();
+      switch (error.code) {
+        case Parse.Error.USERNAME_TAKEN:
+        case Parse.Error.EMAIL_NOT_FOUND:
+          return alert("The password was wrong or the email/username was already taken");
+        case Parse.Error.INVALID_EMAIL_ADDRESS:
+          return alert("The provided email is invalid. Please check it, and try again");
+        case Parse.Error.TIMEOUT:
+          return alert("The connection timed out. Please try again.");
+        case Parse.Error.USERNAME_TAKEN:
+          return alert("The email/username was already taken");
+        case 202:
+          return alert("The email is already in use, please login instead");
+        case 101:
+          return alert("Wrong email or password");
+        default:
+          return alert("something went wrong. Please try again.");
       }
     }
   });
