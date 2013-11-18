@@ -99,11 +99,11 @@
     },
     validateFields: function(email, password) {
       if (!email) {
-        alert("Please fill in you e-mail address");
+        alert("Please fill in your e-mail address");
         return false;
       }
       if (!password) {
-        alert("Please fill in you password");
+        alert("Please fill in your password");
         return false;
       }
       if (email.length === 0 || password.length === 0) {
