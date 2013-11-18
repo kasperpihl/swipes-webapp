@@ -35,7 +35,7 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 				return
 
 			swipy.todos.bumpOrder()
-			swipy.todos.add { title, tags, order, animateIn }
+			swipy.todos.create { title, tags, order, animateIn }
 
 		destroy: ->
 			Backbone.off( null, null, @ )

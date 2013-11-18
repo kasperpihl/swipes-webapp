@@ -45,7 +45,7 @@
         return this.addTag(tagName);
       },
       addTag: function(tagName) {
-        return swipy.tags.add({
+        return swipy.tags.create({
           title: tagName
         });
       },

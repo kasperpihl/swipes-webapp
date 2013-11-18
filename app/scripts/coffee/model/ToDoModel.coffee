@@ -93,7 +93,7 @@ define ["backbone", "momentjs"], (Backbone, Moment) ->
 
 		syncTags: ->
 			if @has( "tags" ) and swipy?.tags
-				swipy.tags.add { title: tagName } for tagName in @get "tags"
+				swipy.tags.create { title: tagName } for tagName in @get "tags"
 
 		setScheduleStr: ->
 			schedule = @get "schedule"

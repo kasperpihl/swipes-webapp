@@ -1,9 +1,29 @@
-define ['backbone', 'backbone.localStorage', 'model/ToDoModel'], (Backbone, BackboneLocalStorage, ToDoModel) ->
-	Backbone.Collection.extend
+###
+
+var todoModel = Parse.Object.extend('ToDo');
+var todoCollectionQuery = new Parse.Query(taskModel);
+taskCollectionQuery.equalTo('owner',Parse.User.current());
+
+App.collections.ToDos = Parse.Collection.extend({
+	model: todoModel,
+	query: todoCollectionQuery
+});
+
+var tagModel = Parse.Object.extend('Tag');
+var tagCollectionQuery = new Parse.Query(tagModel);
+tagCollectionQuery.equalTo('owner',Parse.User.current());
+
+App.collections.Tags = Parse.Collection.extend({
+	model: tagModel,
+	query: tagCollectionQuery
+});
+
+###
+
+define ["model/ToDoModel"], (ToDoModel) ->
+	Parse.Collection.extend
 		model: ToDoModel
-		localStorage: new Backbone.LocalStorage "SwipyTodos"
 		initialize: ->
-			@on( "add", (model) -> model.save() )
 			@on( "destroy", (model) => @remove model )
 			@on( "change:completionDate", @spawnRepeatTask )
 		getActive: ->

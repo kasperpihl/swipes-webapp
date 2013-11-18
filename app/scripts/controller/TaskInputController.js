@@ -53,7 +53,7 @@
           return;
         }
         swipy.todos.bumpOrder();
-        return swipy.todos.add({
+        return swipy.todos.create({
           title: title,
           tags: tags,
           order: order,

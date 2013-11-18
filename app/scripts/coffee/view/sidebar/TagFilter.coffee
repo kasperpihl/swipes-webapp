@@ -29,7 +29,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			@addTag tagName
 		addTag: (tagName) ->
-			swipy.tags.add { title: tagName }
+			swipy.tags.create { title: tagName }
 		removeTag: (e) ->
 			e.stopPropagation()
 			tagName = $.trim $( e.currentTarget.parentNode ).text()
