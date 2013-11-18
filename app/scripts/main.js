@@ -118,11 +118,17 @@ require.config({
     }
 });
 
-require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, DebugHelper) {
-    'use strict';
+// First check that the user is actually logged in
+Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" )
+if (Parse.User.current()) {
+    require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, DebugHelper) {
+        'use strict';
 
-    window.$ = window.jQuery = $;
+        window.$ = window.jQuery = $;
 
-    window.swipy = new App();
-    window.debugHelper = new DebugHelper();
-});
+        window.swipy = new App();
+        window.debugHelper = new DebugHelper();
+    });
+} else {
+    location.pathname = "/login/"
+}
