@@ -97,9 +97,9 @@
           model.unset("tags", {
             silent: true
           });
-          return model.set("tags", tags);
+          return model.save("tags", tags);
         } else {
-          return model.set("tags", [tagName]);
+          return model.save("tags", [tagName]);
         }
       },
       removeTagFromModels: function(tag) {
@@ -112,7 +112,7 @@
           model.unset("tags", {
             silent: true
           });
-          model.set("tags", newTags);
+          model.save("tags", newTags);
         }
         return this.render();
       },

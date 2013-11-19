@@ -64,15 +64,15 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 				if _.contains( tags, tagName ) then return
 				tags.push tagName
 				model.unset( "tags", { silent: yes } )
-				model.set( "tags", tags )
+				model.save( "tags", tags )
 			else
-				return model.set( "tags", [tagName] )
+				return model.save( "tags", [tagName] )
 		removeTagFromModels: (tag) ->
 			for model in @options.models
 				tags = model.get "tags"
 				newTags = _.without( tags, tag )
 				model.unset( "tags", { silent: yes } )
-				model.set( "tags", newTags )
+				model.save( "tags", newTags )
 
 			@render()
 		handleResize: ->
