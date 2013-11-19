@@ -119,14 +119,15 @@ require.config({
     }
 });
 
-require(["parse-js-sdk"], function() {
+require(["jquery", "parse-js-sdk"], function($) {
+    window.$ = window.jQuery = $;
+
     // First check that the user is actually logged in
     Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" )
     if (Parse.User.current()) {
-        require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, DebugHelper) {
+        require(["app", "DebugHelper", "plugins/log"], function (App, DebugHelper) {
             'use strict';
 
-            window.$ = window.jQuery = $;
 
             window.swipy = new App();
             window.debugHelper = new DebugHelper();
