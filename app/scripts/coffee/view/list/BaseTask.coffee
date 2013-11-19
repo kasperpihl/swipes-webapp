@@ -62,7 +62,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
-			@$el.html @template @model.toFullJSON()
+			@$el.html @template @model.toJSON()
 			@$el.attr( "data-id", @model.cid )
 			return @
 

@@ -36,17 +36,17 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 				error: -> swipy.errors.throw "Something went wrong. Please try again in a little bit.", arguments
 			}
 
-			@model.save( {}, opts )
+			@model.save( null, opts )
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
 
 		setRepeat: (e) ->
-			@model.set( "repeatOption", $(e.currentTarget).data "option" )
+			@model.save( "repeatOption", $(e.currentTarget).data "option" )
 		updateTitle: ->
-			@model.set( "title", @getTitle() )
+			@model.save( "title", @getTitle() )
 		updateNotes: ->
-			@model.set( "notes", @getNotes() )
+			@model.save( "notes", @getNotes() )
 		getTitle: ->
 			@$el.find( ".title input" ).val()
 		getNotes: ->

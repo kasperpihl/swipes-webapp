@@ -52,20 +52,20 @@
             return swipy.errors["throw"]("Something went wrong. Please try again in a little bit.", arguments);
           }
         };
-        return this.model.save({}, opts);
+        return this.model.save(null, opts);
       },
       reschedule: function() {
         return Backbone.trigger("show-scheduler", [this.model]);
       },
       transitionInComplete: function() {},
       setRepeat: function(e) {
-        return this.model.set("repeatOption", $(e.currentTarget).data("option"));
+        return this.model.save("repeatOption", $(e.currentTarget).data("option"));
       },
       updateTitle: function() {
-        return this.model.set("title", this.getTitle());
+        return this.model.save("title", this.getTitle());
       },
       updateNotes: function() {
-        return this.model.set("notes", this.getNotes());
+        return this.model.save("notes", this.getNotes());
       },
       getTitle: function() {
         return this.$el.find(".title input").val();
