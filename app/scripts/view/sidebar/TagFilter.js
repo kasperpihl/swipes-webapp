@@ -3,8 +3,7 @@
     return Parse.View.extend({
       events: {
         "click li": "toggleFilter",
-        "click .remove": "removeTag",
-        "submit form": "createTag"
+        "click .remove": "removeTag"
       },
       initialize: function() {
         var _this = this;
@@ -35,17 +34,8 @@
           return Backbone.trigger("remove-filter", "tag", tag);
         }
       },
-      createTag: function(e) {
-        var tagName;
-        e.preventDefault();
-        tagName = this.$el.find("form.add-tag input").val();
-        if (tagName === "") {
-          return;
-        }
-        return this.addTag(tagName);
-      },
       addTag: function(tagName) {
-        return swipy.tags.create({
+        return swipy.tags.add({
           title: tagName
         });
       },

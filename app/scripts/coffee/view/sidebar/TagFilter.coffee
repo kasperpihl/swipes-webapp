@@ -3,7 +3,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		events:
 			"click li": "toggleFilter"
 			"click .remove": "removeTag"
-			"submit form": "createTag"
 		initialize: ->
 			@listenTo( swipy.tags, "add remove reset", @render )
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
@@ -22,14 +21,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				Backbone.trigger( "apply-filter", "tag", tag )
 			else
 				Backbone.trigger( "remove-filter", "tag", tag )
-		createTag: (e) ->
-			e.preventDefault()
-			tagName = @$el.find("form.add-tag input").val()
-			return if tagName is ""
-
-			@addTag tagName
 		addTag: (tagName) ->
-			swipy.tags.create { title: tagName }
+			swipy.tags.add { title: tagName }
 		removeTag: (e) ->
 			e.stopPropagation()
 			tagName = $.trim $( e.currentTarget.parentNode ).text()
@@ -66,7 +59,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
 
-			@renderTag tag, list for tag in @getValidatedTags()
+			@renderTag( tag, list ) for tag in @getValidatedTags()
 
 			return @
 		renderTag: (tag, list) ->
