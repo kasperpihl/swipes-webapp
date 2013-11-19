@@ -21,7 +21,7 @@
         notes: "",
         location: void 0,
         priority: 0,
-        owner: Parse.User.current().id,
+        owner: Parse.User.current(),
         deleted: false
       },
       initialize: function() {
@@ -282,14 +282,16 @@
           throw new Error("You're trying to repeat a task that doesn't have a repeat date");
         }
       },
-      toFullJSON: function() {
+      toJSON: function() {
         this.set("state", this.getState());
         return _.clone(this.attributes);
       },
-      toJSON: function() {
-        console.log("toJSON called!!!", _.pick(this.attributes, this.attrWhitelist));
-        return _.pick(this.attributes, this.attrWhitelist);
-      },
+      /*
+      		toJSON: ->
+      			console.log "toJSON called!!!", _.pick( @attributes, @attrWhitelist )
+      			_.pick( @attributes, @attrWhitelist )
+      */
+
       cleanUp: function() {
         return this.off();
       }

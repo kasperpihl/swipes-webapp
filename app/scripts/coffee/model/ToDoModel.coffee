@@ -33,7 +33,7 @@ define ["momentjs"], ->
 			notes: ""
 			location: undefined
 			priority: 0
-			owner: Parse.User.current().id
+			owner: Parse.User.current()
 			deleted: no
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
@@ -47,7 +47,7 @@ define ["momentjs"], ->
 			@reviveDate "repeatDate"
 
 			# If model was created as a duplicate/repeat task, set up the new repeatDate
-			if @get( "repeatOption" ) isnt "never" then @updateRepeatDate()
+			@updateRepeatDate() unless @get( "repeatOption" ) is "never"
 
 			@setScheduleStr()
 			@setTimeStr()
@@ -125,7 +125,6 @@ define ["momentjs"], ->
 
 			now = moment()
 			parsedDate = moment schedule
-
 
 			# If difference is more than 1 week, we want different formatting
 			if Math.abs( parsedDate.diff( now, "days" ) ) >= 7
@@ -265,11 +264,13 @@ define ["momentjs"], ->
 			else
 				throw new Error "You're trying to repeat a task that doesn't have a repeat date"
 				return
-		toFullJSON: ->
+		toJSON: ->
 			@set( "state", @getState() )
 			_.clone @attributes
+		###
 		toJSON: ->
 			console.log "toJSON called!!!", _.pick( @attributes, @attrWhitelist )
 			_.pick( @attributes, @attrWhitelist )
+		###
 		cleanUp: ->
 			@off()
