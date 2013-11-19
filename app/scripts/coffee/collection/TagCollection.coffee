@@ -1,9 +1,14 @@
-define ["underscore", "backbone"], (_, Backbone) ->
-	Backbone.Collection.extend
+define ["underscore", "model/TagModel"], (_, TagModel) ->
+	Parse.Collection.extend
+		model: TagModel
 		initialize: ->
+			@setQuery()
 			@getTagsFromTasks()
 			@on( "remove", @handleTagDeleted, @ )
 			@on( "add", @validateTag, @ )
+		setQuery: ->
+			@query = new Parse.Query TagModel
+			@query.equalTo( "owner", Parse.User.current() )
 		getTagsFromTasks: ->
 			tags = []
 			swipy.todos.each (m) ->

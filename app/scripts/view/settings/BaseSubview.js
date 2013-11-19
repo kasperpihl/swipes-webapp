@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "gsap"], function(_, Backbone, TweenLite) {
-    return Backbone.View.extend({
+    return Parse.View.extend({
       tagName: "article",
       initialize: function() {
         this.setTemplate();

@@ -1,5 +1,5 @@
 define ["underscore", "backbone"], (_, Backbone) ->
-	Backbone.View.extend
+	Parse.View.extend
 		el: "#add-task"
 		events:
 			"submit": "triggerAddTask"

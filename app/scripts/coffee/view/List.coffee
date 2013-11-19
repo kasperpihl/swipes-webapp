@@ -5,7 +5,7 @@ define [
 	"view/list/TouchTask"
 	"text!templates/todo-list.html"
 	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
-	Backbone.View.extend
+	Parse.View.extend
 		initialize: ->
 			# This deferred is resolved after view has been transitioned in
 			@transitionDeferred = new $.Deferred()

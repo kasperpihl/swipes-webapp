@@ -1,12 +1,18 @@
 (function() {
   var __slice = [].slice;
 
-  define(["underscore", "backbone"], function(_, Backbone) {
-    return Backbone.Collection.extend({
+  define(["underscore", "model/TagModel"], function(_, TagModel) {
+    return Parse.Collection.extend({
+      model: TagModel,
       initialize: function() {
+        this.setQuery();
         this.getTagsFromTasks();
         this.on("remove", this.handleTagDeleted, this);
         return this.on("add", this.validateTag, this);
+      },
+      setQuery: function() {
+        this.query = new Parse.Query(TagModel);
+        return this.query.equalTo("owner", Parse.User.current());
       },
       getTagsFromTasks: function() {
         var tagObjs, tagname, tags;

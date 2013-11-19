@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "text!templates/task-editor.html", "view/editor/TagEditor"], function(_, Backbone, TaskEditorTmpl, TagEditor) {
-    return Backbone.View.extend({
+    return Parse.View.extend({
       tagName: "article",
       className: "task-editor",
       events: {

@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, TagEditorOverlay) ->
-	Backbone.View.extend
+	Parse.View.extend
 		el: ".action-bar"
 		events:
 			"click .edit": "editTask"

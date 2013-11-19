@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "view/list/TagEditorOverlay"], function(_, Backbone, TagEditorOverlay) {
-    return Backbone.View.extend({
+    return Parse.View.extend({
       el: ".action-bar",
       events: {
         "click .edit": "editTask",

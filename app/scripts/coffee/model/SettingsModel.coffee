@@ -1,26 +1,26 @@
 define ["underscore", "backbone"], (_, Backbone) ->
-	Backbone.Model.extend
-		url: "test"
-		defaults: 
+	Parse.Object.extend
+		className: "Settings"
+		defaults:
 			snoozes:
-				laterTodayDelay: 
+				laterTodayDelay:
 					hours: 3
 					minutes: 0
-				weekday: 
-					morning: 
+				weekday:
+					morning:
 						hour: 9
 						minute: 0
-					evening: 
+					evening:
 						hour: 18
 						minute: 0
-					startDay: 
+					startDay:
 						name: "Monday"
 						number: 1 # Sunday, monday is 1
-				weekend: 
-					morning: 
+				weekend:
+					morning:
 						hour: 10
 						minute: 0
-					startDay: 
+					startDay:
 						name: "Saturday"
 						number: 6 # Saturday
 			hasPlus: no

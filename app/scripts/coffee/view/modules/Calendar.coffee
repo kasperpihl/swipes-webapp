@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "clndr"], (_, Backbone, CalendarTmpl) ->
-	Backbone.View.extend
+	Parse.View.extend
 		tagName: "div"
 		className: "calendar-wrap"
 		initialize: ->

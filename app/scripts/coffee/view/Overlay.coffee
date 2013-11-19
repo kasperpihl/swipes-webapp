@@ -1,5 +1,5 @@
 define ["backbone"], (Backbone) ->
-	Backbone.View.extend
+	Parse.View.extend
 		tagName: 'article'
 		className: 'overlay'
 		events:

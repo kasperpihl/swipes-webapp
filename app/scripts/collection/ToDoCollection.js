@@ -1,25 +1,3 @@
-/*
-
-var todoModel = Parse.Object.extend('ToDo');
-var todoCollectionQuery = new Parse.Query(taskModel);
-taskCollectionQuery.equalTo('owner',Parse.User.current());
-
-App.collections.ToDos = Parse.Collection.extend({
-	model: todoModel,
-	query: todoCollectionQuery
-});
-
-var tagModel = Parse.Object.extend('Tag');
-var tagCollectionQuery = new Parse.Query(tagModel);
-tagCollectionQuery.equalTo('owner',Parse.User.current());
-
-App.collections.Tags = Parse.Collection.extend({
-	model: tagModel,
-	query: tagCollectionQuery
-});
-*/
-
-
 (function() {
   define(["model/ToDoModel"], function(ToDoModel) {
     return Parse.Collection.extend({

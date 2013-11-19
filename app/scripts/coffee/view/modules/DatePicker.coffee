@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "view/modules/Calendar", "view/modules/TimeSlider", "text!templates/datepicker.html"], (_, Backbone, CalendarView, TimeSliderView, DatePickerTmpl) ->
-	Backbone.View.extend
+	Parse.View.extend
 		className: "date-picker"
 		initialize: ->
 			@setTemplate()

@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.html"], function(_, Backbone, TweenLite, TimelineLite, TaskTmpl) {
-    return Backbone.View.extend({
+    return Parse.View.extend({
       tagName: "li",
       initialize: function() {
         _.bindAll(this, "onSelected", "setBounds", "toggleSelected", "edit", "handleAction");

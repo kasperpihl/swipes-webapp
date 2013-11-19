@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"], function(_, Backbone, Draggable, SliderControl) {
-    return Backbone.View.extend({
+    return Parse.View.extend({
       tagName: "div",
       className: "range-slider lobster",
       initialize: function() {

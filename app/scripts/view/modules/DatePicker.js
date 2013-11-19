@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "view/modules/Calendar", "view/modules/TimeSlider", "text!templates/datepicker.html"], function(_, Backbone, CalendarView, TimeSliderView, DatePickerTmpl) {
-    return Backbone.View.extend({
+    return Parse.View.extend({
       className: "date-picker",
       initialize: function() {
         this.setTemplate();

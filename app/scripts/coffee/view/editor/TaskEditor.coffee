@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "text!templates/task-editor.html", "view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, TagEditor) ->
-	Backbone.View.extend
+	Parse.View.extend
 		tagName: "article"
 		className: "task-editor"
 		events:

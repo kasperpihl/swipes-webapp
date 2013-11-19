@@ -1,5 +1,5 @@
 define ["underscore", "backbone"], (_, Backbone) ->
-	Backbone.View.extend
+	Parse.View.extend
 		events:
 			"click .add-new-tag": "toggleTagPool"
 			"submit .add-tag": "createTag"

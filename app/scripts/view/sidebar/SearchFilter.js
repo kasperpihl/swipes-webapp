@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone"], function(_, Backbone) {
-    return Backbone.View.extend({
+    return Parse.View.extend({
       events: {
         "submit form": "search",
         "keyup input": "search",

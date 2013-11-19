@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "gsap"], (_, Backbone, TweenLite) ->
-	Backbone.View.extend
+	Parse.View.extend
 		tagName: "article"
 		initialize: ->
 			@setTemplate()

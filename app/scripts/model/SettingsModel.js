@@ -1,7 +1,7 @@
 (function() {
   define(["underscore", "backbone"], function(_, Backbone) {
-    return Backbone.Model.extend({
-      url: "test",
+    return Parse.Object.extend({
+      className: "Settings",
       defaults: {
         snoozes: {
           laterTodayDelay: {
