@@ -114,7 +114,7 @@
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             tagName = _ref[_i];
-            _results.push(swipy.tags.create({
+            _results.push(swipy.tags.add({
               title: tagName
             }));
           }

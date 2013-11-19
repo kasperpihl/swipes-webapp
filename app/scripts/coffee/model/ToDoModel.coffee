@@ -116,7 +116,7 @@ define ["momentjs"], ->
 
 		syncTags: ->
 			if @has( "tags" ) and swipy?.tags
-				swipy.tags.create { title: tagName } for tagName in @get "tags"
+				swipy.tags.add { title: tagName } for tagName in @get "tags"
 
 		setScheduleStr: ->
 			schedule = @get "schedule"
