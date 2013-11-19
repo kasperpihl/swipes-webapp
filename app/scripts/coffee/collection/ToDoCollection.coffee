@@ -31,11 +31,11 @@ define ["model/ToDoModel"], (ToDoModel) ->
 			@query = new Parse.Query ToDoModel
 			@query.equalTo( "user", Parse.User.current() )
 		getActive: ->
-			@filter (m) => m.getState() is "active"
+			@filter (m) -> m.getState() is "active"
 		getScheduled: ->
-			@filter (m) => m.getState() is "scheduled"
+			@filter (m) -> m.getState() is "scheduled"
 		getCompleted: ->
-			@filter (m) => m.getState() is "completed"
+			@filter (m) -> m.getState() is "completed"
 		getActiveList: ->
 			route = swipy.router.getCurrRoute()
 			switch route

@@ -6,15 +6,14 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			"keyup input": "resizeText"
 		initialize: ->
 			@input = @$el.find "input"
+			_.bindAll( @, "resizeText" )
+			$(window).on( "resize.taskinput", @resizeText )
 		triggerAddTask: (e) ->
 			e.preventDefault()
 			return if @input.val() is ""
 
-			_.bindAll( @, "resizeText" )
-
 			Backbone.trigger( "create-task", @input.val() )
-			@input.val("")
-			$(window).on( "resize.taskinput", @resizeText )
+			@input.val ""
 		getFontSizeRange: ->
 			if window.innerHeight < 768
 				{ min: 20, max: 40, charLimit: 20, minChars: 8 }

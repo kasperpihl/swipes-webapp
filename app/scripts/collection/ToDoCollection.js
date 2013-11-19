@@ -37,19 +37,16 @@ App.collections.Tags = Parse.Collection.extend({
         return this.query.equalTo("user", Parse.User.current());
       },
       getActive: function() {
-        var _this = this;
         return this.filter(function(m) {
           return m.getState() === "active";
         });
       },
       getScheduled: function() {
-        var _this = this;
         return this.filter(function(m) {
           return m.getState() === "scheduled";
         });
       },
       getCompleted: function() {
-        var _this = this;
         return this.filter(function(m) {
           return m.getState() === "completed";
         });

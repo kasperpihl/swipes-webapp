@@ -7,17 +7,17 @@
         "keyup input": "resizeText"
       },
       initialize: function() {
-        return this.input = this.$el.find("input");
+        this.input = this.$el.find("input");
+        _.bindAll(this, "resizeText");
+        return $(window).on("resize.taskinput", this.resizeText);
       },
       triggerAddTask: function(e) {
         e.preventDefault();
         if (this.input.val() === "") {
           return;
         }
-        _.bindAll(this, "resizeText");
         Backbone.trigger("create-task", this.input.val());
-        this.input.val("");
-        return $(window).on("resize.taskinput", this.resizeText);
+        return this.input.val("");
       },
       getFontSizeRange: function() {
         if (window.innerHeight < 768) {
