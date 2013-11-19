@@ -30,7 +30,8 @@ require.config({
         'requirejs-text': '../bower_components/requirejs-text/text',
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
         clndr: '../bower_components/clndr/src/clndr',
-        hammerjs: '../bower_components/hammerjs/dist/jquery.hammer'
+        hammerjs: '../bower_components/hammerjs/dist/jquery.hammer',
+        'parse-js-sdk': '../bower_components/parse-js-sdk/lib/parse'
     },
     shim: {
         bootstrapAffix: {
@@ -118,17 +119,20 @@ require.config({
     }
 });
 
-// First check that the user is actually logged in
-Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" )
-if (Parse.User.current()) {
-    require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, DebugHelper) {
-        'use strict';
+require(["parse-js-sdk"], function() {
+    // First check that the user is actually logged in
+    Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" )
+    if (Parse.User.current()) {
+        require(["jquery", "app", "DebugHelper", "plugins/log"], function ($, App, DebugHelper) {
+            'use strict';
 
-        window.$ = window.jQuery = $;
+            window.$ = window.jQuery = $;
 
-        window.swipy = new App();
-        window.debugHelper = new DebugHelper();
-    });
-} else {
-    location.pathname = "/login/"
-}
+            window.swipy = new App();
+            window.debugHelper = new DebugHelper();
+        });
+    } else {
+        location.pathname = "/login/"
+    }
+});
+
