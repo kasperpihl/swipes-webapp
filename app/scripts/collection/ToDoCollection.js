@@ -128,9 +128,7 @@ App.collections.Tags = Parse.Collection.extend({
         }
       },
       spawnRepeatTask: function(model, completionDate) {
-        if (model.get("repeatDate")) {
-          return this.add(model.getRepeatableDuplicate().attributes);
-        }
+        return console.warn("Repeating tasks currently disabled");
       }
     });
   });

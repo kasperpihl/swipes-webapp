@@ -71,4 +71,7 @@ define ["model/ToDoModel"], (ToDoModel) ->
 					model.set( "order", model.get( "order" ) - bumps )
 
 		spawnRepeatTask: (model, completionDate) ->
-			if model.get "repeatDate" then @add model.getRepeatableDuplicate().attributes
+			console.warn "Repeating tasks currently disabled"
+			# if model.get "repeatDate"
+				# console.log "Spawning a duplicate task for repeating"
+				# @create model.getRepeatableDuplicate().attributes
