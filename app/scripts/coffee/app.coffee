@@ -1,4 +1,5 @@
 define [
+	"backbone"
 	"model/ClockWork"
 	"controller/ViewController"
 	"router/MainRouter"
@@ -11,14 +12,22 @@ define [
 	"controller/FilterController"
 	"controller/SettingsController"
 	"controller/ErrorController"
-	], (ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
+	], (Backbone, ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
 	class Swipes
 		constructor: ->
+			@hackParseAPI()
+
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()
 			@updateTimer = new ClockWork()
 			@todos.on( "reset", @init, @ )
 			@fetchTodos()
+
+		hackParseAPI: ->
+			# Add missing mehods to Parse
+			for method in ["where", "findWhere"]
+				if not Parse.Collection[method]?
+					Parse.Collection::[method] = Backbone.Collection::[method]
 
 		init: ->
 			@cleanUp()

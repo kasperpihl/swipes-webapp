@@ -1,14 +1,30 @@
 (function() {
-  define(["model/ClockWork", "controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController"], function(ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
+  define(["backbone", "model/ClockWork", "controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController"], function(Backbone, ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
+        this.hackParseAPI();
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
         this.todos.on("reset", this.init, this);
         this.fetchTodos();
       }
+
+      Swipes.prototype.hackParseAPI = function() {
+        var method, _i, _len, _ref, _results;
+        _ref = ["where", "findWhere"];
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          method = _ref[_i];
+          if (Parse.Collection.prototype[method] == null) {
+            _results.push(Parse.Collection.prototype[method] = Backbone.Collection.prototype[method]);
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
 
       Swipes.prototype.init = function() {
         this.cleanUp();
