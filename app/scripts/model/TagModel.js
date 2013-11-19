@@ -5,9 +5,6 @@
       defaults: {
         title: "",
         deleted: false
-      },
-      initialize: function() {
-        return console.log("wtf?");
       }
     });
   });
