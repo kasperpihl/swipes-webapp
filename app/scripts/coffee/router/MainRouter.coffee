@@ -1,5 +1,5 @@
 define ['backbone'], (Backbone) ->
-	MainRouter = Backbone.Router.extend
+	MainRouter = Parse.Router.extend
 		routes:
 			"settings(/:id)": "settings"
 			"edit/:id": "edit"

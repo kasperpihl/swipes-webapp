@@ -1,7 +1,7 @@
 (function() {
   define(['backbone'], function(Backbone) {
     var MainRouter;
-    return MainRouter = Backbone.Router.extend({
+    return MainRouter = Parse.Router.extend({
       routes: {
         "settings(/:id)": "settings",
         "edit/:id": "edit",
