@@ -108,7 +108,7 @@ define [
 				if view? then do ->
 					m = task
 					view.swipeRight( "completed" ).then ->
-						m.set( "completionDate", new Date() )
+						m.save( "completionDate", new Date() )
 
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
@@ -120,7 +120,7 @@ define [
 					view.swipeRight("todo").then ->
 						oneSecondAgo = new Date()
 						oneSecondAgo.setSeconds oneSecondAgo.getSeconds() - 1
-						m.set { completionDate: null, schedule: oneSecondAgo }
+						m.save { completionDate: null, schedule: oneSecondAgo }
 
 		scheduleTasks: (tasks) ->
 			deferredArr = []

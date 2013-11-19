@@ -19,6 +19,6 @@ define ["view/List"], (ListView) ->
 				if view? then do ->
 					m = task
 					view.swipeLeft("todo").then =>
-						m.set
+						m.save
 							completionDate: null
 							schedule: m.getDefaultSchedule()

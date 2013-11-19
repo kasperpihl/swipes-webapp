@@ -126,7 +126,7 @@
               var m;
               m = task;
               return view.swipeRight("completed").then(function() {
-                return m.set("completionDate", new Date());
+                return m.save("completionDate", new Date());
               });
             })());
           } else {
@@ -149,7 +149,7 @@
                 var oneSecondAgo;
                 oneSecondAgo = new Date();
                 oneSecondAgo.setSeconds(oneSecondAgo.getSeconds() - 1);
-                return m.set({
+                return m.save({
                   completionDate: null,
                   schedule: oneSecondAgo
                 });

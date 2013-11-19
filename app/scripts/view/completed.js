@@ -43,7 +43,7 @@
                 _this = this;
               m = task;
               return view.swipeLeft("todo").then(function() {
-                return m.set({
+                return m.save({
                   completionDate: null,
                   schedule: m.getDefaultSchedule()
                 });
