@@ -53,7 +53,7 @@
           task.unset("schedule", {
             silent: true
           });
-          task.set({
+          task.save({
             schedule: date,
             completionDate: null
           });

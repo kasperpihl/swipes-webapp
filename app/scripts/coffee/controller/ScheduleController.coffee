@@ -35,7 +35,7 @@ define ["underscore", "backbone", "model/ScheduleModel"], (_, Backbone, Schedule
 
 			for task in @currentTasks
 				task.unset( "schedule", {silent: yes} )
-				task.set { schedule: date, completionDate: null }
+				task.save { schedule: date, completionDate: null }
 
 			@view.currentTasks = undefined
 			@view.hide()
