@@ -14,11 +14,11 @@
       }
 
       ListSortController.prototype.enableTouchListners = function() {
-        return this.model.container.hammer().on("hold", "ol li", this.activate);
+        return $(this.model.container[0]).hammer().on("hold", "ol li", this.activate);
       };
 
       ListSortController.prototype.disableTouchListeners = function() {
-        return this.model.container.hammer().off("hold", this.activate);
+        return $(this.model.container[0]).hammer().off("hold", this.activate);
       };
 
       ListSortController.prototype.activate = function(e) {
