@@ -21,6 +21,7 @@
         this.sidebar = new SidebarController();
         this.filter = new FilterController();
         this.settings = new SettingsController();
+        this.tags.fetch();
         return Parse.history.start({
           pushState: false
         });

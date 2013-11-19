@@ -33,6 +33,8 @@ define [
 			@filter = new FilterController()
 			@settings = new SettingsController()
 
+			@tags.fetch()
+
 			Parse.history.start( pushState: no )
 		cleanUp: ->
 			@tags?.destroy()
