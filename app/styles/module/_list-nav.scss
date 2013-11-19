@@ -26,9 +26,14 @@
 
 		@include transition(color 0.15s ease-out);
 
-		&:hover {
+		&:hover, &:focus {
 			text-decoration: none;
 			color: $gray-light;
+			outline: none;
+
+			&.icon-schedule { text-shadow: 0 0 8px $gray-light	; }
+			&.icon-todo { text-shadow: 0 0 8px $gray-light; }
+			&.icon-checkmark { text-shadow: 0 0 8px $gray-light; }
 		}
 	}
 
