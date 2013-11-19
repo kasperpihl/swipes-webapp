@@ -34,7 +34,7 @@ App.collections.Tags = Parse.Collection.extend({
       },
       setQuery: function() {
         this.query = new Parse.Query(ToDoModel);
-        return this.query.equalTo("user", Parse.User.current());
+        return this.query.equalTo("owner", Parse.User.current());
       },
       getActive: function() {
         return this.filter(function(m) {

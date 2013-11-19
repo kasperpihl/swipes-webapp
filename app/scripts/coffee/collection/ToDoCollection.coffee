@@ -29,7 +29,7 @@ define ["model/ToDoModel"], (ToDoModel) ->
 			@on( "change:completionDate", @spawnRepeatTask )
 		setQuery: ->
 			@query = new Parse.Query ToDoModel
-			@query.equalTo( "user", Parse.User.current() )
+			@query.equalTo( "owner", Parse.User.current() )
 		getActive: ->
 			@filter (m) -> m.getState() is "active"
 		getScheduled: ->
