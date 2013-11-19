@@ -33,7 +33,7 @@ define [
 			@filter = new FilterController()
 			@settings = new SettingsController()
 
-			Backbone.history.start( pushState: no )
+			Parse.history.start( pushState: no )
 		cleanUp: ->
 			@tags?.destroy()
 			@viewController?.destroy()
@@ -46,6 +46,6 @@ define [
 			@settings?.destroy()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
-			if Backbone.History.started then Backbone.history.stop()
+			if Parse.History.started then Parse.history.stop()
 		fetchTodos: ->
 			@todos.fetch()

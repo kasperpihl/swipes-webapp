@@ -21,7 +21,7 @@
         this.sidebar = new SidebarController();
         this.filter = new FilterController();
         this.settings = new SettingsController();
-        return Backbone.history.start({
+        return Parse.history.start({
           pushState: false
         });
       };
@@ -55,8 +55,8 @@
         if ((_ref8 = this.settings) != null) {
           _ref8.destroy();
         }
-        if (Backbone.History.started) {
-          return Backbone.history.stop();
+        if (Parse.History.started) {
+          return Parse.history.stop();
         }
       };
 
