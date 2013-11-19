@@ -31,12 +31,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 			@createTagEditor()
 			return @el
 		save: ->
-			opts = {
-				success: => swipy.router.back()
-				error: -> swipy.errors.throw "Something went wrong. Please try again in a little bit.", arguments
-			}
-
-			@model.save( null, opts )
+			swipy.router.back()
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->

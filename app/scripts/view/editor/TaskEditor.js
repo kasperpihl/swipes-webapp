@@ -42,17 +42,7 @@
         return this.el;
       },
       save: function() {
-        var opts,
-          _this = this;
-        opts = {
-          success: function() {
-            return swipy.router.back();
-          },
-          error: function() {
-            return swipy.errors["throw"]("Something went wrong. Please try again in a little bit.", arguments);
-          }
-        };
-        return this.model.save(null, opts);
+        return swipy.router.back();
       },
       reschedule: function() {
         return Backbone.trigger("show-scheduler", [this.model]);
