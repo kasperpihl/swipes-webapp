@@ -6,51 +6,62 @@
       model: TagModel,
       initialize: function() {
         this.setQuery();
-        this.getTagsFromTasks();
         this.on("remove", this.handleTagDeleted, this);
-        return this.on("add", this.validateTag, this);
+        this.on("add", this.handleAddTag, this);
+        return this.once("reset", this.getTagsFromTasks, this);
       },
       setQuery: function() {
         this.query = new Parse.Query(TagModel);
         return this.query.equalTo("owner", Parse.User.current());
       },
       getTagsFromTasks: function() {
-        var tagObjs, tagname, tags;
+        var m, tag, tags, _i, _j, _len, _len1, _ref, _ref1;
         tags = [];
-        swipy.todos.each(function(m) {
-          var tag, _i, _len, _ref, _results;
+        _ref = swipy.todos.models;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          m = _ref[_i];
           if (m.has("tags")) {
-            _ref = m.get("tags");
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              tag = _ref[_i];
-              _results.push(tags.push(tag));
+            _ref1 = m.get("tags");
+            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+              tag = _ref1[_j];
+              if (this.validateTag(tag)) {
+                tags.push(tag);
+              }
             }
-            return _results;
           }
-        });
-        tags = _.unique(tags);
-        tagObjs = (function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = tags.length; _i < _len; _i++) {
-            tagname = tags[_i];
-            _results.push({
-              title: tagname
-            });
-          }
-          return _results;
-        })();
-        return this.reset(tagObjs);
+        }
+        this.reset(tags);
+        return this.saveNewTags();
       },
-      validateTag: function(model) {
-        if (this.where({
-          title: model.get("title")
-        }).length > 1) {
+      saveNewTags: function() {
+        var model, _i, _len, _ref, _results;
+        _ref = this.models;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          model = _ref[_i];
+          if (model.isNew()) {
+            _results.push(console.log(model.get("title") + " is new!"));
+          }
+        }
+        return _results;
+      },
+      handleAddTag: function(model) {
+        if (!this.validateTag(model)) {
           return this.remove(model, {
             silent: true
           });
         }
+      },
+      validateTag: function(model) {
+        if (!model.has("title")) {
+          return false;
+        }
+        if (this.where({
+          title: model.get("title")
+        }).length > 1) {
+          return false;
+        }
+        return true;
       },
       /**
       		 * Looks at a tag (Or an array of tags), finds all the tasks that are tagged with those tags.
