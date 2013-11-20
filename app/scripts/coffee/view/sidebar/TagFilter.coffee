@@ -21,8 +21,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				Backbone.trigger( "apply-filter", "tag", tag )
 			else
 				Backbone.trigger( "remove-filter", "tag", tag )
-		addTag: (tagName) ->
-			swipy.tags.add { title: tagName }
 		removeTag: (e) ->
 			e.stopPropagation()
 			tagName = $.trim $( e.currentTarget.parentNode ).text()
@@ -47,7 +45,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				else models = swipy.todos.getCompleted()
 
 			for model in models when model.has "tags"
-				tags.push tag for tag in model.get "tags"
+				for tag in model.get "tags"
+					tags.push tag if swipy.tags.validateTag tag
 
 			return _.unique tags
 		getValidatedTags: ->
@@ -63,10 +62,11 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			return @
 		renderTag: (tag, list) ->
-			if swipy.filter? and _.contains( swipy.filter.tagsFilter, tag )
-				list.append "<li class='selected'>#{ tag }</li>"
+			tagName = tag.get "title"
+			if swipy.filter? and _.contains( swipy.filter.tagsFilter, tagName )
+				list.append "<li class='selected'>#{ tagName }</li>"
 			else
-				list.append "<li>#{ tag }</li>"
+				list.append "<li>#{ tagName }</li>"
 		destroy: ->
 			@stopListening()
 			@undelegateEvents()

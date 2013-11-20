@@ -34,11 +34,6 @@
           return Backbone.trigger("remove-filter", "tag", tag);
         }
       },
-      addTag: function(tagName) {
-        return swipy.tags.add({
-          title: tagName
-        });
-      },
       removeTag: function(e) {
         var tag, tagName, wasSelected;
         e.stopPropagation();
@@ -82,7 +77,9 @@
             _ref = model.get("tags");
             for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
               tag = _ref[_j];
-              tags.push(tag);
+              if (swipy.tags.validateTag(tag)) {
+                tags.push(tag);
+              }
             }
           }
         }
@@ -107,10 +104,12 @@
         return this;
       },
       renderTag: function(tag, list) {
-        if ((swipy.filter != null) && _.contains(swipy.filter.tagsFilter, tag)) {
-          return list.append("<li class='selected'>" + tag + "</li>");
+        var tagName;
+        tagName = tag.get("title");
+        if ((swipy.filter != null) && _.contains(swipy.filter.tagsFilter, tagName)) {
+          return list.append("<li class='selected'>" + tagName + "</li>");
         } else {
-          return list.append("<li>" + tag + "</li>");
+          return list.append("<li>" + tagName + "</li>");
         }
       },
       destroy: function() {
