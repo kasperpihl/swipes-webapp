@@ -29,6 +29,21 @@
         }
         return _.intersection.apply(_, tagLists);
       },
+      getTagFromName: function(tagName) {
+        var tag;
+        tag = swipy.tags.findWhere({
+          title: tagName
+        });
+        if (tag) {
+          return tag;
+        }
+        swipy.tags.create({
+          title: tagName
+        });
+        return swipy.tags.findWhere({
+          title: tagName
+        });
+      },
       render: function() {
         this.$el.html(this.template({
           allTags: swipy.tags.toJSON(),
@@ -68,17 +83,18 @@
         return this.addTagToModels(tagName);
       },
       addTagToModels: function(tagName, addToCollection) {
-        var model, _i, _len, _ref;
+        var model, tag, _i, _len, _ref;
         if (addToCollection == null) {
           addToCollection = true;
         }
         if (addToCollection && _.contains(swipy.tags.pluck("title"), tagName)) {
           return alert("That tag already exists");
         } else {
+          tag = this.getTagFromName(tagName);
           _ref = this.options.models;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             model = _ref[_i];
-            this.addTagToModel(tagName, model);
+            this.addTagToModel(tag, model);
           }
           if (addToCollection) {
             swipy.tags.getTagsFromTasks();
@@ -86,20 +102,27 @@
           return this.render();
         }
       },
-      addTagToModel: function(tagName, model) {
+      modelHasTag: function(model, tag) {
+        var tagName;
+        tagName = tag.get("title");
+        return !!_.filter(model.get("tag"), function(t) {
+          return t.get("title") === tagName;
+        }).length;
+      },
+      addTagToModel: function(tag, model) {
         var tags;
         if (model.has("tags")) {
-          tags = model.get("tags");
-          if (_.contains(tags, tagName)) {
+          if (this.modelHasTag(model, tag)) {
             return;
           }
-          tags.push(tagName);
+          tags = model.get("tags");
+          tags.push(tag);
           model.unset("tags", {
             silent: true
           });
           return model.save("tags", tags);
         } else {
-          return model.save("tags", [tagName]);
+          return model.save("tags", [tag]);
         }
       },
       removeTagFromModels: function(tag) {

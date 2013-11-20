@@ -23,6 +23,14 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 
 			# Then, go over each task and find out if there are any tags shared by all of them
 			_.intersection tagLists...
+		getTagFromName: (tagName) ->
+			# First see if tag exists
+			tag = swipy.tags.findWhere { title: tagName }
+			if tag then return tag
+
+			# Tag doesn't exist. Create it and then return it
+			swipy.tags.create { title: tagName }
+			return swipy.tags.findWhere { title: tagName }
 		render: () ->
 			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
 
@@ -55,18 +63,22 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			if addToCollection and _.contains( swipy.tags.pluck( "title" ), tagName )
 				return alert "That tag already exists"
 			else
-				@addTagToModel( tagName, model ) for model in @options.models
+				tag = @getTagFromName tagName
+				@addTagToModel( tag, model ) for model in @options.models
 				if addToCollection then swipy.tags.getTagsFromTasks()
 				@render()
-		addTagToModel: (tagName, model) ->
+		modelHasTag: (model, tag) ->
+			tagName = tag.get "title"
+			return !!_.filter( model.get( "tag" ), (t) -> t.get( "title" ) is tagName ).length
+		addTagToModel: (tag, model) ->
 			if model.has "tags"
+				if @modelHasTag( model, tag ) then return
 				tags = model.get "tags"
-				if _.contains( tags, tagName ) then return
-				tags.push tagName
+				tags.push tag
 				model.unset( "tags", { silent: yes } )
 				model.save( "tags", tags )
 			else
-				return model.save( "tags", [tagName] )
+				return model.save( "tags", [tag] )
 		removeTagFromModels: (tag) ->
 			for model in @options.models
 				tags = model.get "tags"
