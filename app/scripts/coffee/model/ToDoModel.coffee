@@ -51,7 +51,9 @@ define ["momentjs"], ->
 
 			@setScheduleStr()
 			@setTimeStr()
-			@syncTags()
+
+			@on "change:tags", (me, tags) =>
+				if tags.length then @syncTags tags
 
 			@on "change:schedule", =>
 				@setScheduleStr()
@@ -114,19 +116,23 @@ define ["momentjs"], ->
 			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
 			return moment.calendar().match( /\w+/ )[0]
 
-		syncTags: ->
-			if @has "tags"
-				tags = @get "tags"
-				validatedTags = (tag for tag in tags when tag.has "title" )
+		syncTags: (tags) ->
+			pointers = ( tag.id for tag in tags when !tag.has "title" )
+			if pointers.length
+				# remove pointers
+				tags = _.reject tags, (t) -> _.contains( pointers, t.id )
 
-				if tags.length isnt validatedTags.length
-					@set( "tags", validatedTags, { silent: yes } )
+				actualTags = @getTagsFromPointers pointers
+				tags.push tag for tag in actualTags
 
-				console.log "Validated tags are ", validatedTags
+				@set( "tags", tags, { silent: yes } )
+		getTagsFromPointers: (pointers) ->
+			result = []
+			for tagid in pointers
+				tag = _.findWhere( swipy.tags.models, { id: tagid } )
+				if tag then result.push tag
 
-				if validatedTags.length and swipy?.tags
-					swipy.tags.add tag for tag in @get "tags"
-
+			return result
 		setScheduleStr: ->
 			schedule = @get "schedule"
 			if !schedule

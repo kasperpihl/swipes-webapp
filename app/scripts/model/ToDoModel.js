@@ -37,7 +37,11 @@
         }
         this.setScheduleStr();
         this.setTimeStr();
-        this.syncTags();
+        this.on("change:tags", function(me, tags) {
+          if (tags.length) {
+            return _this.syncTags(tags);
+          }
+        });
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
@@ -107,37 +111,46 @@
       getDayWithoutTime: function(moment) {
         return moment.calendar().match(/\w+/)[0];
       },
-      syncTags: function() {
-        var tag, tags, validatedTags, _i, _len, _ref, _results;
-        if (this.has("tags")) {
-          tags = this.get("tags");
-          validatedTags = (function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = tags.length; _i < _len; _i++) {
-              tag = tags[_i];
-              if (tag.has("title")) {
-                _results.push(tag);
-              }
+      syncTags: function(tags) {
+        var actualTags, pointers, tag, _i, _len;
+        pointers = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = tags.length; _i < _len; _i++) {
+            tag = tags[_i];
+            if (!tag.has("title")) {
+              _results.push(tag.id);
             }
-            return _results;
-          })();
-          if (tags.length !== validatedTags.length) {
-            this.set("tags", validatedTags, {
-              silent: true
-            });
           }
-          console.log("Validated tags are ", validatedTags);
-          if (validatedTags.length && (typeof swipy !== "undefined" && swipy !== null ? swipy.tags : void 0)) {
-            _ref = this.get("tags");
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              tag = _ref[_i];
-              _results.push(swipy.tags.add(tag));
-            }
-            return _results;
+          return _results;
+        })();
+        if (pointers.length) {
+          tags = _.reject(tags, function(t) {
+            return _.contains(pointers, t.id);
+          });
+          actualTags = this.getTagsFromPointers(pointers);
+          for (_i = 0, _len = actualTags.length; _i < _len; _i++) {
+            tag = actualTags[_i];
+            tags.push(tag);
+          }
+          return this.set("tags", tags, {
+            silent: true
+          });
+        }
+      },
+      getTagsFromPointers: function(pointers) {
+        var result, tag, tagid, _i, _len;
+        result = [];
+        for (_i = 0, _len = pointers.length; _i < _len; _i++) {
+          tagid = pointers[_i];
+          tag = _.findWhere(swipy.tags.models, {
+            id: tagid
+          });
+          if (tag) {
+            result.push(tag);
           }
         }
+        return result;
       },
       setScheduleStr: function() {
         var dayWithoutTime, now, parsedDate, result, schedule;
