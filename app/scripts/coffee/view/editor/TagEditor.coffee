@@ -39,7 +39,7 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			tags = _.reject( @model.get( "tags" ), (t) -> t.get( "title" ) is tagName )
 
 			@model.unset( "tags", { silent: yes } )
-			@model.set( "tags", tags )
+			@model.save( "tags", tags )
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()

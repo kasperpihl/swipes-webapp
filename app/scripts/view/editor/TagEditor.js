@@ -51,7 +51,7 @@
         this.model.unset("tags", {
           silent: true
         });
-        return this.model.set("tags", tags);
+        return this.model.save("tags", tags);
       },
       createTag: function(e) {
         var tagName;
