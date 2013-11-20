@@ -5,7 +5,8 @@
     el: "#login",
     events: {
       "submit form": "handleSubmitForm",
-      "click #facebook-login": "facebookLogin"
+      "click #facebook-login": "facebookLogin",
+      "click .reset-password": "resetPassword"
     },
     facebookLogin: function(e) {
       return this.doAction("facebookLogin");
@@ -87,6 +88,20 @@
         });
       } else {
         return location.href = "/";
+      }
+    },
+    resetPassword: function() {
+      var email;
+      email = prompt("Which email did you register with?");
+      if (email) {
+        return Parse.User.requestPasswordReset(email, {
+          success: function() {
+            return alert("An email was sent to '" + email + "' with instructions on resetting your password");
+          },
+          error: function(error) {
+            return alert("Error: " + error.message);
+          }
+        });
       }
     },
     createUser: function(email, password) {

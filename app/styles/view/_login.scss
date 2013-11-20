@@ -100,7 +100,7 @@ html.login {
 		margin-bottom: emCalc(5px);
 	}
 
-	.lost-password {
+	.reset-password {
 		display: block;
 		color: #36705c;
 		margin-bottom: emCalc(35px);
@@ -158,7 +158,7 @@ html.login body.busy {
 		border-color: #97dcc6;
 	}
 
-	.lost-password, .facebook h3 {
+	.reset-password, .facebook h3 {
 		opacity: 0;
 	}
 }

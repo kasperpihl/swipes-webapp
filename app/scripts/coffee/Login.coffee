@@ -3,6 +3,7 @@ LoginView = Parse.View.extend
 	events:
 		"submit form": "handleSubmitForm"
 		"click #facebook-login": "facebookLogin"
+		"click .reset-password": "resetPassword"
 	facebookLogin: (e) -> @doAction "facebookLogin"
 	setBusyState: ->
 		$("body").addClass "busy"
@@ -54,6 +55,12 @@ LoginView = Parse.View.extend
 			location.href = "/"
 		else
 			location.href = "/"
+	resetPassword: ->
+		email = prompt "Which email did you register with?"
+		if email then Parse.User.requestPasswordReset( email, {
+			success: -> alert "An email was sent to '#{email}' with instructions on resetting your password"
+			error: (error) -> alert "Error: #{ error.message }"
+		})
 	createUser: (email, password) ->
 		user = new Parse.User()
 		user.set( "username", email )
