@@ -32,7 +32,12 @@ div[role=main] {
 	}
 
 	header.add-new {
-		margin: emCalc(5px) 0 emCalc(10px);
+		margin: emCalc(25px) 0 emCalc(10px);
+
+		@include breakpoint(max-width, emCalc(400px)) {
+			margin-top: emCalc(5px);
+		}
+
 		@include transition(margin 0.4s ease-in-out);
 		@include breakpoint(min-height, emCalc(768px)) { margin: emCalc(58px) 0 emCalc(43px); }
 
