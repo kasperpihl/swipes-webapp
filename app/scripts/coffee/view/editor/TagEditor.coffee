@@ -1,4 +1,4 @@
-define ["underscore", "backbone"], (_, Backbone) ->
+define ["underscore", "model/TagModel"], (_, TagModel) ->
 	Parse.View.extend
 		events:
 			"click .add-new-tag": "toggleTagPool"
@@ -32,35 +32,32 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			icon.addClass( if flag is on then "icon-plus" else "icon-minus" )
 
 		addTag: (e) ->
-			@addTagToModel $( e.currentTarget ).text()
+			@addTagToModel( $( e.currentTarget ).text(), no )
 
 		removeTag: (e) ->
-			tag = $.trim $( e.currentTarget ).text()
-			tags = _.without( @model.get( "tags" ), tag )
+			tagName = $.trim $(e.currentTarget).text()
+			tags = _.reject( @model.get( "tags" ), (t) -> t.get( "title" ) is tagName )
 
 			@model.unset( "tags", { silent: yes } )
 			@model.set( "tags", tags )
-
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
 			return if tagName is ""
 
 			@addTagToModel tagName
-
 		addTagToModel: (tagName, addToCollection = yes) ->
 			tags = @model.get( "tags" ) or []
-			if _.contains( tags, tagName ) then return alert "You've already added that tag"
 
-			tags.push tagName
+			if _.filter( tags, (t) -> t.get( "title" ) is tagName ).length
+				return alert "You've already added that tag"
+
+			tags.push new TagModel( title: tagName )
 			@model.unset( "tags", { silent: yes } )
+			@model.save( "tags", tags )
 
-			# This triggers re-rendering
-			@model.set( "tags", tags )
-
-			# If it's a new tag, add it to the stack
+			# If it's a new tag, add it to the stack. getTagsFromTasks will automatically save new tags.
 			if addToCollection then swipy.tags.getTagsFromTasks()
-
 		render: ->
 			@renderTags()
 			@renderTagPool()
@@ -73,8 +70,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			list = @$el.find " > .rounded-tags"
 			list.empty()
 
-			if @model.has "tags" then for tagname in @model.get "tags"
-				@renderTag( tagname, list, "selected" )
+			if @model.has "tags" then for tag in @model.get "tags"
+				@renderTag( tag.get( "title" ), list, "selected" )
 
 			icon = "<span class='" + ( if @toggled then "icon-minus" else "icon-plus" ) + "'></span>"
 			poolToggler = "
@@ -90,7 +87,11 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			list.empty()
 
 			allTags = swipy.tags.pluck "title"
-			unusedTags = if @model.has( "tags" ) then _.without( allTags, @model.get("tags")... ) else allTags
+			if @model.has "tags"
+				unusedTags = _.without( allTags, _.invoke( @model.get("tags"), "get", "title" )... )
+			else
+				unusedTags = allTags
+
 			@renderTag( tagname, list ) for tagname in unusedTags
 
 			tagInput = "
