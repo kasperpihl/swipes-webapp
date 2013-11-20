@@ -37,7 +37,7 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           task = _ref[_i];
           reject = true;
-          if (task.has("tags") && _.intersection(task.get("tags"), this.tagsFilter).length === this.tagsFilter.length) {
+          if (task.has("tags") && _.intersection(task.getTagStrList(), this.tagsFilter).length === this.tagsFilter.length) {
             reject = false;
           }
           _results.push(task.set("rejectedByTag", reject));

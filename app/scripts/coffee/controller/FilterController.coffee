@@ -22,7 +22,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			for task in swipy.todos.models
 				reject = yes
 
-				if task.has( "tags" ) and _.intersection( task.get( "tags" ), @tagsFilter ).length is @tagsFilter.length
+				if task.has( "tags" ) and _.intersection( task.getTagStrList(), @tagsFilter ).length is @tagsFilter.length
 					reject = no
 
 				task.set( "rejectedByTag", reject )
