@@ -63,7 +63,7 @@
         return this.addTagToModel(tagName);
       },
       addTagToModel: function(tagName, addToCollection) {
-        var tags;
+        var tag, tags;
         if (addToCollection == null) {
           addToCollection = true;
         }
@@ -73,9 +73,16 @@
         }).length) {
           return alert("You've already added that tag");
         }
-        tags.push(new TagModel({
+        tag = swipy.tags.findWhere({
           title: tagName
-        }));
+        });
+        if (tag) {
+          tags.push(tag);
+        } else {
+          tags.push(new TagModel({
+            title: tagName
+          }));
+        }
         this.model.unset("tags", {
           silent: true
         });

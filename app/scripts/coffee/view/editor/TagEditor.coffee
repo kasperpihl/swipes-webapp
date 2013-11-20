@@ -52,7 +52,9 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			if _.filter( tags, (t) -> t.get( "title" ) is tagName ).length
 				return alert "You've already added that tag"
 
-			tags.push new TagModel( title: tagName )
+			tag = swipy.tags.findWhere { title: tagName }
+			if tag then tags.push tag else tags.push new TagModel( title: tagName )
+
 			@model.unset( "tags", { silent: yes } )
 			@model.save( "tags", tags )
 
