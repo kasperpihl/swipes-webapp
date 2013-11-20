@@ -58,7 +58,7 @@
         }
       },
       getTagsForCurrentTasks: function() {
-        var activeList, model, models, tag, tags, _i, _j, _len, _len1, _ref;
+        var activeList, model, models, tagName, tags, _i, _j, _len, _len1, _ref;
         tags = [];
         activeList = swipy.todos.getActiveList();
         switch (activeList) {
@@ -74,12 +74,10 @@
         for (_i = 0, _len = models.length; _i < _len; _i++) {
           model = models[_i];
           if (model.has("tags")) {
-            _ref = model.get("tags");
+            _ref = _.invoke(model.get("tags"), "get", "title");
             for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-              tag = _ref[_j];
-              if (swipy.tags.validateTag(tag)) {
-                tags.push(tag);
-              }
+              tagName = _ref[_j];
+              tags.push(tagName);
             }
           }
         }
@@ -103,9 +101,7 @@
         }
         return this;
       },
-      renderTag: function(tag, list) {
-        var tagName;
-        tagName = tag.get("title");
+      renderTag: function(tagName, list) {
         if ((swipy.filter != null) && _.contains(swipy.filter.tagsFilter, tagName)) {
           return list.append("<li class='selected'>" + tagName + "</li>");
         } else {

@@ -45,8 +45,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				else models = swipy.todos.getCompleted()
 
 			for model in models when model.has "tags"
-				for tag in model.get "tags"
-					tags.push tag if swipy.tags.validateTag tag
+				tags.push tagName for tagName in _.invoke( model.get( "tags" ), "get", "title" )
 
 			return _.unique tags
 		getValidatedTags: ->
@@ -61,8 +60,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@renderTag( tag, list ) for tag in @getValidatedTags()
 
 			return @
-		renderTag: (tag, list) ->
-			tagName = tag.get "title"
+		renderTag: (tagName, list) ->
 			if swipy.filter? and _.contains( swipy.filter.tagsFilter, tagName )
 				list.append "<li class='selected'>#{ tagName }</li>"
 			else
