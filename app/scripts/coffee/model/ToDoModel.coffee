@@ -115,8 +115,17 @@ define ["momentjs"], ->
 			return moment.calendar().match( /\w+/ )[0]
 
 		syncTags: ->
-			if @has( "tags" ) and swipy?.tags
-				swipy.tags.add { title: tagName } for tagName in @get "tags"
+			if @has "tags"
+				tags = @get "tags"
+				validatedTags = (tag for tag in tags when tag.has "title" )
+
+				if tags.length isnt validatedTags.length
+					@set( "tags", validatedTags, { silent: yes } )
+
+				console.log "Validated tags are ", validatedTags
+
+				if validatedTags.length and swipy?.tags
+					swipy.tags.add tag for tag in @get "tags"
 
 		setScheduleStr: ->
 			schedule = @get "schedule"
