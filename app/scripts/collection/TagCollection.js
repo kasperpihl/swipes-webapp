@@ -1,14 +1,11 @@
 (function() {
-  var __slice = [].slice;
-
   define(["underscore", "model/TagModel"], function(_, TagModel) {
     return Parse.Collection.extend({
       model: TagModel,
       initialize: function() {
         this.setQuery();
         this.on("remove", this.handleTagDeleted, this);
-        this.on("add", this.handleAddTag, this);
-        return this.once("reset", this.getTagsFromTasks, this);
+        return this.on("add", this.handleAddTag, this);
       },
       setQuery: function() {
         this.query = new Parse.Query(TagModel);
@@ -40,7 +37,7 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           model = _ref[_i];
           if (model.isNew()) {
-            _results.push(console.log(model.get("title") + " is new!"));
+            _results.push(model.save());
           }
         }
         return _results;
@@ -98,12 +95,14 @@
         _ref = swipy.todos.getTasksTaggedWith(tags);
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           task = _ref[_i];
-          result.push(task.get("tags"));
+          result.push(_.invoke(task.get("tags"), "get", "title"));
         }
         result = _.flatten(result);
         result = _.unique(result);
         if (excludeOriginals) {
-          return _.without.apply(_, [result].concat(__slice.call(tags)));
+          return _.reject(result, function(tagName) {
+            return _.contains(tags, tagName);
+          });
         } else {
           return result;
         }

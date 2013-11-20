@@ -68,7 +68,7 @@
             tags = [tags];
           }
           return _.all(tags, function(tag) {
-            return _.contains(m.get("tags"), tag);
+            return _.contains(m.getTagStrList(), tag);
           });
         });
       },

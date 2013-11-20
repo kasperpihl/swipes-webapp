@@ -1,11 +1,11 @@
 <div class="overlay-bg"></div>
 <div class="overlay-content">
-	
+
 	<div class="wrap">
 		<ol class="rounded-tags">
-			
+
 			<% _.each(allTags, function(tag) { %>
-				
+
 				<% if ( _.contains( tagsAppliedToAll, tag.title ) ) { %>
 					<li class="selected"><%= tag.title %></li>
 				<% } else { %>

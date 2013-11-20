@@ -3,27 +3,36 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 		model: TagModel
 		initialize: ->
 			@setQuery()
-			@getTagsFromTasks()
 			@on( "remove", @handleTagDeleted, @ )
-			@on( "add", @validateTag, @ )
+			@on( "add", @handleAddTag, @ )
+			# @once( "reset", @getTagsFromTasks, @ )
 		setQuery: ->
 			@query = new Parse.Query TagModel
 			@query.equalTo( "owner", Parse.User.current() )
 		getTagsFromTasks: ->
 			tags = []
-			swipy.todos.each (m) ->
-				if m.has "tags" then tags.push tag for tag in m.get "tags"
-
-			# Remove any duplicates (Created when multiple tasks share the same tag)
-			tags = _.unique tags
+			for m in swipy.todos.models when m.has "tags"
+				for tag in m.get "tags" when @validateTag tag
+					tags.push tag
 
 			# Finally add tags to our collection
-			tagObjs = ( { title: tagname } for tagname in tags )
-			@reset tagObjs
+			@reset tags
 
-		validateTag: (model) ->
-			if @where( { title: model.get "title" } ).length > 1
+			# Save the models to the server if they are unsaved
+			@saveNewTags()
+		saveNewTags: ->
+			for model in @models when model.isNew()
+				model.save()
+		handleAddTag: (model) ->
+			if not @validateTag model
 				@remove( model, { silent: yes } )
+		validateTag: (model) ->
+			unless model.has "title"
+				return false
+			if @where( { title: model.get "title" } ).length > 1
+				return false
+
+			return true
 
 		###*
 		 * Looks at a tag (Or an array of tags), finds all the tasks that are tagged with those tags.
@@ -53,7 +62,7 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 
 			result = []
 			for task in swipy.todos.getTasksTaggedWith tags
-				result.push task.get "tags"
+				result.push _.invoke( task.get("tags"), "get", "title" )
 
 			# Make sure only to include the tags that are applied to ALL of the tasks
 			result = _.flatten result
@@ -63,7 +72,7 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 
 			# Finally remove the initial tag from the results.
 			if excludeOriginals
-				return _.without( result, tags... )
+				return _.reject( result, (tagName) -> _.contains( tags, tagName ) )
 			else
 				return result
 		handleTagDeleted: (model) ->

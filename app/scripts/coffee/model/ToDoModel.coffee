@@ -111,6 +111,11 @@ define ["momentjs"], ->
 
 			return @get "schedule"
 
+		getTagStrList: ->
+			if @has "tags"
+				return _.invoke( @get( "tags" ), "get", "title" )
+			else
+				return []
 		getDayWithoutTime: (moment) ->
 			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm",
 			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.

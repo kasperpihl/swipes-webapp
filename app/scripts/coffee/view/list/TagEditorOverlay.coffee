@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-overlay.html"], (_, Backbone, Overlay, TagsEditorOverlayTmpl) ->
+define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templates/tags-editor-overlay.html"], (_, Backbone, Overlay, TagModel, TagsEditorOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay tags-editor'
 		events:
@@ -21,19 +21,20 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 			tagLists = _.invoke( @options.models, "get", "tags" )
 			return [] if _.contains( tagLists, null )
 
+			# Convert tag lists from a list of models to a list of strings
+			stringLists = []
+			for modelList in tagLists
+				stringLists.push _.invoke( modelList, "get", "title" )
+
 			# Then, go over each task and find out if there are any tags shared by all of them
-			_.intersection tagLists...
+			return _.intersection stringLists...
 		getTagFromName: (tagName) ->
 			# First see if tag exists
 			tag = swipy.tags.findWhere { title: tagName }
 			if tag then return tag
-
-			# Tag doesn't exist. Create it and then return it
-			swipy.tags.create { title: tagName }
-			return swipy.tags.findWhere { title: tagName }
 		render: () ->
 			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
-
+			console.log "Rendering tag overlay"
 			if not @addedToDom
 				$("body").append @$el
 				@addedToDom = yes
@@ -64,8 +65,17 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 				return alert "That tag already exists"
 			else
 				tag = @getTagFromName tagName
-				@addTagToModel( tag, model ) for model in @options.models
-				if addToCollection then swipy.tags.getTagsFromTasks()
+				if not tag and addToCollection then tag = new TagModel { title: tagName }
+
+				if addToCollection
+					console.log "Adding tag to collection"
+					swipy.tags.add tag
+					tag.save().then =>
+						console.log "Added to col. Now adding tag to model"
+						@addTagToModel( tag, model ) for model in @options.models
+				else
+					@addTagToModel( tag, model ) for model in @options.models
+
 				@render()
 		modelHasTag: (model, tag) ->
 			tagName = tag.get "title"
@@ -78,7 +88,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-ov
 				model.unset( "tags", { silent: yes } )
 				model.save( "tags", tags )
 			else
-				return model.save( "tags", [tag] )
+				model.save( "tags", [tag] )
 		removeTagFromModels: (tag) ->
 			for model in @options.models
 				tags = model.get "tags"

@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "view/Overlay", "text!templates/tags-editor-overlay.html"], function(_, Backbone, Overlay, TagsEditorOverlayTmpl) {
+  define(["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templates/tags-editor-overlay.html"], function(_, Backbone, Overlay, TagModel, TagsEditorOverlayTmpl) {
     return Overlay.extend({
       className: 'overlay tags-editor',
       events: {
@@ -22,12 +22,17 @@
         return this.template = _.template(TagsEditorOverlayTmpl);
       },
       getTagsAppliedToAll: function() {
-        var tagLists;
+        var modelList, stringLists, tagLists, _i, _len;
         tagLists = _.invoke(this.options.models, "get", "tags");
         if (_.contains(tagLists, null)) {
           return [];
         }
-        return _.intersection.apply(_, tagLists);
+        stringLists = [];
+        for (_i = 0, _len = tagLists.length; _i < _len; _i++) {
+          modelList = tagLists[_i];
+          stringLists.push(_.invoke(modelList, "get", "title"));
+        }
+        return _.intersection.apply(_, stringLists);
       },
       getTagFromName: function(tagName) {
         var tag;
@@ -37,18 +42,13 @@
         if (tag) {
           return tag;
         }
-        swipy.tags.create({
-          title: tagName
-        });
-        return swipy.tags.findWhere({
-          title: tagName
-        });
       },
       render: function() {
         this.$el.html(this.template({
           allTags: swipy.tags.toJSON(),
           tagsAppliedToAll: this.getTagsAppliedToAll()
         }));
+        console.log("Rendering tag overlay");
         if (!this.addedToDom) {
           $("body").append(this.$el);
           this.addedToDom = true;
@@ -83,7 +83,8 @@
         return this.addTagToModels(tagName);
       },
       addTagToModels: function(tagName, addToCollection) {
-        var model, tag, _i, _len, _ref;
+        var model, tag, _i, _len, _ref,
+          _this = this;
         if (addToCollection == null) {
           addToCollection = true;
         }
@@ -91,13 +92,31 @@
           return alert("That tag already exists");
         } else {
           tag = this.getTagFromName(tagName);
-          _ref = this.options.models;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            model = _ref[_i];
-            this.addTagToModel(tag, model);
+          if (!tag && addToCollection) {
+            tag = new TagModel({
+              title: tagName
+            });
           }
           if (addToCollection) {
-            swipy.tags.getTagsFromTasks();
+            console.log("Adding tag to collection");
+            swipy.tags.add(tag);
+            tag.save().then(function() {
+              var model, _i, _len, _ref, _results;
+              console.log("Added to col. Now adding tag to model");
+              _ref = _this.options.models;
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                model = _ref[_i];
+                _results.push(_this.addTagToModel(tag, model));
+              }
+              return _results;
+            });
+          } else {
+            _ref = this.options.models;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              model = _ref[_i];
+              this.addTagToModel(tag, model);
+            }
           }
           return this.render();
         }

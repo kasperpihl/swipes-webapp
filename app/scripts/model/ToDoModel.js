@@ -108,6 +108,13 @@
         }
         return this.get("schedule");
       },
+      getTagStrList: function() {
+        if (this.has("tags")) {
+          return _.invoke(this.get("tags"), "get", "title");
+        } else {
+          return [];
+        }
+      },
       getDayWithoutTime: function(moment) {
         return moment.calendar().match(/\w+/)[0];
       },
