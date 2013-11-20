@@ -3,12 +3,17 @@
     var Swipes;
     return Swipes = (function() {
       function Swipes() {
+        var _this = this;
         this.hackParseAPI();
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
+        this.tags = new TagCollection();
+        this.tags.once("reset", function() {
+          return _this.fetchTodos();
+        });
         this.todos.on("reset", this.init, this);
-        this.fetchTodos();
+        this.tags.fetch();
       }
 
       Swipes.prototype.hackParseAPI = function() {
@@ -28,7 +33,6 @@
 
       Swipes.prototype.init = function() {
         this.cleanUp();
-        this.tags = new TagCollection();
         this.viewController = new ViewController();
         this.nav = new ListNavigation();
         this.router = new MainRouter();

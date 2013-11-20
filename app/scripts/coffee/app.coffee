@@ -20,8 +20,12 @@ define [
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()
 			@updateTimer = new ClockWork()
+
+			@tags = new TagCollection()
+			@tags.once( "reset", => @fetchTodos() )
 			@todos.on( "reset", @init, @ )
-			@fetchTodos()
+
+			@tags.fetch()
 
 		hackParseAPI: ->
 			# Add missing mehods to Parse
@@ -32,7 +36,6 @@ define [
 		init: ->
 			@cleanUp()
 
-			@tags = new TagCollection()
 			@viewController = new ViewController()
 			@nav = new ListNavigation()
 			@router = new MainRouter()
