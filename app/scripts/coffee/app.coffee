@@ -28,10 +28,12 @@ define [
 			@tags.fetch()
 
 		hackParseAPI: ->
-			# Add missing mehods to Parse
+			# Add missing mehods to Parse.Collection.prototype
 			for method in ["where", "findWhere"]
 				if not Parse.Collection::[method]?
 					Parse.Collection::[method] = Backbone.Collection::[method]
+
+
 
 		init: ->
 			@cleanUp()

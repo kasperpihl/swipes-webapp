@@ -10,7 +10,7 @@
       },
       initialize: function() {
         this.history = [];
-        return this.on("route", this.updateHistory, this);
+        return Parse.history.on("route", this.updateHistory, this);
       },
       root: function() {
         return this.navigate("list/todo", {
@@ -35,12 +35,12 @@
           return Backbone.trigger("settings/view", subview);
         }
       },
-      updateHistory: function(method, page) {
+      updateHistory: function(me, page, subpage) {
         var newRoute;
-        if (method === "root") {
+        if (page === "") {
           return false;
         }
-        newRoute = this.getRouteStr(method, page[0]);
+        newRoute = this.getRouteStr(page, subpage[0]);
         if (this.getCurrRoute() !== newRoute) {
           return this.history.push(newRoute);
         }
@@ -67,7 +67,7 @@
         }
       },
       destroy: function() {
-        return this.off("route");
+        return Parse.history.off(null, null, this);
       }
     });
   });

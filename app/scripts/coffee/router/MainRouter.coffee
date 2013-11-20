@@ -7,7 +7,7 @@ define ['backbone'], (Backbone) ->
 			"*all": "root"
 		initialize: ->
 			@history = []
-			@on( "route", @updateHistory, @ )
+			Parse.history.on( "route", @updateHistory, @ )
 		root: ->
 			@navigate( "list/todo", { trigger: yes, replace: yes } )
 		list: (id = "todo") ->
@@ -19,11 +19,11 @@ define ['backbone'], (Backbone) ->
 		settings: (subview) ->
 			Backbone.trigger "show-settings"
 			if subview then Backbone.trigger( "settings/view", subview )
-		updateHistory: (method, page) ->
+		updateHistory: (me, page, subpage) ->
 			# We skip root, because it's just a redirect to another route.
-			return false if method is "root"
+			return false if page is ""
 
-			newRoute = @getRouteStr( method, page[0] )
+			newRoute = @getRouteStr( page, subpage[0] )
 
 			# We don't want multiple instances of the same route after
 			# each other that calling router.back() would otherwise create.
@@ -39,4 +39,4 @@ define ['backbone'], (Backbone) ->
 			else
 				@root()
 		destroy: ->
-			@off( "route" )
+			Parse.history.off( null, null, @ )
