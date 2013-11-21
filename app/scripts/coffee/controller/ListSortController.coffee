@@ -4,7 +4,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			@model = new ListSortModel( container, views )
 			@enableTouchListners()
 		enableTouchListners: ->
-			$( @model.container[0] ).hammer().on( "hold", "ol li", @activate )
+			$( @model.container[0] ).hammer().on( "hold", "ol > li", @activate )
 		disableTouchListeners: ->
 			$( @model.container[0] ).hammer().off( "hold", @activate )
 		activate: (e) =>

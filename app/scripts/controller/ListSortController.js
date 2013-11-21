@@ -14,7 +14,7 @@
       }
 
       ListSortController.prototype.enableTouchListners = function() {
-        return $(this.model.container[0]).hammer().on("hold", "ol li", this.activate);
+        return $(this.model.container[0]).hammer().on("hold", "ol > li", this.activate);
       };
 
       ListSortController.prototype.disableTouchListeners = function() {
