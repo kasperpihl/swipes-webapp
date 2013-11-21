@@ -148,7 +148,7 @@
                 this.removeBusyState();
                 return this.doAction("register");
               } else {
-                return;
+                return this.removeBusyState();
               }
               break;
             default:

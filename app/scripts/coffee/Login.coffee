@@ -96,7 +96,7 @@ LoginView = Parse.View.extend
 						@removeBusyState()
 						return @doAction "register"
 					else
-						return
+						return @removeBusyState()
 				else return @showError error
 			else
 				@removeBusyState()
