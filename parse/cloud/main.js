@@ -5,13 +5,13 @@ require('cloud/app.js');
 Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
+  var _ = require('underscore');
+  var attrWhitelist = [ "title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority","owner","deleted" ];
+  request.object = _.pick( request.object, attrWhitelist);
   var todo = request.object;
   makeAttributeChanges(todo);
   if(todo.isNew() && user) todo.set('owner',user);
   response.success();
-});
-Parse.Cloud.afterSave('ToDo',function(request){
-  if(request.object.attributes['attributeChanges'])  delete request.object.attributes['attributeChanges'];
 });
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
