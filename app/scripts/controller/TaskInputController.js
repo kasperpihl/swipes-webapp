@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "view/TaskInput"], function(_, TaskInputView) {
+  define(["underscore", "view/TaskInput", "model/TagModel"], function(_, TaskInputView, TagModel) {
     var TaskInputController;
     return TaskInputController = (function() {
       function TaskInputController() {
@@ -8,10 +8,10 @@
       }
 
       TaskInputController.prototype.parseTags = function(str) {
-        var result, tag;
+        var result, tag, tagName, tagNameList, tags, _i, _len;
         result = str.match(/#(.[^,#]+)/g);
         if (result) {
-          result = (function() {
+          tagNameList = (function() {
             var _i, _len, _results;
             _results = [];
             for (_i = 0, _len = result.length; _i < _len; _i++) {
@@ -20,7 +20,18 @@
             }
             return _results;
           })();
-          return result;
+          tags = [];
+          for (_i = 0, _len = tagNameList.length; _i < _len; _i++) {
+            tagName = tagNameList[_i];
+            tag = swipy.tags.getTagByName(tagName);
+            if (!tag) {
+              tag = new TagModel({
+                title: tagName
+              });
+            }
+            tags.push(tag);
+          }
+          return tags;
         } else {
           return [];
         }

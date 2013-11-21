@@ -128,6 +128,7 @@ define ["momentjs"], ->
 
 		syncTags: (tags) ->
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
+
 			if pointers.length
 				# remove pointers
 				tags = _.reject tags, (t) -> _.contains( pointers, t.id )

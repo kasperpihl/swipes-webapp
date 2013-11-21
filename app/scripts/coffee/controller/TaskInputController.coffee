@@ -1,4 +1,4 @@
-define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
+define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, TagModel) ->
 	class TaskInputController
 		constructor: ->
 			@view = new TaskInputView()
@@ -8,8 +8,15 @@ define ["underscore", "view/TaskInput"], (_, TaskInputView) ->
 
 			if result
 				# Trim white space and remove #-character from results
-				result = ( $.trim tag.replace("#", "") for tag in result )
-				return result
+				tagNameList = ( $.trim tag.replace("#", "") for tag in result )
+				tags = []
+
+				for tagName in tagNameList
+					tag = swipy.tags.getTagByName tagName
+					if not tag then tag = new TagModel( title: tagName )
+					tags.push tag
+
+				return tags
 			else
 				return []
 
