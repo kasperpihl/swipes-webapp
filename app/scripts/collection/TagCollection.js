@@ -30,6 +30,11 @@
         this.reset(tags);
         return this.saveNewTags();
       },
+      getTagByName: function(tagName) {
+        return this.findWhere({
+          title: tagName
+        });
+      },
       saveNewTags: function() {
         var model, _i, _len, _ref, _results;
         _ref = this.models;

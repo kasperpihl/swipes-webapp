@@ -20,6 +20,8 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 
 			# Save the models to the server if they are unsaved
 			@saveNewTags()
+		getTagByName: (tagName) ->
+			@findWhere( title:tagName )
 		saveNewTags: ->
 			for model in @models when model.isNew()
 				model.save()
