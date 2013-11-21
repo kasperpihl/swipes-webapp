@@ -38,7 +38,7 @@
         var dateStr;
         dateStr = moment.format("YYYY-MM-DD");
         return this.days.filter(function() {
-          return $(this).attr("id").indexOf(dateStr) !== -1;
+          return $(this).attr("class").indexOf(dateStr) !== -1;
         });
       },
       getTimeObj: function(moment) {
@@ -113,7 +113,6 @@
         var newDate;
         newDate = moment;
         newDate.date(this.selectedDay.date());
-        console.error("Not checking for date max");
         if (newDate.isBefore(this.today)) {
           newDate = this.today;
         }

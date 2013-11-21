@@ -29,7 +29,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			@clndr = @$el.clndr @getCalendarOpts()
 		getElementFromMoment: (moment) ->
 			dateStr = moment.format "YYYY-MM-DD"
-			@days.filter -> $(@).attr( "id" ).indexOf( dateStr ) isnt -1
+			@days.filter -> $(@).attr( "class" ).indexOf( dateStr ) isnt -1
 		getTimeObj: (moment) ->
 			snoozes = swipy.settings.get "snoozes"
 			day = @selectedDay.day()
@@ -84,8 +84,8 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 
 			# Check if newMonth has as many days as current month
 			# (I.e. switching from a 31 day month to a 29 day month)
+			# Moment.js does this automatically.
 			newDate.date @selectedDay.date()
-			console.error "Not checking for date max"
 
 			# Also check that we don't select a date prior to today
 			if newDate.isBefore @today then newDate = @today
