@@ -69,17 +69,16 @@
           this.setCompletionTimeStr();
         }
         saveOrder = function() {
+          console.log("Saving order for " + (_this.get('title')) + ": ", _this.get("order"));
           return _this.save();
         };
         debouncedSaveOrder = _.debounce(saveOrder, 3000);
-        this.on("change:order", function() {
+        return this.on("change:order", function() {
+          debouncedSaveOrder();
           if ((_this.get("order") != null) && _this.get("order") < 0) {
             return console.error("Model order value set to less than 0");
           }
         });
-        return setTimeout((function() {
-          return _this.on("change:order", debouncedSaveOrder);
-        }), 1000);
       },
       reviveDate: function(prop) {
         if (typeof this.get(prop) === "string") {
