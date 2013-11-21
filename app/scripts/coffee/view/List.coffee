@@ -130,7 +130,7 @@ define [
 			model.updateRepeatDate()
 
 			# Finally persist the changes on the server
-			# model.save()
+			model.save()
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task

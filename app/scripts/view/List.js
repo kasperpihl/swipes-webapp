@@ -157,7 +157,8 @@
           schedule: model.get("repeatDate"),
           repeatCount: model.get("repeatCount") + 1
         });
-        return model.updateRepeatDate();
+        model.updateRepeatDate();
+        return model.save();
       },
       markTaskAsTodo: function(tasks) {
         var task, view, _i, _len, _results;
