@@ -52,6 +52,9 @@
         var movedFromScheduled, now;
         now = new Date().getTime();
         movedFromScheduled = _.filter(this.getTasks(), function(m) {
+          if (!m.has("schedule")) {
+            return false;
+          }
           return now - m.get("schedule").getTime() < 1001;
         });
         if (movedFromScheduled.length) {
@@ -116,7 +119,8 @@
         }
       },
       completeTasks: function(tasks) {
-        var task, view, _i, _len, _results;
+        var task, view, _i, _len, _results,
+          _this = this;
         _results = [];
         for (_i = 0, _len = tasks.length; _i < _len; _i++) {
           task = tasks[_i];
@@ -126,7 +130,11 @@
               var m;
               m = task;
               return view.swipeRight("completed").then(function() {
-                return m.save("completionDate", new Date());
+                if (m.has("repeatDate")) {
+                  return _this.createRepeatedTask(m);
+                } else {
+                  return m.save("completionDate", new Date());
+                }
               });
             })());
           } else {
@@ -134,6 +142,22 @@
           }
         }
         return _results;
+      },
+      createRepeatedTask: function(model) {
+        var duplicate;
+        duplicate = model.getRepeatableDuplicate();
+        if (!duplicate) {
+          return false;
+        }
+        duplicate.save({
+          completionDate: new Date()
+        });
+        swipy.todos.add(duplicate);
+        model.set({
+          schedule: model.get("repeatDate"),
+          repeatCount: model.get("repeatCount") + 1
+        });
+        return model.updateRepeatDate();
       },
       markTaskAsTodo: function(tasks) {
         var task, view, _i, _len, _results;
@@ -162,8 +186,7 @@
         return _results;
       },
       scheduleTasks: function(tasks) {
-        var deferredArr, task, view, _i, _len,
-          _this = this;
+        var deferredArr, task, view, _i, _len;
         deferredArr = [];
         for (_i = 0, _len = tasks.length; _i < _len; _i++) {
           task = tasks[_i];

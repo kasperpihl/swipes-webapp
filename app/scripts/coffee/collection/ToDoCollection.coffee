@@ -4,7 +4,8 @@ define ["model/ToDoModel"], (ToDoModel) ->
 		initialize: ->
 			@setQuery()
 			@on( "destroy", (model) => @remove model )
-			@on( "change:completionDate", @spawnRepeatTask )
+			@on( "change:completionDate", @checkIfRepeat )
+			@on( "change:title", (model, newTitle) => console.log "Changed title to #{newTitle}" )
 		setQuery: ->
 			@query = new Parse.Query ToDoModel
 			@query.equalTo( "owner", Parse.User.current() )
@@ -48,8 +49,12 @@ define ["model/ToDoModel"], (ToDoModel) ->
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
 					model.set( "order", model.get( "order" ) - bumps )
 
-		spawnRepeatTask: (model, completionDate) ->
-			console.warn "Repeating tasks currently disabled"
+		checkIfRepeat: (model, completionDate) ->
 			# if model.get "repeatDate"
-				# console.log "Spawning a duplicate task for repeating"
+			# 	console.warn "I want to play a game with you"
+				# diffSinceLastSave = model.completionDateChangedLast?.getTime() - new Date().getTime()
+				# if diffSinceLastSave <
+				# debugger
+				# console.log "Spawning a duplicate task(#{ model.get 'title' }) for repeating on ", completionDate
 				# @create model.getRepeatableDuplicate().attributes
+				# console.log "Creating new task with properties: ", model.getRepeatableDuplicate().attributes

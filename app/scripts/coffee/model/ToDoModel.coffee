@@ -61,7 +61,6 @@ define ["momentjs"], ->
 				@set( "selected", no )
 
 			@on "change:completionDate", =>
-				@updateRepeatDate()
 				@setCompletionStr()
 				@setCompletionTimeStr()
 				@set( "selected", no )
@@ -240,7 +239,6 @@ define ["momentjs"], ->
 			return date.add( "days", if date.day() is 0 then 6 else 1 ).toDate()
 
 		getNextDate: (option) ->
-			# Task was completed before scheduled time
 			if @has "completionDate"
 				repeatDate = @get "repeatDate"
 				completionDate = @get "completionDate"
@@ -256,6 +254,12 @@ define ["momentjs"], ->
 					date = moment completionDate
 			else
 				date = moment @get "schedule"
+
+				# If we moved the task from scheduled to today and completed it, use the old repeatDate instead of the
+				# modified date.
+				repeatDate = @get "repeatDate"
+				if repeatDate and repeatDate.getTime() > @get( "schedule" ).getTime()
+					date = moment repeatDate
 
 			switch option
 				when "every day" then date.add( "days", 1 ).toDate()
@@ -274,12 +278,16 @@ define ["momentjs"], ->
 				else null
 
 		sanitizeDataForDuplication: (data) ->
+			# Make sure to only duplicate the white-listed attributes
 			sanitizedData = _.clone data
 			sanitizedData = _.pick( sanitizedData, @attrWhitelist )
-			sanitizedData.schedule = @getScheduleBasedOnRepeatDate data.repeatDate
-			sanitizedData.repeatCount++
-			return sanitizedData
 
+			# Duplicate should have no repeat options
+			sanitizedData.repeatCount = 0
+			sanitizedData.repeatOption = "never"
+			sanitizedData.repeatDate = null
+
+			return sanitizedData
 		getScheduleBasedOnRepeatDate: (repeatDate) ->
 			# Look at completionDate and determine the correct date.
 			return repeatDate

@@ -49,7 +49,6 @@
           return _this.set("selected", false);
         });
         this.on("change:completionDate", function() {
-          _this.updateRepeatDate();
           _this.setCompletionStr();
           _this.setCompletionTimeStr();
           return _this.set("selected", false);
@@ -290,6 +289,10 @@
           }
         } else {
           date = moment(this.get("schedule"));
+          repeatDate = this.get("repeatDate");
+          if (repeatDate && repeatDate.getTime() > this.get("schedule").getTime()) {
+            date = moment(repeatDate);
+          }
         }
         switch (option) {
           case "every day":
@@ -314,8 +317,9 @@
         var sanitizedData;
         sanitizedData = _.clone(data);
         sanitizedData = _.pick(sanitizedData, this.attrWhitelist);
-        sanitizedData.schedule = this.getScheduleBasedOnRepeatDate(data.repeatDate);
-        sanitizedData.repeatCount++;
+        sanitizedData.repeatCount = 0;
+        sanitizedData.repeatOption = "never";
+        sanitizedData.repeatDate = null;
         return sanitizedData;
       },
       getScheduleBasedOnRepeatDate: function(repeatDate) {
