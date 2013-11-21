@@ -15,8 +15,10 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			Backbone.trigger( "create-task", @input.val() )
 			@input.val ""
 		getFontSizeRange: ->
-			if window.innerHeight < 768
+			if window.innerHeight < 768 and window.innerWidth < 450
 				{ min: 20, max: 40, charLimit: 20, minChars: 8 }
+			else if window.innerHeight < 768
+				{ min: 35, max: 70, charLimit: 20, minChars: 15 }
 			else if window.innerHeight < 1024
 				{ min: 35, max: 70, charLimit: 24, minChars: 15 }
 			else

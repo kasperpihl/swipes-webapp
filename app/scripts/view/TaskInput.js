@@ -20,12 +20,19 @@
         return this.input.val("");
       },
       getFontSizeRange: function() {
-        if (window.innerHeight < 768) {
+        if (window.innerHeight < 768 && window.innerWidth < 450) {
           return {
             min: 20,
             max: 40,
             charLimit: 20,
             minChars: 8
+          };
+        } else if (window.innerHeight < 768) {
+          return {
+            min: 35,
+            max: 70,
+            charLimit: 20,
+            minChars: 15
           };
         } else if (window.innerHeight < 1024) {
           return {
