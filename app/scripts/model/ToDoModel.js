@@ -25,7 +25,8 @@
         deleted: false
       },
       initialize: function() {
-        var _this = this;
+        var debouncedSaveOrder, saveOrder,
+          _this = this;
         if (this.get("schedule") === "default") {
           this.set("schedule", this.getDefaultSchedule());
         }
@@ -68,11 +69,18 @@
           this.setCompletionStr();
           this.setCompletionTimeStr();
         }
-        return this.on("change:order", function() {
+        saveOrder = function() {
+          return _this.save();
+        };
+        debouncedSaveOrder = _.debounce(saveOrder, 3000);
+        this.on("change:order", function() {
           if ((_this.get("order") != null) && _this.get("order") < 0) {
             return console.error("Model order value set to less than 0");
           }
         });
+        return setTimeout((function() {
+          return _this.on("change:order", debouncedSaveOrder);
+        }), 1000);
       },
       reviveDate: function(prop) {
         if (typeof this.get(prop) === "string") {

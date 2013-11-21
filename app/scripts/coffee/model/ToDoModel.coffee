@@ -77,10 +77,15 @@ define ["momentjs"], ->
 				@setCompletionStr()
 				@setCompletionTimeStr()
 
+			saveOrder = => @save()
+			debouncedSaveOrder = _.debounce( saveOrder, 3000 )
+
 			@on "change:order", =>
 				if @get( "order" )? and @get( "order" ) < 0
 					console.error "Model order value set to less than 0"
 
+			# Give app a chance to init before setting up order change listeners
+			setTimeout ( => @on "change:order", debouncedSaveOrder ), 1000
 		reviveDate: (prop) ->
 			if typeof @get( prop ) is "string"
 				@set( prop, new Date( @get prop ), { silent: yes } )
