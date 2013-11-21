@@ -4,7 +4,13 @@
 	<div class="wrap">
 		<ol class="rounded-tags">
 
-			<% _.each(allTags, function(tag) { %>
+			<%
+				var tags = _.sortBy( allTags, function(tag) {
+					return tag.title.toLowerCase()
+				})
+
+				_.each(tags, function(tag) {
+			%>
 
 				<% if ( _.contains( tagsAppliedToAll, tag.title ) ) { %>
 					<li class="selected"><%= tag.title %></li>

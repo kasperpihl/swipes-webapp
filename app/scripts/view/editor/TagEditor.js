@@ -100,14 +100,17 @@
         return this.el;
       },
       renderTags: function() {
-        var icon, list, poolToggler, tag, _i, _len, _ref;
+        var icon, list, poolToggler, tag, tags, _i, _len;
         list = this.$el.find(" > .rounded-tags");
         list.empty();
         if (this.model.has("tags")) {
-          _ref = this.model.get("tags");
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            tag = _ref[_i];
-            this.renderTag(tag.get("title"), list, "selected");
+          tags = _.invoke(this.model.get("tags"), "get", "title");
+          tags = _.sortBy(tags, function(tag) {
+            return tag.toLowerCase();
+          });
+          for (_i = 0, _len = tags.length; _i < _len; _i++) {
+            tag = tags[_i];
+            this.renderTag(tag, list, "selected");
           }
         }
         icon = "<span class='" + (this.toggled ? "icon-minus" : "icon-plus") + "'></span>";
@@ -115,7 +118,7 @@
         return list.append(poolToggler);
       },
       renderTagPool: function() {
-        var allTags, list, tagInput, tagname, unusedTags, _i, _len;
+        var allTags, list, tagInput, tagname, unusedTags, _i, _len, _ref;
         list = this.$el.find(".tag-pool .rounded-tags");
         list.empty();
         allTags = swipy.tags.pluck("title");
@@ -124,8 +127,11 @@
         } else {
           unusedTags = allTags;
         }
-        for (_i = 0, _len = unusedTags.length; _i < _len; _i++) {
-          tagname = unusedTags[_i];
+        _ref = _.sortBy(unusedTags, function(tag) {
+          return tag.toLowerCase();
+        });
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          tagname = _ref[_i];
           this.renderTag(tagname, list);
         }
         tagInput = "				<li class='tag-input'>					<form class='add-tag'>						<input type='text' placeholder='Add new tag'>					</form>				</li>			";

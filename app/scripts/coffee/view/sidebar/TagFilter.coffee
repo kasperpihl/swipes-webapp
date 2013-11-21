@@ -57,7 +57,11 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
 
-			@renderTag( tag, list ) for tag in @getValidatedTags()
+			tags = @getValidatedTags()
+			# Sort alphabetically, case-insensitive
+			tags = _.sortBy( tags, (tag) -> return tag.toLowerCase() )
+
+			@renderTag( tag, list ) for tag in tags
 
 			return @
 		renderTag: (tagName, list) ->

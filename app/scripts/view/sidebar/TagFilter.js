@@ -91,12 +91,15 @@
         }
       },
       render: function() {
-        var list, tag, _i, _len, _ref;
+        var list, tag, tags, _i, _len;
         list = this.$el.find(".rounded-tags");
         list.empty();
-        _ref = this.getValidatedTags();
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          tag = _ref[_i];
+        tags = this.getValidatedTags();
+        tags = _.sortBy(tags, function(tag) {
+          return tag.toLowerCase();
+        });
+        for (_i = 0, _len = tags.length; _i < _len; _i++) {
+          tag = tags[_i];
           this.renderTag(tag, list);
         }
         return this;

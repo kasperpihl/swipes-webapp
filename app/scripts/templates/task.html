@@ -24,9 +24,16 @@
 	<% if (tags && tags.length) { %>
 	<ul class="tags">
 
-		<% _.each(tags, function(tag) { %>
+		<%
+			tagStrings = _.invoke(tags, "get", "title")
+			tagStrings = _.sortBy( tagStrings, function(tag) {
+				return tag.toLowerCase()
+			})
 
-		<li><%= tag.get("title") %></li>
+			_.each(tagStrings, function(tag) {
+		%>
+
+		<li><%= tag %></li>
 
 		<% }); %>
 

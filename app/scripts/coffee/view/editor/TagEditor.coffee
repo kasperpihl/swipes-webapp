@@ -72,8 +72,10 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			list = @$el.find " > .rounded-tags"
 			list.empty()
 
-			if @model.has "tags" then for tag in @model.get "tags"
-				@renderTag( tag.get( "title" ), list, "selected" )
+			if @model.has "tags"
+				tags = _.invoke( @model.get( "tags" ), "get", "title" )
+				tags = _.sortBy( tags, (tag) -> tag.toLowerCase() )
+				@renderTag( tag, list, "selected" ) for tag in tags
 
 			icon = "<span class='" + ( if @toggled then "icon-minus" else "icon-plus" ) + "'></span>"
 			poolToggler = "
@@ -94,7 +96,7 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			else
 				unusedTags = allTags
 
-			@renderTag( tagname, list ) for tagname in unusedTags
+			@renderTag( tagname, list ) for tagname in _.sortBy( unusedTags, (tag) -> tag.toLowerCase() )
 
 			tagInput = "
 				<li class='tag-input'>
