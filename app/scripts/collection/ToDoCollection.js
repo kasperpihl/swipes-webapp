@@ -8,7 +8,10 @@
         this.on("destroy", function(model) {
           return _this.remove(model);
         });
-        return this.on("change:completionDate", this.spawnRepeatTask);
+        this.on("change:completionDate", this.checkIfRepeat);
+        return this.on("change:title", function(model, newTitle) {
+          return console.log("Changed title to " + newTitle);
+        });
       },
       setQuery: function() {
         this.query = new Parse.Query(ToDoModel);
@@ -105,9 +108,7 @@
           return _results1;
         }
       },
-      spawnRepeatTask: function(model, completionDate) {
-        return console.warn("Repeating tasks currently disabled");
-      }
+      checkIfRepeat: function(model, completionDate) {}
     });
   });
 

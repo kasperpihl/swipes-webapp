@@ -49,7 +49,8 @@ define [
 			# Get all tasks that are scheduled within the current 1001ms
 			# (Includes stuff moved from completed, which is defaulting to 1000ms in the past)
 			movedFromScheduled = _.filter @getTasks(), (m) ->
-				now - m.get( "schedule" ).getTime() < 1001
+				return false unless m.has "schedule"
+				return now - m.get( "schedule" ).getTime() < 1001
 
 			# If we have tasks then bump all tasks +1 and
 			# set order: 0 and animateIn: yes for all of them
@@ -105,11 +106,31 @@ define [
 				view = @getViewForModel task
 
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
-				if view? then do ->
+				if view? then do =>
 					m = task
-					view.swipeRight( "completed" ).then ->
-						m.save( "completionDate", new Date() )
+					view.swipeRight( "completed" ).then =>
+						if m.has "repeatDate"
+							@createRepeatedTask m
+						else
+							m.save( "completionDate", new Date() )
+		createRepeatedTask: (model) ->
+			# First create a duplicate of the current task and put it in the completed pile.
+			duplicate = model.getRepeatableDuplicate()
+			# Make sure we can actually duplicate the task...
+			return false unless duplicate
+			duplicate.save { completionDate: new Date() }
+			swipy.todos.add duplicate
 
+			# Then update the repeatDate (Based on current schedule) and use that to set the new schedule
+			model.set
+				schedule: model.get "repeatDate"
+				repeatCount: model.get( "repeatCount" ) + 1
+
+			# Update the repeatDate on the model
+			model.updateRepeatDate()
+
+			# Finally persist the changes on the server
+			# model.save()
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task
@@ -133,7 +154,7 @@ define [
 					m = task
 					deferredArr.push view.swipeLeft("scheduled", no)
 
-			$.when( deferredArr... ).then => Backbone.trigger( "show-scheduler", tasks )
+			$.when( deferredArr... ).then -> Backbone.trigger( "show-scheduler", tasks )
 
 		handleSchedulerCancelled: (tasks) ->
 			for task in tasks
