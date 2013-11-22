@@ -131,11 +131,12 @@
 
       ListSortController.prototype.onDrag = function(view, model) {
         model.reorderRows(view, this.y);
-        return model.scrollWindow(this.pointerY);
+        return model.scrollWindow(this.minY, this.maxY, this.y, this.pointerY);
       };
 
       ListSortController.prototype.onDragEnd = function(view, model) {
         model.reorderRows(view, this.endY);
+        model.oldTaskY = null;
         if (!view.model.get("selected")) {
           return view.$el.removeClass("selected");
         }

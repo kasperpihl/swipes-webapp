@@ -36,7 +36,7 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			bounds = @container[0].getClientRects()[0]? or { top: 0 }
 
 			@bounds =
-				top: Math.max( bounds.top, window.pageYOffset )
+				top: window.pageYOffset
 				bottom: window.innerHeight + window.pageYOffset
 
 		getViewAtPos: (order) ->
@@ -84,16 +84,42 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			# Silently set order for this view, because we don't want to trigger the handler that tweens the position for it.
 			view.model.set( { order: newOrder }, { silent: yes } )
 
-		scrollWindow: (pointerY) ->
-			amount = 20
+		scrollWindow: (minY, maxY, y, pointerY) ->
+			amount = minAmount = 20
+			maxAmount = 100
+			trigger = window.innerHeight * 0.3
 
-			if pointerY - 100 < @bounds.top
+
+			if @oldTaskY
+				delta = Math.abs @oldTaskY - y
+				amount = delta
+
+				# If user dragged thingy to the bottom/top of the screen and just want to auto-scroll fast.
+				if delta < minAmount
+					distToTop = pointerY - @bounds.top
+					distToBottom = @bounds.bottom - y
+
+					# scrolling up
+					if distToTop < distToBottom
+						if distToTop < ( trigger * 0.8 )
+							amount = ( trigger - distToTop ) * 0.05
+					# scrolling down
+					else
+						if distToBottom < ( trigger * 0.8 )
+							amount = ( trigger - distToBottom ) * 0.05
+
+
+				amount = Math.max( 5, Math.min( maxAmount, amount ) )
+
+			if pointerY - trigger < @bounds.top
 				newScroll = window.pageYOffset - amount
 
-			else if pointerY + 100 > @bounds.bottom
+			else if pointerY + trigger > @bounds.bottom
 				newScroll = window.pageYOffset + amount
 
-			TweenLite.to( window, 0.1, { scrollTo: newScroll, ease:Linear.easeNone } )
+			TweenLite.set( window, { scrollTo: newScroll } )
+
+			@oldTaskY = y
 
 		destroy: ->
 			$(window).off(".sortmodel")

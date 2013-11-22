@@ -72,9 +72,10 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			view.$el.addClass "selected"
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y )
-			model.scrollWindow( @pointerY )
+			model.scrollWindow( @minY, @maxY, @y, @pointerY )
 		onDragEnd: (view, model) ->
 			model.reorderRows( view, @endY )
+			model.oldTaskY = null
 			view.$el.removeClass( "selected" ) unless view.model.get "selected"
 		reorderView: (model, newOrder, animate = yes) ->
 			dur = if animate then 0.3 else 0

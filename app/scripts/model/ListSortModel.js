@@ -65,7 +65,7 @@
           top: 0
         };
         return this.bounds = {
-          top: Math.max(bounds.top, window.pageYOffset),
+          top: window.pageYOffset,
           bottom: window.innerHeight + window.pageYOffset
         };
       };
@@ -159,18 +159,38 @@
         });
       };
 
-      ListSortModel.prototype.scrollWindow = function(pointerY) {
-        var amount, newScroll;
-        amount = 20;
-        if (pointerY - 100 < this.bounds.top) {
+      ListSortModel.prototype.scrollWindow = function(minY, maxY, y, pointerY) {
+        var amount, delta, distToBottom, distToTop, maxAmount, minAmount, newScroll, trigger;
+        amount = minAmount = 20;
+        maxAmount = 100;
+        trigger = window.innerHeight * 0.3;
+        if (this.oldTaskY) {
+          delta = Math.abs(this.oldTaskY - y);
+          amount = delta;
+          if (delta < minAmount) {
+            distToTop = pointerY - this.bounds.top;
+            distToBottom = this.bounds.bottom - y;
+            if (distToTop < distToBottom) {
+              if (distToTop < (trigger * 0.8)) {
+                amount = (trigger - distToTop) * 0.05;
+              }
+            } else {
+              if (distToBottom < (trigger * 0.8)) {
+                amount = (trigger - distToBottom) * 0.05;
+              }
+            }
+          }
+          amount = Math.max(5, Math.min(maxAmount, amount));
+        }
+        if (pointerY - trigger < this.bounds.top) {
           newScroll = window.pageYOffset - amount;
-        } else if (pointerY + 100 > this.bounds.bottom) {
+        } else if (pointerY + trigger > this.bounds.bottom) {
           newScroll = window.pageYOffset + amount;
         }
-        return TweenLite.to(window, 0.1, {
-          scrollTo: newScroll,
-          ease: Linear.easeNone
+        TweenLite.set(window, {
+          scrollTo: newScroll
         });
+        return this.oldTaskY = y;
       };
 
       ListSortModel.prototype.destroy = function() {
