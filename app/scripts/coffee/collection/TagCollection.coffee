@@ -6,7 +6,10 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			@on( "remove", @handleTagDeleted, @ )
 			@on( "add", @handleAddTag, @ )
 
-			@on "reset", -> @remove m for m in @models when m.get "deleted"
+			@on "reset", ->
+				removeThese = []
+				removeThese.push m for m in @models when m.get "deleted"
+				@remove m for m in removeThese
 		setQuery: ->
 			@query = new Parse.Query TagModel
 			@query.equalTo( "owner", Parse.User.current() )
