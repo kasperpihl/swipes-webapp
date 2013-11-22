@@ -64,12 +64,8 @@ define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templa
 				tag = @getTagFromName tagName
 				if not tag and addToCollection then tag = new TagModel { title: tagName }
 
-				if addToCollection
-					swipy.tags.add tag
-					tag.save().then =>
-						@addTagToModel( tag, model ) for model in @options.models
-				else
-					@addTagToModel( tag, model ) for model in @options.models
+				@addTagToModel( tag, model ) for model in @options.models
+				if addToCollection then swipy.tags.getTagsFromTasks()
 
 				@render()
 		modelHasTag: (model, tag) ->

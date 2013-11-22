@@ -81,8 +81,7 @@
         return this.addTagToModels(tagName);
       },
       addTagToModels: function(tagName, addToCollection) {
-        var model, tag, _i, _len, _ref,
-          _this = this;
+        var model, tag, _i, _len, _ref;
         if (addToCollection == null) {
           addToCollection = true;
         }
@@ -95,24 +94,13 @@
               title: tagName
             });
           }
+          _ref = this.options.models;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            model = _ref[_i];
+            this.addTagToModel(tag, model);
+          }
           if (addToCollection) {
-            swipy.tags.add(tag);
-            tag.save().then(function() {
-              var model, _i, _len, _ref, _results;
-              _ref = _this.options.models;
-              _results = [];
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                model = _ref[_i];
-                _results.push(_this.addTagToModel(tag, model));
-              }
-              return _results;
-            });
-          } else {
-            _ref = this.options.models;
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              model = _ref[_i];
-              this.addTagToModel(tag, model);
-            }
+            swipy.tags.getTagsFromTasks();
           }
           return this.render();
         }
