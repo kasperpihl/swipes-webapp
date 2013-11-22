@@ -66,7 +66,6 @@
         target = $(e.currentTarget);
         remove = target.hasClass("selected");
         tag = target.text();
-        console.log("Toggle " + tag + " ", !remove);
         if (remove) {
           return this.removeTagFromModels(tag);
         } else {
@@ -98,11 +97,9 @@
             });
           }
           if (addToCollection) {
-            console.log("Adding tag to collection");
             swipy.tags.add(tag);
             tag.save().then(function() {
               var model, _i, _len, _ref, _results;
-              console.log("Added to col. Now adding tag to model");
               _ref = _this.options.models;
               _results = [];
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {

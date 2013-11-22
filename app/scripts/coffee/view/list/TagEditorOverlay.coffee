@@ -50,8 +50,6 @@ define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templa
 			remove = target.hasClass "selected"
 			tag = target.text()
 
-			console.log "Toggle #{tag} ", !remove
-
 			if remove then @removeTagFromModels tag
 			else @addTagToModels( tag, no )
 		createTag: (e) ->
@@ -68,10 +66,8 @@ define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templa
 				if not tag and addToCollection then tag = new TagModel { title: tagName }
 
 				if addToCollection
-					console.log "Adding tag to collection"
 					swipy.tags.add tag
 					tag.save().then =>
-						console.log "Added to col. Now adding tag to model"
 						@addTagToModel( tag, model ) for model in @options.models
 				else
 					@addTagToModel( tag, model ) for model in @options.models
