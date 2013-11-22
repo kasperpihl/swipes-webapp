@@ -35,9 +35,8 @@ define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templa
 		render: () ->
 			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
 			console.log "Rendering tag overlay"
-			if not @addedToDom
+			if not $("body").find(".overlay.tags-editor").length
 				$("body").append @$el
-				@addedToDom = yes
 
 			@show()
 			@handleResize()

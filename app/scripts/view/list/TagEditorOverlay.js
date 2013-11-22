@@ -49,9 +49,8 @@
           tagsAppliedToAll: this.getTagsAppliedToAll()
         }));
         console.log("Rendering tag overlay");
-        if (!this.addedToDom) {
+        if (!$("body").find(".overlay.tags-editor").length) {
           $("body").append(this.$el);
-          this.addedToDom = true;
         }
         this.show();
         this.handleResize();
