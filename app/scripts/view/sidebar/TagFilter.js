@@ -14,6 +14,7 @@
             return _this.render();
           });
         });
+        this.listenTo(swipy.todos, "change:tags", this.render);
         return this.render();
       },
       handleFilterChange: function(type) {

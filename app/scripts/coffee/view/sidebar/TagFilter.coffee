@@ -7,6 +7,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			@listenTo( swipy.tags, "add remove reset", @render )
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 			@listenTo( Backbone, "navigate/view", => _.defer => @render() )
+			@listenTo( swipy.todos, "change:tags", @render )
 			@render()
 		handleFilterChange: (type) ->
 			# We defer 'till next event loop, because we need to make sure
