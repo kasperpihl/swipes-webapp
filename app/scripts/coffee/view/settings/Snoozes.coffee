@@ -9,15 +9,17 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 			_.bindAll( @, "updateValue" )
 		getFloatFromTime: (hour, minute) ->
 			( hour / 24 ) + ( minute / 60 / 24 )
-		getTimeFromFloat: (val) ->
+		getTimeFromFloat: (value) ->
 			# There are 1440 minutes in a day
-			minutesTotal = 1440 * val
+			minutesTotal = 1440 * value
 
 			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
-			if val < 1
-				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.floor( minutesTotal % 60 ) }
-			else
+			if value is 0
+				{ hour: 0, minute: 5 }
+			else if value is 1
 				{ hour: 23, minute: 55 }
+			else
+				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.round( minutesTotal ) % 60 }
 		getFormattedTime: (hour, minute, addAmPm = yes) ->
 			if minute < 10 then minute = "0" + minute
 
@@ -80,6 +82,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 					opts =
 						onDrag: => @updateValue( "start-day", arguments... )
 						onDragEnd: => @updateValue( "start-day", yes, arguments... )
+						steps: 25
 
 					@startDaySlider.destroy() if @startDaySlider?
 					@startDaySlider = new SliderControl( el, opts, @getSliderVal "start-day" )
@@ -89,6 +92,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 					opts =
 						onDrag: => @updateValue( "start-evening", arguments... )
 						onDragEnd: => @updateValue( "start-evening", yes, arguments... )
+						steps: 25
 
 					@startEveSlider.destroy() if @startEveSlider?
 					@startEveSlider = new SliderControl( el, opts, @getSliderVal "start-evening" )
@@ -98,6 +102,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 					opts =
 						onDrag: => @updateValue( "start-weekend", arguments... )
 						onDragEnd: => @updateValue( "start-weekend", yes, arguments... )
+						steps: 25
 
 					@startWeekendSlider.destroy() if @startWeekendSlider?
 					@startWeekendSlider = new SliderControl( el, opts, @getSliderVal "start-weekend" )
@@ -107,6 +112,7 @@ define ["view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!t
 					opts =
 						onDrag: => @updateValue( "delay", arguments... )
 						onDragEnd: => @updateValue( "delay", yes, arguments... )
+						steps: 49
 
 					@delaySlider.destroy() if @delaySlider?
 					@delaySlider = new SliderControl( el, opts, @getSliderVal "delay" )

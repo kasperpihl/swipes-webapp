@@ -15,18 +15,23 @@
       getFloatFromTime: function(hour, minute) {
         return (hour / 24) + (minute / 60 / 24);
       },
-      getTimeFromFloat: function(val) {
+      getTimeFromFloat: function(value) {
         var minutesTotal;
-        minutesTotal = 1440 * val;
-        if (val < 1) {
+        minutesTotal = 1440 * value;
+        if (value === 0) {
           return {
-            hour: Math.floor(minutesTotal / 60),
-            minute: Math.floor(minutesTotal % 60)
+            hour: 0,
+            minute: 5
           };
-        } else {
+        } else if (value === 1) {
           return {
             hour: 23,
             minute: 55
+          };
+        } else {
+          return {
+            hour: Math.floor(minutesTotal / 60),
+            minute: Math.round(minutesTotal) % 60
           };
         }
       },
@@ -122,7 +127,8 @@
               },
               onDragEnd: function() {
                 return _this.updateValue.apply(_this, ["start-day", true].concat(__slice.call(arguments)));
-              }
+              },
+              steps: 25
             };
             if (this.startDaySlider != null) {
               this.startDaySlider.destroy();
@@ -136,7 +142,8 @@
               },
               onDragEnd: function() {
                 return _this.updateValue.apply(_this, ["start-evening", true].concat(__slice.call(arguments)));
-              }
+              },
+              steps: 25
             };
             if (this.startEveSlider != null) {
               this.startEveSlider.destroy();
@@ -150,7 +157,8 @@
               },
               onDragEnd: function() {
                 return _this.updateValue.apply(_this, ["start-weekend", true].concat(__slice.call(arguments)));
-              }
+              },
+              steps: 25
             };
             if (this.startWeekendSlider != null) {
               this.startWeekendSlider.destroy();
@@ -164,7 +172,8 @@
               },
               onDragEnd: function() {
                 return _this.updateValue.apply(_this, ["delay", true].concat(__slice.call(arguments)));
-              }
+              },
+              steps: 49
             };
             if (this.delaySlider != null) {
               this.delaySlider.destroy();
