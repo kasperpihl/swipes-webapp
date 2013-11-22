@@ -17,14 +17,19 @@
           return console.log("Changed title to " + newTitle);
         });
         return this.on("reset", function() {
-          var m, _i, _len, _ref, _results;
+          var m, removeThese, _i, _j, _len, _len1, _ref, _results;
+          removeThese = [];
           _ref = this.models;
-          _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             m = _ref[_i];
             if (m.get("deleted")) {
-              _results.push(this.remove(m));
+              removeThese.push(m);
             }
+          }
+          _results = [];
+          for (_j = 0, _len1 = removeThese.length; _j < _len1; _j++) {
+            m = removeThese[_j];
+            _results.push(this.remove(m));
           }
           return _results;
         });

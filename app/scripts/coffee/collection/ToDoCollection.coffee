@@ -7,7 +7,10 @@ define ["model/ToDoModel"], (ToDoModel) ->
 			@on( "change:completionDate", @checkIfRepeat )
 			@on( "change:title", (model, newTitle) => console.log "Changed title to #{newTitle}" )
 
-			@on "reset", -> @remove m for m in @models when m.get "deleted"
+			@on "reset", ->
+				removeThese = []
+				removeThese.push m for m in @models when m.get "deleted"
+				@remove m for m in removeThese
 		setQuery: ->
 			@query = new Parse.Query ToDoModel
 			@query.equalTo( "owner", Parse.User.current() )
