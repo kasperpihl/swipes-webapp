@@ -64,12 +64,13 @@
           return;
         }
         swipy.todos.bumpOrder();
-        return swipy.todos.create({
+        swipy.todos.create({
           title: title,
           tags: tags,
           order: order,
           animateIn: animateIn
         });
+        return swipy.tags.getTagsFromTasks();
       };
 
       TaskInputController.prototype.destroy = function() {

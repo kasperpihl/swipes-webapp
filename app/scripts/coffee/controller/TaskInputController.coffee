@@ -14,6 +14,7 @@ define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, Ta
 				for tagName in tagNameList
 					tag = swipy.tags.getTagByName tagName
 					if not tag then tag = new TagModel( title: tagName )
+
 					tags.push tag
 
 				return tags
@@ -21,8 +22,7 @@ define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, Ta
 				return []
 
 		parseTitle: (str) ->
-			if str[0] is "#"
-				return ""
+			if str[0] is "#" then return ""
 
 			result = str.match(/[^#]+/)?[0]
 			if result then result = $.trim result
@@ -43,6 +43,7 @@ define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, Ta
 
 			swipy.todos.bumpOrder()
 			swipy.todos.create { title, tags, order, animateIn }
+			swipy.tags.getTagsFromTasks()
 
 		destroy: ->
 			Backbone.off( null, null, @ )

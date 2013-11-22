@@ -45,7 +45,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				else models = swipy.todos.getCompleted()
 
 			for model in models when model.has "tags"
-				tags.push tagName for tagName in _.invoke( model.get( "tags" ), "get", "title" )
+				tags.push tagName for tagName in model.getTagStrList()
 
 			return _.unique tags
 		getValidatedTags: ->
@@ -57,8 +57,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			list = @$el. find ".rounded-tags"
 			list.empty()
 
-			tags = @getValidatedTags()
 			# Sort alphabetically, case-insensitive
+			tags = @getValidatedTags()
 			tags = _.sortBy( tags, (tag) -> return tag.toLowerCase() )
 
 			@renderTag( tag, list ) for tag in tags

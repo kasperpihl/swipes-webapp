@@ -74,7 +74,7 @@
         for (_i = 0, _len = models.length; _i < _len; _i++) {
           model = models[_i];
           if (model.has("tags")) {
-            _ref = _.invoke(model.get("tags"), "get", "title");
+            _ref = model.getTagStrList();
             for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
               tagName = _ref[_j];
               tags.push(tagName);
