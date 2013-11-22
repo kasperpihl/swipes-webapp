@@ -5,9 +5,6 @@ require('cloud/app.js');
 Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
-  var _ = require('underscore');
-  var attrWhitelist = [ "title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority","owner","deleted" ];
-  request.object = _.pick( request.object, attrWhitelist);
   var todo = request.object;
   makeAttributeChanges(todo);
   if(todo.isNew() && user) todo.set('owner',user);
@@ -37,6 +34,30 @@ function makeAttributeChanges(object){
     if(hasChanged) object.set('attributeChanges',changes);
   }
 }
+Parse.Cloud.define('checkEmail',function(request,response){
+  var email = request.params.email;
+  if(!email) return sendError(response,'You need to include email');
+  var query = new Parse.Query(Parse.User);
+  query.equalTo('username',email);
+  query.count({success:function(counter){
+    if(counter > 0) response.success(1);
+    else response.success(0);
+  },error:function(error){ sendError(response,error); }});
+});
+Parse.Cloud.define('cleanup',function(request,response){
+  var query = new Parse.Query('Tag');
+  query.limit(1000);
+  query.find({success:function(objects){ 
+    Parse.Object.destroyAll(objects,{
+      success:function(){
+        response.success(); 
+      },error:function(error){ 
+        response.error(error); 
+      }});},error:function(error){
+      response.error(error);
+      }
+    });
+  });
 function scrapeChanges(object,lastUpdateTime){
   var attributes = object.attributes;
   var updateTime = new Date();
