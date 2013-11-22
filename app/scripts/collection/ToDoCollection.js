@@ -17,7 +17,7 @@
           return console.log("Changed title to " + newTitle);
         });
         return this.on("reset", function() {
-          var m, removeThese, _i, _j, _len, _len1, _ref, _results;
+          var m, removeThese, _i, _j, _len, _len1, _ref;
           removeThese = [];
           _ref = this.models;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -26,12 +26,14 @@
               removeThese.push(m);
             }
           }
-          _results = [];
           for (_j = 0, _len1 = removeThese.length; _j < _len1; _j++) {
             m = removeThese[_j];
-            _results.push(this.remove(m));
+            this.remove(m);
           }
-          return _results;
+          return this.invoke("set", {
+            rejectedByTag: false,
+            rejectedBySearch: false
+          });
         });
       },
       setQuery: function() {
