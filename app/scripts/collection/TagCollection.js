@@ -39,7 +39,11 @@
             for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
               tag = _ref1[_j];
               if (this.validateTag(tag)) {
-                tags.push(tag);
+                if (!_.findWhere(tags, {
+                  cid: tag.cid
+                })) {
+                  tags.push(tag);
+                }
               }
             }
           }

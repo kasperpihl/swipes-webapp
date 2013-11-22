@@ -17,7 +17,9 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			tags = []
 			for m in swipy.todos.models when m.has "tags"
 				for tag in m.get "tags" when @validateTag tag
-					tags.push tag
+					# Make sure we don't get duplicates
+					unless _.findWhere( tags, { cid: tag.cid } )
+						tags.push tag
 
 			# Finally add tags to our collection
 			@reset tags
