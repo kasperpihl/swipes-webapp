@@ -3,7 +3,8 @@
     var MainRouter;
     return MainRouter = Parse.Router.extend({
       routes: {
-        "settings(/:id)": "settings",
+        "settings/:id": "settings",
+        "settings": "settings",
         "edit/:id": "edit",
         "list/:id": "list",
         "*all": "root"
