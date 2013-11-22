@@ -140,13 +140,15 @@
           return model.save("tags", [tag]);
         }
       },
-      removeTagFromModels: function(tag) {
+      removeTagFromModels: function(tagName) {
         var model, newTags, tags, _i, _len, _ref;
         _ref = this.options.models;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           model = _ref[_i];
           tags = model.get("tags");
-          newTags = _.without(tags, tag);
+          newTags = _.reject(tags, function(tagModel) {
+            return tagModel.get("title") === tagName;
+          });
           model.unset("tags", {
             silent: true
           });

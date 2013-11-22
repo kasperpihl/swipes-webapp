@@ -84,10 +84,10 @@ define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templa
 				model.save( "tags", tags )
 			else
 				model.save( "tags", [tag] )
-		removeTagFromModels: (tag) ->
+		removeTagFromModels: (tagName) ->
 			for model in @options.models
 				tags = model.get "tags"
-				newTags = _.without( tags, tag )
+				newTags = _.reject( tags, (tagModel) -> tagModel.get( "title" ) is tagName )
 				model.unset( "tags", { silent: yes } )
 				model.save( "tags", newTags )
 
