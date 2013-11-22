@@ -5,12 +5,28 @@
       initialize: function() {
         var _this = this;
         this.setQuery();
-        this.on("destroy", function(model) {
-          return _this.remove(model);
+        this.on("change:deleted", function(model, deleted) {
+          if (deleted) {
+            return _this.remove(model);
+          } else {
+            return _this.add(model);
+          }
         });
         this.on("change:completionDate", this.checkIfRepeat);
-        return this.on("change:title", function(model, newTitle) {
+        this.on("change:title", function(model, newTitle) {
           return console.log("Changed title to " + newTitle);
+        });
+        return this.on("reset", function() {
+          var m, _i, _len, _ref, _results;
+          _ref = this.models;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            m = _ref[_i];
+            if (m.get("deleted")) {
+              _results.push(this.remove(m));
+            }
+          }
+          return _results;
         });
       },
       setQuery: function() {
@@ -107,8 +123,7 @@
           }
           return _results1;
         }
-      },
-      checkIfRepeat: function(model, completionDate) {}
+      }
     });
   });
 

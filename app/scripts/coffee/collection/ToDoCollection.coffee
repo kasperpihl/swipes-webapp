@@ -3,9 +3,11 @@ define ["model/ToDoModel"], (ToDoModel) ->
 		model: ToDoModel
 		initialize: ->
 			@setQuery()
-			@on( "destroy", (model) => @remove model )
+			@on( "change:deleted", (model, deleted) => if deleted then @remove model else @add model )
 			@on( "change:completionDate", @checkIfRepeat )
 			@on( "change:title", (model, newTitle) => console.log "Changed title to #{newTitle}" )
+
+			@on "reset", -> @remove m for m in @models when m.get "deleted"
 		setQuery: ->
 			@query = new Parse.Query ToDoModel
 			@query.equalTo( "owner", Parse.User.current() )
@@ -48,13 +50,3 @@ define ["model/ToDoModel"], (ToDoModel) ->
 			else if direction is "up"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
 					model.set( "order", model.get( "order" ) - bumps )
-
-		checkIfRepeat: (model, completionDate) ->
-			# if model.get "repeatDate"
-			# 	console.warn "I want to play a game with you"
-				# diffSinceLastSave = model.completionDateChangedLast?.getTime() - new Date().getTime()
-				# if diffSinceLastSave <
-				# debugger
-				# console.log "Spawning a duplicate task(#{ model.get 'title' }) for repeating on ", completionDate
-				# @create model.getRepeatableDuplicate().attributes
-				# console.log "Creating new task with properties: ", model.getRepeatableDuplicate().attributes

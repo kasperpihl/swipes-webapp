@@ -5,7 +5,19 @@
       initialize: function() {
         this.setQuery();
         this.on("remove", this.handleTagDeleted, this);
-        return this.on("add", this.handleAddTag, this);
+        this.on("add", this.handleAddTag, this);
+        return this.on("reset", function() {
+          var m, _i, _len, _ref, _results;
+          _ref = this.models;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            m = _ref[_i];
+            if (m.get("deleted")) {
+              _results.push(this.remove(m));
+            }
+          }
+          return _results;
+        });
       },
       setQuery: function() {
         this.query = new Parse.Query(TagModel);

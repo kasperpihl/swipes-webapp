@@ -64,9 +64,9 @@
             if (model.has("order")) {
               order = model.get("order");
               model.unset("order");
+              model.save("deleted", true);
               swipy.todos.bumpOrder("up", order);
             }
-            model.destroy();
           }
           return this.hide();
         }
