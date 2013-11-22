@@ -34,6 +34,7 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 			@tagEditor = new TagEditorOverlay( models: swipy.todos.filter (m) -> m.get "selected" )
 		deleteTasks: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			return unless selectedTasks.length
 			if confirm "Delete #{selectedTasks.length} tasks?"
 				for model in selectedTasks
 					if model.has "order"

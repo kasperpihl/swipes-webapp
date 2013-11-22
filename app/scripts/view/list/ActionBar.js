@@ -58,6 +58,9 @@
         selectedTasks = swipy.todos.filter(function(m) {
           return m.get("selected");
         });
+        if (!selectedTasks.length) {
+          return;
+        }
         if (confirm("Delete " + selectedTasks.length + " tasks?")) {
           for (_i = 0, _len = selectedTasks.length; _i < _len; _i++) {
             model = selectedTasks[_i];
