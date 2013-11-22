@@ -47,6 +47,10 @@ $list-item-height-lg: 105px;
 				margin-left: 0;
 				&:before { content: none; }
 			}
+
+			strong {
+				color: $gray;
+			}
 		}
 	}
 }

@@ -33,7 +33,11 @@
 			_.each(tagStrings, function(tag) {
 		%>
 
-		<li><%= tag %></li>
+		<% if ( _.contains(swipy.filter.tagsFilter, tag) ) { %>
+			<li><strong><%= tag %></strong></li>
+		<% } else { %>
+			<li><%= tag %></li>
+		<% } %>
 
 		<% }); %>
 
