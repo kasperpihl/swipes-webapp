@@ -9,6 +9,7 @@
         this.debouncedClearSearch = _.debounce(this.removeSearchFilter, 100);
         Backbone.on("apply-filter", this.applyFilter, this);
         Backbone.on("remove-filter", this.removeFilter, this);
+        Backbone.on('navigate/view', this.clearFilters, this);
       }
 
       FilterController.prototype.applyFilter = function(type, filter) {
@@ -24,6 +25,16 @@
           return this.removeTagsFilter(filter);
         } else {
           return this.debouncedClearSearch(filter);
+        }
+      };
+
+      FilterController.prototype.clearFilters = function() {
+        if (this.searchFilter.length) {
+          this.removeSearchFilter();
+        }
+        if (this.tagsFilter.length) {
+          this.tagsFilter = [];
+          return this.removeTagsFilter();
         }
       };
 

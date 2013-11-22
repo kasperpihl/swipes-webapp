@@ -9,11 +9,19 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			Backbone.on( "apply-filter", @applyFilter, @ )
 			Backbone.on( "remove-filter", @removeFilter, @ )
+
+			Backbone.on( 'navigate/view', @clearFilters, @ )
 		applyFilter: (type, filter) ->
 			if type is "tag" then @applyTagsFilter filter else @debouncedSearch filter
 
 		removeFilter: (type, filter) ->
 			if type is "tag" then @removeTagsFilter filter else @debouncedClearSearch filter
+
+		clearFilters: ->
+			if @searchFilter.length then @removeSearchFilter()
+			if @tagsFilter.length
+				@tagsFilter = []
+				@removeTagsFilter()
 
 		applyTagsFilter: (addTag) ->
 			if (addTag) and not _.contains( @tagsFilter, addTag )
