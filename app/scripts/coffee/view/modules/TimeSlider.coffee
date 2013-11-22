@@ -7,17 +7,24 @@ define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"
 			@listenTo( @model, "change:time", _.debounce( @updateSlider, 50 ) )
 		getFloatFromTime: (hour, minute) ->
 			( hour / 24 ) + ( minute / 60 / 24 )
-		getTimeFromFloat: (val) ->
+		getTimeFromFloat: (value) ->
 			# There are 1440 minutes in a day
-			minutesTotal = 1440 * val
+			minutesTotal = 1440 * value
 
 			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
-			if val < 1
-				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.floor( minutesTotal % 60 ) }
-			else
+			if value is 0
+				{ hour: 0, minute: 5 }
+			else if value is 1
 				{ hour: 23, minute: 55 }
+			else
+				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.round( minutesTotal ) % 60 }
 		getOpts: ->
-			{ onDrag: @updateValue, onDragEnd: @updateValue }
+			# +1 to amount of actual steps, to make the time from value get the true value.
+			# For instance, in a 12-stepped slider we would the last time be 22:00 where we want 24:00,
+			# so we add the extra step. We want 12 steps in-between 0-24, not 12 steps in total.
+			#
+			# 24 * 4 will give us a step every 15 minutes.
+			{ onDrag: @updateValue, onDragEnd: @updateValue, steps: ( 24 * 4 ) + 1  }
 		getStartVal: ->
 			snoozes = swipy.settings.get "snoozes"
 			day = snoozes.weekday
@@ -25,7 +32,6 @@ define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"
 			return result
 		updateValue: ->
 			unless @model.get "userManuallySetTime" then @model.set( "userManuallySetTime", yes )
-
 			time = @getTimeFromFloat @slider.value
 			@model.unset( "time", { silent: yes } )
 			@model.set( "time", time )

@@ -20,6 +20,7 @@
 		position: absolute;
 		top: 50%;
 		margin-top: 0 - ( $handle-size / 2 );
+		margin-left: 0 - ( $handle-size / 2 );
 
 		width: $handle-size;
 		height: $handle-size;

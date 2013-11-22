@@ -10,25 +10,31 @@
       getFloatFromTime: function(hour, minute) {
         return (hour / 24) + (minute / 60 / 24);
       },
-      getTimeFromFloat: function(val) {
+      getTimeFromFloat: function(value) {
         var minutesTotal;
-        minutesTotal = 1440 * val;
-        if (val < 1) {
+        minutesTotal = 1440 * value;
+        if (value === 0) {
           return {
-            hour: Math.floor(minutesTotal / 60),
-            minute: Math.floor(minutesTotal % 60)
+            hour: 0,
+            minute: 5
           };
-        } else {
+        } else if (value === 1) {
           return {
             hour: 23,
             minute: 55
+          };
+        } else {
+          return {
+            hour: Math.floor(minutesTotal / 60),
+            minute: Math.round(minutesTotal) % 60
           };
         }
       },
       getOpts: function() {
         return {
           onDrag: this.updateValue,
-          onDragEnd: this.updateValue
+          onDragEnd: this.updateValue,
+          steps: (24 * 4) + 1
         };
       },
       getStartVal: function() {
