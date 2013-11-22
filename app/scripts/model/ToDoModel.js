@@ -8,7 +8,7 @@
   define(["momentjs"], function() {
     return Parse.Object.extend({
       className: "ToDo",
-      attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority", "owner", "deleted"],
+      attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority", "deleted"],
       defaults: {
         title: "",
         order: void 0,
@@ -21,7 +21,6 @@
         notes: "",
         location: void 0,
         priority: 0,
-        owner: Parse.User.current(),
         deleted: false
       },
       initialize: function() {

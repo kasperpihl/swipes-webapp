@@ -18,7 +18,6 @@ define ["momentjs"], ->
 			"notes"
 			"location"
 			"priority"
-			"owner"
 			"deleted"
 		]
 		defaults:
@@ -33,7 +32,6 @@ define ["momentjs"], ->
 			notes: ""
 			location: undefined
 			priority: 0
-			owner: Parse.User.current()
 			deleted: no
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
