@@ -48,9 +48,16 @@
         return this.saveNewTags();
       },
       getTagByName: function(tagName) {
-        return this.findWhere({
-          title: tagName
+        var result;
+        tagName = tagName.toLowerCase();
+        result = this.filter(function(tag) {
+          return tag.get("title").toLowerCase() === tagName;
         });
+        if (result.length) {
+          return result[0];
+        } else {
+          return void 0;
+        }
       },
       saveNewTags: function() {
         var model, _i, _len, _ref, _results;

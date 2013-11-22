@@ -25,7 +25,12 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			# Save the models to the server if they are unsaved
 			@saveNewTags()
 		getTagByName: (tagName) ->
-			@findWhere( title:tagName )
+			tagName = tagName.toLowerCase()
+			result = @filter (tag) -> tag.get("title").toLowerCase() is tagName
+			if result.length
+				return result[0]
+			else
+				return undefined
 		saveNewTags: ->
 			for model in @models when model.isNew()
 				model.save()
