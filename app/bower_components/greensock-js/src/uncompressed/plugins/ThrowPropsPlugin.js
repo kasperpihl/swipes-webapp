@@ -233,7 +233,7 @@
 						} else {
 							tracker = tracker || VelocityTracker.getByTarget(t);
 							if (tracker && tracker.isTrackingProp(p)) {
-								velocities[p] = tracker.getVelocity(p); //rotational values are actually converted to radians in CSSPlugin, but our tracking velocity is in radians already, so make it into degrees to avoid a funky conversion
+								velocities[p] = tracker.getVelocity(p);
 							} else {
 								velocities[p] = val || 0;
 							}
@@ -267,7 +267,7 @@
 				vars = {throwProps:vars};
 			}
 			var tween = new TweenLite(target, 1, vars);
-			tween.render(0, true, true); //we force a render so that the CSSPlugin instantiates and populates the _cssProxy and _cssVars which we need in order to calculate the tween duration. Remember, we can't use the regular target for calculating the duration because the current values wouldn't be able to be grabbed like target["propertyName"], as css properties can be complex like boxShadow:"10px 10px 20px 30px red" or backgroundPosition:"25px 50px". The proxy is the result of breaking all that complex data down and finding just the numeric values and assigning them to a generic proxy object with unique names. THAT is what the _calculateTweenDuration() can look at. We also needed to to the same break down of any min or max or velocity data
+			tween.render(0, true, true); //we force a render so that the CSSPlugin instantiates and populates the _cssProxy and _cssVars which we need in order to calculate the tween duration. Remember, we can't use the regular target for calculating the duration because the current values wouldn't be able to be grabbed like target["propertyName"], as css properties can be complex like boxShadow:"10px 10px 20px 30px red" or backgroundPosition:"25px 50px". The proxy is the result of breaking all that complex data down and finding just the numeric values and assigning them to a generic proxy object with unique names. THAT is what the _calculateTweenDuration() can look at. We also needed to do the same break down of any min or max or velocity data
 			if (tween.vars.css) {
 				tween.duration(_calculateTweenDuration(_cssProxy, {throwProps:_cssVars, ease:vars.ease}, maxDuration, minDuration, overshootTolerance));
 				if (tween._delay && !tween.vars.immediateRender) {
