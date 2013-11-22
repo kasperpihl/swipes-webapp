@@ -43,7 +43,8 @@ define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, Ta
 
 			swipy.todos.bumpOrder()
 			swipy.todos.create { title, tags, order, animateIn }
-			swipy.tags.getTagsFromTasks()
+
+			if tags.length then swipy.tags.getTagsFromTasks()
 
 		destroy: ->
 			Backbone.off( null, null, @ )

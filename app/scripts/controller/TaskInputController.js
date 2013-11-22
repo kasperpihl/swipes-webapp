@@ -70,7 +70,9 @@
           order: order,
           animateIn: animateIn
         });
-        return swipy.tags.getTagsFromTasks();
+        if (tags.length) {
+          return swipy.tags.getTagsFromTasks();
+        }
       };
 
       TaskInputController.prototype.destroy = function() {
