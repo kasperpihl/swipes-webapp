@@ -68,7 +68,6 @@
           this.setCompletionTimeStr();
         }
         saveOrder = function() {
-          console.log("Saving order for " + (_this.get('title')) + ": ", _this.get("order"));
           return _this.save();
         };
         debouncedSaveOrder = _.debounce(saveOrder, 3000);

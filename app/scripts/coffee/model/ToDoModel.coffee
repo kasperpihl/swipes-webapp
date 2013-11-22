@@ -74,9 +74,7 @@ define ["momentjs"], ->
 				@setCompletionStr()
 				@setCompletionTimeStr()
 
-			saveOrder = =>
-				console.log "Saving order for #{@get 'title'}: ", @get "order"
-				@save()
+			saveOrder = => @save()
 			debouncedSaveOrder = _.debounce( saveOrder, 3000 )
 
 			@on "change:order", =>
