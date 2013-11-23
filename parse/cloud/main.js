@@ -6,6 +6,11 @@ Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
   var todo = request.object;
+  var attrWhitelist = [ "title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority","owner","deleted","attributeChanges"];
+  var _ = require('underscore.js');
+  for(var attribute in todo.attributes){
+    if(_.indexOf(attrWhitelist,attribute) == -1) delete todo.attributes[attribute];
+  }
   makeAttributeChanges(todo);
   if(todo.isNew() && user) todo.set('owner',user);
   response.success();
@@ -14,6 +19,14 @@ Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
   var tag = request.object;
+  var attrWhitelist = ["deleted", "owner", "title", "attributeChanges"];
+  var _ = require('underscore.js');
+  for(var attribute in tag.attributes){
+    if(_.indexOf(attrWhitelist,attribute) == -1){ 
+      tag.unset(attribute);
+      delete tag.attributes[attribute];
+    }
+  }
   makeAttributeChanges(tag);
   if(tag.isNew() && user) tag.set('owner',user);
   response.success();
@@ -32,6 +45,20 @@ function makeAttributeChanges(object){
       }
     }
     if(hasChanged) object.set('attributeChanges',changes);
+  }
+}
+function scrapeChanges(object,lastUpdateTime){
+  var attributes = object.attributes;
+  var updateTime = new Date();
+  if(!attributes['attributeChanges']) return;
+  if(!lastUpdateTime) return delete attributes['attributeChanges'];
+  var changes = object.get('attributeChanges');
+  if(!changes) changes = {};
+  if(attributes){
+    for(var attribute in attributes){
+      var lastChange = changes[attribute];  
+      if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
+    }
   }
 }
 Parse.Cloud.define('checkEmail',function(request,response){
@@ -58,20 +85,7 @@ Parse.Cloud.define('cleanup',function(request,response){
       }
     });
   });
-function scrapeChanges(object,lastUpdateTime){
-  var attributes = object.attributes;
-  var updateTime = new Date();
-  if(!attributes['attributeChanges']) return;
-  if(!lastUpdateTime) return delete attributes['attributeChanges'];
-  var changes = object.get('attributeChanges');
-  if(!changes) changes = {};
-  if(attributes){
-    for(var attribute in attributes){
-      var lastChange = changes[attribute];  
-      if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
-    }
-  }
-}
+
 
 Parse.Cloud.define("subscribe", function(request, response) {
   var email = request.params.email;
