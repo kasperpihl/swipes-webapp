@@ -5,30 +5,49 @@ require('cloud/app.js');
 Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
-  var todo = request.object;
-  var attrWhitelist = [ "title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority","owner","deleted","attributeChanges"];
-  var _ = require('underscore.js');
-  for(var attribute in todo.attributes){
-    if(_.indexOf(attrWhitelist,attribute) == -1) delete todo.attributes[attribute];
+  var attrWhitelist = ["title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority"];
+  handleObject(request.object, attrWhitelist);
+  response.success();
+});
+function handleObject(object,attrWhiteList){
+  var user = Parse.User.current();
+  var _ = require('underscore');
+  var defAttributes = ["deleted","attributeChanges","tempId","owner"];
+  if(attrWhiteList){
+    for(var attribute in object.attributes){
+      if(_.indexOf(attrWhiteList,attribute) == -1 && _.indexOf(defAttributes,attribute) == -1) delete object.attributes[attribute];
+    }
   }
-  makeAttributeChanges(todo);
-  if(todo.isNew() && user) todo.set('owner',user);
+  makeAttributeChanges(object);
+  if(object.isNew() && user){ 
+    object.set('owner',user);
+    var ACL = new Parse.ACL();
+    ACL.setReadAccess(user.id,true);
+    ACL.setWriteAccess(user.id,true);
+    object.setACL(ACL);
+  }
+}
+Parse.Cloud.beforeSave('Payment',function(request,response){
+  var user = request.user;
+  if(!user && !request.master) return sendError(response,'You have to be logged in');
+  var payment = request.object;
+  payment.set('user',user);
+  var productIdentifier = payment.get('productIdentifier');
+  if(productIdentifier == 'plusMonthlyTier1'){
+    user.set('userLevel',2);
+    user.save();
+  }
+  else if(productIdentifier == 'plusYearlyTier10'){
+    user.set('userLevel',3);
+    user.save();
+  }
   response.success();
 });
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in');
-  var tag = request.object;
-  var attrWhitelist = ["deleted", "owner", "title", "attributeChanges"];
-  var _ = require('underscore.js');
-  for(var attribute in tag.attributes){
-    if(_.indexOf(attrWhitelist,attribute) == -1){ 
-      tag.unset(attribute);
-      delete tag.attributes[attribute];
-    }
-  }
-  makeAttributeChanges(tag);
-  if(tag.isNew() && user) tag.set('owner',user);
+  var attrWhitelist = ["title"];
+  handleObject(request.object);
   response.success();
 });
 function makeAttributeChanges(object){
@@ -57,6 +76,7 @@ function scrapeChanges(object,lastUpdateTime){
   if(attributes){
     for(var attribute in attributes){
       var lastChange = changes[attribute];  
+      if(attribute == "deleted" || attribute == "tempId") continue;
       if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
     }
   }
@@ -174,6 +194,9 @@ Parse.Cloud.beforeSave(Parse.User,function(request,response){
       mandrill.sendTemplate("welcome-email-new",object.get('username'),"Welcome to Swipes!");
     }
   }
+  if(object.dirty('userLevel') && !request.master){
+    return sendError(response,'User not allowed to change this');
+  }
   response.success();
 });
 function req(module){
@@ -238,7 +261,7 @@ function runQueue(queue,done,options){
         calledDone = true;
       }
       else{
-        if(result.length > 0){
+        if(result && result.length > 0){
           for(var i = 0 ; i < result.length ; i++){
             var obj = result[i];
             scrapeChanges(obj,options.changesSince);
