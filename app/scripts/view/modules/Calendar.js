@@ -116,7 +116,6 @@
         oldDate = this.selectedDay.date();
         maxDate = newDate.daysInMonth();
         newDate.date(Math.min(oldDate, maxDate));
-        console.log("Month changed!");
         if (newDate.isBefore(this.today)) {
           newDate = this.today;
         }

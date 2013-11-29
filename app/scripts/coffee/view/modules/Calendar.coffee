@@ -94,8 +94,6 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			maxDate = newDate.daysInMonth()
 			newDate.date Math.min( oldDate, maxDate )
 
-			console.log "Month changed!"
-
 			# Also check that we don't select a date prior to today
 			if newDate.isBefore @today then newDate = @today
 
