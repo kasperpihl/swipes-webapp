@@ -123,7 +123,12 @@ $list-item-height-lg: 105px;
 // Various states for tasks
 .todo-list {
 	.selected .todo-content {
-		background: #f3f3f3;
+		background: #f7f7f7;
+	}
+
+	.dragging .todo-content {
+		@include transition(all 0.2s ease-out);
+		@include box-shadow(0 0 30px #ddd);
 	}
 
 	.hover-left {

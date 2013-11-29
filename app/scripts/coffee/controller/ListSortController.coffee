@@ -69,15 +69,15 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			if @model?
 				view.model.off(null, null, @) for view in @model?.views
 		onDragStart: (view, allViews) =>
-			view.$el.addClass "selected"
 			view.$el.off( "click", ".todo-content", view.toggleSelected )
+			view.$el.addClass "dragging"
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y )
 			model.scrollWindow( @minY, @maxY, @y, @pointerY )
 		onDragEnd: (view, model) ->
 			model.reorderRows( view, @endY )
 			model.oldTaskY = null
-			view.$el.removeClass( "selected" ) unless view.model.get "selected"
+			view.$el.removeClass( "dragging" )
 			setTimeout ->
 					view.$el.on( "click", ".todo-content", view.toggleSelected )
 				, 500

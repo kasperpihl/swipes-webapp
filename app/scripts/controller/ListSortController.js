@@ -126,8 +126,8 @@
       };
 
       ListSortController.prototype.onDragStart = function(view, allViews) {
-        return view.$el.addClass("selected");
         view.$el.off("click", ".todo-content", view.toggleSelected);
+        return view.$el.addClass("dragging");
       };
 
       ListSortController.prototype.onDrag = function(view, model) {
@@ -138,9 +138,7 @@
       ListSortController.prototype.onDragEnd = function(view, model) {
         model.reorderRows(view, this.endY);
         model.oldTaskY = null;
-        if (!view.model.get("selected")) {
-          return view.$el.removeClass("selected");
-        }
+        view.$el.removeClass("dragging");
         return setTimeout(function() {
           return view.$el.on("click", ".todo-content", view.toggleSelected);
         }, 500);
