@@ -3,7 +3,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		tagName: "div"
 		className: "calendar-wrap"
 		initialize: ->
-			_.bindAll( @, "handleClickDay", "handleMonthChanged", "handleYearChanged" )
+			_.bindAll( @, "handleClickDay", "handleMonthChanged" )
 
 			@listenTo( @model, "change:date", @renderDate )
 			@listenTo( @model, "change:time", @renderTime )
@@ -18,7 +18,6 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 					day: "day"
 				clickEvents:
 					click: @handleClickDay
-					onYearChange: @handleYearChanged
 					onMonthChange: @handleMonthChanged
 				weekOffset: swipy.settings.get( "snoozes" ).weekday.startDay.number
 				doneRendering: @afterRender
@@ -53,7 +52,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 
 			@days.removeClass "selected"
 			if not element? then element = @getElementFromMoment moment
-			$( element ).addClass( "selected")
+			$( element ).addClass "selected"
 			@selectedDay = moment
 
 			# This class disables the "Previous month" button, if we're at the current month
@@ -76,16 +75,17 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			if $el.hasClass "adjacent-month"
 				if $el.hasClass "last-month" then @clndr.back()
 				else @clndr.forward()
-		handleYearChanged: (moment) ->
-			console.log "Switched year to ", moment.year()
 		handleMonthChanged: (moment) ->
 			# Push selected day to new month.
 			newDate = moment
 
+
 			# Check if newMonth has as many days as current month
 			# (I.e. switching from a 31 day month to a 29 day month)
 			# Moment.js does this automatically.
-			newDate.date @selectedDay.date()
+			oldDate = @selectedDay.date()
+			maxDate = newDate.daysInMonth()
+			newDate.date Math.min( oldDate, maxDate )
 
 			# Also check that we don't select a date prior to today
 			if newDate.isBefore @today then newDate = @today

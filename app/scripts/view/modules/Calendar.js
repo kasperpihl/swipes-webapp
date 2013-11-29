@@ -4,7 +4,7 @@
       tagName: "div",
       className: "calendar-wrap",
       initialize: function() {
-        _.bindAll(this, "handleClickDay", "handleMonthChanged", "handleYearChanged");
+        _.bindAll(this, "handleClickDay", "handleMonthChanged");
         this.listenTo(this.model, "change:date", this.renderDate);
         this.listenTo(this.model, "change:time", this.renderTime);
         return this.today = moment();
@@ -20,7 +20,6 @@
           },
           clickEvents: {
             click: this.handleClickDay,
-            onYearChange: this.handleYearChanged,
             onMonthChange: this.handleMonthChanged
           },
           weekOffset: swipy.settings.get("snoozes").weekday.startDay.number,
@@ -106,13 +105,13 @@
           }
         }
       },
-      handleYearChanged: function(moment) {
-        return console.log("Switched year to ", moment.year());
-      },
       handleMonthChanged: function(moment) {
-        var newDate;
+        var maxDate, newDate, oldDate;
         newDate = moment;
-        newDate.date(this.selectedDay.date());
+        oldDate = this.selectedDay.date();
+        maxDate = newDate.daysInMonth();
+        newDate.date(Math.min(oldDate, maxDate));
+        console.log("New date is ", newDate);
         if (newDate.isBefore(this.today)) {
           newDate = this.today;
         }
