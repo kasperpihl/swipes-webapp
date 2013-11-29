@@ -19,8 +19,7 @@
           swipe: false,
           tap: false,
           transform: false,
-          hold_threshold: 100,
-          prevent_default: false,
+          prevent_default: true,
           hold_timeout: Modernizr.touch ? 400 : 100
         };
       };
@@ -96,11 +95,10 @@
           onDragStart: this.onDragStart,
           onDragParams: [view, this.model],
           onDrag: this.onDrag,
-          onDragEndParams: [view, this.model],
+          onDragEndParams: [view, this.model, this],
           onDragEnd: this.onDragEnd,
           onThrowComplete: function() {
             var _ref;
-            _this.deactivate();
             return (_ref = _this.onDragCompleteCallback) != null ? _ref.call(_this) : void 0;
           }
         };
@@ -148,12 +146,12 @@
         return model.scrollWindow(this.minY, this.maxY, this.y, this.pointerY);
       };
 
-      ListSortController.prototype.onDragEnd = function(view, model) {
-        var _this = this;
+      ListSortController.prototype.onDragEnd = function(view, model, self) {
         model.reorderRows(view, this.endY);
         model.oldTaskY = null;
         view.$el.removeClass("dragging");
         return setTimeout(function() {
+          self.deactivate();
           return view.$el.on("click", ".todo-content", view.toggleSelected);
         }, 500);
       };

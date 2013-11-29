@@ -10,8 +10,8 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				swipe: off
 				tap: off
 				transform: off
-				hold_threshold: 100
-				prevent_default: no
+				# hold_threshold: 50
+				prevent_default: yes
 				hold_timeout: if Modernizr.touch then 400 else 100
 			}
 		enableTouchListners: ->
@@ -62,10 +62,9 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				onDragStart: @onDragStart
 				onDragParams: [view, @model]
 				onDrag: @onDrag
-				onDragEndParams: [view, @model]
+				onDragEndParams: [view, @model, @]
 				onDragEnd: @onDragEnd
 				onThrowComplete: =>
-					@deactivate()
 					@onDragCompleteCallback?.call @
 
 			dragOpts.trigger = view.$el.find ".todo-content"
@@ -86,11 +85,12 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y )
 			model.scrollWindow( @minY, @maxY, @y, @pointerY )
-		onDragEnd: (view, model) ->
+		onDragEnd: (view, model, self) ->
 			model.reorderRows( view, @endY )
 			model.oldTaskY = null
 			view.$el.removeClass( "dragging" )
-			setTimeout =>
+			setTimeout ->
+					self.deactivate()
 					view.$el.on( "click", ".todo-content", view.toggleSelected )
 				, 500
 		reorderView: (model, newOrder, animate = yes) ->
