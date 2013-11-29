@@ -11,8 +11,8 @@
 <a href="JavaScript:void(0);" class="action schedule" title="Schedule todo">
 	<span class="icon-schedule"></span>
 </a>
-
-<div class="todo-content">
+<% var centerTitle = !(tags && tags.length || repeatDate || notes) %>
+<div class="todo-content<% if (centerTitle) print(" center-title") %>">
 	<h2><span class="priority"></span><%= title %></h2>
 
 	<% if (state === "completed") { %>
