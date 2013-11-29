@@ -16,7 +16,7 @@ define [
 		initialize: ->
 			@setTemplate()
 			@bindEvents()
-			
+
 			@showClassName = "settings-open"
 			@hideClassName = "hide-settings"
 		bindEvents: ->
@@ -32,7 +32,7 @@ define [
 		afterShow: ->
 			@handleResize()
 		show: ->
-			if Backbone.history.fragment is "settings" then @killSubView()
+			if Parse.history.fragment is "settings" then @killSubView()
 			Overlay::show.apply( @, arguments )
 		showSubview: (subView) ->
 			@killSubView().then =>
@@ -45,12 +45,12 @@ define [
 		killSubView: ->
 			dfd = new $.Deferred()
 			if @subview?
-				@subview.remove().then => 
+				@subview.remove().then =>
 					@$el.removeClass "has-active-subview"
 					@subview = null
 					dfd.resolve()
 				return dfd.promise()
-			else 
+			else
 				@$el.removeClass "has-active-subview"
 				dfd.resolve()
 				return dfd.promise()
@@ -60,4 +60,4 @@ define [
 			content = @$el.find ".grid"
 			offset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
 			content.css( "margin-top", offset )
-			
+
