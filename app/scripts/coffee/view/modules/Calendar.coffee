@@ -21,11 +21,16 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 					onMonthChange: @handleMonthChanged
 				weekOffset: swipy.settings.get( "snoozes" ).weekday.startDay.number
 				doneRendering: @afterRender
+				adjacentDaysChangeMonth: on
+				constraints:
+					startDay: @getTodayStr()
 				ready: => @selectDay @today
 				daysOfTheWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 			}
 		createCalendar: ->
 			@clndr = @$el.clndr @getCalendarOpts()
+		getTodayStr: ->
+			new moment().format "YYYY-MM-DD"
 		getElementFromMoment: (moment) ->
 			dateStr = moment.format "YYYY-MM-DD"
 			@days.filter -> $(@).attr( "class" ).indexOf( dateStr ) isnt -1
@@ -71,10 +76,12 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			@selectDay( day.date, day.element )
 
 			# Auto switch to next/prev month if adjecent month is clicked
+			###
 			$el = $ day.element
 			if $el.hasClass "adjacent-month"
 				if $el.hasClass "last-month" then @clndr.back()
 				else @clndr.forward()
+			###
 		handleMonthChanged: (moment) ->
 			# Push selected day to new month.
 			newDate = moment
@@ -86,6 +93,8 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			oldDate = @selectedDay.date()
 			maxDate = newDate.daysInMonth()
 			newDate.date Math.min( oldDate, maxDate )
+
+			console.log "Month changed!"
 
 			# Also check that we don't select a date prior to today
 			if newDate.isBefore @today then newDate = @today

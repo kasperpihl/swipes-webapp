@@ -24,6 +24,10 @@
           },
           weekOffset: swipy.settings.get("snoozes").weekday.startDay.number,
           doneRendering: this.afterRender,
+          adjacentDaysChangeMonth: true,
+          constraints: {
+            startDay: this.getTodayStr()
+          },
           ready: function() {
             return _this.selectDay(_this.today);
           },
@@ -32,6 +36,9 @@
       },
       createCalendar: function() {
         return this.clndr = this.$el.clndr(this.getCalendarOpts());
+      },
+      getTodayStr: function() {
+        return new moment().format("YYYY-MM-DD");
       },
       getElementFromMoment: function(moment) {
         var dateStr;
@@ -91,19 +98,17 @@
         }
       },
       handleClickDay: function(day) {
-        var $el;
         if ($(day.element).hasClass("past")) {
           return false;
         }
-        this.selectDay(day.date, day.element);
-        $el = $(day.element);
-        if ($el.hasClass("adjacent-month")) {
-          if ($el.hasClass("last-month")) {
-            return this.clndr.back();
-          } else {
-            return this.clndr.forward();
-          }
-        }
+        return this.selectDay(day.date, day.element);
+        /*
+        			$el = $ day.element
+        			if $el.hasClass "adjacent-month"
+        				if $el.hasClass "last-month" then @clndr.back()
+        				else @clndr.forward()
+        */
+
       },
       handleMonthChanged: function(moment) {
         var maxDate, newDate, oldDate;
@@ -111,7 +116,7 @@
         oldDate = this.selectedDay.date();
         maxDate = newDate.daysInMonth();
         newDate.date(Math.min(oldDate, maxDate));
-        console.log("New date is ", newDate);
+        console.log("Month changed!");
         if (newDate.isBefore(this.today)) {
           newDate = this.today;
         }
