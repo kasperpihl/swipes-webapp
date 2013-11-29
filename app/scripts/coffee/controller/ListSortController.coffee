@@ -3,8 +3,19 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )
 			@enableTouchListners()
+		getHammerOpts: ->
+			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
+			{
+				drag: off
+				swipe: off
+				tap: off
+				transform: off
+				hold_threshold: 100
+				prevent_default: no
+				hold_timeout: if Modernizr.touch then 400 else 100
+			}
 		enableTouchListners: ->
-			$( @model.container[0] ).hammer().on( "hold", "ol > li", @activate )
+			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "hold", "ol > li", @activate )
 		disableTouchListeners: ->
 			$( @model.container[0] ).hammer().off( "hold", @activate )
 		activate: (e) =>
@@ -38,9 +49,10 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				bounds: @model.container
 
 				# Throwing / Dragging
-				edgeResistance: 0.75
 				throwProps: yes
-				resistance: 3000
+				edgeResistance: 0.8
+				maxDuration: 0.4
+				throwResistance: 3000
 				snap: y: (endValue) ->
 					# Snap to closest row
 					return Math.max( @minY, Math.min( @maxY, Math.round( endValue / self.model.rowHeight ) * self.model.rowHeight ) );
@@ -52,6 +64,9 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				onDrag: @onDrag
 				onDragEndParams: [view, @model]
 				onDragEnd: @onDragEnd
+				onDragEndScope: @
+				onThrowUpdate: ->
+					# self.onDrag.call( @, view, self.model )
 				onThrowComplete: =>
 					@deactivate()
 					@onDragCompleteCallback?.call @
@@ -78,7 +93,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			model.reorderRows( view, @endY )
 			model.oldTaskY = null
 			view.$el.removeClass( "dragging" )
-			setTimeout ->
+			setTimeout =>
 					view.$el.on( "click", ".todo-content", view.toggleSelected )
 				, 500
 		reorderView: (model, newOrder, animate = yes) ->

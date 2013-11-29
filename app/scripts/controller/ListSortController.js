@@ -13,8 +13,20 @@
         this.enableTouchListners();
       }
 
+      ListSortController.prototype.getHammerOpts = function() {
+        return {
+          drag: false,
+          swipe: false,
+          tap: false,
+          transform: false,
+          hold_threshold: 100,
+          prevent_default: false,
+          hold_timeout: Modernizr.touch ? 400 : 100
+        };
+      };
+
       ListSortController.prototype.enableTouchListners = function() {
-        return $(this.model.container[0]).hammer().on("hold", "ol > li", this.activate);
+        return $(this.model.container[0]).hammer(this.getHammerOpts()).on("hold", "ol > li", this.activate);
       };
 
       ListSortController.prototype.disableTouchListeners = function() {
@@ -71,9 +83,10 @@
         dragOpts = {
           type: "y",
           bounds: this.model.container,
-          edgeResistance: 0.75,
           throwProps: true,
-          resistance: 3000,
+          edgeResistance: 0.8,
+          maxDuration: 0.4,
+          throwResistance: 3000,
           snap: {
             y: function(endValue) {
               return Math.max(this.minY, Math.min(this.maxY, Math.round(endValue / self.model.rowHeight) * self.model.rowHeight));
@@ -85,6 +98,8 @@
           onDrag: this.onDrag,
           onDragEndParams: [view, this.model],
           onDragEnd: this.onDragEnd,
+          onDragEndScope: this,
+          onThrowUpdate: function() {},
           onThrowComplete: function() {
             var _ref;
             _this.deactivate();
@@ -136,6 +151,7 @@
       };
 
       ListSortController.prototype.onDragEnd = function(view, model) {
+        var _this = this;
         model.reorderRows(view, this.endY);
         model.oldTaskY = null;
         view.$el.removeClass("dragging");
