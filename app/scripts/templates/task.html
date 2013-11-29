@@ -21,27 +21,38 @@
 		<time><%= timeStr %></time>
 	<% } %>
 
-	<% if (tags && tags.length) { %>
-	<ul class="tags">
-
-		<%
-			tagStrings = _.invoke(tags, "get", "title")
-			tagStrings = _.sortBy( tagStrings, function(tag) {
-				return tag.toLowerCase()
-			})
-
-			_.each(tagStrings, function(tag) {
-		%>
-
-		<% if ( _.contains(swipy.filter.tagsFilter, tag) ) { %>
-			<li><strong><%= tag %></strong></li>
-		<% } else { %>
-			<li><%= tag %></li>
+	<ul class="meta">
+		<% if (notes) { %>
+			<li title="<%= notes %>"><span class="icon-pencil"></span></li>
 		<% } %>
 
-		<% }); %>
+		<% if (repeatDate) { %>
+			<li title="This task will repeat on <%= repeatDate %>"><span class="icon-repeat"></span></li>
+		<% } %>
 
+		<% if (notes || repeatDate) { %>
+			<li class="seperator"></li>
+		<% } %>
+
+		<% if (tags && tags.length) { %>
+			<ul class="tags">
+				<%
+					tagStrings = _.invoke(tags, "get", "title")
+					tagStrings = _.sortBy( tagStrings, function(tag) {
+						return tag.toLowerCase()
+					})
+
+					_.each(tagStrings, function(tag) {
+				%>
+
+				<% if ( _.contains(swipy.filter.tagsFilter, tag) ) { %>
+					<li><strong><%= tag %></strong></li>
+				<% } else { %>
+					<li><%= tag %></li>
+				<% } %>
+
+				<% }); %>
+			</ul>
+		<% } %>
 	</ul>
-	<% } %>
-
 </div>
