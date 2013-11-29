@@ -98,8 +98,6 @@
           onDrag: this.onDrag,
           onDragEndParams: [view, this.model],
           onDragEnd: this.onDragEnd,
-          onDragEndScope: this,
-          onThrowUpdate: function() {},
           onThrowComplete: function() {
             var _ref;
             _this.deactivate();

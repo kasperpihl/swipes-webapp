@@ -64,9 +64,6 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				onDrag: @onDrag
 				onDragEndParams: [view, @model]
 				onDragEnd: @onDragEnd
-				onDragEndScope: @
-				onThrowUpdate: ->
-					# self.onDrag.call( @, view, self.model )
 				onThrowComplete: =>
 					@deactivate()
 					@onDragCompleteCallback?.call @
