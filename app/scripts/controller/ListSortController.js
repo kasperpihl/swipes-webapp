@@ -127,6 +127,7 @@
 
       ListSortController.prototype.onDragStart = function(view, allViews) {
         return view.$el.addClass("selected");
+        view.$el.off("click", ".todo-content", view.toggleSelected);
       };
 
       ListSortController.prototype.onDrag = function(view, model) {
@@ -140,6 +141,9 @@
         if (!view.model.get("selected")) {
           return view.$el.removeClass("selected");
         }
+        return setTimeout(function() {
+          return view.$el.on("click", ".todo-content", view.toggleSelected);
+        }, 500);
       };
 
       ListSortController.prototype.reorderView = function(model, newOrder, animate) {

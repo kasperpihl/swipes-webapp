@@ -70,6 +70,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				view.model.off(null, null, @) for view in @model?.views
 		onDragStart: (view, allViews) =>
 			view.$el.addClass "selected"
+			view.$el.off( "click", ".todo-content", view.toggleSelected )
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y )
 			model.scrollWindow( @minY, @maxY, @y, @pointerY )
@@ -77,6 +78,9 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			model.reorderRows( view, @endY )
 			model.oldTaskY = null
 			view.$el.removeClass( "selected" ) unless view.model.get "selected"
+			setTimeout ->
+					view.$el.on( "click", ".todo-content", view.toggleSelected )
+				, 500
 		reorderView: (model, newOrder, animate = yes) ->
 			dur = if animate then 0.3 else 0
 			TweenLite.to( @el, dur, { y: newOrder * @$el.height() } )
