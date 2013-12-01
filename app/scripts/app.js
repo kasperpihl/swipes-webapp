@@ -42,13 +42,34 @@
         this.filter = new FilterController();
         this.settings = new SettingsController();
         this.tags.fetch();
-        return Parse.history.start({
+        Parse.history.start({
           pushState: false
         });
+        return this.startAutoUpdate();
+      };
+
+      Swipes.prototype.update = function() {
+        return this.fetchTodos();
+      };
+
+      Swipes.prototype.startAutoUpdate = function() {
+        var timeout,
+          _this = this;
+        timeout = 30 * 1000;
+        return this.updateTimer = setInterval((function() {
+          return _this.update();
+        }), timeout);
+      };
+
+      Swipes.prototype.stopAutoUpdate = function() {
+        if (this.updateTimer != null) {
+          return clearInterval(this.updateTimer);
+        }
       };
 
       Swipes.prototype.cleanUp = function() {
         var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+        this.stopAutoUpdate();
         if ((_ref = this.tags) != null) {
           _ref.destroy();
         }

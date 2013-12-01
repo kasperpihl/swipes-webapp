@@ -50,7 +50,17 @@ define [
 			@tags.fetch()
 
 			Parse.history.start( pushState: no )
+
+			@startAutoUpdate()
+		update: ->
+			@fetchTodos()
+		startAutoUpdate: ->
+			timeout = 30 * 1000
+			@updateTimer = setInterval( ( => @update() ), timeout )
+		stopAutoUpdate: ->
+			if @updateTimer? then clearInterval @updateTimer
 		cleanUp: ->
+			@stopAutoUpdate()
 			@tags?.destroy()
 			@viewController?.destroy()
 			@nav?.destroy()
