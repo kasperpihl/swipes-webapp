@@ -20,7 +20,7 @@
           tap: false,
           transform: false,
           prevent_default: true,
-          hold_timeout: Modernizr.touch ? 400 : 100
+          hold_timeout: Modernizr.touch ? 400 : 400
         };
       };
 

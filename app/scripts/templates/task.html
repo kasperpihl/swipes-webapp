@@ -11,8 +11,21 @@
 <a href="JavaScript:void(0);" class="action schedule" title="Schedule todo">
 	<span class="icon-schedule"></span>
 </a>
-<% var centerTitle = !(tags && tags.length || repeatDate || notes) %>
-<div class="todo-content<% if (centerTitle) print(" center-title") %>">
+<%
+	var centerTitle, isPriority, classList
+
+	isPriority = (priority === 1)
+	classList = "todo-content"
+
+	if ( !( tags && tags.length || repeatDate || notes) ) {
+		classList += " center-title"
+	}
+
+	if (priority === 1) {
+		classList += " is-priority"
+	}
+%>
+<div class="<%= classList %>">
 	<h2><span class="priority"></span><%= title %></h2>
 
 	<% if (state === "completed") { %>
@@ -31,7 +44,9 @@
 		<% } %>
 
 		<% if (notes || repeatDate) { %>
-			<li class="seperator"></li>
+			<% if (tags && tags.length) { %>
+				<li class="seperator"></li>
+			<% } %>
 		<% } %>
 
 		<% if (tags && tags.length) { %>

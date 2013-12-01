@@ -2,7 +2,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 	Parse.View.extend
 		tagName: "li"
 		initialize: ->
-			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "edit", "handleAction" )
+			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "edit", "handleAction" )
 
 			# Bind events that should re-render the view
 			@listenTo( @model, "change:tags change:timeStr", @render, @ )
@@ -15,27 +15,26 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@render()
 
 			@bindEvents()
-
 		bindEvents: ->
 			# Bind all events manually, so events extending me can use the
 			# events hash freely
 			@$el.on( "click", ".todo-content", @toggleSelected )
+			@$el.on( "click", ".priority", @togglePriority )
 			@$el.on( "dblclick", ".todo-content", @edit )
 			@$el.on( "click", ".action", @handleAction )
-
 		setTemplate: ->
 			@template = _.template TaskTmpl
-
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
-
-		init: ->
-			# Hook for views extending me
-
+		init: -> # Hook for views extending me
 		toggleSelected: ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
-
+		togglePriority: ->
+			if @model.get "priority"
+				@model.save( "priority", 0 )
+			else
+				@model.save( "priority", 1 )
 		handleAction: (e) ->
 			# Set trigger. One or more elements, but always wrapped in an array ready to loop over.
 			trigger = [@model]
@@ -52,27 +51,21 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 				Backbone.trigger( "complete-task", trigger )
 			else if $( e.currentTarget ).hasClass "todo"
 				Backbone.trigger( "todo-task", trigger )
-
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
-
 		edit: ->
 			swipy.router.navigate( "edit/#{ @model.cid }", yes )
-
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
 			@$el.html @template @model.toJSON()
 			@$el.attr( "data-id", @model.cid )
 			return @
-
 		remove: ->
 			@cleanUp()
 			@$el.remove()
-
 		customCleanUp: ->
 			# Hook for views extending me
-
 		swipeRight: (className, fadeOut = yes) ->
 			dfd = new $.Deferred()
 
@@ -95,13 +88,11 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			if fadeOut then timeline.to( @$el, 0.2, { alpha: 0, height: 0 }, "-=0.1" )
 
 			return dfd.promise()
-
 		reset: ->
 			content = @$el.find ".todo-content"
 			@$el.removeClass "scheduled completed todo"
 			content.css( "left", "" )
 			@$el.css( "opacity", "" )
-
 		cleanUp: ->
 			$(window).off( "resize", @setBounds )
 			@$el.off()

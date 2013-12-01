@@ -12,7 +12,7 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				transform: off
 				# hold_threshold: 50
 				prevent_default: yes
-				hold_timeout: if Modernizr.touch then 400 else 100
+				hold_timeout: if Modernizr.touch then 400 else 400
 			}
 		enableTouchListners: ->
 			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "hold", "ol > li", @activate )
