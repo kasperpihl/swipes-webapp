@@ -21,6 +21,7 @@
 
 		h2 {
 			margin: 0 0 2em;
+			font-family: $font-normal;
 			@include breakpoint( min-height, emCalc(800px) ) { margin-bottom: 3.2em; }
 		}
 	}
@@ -46,7 +47,7 @@
 
 		&:hover {
 			background: white;
-			color: $gray-light;
+			color: $gray;
 		}
 	}
 }

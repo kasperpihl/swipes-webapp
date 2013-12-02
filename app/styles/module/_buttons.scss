@@ -4,25 +4,25 @@
 	width: $size;
 	height: $size;
 	border-radius: $size;
-	border: 2px solid $gray-light;
+	border: 2px solid $gray;
 
 	display: inline-block;
 	text-align: center;
 	line-height: $size;
 
 	text-decoration: none;
-	color: $gray-light;
+	color: $gray;
 
 	@include transition(all 0.17s ease-in-out);
 
 	&:hover {
 		color: white;
 		text-decoration: none;
-		background: $gray-light;
-		border-color: $gray-light
+		background: $gray;
+		border-color: $gray
 	}
 
-	span { font-size: 1.35em; }
+	// span { font-size: 1em; }
 
 
 	// Some icons have fucked up vertical alignment, so we need to manually adjust.
@@ -34,7 +34,7 @@
 		border-color: white;
 
 		&:hover {
-			color: $gray-light;
+			color: $gray;
 			background: white;
 			border-color: transparent;
 		}
