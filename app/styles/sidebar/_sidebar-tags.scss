@@ -2,21 +2,46 @@
 	.rounded-tags {
 		li {
 			cursor: pointer;
-			background: $blue-dark;
-			margin: 0 0.25em 0.25em 0;
-			color: rgba(white, 0.5);
-			border: none;
-			font-family: $font-light;
+			background: transparent;
+			margin: 0 0.4em 0.4em 0;
+			color: white;
+			border: thin solid rgba(white, 0.8);
+			font-family: $font-normal;
 
-			@include transition(all 0.08s ease-out);
+			@include transition(color 0.15s ease-out);
 
-			&:hover { color: white; }
-			&.selected { background: darken($blue-dark, 7%); color: white; }
-			a.remove:hover { color: $gray-light; }
+			&:hover { color: rgba(white, 0.5); }
+			&.selected {
+				font-family: $font-bold;
+				background: white;
+				color: $gray;
+				border-color: $gray;
+			}
 
 			&.tag-input {
 				background: $yellow !important;
 				color: white;
+			}
+		}
+
+		li.delete {
+			$h: 2.42em;
+			background: $lobster;
+			border-color: transparent;
+			height: $h;
+
+			&:hover {
+				color: white;
+			}
+
+			a {
+				color: inherit;
+				font-size: 1.2em;
+				padding: 0 1.1em;
+
+				text-shadow: 0 0 0px white;
+
+				&:hover { text-decoration: none; }
 			}
 		}
 	}

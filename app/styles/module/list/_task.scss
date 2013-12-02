@@ -69,7 +69,10 @@ $list-item-height-lg: 105px;
 			font-family: $font-bold;
 
 			li {
-				strong { color: $gray; }
+				strong {
+					color: black;
+					text-shadow: 0 0 0px black;
+				}
 
 				&:before { content: ', '; }
 

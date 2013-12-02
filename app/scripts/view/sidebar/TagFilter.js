@@ -130,7 +130,7 @@
         }
       },
       renderDeleteButton: function(list) {
-        return list.append("<li class='delete'><a href='JavaScript:void(0);' title='Delete tags'>Delete</a></li>");
+        return list.append("<li class='delete'><a href='JavaScript:void(0);' title='Delete tags'><span class='icon-trashcan'></span></a></li>");
       },
       destroy: function() {
         this.stopListening();

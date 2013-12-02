@@ -85,7 +85,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			else
 				list.append "<li>#{ tagName }</li>"
 		renderDeleteButton: (list) ->
-			list.append "<li class='delete'><a href='JavaScript:void(0);' title='Delete tags'>Delete</a></li>"
+			list.append "<li class='delete'><a href='JavaScript:void(0);' title='Delete tags'><span class='icon-trashcan'></span></a></li>"
 		destroy: ->
 			@stopListening()
 			@undelegateEvents()

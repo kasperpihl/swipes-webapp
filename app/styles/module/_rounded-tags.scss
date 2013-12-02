@@ -118,8 +118,12 @@
 	li:not(.delete) {
 
 		&:before {
-			content: "x ";
-			color: red;
+			content: "× ";
+			color: $lobster;
+			font-size: 1.4em;
+			line-height: 1em;
+			top: 0.12em;
+			position: relative;
 		}
 
 		&:nth-child(2n) {
