@@ -30,7 +30,8 @@
         currentlySelected = this.model.get("selected") || false;
         return this.model.set("selected", !currentlySelected);
       },
-      togglePriority: function() {
+      togglePriority: function(e) {
+        e.stopPropagation();
         if (this.model.get("priority")) {
           return this.model.save("priority", 0);
         } else {

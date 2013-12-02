@@ -32,6 +32,9 @@
 		height: 1.3em;
 		color: $gray;
 
+		font-family: $font-light;
+		text-transform: uppercase;
+
 		&:before {
 			position: absolute;
 			display: block;

@@ -30,7 +30,8 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		toggleSelected: ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
-		togglePriority: ->
+		togglePriority: (e) ->
+			e.stopPropagation()
 			if @model.get "priority"
 				@model.save( "priority", 0 )
 			else
