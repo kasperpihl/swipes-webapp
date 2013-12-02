@@ -28,11 +28,6 @@
 <div class="<%= classList %>">
 	<h2><span class="priority"></span><%= title %></h2>
 
-	<% if (state === "completed") { %>
-		<time><%= completionTimeStr %></time>
-	<% } else if (state === "scheduled") { %>
-		<time><%= timeStr %></time>
-	<% } %>
 
 	<ul class="meta">
 		<% if (notes) { %>
@@ -44,6 +39,20 @@
 		<% } %>
 
 		<% if (notes || repeatDate) { %>
+			<% if (tags && tags.length) { %>
+				<li class="seperator"></li>
+			<% } %>
+		<% } %>
+
+		<li>
+			<% if (state === "completed") { %>
+				<time><%= completionTimeStr %></time>
+			<% } else if (state === "scheduled") { %>
+				<time><%= timeStr %></time>
+			<% } %>
+		</li>
+
+		<% if (state === "completed" || state === "scheduled") { %>
 			<% if (tags && tags.length) { %>
 				<li class="seperator"></li>
 			<% } %>
