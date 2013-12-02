@@ -39,7 +39,7 @@
 
 
 	li.tag-input {
-		background: $gray !important;
+		border-color: #ACACAC;
 	}
 
 	.add-new-tag {
@@ -84,18 +84,14 @@
 		outline: none;
 		border: none;
 		background: transparent;
-		color: #ddd;
-
-		@include input-placeholder {
-			color: #ddd;
-		}
+		color: $gray;
 
 		&:focus, &:hover {
-			color: white;
+
 		}
 
 		@include input-placeholder() {
-			color: $gray;
+			color: lighten($gray, 30%);
 		}
 	}
 }
@@ -110,7 +106,7 @@
 	margin-left: -0.7em;
 	margin-top: emCalc(6px);
 
-	@include triangle(1.6em, 0.72em, up, lighten($gray-light, 13%));
+	@include triangle(1.6em, 0.72em, up, $gray-light);
 }
 
 // Wobble tags in delete mode
