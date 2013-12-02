@@ -3,13 +3,12 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 		model: TagModel
 		initialize: ->
 			@setQuery()
-			@on( "remove", @handleTagDeleted, @ )
+			@on( "remove", @handleTagDeleted )
 			@on( "add", @handleAddTag, @ )
 
 			@on "reset", ->
-				removeThese = []
-				removeThese.push m for m in @models when m.get "deleted"
-				@remove m for m in removeThese
+				removeThese = ( m for m in @models when m.get "deleted" )
+				@remove( m, { silent: yes } ) for m in removeThese
 		setQuery: ->
 			@query = new Parse.Query TagModel
 			@query.equalTo( "owner", Parse.User.current() )
@@ -92,11 +91,12 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			tagName = model.get "title"
 
 			affectedTasks = swipy.todos.filter (m) ->
-				m.has( "tags" ) and _.contains( m.get( "tags" ), tagName )
+				m.has( "tags" ) and _.contains( m.getTagStrList(), tagName )
 
 			for task in affectedTasks
 				oldTags = task.get "tags"
 				task.unset( "tags", { silent: yes } )
-				task.set( "tags", _.without( oldTags, tagName ) )
+				newTags = _.reject( oldTags, (tag) -> tag.get("title") is model.get "title" )
+				task.set( "tags", newTags )
 		destroy: ->
 			@off( null, null, @ )

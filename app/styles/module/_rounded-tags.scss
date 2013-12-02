@@ -112,3 +112,30 @@
 
 	@include triangle(1.6em, 0.72em, up, lighten($gray-lighter, 13%));
 }
+
+// Wobble tags in delete mode
+.delete-mode .rounded-tags {
+	li:not(.delete) {
+
+		&:before {
+			content: "x ";
+			color: red;
+		}
+
+		&:nth-child(2n) {
+			@include experimental(animation, wobble1 0.27s infinite);
+			@include apply-origin(40% 60%, false);
+		}
+
+		&:nth-child(2n-1) {
+			@include experimental(animation, wobble2 0.33s infinite alternate);
+			@include apply-origin(60% 40%, false);
+		}
+
+		@for $i from 1 through 40 {
+			&:nth-child(#{$i}) {
+				@include experimental(animation-delay, -#{rand(0-1)}s);
+			}
+		}
+	}
+}

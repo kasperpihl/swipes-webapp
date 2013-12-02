@@ -1,9 +1,12 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	Parse.View.extend
 		events:
-			"click li": "toggleFilter"
+			"click li:not(.delete)": "handleClickTag"
+			"click .delete": "toggleDeleteMode"
 			"click .remove": "removeTag"
 		initialize: ->
+			@render = _.throttle( @render, 500 )
+
 			@listenTo( swipy.tags, "add remove reset", @render )
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 			@listenTo( Backbone, "navigate/view", => _.defer => @render() )
@@ -14,6 +17,15 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			# FilterController has done its thing first.
 			_.defer =>
 				if type is "tag" then @render()
+		handleClickTag: (e) ->
+			if @deleteMode
+				@removeTag e
+			else
+				@toggleFilter e
+		toggleDeleteMode: (e) ->
+			e.stopPropagation()
+			if @deleteMode then @deleteMode = off else @deleteMode = on
+			@$el.toggleClass( "delete-mode", @deleteMode )
 		toggleFilter: (e) ->
 			tag = $.trim $( e.currentTarget ).text()
 			el = $( e.currentTarget )
@@ -24,18 +36,16 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				Backbone.trigger( "remove-filter", "tag", tag )
 		removeTag: (e) ->
 			e.stopPropagation()
-			tagName = $.trim $( e.currentTarget.parentNode ).text()
-			tag = swipy.tags.findWhere {title: tagName}
+			tagName = $.trim $( e.currentTarget ).text()
+			tag = swipy.tags.findWhere { title: tagName }
 
-			wasSelected = $(e.currentTarget.parentNode).hasClass "selected"
 
-			if tag and confirm( "Are you sure you want to permenently delete this tag?" ) then tag.destroy
-				success: (model, response) ->
-					swipy.todos.remove model
-					if wasSelected then Backbone.trigger( "remove-filter", "tag", tagName )
-				error: (model, response) ->
-					alert "Something went wrong trying to delete the tag '#{ model.get 'title' }' please try again."
-					console.warn "Error deleting tag — Response: ", response
+			wasSelected = $(e.currentTarget).hasClass "selected"
+
+			if tag and confirm( "Are you sure you want to permenently delete this tag?" )
+				swipy.tags.remove tag
+				tag.save( "deleted", true )
+				if wasSelected then Backbone.trigger( "remove-filter", "tag", tagName )
 		getTagsForCurrentTasks: ->
 			tags = []
 
@@ -55,7 +65,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			else
 				@getTagsForCurrentTasks()
 		render: ->
-			list = @$el. find ".rounded-tags"
+			list = @$el.find ".rounded-tags"
 			list.empty()
 
 			# Sort alphabetically, case-insensitive
@@ -63,6 +73,10 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			tags = _.sortBy( tags, (tag) -> return tag.toLowerCase() )
 
 			@renderTag( tag, list ) for tag in tags
+			if tags.length then @renderDeleteButton list
+
+			if @deleteMode
+				@$el.toggleClass( "delete-mode", on )
 
 			return @
 		renderTag: (tagName, list) ->
@@ -70,6 +84,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 				list.append "<li class='selected'>#{ tagName }</li>"
 			else
 				list.append "<li>#{ tagName }</li>"
+		renderDeleteButton: (list) ->
+			list.append "<li class='delete'><a href='JavaScript:void(0);' title='Delete tags'>Delete</a></li>"
 		destroy: ->
 			@stopListening()
 			@undelegateEvents()

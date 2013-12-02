@@ -4,22 +4,28 @@
       model: TagModel,
       initialize: function() {
         this.setQuery();
-        this.on("remove", this.handleTagDeleted, this);
+        this.on("remove", this.handleTagDeleted);
         this.on("add", this.handleAddTag, this);
         return this.on("reset", function() {
-          var m, removeThese, _i, _j, _len, _len1, _ref, _results;
-          removeThese = [];
-          _ref = this.models;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            m = _ref[_i];
-            if (m.get("deleted")) {
-              removeThese.push(m);
+          var m, removeThese, _i, _len, _results;
+          removeThese = (function() {
+            var _i, _len, _ref, _results;
+            _ref = this.models;
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              m = _ref[_i];
+              if (m.get("deleted")) {
+                _results.push(m);
+              }
             }
-          }
+            return _results;
+          }).call(this);
           _results = [];
-          for (_j = 0, _len1 = removeThese.length; _j < _len1; _j++) {
-            m = removeThese[_j];
-            _results.push(this.remove(m));
+          for (_i = 0, _len = removeThese.length; _i < _len; _i++) {
+            m = removeThese[_i];
+            _results.push(this.remove(m, {
+              silent: true
+            }));
           }
           return _results;
         });
@@ -141,10 +147,10 @@
         }
       },
       handleTagDeleted: function(model) {
-        var affectedTasks, oldTags, tagName, task, _i, _len, _results;
+        var affectedTasks, newTags, oldTags, tagName, task, _i, _len, _results;
         tagName = model.get("title");
         affectedTasks = swipy.todos.filter(function(m) {
-          return m.has("tags") && _.contains(m.get("tags"), tagName);
+          return m.has("tags") && _.contains(m.getTagStrList(), tagName);
         });
         _results = [];
         for (_i = 0, _len = affectedTasks.length; _i < _len; _i++) {
@@ -153,7 +159,10 @@
           task.unset("tags", {
             silent: true
           });
-          _results.push(task.set("tags", _.without(oldTags, tagName)));
+          newTags = _.reject(oldTags, function(tag) {
+            return tag.get("title") === model.get("title");
+          });
+          _results.push(task.set("tags", newTags));
         }
         return _results;
       },

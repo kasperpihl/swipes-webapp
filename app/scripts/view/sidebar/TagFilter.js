@@ -2,11 +2,13 @@
   define(["underscore", "backbone"], function(_, Backbone) {
     return Parse.View.extend({
       events: {
-        "click li": "toggleFilter",
+        "click li:not(.delete)": "handleClickTag",
+        "click .delete": "toggleDeleteMode",
         "click .remove": "removeTag"
       },
       initialize: function() {
         var _this = this;
+        this.render = _.throttle(this.render, 500);
         this.listenTo(swipy.tags, "add remove reset", this.render);
         this.listenTo(Backbone, "apply-filter remove-filter", this.handleFilterChange);
         this.listenTo(Backbone, "navigate/view", function() {
@@ -25,6 +27,22 @@
           }
         });
       },
+      handleClickTag: function(e) {
+        if (this.deleteMode) {
+          return this.removeTag(e);
+        } else {
+          return this.toggleFilter(e);
+        }
+      },
+      toggleDeleteMode: function(e) {
+        e.stopPropagation();
+        if (this.deleteMode) {
+          this.deleteMode = false;
+        } else {
+          this.deleteMode = true;
+        }
+        return this.$el.toggleClass("delete-mode", this.deleteMode);
+      },
       toggleFilter: function(e) {
         var el, tag;
         tag = $.trim($(e.currentTarget).text());
@@ -38,24 +56,17 @@
       removeTag: function(e) {
         var tag, tagName, wasSelected;
         e.stopPropagation();
-        tagName = $.trim($(e.currentTarget.parentNode).text());
+        tagName = $.trim($(e.currentTarget).text());
         tag = swipy.tags.findWhere({
           title: tagName
         });
-        wasSelected = $(e.currentTarget.parentNode).hasClass("selected");
+        wasSelected = $(e.currentTarget).hasClass("selected");
         if (tag && confirm("Are you sure you want to permenently delete this tag?")) {
-          return tag.destroy({
-            success: function(model, response) {
-              swipy.todos.remove(model);
-              if (wasSelected) {
-                return Backbone.trigger("remove-filter", "tag", tagName);
-              }
-            },
-            error: function(model, response) {
-              alert("Something went wrong trying to delete the tag '" + (model.get('title')) + "' please try again.");
-              return console.warn("Error deleting tag — Response: ", response);
-            }
-          });
+          swipy.tags.remove(tag);
+          tag.save("deleted", true);
+          if (wasSelected) {
+            return Backbone.trigger("remove-filter", "tag", tagName);
+          }
         }
       },
       getTagsForCurrentTasks: function() {
@@ -103,6 +114,12 @@
           tag = tags[_i];
           this.renderTag(tag, list);
         }
+        if (tags.length) {
+          this.renderDeleteButton(list);
+        }
+        if (this.deleteMode) {
+          this.$el.toggleClass("delete-mode", true);
+        }
         return this;
       },
       renderTag: function(tagName, list) {
@@ -111,6 +128,9 @@
         } else {
           return list.append("<li>" + tagName + "</li>");
         }
+      },
+      renderDeleteButton: function(list) {
+        return list.append("<li class='delete'><a href='JavaScript:void(0);' title='Delete tags'>Delete</a></li>");
       },
       destroy: function() {
         this.stopListening();
