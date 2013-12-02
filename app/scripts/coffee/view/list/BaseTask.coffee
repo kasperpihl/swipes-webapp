@@ -61,7 +61,9 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			return @ unless @template?
 			@$el.html @template @model.toJSON()
 			@$el.attr( "data-id", @model.cid )
+			@afterRender()
 			return @
+		afterRender: ->
 		remove: ->
 			@cleanUp()
 			@$el.remove()

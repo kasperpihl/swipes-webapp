@@ -74,8 +74,10 @@
         }
         this.$el.html(this.template(this.model.toJSON()));
         this.$el.attr("data-id", this.model.cid);
+        this.afterRender();
         return this;
       },
+      afterRender: function() {},
       remove: function() {
         this.cleanUp();
         return this.$el.remove();
