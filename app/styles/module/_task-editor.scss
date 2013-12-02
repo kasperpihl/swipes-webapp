@@ -30,7 +30,7 @@
 				position: absolute;
 				left: 0; top: 0;
 				font-size: 1.3em;
-				color: $gray-light;
+				color: $gray;
 			}
 		}
 
@@ -73,5 +73,8 @@
 
 	textarea {
 		min-height: 6em;
+		@include input-placeholder() {
+			color: lighten($gray, 30%);
+		}
 	}
 }

@@ -22,7 +22,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 				@tagEditor.cleanUp()
 				@tagEditor.remove()
 		createTagEditor: ->
-			@tagEditor = new TagEditor { el: @$el.find(".icon-tags"), model: @model }
+			@tagEditor = new TagEditor { el: @$el.find(".icon-tag-bold"), model: @model }
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->

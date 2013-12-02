@@ -28,7 +28,7 @@
       },
       createTagEditor: function() {
         return this.tagEditor = new TagEditor({
-          el: this.$el.find(".icon-tags"),
+          el: this.$el.find(".icon-tag-bold"),
           model: this.model
         });
       },

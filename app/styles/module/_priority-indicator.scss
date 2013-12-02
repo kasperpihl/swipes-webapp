@@ -45,6 +45,6 @@
 
 	@include box-sizing(content-box);
 
-	margin-top: 0 - emCalc($border-size - ($size / 2));
+	margin-top: -0.25em;
 }
 
