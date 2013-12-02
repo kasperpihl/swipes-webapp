@@ -51,7 +51,7 @@ define [
 
 			Parse.history.start( pushState: no )
 
-			@startAutoUpdate()
+			# @startAutoUpdate()
 		update: ->
 			@fetchTodos()
 		startAutoUpdate: ->

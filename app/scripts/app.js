@@ -42,10 +42,9 @@
         this.filter = new FilterController();
         this.settings = new SettingsController();
         this.tags.fetch();
-        Parse.history.start({
+        return Parse.history.start({
           pushState: false
         });
-        return this.startAutoUpdate();
       };
 
       Swipes.prototype.update = function() {
