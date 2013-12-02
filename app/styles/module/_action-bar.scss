@@ -39,17 +39,16 @@
 	a {
 		display: block;
 		width: 25%;
-
 		float: left;
 
-		color: $gray-light;
+		color: inherit;
 		text-decoration: none;
 		text-align: center;
 
 		@include transition(all 0.2s ease-out);
 
 		&:hover {
-			color: $gray-light;
+			color: inherit;
 			@include scale(1.2);
 		}
 	}
