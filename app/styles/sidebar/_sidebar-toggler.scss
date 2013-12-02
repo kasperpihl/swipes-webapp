@@ -1,14 +1,11 @@
 .open-sidebar {
-	$size: emCalc(40px);
 	$padding: 0.5em;
 	position: fixed;
 	display: block;
 	body.sidebar-open & { display: none; }
 
-	width: $size; height: $size;
 	bottom: $padding;
 	left: $padding;
-	background: $green;
 	z-index: 9999;
 
 	@include breakpoint(tablet) {
@@ -16,19 +13,21 @@
 		bottom: auto;
 	}
 
-	color: white;
+	color: inherit;
 	text-align: center;
-
 	@include transition(all 0.2s ease-out);
 
-	> span {
-		font-size: 1.5em;
-		line-height: 1.84em;
+	span {
+		@extend .icon-swipes-logo-square;
+		font-size: 2.2em;
+		line-height: 1.4em;
 	}
 
-	&:hover {
+	&:hover, &:focus {
 		text-decoration: none;
-		color: white;
-		background: lighten($green, 7%);
+		color: inherit;
+		span {
+			@extend .icon-swipes-logo-square-act;
+		}
 	}
 }
