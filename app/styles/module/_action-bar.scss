@@ -12,7 +12,7 @@
 	z-index: 10000;
 	position: fixed;
 	bottom: 1.5em;
-	
+
 	padding: 0;
 	text-align: center;
 
@@ -27,7 +27,7 @@
 			margin-left: 0 - emCalc(350px - $sidebar-width);
 		}
 	}
-	
+
 	@include breakpoint(desktop-wide) {
 		@include transition(max-width 0.5s ease-out);
 		max-width: emCalc(600px);
@@ -41,8 +41,8 @@
 		width: 25%;
 
 		float: left;
-		
-		color: $gray-lighter;
+
+		color: $gray-light;
 		text-decoration: none;
 		text-align: center;
 

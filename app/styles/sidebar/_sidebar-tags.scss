@@ -12,7 +12,7 @@
 
 			&:hover { color: white; }
 			&.selected { background: darken($blue-dark, 7%); color: white; }
-			a.remove:hover { color: $gray-lighter; }
+			a.remove:hover { color: $gray-light; }
 
 			&.tag-input {
 				background: $yellow !important;

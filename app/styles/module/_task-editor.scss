@@ -1,7 +1,7 @@
 .task-editor {
 	$padding: 66px;
 
-	color: $gray-warm;
+	color: $gray;
 
 	.title {
 		position: relative;
@@ -30,7 +30,7 @@
 				position: absolute;
 				left: 0; top: 0;
 				font-size: 1.3em;
-				color: $gray-lighter;
+				color: $gray-light;
 			}
 		}
 
@@ -62,7 +62,7 @@
 		@include transition(color 0.2s ease-out);
 
 		&:focus, &:hover {
-			color: $gray-dark;
+			color: $gray;
 		}
 
 		&:active, &:focus {

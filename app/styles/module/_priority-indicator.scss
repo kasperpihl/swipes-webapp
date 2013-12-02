@@ -34,7 +34,7 @@
 		bottom: 0; left: 0; right: 0;
 
 		@include background-image(
-			linear-gradient(left, transparent, $gray-lighter 15%, transparent 105%)
+			linear-gradient(left, transparent, $gray-light 15%, transparent 105%)
 		);
 	}
 }

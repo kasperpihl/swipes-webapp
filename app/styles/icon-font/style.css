@@ -2,33 +2,14 @@
 	font-family: 'swipes';
 	src:url('fonts/swipes.eot');
 	src:url('fonts/swipes.eot?#iefix') format('embedded-opentype'),
-		url('fonts/swipes.woff') format('woff'),
 		url('fonts/swipes.ttf') format('truetype'),
+		url('fonts/swipes.woff') format('woff'),
 		url('fonts/swipes.svg#swipes') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
-/* Use the following CSS code if you want to use data attributes for inserting your icons */
-[data-icon]:before {
-	font-family: 'swipes';
-	content: attr(data-icon);
-	speak: none;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-/* Use the following CSS code if you want to have a class per icon */
-/*
-Instead of a list of all class selectors,
-you can use the generic selector below, but it's slower:
-[class*="icon-"] {
-*/
-.icon-triangle-right, .icon-triangle-left, .icon-trashcan, .icon-todo, .icon-tags, .icon-swipes-plus, .icon-swipes-logo, .icon-swipes-logo-square, .icon-support, .icon-snooze-unspecified, .icon-snooze-tomorrow, .icon-snooze-this-weekend, .icon-snooze-this-evening, .icon-snooze-next-week, .icon-snooze-location, .icon-snooze-later-today, .icon-snooze-day-after-tomorrow, .icon-snooze-date, .icon-share, .icon-schedule, .icon-repeat, .icon-questionmark-circle, .icon-policy, .icon-plus, .icon-pencil, .icon-note, .icon-log-out, .icon-facebook-logo, .icon-facebook-btn, .icon-cross, .icon-cog, .icon-clock, .icon-checkmark, .icon-arr-right, .icon-arr-right-long, .icon-arr-left, .icon-arr-left-long, .icon-minus {
+[class^="icon-"], [class*=" icon-"] {
 	font-family: 'swipes';
 	speak: none;
 	font-style: normal;
@@ -36,119 +17,201 @@ you can use the generic selector below, but it's slower:
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
+
+	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
-.icon-triangle-right:before {
-	content: "\e000";
-}
+
 .icon-triangle-left:before {
-	content: "\e001";
+	content: "\e602";
+}
+.icon-triangle-left-act:before {
+	content: "\e603";
 }
 .icon-trashcan:before {
-	content: "\e002";
+	content: "\e604";
+}
+.icon-trashcan-act:before {
+	content: "\e605";
 }
 .icon-todo:before {
-	content: "\e003";
+	content: "\e606";
+}
+.icon-todo-act:before {
+	content: "\e607";
 }
 .icon-tags:before {
-	content: "\e004";
+	content: "\e608";
+}
+.icon-tags-act:before {
+	content: "\e609";
 }
 .icon-swipes-plus:before {
-	content: "\e005";
-}
-.icon-swipes-logo:before {
-	content: "\e006";
+	content: "\e60a";
 }
 .icon-swipes-logo-square:before {
-	content: "\e007";
+	content: "\e60b";
 }
-.icon-support:before {
-	content: "\e008";
+.icon-swipes-logo-square-act:before {
+	content: "\e60c";
 }
-.icon-snooze-unspecified:before {
-	content: "\e009";
+.icon-snooze-unspecified-act:before {
+	content: "\e610";
 }
 .icon-snooze-tomorrow:before {
-	content: "\e00a";
+	content: "\e611";
+}
+.icon-snooze-tomorrow-act:before {
+	content: "\e612";
 }
 .icon-snooze-this-weekend:before {
-	content: "\e00b";
+	content: "\e613";
+}
+.icon-snooze-this-weekend-act:before {
+	content: "\e614";
 }
 .icon-snooze-this-evening:before {
-	content: "\e00c";
+	content: "\e615";
+}
+.icon-snooze-this-evening-act:before {
+	content: "\e616";
+}
+.icon-snooze-pick-a-date:before {
+	content: "\e617";
+}
+.icon-snooze-pick-a-date-act:before {
+	content: "\e618";
 }
 .icon-snooze-next-week:before {
-	content: "\e00d";
+	content: "\e619";
 }
-.icon-snooze-location:before {
-	content: "\e00e";
+.icon-snooze-next-week-act:before {
+	content: "\e61a";
 }
-.icon-snooze-later-today:before {
-	content: "\e00f";
+.icon-snooze-later-today-act:before {
+	content: "\e61e";
 }
 .icon-snooze-day-after-tomorrow:before {
-	content: "\e010";
+	content: "\e61f";
 }
-.icon-snooze-date:before {
-	content: "\e011";
+.icon-snooze-day-after-tomorrow-act:before {
+	content: "\e620";
 }
 .icon-share:before {
-	content: "\e012";
+	content: "\e621";
+}
+.icon-share-act:before {
+	content: "\e622";
 }
 .icon-schedule:before {
-	content: "\e013";
+	content: "\e623";
+}
+.icon-schedule-act:before {
+	content: "\e624";
 }
 .icon-repeat:before {
-	content: "\e014";
+	content: "\e625";
 }
 .icon-questionmark-circle:before {
-	content: "\e015";
+	content: "\e626";
+}
+.icon-questionmark-circle-act:before {
+	content: "\e627";
 }
 .icon-policy:before {
-	content: "\e016";
+	content: "\e628";
 }
-.icon-plus:before {
-	content: "\e017";
-}
-.icon-pencil:before {
-	content: "\e018";
+.icon-pencil-act:before {
+	content: "\e62c";
 }
 .icon-note:before {
-	content: "\e019";
+	content: "\e62d";
 }
 .icon-log-out:before {
-	content: "\e01a";
+	content: "\e62e";
 }
-.icon-facebook-logo:before {
-	content: "\e01b";
-}
-.icon-facebook-btn:before {
-	content: "\e01c";
+.icon-log-out-act:before {
+	content: "\e62f";
 }
 .icon-cross:before {
-	content: "\e01d";
+	content: "\e630";
+}
+.icon-cross-act:before {
+	content: "\e631";
 }
 .icon-cog:before {
-	content: "\e01e";
+	content: "\e632";
+}
+.icon-cog-act:before {
+	content: "\e633";
 }
 .icon-clock:before {
-	content: "\e01f";
+	content: "\e634";
 }
-.icon-checkmark:before {
-	content: "\e020";
+.icon-clock-alt:before {
+	content: "\e635";
+}
+.icon-clock-alt-act:before {
+	content: "\e637";
+}
+.icon-checkmark-alt:before {
+	content: "\e63b";
+}
+.icon-checkmark-alt-act:before {
+	content: "\e63c";
+}
+.icon-checkmark-act:before {
+	content: "\e63d";
 }
 .icon-arr-right:before {
-	content: "\e021";
-}
-.icon-arr-right-long:before {
-	content: "\e022";
+	content: "\e63e";
 }
 .icon-arr-left:before {
-	content: "\e023";
-}
-.icon-arr-left-long:before {
-	content: "\e024";
+	content: "\e63f";
 }
 .icon-minus:before {
-	content: "\e025";
+	content: "\e600";
+}
+.icon-triangle-right:before {
+	content: "\e601";
+}
+.icon-triangle-right-act:before {
+	content: "\e60d";
+}
+.icon-support:before {
+	content: "\e60e";
+}
+.icon-support-act:before {
+	content: "\e60f";
+}
+.icon-snooze-unspecified:before {
+	content: "\e61b";
+}
+.icon-snooze-location:before {
+	content: "\e61c";
+}
+.icon-snooze-location-act:before {
+	content: "\e61d";
+}
+.icon-snooze-later-today:before {
+	content: "\e629";
+}
+.icon-policy-act:before {
+	content: "\e62a";
+}
+.icon-plus:before {
+	content: "\e62b";
+}
+.icon-pencil:before {
+	content: "\e636";
+}
+.icon-clock-act:before {
+	content: "\e638";
+}
+.icon-checkmark:before {
+	content: "\e639";
+}
+.icon-checkmark-nav:before {
+	content: "\e63a";
 }

@@ -38,9 +38,9 @@
 		line-height: $height;
 		text-align: center;
 		font-family: $font-bold;
-		color: $gray-warm;
+		color: $gray;
 
-		border-left: thin solid lighten($gray-lighter, 10%);
+		border-left: thin solid lighten($gray-light, 10%);
 
 		&:hover {
 			text-decoration: none;
@@ -61,7 +61,7 @@
 
 	@include breakpoint(max-width, emCalc(650px)) {
 		li a {
-			border-bottom: thin solid lighten($gray-lighter, 10%);
+			border-bottom: thin solid lighten($gray-light, 10%);
 		}
 
 		li:nth-child(3n + 1) a {
