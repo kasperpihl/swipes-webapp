@@ -1,7 +1,17 @@
 .divider {
-	border-top: 3px solid $yellow;
+	border-top: 1px solid $yellow;
 	font-size: 0.77778em;
 	position: relative;
+
+	&:before {
+		display: block;
+		position: absolute;
+		top: -5px;
+		width: 100%;
+		height: 4px;
+		background: white;
+		content: "";
+	}
 
 	> h1, > h2, > h3 {
 		position: absolute;
@@ -12,10 +22,11 @@
 
 		z-index: 2000;
 
-		margin-top: 0;
-		padding: 0.05em 0.5em 0.1em;
+		margin-top: -4px;
+		padding: 0 0.5em 0.1em;
+		border-bottom: 1px solid $yellow;
 
-		background: $yellow;
+		background: white;
 
 		font-size: 1.13em;
 		height: 1.3em;
@@ -23,13 +34,23 @@
 
 		&:before {
 			position: absolute;
-			left: -0.9em;
-			top: -0.1em;
-
 			display: block;
+			top: -1px;
+			left: -6px;
+			width: 10px;
+			height: 110%;
+			background: white;
 			content: "";
 
-			@include divider-triangle($yellow);
+			@include rotate(-35deg);
+		}
+
+		&:after {
+			position: absolute;
+			content: "";
+			left: -6px;
+			top: 2px;
+			@include slanted-line($yellow);
 		}
 	}
 
@@ -37,9 +58,8 @@
 		border-top-color: $lobster;
 
 		> h1, > h2, > h3 {
-			background: $lobster; color: white;
-
-			&:before { @include divider-triangle($lobster) }
+			border-color: $lobster;
+			&:after { @include slanted-line($lobster) }
 		}
 	}
 
@@ -47,9 +67,8 @@
 		border-top-color: $green;
 
 		> h1, > h2, > h3 {
-			background: $green; color: white;
-
-			&:before { @include divider-triangle($green) }
+			border-color: $green;
+			&:after { @include slanted-line($green) }
 		}
 	}
 }

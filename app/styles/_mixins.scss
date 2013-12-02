@@ -52,7 +52,7 @@
 		border-bottom: ($height / 2) solid transparent;
 		border-left: $width solid $color;
 	}
-	
+
 	// Left
 	@if $direction == left {
 		border-top: ($height / 2) solid transparent;
@@ -73,6 +73,15 @@
 		border-right: ($width / 2) solid transparent;
 		border-top: $height solid $color;
 	}
+}
+
+@mixin slanted-line($color, $deg: -35deg) {
+	display: block;
+	width: 1px;
+	height: 100%;
+	background: $color;
+
+	@include rotate($deg);
 }
 
 
