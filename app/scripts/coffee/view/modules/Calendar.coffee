@@ -52,6 +52,11 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			else if hour <= 11 then return hour + ":" + minute + " AM"
 			else if hour is 12 then return "12:" + minute + " PM"
 			else return hour - 12 + ":" + minute + " PM"
+		getSelectedDateText: ->
+			if @selectedDay.isSame(new moment(), 'year')
+				@selectedDay.format("MMM Do")
+			else
+				@selectedDay.format("MMM Do 'YY")
 		selectDay: (moment, element) ->
 			@days = @$el.find ".day"
 
@@ -74,14 +79,6 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 		handleClickDay: (day) ->
 			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )
-
-			# Auto switch to next/prev month if adjecent month is clicked
-			###
-			$el = $ day.element
-			if $el.hasClass "adjacent-month"
-				if $el.hasClass "last-month" then @clndr.back()
-				else @clndr.forward()
-			###
 		handleMonthChanged: (moment) ->
 			# Push selected day to new month.
 			newDate = moment
@@ -102,7 +99,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			@createCalendar()
 			return @
 		renderDate: ->
-			@$el.find(".month .selected-date").text @selectedDay.format("MMM Do")
+			@$el.find(".month .selected-date").text @getSelectedDateText()
 		renderTime: ->
 			time = @model.get "time"
 			@$el.find(".month time").text @getFormattedTime( time.hour, time.minute )
