@@ -47,12 +47,12 @@
 		<li>
 			<% if (state === "completed") { %>
 				<time><%= completionTimeStr %></time>
-			<% } else if (state === "scheduled") { %>
+			<% } else if (state === "scheduled" && scheduleStr !== "unspecified") { %>
 				<time><%= timeStr %></time>
 			<% } %>
 		</li>
 
-		<% if (state === "completed" || state === "scheduled") { %>
+		<% if (state === "completed" || state === "scheduled" && scheduleStr !== "unspecified" ) { %>
 			<% if (tags && tags.length) { %>
 				<li class="seperator"></li>
 			<% } %>
