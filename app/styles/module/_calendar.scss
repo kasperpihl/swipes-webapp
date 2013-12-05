@@ -37,7 +37,7 @@
 		}
 
 		.selected-date + time {
-			border-left: 2px solid lighten( $gray-warm, 35% );
+			border-left: 2px solid lighten( $gray, 35% );
 			padding-left: 0.7em;
 			margin-left: 0.7em;
 		}
@@ -66,7 +66,7 @@
 	}
 
 	.header-day {
-		// color: $gray-warm;
+		// color: $gray;
 		font-size: 80%;
 		text-transform: lowercase;
 		font-family: $font-bold;
@@ -97,10 +97,10 @@
 		}
 
 		&.past {
-			color: $gray-lighter;
+			color: $gray-light;
 			cursor: default;
 
-			&.adjacent-month { background: lighten($gray-lighter, 10%); }
+			&.adjacent-month { background: lighten($gray-light, 10%); }
 		}
 
 		&.selected, &.event {
@@ -112,7 +112,7 @@
 	}
 
 	.empty, .adjacent-month {
-		background: $gray-lighter;
+		background: $gray-light;
 		color: $gray-light;
 	}
 }

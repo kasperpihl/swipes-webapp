@@ -18,8 +18,10 @@
           return $("body").toggleClass("sidebar-open", false);
         } else if (trigger.hasClass("log-out")) {
           e.preventDefault();
-          Parse.User.logOut();
-          return location.pathname = "/login/";
+          if (confirm("Are you sure you want to log out?")) {
+            Parse.User.logOut();
+            return location.pathname = "/login/";
+          }
         }
       },
       destroy: function() {

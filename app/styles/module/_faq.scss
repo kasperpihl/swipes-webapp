@@ -3,14 +3,15 @@ ul.faq, ol.faq {
 	list-style: none;
 	padding: 0;
 
-	li { 
+	li {
 		margin: 0 0 1.3em;
 		@include perspective(500);
 	}
 
 	header { cursor: pointer; }
-	
-	header h4 { 
+
+	header h4 {
+		font-family: $font-normal;
 		position: relative;
 		margin: 0 0 0.4em;
 		text-align: left;
@@ -30,10 +31,10 @@ ul.faq, ol.faq {
 			margin-top: 0 - ( $dot-size / 2 );
 		}
 	}
-	
-	section { 
+
+	section {
 		overflow: hidden;
-		
+
 		@include transform-origin(top, center);
 
 		padding-left: $dot-size * 2.7;

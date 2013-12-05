@@ -4,7 +4,7 @@
       tagName: "div",
       className: "calendar-wrap",
       initialize: function() {
-        _.bindAll(this, "handleClickDay", "handleMonthChanged", "handleYearChanged");
+        _.bindAll(this, "handleClickDay", "handleMonthChanged");
         this.listenTo(this.model, "change:date", this.renderDate);
         this.listenTo(this.model, "change:time", this.renderTime);
         return this.today = moment();
@@ -20,11 +20,14 @@
           },
           clickEvents: {
             click: this.handleClickDay,
-            onYearChange: this.handleYearChanged,
             onMonthChange: this.handleMonthChanged
           },
           weekOffset: swipy.settings.get("snoozes").weekday.startDay.number,
           doneRendering: this.afterRender,
+          adjacentDaysChangeMonth: true,
+          constraints: {
+            startDay: this.getTodayStr()
+          },
           ready: function() {
             return _this.selectDay(_this.today);
           },
@@ -33,6 +36,9 @@
       },
       createCalendar: function() {
         return this.clndr = this.$el.clndr(this.getCalendarOpts());
+      },
+      getTodayStr: function() {
+        return new moment().format("YYYY-MM-DD");
       },
       getElementFromMoment: function(moment) {
         var dateStr;
@@ -92,27 +98,24 @@
         }
       },
       handleClickDay: function(day) {
-        var $el;
         if ($(day.element).hasClass("past")) {
           return false;
         }
-        this.selectDay(day.date, day.element);
-        $el = $(day.element);
-        if ($el.hasClass("adjacent-month")) {
-          if ($el.hasClass("last-month")) {
-            return this.clndr.back();
-          } else {
-            return this.clndr.forward();
-          }
-        }
-      },
-      handleYearChanged: function(moment) {
-        return console.log("Switched year to ", moment.year());
+        return this.selectDay(day.date, day.element);
+        /*
+        			$el = $ day.element
+        			if $el.hasClass "adjacent-month"
+        				if $el.hasClass "last-month" then @clndr.back()
+        				else @clndr.forward()
+        */
+
       },
       handleMonthChanged: function(moment) {
-        var newDate;
+        var maxDate, newDate, oldDate;
         newDate = moment;
-        newDate.date(this.selectedDay.date());
+        oldDate = this.selectedDay.date();
+        maxDate = newDate.daysInMonth();
+        newDate.date(Math.min(oldDate, maxDate));
         if (newDate.isBefore(this.today)) {
           newDate = this.today;
         }

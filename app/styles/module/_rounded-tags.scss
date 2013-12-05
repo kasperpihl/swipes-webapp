@@ -17,21 +17,21 @@
 		@include transition(background 0.15s ease-out);
 		border-radius: 0.5em;
 
-		color: $gray-warm;
+		color: $gray;
 		font-size: 0.8em;
 		font-family: $font-normal;
 		cursor: pointer;
 
-		border: thin solid $gray-warm;
+		border: thin solid $gray;
 
 		@include transition(background 0.15s ease-out);
 
 		&:hover {
-			color: $gray-dark;
+			color: $gray;
 		}
 
 		&.selected {
-			background: $gray-warm;
+			background: $gray;
 			color: white;
 		}
 	}
@@ -39,7 +39,7 @@
 
 
 	li.tag-input {
-		background: $gray-warm !important;
+		border-color: #ACACAC;
 	}
 
 	.add-new-tag {
@@ -84,18 +84,14 @@
 		outline: none;
 		border: none;
 		background: transparent;
-		color: #ddd;
-
-		@include input-placeholder {
-			color: #ddd;
-		}
+		color: $gray;
 
 		&:focus, &:hover {
-			color: white;
+
 		}
 
 		@include input-placeholder() {
-			color: $gray;
+			color: lighten($gray, 30%);
 		}
 	}
 }
@@ -110,5 +106,36 @@
 	margin-left: -0.7em;
 	margin-top: emCalc(6px);
 
-	@include triangle(1.6em, 0.72em, up, lighten($gray-lighter, 13%));
+	@include triangle(1.6em, 0.72em, up, $gray-light);
+}
+
+// Wobble tags in delete mode
+.delete-mode .rounded-tags {
+	li:not(.delete) {
+
+		&:before {
+			content: "× ";
+			color: $lobster;
+			font-size: 1.4em;
+			line-height: 1em;
+			top: 0.12em;
+			position: relative;
+		}
+
+		&:nth-child(2n) {
+			@include experimental(animation, wobble1 0.24s infinite);
+			@include apply-origin(40% 60%, false);
+		}
+
+		&:nth-child(2n-1) {
+			@include experimental(animation, wobble2 0.3s infinite alternate);
+			@include apply-origin(60% 40%, false);
+		}
+
+		@for $i from 1 through 40 {
+			&:nth-child(#{$i}) {
+				@include experimental(animation-delay, -#{rand(0-1)}s);
+			}
+		}
+	}
 }

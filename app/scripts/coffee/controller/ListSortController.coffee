@@ -3,8 +3,19 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )
 			@enableTouchListners()
+		getHammerOpts: ->
+			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
+			{
+				drag: off
+				swipe: off
+				tap: off
+				transform: off
+				# hold_threshold: 50
+				prevent_default: yes
+				hold_timeout: if Modernizr.touch then 400 else 400
+			}
 		enableTouchListners: ->
-			$( @model.container[0] ).hammer().on( "hold", "ol > li", @activate )
+			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "hold", "ol > li", @activate )
 		disableTouchListeners: ->
 			$( @model.container[0] ).hammer().off( "hold", @activate )
 		activate: (e) =>
@@ -38,9 +49,10 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				bounds: @model.container
 
 				# Throwing / Dragging
-				edgeResistance: 0.75
 				throwProps: yes
-				resistance: 3000
+				edgeResistance: 0.8
+				maxDuration: 0.4
+				throwResistance: 3000
 				snap: y: (endValue) ->
 					# Snap to closest row
 					return Math.max( @minY, Math.min( @maxY, Math.round( endValue / self.model.rowHeight ) * self.model.rowHeight ) );
@@ -50,10 +62,9 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 				onDragStart: @onDragStart
 				onDragParams: [view, @model]
 				onDrag: @onDrag
-				onDragEndParams: [view, @model]
+				onDragEndParams: [view, @model, @]
 				onDragEnd: @onDragEnd
 				onThrowComplete: =>
-					@deactivate()
 					@onDragCompleteCallback?.call @
 
 			dragOpts.trigger = view.$el.find ".todo-content"
@@ -69,14 +80,19 @@ define ["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], 
 			if @model?
 				view.model.off(null, null, @) for view in @model?.views
 		onDragStart: (view, allViews) =>
-			view.$el.addClass "selected"
+			view.$el.off( "click", ".todo-content", view.toggleSelected )
+			view.$el.addClass "dragging"
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y )
 			model.scrollWindow( @minY, @maxY, @y, @pointerY )
-		onDragEnd: (view, model) ->
+		onDragEnd: (view, model, self) ->
 			model.reorderRows( view, @endY )
 			model.oldTaskY = null
-			view.$el.removeClass( "selected" ) unless view.model.get "selected"
+			view.$el.removeClass( "dragging" )
+			setTimeout ->
+					self.deactivate()
+					view.$el.on( "click", ".todo-content", view.toggleSelected )
+				, 500
 		reorderView: (model, newOrder, animate = yes) ->
 			dur = if animate then 0.3 else 0
 			TweenLite.to( @el, dur, { y: newOrder * @$el.height() } )

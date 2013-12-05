@@ -1,9 +1,9 @@
 .tag-pool {
 	display: none;
 
-	background: lighten($gray-lighter, 13%);
+	background: $gray-light;
 	padding: 0.8em 0.8em 0.4em;
-	border-radius: 0.5em;
+	border-radius: 0.2em;
 
 	.show-pool & {
 		display: block;

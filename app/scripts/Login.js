@@ -170,7 +170,7 @@
       switch (error.code) {
         case Parse.Error.USERNAME_TAKEN:
         case Parse.Error.EMAIL_NOT_FOUND:
-          return alert("The password was wrong or the email/username was already taken");
+          return alert("The password was wrong");
         case Parse.Error.INVALID_EMAIL_ADDRESS:
           return alert("The provided email is invalid. Please check it, and try again");
         case Parse.Error.TIMEOUT:

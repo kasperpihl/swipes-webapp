@@ -14,26 +14,20 @@ $list-item-height-lg: 105px;
 		margin: 0 0 .2em;
 	}
 
+	.center-title h2 {
+		margin-top: 0.45em;
+	}
+
 	.priority {
 		margin-left: 10%;
 		@include breakpoint(tablet) { margin-left: 19.5%; }
 	}
 
-	time, .tags { display: inline-block; }
+	time, .meta, .tags { display: inline-block; }
 
-	time {
-		font-family: $font-light;
-		background: $gray-light;
-		padding: 0 0.6em;
-		margin-right: 0.5em;
-		color: white;
-		font-size: 0.9em;
-	}
-
-	.tags {
+	.meta {
 		margin: 0;
 		padding: 0;
-		font-family: $font-bold;
 
 		li {
 			display: inline-block;
@@ -41,15 +35,42 @@ $list-item-height-lg: 105px;
 			margin: 0 0 0 -0.3em;
 			padding: 0;
 
-			&:before { content: ', '; }
 
 			&:first-child {
 				margin-left: 0;
 				&:before { content: none; }
 			}
+		}
 
-			strong {
-				color: $gray;
+		> li {
+			margin-left: 0.2em;
+		}
+
+		li.seperator {
+			margin-right: 0.2em;
+			color: $gray;
+			font-family: $font-bold;
+
+			&:before { content: "//"; }
+		}
+
+		.tags {
+			margin: 0;
+			padding: 0;
+			font-family: $font-bold;
+
+			li {
+				strong {
+					color: black;
+					text-shadow: 0 0 0px black;
+				}
+
+				&:before { content: ', '; }
+
+				&:first-child {
+					margin-left: 0;
+					&:before { content: none; }
+				}
 			}
 		}
 	}
@@ -123,7 +144,12 @@ $list-item-height-lg: 105px;
 // Various states for tasks
 .todo-list {
 	.selected .todo-content {
-		background: #f3f3f3;
+		background: #f7f7f7;
+	}
+
+	.dragging .todo-content {
+		@include transition(all 0.2s ease-out);
+		@include box-shadow(0 0 30px #ddd);
 	}
 
 	.hover-left {

@@ -1,33 +1,50 @@
 .priority {
+	$size: 16px;
+	$border-size: 2px;
+
 	// Normalize size independent of container
 	font-size: 18px;
 
 	position: absolute;
-	$size: 0.8em;
-	$border-size: 4px;
 
-	width: $size; height: $size;
-	
-	background: $yellow;
-	.scheduled & { background: $lobster }
-	.completed & { background: $green }
+	width: $size;
+	height: $size;
 
-	border: $border-size solid $gray;
 	border-radius: $size;
 	left: 0; top: 50%;
+	cursor: pointer;
+
+	background: $yellow;
+	&:after {
+		$inner-size: 10px;
+		position: absolute;
+		display: none;
+		left: 50%; top: 50%;
+		margin-top: 0 - ($inner-size / 2);
+		margin-left: 0 - ($inner-size / 2);
+		width: $inner-size;
+		height: $inner-size;
+		border-radius: $inner-size;
+		background: $yellow;
+		border: $border-size solid white;
+		content: "";
+	}
+
+	.scheduled & {
+		background: $lobster;
+		&:after { background: $lobster; }
+	}
+	.completed & {
+		background: $green;
+		&:after { background: $green; }
+	}
+
+	.is-priority & {
+		&:after { display: block; }
+	}
 
 	@include box-sizing(content-box);
-	
-	margin-top: 0 - emCalc($border-size) - ($size / 2);
 
-	// Border
-	&:after {
-		content: ""; 
-		position: absolute;
-		bottom: 0; left: 0; right: 0;
-		
-		@include background-image( 
-			linear-gradient(left, transparent, $gray-lighter 15%, transparent 105%) 
-		);
-	}
+	margin-top: -0.25em;
 }
+

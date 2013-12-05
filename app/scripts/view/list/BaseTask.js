@@ -3,7 +3,7 @@
     return Parse.View.extend({
       tagName: "li",
       initialize: function() {
-        _.bindAll(this, "onSelected", "setBounds", "toggleSelected", "edit", "handleAction");
+        _.bindAll(this, "onSelected", "setBounds", "toggleSelected", "togglePriority", "edit", "handleAction");
         this.listenTo(this.model, "change:tags change:timeStr", this.render, this);
         this.listenTo(this.model, "change:selected", this.onSelected);
         $(window).on("resize", this.setBounds);
@@ -14,6 +14,7 @@
       },
       bindEvents: function() {
         this.$el.on("click", ".todo-content", this.toggleSelected);
+        this.$el.on("click", ".priority", this.togglePriority);
         this.$el.on("dblclick", ".todo-content", this.edit);
         return this.$el.on("click", ".action", this.handleAction);
       },
@@ -28,6 +29,14 @@
         var currentlySelected;
         currentlySelected = this.model.get("selected") || false;
         return this.model.set("selected", !currentlySelected);
+      },
+      togglePriority: function(e) {
+        e.stopPropagation();
+        if (this.model.get("priority")) {
+          return this.model.save("priority", 0);
+        } else {
+          return this.model.save("priority", 1);
+        }
       },
       handleAction: function(e) {
         var selectedTasks, task, trigger, _i, _len,
@@ -65,8 +74,10 @@
         }
         this.$el.html(this.template(this.model.toJSON()));
         this.$el.attr("data-id", this.model.cid);
+        this.afterRender();
         return this;
       },
+      afterRender: function() {},
       remove: function() {
         this.cleanUp();
         return this.$el.remove();

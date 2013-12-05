@@ -13,8 +13,19 @@
         this.enableTouchListners();
       }
 
+      ListSortController.prototype.getHammerOpts = function() {
+        return {
+          drag: false,
+          swipe: false,
+          tap: false,
+          transform: false,
+          prevent_default: true,
+          hold_timeout: Modernizr.touch ? 400 : 400
+        };
+      };
+
       ListSortController.prototype.enableTouchListners = function() {
-        return $(this.model.container[0]).hammer().on("hold", "ol > li", this.activate);
+        return $(this.model.container[0]).hammer(this.getHammerOpts()).on("hold", "ol > li", this.activate);
       };
 
       ListSortController.prototype.disableTouchListeners = function() {
@@ -71,9 +82,10 @@
         dragOpts = {
           type: "y",
           bounds: this.model.container,
-          edgeResistance: 0.75,
           throwProps: true,
-          resistance: 3000,
+          edgeResistance: 0.8,
+          maxDuration: 0.4,
+          throwResistance: 3000,
           snap: {
             y: function(endValue) {
               return Math.max(this.minY, Math.min(this.maxY, Math.round(endValue / self.model.rowHeight) * self.model.rowHeight));
@@ -83,11 +95,10 @@
           onDragStart: this.onDragStart,
           onDragParams: [view, this.model],
           onDrag: this.onDrag,
-          onDragEndParams: [view, this.model],
+          onDragEndParams: [view, this.model, this],
           onDragEnd: this.onDragEnd,
           onThrowComplete: function() {
             var _ref;
-            _this.deactivate();
             return (_ref = _this.onDragCompleteCallback) != null ? _ref.call(_this) : void 0;
           }
         };
@@ -126,7 +137,8 @@
       };
 
       ListSortController.prototype.onDragStart = function(view, allViews) {
-        return view.$el.addClass("selected");
+        view.$el.off("click", ".todo-content", view.toggleSelected);
+        return view.$el.addClass("dragging");
       };
 
       ListSortController.prototype.onDrag = function(view, model) {
@@ -134,12 +146,14 @@
         return model.scrollWindow(this.minY, this.maxY, this.y, this.pointerY);
       };
 
-      ListSortController.prototype.onDragEnd = function(view, model) {
+      ListSortController.prototype.onDragEnd = function(view, model, self) {
         model.reorderRows(view, this.endY);
         model.oldTaskY = null;
-        if (!view.model.get("selected")) {
-          return view.$el.removeClass("selected");
-        }
+        view.$el.removeClass("dragging");
+        return setTimeout(function() {
+          self.deactivate();
+          return view.$el.on("click", ".todo-content", view.toggleSelected);
+        }, 500);
       };
 
       ListSortController.prototype.reorderView = function(model, newOrder, animate) {

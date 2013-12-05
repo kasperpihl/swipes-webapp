@@ -108,7 +108,7 @@ LoginView = Parse.View.extend
 		else alert "something went wrong. Please try again."
 	showError: (error) ->
 		switch error.code
-			when Parse.Error.USERNAME_TAKEN, Parse.Error.EMAIL_NOT_FOUND then alert "The password was wrong or the email/username was already taken"
+			when Parse.Error.USERNAME_TAKEN, Parse.Error.EMAIL_NOT_FOUND then alert "The password was wrong"
 			when Parse.Error.INVALID_EMAIL_ADDRESS then alert "The provided email is invalid. Please check it, and try again"
 			when Parse.Error.TIMEOUT then alert "The connection timed out. Please try again."
 			when Parse.Error.USERNAME_TAKEN then alert "The email/username was already taken"

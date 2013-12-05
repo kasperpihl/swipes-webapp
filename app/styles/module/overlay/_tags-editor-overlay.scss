@@ -1,11 +1,11 @@
-	
+
 body.tags-editor-open {
 
 	.overlay.tags-editor {
 		visibility: visible;
 		.overlay-bg { opacity: 1; }
 	}
-	
+
 	&.hide-tags-editor .overlay.tags-editor {
 		.overlay-bg {
 			opacity: 0;
@@ -17,7 +17,7 @@ body.tags-editor-open {
 }
 
 .overlay.tags-editor {
-	.overlay-bg { background: rgba( $gray-md-dark, 0.6 ); }
+	.overlay-bg { background: rgba( $gray, 0.6 ); }
 
 	.overlay-content {
 
@@ -29,9 +29,9 @@ body.tags-editor-open {
 		@include breakpoint(min-width, emCalc(550px)) { max-width: emCalc(486px); }
 
 		background: white;
-		
+
 		margin: 0 auto 2.5em;
-		
+
 		padding: 1em 1em 0.4em;
 		border-radius: 0.5em;
 

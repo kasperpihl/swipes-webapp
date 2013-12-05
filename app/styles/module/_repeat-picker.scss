@@ -38,9 +38,9 @@
 		line-height: $height;
 		text-align: center;
 		font-family: $font-bold;
-		color: $gray-warm;
+		color: $gray;
 
-		border-left: thin solid lighten($gray-lighter, 10%);
+		border-left: thin solid rgba($gray, 0.3);
 
 		&:hover {
 			text-decoration: none;
@@ -61,16 +61,16 @@
 
 	@include breakpoint(max-width, emCalc(650px)) {
 		li a {
-			border-bottom: thin solid lighten($gray-lighter, 10%);
+			border-bottom: thin solid rgba($gray, 0.3);
 		}
 
 		li:nth-child(3n + 1) a {
 			border-left: none;
 		}
 
-		li:nth-last-child(1) a,
-		li:nth-last-child(2) a,
-		li:nth-last-child(3) a {
+		li:nth-child(4) a,
+		li:nth-child(5) a,
+		li:nth-child(6) a {
 			border-bottom: none;
 		}
 

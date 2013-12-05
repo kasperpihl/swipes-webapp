@@ -2,24 +2,26 @@
 .sidebar {
 	a.close-sidebar, a.log-out, a.settings {
 		position: absolute;
-		color: #94a0aa;
+		color: white;
 		line-height: 0;
-		
+
 		@include transition(color 0.18s ease-out);
-		
-		&:hover { 
+
+		&:hover {
 			text-decoration: none;
 			color: white;
 		}
 	}
-	
+
 	.close-sidebar {
 		top: 12px; right: 12px;
 		@include breakpoint(desktop) {
 			top: 20px; right: 20px;
 		}
 
-		font-size: 0.9em;
+		font-size: 1.5em;
+
+		&:hover { @extend .icon-cross-act; }
 	}
 
 	a.log-out {
@@ -27,6 +29,10 @@
 		@include breakpoint(desktop) {
 			bottom: 20px; left: 20px;
 		}
+
+		font-size: 1.1em;
+
+		&:hover .icon-log-out { @extend .icon-log-out-act; }
 	}
 
 	a.settings {
@@ -36,5 +42,6 @@
 		}
 
 		> span { font-size: 1.4em; }
+		&:hover .icon-cog { @extend .icon-cog-act; }
 	}
 }

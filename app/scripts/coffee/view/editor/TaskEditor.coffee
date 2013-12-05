@@ -4,6 +4,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 		className: "task-editor"
 		events:
 			"click .save": "save"
+			"click .priority": "togglePriority"
 			"click time": "reschedule"
 			"click .repeat-picker a": "setRepeat"
 			"blur .title input": "updateTitle"
@@ -13,7 +14,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 			@setTemplate()
 
 			@render()
-			@listenTo( @model, "change:schedule change:repeatOption", @render )
+			@listenTo( @model, "change:schedule change:repeatOption change:priority", @render )
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
 		killTagEditor: ->
@@ -21,7 +22,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 				@tagEditor.cleanUp()
 				@tagEditor.remove()
 		createTagEditor: ->
-			@tagEditor = new TagEditor { el: @$el.find(".icon-tags"), model: @model }
+			@tagEditor = new TagEditor { el: @$el.find(".icon-tag-bold"), model: @model }
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->
@@ -35,7 +36,11 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
-
+		togglePriority: ->
+			if @model.get "priority"
+				@model.save( "priority", 0 )
+			else
+				@model.save( "priority", 1 )
 		setRepeat: (e) ->
 			@model.save( "repeatOption", $(e.currentTarget).data "option" )
 		updateTitle: ->

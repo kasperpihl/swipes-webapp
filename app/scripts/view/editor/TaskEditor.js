@@ -5,6 +5,7 @@
       className: "task-editor",
       events: {
         "click .save": "save",
+        "click .priority": "togglePriority",
         "click time": "reschedule",
         "click .repeat-picker a": "setRepeat",
         "blur .title input": "updateTitle",
@@ -14,7 +15,7 @@
         $("body").addClass("edit-mode");
         this.setTemplate();
         this.render();
-        return this.listenTo(this.model, "change:schedule change:repeatOption", this.render);
+        return this.listenTo(this.model, "change:schedule change:repeatOption change:priority", this.render);
       },
       setTemplate: function() {
         return this.template = _.template(TaskEditorTmpl);
@@ -27,7 +28,7 @@
       },
       createTagEditor: function() {
         return this.tagEditor = new TagEditor({
-          el: this.$el.find(".icon-tags"),
+          el: this.$el.find(".icon-tag-bold"),
           model: this.model
         });
       },
@@ -48,6 +49,13 @@
         return Backbone.trigger("show-scheduler", [this.model]);
       },
       transitionInComplete: function() {},
+      togglePriority: function() {
+        if (this.model.get("priority")) {
+          return this.model.save("priority", 0);
+        } else {
+          return this.model.save("priority", 1);
+        }
+      },
       setRepeat: function(e) {
         return this.model.save("repeatOption", $(e.currentTarget).data("option"));
       },
