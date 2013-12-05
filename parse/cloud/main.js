@@ -182,6 +182,18 @@ Parse.Cloud.beforeSave("Signup",function(request,response){
     else response.success();
   });
 });
+Parse.Cloud.define('claimGift',function(request,response){
+  var email = request.params.email;
+  if(!email) return sendError(response,'You need to include email');
+  var query = new Parse.Query(Parse.User);
+  query.equalTo('username',email);
+  query.first({success:function(object){
+    if(!object) return sendError(response,'Email not found');
+    object.set('userLevel',2);
+
+    // TODO: finish claiming
+  },error:function(error){ sendError(response,error); }});
+});
 Parse.Cloud.beforeSave(Parse.User,function(request,response){
   var object = request.object;
   if(object.dirty("username")){
