@@ -17,8 +17,10 @@
 	isPriority = (priority === 1)
 	classList = "todo-content"
 
-	if ( !( tags && tags.length || repeatDate || notes || state === "completed") ) {
-		classList += " center-title"
+	if ( !( tags && tags.length || repeatDate || notes ) ) {
+		if ( state !== "completed" && state !== "scheduled" || scheduleStr === "unspecified" ) {
+			classList += " center-title"
+		}
 	}
 
 	if (priority === 1) {
