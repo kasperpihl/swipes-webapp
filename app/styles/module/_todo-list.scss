@@ -35,5 +35,10 @@
 	@include breakpoint(min-height, emCalc(800px)) {
 		height: 7em;
 	}
-	@include background-image( linear-gradient(rgba(white, 0), rgba(white, 0.9) 75%) );
+
+	@include background-image( linear-gradient( rgba(white, 0), white ) );
+}
+
+.action-bar:not(.fadeout) + .list-fade {
+	@include background-image( linear-gradient( rgba(white, 0), white 35% ) );
 }
