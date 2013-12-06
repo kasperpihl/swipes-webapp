@@ -18,6 +18,10 @@ body.scheduler-open {
 .overlay.scheduler {
 	color: white;
 	.overlay-bg { background: rgba($lobster, 0.8); }
+
+	.round-btn.inverted:hover {
+		color: $lobster;
+	}
 }
 
 .overlay {
