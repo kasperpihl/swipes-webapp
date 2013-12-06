@@ -1,6 +1,6 @@
 .priority {
 	$size: 16px;
-	$border-size: 2px;
+	$border-size: 4px;
 
 	// Normalize size independent of container
 	font-size: 18px;
@@ -16,7 +16,7 @@
 
 	background: $yellow;
 	&:after {
-		$inner-size: 10px;
+		$inner-size: 18px;
 		position: absolute;
 		display: none;
 		left: 50%; top: 50%;
@@ -40,6 +40,14 @@
 	}
 
 	.is-priority & {
+		$big-size: 22px;
+		width: $big-size;
+		height: $big-size;
+		left: -3px;
+		margin-top: -6px;
+
+		border-radius: $big-size;
+
 		&:after { display: block; }
 	}
 
