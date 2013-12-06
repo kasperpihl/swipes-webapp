@@ -89,22 +89,24 @@ LoginView = Parse.View.extend
 		return regex.test email
 	handleError: (user, error, triedLoginWithCredentials = no) ->
 		if triedLoginWithCredentials
-			# Figure out if the error was that the user didn't exist. If true, do the login.
-			if error and error.code then switch error.code
-				when 101
-					if confirm "You're about to create a new user with the e-mail #{ triedLoginWithCredentials.email }. Do you want to continue?"
-						@removeBusyState()
-						return @doAction "register"
+			checkEmailOpts =
+				success: (result, error) =>
+					if not result
+						if confirm "You're about to create a new user with the e-mail #{ triedLoginWithCredentials.email }. Do you want to continue?"
+							@removeBusyState()
+							return @doAction "register"
+						else
+							return @removeBusyState()
 					else
-						return @removeBusyState()
-				else return @showError error
-			else
-				@removeBusyState()
-				return alert "something went wrong. Please try again."
+						@removeBusyState()
+						return alert "Wrong password."
+				error: =>
+					alert "Something went wrong. Please try again."
+					@removeBusyState()
 
+			Parse.Cloud.run( "checkEmail" , { email:triedLoginWithCredentials.email }, checkEmailOpts );
 
-		@removeBusyState()
-		if error and error.code then return @showError error
+		else if error and error.code then return @showError error
 		else alert "something went wrong. Please try again."
 	showError: (error) ->
 		switch error.code
