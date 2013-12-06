@@ -55,12 +55,12 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
 		edit: ->
-			swipy.router.navigate( "edit/#{ @model.cid }", yes )
+			swipy.router.navigate( "edit/#{ @model.id }", yes )
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
 			@$el.html @template @model.toJSON()
-			@$el.attr( "data-id", @model.cid )
+			@$el.attr( "data-id", @model.id )
 			@afterRender()
 			return @
 		afterRender: ->
