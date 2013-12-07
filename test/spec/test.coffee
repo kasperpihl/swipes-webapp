@@ -866,27 +866,30 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					it "Should be able to parse 1 tag", ->
 						result = taskInput.parseTags "I love #tags"
 						expect(result).to.have.length 1
-						expect(result[0]).to.equal "tags"
+						expect(result[0].get "title" ).to.equal "tags"
 
 					it "Should be able to parse multiple tags", ->
 						result = taskInput.parseTags "I love #tags, #racks, #stacks"
 						expect(result).to.have.length 3
-						expect(result).to.include "tags"
-						expect(result).to.include "racks"
-						expect(result).to.include "stacks"
+						tagStrings = _.invoke( result, "get", "title" )
+						expect(tagStrings).to.include "tags"
+						expect(tagStrings).to.include "racks"
+						expect(tagStrings).to.include "stacks"
 
 					it "Should be able to parse tags with spaces", ->
 						result = taskInput.parseTags "I love #tags, #racks and stacks"
 						expect(result).to.have.length 2
-						expect(result).to.include "tags"
-						expect(result).to.include "racks and stacks"
+						tagStrings = _.invoke( result, "get", "title" )
+						expect(tagStrings).to.include "tags"
+						expect(tagStrings).to.include "racks and stacks"
 
 					it "Should be able to seperate tags without commas", ->
 						result = taskInput.parseTags "I love #tags, #racks #stacks"
 						expect(result).to.have.length 3
-						expect(result).to.include "tags"
-						expect(result).to.include "racks"
-						expect(result).to.include "stacks"
+						tagStrings = _.invoke( result, "get", "title" )
+						expect(tagStrings).to.include "tags"
+						expect(tagStrings).to.include "racks"
+						expect(tagStrings).to.include "stacks"
 
 				describe "parsing title", ->
 					it "Should not be able to add tags without a title", ->
@@ -910,9 +913,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					Backbone.trigger( "create-task", "Test task #tags, #rags" )
 					model = swipy.todos.findWhere { "title": "Test task" }
 					expect( model ).to.exist
-					expect( model.get "tags" ).to.have.length 2
-					expect( model.get "tags" ).to.include "tags"
-					expect( model.get "tags" ).to.include "rags"
+
+					tags = model.getTagStrList()
+					expect( tags ).to.have.length 2
+					expect( tags ).to.include "tags"
+					expect( tags ).to.include "rags"
 
 	require ["view/editor/TaskEditor"], (TaskEditor) ->
 		describe "Task Editor", ->

@@ -1033,30 +1033,33 @@
               var result;
               result = taskInput.parseTags("I love #tags");
               expect(result).to.have.length(1);
-              return expect(result[0]).to.equal("tags");
+              return expect(result[0].get("title")).to.equal("tags");
             });
             it("Should be able to parse multiple tags", function() {
-              var result;
+              var result, tagStrings;
               result = taskInput.parseTags("I love #tags, #racks, #stacks");
               expect(result).to.have.length(3);
-              expect(result).to.include("tags");
-              expect(result).to.include("racks");
-              return expect(result).to.include("stacks");
+              tagStrings = _.invoke(result, "get", "title");
+              expect(tagStrings).to.include("tags");
+              expect(tagStrings).to.include("racks");
+              return expect(tagStrings).to.include("stacks");
             });
             it("Should be able to parse tags with spaces", function() {
-              var result;
+              var result, tagStrings;
               result = taskInput.parseTags("I love #tags, #racks and stacks");
               expect(result).to.have.length(2);
-              expect(result).to.include("tags");
-              return expect(result).to.include("racks and stacks");
+              tagStrings = _.invoke(result, "get", "title");
+              expect(tagStrings).to.include("tags");
+              return expect(tagStrings).to.include("racks and stacks");
             });
             return it("Should be able to seperate tags without commas", function() {
-              var result;
+              var result, tagStrings;
               result = taskInput.parseTags("I love #tags, #racks #stacks");
               expect(result).to.have.length(3);
-              expect(result).to.include("tags");
-              expect(result).to.include("racks");
-              return expect(result).to.include("stacks");
+              tagStrings = _.invoke(result, "get", "title");
+              expect(tagStrings).to.include("tags");
+              expect(tagStrings).to.include("racks");
+              return expect(tagStrings).to.include("stacks");
             });
           });
           describe("parsing title", function() {
@@ -1079,15 +1082,16 @@
             });
           });
           return it("Should add a new item to swipy.todos list when create-task event is fired", function() {
-            var model;
+            var model, tags;
             Backbone.trigger("create-task", "Test task #tags, #rags");
             model = swipy.todos.findWhere({
               "title": "Test task"
             });
             expect(model).to.exist;
-            expect(model.get("tags")).to.have.length(2);
-            expect(model.get("tags")).to.include("tags");
-            return expect(model.get("tags")).to.include("rags");
+            tags = model.getTagStrList();
+            expect(tags).to.have.length(2);
+            expect(tags).to.include("tags");
+            return expect(tags).to.include("rags");
           });
         });
       });
