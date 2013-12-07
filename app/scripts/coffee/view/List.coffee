@@ -102,6 +102,11 @@ define [
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
 		completeTasks: (tasks) ->
+			minOrder = Math.min _.invoke( tasks, "get", "order" )...
+
+			# Bump order for tasks
+			swipy.todos.bumpOrder( "up", minOrder, tasks.length )
+
 			for task in tasks
 				view = @getViewForModel task
 

@@ -119,8 +119,10 @@
         }
       },
       completeTasks: function(tasks) {
-        var task, view, _i, _len, _results,
+        var minOrder, task, view, _i, _len, _results,
           _this = this;
+        minOrder = Math.min.apply(Math, _.invoke(tasks, "get", "order"));
+        swipy.todos.bumpOrder("up", minOrder, tasks.length);
         _results = [];
         for (_i = 0, _len = tasks.length; _i < _len; _i++) {
           task = tasks[_i];
