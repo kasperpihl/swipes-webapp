@@ -4,7 +4,6 @@ define ["model/ToDoModel"], (ToDoModel) ->
 		initialize: ->
 			@setQuery()
 			@on( "change:deleted", (model, deleted) => if deleted then @remove model else @add model )
-			@on( "change:completionDate", @checkIfRepeat )
 			@on( "change:title", (model, newTitle) => console.log "Changed title to #{newTitle}" )
 
 			@on "reset", ->

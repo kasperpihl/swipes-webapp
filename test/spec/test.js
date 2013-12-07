@@ -1336,127 +1336,127 @@
             });
           });
           it("Should schedule duplicated task for 11/12/2015, if current task is completed 11/11/2015", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/11/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(12);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           it("Should schedule duplicated task for 11/13/2015, if current task is completed 11/12/2015 (Completed one day too late)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/12/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(13);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           it("Should schedule duplicated task for 11/12/2015, if current task is completed 11/09/2015 (Completed too early, don't create new repeat before scheduled repeatDate)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/09/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(task.get("schedule").getTime()).to.equal(new Date("11/11/2015").getTime());
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(12);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          return it("Should schedule duplicated task for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("01/22/2014"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+          return it("Should schedule duplicated task for 01/23/2016, if current task is completed 01/22/2016 (Completed much too late)", function() {
+            var newSchedule;
+            task.set("completionDate", new Date("01/22/2016"));
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(0);
             expect(newSchedule.getDate()).to.equal(23);
-            return expect(newSchedule.getFullYear()).to.equal(2014);
+            return expect(newSchedule.getFullYear()).to.equal(2016);
           });
         });
         describe("Repeat option: 'mon-fri or sat+sun'", function() {
           beforeEach(function() {
             return task.set({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/11/2015")
-            });
-          });
-          it("should schedule duplicated task for tuesday 11/12/2015 if scheduled for monday 11/11/2015, but completed sunday 11/10/2015 (Too early)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/10/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2015);
-          });
-          it("should schedule duplicated task for monday 11/18/2015 if completed friday 11/15/2015, but scheduled for monday 11/11/2015 (Too late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/15/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2015);
-          });
-          it("should schedule duplicated task for tuesday 11/12/2015 if completed and scheduled for monday 11/11/2015 (On time)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/11/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
-            expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2015);
-          });
-          it("should schedule duplicated task for saturday 11/16/2015 if scheduled for sunday 11/10/2015, but completed sunday 11/03/2015 (A week too early)", function() {
-            var duplicate, newSchedule, newTask;
-            newTask = new ToDoModel({
-              repeatOption: "mon-fri or sat+sun",
               schedule: new Date("11/10/2015")
             });
-            newTask.set("completionDate", new Date("11/03/2015"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+          });
+          it("should schedule duplicated task for tuesday 11/11/2015 if scheduled for monday 11/10/2015, but completed sunday 11/09/2015 (Too early)", function() {
+            var newSchedule;
+            task.set("completionDate", new Date("11/09/2015"));
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(11);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
+          });
+          it("should schedule duplicated task for monday 11/16/2015 if completed friday 11/13/2015, but scheduled for monday 11/10/2015 (Too late)", function() {
+            var newSchedule;
+            task.set("completionDate", new Date("11/13/2015"));
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(16);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should schedule duplicated task for saturday 11/16/2015 if completed sunday 11/10/2015, but scheduled for monday 11/03/2015 (A week too late)", function() {
-            var duplicate, newSchedule, newTask;
+          it("should schedule duplicated task for tuesday 11/11/2015 if completed and scheduled for monday 11/10/2015 (On time)", function() {
+            var newSchedule;
+            task.set("completionDate", new Date("11/10/2015"));
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(11);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
+          });
+          it("should schedule duplicated task for saturday 11/14/2015 if scheduled for sunday 11/08/2015, but completed sunday 11/01/2015 (A week too early)", function() {
+            var newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/03/2015")
+              schedule: new Date("11/08/2015")
             });
-            newTask.set("completionDate", new Date("11/10/2015"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            newTask.set("completionDate", new Date("11/01/2015"));
+            newTask.updateRepeatDate();
+            newSchedule = newTask.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(16);
+            expect(newSchedule.getDate()).to.equal(14);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
+          });
+          it("should schedule duplicated task for monday 11/09/2015 if completed sunday 11/08/2015, but scheduled for monday 11/02/2015 (A week too late)", function() {
+            var newSchedule, newTask;
+            newTask = new ToDoModel({
+              repeatOption: "mon-fri or sat+sun",
+              schedule: new Date("11/02/2015")
+            });
+            newTask.set("completionDate", new Date("11/08/2015"));
+            newTask.updateRepeatDate();
+            newSchedule = newTask.get("repeatDate");
+            expect(newSchedule.getMonth()).to.equal(10);
+            expect(newSchedule.getDate()).to.equal(9);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           it("should schedule duplicated task for sunday 11/10/2015 if completed and scheduled for saturday 11/09/2015 (On time)", function() {
-            var duplicate, newSchedule, newTask;
+            var newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "mon-fri or sat+sun",
               schedule: new Date("11/09/2015")
             });
             newTask.set("completionDate", new Date("11/09/2015"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            newTask.updateRepeatDate();
+            newSchedule = newTask.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(10);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          return it("should schedule duplicated task for saturday 11/16/2015 if completed and scheduled for sunday 11/10/2015 (On time)", function() {
-            var duplicate, newSchedule, newTask;
+          return it("should schedule duplicated task for saturday 11/14/2015 if completed and scheduled for sunday 11/08/2015 (On time)", function() {
+            var newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/10/2015")
+              schedule: new Date("11/08/2015")
             });
-            newTask.set("completionDate", new Date("11/10/2015"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            newTask.set("completionDate", new Date("11/08/2015"));
+            newTask.updateRepeatDate();
+            newSchedule = newTask.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
-            expect(newSchedule.getDate()).to.equal(16);
+            expect(newSchedule.getDate()).to.equal(14);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
         });
@@ -1468,37 +1468,37 @@
             });
           });
           it("should schedule duplicated task for tuesday 11/19/2015 if current task is scheduled for and completed 11/12/2015 (on time)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/12/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(19);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           it("should still schedule duplicated task for tuesday 11/19/2015 if current task is scheduled for 11/12/2015 but completed 11/13/2015 (wednesday, the day after)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/13/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(19);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           it("should schedule duplicated task for tuesday 11/19/2015 if current task is scheduled for 11/12/2015 but completed 11/18/2015 (monday, the week after original schedule date)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/18/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(19);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           return it("should schedule duplicated task for tuesday 11/26/2015 if current task is scheduled for 11/12/2015 but completed wednesday 11/20/2015 (1 week and 1 day after original schedule date)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/20/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(26);
             return expect(newSchedule.getFullYear()).to.equal(2015);
@@ -1512,41 +1512,41 @@
             });
           });
           it("Should schedule duplicate for 11/18/2015, if scheduled for and completed on 10/18/2015 (On time)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("10/18/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           it("Should schedule duplicate for 11/18/2015, if scheduled for 10/18/2015 and completed on 11/17/2015 (less than 1 month late)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/17/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           it("Should schedule duplicate for 12/18/2015, if scheduled for 10/18/2015 and completed on 11/19/2015 (more than 1 month late)", function() {
-            var duplicate, newSchedule;
+            var newSchedule;
             task.set("completionDate", new Date("11/19/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(11);
             expect(newSchedule.getDate()).to.equal(18);
             return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           return it("Should schedule duplicate for 11/30/2015, if scheduled for and completed on 10/31/2015 (Handling difference between number of days in a month nicely)", function() {
-            var duplicate, newSchedule, newTask;
+            var newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "every month",
               schedule: new Date("10/31/2015")
             });
             newTask.set("completionDate", new Date("10/31/2015"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            newTask.updateRepeatDate();
+            newSchedule = newTask.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(30);
             return expect(newSchedule.getFullYear()).to.equal(2015);
@@ -1559,49 +1559,49 @@
               schedule: new Date("11/18/2015")
             });
           });
-          it("Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2015 (On time)", function() {
-            var duplicate, newSchedule;
+          it("Should schedule duplicate for 11/18/2016, if scheduled for and completed on 11/18/2015 (On time)", function() {
+            var newSchedule;
             task.set("completionDate", new Date("11/18/2015"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2014);
+            return expect(newSchedule.getFullYear()).to.equal(2016);
           });
-          it("Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2015 and completed on 11/17/2014 (less than 1 year late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/17/2014"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+          it("Should schedule duplicate for 11/18/2016, if scheduled for 11/18/2015 and completed on 11/17/2016 (less than 1 year late)", function() {
+            var newSchedule;
+            task.set("completionDate", new Date("11/17/2016"));
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2014);
+            return expect(newSchedule.getFullYear()).to.equal(2016);
           });
-          it("Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2015 and completed on 11/19/2014 (more than 1 year late)", function() {
-            var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/19/2014"));
-            duplicate = task.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+          it("Should schedule duplicate for 11/18/2017, if scheduled for 11/18/2017 and completed on 11/19/2016 (more than 1 year late)", function() {
+            var newSchedule;
+            task.set("completionDate", new Date("11/19/2016"));
+            task.updateRepeatDate();
+            newSchedule = task.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2015);
+            return expect(newSchedule.getFullYear()).to.equal(2017);
           });
           return it("if repeatDate is only existant because of a leap year (for instance 02/29/2016), we should schedule for the day before the next year (02/28/2017)", function() {
-            var duplicate, newSchedule, newTask;
+            var newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "every year",
               schedule: new Date("02/29/2016")
             });
             newTask.set("completionDate", new Date("02/29/2016"));
-            duplicate = newTask.getRepeatableDuplicate();
-            newSchedule = duplicate.get("schedule");
+            newTask.updateRepeatDate();
+            newSchedule = newTask.get("repeatDate");
             expect(newSchedule.getMonth()).to.equal(1);
             expect(newSchedule.getDate()).to.equal(28);
             return expect(newSchedule.getFullYear()).to.equal(2017);
           });
         });
       });
-      describe("Un-setting repeat options on ToDo Model", function() {
+      return describe("Un-setting repeat options on ToDo Model", function() {
         it("Should change repeatDate to 'null' of repeatOption is set to 'never'", function() {
           var task;
           task = new ToDoModel({
@@ -1613,311 +1613,266 @@
         });
         return it("Should delete duplicated (repeated) tasks when repeatOption is set to 'never'");
       });
-      return describe("Completing a task with repeat set and automatically spawning a new task", function() {
-        it("TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'", function(done) {
-          return require(["collection/ToDoCollection"], function(ToDoCollection) {
-            var spawnSpy, todoCollection;
-            spawnSpy = sinon.spy(ToDoCollection.prototype, "spawnRepeatTask");
-            expect(spawnSpy).to.not.have.been.called;
-            todoCollection = new ToDoCollection();
-            todoCollection.add({
-              title: "auto spawn tester",
-              repeatOption: "every day"
-            });
-            expect(todoCollection.models).to.have.length(1);
-            todoCollection.at(0).set("completionDate", new Date());
-            expect(spawnSpy).to.have.been.calledOnce;
-            expect(todoCollection.models).to.have.length(2);
-            ToDoCollection.prototype.spawnRepeatTask.restore();
-            todoCollection.off();
-            todoCollection = null;
-            return done();
-          });
-        });
-        return it("TodoCollection should listen for tasks that are completed and do nothing if repeatOption is 'never'", function(done) {
-          return require(["collection/ToDoCollection"], function(ToDoCollection) {
-            var spawnSpy, todoCollection;
-            spawnSpy = sinon.spy(ToDoCollection.prototype, "spawnRepeatTask");
-            todoCollection = new ToDoCollection();
-            todoCollection.add({
-              title: "auto spawn tester 2"
-            });
-            todoCollection.at(0).set("completionDate", new Date());
-            expect(spawnSpy).to.have.been.calledOnce;
-            expect(todoCollection.models).to.have.length(1);
-            ToDoCollection.prototype.spawnRepeatTask.restore();
-            todoCollection.off();
-            todoCollection = null;
-            return done();
-          });
-        });
-      });
+      /*
+      		describe "Completing a task with repeat set and automatically spawning a new task", ->
+      			it "TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'", (done) ->
+      				require ["collection/ToDoCollection"], (ToDoCollection) ->
+      					spawnSpy = sinon.spy( ToDoCollection.prototype, "spawnRepeatTask" )
+      
+      					expect( spawnSpy ).to.not.have.been.called
+      
+      					todoCollection = new ToDoCollection()
+      					todoCollection.add { title: "auto spawn tester", repeatOption: "every day" }
+      
+      					expect( todoCollection.models ).to.have.length 1
+      
+      					todoCollection.at(0).set( "completionDate", new Date() )
+      
+      					expect( spawnSpy ).to.have.been.calledOnce
+      					expect( todoCollection.models ).to.have.length 2
+      
+      					# Clean up this mess
+      					ToDoCollection::spawnRepeatTask.restore()
+      					todoCollection.off()
+      					todoCollection = null
+      
+      					done()
+      
+      			it "TodoCollection should listen for tasks that are completed and do nothing if repeatOption is 'never'", (done) ->
+      				require ["collection/ToDoCollection"], (ToDoCollection) ->
+      					spawnSpy = sinon.spy( ToDoCollection.prototype, "spawnRepeatTask" )
+      
+      					todoCollection = new ToDoCollection()
+      					todoCollection.add { title: "auto spawn tester 2" }
+      					todoCollection.at(0).set( "completionDate", new Date() )
+      
+      					expect( spawnSpy ).to.have.been.calledOnce
+      					expect( todoCollection.models ).to.have.length 1
+      
+      					# Clean up this mess
+      					ToDoCollection::spawnRepeatTask.restore()
+      					todoCollection.off()
+      					todoCollection = null
+      
+      					done()
+      */
+
     });
-    describe("Tag Filter", function() {
-      beforeEach(function() {
-        Backbone.trigger("create-task", "TagTester1 #Nina");
-        Backbone.trigger("create-task", "TagTester2 #Nina, #Pinta");
-        return Backbone.trigger("create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria");
-      });
-      afterEach(function() {
-        swipy.todos.findWhere({
-          title: "TagTester1"
-        }).destroy();
-        swipy.todos.findWhere({
-          title: "TagTester2"
-        }).destroy();
-        return swipy.todos.findWhere({
-          title: "TagTester3"
-        }).destroy();
-      });
-      it("Should add new tags to the global tags collection", function() {
-        swipy.sidebar.tagFilter.addTag("My Test Tag zyxvy");
-        return expect(swipy.tags.pluck("title")).to.include("My Test Tag zyxvy");
-      });
-      it("Should re-render whenever tags in the global collection are added or removed", function() {
-        return require(["view/sidebar/TagFilter"], function(TagFilter) {
-          var dummyTitle, filter, renderSpy;
-          renderSpy = sinon.spy(TagFilter.prototype, "render");
-          filter = new TagFilter({
-            el: $(".sidebar .tags-filter")
-          });
-          expect(renderSpy).to.have.been.calledOnce;
-          dummyTitle = "dummy-" + new Date().getTime();
-          swipy.tags.add({
-            title: dummyTitle
-          });
-          expect(renderSpy).to.have.been.calledTwice;
-          swipy.tags.remove(swipy.tags.findWhere({
-            title: dummyTitle
-          }));
-          expect(renderSpy).to.have.been.calledThrice;
-          TagFilter.prototype.render.restore();
-          filter.remove();
-          return $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
-        });
-      });
-      it("Should show all tags again if the last tag is de-selected", function(done) {
-        return require(["view/sidebar/TagFilter"], function(TagFilter) {
-          var filter, origTagCount, renderSpy, savedRender;
-          savedRender = swipy.sidebar.tagFilter.__proto__.render;
-          swipy.sidebar.tagFilter.render = function() {};
-          renderSpy = sinon.spy(TagFilter.prototype, "render");
-          filter = new TagFilter({
-            el: $(".sidebar .tags-filter")
-          });
-          expect(renderSpy).to.have.been.calledOnce;
-          origTagCount = filter.$el.find("li:not(.tag-input)").length;
-          Backbone.trigger("apply-filter", "tag", "Santa-Maria");
-          Backbone.trigger("remove-filter", "tag", "Santa-Maria");
-          return _.defer(function() {
-            var tag, tags;
-            expect(renderSpy).to.have.been.calledThrice;
-            tags = (function() {
-              var _i, _len, _ref, _results;
-              _ref = filter.$el.find("li:not(.tag-input)");
-              _results = [];
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                tag = _ref[_i];
-                _results.push($(tag).text());
-              }
-              return _results;
-            })();
-            expect(tags).to.have.length(origTagCount);
-            TagFilter.prototype.render.restore();
-            filter.remove();
-            $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
-            swipy.sidebar.tagFilter.render = savedRender;
-            return done();
-          });
-        });
-      });
-      describe("Filtering tasks", function() {
-        return it("If one or more tags are selected, it should only show the tasks that has all of those filters", function() {
-          var tagTitles, taskTitles;
-          taskTitles = swipy.todos.pluck("title");
-          expect(taskTitles).to.include("TagTester1");
-          expect(taskTitles).to.include("TagTester2");
-          expect(taskTitles).to.include("TagTester3");
-          tagTitles = swipy.tags.pluck("title");
-          expect(tagTitles).to.include("Nina");
-          expect(tagTitles).to.include("Pinta");
-          expect(tagTitles).to.include("Santa-Maria");
-          Backbone.trigger("apply-filter", "tag", "Nina");
-          expect(swipy.todos.where({
-            rejectedByTag: false
-          })).to.have.length(3);
-          Backbone.trigger("apply-filter", "tag", "Pinta");
-          expect(swipy.todos.where({
-            rejectedByTag: false
-          })).to.have.length(2);
-          expect(swipy.todos.findWhere({
-            title: "TagTester1"
-          }).get("rejectedByTag")).to.be["true"];
-          Backbone.trigger("apply-filter", "tag", "Santa-Maria");
-          expect(swipy.todos.where({
-            rejectedByTag: false
-          })).to.have.length(1);
-          return expect(swipy.todos.findWhere({
-            title: "TagTester2"
-          }).get("rejectedByTag")).to.be["true"];
-        });
-      });
-      return describe("Narrowing down available tags after filtering", function() {
-        return it("If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", function(done) {
-          return require(["view/sidebar/TagFilter"], function(TagFilter) {
-            var filter, renderSpy, savedRender;
-            savedRender = swipy.sidebar.tagFilter.__proto__.render;
-            swipy.sidebar.tagFilter.render = function() {};
-            renderSpy = sinon.spy(TagFilter.prototype, "render");
-            filter = new TagFilter({
-              el: $(".sidebar .tags-filter")
-            });
-            expect(renderSpy).to.have.been.calledOnce;
-            Backbone.trigger("apply-filter", "tag", "Nina");
-            return _.defer(function() {
-              var tag, tags;
-              expect(renderSpy).to.have.been.calledTwice;
-              tags = (function() {
-                var _i, _len, _ref, _results;
-                _ref = filter.$el.find("li:not(.tag-input)");
-                _results = [];
-                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                  tag = _ref[_i];
-                  _results.push($(tag).text());
-                }
-                return _results;
-              })();
-              expect(tags).to.have.length(3);
-              expect(tags).to.contain("Nina");
-              expect(tags).to.contain("Pinta");
-              expect(tags).to.contain("Santa-Maria");
-              Backbone.trigger("apply-filter", "tag", "Pinta");
-              return _.defer(function() {
-                tags = (function() {
-                  var _i, _len, _ref, _results;
-                  _ref = filter.$el.find("li:not(.tag-input)");
-                  _results = [];
-                  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                    tag = _ref[_i];
-                    _results.push($(tag).text());
-                  }
-                  return _results;
-                })();
-                expect(tags).to.have.length(3);
-                expect(tags).to.contain("Nina");
-                expect(tags).to.contain("Pinta");
-                expect(tags).to.contain("Santa-Maria");
-                Backbone.trigger("remove-filter", "tag", "Nina");
-                Backbone.trigger("apply-filter", "tag", "Santa-Maria");
-                return _.defer(function() {
-                  expect(swipy.filter.tagsFilter).to.have.length(2);
-                  expect(swipy.filter.tagsFilter).to.contain("Pinta");
-                  expect(swipy.filter.tagsFilter).to.contain("Santa-Maria");
-                  tags = (function() {
-                    var _i, _len, _ref, _results;
-                    _ref = filter.$el.find("li:not(.tag-input)");
-                    _results = [];
-                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                      tag = _ref[_i];
-                      _results.push($(tag).text());
-                    }
-                    return _results;
-                  })();
-                  expect(tags).to.have.length(3);
-                  expect(tags).to.contain("Nina");
-                  expect(tags).to.contain("Pinta");
-                  expect(tags).to.contain("Santa-Maria");
-                  Backbone.trigger("apply-filter", "tag", "Nina");
-                  return _.defer(function() {
-                    expect(swipy.filter.tagsFilter).to.have.length(3);
-                    expect(swipy.filter.tagsFilter).to.contain("Nina");
-                    expect(swipy.filter.tagsFilter).to.contain("Pinta");
-                    expect(swipy.filter.tagsFilter).to.contain("Santa-Maria");
-                    tags = (function() {
-                      var _i, _len, _ref, _results;
-                      _ref = filter.$el.find("li:not(.tag-input)");
-                      _results = [];
-                      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                        tag = _ref[_i];
-                        _results.push($(tag).text());
-                      }
-                      return _results;
-                    })();
-                    expect(tags).to.have.length(3);
-                    expect(tags).to.contain("Nina");
-                    expect(tags).to.contain("Pinta");
-                    expect(tags).to.contain("Santa-Maria");
-                    TagFilter.prototype.render.restore();
-                    filter.remove();
-                    $(".sidebar").append("<section class='tags-filter'><ul class='rounded-tags'></ul></section>");
-                    swipy.sidebar.tagFilter.render = savedRender;
-                    return done();
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-    require(["view/list/TagEditorOverlay"], function(TagEditorOverlay) {
-      return describe("Tag Editor overlay", function() {
-        describe("Marking shared tags selected", function() {
-          it("Should detect if any tasks have no tags", function() {
-            var d, data, models, overlay;
-            data = helpers.getDummyModels();
-            models = (function() {
-              var _i, _len, _results;
-              _results = [];
-              for (_i = 0, _len = data.length; _i < _len; _i++) {
-                d = data[_i];
-                _results.push(new ToDoModel(d));
-              }
-              return _results;
-            })();
-            models[0].unset("tags");
-            overlay = new TagEditorOverlay({
-              models: models
-            });
-            return expect(overlay.getTagsAppliedToAll()).to.have.length(0);
-          });
-          return it("Should detect if any tags are shared between the selected tasks", function() {
-            var d, data, models, overlay;
-            data = [
-              {
-                title: "Task 1",
-                tags: ["tag1", "tag2"]
-              }, {
-                title: "Task 2",
-                tags: ["tag2"]
-              }, {
-                title: "Task 3",
-                tags: ["tag2", "tag3"]
-              }
-            ];
-            models = (function() {
-              var _i, _len, _results;
-              _results = [];
-              for (_i = 0, _len = data.length; _i < _len; _i++) {
-                d = data[_i];
-                _results.push(new ToDoModel(d));
-              }
-              return _results;
-            })();
-            overlay = new TagEditorOverlay({
-              models: models
-            });
-            return expect(overlay.getTagsAppliedToAll()).to.have.length(1);
-          });
-        });
-        return describe("Handling interaction / Updating models", function() {
-          it("Should detect if clicked tag is currently selected");
-          it("Should remove clicked tag from all tasks if clicked tag is marked selected");
-          it("Should add clicked tag to all tasks unless tag is marked selected");
-          return it("Should add new tag to all selected tasks if a new tag is created");
-        });
-      });
-    });
+    /*
+    	describe "Tag Filter", ->
+    		beforeEach ->
+    			Backbone.trigger( "create-task", "TagTester1 #Nina" )
+    			Backbone.trigger( "create-task", "TagTester2 #Nina, #Pinta" )
+    			Backbone.trigger( "create-task", "TagTester3 #Nina, #Pinta, #Santa-Maria" )
+    
+    		afterEach ->
+    			swipy.todos.findWhere( title: "TagTester1" ).destroy()
+    			swipy.todos.findWhere( title: "TagTester2" ).destroy()
+    			swipy.todos.findWhere( title: "TagTester3" ).destroy()
+    
+    		it "Should add new tags to the global tags collection", ->
+    			swipy.sidebar.tagFilter.addTag "My Test Tag zyxvy"
+    			expect( swipy.tags.pluck "title" ).to.include "My Test Tag zyxvy"
+    
+    		it "Should re-render whenever tags in the global collection are added or removed", ->
+    			require ["view/sidebar/TagFilter"], (TagFilter) ->
+    				renderSpy = sinon.spy( TagFilter.prototype, "render" )
+    				filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
+    
+    				# Filter renders automatically upon instantiation
+    				expect( renderSpy ).to.have.been.calledOnce
+    
+    				# Set up unique dummy title
+    				dummyTitle = "dummy-" + new Date().getTime()
+    
+    				# Render should be called after a new tag was added
+    				swipy.tags.add { title: dummyTitle }
+    				expect( renderSpy ).to.have.been.calledTwice
+    
+    				# Render should be called after a tag was removed
+    				swipy.tags.remove swipy.tags.findWhere { title: dummyTitle }
+    				expect( renderSpy ).to.have.been.calledThrice
+    
+    				TagFilter.prototype.render.restore()
+    				filter.remove()
+    				$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+    
+    		it "Should show all tags again if the last tag is de-selected", (done) ->
+    			require ["view/sidebar/TagFilter"], (TagFilter) ->
+    				# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
+    				savedRender = swipy.sidebar.tagFilter.__proto__.render
+    				swipy.sidebar.tagFilter.render = ->
+    
+    				renderSpy = sinon.spy( TagFilter.prototype, "render" )
+    				filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
+    
+    				# Filter renders automatically upon instantiation
+    				expect( renderSpy ).to.have.been.calledOnce
+    
+    				# Get original tag count
+    				origTagCount = filter.$el.find("li:not(.tag-input)").length
+    
+    				# Do a top level filter. Only 1 tag selected.
+    				Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
+    				Backbone.trigger( "remove-filter", "tag", "Santa-Maria" )
+    				_.defer ->
+    
+    					expect( renderSpy ).to.have.been.calledThrice
+    					tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+    					expect( tags ).to.have.length origTagCount
+    
+    					# Remove spy
+    					TagFilter.prototype.render.restore()
+    
+    					# Reset HTML
+    					filter.remove()
+    					$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+    
+    					# Re-enable render method on swipys tagFilter
+    					swipy.sidebar.tagFilter.render = savedRender
+    					done()
+    
+    		describe "Filtering tasks", ->
+    			it "If one or more tags are selected, it should only show the tasks that has all of those filters", ->
+    
+    				# Make sure we have our 3 tasks all set up
+    				taskTitles = swipy.todos.pluck "title"
+    				expect( taskTitles ).to.include "TagTester1"
+    				expect( taskTitles ).to.include "TagTester2"
+    				expect( taskTitles ).to.include "TagTester3"
+    
+    				# Make sure we have our 3 tags all set up
+    				tagTitles = swipy.tags.pluck "title"
+    				expect( tagTitles ).to.include "Nina"
+    				expect( tagTitles ).to.include "Pinta"
+    				expect( tagTitles ).to.include "Santa-Maria"
+    
+    				# Filter for first tag. None of the 3 tasks should be rejected.
+    				Backbone.trigger( "apply-filter", "tag", "Nina" )
+    				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 3
+    
+    				# Filter for second tag. TagTester1 should be rejected
+    				Backbone.trigger( "apply-filter", "tag", "Pinta" )
+    				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 2
+    				expect( swipy.todos.findWhere( { title: "TagTester1" } ).get "rejectedByTag" ).to.be.true
+    
+    				# Filter for second tag. TagTester1 and TagTester2 should be rejected
+    				Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
+    				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 1
+    				expect( swipy.todos.findWhere( { title: "TagTester2" } ).get "rejectedByTag" ).to.be.true
+    
+    		describe "Narrowing down available tags after filtering", ->
+    			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", (done) ->
+    				require ["view/sidebar/TagFilter"], (TagFilter) ->
+    					# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
+    					savedRender = swipy.sidebar.tagFilter.__proto__.render
+    					swipy.sidebar.tagFilter.render = ->
+    
+    					renderSpy = sinon.spy( TagFilter.prototype, "render" )
+    					filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
+    
+    					# Filter renders automatically upon instantiation
+    					expect( renderSpy ).to.have.been.calledOnce
+    
+    					# Do a top level filter. Only 1 tag selected.
+    					Backbone.trigger( "apply-filter", "tag", "Nina" )
+    					_.defer ->
+    						expect( renderSpy ).to.have.been.calledTwice
+    
+    						# tags is an array of the text content found inside every <li> in the HTML for the filter. This represents real DOM elements,
+    						# but in a way that's easier to work with.
+    						tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+    
+    						expect( tags ).to.have.length 3
+    						expect( tags ).to.contain "Nina"
+    						expect( tags ).to.contain "Pinta"
+    						expect( tags ).to.contain "Santa-Maria"
+    
+    						# Do a deeper filter — Both #Nina & #Pinta are now selected.
+    						# It should render the same result as above ...
+    						Backbone.trigger( "apply-filter", "tag", "Pinta" )
+    						_.defer ->
+    							tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+    
+    							expect( tags ).to.have.length 3
+    							expect( tags ).to.contain "Nina"
+    							expect( tags ).to.contain "Pinta"
+    							expect( tags ).to.contain "Santa-Maria"
+    
+    							# Do another deep filter — #Pinta & #Santa-Maria are now selected.
+    							Backbone.trigger( "remove-filter", "tag", "Nina" )
+    							Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
+    							_.defer ->
+    								expect( swipy.filter.tagsFilter ).to.have.length 2
+    								expect( swipy.filter.tagsFilter ).to.contain "Pinta"
+    								expect( swipy.filter.tagsFilter ).to.contain "Santa-Maria"
+    
+    								tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+    
+    								expect( tags ).to.have.length 3
+    								expect( tags ).to.contain "Nina"
+    								expect( tags ).to.contain "Pinta"
+    								expect( tags ).to.contain "Santa-Maria"
+    
+    								# Do another deep filter — #Nina, #Pinta & #Santa-Maria are now selected.
+    								Backbone.trigger( "apply-filter", "tag", "Nina" )
+    								_.defer ->
+    									expect( swipy.filter.tagsFilter ).to.have.length 3
+    									expect( swipy.filter.tagsFilter ).to.contain "Nina"
+    									expect( swipy.filter.tagsFilter ).to.contain "Pinta"
+    									expect( swipy.filter.tagsFilter ).to.contain "Santa-Maria"
+    
+    									tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
+    
+    									expect( tags ).to.have.length 3
+    									expect( tags ).to.contain "Nina"
+    									expect( tags ).to.contain "Pinta"
+    									expect( tags ).to.contain "Santa-Maria"
+    
+    									# Remove spy
+    									TagFilter.prototype.render.restore()
+    
+    									# Reset HTML
+    									filter.remove()
+    									$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
+    
+    									# Re-enable render method on swipys tagFilter
+    									swipy.sidebar.tagFilter.render = savedRender
+    									done()
+    
+    	require ["view/list/TagEditorOverlay"], (TagEditorOverlay) ->
+    		describe "Tag Editor overlay", ->
+    			describe "Marking shared tags selected", ->
+    				it "Should detect if any tasks have no tags", ->
+    					data = helpers.getDummyModels()
+    					models = ( new ToDoModel d for d in data )
+    					models[0].unset "tags"
+    					overlay = new TagEditorOverlay { models: models }
+    					expect(overlay.getTagsAppliedToAll()).to.have.length 0
+    
+    				it "Should detect if any tags are shared between the selected tasks", ->
+    					data = [
+    							title: "Task 1"
+    							tags: ["tag1", "tag2"]
+    						,
+    							title: "Task 2"
+    							tags: ["tag2"]
+    						,
+    							title: "Task 3"
+    							tags: ["tag2", "tag3"]
+    					]
+    					models = ( new ToDoModel d for d in data )
+    					overlay = new TagEditorOverlay { models: models }
+    
+    					expect(overlay.getTagsAppliedToAll()).to.have.length 1
+    
+    			describe "Handling interaction / Updating models", ->
+    				it "Should detect if clicked tag is currently selected"
+    				it "Should remove clicked tag from all tasks if clicked tag is marked selected"
+    				it "Should add clicked tag to all tasks unless tag is marked selected"
+    				it "Should add new tag to all selected tasks if a new tag is created"
+    */
+
     return describe("Router", function() {
       before(function() {
         location.hash = "";
@@ -1996,9 +1951,11 @@
         });
       });
       it("Should trigger appropiate logic when navigating to 'edit/:id'", function(done) {
-        var eventTriggered, testTaskId,
+        var eventTriggered, testTask, testTaskId,
           _this = this;
-        testTaskId = swipy.todos.at(0).cid;
+        testTask = swipy.todos.at(0);
+        testTaskId = "router-edit-test-id" + new Date().getTime();
+        testTask.id = testTaskId;
         eventTriggered = false;
         Backbone.once("edit/task", function(id) {
           if (id === testTaskId) {

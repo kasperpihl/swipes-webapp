@@ -12,7 +12,6 @@
             return _this.add(model);
           }
         });
-        this.on("change:completionDate", this.checkIfRepeat);
         this.on("change:title", function(model, newTitle) {
           return console.log("Changed title to " + newTitle);
         });

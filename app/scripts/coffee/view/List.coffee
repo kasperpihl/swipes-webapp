@@ -116,8 +116,10 @@ define [
 		createRepeatedTask: (model) ->
 			# First create a duplicate of the current task and put it in the completed pile.
 			duplicate = model.getRepeatableDuplicate()
+
 			# Make sure we can actually duplicate the task...
 			return false unless duplicate
+
 			duplicate.save { completionDate: new Date() }
 			swipy.todos.add duplicate
 
