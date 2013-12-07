@@ -1177,6 +1177,7 @@
         it("Should change the models repeatOption and repeatDate properties when clicking a repeat option", function(done) {
           var targetModel;
           targetModel = swipy.todos.getActive()[0];
+          targetModel.id = "test-repeat" + new Date().getTime();
           targetModel.set("repeatOption", "never");
           swipy.router.navigate("edit/" + targetModel.id, true);
           return require(["view/editor/TaskEditor"], function() {

@@ -988,6 +988,10 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 		describe "Repeat Picker user interface", ->
 			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
 				targetModel = swipy.todos.getActive()[0]
+
+				# Fake ID for model
+				targetModel.id = "test-repeat" + new Date().getTime()
+
 				targetModel.set( "repeatOption", "never" )
 				swipy.router.navigate( "edit/#{ targetModel.id }", yes )
 
@@ -998,7 +1002,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 					editor = swipy.viewController.currView.$el
 					editor.find(".repeat-picker a").filter( -> $(@).data( "option" ) is "every day" ).click()
-
 					expect( targetModel.get "repeatOption" ).to.equal "every day"
 					done()
 
