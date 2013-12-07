@@ -1196,8 +1196,9 @@
         return it("Should update the UI when the models repeatOption prop changes", function(done) {
           var targetModel;
           targetModel = swipy.todos.getActive()[0];
+          targetModel.id = "test-repeat-update-ui" + new Date().getTime();
           targetModel.set("repeatOption", "never");
-          swipy.router.navigate("edit/" + targetModel.cid, true);
+          swipy.router.navigate("edit/" + targetModel.id, true);
           return require(["view/editor/TaskEditor"], function() {
             var editor;
             editor = swipy.viewController.currView.$el;

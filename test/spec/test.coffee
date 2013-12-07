@@ -1007,8 +1007,12 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 
 			it "Should update the UI when the models repeatOption prop changes", (done) ->
 				targetModel = swipy.todos.getActive()[0]
+
+				# Fake ID for model
+				targetModel.id = "test-repeat-update-ui" + new Date().getTime()
+
 				targetModel.set( "repeatOption", "never" )
-				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
+				swipy.router.navigate( "edit/#{ targetModel.id }", yes )
 
 				require ["view/editor/TaskEditor"], ->
 					editor = swipy.viewController.currView.$el
