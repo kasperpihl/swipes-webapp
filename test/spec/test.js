@@ -1235,90 +1235,88 @@
           return expect(task.get("repeatDate")).to.be.falsy;
         });
       });
-      describe("Duplicating tasks", function() {
-        var duplicate, task;
-        task = duplicate = null;
-        beforeEach(function() {
-          task = new ToDoModel({
-            title: "test title",
-            notes: "test notes",
-            tags: ["tag1", "tag2"],
-            order: 2,
-            state: "completed",
-            repeatOption: "every day"
-          });
-          task.set("completionDate", new Date());
-          return duplicate = task.getRepeatableDuplicate();
-        });
-        afterEach(function() {
-          task.destroy();
-          return duplicate.destroy();
-        });
-        it("Shouldn't allow you to create a duplicate, if the task has no repeatDate", function() {
-          return expect(new ToDoModel().getRepeatableDuplicate).to["throw"](Error);
-        });
-        it("Should return a new instance of ToDo Model when calling 'getRepeatableDuplicate()'", function() {
-          expect(task).to.respondTo("getRepeatableDuplicate");
-          return expect(duplicate).to.be.instanceOf(ToDoModel);
-        });
-        it("Should retain title when duplicating a task", function() {
-          expect(task.get("title")).to.have.length.above(0);
-          return expect(task.get("title")).to.equal(duplicate.get("title"));
-        });
-        it("Should retain tags when duplicating a task", function() {
-          expect(task.get("tags")).to.have.length.above(0);
-          return expect(task.get("tags")).to.have.length(duplicate.get("tags").length);
-        });
-        it("Should retain notes when duplicating a task", function() {
-          expect(task.get("notes")).to.have.length.above(0);
-          return expect(task.get("notes")).to.equal(duplicate.get("notes"));
-        });
-        it("Should retain order when duplicating a task", function() {
-          expect(task.get("order")).to.not.be.falsy;
-          return expect(task.get("order")).to.equal(duplicate.get("order"));
-        });
-        it("Should retain repeatOption when duplicating a task", function() {
-          return expect(task.get("repeatOption")).to.equal(duplicate.get("repeatOption"));
-        });
-        it("Should NOT retain state when duplicating a task", function() {
-          expect(duplicate.has("state")).to.be["false"];
-          return expect(duplicate.getState()).to.equal("scheduled");
-        });
-        it("Should NOT retain model ID when duplicating a task", function() {
-          if (task.id != null) {
-            return expect(duplicate.id).to.not.exist;
-          }
-        });
-        it("Should NOT retain schedule when duplicating a task", function() {
-          expect(duplicate.has("schedule")).to.be["true"];
-          return expect(task.get("schedule").getTime()).to.not.equal(duplicate.get("schedule").getTime());
-        });
-        it("Should NOT retain scheduleStr when duplicating a task", function() {
-          expect(duplicate.has("scheduleStr")).to.be["true"];
-          return expect(task.get("scheduleStr")).to.not.equal(duplicate.get("scheduleStr"));
-        });
-        it("Should NOT retain completionDate when duplicating a task", function() {
-          return expect(duplicate.has("completionDate")).to.be["false"];
-        });
-        it("Should NOT retain completionStr when duplicating a task", function() {
-          return expect(duplicate.has("completionStr")).to.be["false"];
-        });
-        it("Should NOT retain completionTimeStr when duplicating a task", function() {
-          return expect(duplicate.has("completionTimeStr")).to.be["false"];
-        });
-        it("Should NOT retain repeatDate when duplicating a task", function() {
-          expect(duplicate.has("repeatDate")).to.be["true"];
-          return expect(task.get("repeatDate").getTime()).to.not.equal(duplicate.get("repeatDate").getTime());
-        });
-        it("Should NOT retain repeatCount when duplicating a task", function() {
-          expect(task.has("repeatCount")).to.be["true"];
-          expect(duplicate.has("repeatCount")).to.be["true"];
-          return expect(task.get("repeatCount")).to.not.equal(duplicate.get("repeatCount"));
-        });
-        return it("Should update repeatCount++ every time a the same task is duplicated/repeated", function() {
-          return expect(duplicate.get("repeatCount")).to.equal(task.get("repeatCount") + 1);
-        });
-      });
+      /*
+      		describe "Duplicating tasks", ->
+      			task = duplicate = null
+      			beforeEach ->
+      				task = new ToDoModel
+      					title: "test title"
+      					notes: "test notes"
+      					tags: ["tag1", "tag2"]
+      					order: 2
+      					state: "completed"
+      					repeatOption: "every day"
+      
+      				task.set( "completionDate", new Date() )
+      
+      				duplicate = task.getRepeatableDuplicate()
+      			afterEach ->
+      				task.destroy()
+      				duplicate.destroy()
+      
+      			it "Shouldn't allow you to create a duplicate, if the task has no repeatDate", ->
+      				expect( new ToDoModel().getRepeatableDuplicate ).to.throw Error
+      
+      			it "Should return a new instance of ToDo Model when calling 'getRepeatableDuplicate()'", ->
+      				expect( task ).to.respondTo "getRepeatableDuplicate"
+      				expect( duplicate ).to.be.instanceOf ToDoModel
+      
+      			it "Should retain title when duplicating a task", ->
+      				expect( task.get "title" ).to.have.length.above 0
+      				expect( task.get "title" ).to.equal duplicate.get "title"
+      
+      			it "Should retain tags when duplicating a task", ->
+      				expect( task.get "tags" ).to.have.length.above 0
+      				expect( task.get "tags" ).to.have.length duplicate.get("tags").length
+      
+      			it "Should retain notes when duplicating a task", ->
+      				expect( task.get "notes" ).to.have.length.above 0
+      				expect( task.get "notes" ).to.equal duplicate.get "notes"
+      
+      			it "Should retain order when duplicating a task", ->
+      				expect( task.get "order" ).to.not.be.falsy
+      				expect( task.get "order" ).to.equal duplicate.get "order"
+      
+      
+      			it "Should retain state when duplicating a task", ->
+      				expect( duplicate.getState() ).to.equal task.get "state"
+      
+      			it "Should NOT retain model ID when duplicating a task", ->
+      				if task.id? then expect( duplicate.id ).to.not.exist
+      
+      			it "Should NOT retain repeatOption when duplicating a task", ->
+      				expect( task.get "repeatOption" ).to.not.equal duplicate.get "repeatOption"
+      
+      			it "Should NOT retain schedule when duplicating a task", ->
+      				expect( duplicate.has "schedule" ).to.be.true
+      				expect( task.get( "schedule" ).getTime() ).to.not.equal duplicate.get( "schedule" ).getTime()
+      
+      			it "Should NOT retain scheduleStr when duplicating a task", ->
+      				expect( duplicate.has "scheduleStr" ).to.be.true
+      				expect( task.get( "scheduleStr" ) ).to.not.equal duplicate.get( "scheduleStr" )
+      
+      			it "Should NOT retain completionDate when duplicating a task", ->
+      				expect( duplicate.has "completionDate" ).to.be.false
+      
+      			it "Should NOT retain completionStr when duplicating a task", ->
+      				expect( duplicate.has "completionStr" ).to.be.false
+      
+      			it "Should NOT retain completionTimeStr when duplicating a task", ->
+      				expect( duplicate.has "completionTimeStr" ).to.be.false
+      
+      			it "Should NOT retain repeatDate when duplicating a task", ->
+      				expect( duplicate.has "repeatDate" ).to.be.true
+      				expect( task.get( "repeatDate" ).getTime() ).to.not.equal duplicate.get( "repeatDate" ).getTime()
+      
+      			it "Should NOT retain repeatCount when duplicating a task", ->
+      				expect( task.has "repeatCount" ).to.be.true
+      				expect( duplicate.has "repeatCount" ).to.be.true
+      				expect( task.get "repeatCount" ).to.not.equal duplicate.get "repeatCount"
+      
+      			it "Should update repeatCount++ every time a the same task is duplicated/repeated", ->
+      				expect( duplicate.get "repeatCount" ).to.equal ( task.get( "repeatCount" ) + 1 )
+      */
+
       describe("Duplicating a task based on repeatDate and repeatOption", function() {
         var task;
         task = null;
@@ -1330,40 +1328,40 @@
         afterEach(function() {
           return task.destroy();
         });
-        describe("Repeat option: 'every day' — Scheduled for 11/11/2013", function() {
+        describe("Repeat option: 'every day' — Scheduled for 11/11/2015", function() {
           beforeEach(function() {
             return task.set({
               repeatOption: "every day",
-              schedule: new Date("11/11/2013")
+              schedule: new Date("11/11/2015")
             });
           });
-          it("Should schedule duplicated task for 11/12/2013, if current task is completed 11/11/2013", function() {
+          it("Should schedule duplicated task for 11/12/2015, if current task is completed 11/11/2015", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/11/2013"));
+            task.set("completionDate", new Date("11/11/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("Should schedule duplicated task for 11/13/2013, if current task is completed 11/12/2013 (Completed one day too late)", function() {
+          it("Should schedule duplicated task for 11/13/2015, if current task is completed 11/12/2015 (Completed one day too late)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/12/2013"));
+            task.set("completionDate", new Date("11/12/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(13);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("Should schedule duplicated task for 11/12/2013, if current task is completed 11/09/2013 (Completed too early, don't create new repeat before scheduled repeatDate)", function() {
+          it("Should schedule duplicated task for 11/12/2015, if current task is completed 11/09/2015 (Completed too early, don't create new repeat before scheduled repeatDate)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/09/2013"));
+            task.set("completionDate", new Date("11/09/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
-            expect(task.get("schedule").getTime()).to.equal(new Date("11/11/2013").getTime());
+            expect(task.get("schedule").getTime()).to.equal(new Date("11/11/2015").getTime());
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
           return it("Should schedule duplicated task for 01/23/2014, if current task is completed 01/22/2014 (Completed much too late)", function() {
             var duplicate, newSchedule;
@@ -1379,198 +1377,198 @@
           beforeEach(function() {
             return task.set({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/11/2013")
+              schedule: new Date("11/11/2015")
             });
           });
-          it("should schedule duplicated task for tuesday 11/12/2013 if scheduled for monday 11/11/2013, but completed sunday 11/10/2013 (Too early)", function() {
+          it("should schedule duplicated task for tuesday 11/12/2015 if scheduled for monday 11/11/2015, but completed sunday 11/10/2015 (Too early)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/10/2013"));
+            task.set("completionDate", new Date("11/10/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should schedule duplicated task for monday 11/18/2013 if completed friday 11/15/2013, but scheduled for monday 11/11/2013 (Too late)", function() {
+          it("should schedule duplicated task for monday 11/18/2015 if completed friday 11/15/2015, but scheduled for monday 11/11/2015 (Too late)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/15/2013"));
+            task.set("completionDate", new Date("11/15/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should schedule duplicated task for tuesday 11/12/2013 if completed and scheduled for monday 11/11/2013 (On time)", function() {
+          it("should schedule duplicated task for tuesday 11/12/2015 if completed and scheduled for monday 11/11/2015 (On time)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/11/2013"));
+            task.set("completionDate", new Date("11/11/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(12);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should schedule duplicated task for saturday 11/16/2013 if scheduled for sunday 11/10/2013, but completed sunday 11/03/2013 (A week too early)", function() {
+          it("should schedule duplicated task for saturday 11/16/2015 if scheduled for sunday 11/10/2015, but completed sunday 11/03/2015 (A week too early)", function() {
             var duplicate, newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/10/2013")
+              schedule: new Date("11/10/2015")
             });
-            newTask.set("completionDate", new Date("11/03/2013"));
+            newTask.set("completionDate", new Date("11/03/2015"));
             duplicate = newTask.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(16);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should schedule duplicated task for saturday 11/16/2013 if completed sunday 11/10/2013, but scheduled for monday 11/03/2013 (A week too late)", function() {
+          it("should schedule duplicated task for saturday 11/16/2015 if completed sunday 11/10/2015, but scheduled for monday 11/03/2015 (A week too late)", function() {
             var duplicate, newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/03/2013")
+              schedule: new Date("11/03/2015")
             });
-            newTask.set("completionDate", new Date("11/10/2013"));
+            newTask.set("completionDate", new Date("11/10/2015"));
             duplicate = newTask.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(16);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should schedule duplicated task for sunday 11/10/2013 if completed and scheduled for saturday 11/09/2013 (On time)", function() {
+          it("should schedule duplicated task for sunday 11/10/2015 if completed and scheduled for saturday 11/09/2015 (On time)", function() {
             var duplicate, newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/09/2013")
+              schedule: new Date("11/09/2015")
             });
-            newTask.set("completionDate", new Date("11/09/2013"));
+            newTask.set("completionDate", new Date("11/09/2015"));
             duplicate = newTask.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(10);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          return it("should schedule duplicated task for saturday 11/16/2013 if completed and scheduled for sunday 11/10/2013 (On time)", function() {
+          return it("should schedule duplicated task for saturday 11/16/2015 if completed and scheduled for sunday 11/10/2015 (On time)", function() {
             var duplicate, newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "mon-fri or sat+sun",
-              schedule: new Date("11/10/2013")
+              schedule: new Date("11/10/2015")
             });
-            newTask.set("completionDate", new Date("11/10/2013"));
+            newTask.set("completionDate", new Date("11/10/2015"));
             duplicate = newTask.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(16);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
         });
         describe("Repeat option: 'every week'", function() {
           beforeEach(function() {
             return task.set({
               repeatOption: "every week",
-              schedule: new Date("11/12/2013")
+              schedule: new Date("11/12/2015")
             });
           });
-          it("should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for and completed 11/12/2013 (on time)", function() {
+          it("should schedule duplicated task for tuesday 11/19/2015 if current task is scheduled for and completed 11/12/2015 (on time)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/12/2013"));
+            task.set("completionDate", new Date("11/12/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(19);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should still schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/13/2013 (wednesday, the day after)", function() {
+          it("should still schedule duplicated task for tuesday 11/19/2015 if current task is scheduled for 11/12/2015 but completed 11/13/2015 (wednesday, the day after)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/13/2013"));
+            task.set("completionDate", new Date("11/13/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(19);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("should schedule duplicated task for tuesday 11/19/2013 if current task is scheduled for 11/12/2013 but completed 11/18/2013 (monday, the week after original schedule date)", function() {
+          it("should schedule duplicated task for tuesday 11/19/2015 if current task is scheduled for 11/12/2015 but completed 11/18/2015 (monday, the week after original schedule date)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/18/2013"));
+            task.set("completionDate", new Date("11/18/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(19);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          return it("should schedule duplicated task for tuesday 11/26/2013 if current task is scheduled for 11/12/2013 but completed wednesday 11/20/2013 (1 week and 1 day after original schedule date)", function() {
+          return it("should schedule duplicated task for tuesday 11/26/2015 if current task is scheduled for 11/12/2015 but completed wednesday 11/20/2015 (1 week and 1 day after original schedule date)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/20/2013"));
+            task.set("completionDate", new Date("11/20/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(26);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
         });
         describe("Repeat option: 'every month'", function() {
           beforeEach(function() {
             return task.set({
               repeatOption: "every month",
-              schedule: new Date("10/18/2013")
+              schedule: new Date("10/18/2015")
             });
           });
-          it("Should schedule duplicate for 11/18/2013, if scheduled for and completed on 10/18/2013 (On time)", function() {
+          it("Should schedule duplicate for 11/18/2015, if scheduled for and completed on 10/18/2015 (On time)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("10/18/2013"));
+            task.set("completionDate", new Date("10/18/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("Should schedule duplicate for 11/18/2013, if scheduled for 10/18/2013 and completed on 11/17/2013 (less than 1 month late)", function() {
+          it("Should schedule duplicate for 11/18/2015, if scheduled for 10/18/2015 and completed on 11/17/2015 (less than 1 month late)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/17/2013"));
+            task.set("completionDate", new Date("11/17/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          it("Should schedule duplicate for 12/18/2013, if scheduled for 10/18/2013 and completed on 11/19/2013 (more than 1 month late)", function() {
+          it("Should schedule duplicate for 12/18/2015, if scheduled for 10/18/2015 and completed on 11/19/2015 (more than 1 month late)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/19/2013"));
+            task.set("completionDate", new Date("11/19/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(11);
             expect(newSchedule.getDate()).to.equal(18);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
-          return it("Should schedule duplicate for 11/30/2013, if scheduled for and completed on 10/31/2013 (Handling difference between number of days in a month nicely)", function() {
+          return it("Should schedule duplicate for 11/30/2015, if scheduled for and completed on 10/31/2015 (Handling difference between number of days in a month nicely)", function() {
             var duplicate, newSchedule, newTask;
             newTask = new ToDoModel({
               repeatOption: "every month",
-              schedule: new Date("10/31/2013")
+              schedule: new Date("10/31/2015")
             });
-            newTask.set("completionDate", new Date("10/31/2013"));
+            newTask.set("completionDate", new Date("10/31/2015"));
             duplicate = newTask.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(30);
-            return expect(newSchedule.getFullYear()).to.equal(2013);
+            return expect(newSchedule.getFullYear()).to.equal(2015);
           });
         });
         return describe("Repeat option: 'every year'", function() {
           beforeEach(function() {
             return task.set({
               repeatOption: "every year",
-              schedule: new Date("11/18/2013")
+              schedule: new Date("11/18/2015")
             });
           });
-          it("Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2013 (On time)", function() {
+          it("Should schedule duplicate for 11/18/2014, if scheduled for and completed on 11/18/2015 (On time)", function() {
             var duplicate, newSchedule;
-            task.set("completionDate", new Date("11/18/2013"));
+            task.set("completionDate", new Date("11/18/2015"));
             duplicate = task.getRepeatableDuplicate();
             newSchedule = duplicate.get("schedule");
             expect(newSchedule.getMonth()).to.equal(10);
             expect(newSchedule.getDate()).to.equal(18);
             return expect(newSchedule.getFullYear()).to.equal(2014);
           });
-          it("Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2013 and completed on 11/17/2014 (less than 1 year late)", function() {
+          it("Should schedule duplicate for 11/18/2014, if scheduled for 11/18/2015 and completed on 11/17/2014 (less than 1 year late)", function() {
             var duplicate, newSchedule;
             task.set("completionDate", new Date("11/17/2014"));
             duplicate = task.getRepeatableDuplicate();
@@ -1579,7 +1577,7 @@
             expect(newSchedule.getDate()).to.equal(18);
             return expect(newSchedule.getFullYear()).to.equal(2014);
           });
-          it("Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2013 and completed on 11/19/2014 (more than 1 year late)", function() {
+          it("Should schedule duplicate for 11/18/2015, if scheduled for 11/18/2015 and completed on 11/19/2014 (more than 1 year late)", function() {
             var duplicate, newSchedule;
             task.set("completionDate", new Date("11/19/2014"));
             duplicate = task.getRepeatableDuplicate();
