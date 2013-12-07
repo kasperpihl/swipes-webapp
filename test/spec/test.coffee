@@ -989,7 +989,7 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			it "Should change the models repeatOption and repeatDate properties when clicking a repeat option", (done) ->
 				targetModel = swipy.todos.getActive()[0]
 				targetModel.set( "repeatOption", "never" )
-				swipy.router.navigate( "edit/#{ targetModel.cid }", yes )
+				swipy.router.navigate( "edit/#{ targetModel.id }", yes )
 
 				require ["view/editor/TaskEditor"], ->
 					expect( targetModel.get "repeatOption" ).to.equal "never"

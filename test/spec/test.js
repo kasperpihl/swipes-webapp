@@ -1178,7 +1178,7 @@
           var targetModel;
           targetModel = swipy.todos.getActive()[0];
           targetModel.set("repeatOption", "never");
-          swipy.router.navigate("edit/" + targetModel.cid, true);
+          swipy.router.navigate("edit/" + targetModel.id, true);
           return require(["view/editor/TaskEditor"], function() {
             var editor;
             expect(targetModel.get("repeatOption")).to.equal("never");
