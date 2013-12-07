@@ -14,7 +14,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
-					tags: ["work", "client"]
 					notes: ""
 				,
 					title: "Completed Dummy task #3"
@@ -23,7 +22,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					completionDate: new Date("July 12, 2013 11:51:45")
 					repeatOption: "never"
 					repeatDate: null
-					tags: ["work", "client"]
 					notes: ""
 				,
 					title: "Dummy task #2"
@@ -32,7 +30,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 					completionDate: null
 					repeatOption: "never"
 					repeatDate: null
-					tags: ["work", "client"]
 					notes: ""
 				,
 					title: "Dummy task #4"
@@ -63,7 +60,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 		it "App should be up and running", ->
 			# Overwrite todos with dummy data
 			swipy.todos.reset helpers.getDummyModels()
-
 			expect( swipy ).to.exist
 
 		it "Should have scheduled tasks for testing", ->

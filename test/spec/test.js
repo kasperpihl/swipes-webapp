@@ -15,7 +15,6 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["work", "client"],
             notes: ""
           }, {
             title: "Completed Dummy task #3",
@@ -24,7 +23,6 @@
             completionDate: new Date("July 12, 2013 11:51:45"),
             repeatOption: "never",
             repeatDate: null,
-            tags: ["work", "client"],
             notes: ""
           }, {
             title: "Dummy task #2",
@@ -33,7 +31,6 @@
             completionDate: null,
             repeatOption: "never",
             repeatDate: null,
-            tags: ["work", "client"],
             notes: ""
           }, {
             title: "Dummy task #4",
