@@ -1726,7 +1726,11 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			_.defer ->
 
 				# Update route to trigger editor
-				editTaskRoute = "edit/#{ swipy.todos.at( 1 ).cid }"
+				testTask = swipy.todos.at(1)
+				testTaskId = testTask.get("title") + new Date().getTime()
+				testTask.id = testTaskId
+
+				editTaskRoute = "edit/#{ testTaskId }"
 				location.hash = editTaskRoute
 
 				# Then, make sure we've loaded in the editor view
@@ -1739,20 +1743,18 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 							expect( $("body").hasClass "edit-mode" ).to.be.true
 
 							# Save editor (Which should trigger a router.back() call on success)
-							editor.save().then ->
+							editor.save()
 
-								# Allow save success callbacks to do their thing first ...
-								setTimeout ->
-										newRoute = location.hash[1...]
+							setTimeout ->
+									newRoute = location.hash[1...]
+									expect( newRoute ).to.not.equal editTaskRoute
+									expect( swipy.viewController.currView ).to.exist
+									expect( Parse.history.fragment ).to.equal "list/todo"
+									expect( swipy.viewController.currView ).to.be.instanceOf TodoList
+									expect( $("body").hasClass "edit-mode" ).to.be.false
 
-										expect( newRoute ).to.not.equal editTaskRoute
-										expect( swipy.viewController.currView ).to.exist
-										expect( Backbone.history.fragment ).to.equal "list/todo"
-										expect( swipy.viewController.currView ).to.be.instanceOf TodoList
-										expect( $("body").hasClass "edit-mode" ).to.be.false
-
-										done()
-									, 150
+									done()
+								, 100
 						, 500
 
 		it "Should have a catch-all which results in 'list/todo'", ->
@@ -1773,7 +1775,10 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 			routerTriggeredTimes = 0
 			Backbone.on( "navigate/view edit/task show-settings", -> routerTriggeredTimes++ )
 
-			testRoutes = ["", "list/scheduled", "edit/#{swipy.todos.at(0).cid}", "list/scheduled", "list/completed", "", "settings"]
+			taskTestId = swipy.todos.at(0).get("title") + "testroute" + new Date().getTime()
+			swipy.todos.at(0).id= taskTestId
+
+			testRoutes = ["", "list/scheduled", "edit/#{ taskTestId }", "list/scheduled", "list/completed", "", "settings"]
 
 			for route, i in testRoutes
 				do ->
@@ -1806,6 +1811,6 @@ define ["jquery", "underscore", "backbone", "model/ToDoModel", "momentjs"], ($, 
 				swipy.router.back()
 
 				# Make sure backbone.hisotry is also in sync
-				expect( Backbone.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
+				expect( Parse.history.fragment ).to.equal fixRoute testRoutes[testRoutes.length - 3]
 
 				done()

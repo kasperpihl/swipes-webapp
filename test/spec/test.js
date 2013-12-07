@@ -1977,8 +1977,11 @@
       it("Should go back to list view when calling save on task editor", function(done) {
         location.hash = "list/todo";
         return _.defer(function() {
-          var editTaskRoute;
-          editTaskRoute = "edit/" + (swipy.todos.at(1).cid);
+          var editTaskRoute, testTask, testTaskId;
+          testTask = swipy.todos.at(1);
+          testTaskId = testTask.get("title") + new Date().getTime();
+          testTask.id = testTaskId;
+          editTaskRoute = "edit/" + testTaskId;
           location.hash = editTaskRoute;
           return require(["view/editor/TaskEditor", "view/Todo"], function(TaskEditor, TodoList) {
             return setTimeout(function() {
@@ -1987,18 +1990,17 @@
               expect(swipy.router.history).to.have.length(2);
               expect(editor).to.be.instanceOf(TaskEditor);
               expect($("body").hasClass("edit-mode")).to.be["true"];
-              return editor.save().then(function() {
-                return setTimeout(function() {
-                  var newRoute;
-                  newRoute = location.hash.slice(1);
-                  expect(newRoute).to.not.equal(editTaskRoute);
-                  expect(swipy.viewController.currView).to.exist;
-                  expect(Backbone.history.fragment).to.equal("list/todo");
-                  expect(swipy.viewController.currView).to.be.instanceOf(TodoList);
-                  expect($("body").hasClass("edit-mode")).to.be["false"];
-                  return done();
-                }, 150);
-              });
+              editor.save();
+              return setTimeout(function() {
+                var newRoute;
+                newRoute = location.hash.slice(1);
+                expect(newRoute).to.not.equal(editTaskRoute);
+                expect(swipy.viewController.currView).to.exist;
+                expect(Parse.history.fragment).to.equal("list/todo");
+                expect(swipy.viewController.currView).to.be.instanceOf(TodoList);
+                expect($("body").hasClass("edit-mode")).to.be["false"];
+                return done();
+              }, 100);
             }, 500);
           });
         });
@@ -2018,7 +2020,7 @@
         });
       });
       return it("The router should have a custom history lookup, so we can call swipy.router.back() and make sure not to go outside our current domain, unlike history.back in the browser", function(done) {
-        var i, lastRouteDfd, route, routerTriggeredTimes, testRoutes, _fn, _i, _len;
+        var i, lastRouteDfd, route, routerTriggeredTimes, taskTestId, testRoutes, _fn, _i, _len;
         expect(swipy.router).to.respondTo("back");
         expect(swipy.router).to.have.property("history");
         lastRouteDfd = new $.Deferred();
@@ -2026,7 +2028,9 @@
         Backbone.on("navigate/view edit/task show-settings", function() {
           return routerTriggeredTimes++;
         });
-        testRoutes = ["", "list/scheduled", "edit/" + (swipy.todos.at(0).cid), "list/scheduled", "list/completed", "", "settings"];
+        taskTestId = swipy.todos.at(0).get("title") + "testroute" + new Date().getTime();
+        swipy.todos.at(0).id = taskTestId;
+        testRoutes = ["", "list/scheduled", "edit/" + taskTestId, "list/scheduled", "list/completed", "", "settings"];
         _fn = function() {
           var count, path;
           count = i;
@@ -2061,7 +2065,7 @@
           swipy.router.back();
           expect(location.hash).to.equal("#" + fixRoute(testRoutes[testRoutes.length - 2]));
           swipy.router.back();
-          expect(Backbone.history.fragment).to.equal(fixRoute(testRoutes[testRoutes.length - 3]));
+          expect(Parse.history.fragment).to.equal(fixRoute(testRoutes[testRoutes.length - 3]));
           return done();
         });
       });

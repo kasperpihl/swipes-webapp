@@ -38,7 +38,7 @@
       },
       updateHistory: function(me, page, subpage) {
         var newRoute;
-        if (page === "") {
+        if (page === "" || page === "root") {
           return false;
         }
         newRoute = this.getRouteStr(page, subpage[0]);

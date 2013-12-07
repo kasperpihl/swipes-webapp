@@ -22,7 +22,7 @@ define ['backbone'], (Backbone) ->
 			if subview then Backbone.trigger( "settings/view", subview )
 		updateHistory: (me, page, subpage) ->
 			# We skip root, because it's just a redirect to another route.
-			return false if page is ""
+			return false if page is "" or page is "root"
 
 			newRoute = @getRouteStr( page, subpage[0] )
 
