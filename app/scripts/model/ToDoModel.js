@@ -45,17 +45,13 @@
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
-          return _this.set("selected", false);
+          _this.set("selected", false);
+          return _this.reviveDate("schedule");
         });
         this.on("change:completionDate", function() {
           _this.setCompletionStr();
           _this.setCompletionTimeStr();
-          return _this.set("selected", false);
-        });
-        this.on("change:schedule", function() {
-          return _this.reviveDate("schedule");
-        });
-        this.on("change:completionDate", function() {
+          _this.set("selected", false);
           return _this.reviveDate("completionDate");
         });
         this.on("change:repeatDate", function() {

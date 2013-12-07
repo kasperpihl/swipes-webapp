@@ -57,14 +57,14 @@ define ["momentjs"], ->
 				@setScheduleStr()
 				@setTimeStr()
 				@set( "selected", no )
+				@reviveDate "schedule"
 
 			@on "change:completionDate", =>
 				@setCompletionStr()
 				@setCompletionTimeStr()
 				@set( "selected", no )
+				@reviveDate "completionDate"
 
-			@on "change:schedule", => @reviveDate "schedule"
-			@on "change:completionDate", => @reviveDate "completionDate"
 			@on "change:repeatDate", => @reviveDate "repeatDate"
 
 			@on( "change:repeatOption", @setRepeatOption )
