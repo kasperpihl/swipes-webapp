@@ -38,7 +38,7 @@
         _ref = swipy.todos.models;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           m = _ref[_i];
-          if (m.cid === taskId) {
+          if (m.id === taskId) {
             model = m;
           }
         }

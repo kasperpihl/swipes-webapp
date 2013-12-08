@@ -137,30 +137,35 @@
       return regex.test(email);
     },
     handleError: function(user, error, triedLoginWithCredentials) {
+      var checkEmailOpts,
+        _this = this;
       if (triedLoginWithCredentials == null) {
         triedLoginWithCredentials = false;
       }
       if (triedLoginWithCredentials) {
-        if (error && error.code) {
-          switch (error.code) {
-            case 101:
+        checkEmailOpts = {
+          success: function(result, error) {
+            if (!result) {
               if (confirm("You're about to create a new user with the e-mail " + triedLoginWithCredentials.email + ". Do you want to continue?")) {
-                this.removeBusyState();
-                return this.doAction("register");
+                _this.removeBusyState();
+                return _this.doAction("register");
               } else {
-                return this.removeBusyState();
+                return _this.removeBusyState();
               }
-              break;
-            default:
-              return this.showError(error);
+            } else {
+              _this.removeBusyState();
+              return alert("Wrong password.");
+            }
+          },
+          error: function() {
+            alert("Something went wrong. Please try again.");
+            return _this.removeBusyState();
           }
-        } else {
-          this.removeBusyState();
-          return alert("something went wrong. Please try again.");
-        }
-      }
-      this.removeBusyState();
-      if (error && error.code) {
+        };
+        return Parse.Cloud.run("checkEmail", {
+          email: triedLoginWithCredentials.email
+        }, checkEmailOpts);
+      } else if (error && error.code) {
         return this.showError(error);
       } else {
         return alert("something went wrong. Please try again.");

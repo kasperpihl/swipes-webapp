@@ -57,14 +57,14 @@ define ["momentjs"], ->
 				@setScheduleStr()
 				@setTimeStr()
 				@set( "selected", no )
+				@reviveDate "schedule"
 
 			@on "change:completionDate", =>
 				@setCompletionStr()
 				@setCompletionTimeStr()
 				@set( "selected", no )
+				@reviveDate "completionDate"
 
-			@on "change:schedule", => @reviveDate "schedule"
-			@on "change:completionDate", => @reviveDate "completionDate"
 			@on "change:repeatDate", => @reviveDate "repeatDate"
 
 			@on( "change:repeatOption", @setRepeatOption )
@@ -116,11 +116,16 @@ define ["momentjs"], ->
 				return _.invoke( @get( "tags" ), "get", "title" )
 			else
 				return []
-		getDayWithoutTime: (moment) ->
+		getDayWithoutTime: (day) ->
+			fullStr = day.calendar()
+			timeIndex = fullStr.indexOf( " at " )
+
 			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm",
 			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
-			return moment.calendar().match( /\w+/ )[0]
-
+			if timeIndex isnt -1
+				return fullStr.slice( 0, timeIndex )
+			else
+				return fullStr
 		syncTags: (tags) ->
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
 
@@ -146,9 +151,10 @@ define ["momentjs"], ->
 
 			now = moment()
 			parsedDate = moment schedule
+			dayDiff =  Math.abs parsedDate.diff( now, "days" )
 
 			# If difference is more than 1 week, we want different formatting
-			if Math.abs( parsedDate.diff( now, "days" ) ) >= 7
+			if dayDiff >= 6
 				# If it's next year, add year suffix
 				if parsedDate.year() > now.year() then result = parsedDate.format "MMM Do 'YY"
 				else result = parsedDate.format "MMM Do"
@@ -178,7 +184,7 @@ define ["momentjs"], ->
 			parsedDate = moment completionDate
 
 			# If difference is more than 1 week, we want different formatting
-			if parsedDate.diff( now, "days" ) <= -7
+			if parsedDate.diff( now, "days" ) <= -6
 				# If it's the previous year, add year suffix
 				if parsedDate.year() < now.year() then result = parsedDate.format "MMM Do 'YY"
 				else result = parsedDate.format "MMM Do"

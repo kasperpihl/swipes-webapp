@@ -45,17 +45,13 @@
         this.on("change:schedule", function() {
           _this.setScheduleStr();
           _this.setTimeStr();
-          return _this.set("selected", false);
+          _this.set("selected", false);
+          return _this.reviveDate("schedule");
         });
         this.on("change:completionDate", function() {
           _this.setCompletionStr();
           _this.setCompletionTimeStr();
-          return _this.set("selected", false);
-        });
-        this.on("change:schedule", function() {
-          return _this.reviveDate("schedule");
-        });
-        this.on("change:completionDate", function() {
+          _this.set("selected", false);
           return _this.reviveDate("completionDate");
         });
         this.on("change:repeatDate", function() {
@@ -119,8 +115,15 @@
           return [];
         }
       },
-      getDayWithoutTime: function(moment) {
-        return moment.calendar().match(/\w+/)[0];
+      getDayWithoutTime: function(day) {
+        var fullStr, timeIndex;
+        fullStr = day.calendar();
+        timeIndex = fullStr.indexOf(" at ");
+        if (timeIndex !== -1) {
+          return fullStr.slice(0, timeIndex);
+        } else {
+          return fullStr;
+        }
       },
       syncTags: function(tags) {
         var actualTags, pointers, tag, _i, _len;
@@ -164,14 +167,15 @@
         return result;
       },
       setScheduleStr: function() {
-        var dayWithoutTime, now, parsedDate, result, schedule;
+        var dayDiff, dayWithoutTime, now, parsedDate, result, schedule;
         schedule = this.get("schedule");
         if (!schedule) {
           return this.set("scheduleStr", "unspecified");
         }
         now = moment();
         parsedDate = moment(schedule);
-        if (Math.abs(parsedDate.diff(now, "days")) >= 7) {
+        dayDiff = Math.abs(parsedDate.diff(now, "days"));
+        if (dayDiff >= 6) {
           if (parsedDate.year() > now.year()) {
             result = parsedDate.format("MMM Do 'YY");
           } else {
@@ -201,7 +205,7 @@
         }
         now = moment();
         parsedDate = moment(completionDate);
-        if (parsedDate.diff(now, "days") <= -7) {
+        if (parsedDate.diff(now, "days") <= -6) {
           if (parsedDate.year() < now.year()) {
             result = parsedDate.format("MMM Do 'YY");
           } else {

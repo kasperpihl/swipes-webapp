@@ -11,7 +11,10 @@
 
 	<% if (scheduleStr) { %>
 		<section>
-			<time class="icon-clock-bold has-icon no-select"><%= scheduleStr %><% if (timeStr) print(", " + timeStr); %></time>
+			<time class="icon-clock-bold has-icon no-select">
+				<%= scheduleStr %>
+				<% if (timeStr && schedule !== null) print(", " + timeStr); %>
+			</time>
 		</section>
 	<% } %>
 

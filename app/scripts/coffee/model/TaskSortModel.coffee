@@ -39,6 +39,7 @@ define ["underscore"], (_) ->
 			return result
 		setTodoOrder: (todos) ->
 			orders = _.invoke( todos, "get", "order" )
+			console.log "Orders are ", orders
 			orders = _.without( orders, undefined ) #Remove falsy values from array, like undefined.
 
 			ordersBefore = orders

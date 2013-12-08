@@ -66,14 +66,14 @@
         return this.$el.toggleClass("selected", selected);
       },
       edit: function() {
-        return swipy.router.navigate("edit/" + this.model.cid, true);
+        return swipy.router.navigate("edit/" + this.model.id, true);
       },
       render: function() {
         if (this.template == null) {
           return this;
         }
         this.$el.html(this.template(this.model.toJSON()));
-        this.$el.attr("data-id", this.model.cid);
+        this.$el.attr("data-id", this.model.id);
         this.afterRender();
         return this;
       },

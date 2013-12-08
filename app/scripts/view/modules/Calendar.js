@@ -77,6 +77,13 @@
           return hour - 12 + ":" + minute + " PM";
         }
       },
+      getSelectedDateText: function() {
+        if (this.selectedDay.isSame(new moment(), 'year')) {
+          return this.selectedDay.format("MMM Do");
+        } else {
+          return this.selectedDay.format("MMM Do 'YY");
+        }
+      },
       selectDay: function(moment, element) {
         this.days = this.$el.find(".day");
         this.days.removeClass("selected");
@@ -102,13 +109,6 @@
           return false;
         }
         return this.selectDay(day.date, day.element);
-        /*
-        			$el = $ day.element
-        			if $el.hasClass "adjacent-month"
-        				if $el.hasClass "last-month" then @clndr.back()
-        				else @clndr.forward()
-        */
-
       },
       handleMonthChanged: function(moment) {
         var maxDate, newDate, oldDate;
@@ -126,7 +126,7 @@
         return this;
       },
       renderDate: function() {
-        return this.$el.find(".month .selected-date").text(this.selectedDay.format("MMM Do"));
+        return this.$el.find(".month .selected-date").text(this.getSelectedDateText());
       },
       renderTime: function() {
         var time;

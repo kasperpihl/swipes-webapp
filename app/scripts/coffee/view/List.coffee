@@ -102,6 +102,11 @@ define [
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
 		completeTasks: (tasks) ->
+			minOrder = Math.min _.invoke( tasks, "get", "order" )...
+
+			# Bump order for tasks
+			swipy.todos.bumpOrder( "up", minOrder, tasks.length )
+
 			for task in tasks
 				view = @getViewForModel task
 
@@ -116,8 +121,10 @@ define [
 		createRepeatedTask: (model) ->
 			# First create a duplicate of the current task and put it in the completed pile.
 			duplicate = model.getRepeatableDuplicate()
+
 			# Make sure we can actually duplicate the task...
 			return false unless duplicate
+
 			duplicate.save { completionDate: new Date() }
 			swipy.todos.add duplicate
 
