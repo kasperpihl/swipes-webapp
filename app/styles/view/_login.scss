@@ -133,6 +133,8 @@ html.login {
 				font-size: 50px;
 			}
 
+			background: image-url("facebook-btn.svg") no-repeat center center;
+
 			line-height: 1;
 			@include transition(opacity 0.15s ease-out);
 
