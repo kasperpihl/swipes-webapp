@@ -4,7 +4,7 @@ Parse.Cloud.useMasterKey();
 require('cloud/app.js');
 Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
-  if(!user && !request.master) return sendError(response,'You have to be logged in');
+  if(!user && !request.master) return sendError(response,'You have to be logged in to save ToDo');
   var attrWhitelist = ["title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority"];
   handleObject(request.object, attrWhitelist);
   response.success();
@@ -29,7 +29,7 @@ function handleObject(object,attrWhiteList){
 }
 Parse.Cloud.beforeSave('Payment',function(request,response){
   var user = request.user;
-  if(!user && !request.master) return sendError(response,'You have to be logged in');
+  if(!user && !request.master) return sendError(response,'You have to be logged in to save Payment');
   var payment = request.object;
   payment.set('user',user);
   var productIdentifier = payment.get('productIdentifier');
@@ -45,7 +45,7 @@ Parse.Cloud.beforeSave('Payment',function(request,response){
 });
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
-  if(!user && !request.master) return sendError(response,'You have to be logged in');
+  if(!user && !request.master) return sendError(response,'You have to be logged in to save Tag');
   var attrWhitelist = ["title"];
   handleObject(request.object);
   response.success();
@@ -92,7 +92,7 @@ Parse.Cloud.define('checkEmail',function(request,response){
   },error:function(error){ sendError(response,error); }});
 });
 Parse.Cloud.define('cleanup',function(request,response){
-  var query = new Parse.Query('Tag');
+  var query = new Parse.Query('ServerError');
   query.limit(1000);
   query.find({success:function(objects){ 
     Parse.Object.destroyAll(objects,{
