@@ -31,7 +31,7 @@ require.config({
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
         clndr: '../bower_components/clndr/src/clndr',
         hammerjs: '../bower_components/hammerjs/dist/jquery.hammer',
-        'parse-js-sdk': '../bower_components/parse-js-sdk/lib/parse'
+        'parse-js-sdk': '../scripts/plugins/parse-js-sdk/lib/parse'
     },
     shim: {
         bootstrapAffix: {
