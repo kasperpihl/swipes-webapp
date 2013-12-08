@@ -24,7 +24,7 @@
         deleted: false
       },
       initialize: function() {
-        var debouncedSaveOrder, saveOrder,
+        var saveOrder,
           _this = this;
         if (this.get("schedule") === "default") {
           this.set("schedule", this.getDefaultSchedule());
@@ -46,13 +46,15 @@
           _this.setScheduleStr();
           _this.setTimeStr();
           _this.set("selected", false);
-          return _this.reviveDate("schedule");
+          _this.reviveDate("schedule");
+          return _this.checkIfWeShouldListenForOrderChange();
         });
         this.on("change:completionDate", function() {
           _this.setCompletionStr();
           _this.setCompletionTimeStr();
           _this.set("selected", false);
-          return _this.reviveDate("completionDate");
+          _this.reviveDate("completionDate");
+          return _this.checkIfWeShouldListenForOrderChange();
         });
         this.on("change:repeatDate", function() {
           return _this.reviveDate("repeatDate");
@@ -66,13 +68,27 @@
         saveOrder = function() {
           return _this.save();
         };
-        debouncedSaveOrder = _.debounce(saveOrder, 3000);
-        return this.on("change:order", function() {
-          debouncedSaveOrder();
-          if ((_this.get("order") != null) && _this.get("order") < 0) {
-            return console.error("Model order value set to less than 0");
+        this.debouncedSaveOrder = _.debounce(saveOrder, 3000);
+        return this.checkIfWeShouldListenForOrderChange(false);
+      },
+      checkIfWeShouldListenForOrderChange: function(removeEventListeners) {
+        if (this.getState() === "active") {
+          if (this.get("title")) {
+            if (!this.get("deleted")) {
+              return this.listenForOrderChanges();
+            }
           }
-        });
+        } else {
+          if (removeEventListeners) {
+            return this.stopListeningForOrderChanges();
+          }
+        }
+      },
+      listenForOrderChanges: function() {
+        return this.on("change:order", this.debouncedSaveOrder);
+      },
+      stopListeningForOrderChanges: function() {
+        return this.off("change:order", this.debouncedSaveOrder);
       },
       reviveDate: function(prop) {
         if (typeof this.get(prop) === "string") {

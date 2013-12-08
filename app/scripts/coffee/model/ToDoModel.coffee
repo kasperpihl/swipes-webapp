@@ -58,12 +58,14 @@ define ["momentjs"], ->
 				@setTimeStr()
 				@set( "selected", no )
 				@reviveDate "schedule"
+				@checkIfWeShouldListenForOrderChange()
 
 			@on "change:completionDate", =>
 				@setCompletionStr()
 				@setCompletionTimeStr()
 				@set( "selected", no )
 				@reviveDate "completionDate"
+				@checkIfWeShouldListenForOrderChange()
 
 			@on "change:repeatDate", => @reviveDate "repeatDate"
 
@@ -75,12 +77,21 @@ define ["momentjs"], ->
 				@setCompletionTimeStr()
 
 			saveOrder = => @save()
-			debouncedSaveOrder = _.debounce( saveOrder, 3000 )
+			@debouncedSaveOrder = _.debounce( saveOrder, 3000 )
 
-			@on "change:order", =>
-				debouncedSaveOrder()
-				if @get( "order" )? and @get( "order" ) < 0
-					console.error "Model order value set to less than 0"
+			@checkIfWeShouldListenForOrderChange( no )
+		checkIfWeShouldListenForOrderChange: (removeEventListeners) ->
+			if @getState() is "active"
+				if @get "title"
+					if not @get "deleted"
+						@listenForOrderChanges()
+			else
+				if removeEventListeners then @stopListeningForOrderChanges()
+		listenForOrderChanges: ->
+			@on( "change:order", @debouncedSaveOrder )
+		stopListeningForOrderChanges: ->
+			@off( "change:order", @debouncedSaveOrder )
+
 		reviveDate: (prop) ->
 			if typeof @get( prop ) is "string"
 				@set( prop, new Date( @get prop ), { silent: yes } )
