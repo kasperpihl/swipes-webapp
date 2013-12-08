@@ -12,8 +12,10 @@ define [
 	"controller/FilterController"
 	"controller/SettingsController"
 	"controller/ErrorController"
+	"gsap"
 	], (Backbone, ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
 	class Swipes
+		UPDATE_INTERVAL: 30
 		constructor: ->
 			@hackParseAPI()
 
@@ -26,7 +28,16 @@ define [
 			@todos.on( "reset", @init, @ )
 
 			@tags.fetch()
+		isSaving: ->
+			if @todos.length?
+				for task in @todos.models when task._saving
+					return yes
 
+			if @tags.length?
+				for tag in @tags.models when tag._saving
+					return yes
+
+			return no
 		hackParseAPI: ->
 			# Add missing mehods to Parse.Collection.prototype
 			for method in ["where", "findWhere"]
@@ -45,16 +56,19 @@ define [
 			@filter = new FilterController()
 			@settings = new SettingsController()
 
-			@tags.fetch()
-
 			Parse.history.start( pushState: no )
 
-			# @startAutoUpdate()
+			@startAutoUpdate()
 		update: ->
-			@fetchTodos()
+			if not @isSaving()
+				console.log "Fetching new data..."
+				@fetchTodos()
+
+			# TweenLite uses requestAnimationFrame internally. Easiest way to set up a timer with RAF, that
+			# pauses when current browser tab is inactive
+			TweenLite.to( {a:0}, @UPDATE_INTERVAL, { a:1, onComplete: @update, onCompleteScope: @ } )
 		startAutoUpdate: ->
-			timeout = 30 * 1000
-			@updateTimer = setInterval( ( => @update() ), timeout )
+			TweenLite.to( {a:0}, @UPDATE_INTERVAL, { a:1, onComplete: @update, onCompleteScope: @ } )
 		stopAutoUpdate: ->
 			if @updateTimer? then clearInterval @updateTimer
 		cleanUp: ->

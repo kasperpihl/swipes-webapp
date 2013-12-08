@@ -1,7 +1,9 @@
 (function() {
-  define(["backbone", "model/ClockWork", "controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController"], function(Backbone, ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
+  define(["backbone", "model/ClockWork", "controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController", "gsap"], function(Backbone, ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
     var Swipes;
     return Swipes = (function() {
+      Swipes.prototype.UPDATE_INTERVAL = 30;
+
       function Swipes() {
         var _this = this;
         this.hackParseAPI();
@@ -15,6 +17,29 @@
         this.todos.on("reset", this.init, this);
         this.tags.fetch();
       }
+
+      Swipes.prototype.isSaving = function() {
+        var tag, task, _i, _j, _len, _len1, _ref, _ref1;
+        if (this.todos.length != null) {
+          _ref = this.todos.models;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            task = _ref[_i];
+            if (task._saving) {
+              return true;
+            }
+          }
+        }
+        if (this.tags.length != null) {
+          _ref1 = this.tags.models;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            tag = _ref1[_j];
+            if (tag._saving) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
 
       Swipes.prototype.hackParseAPI = function() {
         var method, _i, _len, _ref, _results;
@@ -41,23 +66,34 @@
         this.sidebar = new SidebarController();
         this.filter = new FilterController();
         this.settings = new SettingsController();
-        this.tags.fetch();
-        return Parse.history.start({
+        Parse.history.start({
           pushState: false
         });
+        return this.startAutoUpdate();
       };
 
       Swipes.prototype.update = function() {
-        return this.fetchTodos();
+        if (!this.isSaving()) {
+          console.log("Fetching new data...");
+          this.fetchTodos();
+        }
+        return TweenLite.to({
+          a: 0
+        }, this.UPDATE_INTERVAL, {
+          a: 1,
+          onComplete: this.update,
+          onCompleteScope: this
+        });
       };
 
       Swipes.prototype.startAutoUpdate = function() {
-        var timeout,
-          _this = this;
-        timeout = 30 * 1000;
-        return this.updateTimer = setInterval((function() {
-          return _this.update();
-        }), timeout);
+        return TweenLite.to({
+          a: 0
+        }, this.UPDATE_INTERVAL, {
+          a: 1,
+          onComplete: this.update,
+          onCompleteScope: this
+        });
       };
 
       Swipes.prototype.stopAutoUpdate = function() {
