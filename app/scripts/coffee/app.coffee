@@ -33,8 +33,6 @@ define [
 				if not Parse.Collection::[method]?
 					Parse.Collection::[method] = Backbone.Collection::[method]
 
-
-
 		init: ->
 			@cleanUp()
 

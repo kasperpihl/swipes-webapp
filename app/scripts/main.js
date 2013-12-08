@@ -124,12 +124,11 @@ require(["jquery"], function($) {
 
     require(["parse-js-sdk"], function() {
         // First check that the user is actually logged in
-        Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" )
+        Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" );
 
         if (Parse.User.current()) {
             require(["app", "DebugHelper", "plugins/log"], function (App, DebugHelper) {
                 'use strict';
-
 
                 window.swipy = new App();
                 window.debugHelper = new DebugHelper();

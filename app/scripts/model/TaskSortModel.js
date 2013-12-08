@@ -64,7 +64,6 @@
       TaskSortModel.prototype.setTodoOrder = function(todos) {
         var i, order, orders, ordersBefore, ordersMinusCurrent, spot, task, withoutOrder, _i, _j, _k, _len, _len1, _len2;
         orders = _.invoke(todos, "get", "order");
-        console.log("Orders are ", orders);
         orders = _.without(orders, void 0);
         ordersBefore = orders;
         withoutOrder = this.sortBySchedule(_.filter(todos, function(m) {
