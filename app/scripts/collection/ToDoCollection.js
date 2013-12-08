@@ -37,7 +37,9 @@
       },
       setQuery: function() {
         this.query = new Parse.Query(ToDoModel);
-        return this.query.equalTo("owner", Parse.User.current());
+        this.query.equalTo("owner", Parse.User.current());
+        this.query.notEqualTo("deleted", true);
+        return this.query.limit(1000);
       },
       getActive: function() {
         return this.filter(function(m) {

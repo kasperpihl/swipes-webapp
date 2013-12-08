@@ -15,6 +15,8 @@ define ["model/ToDoModel"], (ToDoModel) ->
 		setQuery: ->
 			@query = new Parse.Query ToDoModel
 			@query.equalTo( "owner", Parse.User.current() )
+			@query.notEqualTo( "deleted", true )
+			@query.limit 1000
 		getActive: ->
 			@filter (m) -> m.getState() is "active"
 		getScheduled: ->
