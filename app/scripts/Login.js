@@ -39,7 +39,7 @@
           }
           return Parse.User.logIn(email, password, {
             success: function() {
-              return location.pathname = "/";
+              return _this.handleUserLoginSuccess();
             },
             error: function(user, error) {
               return _this.handleError(user, error, {
@@ -56,7 +56,7 @@
             return this.removeBusyState();
           }
           return this.createUser(email, password).signUp().done(function() {
-            return location.pathname = "/";
+            return _this.handleUserLoginSuccess();
           }).fail(function(user, error) {
             return _this.handleError(user, error);
           });
@@ -84,10 +84,23 @@
             user.set("username", response.email);
             user.save();
           }
-          return location.href = "/";
+          return this.handleUserLoginSuccess();
         });
       } else {
-        return location.href = "/";
+        return this.handleUserLoginSuccess();
+      }
+    },
+    handleUserLoginSuccess: function() {
+      var level, user;
+      user = Parse.User.current();
+      level = user.get("userLevel");
+      if (level && parseInt(level) >= 1) {
+        return location.pathname = "/";
+      } else {
+        this.removeBusyState();
+        return $("body").addClass("swipes-plus-required").one("click", ".plus-required .cancel", function() {
+          return $("body").removeClass("swipes-plus-required");
+        });
       }
     },
     resetPassword: function() {
@@ -114,7 +127,7 @@
     },
     validateFields: function(email, password) {
       if (!email) {
-        alert("Please fill in yourF e-mail address");
+        alert("Please fill in your e-mail address");
         return false;
       }
       if (!password) {

@@ -25,7 +25,7 @@ LoginView = Parse.View.extend
 				return @removeBusyState() unless @validateFields( email, password )
 
 				Parse.User.logIn( email, password, {
-					success: -> location.pathname = "/"
+					success: => @handleUserLoginSuccess()
 					error: (user, error) => @handleError( user, error, { email, password } )
 				})
 			when "register"
@@ -35,7 +35,7 @@ LoginView = Parse.View.extend
 				return @removeBusyState() unless @validateFields( email, password )
 
 				@createUser( email, password ).signUp()
-				.done( -> location.pathname = "/" )
+				.done( => @handleUserLoginSuccess() )
 				.fail (user, error) => @handleError( user, error )
 			when "facebookLogin"
 				Parse.FacebookUtils.logIn( null, {
@@ -52,9 +52,19 @@ LoginView = Parse.View.extend
 				user.set( "email", response.email )
 				user.set( "username", response.email )
 				user.save()
-			location.href = "/"
+			@handleUserLoginSuccess()
 		else
-			location.href = "/"
+			@handleUserLoginSuccess()
+	handleUserLoginSuccess: ->
+		user = Parse.User.current()
+		level = user.get "userLevel"
+
+		if level and parseInt( level ) >= 1
+			location.pathname = "/"
+		else
+			@removeBusyState()
+			$("body").addClass( "swipes-plus-required" ).one "click", ".plus-required .cancel", ->
+				$("body").removeClass "swipes-plus-required"
 	resetPassword: ->
 		email = prompt "Which email did you register with?"
 		if email then Parse.User.requestPasswordReset( email, {
@@ -69,7 +79,7 @@ LoginView = Parse.View.extend
 		return user
 	validateFields: (email, password) ->
 		if not email
-			alert "Please fill in yourF e-mail address"
+			alert "Please fill in your e-mail address"
 			return no
 
 		if not password
