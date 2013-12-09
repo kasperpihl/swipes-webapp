@@ -53,6 +53,6 @@ define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, Ta
 			else if 41 <= title.length > 50 then taskTitleLength = "41-50"
 			else if 50 < title.length then taskTitleLength = "50+"
 
-			swipy.analyics.tagEvent( "Added Task", { length: taskTitleLength } )
+			swipy.analytics.tagEvent( "Added Task", { length: taskTitleLength } )
 		destroy: ->
 			Backbone.off( null, null, @ )

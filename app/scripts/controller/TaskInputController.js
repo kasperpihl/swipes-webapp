@@ -85,7 +85,7 @@
         } else if (50 < title.length) {
           taskTitleLength = "50+";
         }
-        return swipy.analyics.tagEvent("Added Task", {
+        return swipy.analytics.tagEvent("Added Task", {
           length: taskTitleLength
         });
       };
