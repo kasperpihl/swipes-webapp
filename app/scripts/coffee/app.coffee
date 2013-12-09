@@ -2,6 +2,7 @@ define [
 	"backbone"
 	"model/ClockWork"
 	"controller/ViewController"
+	"controller/AnalyticsController"
 	"router/MainRouter"
 	"collection/ToDoCollection"
 	"collection/TagCollection"
@@ -13,11 +14,14 @@ define [
 	"controller/SettingsController"
 	"controller/ErrorController"
 	"gsap"
-	], (Backbone, ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
+	"localytics-sdk"
+	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		constructor: ->
 			@hackParseAPI()
+
+			@analytics = new AnalyticsController()
 
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()

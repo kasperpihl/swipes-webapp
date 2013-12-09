@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "model/ClockWork", "controller/ViewController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController", "gsap"], function(Backbone, ClockWork, ViewController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
+  define(["backbone", "model/ClockWork", "controller/ViewController", "controller/AnalyticsController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
     var Swipes;
     return Swipes = (function() {
       Swipes.prototype.UPDATE_INTERVAL = 30;
@@ -7,6 +7,7 @@
       function Swipes() {
         var _this = this;
         this.hackParseAPI();
+        this.analytics = new AnalyticsController();
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
