@@ -47,11 +47,11 @@ define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, Ta
 			if tags.length then swipy.tags.getTagsFromTasks()
 
 			taskTitleLength = "1-10"
-			if 11 <= title.length > 20 then taskTitleLength = "11-20"
-			else if 21 <= title.length > 30 then taskTitleLength = "21-30"
-			else if 31 <= title.length > 40 then taskTitleLength = "31-40"
-			else if 41 <= title.length > 50 then taskTitleLength = "41-50"
-			else if 50 < title.length then taskTitleLength = "50+"
+			if title.length > 50 then taskTitleLength = "50+"
+			else if title.length > 41 then taskTitleLength = "41-50"
+			else if title.length > 31 then taskTitleLength = "31-40"
+			else if title.length > 21 then taskTitleLength = "21-30"
+			else if title.length > 11 then taskTitleLength = "11-20"
 
 			swipy.analytics.tagEvent( "Added Task", { length: taskTitleLength } )
 		destroy: ->
