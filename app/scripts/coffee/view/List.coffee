@@ -118,6 +118,8 @@ define [
 							@createRepeatedTask m
 						else
 							m.save( "completionDate", new Date() )
+
+			swipy.analytics.tagEvent( "Completed Tasks", { "Number of Tasks": tasks.length } )
 		createRepeatedTask: (model) ->
 			# First create a duplicate of the current task and put it in the completed pile.
 			duplicate = model.getRepeatableDuplicate()
