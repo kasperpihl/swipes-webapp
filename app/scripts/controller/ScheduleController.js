@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "model/ScheduleModel"], function(_, Backbone, ScheduleModel) {
+  define(["underscore", "backbone", "model/ScheduleModel", "momentjs"], function(_, Backbone, ScheduleModel) {
     var ScheduleController;
     return ScheduleController = (function() {
       function ScheduleController(opts) {
@@ -58,8 +58,62 @@
             completionDate: null
           });
         }
+        swipy.analytics.tagEvent("Scheduled Tasks", this.getAnalyticsDataFromOption(option, date));
         this.view.currentTasks = void 0;
         return this.view.hide();
+      };
+
+      ScheduleController.prototype.getAnalyticsDataFromOption = function(option, date) {
+        if (typeof option === "object") {
+          option = "Calendar";
+        } else {
+          option = (function() {
+            switch (option) {
+              case "later today":
+                return "Later Today";
+              case "this evening":
+                return "This Evening";
+              case "tomorrow":
+                return "Tomorrow";
+              case "day after tomorrow":
+                return "In 2 Days";
+              case "this weekend":
+                return "This Weekend";
+              case "next week":
+                return "Next Week";
+              default:
+                return "Unspecified";
+            }
+          })();
+        }
+        return {
+          "Button Pressed": option,
+          "Number of Tasks": this.currentTasks.length,
+          "Number of days ahead": this.getDayDiff(date),
+          "Used Time Picker": false
+        };
+      };
+
+      ScheduleController.prototype.getDayDiff = function(date) {
+        var diff;
+        if (!date) {
+          return "";
+        }
+        diff = moment(date).diff(new moment(), "days");
+        if (diff < 7) {
+          return diff;
+        } else if (diff < 15) {
+          return "7-14";
+        } else if (diff < 29) {
+          return "15-28";
+        } else if (diff < 43) {
+          return "29-42";
+        } else if (diff < 57) {
+          return "43-56";
+        } else {
+          return "56+";
+        }
+        return diff;
       };
 
       ScheduleController.prototype.selectDate = function() {
