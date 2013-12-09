@@ -77,6 +77,7 @@
           console.log("Fetching new data...");
           this.fetchTodos();
         }
+        this.lastUpdate = new Date();
         return TweenLite.delayedCall(this.UPDATE_INTERVAL, this.update, null, this);
       };
 

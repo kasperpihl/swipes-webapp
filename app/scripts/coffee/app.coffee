@@ -63,6 +63,8 @@ define [
 			if not @isSaving()
 				console.log "Fetching new data..."
 				@fetchTodos()
+
+			@lastUpdate = new Date()
 			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
 		startAutoUpdate: ->
 			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
