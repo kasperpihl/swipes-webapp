@@ -52,7 +52,7 @@
       };
 
       AnalyticsController.prototype.tagEvent = function(ev, options) {
-        return console.warn("TAGGING EVENT: ", ev, options);
+        return this.session.tagEvent(ev, options, this.customDimensions);
       };
 
       AnalyticsController.prototype.pushScreen = function(screenName) {
