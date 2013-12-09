@@ -63,14 +63,11 @@ define [
 			if not @isSaving()
 				console.log "Fetching new data..."
 				@fetchTodos()
-
-			# TweenLite uses requestAnimationFrame internally. Easiest way to set up a timer with RAF, that
-			# pauses when current browser tab is inactive
-			TweenLite.to( {a:0}, @UPDATE_INTERVAL, { a:1, onComplete: @update, onCompleteScope: @ } )
+			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
 		startAutoUpdate: ->
-			TweenLite.to( {a:0}, @UPDATE_INTERVAL, { a:1, onComplete: @update, onCompleteScope: @ } )
+			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
 		stopAutoUpdate: ->
-			if @updateTimer? then clearInterval @updateTimer
+			TweenLite.killDelayedCallsTo @update
 		cleanUp: ->
 			@stopAutoUpdate()
 			@tags?.destroy()

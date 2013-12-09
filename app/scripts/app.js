@@ -77,29 +77,15 @@
           console.log("Fetching new data...");
           this.fetchTodos();
         }
-        return TweenLite.to({
-          a: 0
-        }, this.UPDATE_INTERVAL, {
-          a: 1,
-          onComplete: this.update,
-          onCompleteScope: this
-        });
+        return TweenLite.delayedCall(this.UPDATE_INTERVAL, this.update, null, this);
       };
 
       Swipes.prototype.startAutoUpdate = function() {
-        return TweenLite.to({
-          a: 0
-        }, this.UPDATE_INTERVAL, {
-          a: 1,
-          onComplete: this.update,
-          onCompleteScope: this
-        });
+        return TweenLite.delayedCall(this.UPDATE_INTERVAL, this.update, null, this);
       };
 
       Swipes.prototype.stopAutoUpdate = function() {
-        if (this.updateTimer != null) {
-          return clearInterval(this.updateTimer);
-        }
+        return TweenLite.killDelayedCallsTo(this.update);
       };
 
       Swipes.prototype.cleanUp = function() {
