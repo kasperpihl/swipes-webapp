@@ -46,6 +46,8 @@
         Backbone.trigger("show-settings");
         if (subview) {
           return Backbone.trigger("settings/view", subview);
+        } else {
+          return swipy.analytics.tagEvent("Settings menu");
         }
       },
       updateHistory: function(me, page, subpage) {
