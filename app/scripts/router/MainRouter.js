@@ -20,11 +20,23 @@
         });
       },
       list: function(id) {
+        var eventName;
         if (id == null) {
           id = "todo";
         }
         Backbone.trigger("hide-settings");
-        return Backbone.trigger("navigate/view", id);
+        Backbone.trigger("navigate/view", id);
+        eventName = (function() {
+          switch (id) {
+            case "todo":
+              return "Tasks Tab";
+            case "scheduled":
+              return "Later Tab";
+            case "completed":
+              return "Done Tab";
+          }
+        })();
+        return swipy.analytics.tagEvent(eventName);
       },
       edit: function(taskId) {
         Backbone.trigger("hide-settings");

@@ -14,6 +14,13 @@ define ['backbone'], (Backbone) ->
 		list: (id = "todo") ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
+
+			eventName = switch id
+				when "todo" then "Tasks Tab"
+				when "scheduled" then "Later Tab"
+				when "completed" then "Done Tab"
+
+			swipy.analytics.tagEvent eventName
 		edit: (taskId) ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
