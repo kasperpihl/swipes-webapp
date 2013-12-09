@@ -50,7 +50,7 @@
       };
 
       TaskInputController.prototype.createTask = function(str) {
-        var animateIn, msg, order, tags, title;
+        var animateIn, msg, order, tags, taskTitleLength, title, _ref, _ref1, _ref2, _ref3;
         if (swipy.todos == null) {
           return;
         }
@@ -71,8 +71,23 @@
           animateIn: animateIn
         });
         if (tags.length) {
-          return swipy.tags.getTagsFromTasks();
+          swipy.tags.getTagsFromTasks();
         }
+        taskTitleLength = "1-10";
+        if ((11 <= (_ref = title.length) && _ref > 20)) {
+          taskTitleLength = "11-20";
+        } else if ((21 <= (_ref1 = title.length) && _ref1 > 30)) {
+          taskTitleLength = "21-30";
+        } else if ((31 <= (_ref2 = title.length) && _ref2 > 40)) {
+          taskTitleLength = "31-40";
+        } else if ((41 <= (_ref3 = title.length) && _ref3 > 50)) {
+          taskTitleLength = "41-50";
+        } else if (50 < title.length) {
+          taskTitleLength = "50+";
+        }
+        return swipy.analyics.tagEvent("Added Task", {
+          length: taskTitleLength
+        });
       };
 
       TaskInputController.prototype.destroy = function() {
