@@ -58,7 +58,7 @@ define [
 
 			Parse.history.start( pushState: no )
 
-			@startAutoUpdate()
+			# @startAutoUpdate()
 		update: ->
 			if not @isSaving()
 				console.log "Fetching new data..."

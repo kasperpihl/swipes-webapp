@@ -24,6 +24,8 @@
 	position: fixed;
 	bottom: 0; left: 0; right: 0;
 
+	.edit-mode & { display: none !important; }
+
 	.sidebar-open & {
 		left: $sidebar-width;
 		@include breakpoint(desktop) { left: $sidebar-width-big; }
