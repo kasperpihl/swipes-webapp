@@ -8,6 +8,7 @@
         var _this = this;
         this.hackParseAPI();
         this.analytics = new AnalyticsController();
+        this.analytics.tagEvent("Logged In");
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
