@@ -84,7 +84,7 @@
         if (cdUserLevel !== this.customDimensions[0]) {
           this.setCustomDimension(0, cdUserLevel);
         }
-        if (user.get("email") !== this.createSession().customerEmail) {
+        if (user.get("email") !== this.session.customerEmail) {
           this.session.setCustomerEmail(user.get("email"));
         }
         if ((user.id != null) !== this.session.customerId) {

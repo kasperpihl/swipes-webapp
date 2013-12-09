@@ -52,7 +52,7 @@ define ["underscore"], (_) ->
 				@setCustomDimension( 0, cdUserLevel )
 
 			# If user email changed, update the one used by the session
-			if user.get( "email" ) isnt @createSession().customerEmail
+			if user.get( "email" ) isnt @session.customerEmail
 				@session.setCustomerEmail user.get "email"
 
 			# If user id changed, update the one used by the session
