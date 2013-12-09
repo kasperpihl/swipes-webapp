@@ -32,7 +32,8 @@ define ["underscore"], (_) ->
 			if @hasDimension dimension
 				@customDimensions[dimension] = value
 		tagEvent: (ev, options) ->
-			@session.tagEvent( ev, options, @customDimensions )
+			console.warn "TAGGING EVENT: ", ev, options
+			# @session.tagEvent( ev, options, @customDimensions )
 		pushScreen: (screenName) ->
 			@session.tagScreen screenName
 			@screens.push screenName
