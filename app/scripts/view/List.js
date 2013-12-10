@@ -119,16 +119,15 @@
         }
       },
       completeTasks: function(tasks) {
-        var minOrder, task, view, _i, _len, _results,
+        var minOrder, task, view, _i, _len,
           _this = this;
         minOrder = Math.min.apply(Math, _.invoke(tasks, "get", "order"));
         swipy.todos.bumpOrder("up", minOrder, tasks.length);
-        _results = [];
         for (_i = 0, _len = tasks.length; _i < _len; _i++) {
           task = tasks[_i];
           view = this.getViewForModel(task);
           if (view != null) {
-            _results.push((function() {
+            (function() {
               var m;
               m = task;
               return view.swipeRight("completed").then(function() {
@@ -138,12 +137,12 @@
                   return m.save("completionDate", new Date());
                 }
               });
-            })());
-          } else {
-            _results.push(void 0);
+            })();
           }
         }
-        return _results;
+        return swipy.analytics.tagEvent("Completed Tasks", {
+          "Number of Tasks": tasks.length
+        });
       },
       createRepeatedTask: function(model) {
         var duplicate;
