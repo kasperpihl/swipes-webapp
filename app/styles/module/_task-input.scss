@@ -1,25 +1,27 @@
 .add-new {
+	$placeholderColor: #e1e1e1;
 	body.edit-mode & {
 		opacity: 0;
 		height: 0;
 		overflow: hidden;
 		visibility: hidden;
 	}
-
+	
 	input {
+
 		text-indent: 5%;
 		width: 100%;
 		font-family: $font-bold;
-
-		font-size: emCalc(40px);
+		text-align:center;
+		font-size: emCalc(45px);
 		line-height: 1;
 
-		@include breakpoint(min-width, emCalc(415px)) { font-size: emCalc(50px); }
+		@include breakpoint(min-width, emCalc(415px)) { font-size: emCalc(55px); }
 
 		@include breakpoint(tablet) {
 			text-indent: 0;
 		}
-		@include breakpoint(min-height, emCalc(768px)) { font-size: emCalc(70px); }
+		@include breakpoint(min-height, emCalc(768px)) { font-size: emCalc(75px); }
 		@include breakpoint(min-height, emCalc(1024px)) { font-size: emCalc(100px); }
 	}
 }

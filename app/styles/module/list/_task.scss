@@ -83,7 +83,7 @@ $list-item-height-lg: 105px;
 	@include breakpoint(tablet) { padding-left: 28% }
 	height: $list-item-height;
 
-	@include breakpoint(min-height, 800px) {
+	@include breakpoint(min-height, 900px) {
 		padding-top: 3em;
 		height: $list-item-height-lg;
 	}
@@ -115,7 +115,7 @@ $list-item-height-lg: 105px;
 		text-decoration: none;
 		font-size: 1.7em;
 
-		@include breakpoint(min-height, 800px) {
+		@include breakpoint(min-height, 900px) {
 			width: $list-item-height-lg;
 			line-height: $list-item-height-lg;
 		}
