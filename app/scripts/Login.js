@@ -71,6 +71,9 @@
     },
     handleFacebookLoginSuccess: function(user) {
       var signup;
+      if (user.isNew) {
+        this.wasSignup = true;
+      }
       if (!user.existed) {
         signup = true;
       }
@@ -90,8 +93,18 @@
         return this.handleUserLoginSuccess();
       }
     },
+    handleAnalyticsForLogin: function() {
+      /*user = Parse.User.current()
+      		if @wasSignup
+      			swipy.analytics.tagEvent("Signed Up")
+      		else
+      			swipy.analytics.tagEvent("Logged In")
+      */
+
+    },
     handleUserLoginSuccess: function() {
       var level, user;
+      this.handleAnalyticsForLogin();
       user = Parse.User.current();
       level = user.get("userLevel");
       if (level && parseInt(level) >= 1) {

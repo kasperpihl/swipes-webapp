@@ -22,8 +22,6 @@ define [
 			@hackParseAPI()
 
 			@analytics = new AnalyticsController()
-			@analytics.tagEvent "Logged In"
-
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()
 			@updateTimer = new ClockWork()

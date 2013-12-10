@@ -43,6 +43,8 @@ LoginView = Parse.View.extend
 					error: (user, error) => @handleError( user, error )
 				})
 	handleFacebookLoginSuccess: (user) ->
+		if user.isNew 
+			@wasSignup = yes
 		if not user.existed
 			signup = yes # Will be true if it was a signup
 		unless user.get "email" then FB.api "/me", (response) ->
@@ -55,7 +57,14 @@ LoginView = Parse.View.extend
 			@handleUserLoginSuccess()
 		else
 			@handleUserLoginSuccess()
+	handleAnalyticsForLogin: ->
+		###user = Parse.User.current()
+		if @wasSignup
+			swipy.analytics.tagEvent("Signed Up")
+		else
+			swipy.analytics.tagEvent("Logged In")###
 	handleUserLoginSuccess: ->
+		@handleAnalyticsForLogin()
 		user = Parse.User.current()
 		level = user.get "userLevel"
 
