@@ -58,7 +58,7 @@ define ["underscore", "backbone", "model/ScheduleModel", "momentjs"], (_, Backbo
 				"Button Pressed": option
 				"Number of Tasks": @currentTasks.length
 				"Number of days ahead": @getDayDiff date
-				"Used Time Picker": no
+				"Used Time Picker": "No"
 			}
 		getDayDiff: (date) ->
 			# For unspecified

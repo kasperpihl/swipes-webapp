@@ -90,7 +90,7 @@
           "Button Pressed": option,
           "Number of Tasks": this.currentTasks.length,
           "Number of days ahead": this.getDayDiff(date),
-          "Used Time Picker": false
+          "Used Time Picker": "No"
         };
       };
 
