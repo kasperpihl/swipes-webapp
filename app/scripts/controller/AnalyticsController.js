@@ -55,6 +55,10 @@
         return this.session.tagEvent(ev, options, this.customDimensions);
       };
 
+      AnalyticsController.prototype.tagScreen = function(screenName) {
+        return this.session.tagScreen(screenName);
+      };
+
       AnalyticsController.prototype.pushScreen = function(screenName) {
         this.session.tagScreen(screenName);
         return this.screens.push(screenName);

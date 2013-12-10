@@ -33,6 +33,8 @@ define ["underscore"], (_) ->
 				@customDimensions[dimension] = value
 		tagEvent: (ev, options) ->
 			@session.tagEvent( ev, options, @customDimensions )
+		tagScreen: (screenName) ->
+			@session.tagScreen screenName
 		pushScreen: (screenName) ->
 			@session.tagScreen screenName
 			@screens.push screenName

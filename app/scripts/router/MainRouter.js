@@ -36,7 +36,7 @@
               return "Done Tab";
           }
         })();
-        return swipy.analytics.tagEvent(eventName);
+        return swipy.analytics.tagScreen(eventName);
       },
       edit: function(taskId) {
         Backbone.trigger("hide-settings");
@@ -47,7 +47,7 @@
         if (subview) {
           return Backbone.trigger("settings/view", subview);
         } else {
-          return swipy.analytics.tagEvent("Settings menu");
+          return swipy.analytics.tagScreen("Settings menu");
         }
       },
       updateHistory: function(me, page, subpage) {
