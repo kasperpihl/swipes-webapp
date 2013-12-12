@@ -168,7 +168,9 @@
           });
         case "facebookLogin":
           return Parse.FacebookUtils.logIn(null, {
-            success: this.handleFacebookLoginSuccess,
+            success: function(success) {
+              return _this.handleFacebookLoginSuccess(success);
+            },
             error: function(user, error) {
               return _this.handleError(user, error);
             }

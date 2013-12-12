@@ -105,7 +105,7 @@ LoginView = Parse.View.extend
 				.fail (user, error) => @handleError( user, error )
 			when "facebookLogin"
 				Parse.FacebookUtils.logIn( null, {
-					success: @handleFacebookLoginSuccess
+					success: (success) => @handleFacebookLoginSuccess success
 					error: (user, error) => @handleError( user, error )
 				})
 	handleFacebookLoginSuccess: (user) ->
