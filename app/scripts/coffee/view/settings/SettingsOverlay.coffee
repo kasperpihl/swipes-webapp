@@ -6,7 +6,7 @@ define [
 	# Pre-load subviews
 	"view/settings/BaseSubview"
 	"view/settings/Faq"
-	"view/settings/Policy"
+	"view/settings/Policies"
 	"view/settings/Snoozes"
 	"view/settings/Subscription"
 	"view/settings/Support"
