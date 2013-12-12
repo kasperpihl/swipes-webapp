@@ -297,10 +297,13 @@
         return Parse.Cloud.run("checkEmail", {
           email: triedLoginWithCredentials.email
         }, checkEmailOpts);
-      } else if (error && error.code) {
-        return this.showError(error);
       } else {
-        return alert("something went wrong. Please try again.");
+        this.removeBusyState();
+        if (error && error.code) {
+          return this.showError(error);
+        } else {
+          return alert("something went wrong. Please try again.");
+        }
       }
     },
     showError: function(error) {

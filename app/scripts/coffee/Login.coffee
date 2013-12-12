@@ -192,8 +192,10 @@ LoginView = Parse.View.extend
 
 			Parse.Cloud.run( "checkEmail" , { email:triedLoginWithCredentials.email }, checkEmailOpts );
 
-		else if error and error.code then return @showError error
-		else alert "something went wrong. Please try again."
+		else
+			@removeBusyState()
+			if error and error.code then return @showError error
+			else alert "something went wrong. Please try again."
 	showError: (error) ->
 		switch error.code
 			when Parse.Error.USERNAME_TAKEN, Parse.Error.EMAIL_NOT_FOUND then alert "The password was wrong"
