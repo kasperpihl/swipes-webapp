@@ -2,7 +2,7 @@
 
 
 (function() {
-  var AnalyticsController, LoginView, isInt, login;
+  var AnalyticsController, LoginView, appId, isInt, jsId, login;
 
   isInt = function(n) {
     return typeof n === 'number' && n % 1 === 0;
@@ -27,10 +27,9 @@
     };
 
     AnalyticsController.prototype.getKey = function() {
-      var liveKey, testKey;
-      testKey = "f2f927e0eafc7d3c36835fe-c0a84d84-18d8-11e3-3b24-00a426b17dd8";
-      liveKey = "0c159f237171213e5206f21-6bd270e2-076d-11e3-11ec-004a77f8b47f";
-      return testKey;
+      var key;
+      key = liveEnvironment ? "0c159f237171213e5206f21-6bd270e2-076d-11e3-11ec-004a77f8b47f" : "f2f927e0eafc7d3c36835fe-c0a84d84-18d8-11e3-3b24-00a426b17dd8";
+      return key;
     };
 
     AnalyticsController.prototype.hasDimension = function(dimension) {
@@ -325,12 +324,18 @@
     }
   });
 
-  Parse.initialize("0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag");
+  appId = liveEnvironment ? "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3" : "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr";
+
+  jsId = liveEnvironment ? "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg" : "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag";
+
+  Parse.initialize(appId, jsId);
 
   window.fbAsyncInit = function() {
+    var fbKey;
+    fbKey = liveEnvironment ? '531435630236702' : "312199845588337";
     return Parse.FacebookUtils.init({
-      appId: '312199845588337',
-      channelUrl: 'http://test.swipesapp.com/channel.html',
+      appId: fbKey,
+      channelUrl: 'http://swipesapp.com/channel.php',
       status: false,
       cookie: true,
       xfbml: true

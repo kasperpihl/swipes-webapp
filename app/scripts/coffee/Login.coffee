@@ -16,10 +16,9 @@ class AnalyticsController
 		@session.upload()
 		@setUser Parse.User.current()
 	getKey: ->
-		testKey = "f2f927e0eafc7d3c36835fe-c0a84d84-18d8-11e3-3b24-00a426b17dd8"
-		liveKey = "0c159f237171213e5206f21-6bd270e2-076d-11e3-11ec-004a77f8b47f"
+		key = if liveEnvironment then "0c159f237171213e5206f21-6bd270e2-076d-11e3-11ec-004a77f8b47f" else "f2f927e0eafc7d3c36835fe-c0a84d84-18d8-11e3-3b24-00a426b17dd8" 
 		# Figure out which one to use here...
-		return testKey
+		return key
 	hasDimension: (dimension) ->
 		if isInt( dimension ) and @customDimensions.length < dimension >= 0
 			return true
@@ -206,13 +205,16 @@ LoginView = Parse.View.extend
 			else alert "something went wrong. Please try again."
 
 # Log into services
-Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" )
+appId = if liveEnvironment then "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3" else "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr"
+jsId = if liveEnvironment then "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg" else "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag"
+Parse.initialize(appId, jsId);
 
 # Handle Fabebook Login
 window.fbAsyncInit = ->
+	fbKey = if liveEnvironment then '531435630236702' else "312199845588337"
 	Parse.FacebookUtils.init
-		appId: '312199845588337'	        	                # App ID from the app dashboard
-		channelUrl : 'http://test.swipesapp.com/channel.html' 	# Channel file for x-domain comms
+		appId: fbKey	        	                # App ID from the app dashboard
+		channelUrl : 'http://swipesapp.com/channel.php' 		# Channel file for x-domain comms
 		status: no                		                 		# Check Facebook Login status
 		cookie: yes                           		      		# enable cookies to allow Parse to access the session
 		xfbml: yes                                				# Look for social plugins on the page
