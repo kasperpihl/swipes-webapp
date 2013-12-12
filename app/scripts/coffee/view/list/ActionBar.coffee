@@ -40,9 +40,12 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 					if model.has "order"
 						order = model.get "order"
 						model.unset "order"
-						model.save( "deleted", yes )
 						swipy.todos.bumpOrder( "up", order )
 
+					model.save( "deleted", yes )
 				@hide()
 		shareTasks: ->
-			alert "Task sharing is coming soon :)"
+			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			return unless selectedTasks.length
+
+			console.log "Sharing ", selectedTasks

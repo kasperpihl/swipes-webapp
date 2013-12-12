@@ -67,15 +67,22 @@
             if (model.has("order")) {
               order = model.get("order");
               model.unset("order");
-              model.save("deleted", true);
               swipy.todos.bumpOrder("up", order);
             }
+            model.save("deleted", true);
           }
           return this.hide();
         }
       },
       shareTasks: function() {
-        return alert("Task sharing is coming soon :)");
+        var selectedTasks;
+        selectedTasks = swipy.todos.filter(function(m) {
+          return m.get("selected");
+        });
+        if (!selectedTasks.length) {
+          return;
+        }
+        return console.log("Sharing ", selectedTasks);
       }
     });
   });
