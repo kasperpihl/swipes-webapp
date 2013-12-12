@@ -48,4 +48,19 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
 			return unless selectedTasks.length
 
-			console.log "Sharing ", selectedTasks
+			# Set up email subject and start body
+			emailString = "
+				mailto:
+				?subject=Tasks to complete
+				&body=
+			"
+			# Add title
+			emailString += encodeURIComponent "Tasks: \r\n"
+
+			# Add tasks
+			emailString += encodeURIComponent "◯ " + task.get( "title" ) + "\r\n" for task in selectedTasks
+
+			# Add footer
+			emailString += encodeURIComponent "\r\nSent from Swipes — http://swipesapp.com"
+
+			location.href = emailString

@@ -75,14 +75,21 @@
         }
       },
       shareTasks: function() {
-        var selectedTasks;
+        var emailString, selectedTasks, task, _i, _len;
         selectedTasks = swipy.todos.filter(function(m) {
           return m.get("selected");
         });
         if (!selectedTasks.length) {
           return;
         }
-        return console.log("Sharing ", selectedTasks);
+        emailString = "				mailto:				?subject=Tasks to complete				&body=			";
+        emailString += encodeURIComponent("Tasks: \r\n");
+        for (_i = 0, _len = selectedTasks.length; _i < _len; _i++) {
+          task = selectedTasks[_i];
+          emailString += encodeURIComponent("◯ " + task.get("title") + "\r\n");
+        }
+        emailString += encodeURIComponent("\r\nSent from Swipes — http://swipesapp.com");
+        return location.href = emailString;
       }
     });
   });
