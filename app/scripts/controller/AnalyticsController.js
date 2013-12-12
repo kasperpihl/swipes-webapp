@@ -23,10 +23,9 @@
       };
 
       AnalyticsController.prototype.getKey = function() {
-        var liveKey, testKey;
-        testKey = "f2f927e0eafc7d3c36835fe-c0a84d84-18d8-11e3-3b24-00a426b17dd8";
-        liveKey = "0c159f237171213e5206f21-6bd270e2-076d-11e3-11ec-004a77f8b47f";
-        return testKey;
+        var key;
+        key = liveEnvironment ? "0c159f237171213e5206f21-6bd270e2-076d-11e3-11ec-004a77f8b47f" : "f2f927e0eafc7d3c36835fe-c0a84d84-18d8-11e3-3b24-00a426b17dd8";
+        return key;
       };
 
       AnalyticsController.prototype.hasDimension = function(dimension) {
