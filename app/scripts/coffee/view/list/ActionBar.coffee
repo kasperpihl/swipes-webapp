@@ -28,8 +28,8 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 			@stopListening()
 			@hide()
 		editTask: ->
-			targetCid = swipy.todos.filter( (m) -> m.get "selected" )[0].cid
-			swipy.router.navigate( "edit/#{ targetCid }", yes )
+			target = swipy.todos.filter( (m) -> m.get "selected" )[0].id
+			swipy.router.navigate( "edit/#{ target }", yes )
 		editTags: ->
 			@tagEditor = new TagEditorOverlay( models: swipy.todos.filter (m) -> m.get "selected" )
 		deleteTasks: ->

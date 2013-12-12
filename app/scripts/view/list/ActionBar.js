@@ -40,11 +40,11 @@
         return this.hide();
       },
       editTask: function() {
-        var targetCid;
-        targetCid = swipy.todos.filter(function(m) {
+        var target;
+        target = swipy.todos.filter(function(m) {
           return m.get("selected");
-        })[0].cid;
-        return swipy.router.navigate("edit/" + targetCid, true);
+        })[0].id;
+        return swipy.router.navigate("edit/" + target, true);
       },
       editTags: function() {
         return this.tagEditor = new TagEditorOverlay({
