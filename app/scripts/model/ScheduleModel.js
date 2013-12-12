@@ -96,10 +96,9 @@
             newDate = newDate.startOf("minute");
             break;
           case "next week":
-            if (newDate.day() === snoozes.weekday.startDay.number) {
-              newDate.add("days", 7);
-            } else {
-              newDate.day(snoozes.weekday.start);
+            newDate.add("days", 7);
+            if (newDate.day() !== snoozes.weekday.startDay.number) {
+              newDate.day(snoozes.weekday.startDay.number);
             }
             newDate.hour(snoozes.weekday.morning.hour);
             newDate.minute(snoozes.weekday.morning.minute);

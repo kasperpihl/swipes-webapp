@@ -56,11 +56,13 @@ define ["underscore", "momentjs"], (_, Moment) ->
 					newDate.minute snoozes.weekend.morning.minute
 					newDate = newDate.startOf "minute"
 				when "next week"
-					# If we're on week start date, fast-forward 7 days.
-					if newDate.day() is snoozes.weekday.startDay.number
-						newDate.add( "days", 7 )
-					else
-						newDate.day snoozes.weekday.start
+					# First fast-forward 7 days.
+					newDate.add( "days", 7 )
+
+					# Now, if dayNumber is the same as the snoozes weekday start day, we don't need to do anything else
+					# Else: We need to change the day number to the default week start day
+					if newDate.day() isnt snoozes.weekday.startDay.number
+						newDate.day snoozes.weekday.startDay.number
 
 					newDate.hour snoozes.weekday.morning.hour
 					newDate.minute snoozes.weekday.morning.minute
