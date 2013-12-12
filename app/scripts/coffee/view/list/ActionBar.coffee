@@ -25,6 +25,7 @@ define ["underscore", "backbone", "view/list/TagEditorOverlay"], (_, Backbone, T
 			@$el.toggleClass( "fadeout", yes )
 			@shown = no
 		kill: ->
+			@undelegateEvents()
 			@stopListening()
 			@hide()
 		editTask: ->

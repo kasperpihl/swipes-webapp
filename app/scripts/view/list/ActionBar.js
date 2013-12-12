@@ -36,6 +36,7 @@
         return this.shown = false;
       },
       kill: function() {
+        this.undelegateEvents();
         this.stopListening();
         return this.hide();
       },
