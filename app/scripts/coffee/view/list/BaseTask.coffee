@@ -54,7 +54,11 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 				Backbone.trigger( "todo-task", trigger )
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
-		edit: ->
+		edit: (e) ->
+			# Ignore doubleclicks on priority dot
+			return false if e.target.className is "priority"
+
+			# Else navigator to editor.
 			swipy.router.navigate( "edit/#{ @model.id }", yes )
 		render: ->
 			# If template isnt set yet, just return the empty element

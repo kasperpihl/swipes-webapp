@@ -65,7 +65,10 @@
       onSelected: function(model, selected) {
         return this.$el.toggleClass("selected", selected);
       },
-      edit: function() {
+      edit: function(e) {
+        if (e.target.className === "priority") {
+          return false;
+        }
         return swipy.router.navigate("edit/" + this.model.id, true);
       },
       render: function() {
