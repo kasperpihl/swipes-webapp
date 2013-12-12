@@ -60,15 +60,18 @@
       showDatePicker: function() {
         var _this = this;
         if (this.datePicker == null) {
-          return require(["view/modules/DatePicker"], function(DatePicker) {
+          require(["view/modules/DatePicker"], function(DatePicker) {
             _this.datePicker = new DatePicker();
             _this.$el.find(".overlay-content").append(_this.datePicker.el);
             _this.$el.addClass("show-datepicker");
             return _this.datePicker.render();
           });
         } else {
-          return this.$el.addClass("show-datepicker");
+          this.$el.addClass("show-datepicker");
         }
+        return setTimeout(function() {
+          return _this.handleResize();
+        }, 100);
       },
       hideDatePicker: function() {
         return this.$el.removeClass("show-datepicker");

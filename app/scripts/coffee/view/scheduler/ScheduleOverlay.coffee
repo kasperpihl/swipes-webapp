@@ -57,6 +57,10 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 				@datePicker.render()
 			else
 				@$el.addClass "show-datepicker"
+
+			setTimeout =>
+					@handleResize()
+				, 100
 		hideDatePicker: ->
 			@$el.removeClass "show-datepicker"
 		handleResize: ->
