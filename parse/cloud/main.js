@@ -33,15 +33,24 @@ Parse.Cloud.beforeSave('Payment',function(request,response){
   var payment = request.object;
   payment.set('user',user);
   var productIdentifier = payment.get('productIdentifier');
+  var callback = {
+    success: function(savedUser) {
+      response.success();
+    },
+  error: function(savedUser, error) {
+      console.error("Error upgrading user: "+ savedUser.id);
+      console.error(error);
+      response.success();
+    }
+  };
   if(productIdentifier == 'plusMonthlyTier1'){
     user.set('userLevel',2);
-    user.save();
+    user.save(null,callback);
   }
   else if(productIdentifier == 'plusYearlyTier10'){
     user.set('userLevel',3);
-    user.save();
+    user.save(null,callback);
   }
-  response.success();
 });
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
@@ -203,7 +212,7 @@ Parse.Cloud.beforeSave(Parse.User,function(request,response){
       var mandrill = req('mandrill');
       var mailjet = req('mailjet');
       mailjet.request("listsAddcontact",{"id":"370097","contact":object.get('username')});
-      mandrill.sendTemplate("welcome-email-new",object.get('username'),"Welcome to Swipes!");
+      mandrill.sendTemplate("welcome-again",object.get('username'),"Welcome news & tips");
     }
   }
   if(object.dirty('userLevel') && !request.master){
