@@ -148,7 +148,7 @@
           _results = [];
           for (_i = 0, _len = tags.length; _i < _len; _i++) {
             tag = tags[_i];
-            if (!tag.has("title")) {
+            if ((tag != null) && !tag.has("title")) {
               _results.push(tag.id);
             }
           }
