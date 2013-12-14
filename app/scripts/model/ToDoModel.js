@@ -143,12 +143,13 @@
       },
       syncTags: function(tags) {
         var actualTags, pointers, tag, _i, _len;
+        tags = _.compact(tags);
         pointers = (function() {
           var _i, _len, _results;
           _results = [];
           for (_i = 0, _len = tags.length; _i < _len; _i++) {
             tag = tags[_i];
-            if ((tag != null) && !tag.has("title")) {
+            if (!tag.has("title")) {
               _results.push(tag.id);
             }
           }

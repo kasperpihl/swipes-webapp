@@ -138,7 +138,10 @@ define ["momentjs"], ->
 			else
 				return fullStr
 		syncTags: (tags) ->
-			pointers = ( tag.id for tag in tags when tag? and !tag.has "title" )
+			# Remove falsy values first
+			tags = _.compact tags
+
+			pointers = ( tag.id for tag in tags when !tag.has "title" )
 
 			if pointers.length
 				# remove pointers
