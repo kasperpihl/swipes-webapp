@@ -37,7 +37,7 @@ Parse.Cloud.beforeSave('Payment',function(request,response){
     success: function(savedUser) {
       response.success();
     },
-  error: function(savedUser, error) {
+  	error: function(savedUser, error) {
       console.error("Error upgrading user: "+ savedUser.id);
       console.error(error);
       response.success();
@@ -142,8 +142,8 @@ Parse.Cloud.define('update',function(request,response){
   var user = Parse.User.current();
   var updateTime = new Date(new Date().getTime());
   if(!user) return sendError(response,'You have to be logged in');
-  
 
+  var limit = 1000;
   var skip = request.params.skip;
   var lastUpdate = false;
   if(request.params.lastUpdate) lastUpdate = new Date(request.params.lastUpdate);
@@ -152,26 +152,28 @@ Parse.Cloud.define('update',function(request,response){
   var queue = require('cloud/queue.js');
   var tagQuery = new Parse.Query('Tag');
   tagQuery.equalTo('owner',user);
-  tagQuery.limit(1000);
+  tagQuery.limit(limit);
   if(skip) tagQuery.skip(skip);
   if(lastUpdate) tagQuery.greaterThan('updatedAt',lastUpdate);
+  else tagQuery.notEqualTo('deleted',true);
   queue.addToQueue(tagQuery);
 
   var taskQuery = new Parse.Query('ToDo');
   taskQuery.equalTo('owner',user);
-  taskQuery.limit(1000);
+  taskQuery.limit(limit);
   if(skip) taskQuery.skip(skip);
   if(lastUpdate) taskQuery.greaterThan('updatedAt',lastUpdate);
+  else taskQuery.notEqualTo('deleted',true);
   queue.addToQueue(taskQuery);
 
   runQueue(queue.getQueue(),function(objects,error){
     if(error) sendError(response,error);
     else{
       objects.updateTime = updateTime.toISOString();
+      objects.serverTime = new Date().toISOString();
       response.success(objects);
-      
     }
-  },{recurring:3,changesSince:changesOnly});
+  },{recurring:3,changesSince:changesOnly,limit:limit});
 });
 Parse.Cloud.define("unsubscribe",function(request,response){
   var email = request.params.email;
@@ -191,17 +193,23 @@ Parse.Cloud.beforeSave("Signup",function(request,response){
     else response.success();
   });
 });
-Parse.Cloud.define('claimGift',function(request,response){
-  var email = request.params.email;
-  if(!email) return sendError(response,'You need to include email');
-  var query = new Parse.Query(Parse.User);
-  query.equalTo('username',email);
-  query.first({success:function(object){
-    if(!object) return sendError(response,'Email not found');
-    object.set('userLevel',2);
+Parse.Cloud.define('test',function(request,response){
+  var paymentQuery = new Parse.Query('Payment');
+  paymentQuery.include('user');
+  paymentQuery.limit(1000);
+  paymentQuery.find({success:function(payments){ 
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.limit(1000);
+    userQuery.doesNotExist('userLevel');
+    var contained = new Array();
+    for(var i = 0 ; i < payments.length ; i++){
+      contained.push(payments[i].get('user').id);
+    }
+    userQuery.containedIn('objectId',contained);
+    userQuery.find({success:function(payments){ response.success(payments); },error:function(error){ response.error(error); }});
+  },error:function(error){ response.error(error); }});
 
-    // TODO: finish claiming
-  },error:function(error){ sendError(response,error); }});
+  
 });
 Parse.Cloud.beforeSave(Parse.User,function(request,response){
   var object = request.object;
@@ -245,6 +253,7 @@ function sendError(response,error){
 function runQueue(queue,done,options){
   function performQuery(object,callback){
     var query = object.query;
+    if(object.skip) query.skip(object.skip);
     var optionObject = {
       success:function(result){
         callback(object,result);
@@ -256,24 +265,25 @@ function runQueue(queue,done,options){
     if(object.count) query.count(optionObject);
     else query.find(optionObject);
   }
+  var limit = 1000;
+  if(options && options.limit) limit = parseInt(options.limit);
   var recurring = 1;
   if(options && options.recurring) recurring = options.recurring;
   var k = 0;
   var doneCounter = 0;
   var calledDone= false;
-  var target = queue.length;
-  if(target === 0) return done(false,null);
+  if(queue.length === 0) return done(false,null);
   var returnObj = {};
   function checkDone(){
     if(calledDone) return;
-    if(doneCounter == target){
+    if(doneCounter == queue.length){
       done(returnObj,null);
       calledDone = true;
     }
     else next();
   }
   function next(){
-    if(k>=target){
+    if(k>=queue.length){
       return;
     }
     performQuery(queue[k],function(object,result,error){
@@ -282,13 +292,21 @@ function runQueue(queue,done,options){
         calledDone = true;
       }
       else{
-        if(result && result.length > 0){
-          for(var i = 0 ; i < result.length ; i++){
-            var obj = result[i];
-            scrapeChanges(obj,options.changesSince);
-          }
-        }
-        returnObj[object.title] = result;
+      	var length = result.length;
+      	if(options.changesSince){
+	        if(result && length > 0){
+	          for(var i = 0 ; i < result.length ; i++){
+	            var obj = result[i];
+	            scrapeChanges(obj,options.changesSince);
+	          }
+	        }
+    	}
+    	if(length == limit){
+    		object.skip += limit;
+  			queue.push(object);
+    	}
+        if(returnObj[object.title]) returnObj[object.title] = returnObj[object.title].concat(result);
+        else returnObj[object.title] = result;
         doneCounter++;
         checkDone();
       }

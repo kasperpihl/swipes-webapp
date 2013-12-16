@@ -85,7 +85,7 @@ LoginView = Parse.View.extend
 
 		switch action
 			when "login"
-				email = @$el.find( "#email" ).val()
+				email = @$el.find( "#email" ).val().toLowerCase()
 				password = @$el.find( "#password" ).val()
 				return @removeBusyState() unless @validateFields( email, password )
 
@@ -95,7 +95,7 @@ LoginView = Parse.View.extend
 				})
 			when "register"
 				console.log "Registering a new user"
-				email = @$el.find( "#email" ).val()
+				email = @$el.find( "#email" ).val().toLowerCase()
 				password = @$el.find( "#password" ).val()
 				return @removeBusyState() unless @validateFields( email, password )
 

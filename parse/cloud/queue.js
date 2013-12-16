@@ -6,6 +6,7 @@ exports.addToQueue = function(query,count,title){
 	var queueObj = {query:query};
 	if(count) queueObj.count = true;
 	queueObj.title = title ? title : query.className;
+	queueObj.skip = 0;
 	queue[queue.length] = queueObj;
 };
 exports.getQueue = function(){
