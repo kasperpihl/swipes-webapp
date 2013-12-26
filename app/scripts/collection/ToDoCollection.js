@@ -41,6 +41,7 @@
         this.query.notEqualTo("deleted", true);
         return this.query.limit(1000);
       },
+      updateQuery: function() {},
       getActive: function() {
         return this.filter(function(m) {
           return m.getState() === "active";

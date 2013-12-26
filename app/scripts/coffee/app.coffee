@@ -18,6 +18,7 @@ define [
 	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
+		UPDATE_COUNT: 0
 		constructor: ->
 			@hackParseAPI()
 
@@ -28,7 +29,7 @@ define [
 
 			@tags = new TagCollection()
 			@tags.once( "reset", => @fetchTodos() )
-			@todos.on( "reset", @init, @ )
+			@todos.once( "reset", @init, @ )
 
 			@tags.fetch()
 		isSaving: ->
@@ -61,11 +62,14 @@ define [
 
 			Parse.history.start( pushState: no )
 
-			# @startAutoUpdate()
+			$("body").removeClass "loading"
+			# $("")
+
+			@startAutoUpdate()
 		update: ->
 			if not @isSaving()
-				console.log "Fetching new data..."
 				@fetchTodos()
+				@UPDATE_COUNT++
 
 			@lastUpdate = new Date()
 			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );

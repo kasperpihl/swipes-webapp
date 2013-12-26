@@ -17,6 +17,8 @@ define ["model/ToDoModel"], (ToDoModel) ->
 			@query.equalTo( "owner", Parse.User.current() )
 			@query.notEqualTo( "deleted", true )
 			@query.limit 1000
+		updateQuery: ->
+
 		getActive: ->
 			@filter (m) -> m.getState() is "active"
 		getScheduled: ->

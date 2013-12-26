@@ -2,11 +2,20 @@
 	$padding: 0.5em;
 	position: fixed;
 	display: block;
+
+	body.loading & {
+		display: none;
+	}
+
 	body.sidebar-open & { display: none; }
 
 	bottom: $padding;
 	left: $padding;
 	z-index: 9999;
+
+	&:focus {
+		outline: none;
+	}
 
 	@include breakpoint(tablet) {
 		top: $padding;

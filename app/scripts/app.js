@@ -4,6 +4,8 @@
     return Swipes = (function() {
       Swipes.prototype.UPDATE_INTERVAL = 30;
 
+      Swipes.prototype.UPDATE_COUNT = 0;
+
       function Swipes() {
         var _this = this;
         this.hackParseAPI();
@@ -15,7 +17,7 @@
         this.tags.once("reset", function() {
           return _this.fetchTodos();
         });
-        this.todos.on("reset", this.init, this);
+        this.todos.once("reset", this.init, this);
         this.tags.fetch();
       }
 
@@ -67,15 +69,17 @@
         this.sidebar = new SidebarController();
         this.filter = new FilterController();
         this.settings = new SettingsController();
-        return Parse.history.start({
+        Parse.history.start({
           pushState: false
         });
+        $("body").removeClass("loading");
+        return this.startAutoUpdate();
       };
 
       Swipes.prototype.update = function() {
         if (!this.isSaving()) {
-          console.log("Fetching new data...");
           this.fetchTodos();
+          this.UPDATE_COUNT++;
         }
         this.lastUpdate = new Date();
         return TweenLite.delayedCall(this.UPDATE_INTERVAL, this.update, null, this);
