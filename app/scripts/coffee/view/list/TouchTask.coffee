@@ -1,4 +1,4 @@
-define ["view/list/BaseTask", "hammerjs"], (BaseTaskView) ->
+define ["view/list/BaseTask", "jquery-hammerjs"], (BaseTaskView) ->
 	BaseTaskView.extend
 		bindEvents: ->
 			@$el.hammer().on( "tap", ".todo-content", @toggleSelected )

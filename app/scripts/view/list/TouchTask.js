@@ -1,5 +1,5 @@
 (function() {
-  define(["view/list/BaseTask", "hammerjs"], function(BaseTaskView) {
+  define(["view/list/BaseTask", "jquery-hammerjs"], function(BaseTaskView) {
     return BaseTaskView.extend({
       bindEvents: function() {
         this.$el.hammer().on("tap", ".todo-content", this.toggleSelected);

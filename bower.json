@@ -17,6 +17,7 @@
     "clndr": "~1.0.12",
     "sinon-chai": "~2.4.0",
     "sinon": "~1.7.3",
-    "hammerjs": "~1.0.5"
+    "hammerjs": "~1.0.5",
+    "jquery-hammerjs": "*"
   }
 }

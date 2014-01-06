@@ -30,9 +30,10 @@ require.config({
         'requirejs-text': '../bower_components/requirejs-text/text',
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
         clndr: '../bower_components/clndr/src/clndr',
-        hammerjs: '../bower_components/hammerjs/hammer',
         'parse-js-sdk': '../scripts/plugins/parse-js-sdk/lib/parse',
-        'localytics-sdk': '../scripts/plugins/localytics'
+        'localytics-sdk': '../scripts/plugins/localytics',
+        hammerjs: '../scripts/plugins/hammer',
+        'jquery-hammerjs': '../scripts/plugins/jquery.hammer'
     },
     shim: {
         bootstrapAffix: {
@@ -116,6 +117,11 @@ require.config({
             deps: [
                 'momentjs'
             ]
+        },
+        'jquery-hammerjs': {
+            deps: [
+                'hammerjs'
+            ]
         }
     }
 });
@@ -127,7 +133,7 @@ require(["jquery"], function($) {
         // First check that the user is actually logged in
         var appId = liveEnvironment ? "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3" : "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr";
         var jsId = liveEnvironment ? "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg" : "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag";
-        
+
         Parse.initialize(appId, jsId);
 
         if (Parse.User.current()) {

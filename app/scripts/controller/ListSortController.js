@@ -1,7 +1,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "hammerjs"], function($, ListSortModel, TweenLite, Draggable) {
+  define(["jquery", "model/ListSortModel", "gsap", "gsap-draggable", "jquery-hammerjs"], function($, ListSortModel, TweenLite, Draggable) {
     var ListSortController;
     return ListSortController = (function() {
       function ListSortController(container, views, onDragCompleteCallback) {
