@@ -30,7 +30,7 @@ require.config({
         'requirejs-text': '../bower_components/requirejs-text/text',
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
         clndr: '../bower_components/clndr/src/clndr',
-        hammerjs: '../bower_components/hammerjs/dist/jquery.hammer',
+        hammerjs: '../bower_components/hammerjs/hammer.min',
         'parse-js-sdk': '../scripts/plugins/parse-js-sdk/lib/parse',
         'localytics-sdk': '../scripts/plugins/localytics'
     },
