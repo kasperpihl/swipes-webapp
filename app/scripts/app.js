@@ -21,7 +21,7 @@
         this.tags.fetch();
       }
 
-      Swipes.prototype.isSaving = function() {
+      Swipes.prototype.isBusy = function() {
         var tag, task, _i, _j, _len, _len1, _ref, _ref1;
         if (this.todos.length != null) {
           _ref = this.todos.models;
@@ -39,6 +39,16 @@
             if (tag._saving) {
               return true;
             }
+          }
+        }
+        if (location.href.indexOf("edit/") !== -1) {
+          return true;
+        }
+        if (this.todos.length) {
+          if (this.todos.where({
+            selected: true
+          }).length) {
+            return true;
           }
         }
         return false;
@@ -77,7 +87,7 @@
       };
 
       Swipes.prototype.update = function() {
-        if (!this.isSaving()) {
+        if (!this.isBusy()) {
           this.fetchTodos();
           this.UPDATE_COUNT++;
         }
