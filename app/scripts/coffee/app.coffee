@@ -46,6 +46,10 @@ define [
 			if location.href.indexOf( "edit/" ) isnt -1
 				return yes
 
+			# Are any tasks selected right now?
+			if @todos.length
+				if @todos.where( selected:yes ).length
+					return yes
 			return no
 		hackParseAPI: ->
 			# Add missing mehods to Parse.Collection.prototype
