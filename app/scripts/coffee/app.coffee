@@ -32,14 +32,19 @@ define [
 			@todos.once( "reset", @init, @ )
 
 			@tags.fetch()
-		isSaving: ->
+		isBusy: ->
+			# Are any todos being saved right now?
 			if @todos.length?
 				for task in @todos.models when task._saving
 					return yes
-
+			# Are any tags being saved right now?
 			if @tags.length?
 				for tag in @tags.models when tag._saving
 					return yes
+
+			# Are any tasks being edited right now
+			if location.href.indexOf( "edit/" ) isnt -1
+				return yes
 
 			return no
 		hackParseAPI: ->
@@ -67,7 +72,7 @@ define [
 
 			@startAutoUpdate()
 		update: ->
-			if not @isSaving()
+			if not @isBusy()
 				@fetchTodos()
 				@UPDATE_COUNT++
 
