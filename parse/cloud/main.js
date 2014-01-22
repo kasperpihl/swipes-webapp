@@ -141,43 +141,7 @@ Parse.Cloud.define("subscribe", function(request, response) {
     }
   });
 });
-Parse.Cloud.define('update',function(request,response){
-  var user = Parse.User.current();
-  var updateTime = new Date(new Date().getTime());
-  if(!user) return sendError(response,'You have to be logged in');
 
-  var limit = 1000;
-  var skip = request.params.skip;
-  var lastUpdate = false;
-  if(request.params.lastUpdate) lastUpdate = new Date(request.params.lastUpdate);
-  var changesOnly = request.params.changesOnly ? lastUpdate : false;
-
-  var queue = require('cloud/queue.js');
-  var tagQuery = new Parse.Query('Tag');
-  tagQuery.equalTo('owner',user);
-  tagQuery.limit(limit);
-  if(skip) tagQuery.skip(skip);
-  if(lastUpdate) tagQuery.greaterThan('updatedAt',lastUpdate);
-  else tagQuery.notEqualTo('deleted',true);
-  queue.addToQueue(tagQuery);
-
-  var taskQuery = new Parse.Query('ToDo');
-  taskQuery.equalTo('owner',user);
-  taskQuery.limit(limit);
-  if(skip) taskQuery.skip(skip);
-  if(lastUpdate) taskQuery.greaterThan('updatedAt',lastUpdate);
-  else taskQuery.notEqualTo('deleted',true);
-  queue.addToQueue(taskQuery);
-
-  runQueue(queue.getQueue(),function(objects,error){
-    if(error) sendError(response,error);
-    else{
-      objects.updateTime = updateTime.toISOString();
-      objects.serverTime = new Date().toISOString();
-      response.success(objects);
-    }
-  },{recurring:3,changesSince:changesOnly,limit:limit});
-});
 function queriesForUpdating(user,lastUpdate,nowTime,options){
   if(!user) return false;
 
@@ -380,28 +344,6 @@ Parse.Cloud.beforeSave("Signup",function(request,response){
     else response.success();
   });
 });
-Parse.Cloud.define('test',function(request,response){
-  var i = 1;
-  var x = 0;
-  while (i < 10)
-  {
-    x++;
-  }
-  var paymentQuery = new Parse.Query('Payment');
-  paymentQuery.include('user');
-  paymentQuery.limit(1000);
-  paymentQuery.find({success:function(payments){ 
-    var userQuery = new Parse.Query(Parse.User);
-    userQuery.limit(1000);
-    userQuery.doesNotExist('userLevel');
-    var contained = new Array();
-    for(var i = 0 ; i < payments.length ; i++){
-      contained.push(payments[i].get('user').id);
-    }
-    userQuery.containedIn('objectId',contained);
-    userQuery.find({success:function(payments){ response.success(payments); },error:function(error){ response.error(error); }});
-  },error:function(error){ response.error(error); }});
-});
 
 Parse.Cloud.beforeSave(Parse.User,function(request,response){
   var object = request.object;
@@ -454,72 +396,43 @@ function sendError(response,error){
     }
   });
 }
-function runQueue(queue,done,options){
-  function performQuery(object,callback){
-    var query = object.query;
-    if(object.skip) query.skip(object.skip);
-    var optionObject = {
-      success:function(result){
-        callback(object,result);
-      },
-      error:function(error){
-        callback(object,null,error);
-      }
-    };
-    if(object.count) query.count(optionObject);
-    else query.find(optionObject);
-  }
+
+Parse.Cloud.define('update',function(request,response){
+  var user = Parse.User.current();
+  var updateTime = new Date(new Date().getTime());
+  if(!user) return sendError(response,'You have to be logged in');
+
   var limit = 1000;
-  if(options && options.limit) limit = parseInt(options.limit);
-  var recurring = 1;
-  if(options && options.recurring) recurring = options.recurring;
-  var k = 0;
-  var doneCounter = 0;
-  var calledDone= false;
-  if(queue.length === 0) return done(false,null);
-  var returnObj = {};
-  function checkDone(){
-    if(calledDone) return;
-    if(doneCounter == queue.length){
-      done(returnObj,null);
-      calledDone = true;
-    }
-    else next();
-  }
-  function next(){
-    if(k>=queue.length){
-      return;
-    }
-    performQuery(queue[k],function(object,result,error){
-      if(error && !calledDone){
-        done(null,error);
-        calledDone = true;
+  var skip = request.params.skip;
+  var lastUpdate = false;
+  if(request.params.lastUpdate) lastUpdate = new Date(request.params.lastUpdate);
+  var changesOnly = request.params.changesOnly ? lastUpdate : false;
+
+  var queue = require('cloud/queue.js');
+
+  var resultObjects = {};
+  var queryError;
+  var updateTime = new Date();
+  var queries = queriesForUpdating(user,lastUpdate,updateTime);
+  queue.push(queries,true);
+  queue.run(function(query){
+    runQueryToTheEnd(query,function(result,error){
+      if(!error && result && result.length > 0){
+        for(var i = 0 ; i < result.length ; i++)
+          scrapeChanges(result[i],lastUpdate);
+        var index = result[0].className;
+        resultObjects[index] = result;
+        queue.next();
       }
       else{
-      	var length = 0;
-        if(result) length = result.length;
-      	if(options.changesSince){
-	        if(result && length > 0){
-	          for(var i = 0 ; i < result.length ; i++){
-	            var obj = result[i];
-	            scrapeChanges(obj,options.changesSince);
-	          }
-	        }
-        }
-      	if(length == limit){
-      		object.skip += limit;
-    			queue.push(object);
-      	}
-        if(returnObj[object.title]) returnObj[object.title] = returnObj[object.title].concat(result);
-        else returnObj[object.title] = result;
-        doneCounter++;
-        checkDone();
+        if(error) queryError = error;
+        queue.next();
       }
-      
     });
-    k++;
-  }
-  for(var i = 0 ; i < recurring ; i++){
-    next();
-  }
-}
+  },function(finished){
+    if(queryError) return response.error(queryError);
+    resultObjects.updateTime = updateTime.toISOString();
+    resultObjects.serverTime = new Date().toISOString();
+    response.success(resultObjects);
+  });
+});
