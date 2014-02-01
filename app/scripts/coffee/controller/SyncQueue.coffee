@@ -1,9 +1,7 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	class SyncQueue
-		state: ""
-		deferreds: []
 		constructor: ->
-			@state = "ready"
+			@deferreds = []
 		add: (promise) ->
 			# Use jQuery deferred instead of crappy Parse deferred.
 			# ... And since parse depends on Backbone, and thereby depends on jQuery,
@@ -17,8 +15,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			promise.then( success, fail )
 
-			@deferreds.push( dfd.promise() );
+			@deferreds.push( dfd );
 		isBusy: ->
-			!_.all( @deferreds, (d) -> d.isResolved() or d.isRejected() );
+			_.any( @deferreds, (d) -> d.state() is "pending" )
 		destroy: ->
 			# We don't really need to do anything here...

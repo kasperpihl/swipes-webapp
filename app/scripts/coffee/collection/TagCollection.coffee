@@ -34,7 +34,7 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 				return undefined
 		saveNewTags: ->
 			for model in @models when model.isNew()
-				model.save()
+				swipy.queue.add model.save()
 		handleAddTag: (model) ->
 			if not @validateTag model
 				@remove( model, { silent: yes } )

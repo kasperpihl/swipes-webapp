@@ -51,19 +51,19 @@
       transitionInComplete: function() {},
       togglePriority: function() {
         if (this.model.get("priority")) {
-          return this.model.save("priority", 0);
+          return swipy.queue.add(this.model.save("priority", 0));
         } else {
-          return this.model.save("priority", 1);
+          return swipy.queue.add(this.model.save("priority", 1));
         }
       },
       setRepeat: function(e) {
-        return this.model.save("repeatOption", $(e.currentTarget).data("option"));
+        return swipy.queue.add(this.model.save("repeatOption", $(e.currentTarget).data("option")));
       },
       updateTitle: function() {
-        return this.model.save("title", this.getTitle());
+        return swipy.queue.add(this.model.save("title", this.getTitle()));
       },
       updateNotes: function() {
-        return this.model.save("notes", this.getNotes());
+        return swipy.queue.add(this.model.save("notes", this.getNotes()));
       },
       getTitle: function() {
         return this.$el.find(".title input").val();

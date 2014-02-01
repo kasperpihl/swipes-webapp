@@ -51,7 +51,7 @@
         this.model.unset("tags", {
           silent: true
         });
-        return this.model.save("tags", tags);
+        return swipy.queue.add(this.model.save("tags", tags));
       },
       createTag: function(e) {
         var tagName;
@@ -86,7 +86,7 @@
         this.model.unset("tags", {
           silent: true
         });
-        this.model.save("tags", tags);
+        swipy.queue.add(this.model.save("tags", tags));
         if (addToCollection) {
           return swipy.tags.getTagsFromTasks();
         }

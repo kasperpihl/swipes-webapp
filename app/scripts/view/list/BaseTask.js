@@ -33,9 +33,9 @@
       togglePriority: function(e) {
         e.stopPropagation();
         if (this.model.get("priority")) {
-          return this.model.save("priority", 0);
+          return swipy.queue.add(this.model.save("priority", 0));
         } else {
-          return this.model.save("priority", 1);
+          return swipy.queue.add(this.model.save("priority", 1));
         }
       },
       handleAction: function(e) {

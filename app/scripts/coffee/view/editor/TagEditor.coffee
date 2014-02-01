@@ -39,7 +39,7 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			tags = _.reject( @model.get( "tags" ), (t) -> t.get( "title" ) is tagName )
 
 			@model.unset( "tags", { silent: yes } )
-			@model.save( "tags", tags )
+			swipy.queue.add @model.save( "tags", tags )
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
@@ -56,7 +56,7 @@ define ["underscore", "model/TagModel"], (_, TagModel) ->
 			if tag then tags.push tag else tags.push new TagModel( title: tagName )
 
 			@model.unset( "tags", { silent: yes } )
-			@model.save( "tags", tags )
+			swipy.queue.add @model.save( "tags", tags )
 
 			# If it's a new tag, add it to the stack. getTagsFromTasks will automatically save new tags.
 			if addToCollection then swipy.tags.getTagsFromTasks()

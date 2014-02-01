@@ -123,9 +123,9 @@
           model.unset("tags", {
             silent: true
           });
-          return model.save("tags", tags);
+          return swipy.queue.add(model.save("tags", tags));
         } else {
-          return model.save("tags", [tag]);
+          return swipy.queue.add(model.save("tags", [tag]));
         }
       },
       removeTagFromModels: function(tagName) {
@@ -140,7 +140,7 @@
           model.unset("tags", {
             silent: true
           });
-          model.save("tags", newTags);
+          swipy.queue.add(model.save("tags", newTags));
         }
         return this.render();
       },

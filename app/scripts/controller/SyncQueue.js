@@ -2,12 +2,8 @@
   define(["underscore", "backbone"], function(_, Backbone) {
     var SyncQueue;
     return SyncQueue = (function() {
-      SyncQueue.prototype.state = "";
-
-      SyncQueue.prototype.deferreds = [];
-
       function SyncQueue() {
-        this.state = "ready";
+        this.deferreds = [];
       }
 
       SyncQueue.prototype.add = function(promise) {
@@ -20,12 +16,12 @@
           return dfd.reject();
         };
         promise.then(success, fail);
-        return this.deferreds.push(dfd.promise());
+        return this.deferreds.push(dfd);
       };
 
       SyncQueue.prototype.isBusy = function() {
-        return !_.all(this.deferreds, function(d) {
-          return d.isResolved() || d.isRejected();
+        return _.any(this.deferreds, function(d) {
+          return d.state() === "pending";
         });
       };
 
