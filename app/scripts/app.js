@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "model/ClockWork", "controller/ViewController", "controller/AnalyticsController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) {
+  define(["backbone", "model/ClockWork", "controller/ViewController", "controller/AnalyticsController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController", "controller/SyncQueue", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue) {
     var Swipes;
     return Swipes = (function() {
       Swipes.prototype.UPDATE_INTERVAL = 30;
@@ -9,6 +9,7 @@
       function Swipes() {
         var _this = this;
         this.hackParseAPI();
+        this.queue = new SyncQueue();
         this.analytics = new AnalyticsController();
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
@@ -50,6 +51,9 @@
           }).length) {
             return true;
           }
+        }
+        if (this.queue.isBusy()) {
+          return true;
         }
         return false;
       };
@@ -104,7 +108,7 @@
       };
 
       Swipes.prototype.cleanUp = function() {
-        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
         this.stopAutoUpdate();
         if ((_ref = this.tags) != null) {
           _ref.destroy();
@@ -132,6 +136,9 @@
         }
         if ((_ref8 = this.settings) != null) {
           _ref8.destroy();
+        }
+        if ((_ref9 = this.queue) != null) {
+          _ref9.destroy();
         }
         if (Parse.History.started) {
           return Parse.history.stop();

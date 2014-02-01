@@ -13,15 +13,17 @@ define [
 	"controller/FilterController"
 	"controller/SettingsController"
 	"controller/ErrorController"
+	"controller/SyncQueue"
 	"gsap"
 	"localytics-sdk"
-	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController) ->
+	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
 		constructor: ->
 			@hackParseAPI()
 
+			@queue = new SyncQueue()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()
@@ -50,6 +52,11 @@ define [
 			if @todos.length
 				if @todos.where( selected:yes ).length
 					return yes
+
+			# Are we pushing changes to the server right now?
+			if @queue.isBusy()
+				return yes
+
 			return no
 		hackParseAPI: ->
 			# Add missing mehods to Parse.Collection.prototype
@@ -97,6 +104,7 @@ define [
 			@sidebar?.destroy()
 			@filter?.destroy()
 			@settings?.destroy()
+			@queue?.destroy()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
