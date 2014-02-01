@@ -24,7 +24,7 @@
       };
 
       SyncQueue.prototype.isBusy = function() {
-        return _.all(this.deferreds, function(d) {
+        return !_.all(this.deferreds, function(d) {
           return d.isResolved() || d.isRejected();
         });
       };

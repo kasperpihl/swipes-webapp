@@ -19,6 +19,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			@deferreds.push( dfd.promise() );
 		isBusy: ->
-			_.all( @deferreds, (d) -> d.isResolved() or d.isRejected() );
+			!_.all( @deferreds, (d) -> d.isResolved() or d.isRejected() );
 		destroy: ->
 			# We don't really need to do anything here...
