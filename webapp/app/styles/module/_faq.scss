@@ -1,0 +1,53 @@
+ul.faq, ol.faq {
+	$dot-size: emCalc(14px);
+	list-style: none;
+	padding: 0;
+
+	li {
+		margin: 0 0 1.3em;
+		@include perspective(500);
+	}
+
+	header { cursor: pointer; }
+
+	header h4 {
+		font-family: $font-normal;
+		position: relative;
+		margin: 0 0 0.4em;
+		text-align: left;
+		padding-left: $dot-size * 2;
+
+		@include hyphenation();
+
+		&:before {
+			position: absolute;
+			display: inline-block;
+			content: "";
+
+			width: $dot-size; height: $dot-size;
+			border-radius: $dot-size;
+			border: 2px solid white;
+			left: 0; top: 50%;
+			margin-top: 0 - ( $dot-size / 2 );
+		}
+	}
+
+	section {
+		overflow: hidden;
+
+		@include transform-origin(top center);
+
+		padding-left: $dot-size * 2.7;
+		margin-bottom: 3.2em;
+	}
+
+	li.toggled {
+		h4:before {
+			background: white;
+		}
+
+		section {
+			display: block;
+		}
+	}
+}

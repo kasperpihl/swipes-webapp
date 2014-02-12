@@ -1,0 +1,3 @@
+@function emCalc($pxWidth, $baseSize: $font-size-base) {
+	@return $pxWidth / $baseSize * 1em;
+}

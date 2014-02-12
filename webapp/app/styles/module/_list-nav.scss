@@ -1,0 +1,66 @@
+.list-nav {
+	@extend .clearfix;
+	list-style: none;
+	margin: 0 auto;
+	padding: 0;
+
+	width: 85%;
+	@include breakpoint(min-width, emCalc(600px)) { width: 70%; }
+
+
+	body.edit-mode & {
+		visibility: hidden;
+		opacity: 0;
+		height: 0;
+		overflow: hidden;
+	}
+
+	li {
+		text-align: center;
+		width: 33%;
+		float: left;
+
+		&:last-child { float: right; }
+	}
+
+	a {
+		color: $gray;
+		font-size: 1.9em;
+		line-height: 1;
+
+		@include transition(color 0.15s ease-out);
+
+		&:focus, &:hover {
+			text-decoration: none;
+			outline: none;
+			&.schedule { @extend .icon-clock-act; }
+			&.todo { @extend .icon-todo-act; }
+			&.checkmark { @extend .icon-checkmark-act; }
+		}
+	}
+
+	.schedule, .todo, .active { @extend .icon; }
+
+	.schedule { @extend .icon-clock; }
+	.todo { @extend .icon-todo; }
+	.checkmark { @extend .icon-checkmark; }
+
+
+	.schedule.active {
+		color: $lobster;
+		@extend .icon-clock-act;
+		&:focus { @extend .icon-clock; }
+	}
+
+	.todo.active {
+		color: $yellow;
+		@extend .icon-todo-act;
+		&:focus { @extend .icon-todo; }
+	}
+
+	.checkmark.active {
+		color: $green;
+		@extend .icon-checkmark-act;
+		&:focus { @extend .icon-checkmark; }
+	}
+}

@@ -1,0 +1,38 @@
+<div class="overlay-bg"></div>
+<div class="overlay-content">
+
+	<div class="wrap">
+		<ol class="rounded-tags">
+
+			<%
+				var tags = _.sortBy( allTags, function(tag) {
+					return tag.title.toLowerCase()
+				})
+
+				_.each(tags, function(tag) {
+			%>
+
+				<% if ( _.contains( tagsAppliedToAll, tag.title ) ) { %>
+					<li class="selected"><%= tag.title %></li>
+				<% } else { %>
+					<li><%= tag.title %></li>
+				<% } %>
+
+			<% }) %>
+
+			<li class="tag-input">
+				<form class="add-tag">
+					<input type="text" placeholder="Add new tag">
+				</form>
+			</li>
+
+		</ol>
+	</div>
+
+	<nav class="text-center">
+		<a href="JavaScript:void(0);" class="save round-btn inverted">
+			<span class="icon-checkmark-act"></span>
+		</a>
+	</nav>
+
+</div>

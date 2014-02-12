@@ -1,0 +1,15 @@
+.tag-pool {
+	display: none;
+
+	background: $gray-light;
+	padding: 0.8em 0.8em 0.4em;
+	border-radius: 0.2em;
+
+	.show-pool & {
+		display: block;
+	}
+
+	.rounded-tags {
+		margin: 0;
+	}
+}

@@ -1,0 +1,13 @@
+input.borderless, textarea.borderless {
+	border: 0;
+	outline: 0;
+	text-indent: 10px;
+	resize: none;
+	background: transparent;
+}
+
+input, textarea {
+	@include input-placeholder {
+		color: $gray-light;
+	}
+}

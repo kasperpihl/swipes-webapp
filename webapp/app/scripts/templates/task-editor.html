@@ -1,0 +1,70 @@
+<div class="divider">
+	<h2>Tasks</h2>
+</div>
+
+<div class="editor-content <% if (priority === 1) print(" is-priority") %>">
+
+	<h1 class="h2 title">
+		<span class="priority"></span>
+		<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">
+	</h1>
+
+	<% if (scheduleStr) { %>
+		<section>
+			<time class="icon-clock-bold has-icon no-select">
+				<%= scheduleStr %>
+				<% if (timeStr && schedule !== null) print(", " + timeStr); %>
+			</time>
+		</section>
+	<% } %>
+
+	<% if ( schedule !== null ) { %>
+		<section>
+			<div class="repeat-picker icon-repeat has-icon">
+				<p>Repeat every &hellip;</p>
+				<ul>
+					<li><a <% if (repeatOption === "never") print("class='selected'") %> href="JavaScript:void(0);" data-option="never">never</a></li>
+					<li><a <% if (repeatOption === "every day") print("class='selected'") %> href="JavaScript:void(0);" data-option="every day">day</a></li>
+					<li><a <% if (repeatOption === "mon-fri or sat+sun") print("class='selected'") %> href="JavaScript:void(0);" data-option="mon-fri or sat+sun">
+						<%
+							date = schedule
+							if ( repeatDate && repeatOption === "mon-fri or sat+sun" ) {
+								date = repeatDate
+							}
+							if ( typeof date === "string" ) date = new Date( date )
+							print( ( date.getDay() === 0 || date.getDay() === 6 ) ? "sat+sun" : "mon-fri" )
+						%>
+					</a></li>
+					<li><a <% if (repeatOption === "every week") print("class='selected'") %> href="JavaScript:void(0);" data-option="every week">week</a></li>
+					<li><a <% if (repeatOption === "every month") print("class='selected'") %> href="JavaScript:void(0);" data-option="every month">month</a></li>
+					<li><a <% if (repeatOption === "every year") print("class='selected'") %> href="JavaScript:void(0);" data-option="every year">year</a></li>
+				</ul>
+			</div>
+		</section>
+	<% } %>
+
+	<section>
+		<div class="icon-tag-bold has-icon">
+
+			<ul class="rounded-tags applied-tags">
+			</ul>
+			<aside class="tag-pool">
+				<ul class="rounded-tags">
+				</ul>
+			</aside>
+		</div>
+	</section>
+
+	<section>
+		<div class="notes icon-note-bold has-icon">
+			<textarea class="borderless" placeholder="Add a note"><%= notes %></textarea>
+		</div>
+	</section>
+
+</div>
+
+<nav class="sticky-if-small">
+	<a href="JavaScript:void(0);" class="save round-btn ">
+		<span class="icon-checkmark-nav"></span>
+	</a>
+</nav>

@@ -1,0 +1,141 @@
+.rounded-tags {
+	@extend .clearfix;
+	padding: 0;
+	margin-bottom: 0;
+
+	li {
+		@extend .no-select;
+
+		list-style: none;
+		display: block;
+		float: left;
+
+		margin: 0 0.7em 0.7em 0;
+
+		padding: emCalc(9px) emCalc(12px);
+		background: transparent;
+		@include transition(background 0.15s ease-out);
+		border-radius: 0.5em;
+
+		color: $gray;
+		font-size: 0.8em;
+		font-family: $font-normal;
+		cursor: pointer;
+
+		border: thin solid $gray;
+
+		@include transition(background 0.15s ease-out);
+
+		&:hover {
+			color: $gray;
+		}
+
+		&.selected {
+			background: $gray;
+			color: white;
+		}
+	}
+
+
+
+	li.tag-input {
+		border-color: #ACACAC;
+	}
+
+	.add-new-tag {
+		position: relative;
+		background: $yellow;
+		border: none;
+		padding: 0;
+
+		.icon-plus {
+			position: relative;
+			top: 0.1em;
+		}
+
+		.icon-minus {
+			position: relative;
+			top: 0.2em;
+		}
+
+		a {
+			display: block;
+			color: white;
+			padding: emCalc(9px) emCalc(12px);
+
+		}
+
+		&:hover {
+			background: $yellow;
+			a { color: white; text-decoration: none; }
+		}
+	}
+}
+
+// Tag input
+.rounded-tags {
+	form {
+		width: emCalc(102px);
+	}
+
+	input {
+		width: 100%;
+
+		outline: none;
+		border: none;
+		background: transparent;
+		color: $gray;
+
+		&:focus, &:hover {
+
+		}
+
+		@include input-placeholder() {
+			color: lighten($gray, 30%);
+		}
+	}
+}
+
+// Show / hide pool btn
+.show-pool .add-new-tag:after {
+	content: "";
+	position: absolute;
+	display: block;
+
+	left: 50%;
+	margin-left: -0.7em;
+	margin-top: emCalc(6px);
+
+	@include triangle(1.6em, 0.72em, up, $gray-light);
+}
+
+// Wobble tags in delete mode
+.delete-mode .rounded-tags {
+	li:not(.delete) {
+
+		&:before {
+			content: "× ";
+			color: $lobster;
+			font-size: 1.4em;
+			line-height: 1em;
+			top: 0.12em;
+			position: relative;
+		}
+
+		&:nth-child(2n) {
+			@include experimental(animation, wobble1 0.24s infinite);
+			@include apply-origin(40% 60%, false);
+		}
+
+		&:nth-child(2n-1) {
+			@include experimental(animation, wobble2 0.3s infinite alternate);
+			@include apply-origin(60% 40%, false);
+		}
+
+		@for $i from 1 through 40 {
+			&:nth-child(#{$i}) {
+				@include experimental(animation-delay, -#{rand(0-1)}s);
+			}
+		}
+	}
+}

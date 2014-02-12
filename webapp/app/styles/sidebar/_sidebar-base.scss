@@ -1,0 +1,29 @@
+.sidebar {
+	display: none;
+	body.sidebar-open & { display: block; }
+
+	position: fixed;
+	left: 0;
+
+	min-height: 100%;
+	width: $sidebar-width;
+	padding: 12px;
+
+	@include breakpoint(desktop) {
+		width: $sidebar-width-big;
+		padding: 20px;
+	}
+
+	background: $gray;
+
+	color: #9FA8B2;
+	#{headers()} { color: white; }
+}
+
+.sidebar > section {
+	margin-top: 45px;
+
+	@include breakpoint(min-height, emCalc(800px)) {
+		margin-top: 75px;
+	}
+}
