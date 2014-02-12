@@ -1,18 +1,20 @@
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
 Parse.Cloud.useMasterKey();
-require('cloud/app.js');
 Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in to save ToDo');
   if(!request.master && request.object.dirty('owner')) return sendError(response,"Not allowed to change owner");
+  if(request.object.get('owner') && request.object.get('lastSave')){
+    if(request.object.get('owner').id != request.object.get('lastSave').id) return sendError(response,'Unauthorized Save'); 
+  }
   var attrWhitelist = ["title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority"];
   handleObject(request.object, attrWhitelist);
   response.success();
 });
 function handleObject(object,attrWhiteList){
   var _ = require('underscore');
-  var defAttributes = ["deleted","attributeChanges","tempId","owner"];
+  var defAttributes = ["deleted","attributeChanges","tempId","owner","lastSave"];
   if(attrWhiteList){
     for(var attribute in object.attributes){
       if(_.indexOf(attrWhiteList,attribute) == -1 && _.indexOf(defAttributes,attribute) == -1) delete object.attributes[attribute];
@@ -20,7 +22,7 @@ function handleObject(object,attrWhiteList){
   }
   makeAttributeChanges(object);
   var user = Parse.User.current();
-  if(!user) user = object.get('owner');
+  if(!user) user = object.get('lastSave');
   if(object.isNew() && user){ 
     object.set('owner',user);
     var ACL = new Parse.ACL();
@@ -55,7 +57,7 @@ function scrapeChanges(object,lastUpdateTime){
   if(attributes){
     for(var attribute in attributes){
       var lastChange = changes[attribute];
-      if(attribute == "deleted" || attribute == "tempId") continue;
+      if((attribute == "deleted" && attributes[attribute]) || attribute == "tempId") continue;
       if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
     }
   }
@@ -88,6 +90,10 @@ Parse.Cloud.beforeSave('Payment',function(request,response){
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in to save Tag');
+  if(!request.master && request.object.dirty('owner')) return sendError(response,"Not allowed to change owner");
+  if(request.object.get('owner') && request.object.get('lastSave')){
+    if(request.object.get('owner').id != request.object.get('lastSave').id) return sendError(response,'Unauthorized Save'); 
+  }
   var attrWhitelist = ["title"];
   handleObject(request.object);
   response.success();
@@ -103,22 +109,6 @@ Parse.Cloud.define('checkEmail',function(request,response){
     else response.success(0);
   },error:function(error){ sendError(response,error); }});
 });
-Parse.Cloud.define('cleanup',function(request,response){
-  var query = new Parse.Query('ServerError');
-  query.limit(1000);
-  query.find({success:function(objects){ 
-    Parse.Object.destroyAll(objects,{
-      success:function(){
-        response.success(); 
-      },error:function(error){ 
-        response.error(error); 
-      }});},error:function(error){
-      response.error(error);
-      }
-    });
-  });
-
-
 Parse.Cloud.define("subscribe", function(request, response) {
   var email = request.params.email;
   if(!email) return response.error('Must include email');
@@ -142,190 +132,29 @@ Parse.Cloud.define("subscribe", function(request, response) {
   });
 });
 
-function queriesForUpdating(user,lastUpdate,nowTime,options){
-  if(!user) return false;
-
-  var tagQuery = new Parse.Query('Tag');
-  tagQuery.equalTo('owner',user);
-  if(lastUpdate) tagQuery.greaterThanOrEqualTo('updatedAt',lastUpdate);
-  else tagQuery.notEqualTo('deleted',true);
-  if(nowTime) tagQuery.lessThanOrEqualTo('updatedAt',nowTime);
-
-  var taskQuery = new Parse.Query('ToDo');
-  taskQuery.equalTo('owner',user);
-  if(lastUpdate) taskQuery.greaterThanOrEqualTo('updatedAt',lastUpdate);
-  else taskQuery.notEqualTo('deleted',true);
-  if(nowTime) taskQuery.lessThanOrEqualTo('updatedAt',nowTime);
-  return [tagQuery,taskQuery];
-};
 /* Running a query unlimited with skips if limit of object is reached
   callback (result,error)
 */
 function runQueryToTheEnd(query,callback,deltaResult,deltaSkip){
   if(!deltaResult) deltaResult = [];
+  if(!deltaSkip) deltaSkip = 0;
   if(deltaSkip) query.skip(parseInt(deltaSkip,10));
   query.limit(1000);
   query.find({success:function(result){
     var runAgain = false;
-    if(result && result.length > 0){ 
+    if(result && result.length > 0){
       deltaResult = deltaResult.concat(result);
       if(result.length == 1000) runAgain = true;
     }
-    if(runAgain) runQueryToTheEnd(query,callback,deltaResult,(deltaSkip+1000));
-    else callback(deltaResult,false);
+    if(runAgain){ 
+      deltaSkip = deltaSkip + 1000;
+      runQueryToTheEnd(query,callback,deltaResult,deltaSkip);
+    }
+    else callback(deltaResult,false,query);
   },error:function(error){
-    callback(deltaResult,error);
+    callback(deltaResult,error,query);
   }});
 };
-Parse.Cloud.define('sync',function(request,response){
-  var user = Parse.User.current();
-  if(!user) return sendError(response,'You have to be logged in');
-  var startTime = new Date();
-  var tagObjects = makeParseObjectsFromRaw(request.params.objects["Tag"],"Tag",user);
-  var todoObjects = makeParseObjectsFromRaw(request.params.objects["ToDo"],"ToDo",user);
-  var batches = makeBatchesFromParseObjects(todoObjects,tagObjects);
-  var lastUpdate = (request.params.lastUpdate) ? new Date(request.params.lastUpdate) : false;
-  
-  function saveAll(){
-    var queue = require('cloud/queue.js');
-    queue.push(batches,true);
-    var saveError;
-    queue.run(function(batch){
-      Parse.Object.saveAll(batch,{success:function(result){
-        queue.next();
-      },error:function(result,error){
-        // TODO: Handle error on batches here
-        queue.next();
-      }});
-    },function(finished){
-      if(saveError) return response.error(saveError);
-      else fetchAll();
-    });
-  };
-  
-  function fetchAll(){
-    var queue = require('cloud/queue.js');
-    queue.reset();
-    var resultObjects = {};
-    var queryError;
-    var updateTime = new Date();
-    var queries = queriesForUpdating(user,lastUpdate,updateTime);
-    queue.push(queries,true);
-    queue.run(function(query){
-      runQueryToTheEnd(query,function(result,error){
-        if(!error && result && result.length > 0){
-          for(var i = 0 ; i < result.length ; i++)
-            scrapeChanges(result[i],lastUpdate);
-          var index = result[0].className;
-          resultObjects[index] = result;
-          queue.next();
-        }
-        else{
-          if(error) queryError = error;
-          queue.next();
-        }
-      });
-    },function(finished){
-      if(queryError) return response.error(queryError);
-      resultObjects.updateTime = updateTime.toISOString();
-      resultObjects.serverTime = new Date().toISOString();
-      response.success(resultObjects);
-    });
-  };
-  if(batches && batches.length > 0) saveAll();
-  else fetchAll();
-
-  
-    
-    
-    
-  
-});
-function makeBatchesFromParseObjects(todoObjects,tagObjects){
-  var batches = new Array();
-  if(!todoObjects && !tagObjects) return batches;
-  var noRelation = new Array();
-  var dependency = new Array();
-  var tagIdentifiers = new Array();
-  var chunkSize = 50;
-
-  var _ = require("underscore");
-  /* Preparing todo's - checking for relation dependencies */
-  for(var identifier in todoObjects){
-    var todo = todoObjects[identifier];
-    /* Checking tags */
-    var tags = todo.get('tags');
-    if(!tags){
-      noRelation.push(todo); 
-    }
-    else{
-      var dependent = false;
-      var Tag = Parse.Object.extend("Tag");
-      var tagObjects = new Array();
-      var dependent = false;
-      for(var i = 0 ; i < tags.length ; i++){
-        var rawTag = tags[i];
-        var tagObj;
-        if(rawTag.objectId){
-          tagObj = new Tag({"objectId":rawTag.objectId});
-        }
-        else if(rawTag.tempId){ 
-          tagObj = todoObjects[rawTag.tempId];
-          if(tagObj){ 
-            tagIdentifiers.push(rawTag.tempId);
-            dependent = true;
-          }
-        }        
-        if(tagObj) tagObjects.push(tagObj);
-      }
-      todo.set("tags",tagObjects);
-      if(dependent) dependency.push(todo);
-      else noRelation.push(todo);
-    }
-  }
-  var testTags = false;
-  if(tagIdentifiers.length > 0){
-    _.uniq(tagIdentifiers);
-    testTags = true;
-  }
-  for(var identifier in tagObjects){
-    var dependend = false;
-    var tag = tagObjects[identifier];
-    if(testTags && _.indexOf(tagIdentifiers,identifier) != -1) dependent = true;
-    if(dependent) dependency.push(tag);
-    else noRelation.push(tag);
-  }
-  
-  if(noRelation.length > 0){
-    for (i = 0, j = noRelation.length; i < j; i += chunkSize) {
-      batches.push(noRelation.slice(i, i + chunkSize));
-    }
-  }
-
-  if(dependency.length > 0){
-    var lastBatch = batches[batches.length];
-    if((lastBatch.length + dependency) <= 50) lastBatch = lastBatch.concat(dependency);
-    else batches.push(dependency);
-  }
-  return batches;
-};
-function makeParseObjectsFromRaw(objects,className,user){
-  if(!objects || objects.length == 0) return false;
-  var ParseObject = Parse.Object.extend(className);
-  var collection = {};
-  for(var i = 0 ; i < objects.length ; i++){
-    var rawObject = objects[i];
-    var parseObject = new ParseObject(rawObject);
-    if(parseObject.id){
-      collection[parseObject.id] = parseObject;
-    }
-    else if(parseObject.get('tempId')){
-      collection[parseObject.get('tempId')] = parseObject;
-      parseObject.set('owner',user);
-    }
-  }
-  return collection;
-}
 Parse.Cloud.define("unsubscribe",function(request,response){
   var email = request.params.email;
   if(!email) return response.error('Must include email');
@@ -348,6 +177,7 @@ Parse.Cloud.beforeSave("Signup",function(request,response){
 Parse.Cloud.beforeSave(Parse.User,function(request,response){
   var object = request.object;
   var mandrill = req('mandrill');
+  var vero = req('vero');
   if(object.dirty('userLevel') && !request.master){
     return sendError(response,'User not allowed to change this');
   }
@@ -357,7 +187,7 @@ Parse.Cloud.beforeSave(Parse.User,function(request,response){
       var keys = conf.keys;
       var mailjet = req('mailjet');
       mailjet.request("listsAddcontact",{"id":"370097","contact":object.get('username')});
-      mandrill.sendTemplate("welcome-again",object.get('username'),"Welcome news & tips",function(result,error){
+      vero.track('Signs up',{user:object},function(result,error){
         response.success();
       });
     } else response.success();
@@ -413,7 +243,9 @@ Parse.Cloud.define('update',function(request,response){
   var resultObjects = {};
   var queryError;
   var updateTime = new Date();
-  var queries = queriesForUpdating(user,lastUpdate,updateTime);
+
+  var queryUtility = req('queryUtility');
+  var queries = queryUtility.queriesForUpdating(user,lastUpdate,updateTime);
   queue.push(queries,true);
   queue.run(function(query){
     runQueryToTheEnd(query,function(result,error){

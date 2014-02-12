@@ -44,7 +44,7 @@ function nextItem(){
       return;
     }
 	if(iteratorCallback) iteratorCallback(queue[iterator]);
-	else exports.finishedItem();
+	else exports.next();
 }
 /* resets the queue - removes all the objct*/
 
