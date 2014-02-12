@@ -38,15 +38,15 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "view/edito
 		transitionInComplete: ->
 		togglePriority: ->
 			if @model.get "priority"
-				@model.save( "priority", 0 )
+				swipy.queue.add @model.save( "priority", 0 )
 			else
-				@model.save( "priority", 1 )
+				swipy.queue.add @model.save( "priority", 1 )
 		setRepeat: (e) ->
-			@model.save( "repeatOption", $(e.currentTarget).data "option" )
+			swipy.queue.add @model.save( "repeatOption", $(e.currentTarget).data "option" )
 		updateTitle: ->
-			@model.save( "title", @getTitle() )
+			swipy.queue.add @model.save( "title", @getTitle() )
 		updateNotes: ->
-			@model.save( "notes", @getNotes() )
+			swipy.queue.add @model.save( "notes", @getNotes() )
 		getTitle: ->
 			@$el.find( ".title input" ).val()
 		getNotes: ->

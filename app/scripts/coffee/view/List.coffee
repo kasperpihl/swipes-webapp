@@ -117,7 +117,7 @@ define [
 						if m.has "repeatDate"
 							@createRepeatedTask m
 						else
-							m.save( "completionDate", new Date() )
+							swipy.queue.add m.save( "completionDate", new Date() )
 
 			swipy.analytics.tagEvent( "Completed Tasks", { "Number of Tasks": tasks.length } )
 		createRepeatedTask: (model) ->
@@ -139,7 +139,7 @@ define [
 			model.updateRepeatDate()
 
 			# Finally persist the changes on the server
-			model.save()
+			swipy.queue.add model.save()
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task

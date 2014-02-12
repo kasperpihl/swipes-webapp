@@ -77,15 +77,15 @@ define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templa
 				tags = model.get "tags"
 				tags.push tag
 				model.unset( "tags", { silent: yes } )
-				model.save( "tags", tags )
+				swipy.queue.add model.save( "tags", tags )
 			else
-				model.save( "tags", [tag] )
+				swipy.queue.add model.save( "tags", [tag] )
 		removeTagFromModels: (tagName) ->
 			for model in @options.models
 				tags = model.get "tags"
 				newTags = _.reject( tags, (tagModel) -> tagModel.get( "title" ) is tagName )
 				model.unset( "tags", { silent: yes } )
-				model.save( "tags", newTags )
+				swipy.queue.add model.save( "tags", newTags )
 
 			@render()
 		handleResize: ->

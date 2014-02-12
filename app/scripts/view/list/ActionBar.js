@@ -70,7 +70,7 @@
               model.unset("order");
               swipy.todos.bumpOrder("up", order);
             }
-            model.save("deleted", true);
+            swipy.queue.add(model.save("deleted", true));
           }
           return this.hide();
         }

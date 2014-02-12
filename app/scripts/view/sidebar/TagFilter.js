@@ -63,7 +63,7 @@
         wasSelected = $(e.currentTarget).hasClass("selected");
         if (tag && confirm("Are you sure you want to permenently delete this tag?")) {
           swipy.tags.remove(tag);
-          tag.save("deleted", true);
+          swipy.queue.add(tag.save("deleted", true));
           if (wasSelected) {
             return Backbone.trigger("remove-filter", "tag", tagName);
           }

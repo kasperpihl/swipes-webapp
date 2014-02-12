@@ -134,7 +134,7 @@
                 if (m.has("repeatDate")) {
                   return _this.createRepeatedTask(m);
                 } else {
-                  return m.save("completionDate", new Date());
+                  return swipy.queue.add(m.save("completionDate", new Date()));
                 }
               });
             })();
@@ -159,7 +159,7 @@
           repeatCount: model.get("repeatCount") + 1
         });
         model.updateRepeatDate();
-        return model.save();
+        return swipy.queue.add(model.save());
       },
       markTaskAsTodo: function(tasks) {
         var task, view, _i, _len, _results;

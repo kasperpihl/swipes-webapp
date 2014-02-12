@@ -76,7 +76,7 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           model = _ref[_i];
           if (model.isNew()) {
-            _results.push(model.save());
+            _results.push(swipy.queue.add(model.save()));
           }
         }
         return _results;

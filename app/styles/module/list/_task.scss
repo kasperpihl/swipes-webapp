@@ -153,13 +153,20 @@ $list-item-height-lg: 105px;
 	}
 
 	.hover-left {
-		.todo-content { left: 95px; }
+
+		.todo-content {
+			left: $list-item-height;
+			@include breakpoint(min-height, 900px) { left: 95px; }
+		}
 		.action.complete { background: $green; }
 		.action.todo { background: $yellow; }
 	}
 
 	.hover-right {
-		.todo-content { right: 95px; }
+		.todo-content {
+			right: $list-item-height;
+			@include breakpoint(min-height, 900px) { right: 95px; }
+		}
 		.action.schedule { background: $lobster; }
 	}
 }
