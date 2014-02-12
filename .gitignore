@@ -2,6 +2,6 @@
 .tmp
 .sass-cache
 .DS_Store
-parse/public
+cloud/public
 *.sublime-project
 *.sublime-workspace
