@@ -51,7 +51,8 @@ define ["momentjs"], ->
 			@setTimeStr()
 
 			@on "change:tags", (me, tags) =>
-				if tags.length then @syncTags tags
+				if !tags then @set( "tags", [] )
+				@syncTags tags
 
 			@on "change:schedule", =>
 				@setScheduleStr()
