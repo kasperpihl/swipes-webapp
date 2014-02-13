@@ -1,30 +1,65 @@
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
 Parse.Cloud.useMasterKey();
-require('cloud/app.js');
 Parse.Cloud.beforeSave("ToDo",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in to save ToDo');
+  if(!request.master && request.object.dirty('owner')) return sendError(response,"Not allowed to change owner");
+  if(request.object.get('owner') && request.object.get('lastSave')){
+    if(request.object.get('owner').id != request.object.get('lastSave').id) return sendError(response,'Unauthorized Save'); 
+  }
   var attrWhitelist = ["title","order","schedule","completionDate","repeatOption","repeatDate","repeatCount","tags","notes","location","priority"];
   handleObject(request.object, attrWhitelist);
   response.success();
 });
 function handleObject(object,attrWhiteList){
-  var user = Parse.User.current();
   var _ = require('underscore');
-  var defAttributes = ["deleted","attributeChanges","tempId","owner"];
+  var defAttributes = ["deleted","attributeChanges","tempId","owner","lastSave"];
   if(attrWhiteList){
     for(var attribute in object.attributes){
       if(_.indexOf(attrWhiteList,attribute) == -1 && _.indexOf(defAttributes,attribute) == -1) delete object.attributes[attribute];
     }
   }
   makeAttributeChanges(object);
+  var user = Parse.User.current();
+  if(!user) user = object.get('lastSave');
   if(object.isNew() && user){ 
     object.set('owner',user);
     var ACL = new Parse.ACL();
     ACL.setReadAccess(user.id,true);
     ACL.setWriteAccess(user.id,true);
     object.setACL(ACL);
+  }
+}
+function makeAttributeChanges(object){
+  var attributes = object.attributes;
+  var updateTime = new Date();
+  var changes = object.get('attributeChanges');
+  if(!changes) changes = {};
+  if(attributes){
+    var hasChanged = false;
+    for(var attribute in attributes){
+      if(object.dirty(attribute) && attribute != 'attributeChanges'){ 
+        hasChanged = true;
+        changes[attribute] = updateTime;
+      }
+    }
+    if(hasChanged) object.set('attributeChanges',changes);
+  }
+}
+function scrapeChanges(object,lastUpdateTime){
+  var attributes = object.attributes;
+  var updateTime = new Date();
+  if(!attributes['attributeChanges']) return;
+  if(!lastUpdateTime) return delete attributes['attributeChanges'];
+  var changes = object.get('attributeChanges');
+  if(!changes) changes = {};
+  if(attributes){
+    for(var attribute in attributes){
+      var lastChange = changes[attribute];
+      if((attribute == "deleted" && attributes[attribute]) || attribute == "tempId") continue;
+      if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
+    }
   }
 }
 Parse.Cloud.beforeSave('Payment',function(request,response){
@@ -55,41 +90,15 @@ Parse.Cloud.beforeSave('Payment',function(request,response){
 Parse.Cloud.beforeSave("Tag",function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in to save Tag');
+  if(!request.master && request.object.dirty('owner')) return sendError(response,"Not allowed to change owner");
+  if(request.object.get('owner') && request.object.get('lastSave')){
+    if(request.object.get('owner').id != request.object.get('lastSave').id) return sendError(response,'Unauthorized Save'); 
+  }
   var attrWhitelist = ["title"];
   handleObject(request.object);
   response.success();
 });
-function makeAttributeChanges(object){
-  var attributes = object.attributes;
-  var updateTime = new Date();
-  var changes = object.get('attributeChanges');
-  if(!changes) changes = {};
-  if(attributes){
-    var hasChanged = false;
-    for(var attribute in attributes){
-      if(object.dirty(attribute) && attribute != 'attributeChanges'){ 
-        hasChanged = true;
-        changes[attribute] = updateTime;
-      }
-    }
-    if(hasChanged) object.set('attributeChanges',changes);
-  }
-}
-function scrapeChanges(object,lastUpdateTime){
-  var attributes = object.attributes;
-  var updateTime = new Date();
-  if(!attributes['attributeChanges']) return;
-  if(!lastUpdateTime) return delete attributes['attributeChanges'];
-  var changes = object.get('attributeChanges');
-  if(!changes) changes = {};
-  if(attributes){
-    for(var attribute in attributes){
-      var lastChange = changes[attribute];  
-      if(attribute == "deleted" || attribute == "tempId") continue;
-      if(!lastChange || lastChange <= lastUpdateTime) delete attributes[attribute];
-    }
-  }
-}
+
 Parse.Cloud.define('checkEmail',function(request,response){
   var email = request.params.email;
   if(!email) return sendError(response,'You need to include email');
@@ -100,22 +109,6 @@ Parse.Cloud.define('checkEmail',function(request,response){
     else response.success(0);
   },error:function(error){ sendError(response,error); }});
 });
-Parse.Cloud.define('cleanup',function(request,response){
-  var query = new Parse.Query('ServerError');
-  query.limit(1000);
-  query.find({success:function(objects){ 
-    Parse.Object.destroyAll(objects,{
-      success:function(){
-        response.success(); 
-      },error:function(error){ 
-        response.error(error); 
-      }});},error:function(error){
-      response.error(error);
-      }
-    });
-  });
-
-
 Parse.Cloud.define("subscribe", function(request, response) {
   var email = request.params.email;
   if(!email) return response.error('Must include email');
@@ -138,43 +131,30 @@ Parse.Cloud.define("subscribe", function(request, response) {
     }
   });
 });
-Parse.Cloud.define('update',function(request,response){
-  var user = Parse.User.current();
-  var updateTime = new Date(new Date().getTime());
-  if(!user) return sendError(response,'You have to be logged in');
 
-  var limit = 1000;
-  var skip = request.params.skip;
-  var lastUpdate = false;
-  if(request.params.lastUpdate) lastUpdate = new Date(request.params.lastUpdate);
-  var changesOnly = request.params.changesOnly ? lastUpdate : false;
-
-  var queue = require('cloud/queue.js');
-  var tagQuery = new Parse.Query('Tag');
-  tagQuery.equalTo('owner',user);
-  tagQuery.limit(limit);
-  if(skip) tagQuery.skip(skip);
-  if(lastUpdate) tagQuery.greaterThan('updatedAt',lastUpdate);
-  else tagQuery.notEqualTo('deleted',true);
-  queue.addToQueue(tagQuery);
-
-  var taskQuery = new Parse.Query('ToDo');
-  taskQuery.equalTo('owner',user);
-  taskQuery.limit(limit);
-  if(skip) taskQuery.skip(skip);
-  if(lastUpdate) taskQuery.greaterThan('updatedAt',lastUpdate);
-  else taskQuery.notEqualTo('deleted',true);
-  queue.addToQueue(taskQuery);
-
-  runQueue(queue.getQueue(),function(objects,error){
-    if(error) sendError(response,error);
-    else{
-      objects.updateTime = updateTime.toISOString();
-      objects.serverTime = new Date().toISOString();
-      response.success(objects);
+/* Running a query unlimited with skips if limit of object is reached
+  callback (result,error)
+*/
+function runQueryToTheEnd(query,callback,deltaResult,deltaSkip){
+  if(!deltaResult) deltaResult = [];
+  if(!deltaSkip) deltaSkip = 0;
+  if(deltaSkip) query.skip(parseInt(deltaSkip,10));
+  query.limit(1000);
+  query.find({success:function(result){
+    var runAgain = false;
+    if(result && result.length > 0){
+      deltaResult = deltaResult.concat(result);
+      if(result.length == 1000) runAgain = true;
     }
-  },{recurring:3,changesSince:changesOnly,limit:limit});
-});
+    if(runAgain){ 
+      deltaSkip = deltaSkip + 1000;
+      runQueryToTheEnd(query,callback,deltaResult,deltaSkip);
+    }
+    else callback(deltaResult,false,query);
+  },error:function(error){
+    callback(deltaResult,error,query);
+  }});
+};
 Parse.Cloud.define("unsubscribe",function(request,response){
   var email = request.params.email;
   if(!email) return response.error('Must include email');
@@ -193,40 +173,36 @@ Parse.Cloud.beforeSave("Signup",function(request,response){
     else response.success();
   });
 });
-Parse.Cloud.define('test',function(request,response){
-  var paymentQuery = new Parse.Query('Payment');
-  paymentQuery.include('user');
-  paymentQuery.limit(1000);
-  paymentQuery.find({success:function(payments){ 
-    var userQuery = new Parse.Query(Parse.User);
-    userQuery.limit(1000);
-    userQuery.doesNotExist('userLevel');
-    var contained = new Array();
-    for(var i = 0 ; i < payments.length ; i++){
-      contained.push(payments[i].get('user').id);
-    }
-    userQuery.containedIn('objectId',contained);
-    userQuery.find({success:function(payments){ response.success(payments); },error:function(error){ response.error(error); }});
-  },error:function(error){ response.error(error); }});
 
-  
-});
 Parse.Cloud.beforeSave(Parse.User,function(request,response){
   var object = request.object;
+  var mandrill = req('mandrill');
+  var vero = req('vero');
+  if(object.dirty('userLevel') && !request.master){
+    return sendError(response,'User not allowed to change this');
+  }
   if(object.dirty("username")){
     if(validateEmail(object.get('username'))){
       var conf = require('cloud/conf.js');
       var keys = conf.keys;
-      var mandrill = req('mandrill');
       var mailjet = req('mailjet');
       mailjet.request("listsAddcontact",{"id":"370097","contact":object.get('username')});
-      mandrill.sendTemplate("welcome-again",object.get('username'),"Welcome news & tips");
-    }
+      vero.track('Signs up',{user:object},function(result,error){
+        response.success();
+      });
+    } else response.success();
   }
-  if(object.dirty('userLevel') && !request.master){
-    return sendError(response,'User not allowed to change this');
+  else if(object.dirty('userLevel') && object.get('userLevel') > 0){
+    var email = false;
+    if(validateEmail(object.get('username'))) email = object.get('username');
+    else if(validateEmail(object.get('email'))) email = object.get('email');
+    mandrill.sendTemplate('email-to-plus',email,"Welcome to Swipes Plus",function(result,error){
+      if(result) response.success();
+      else if(error == 'email required') response.success();
+      else response.error(error);
+    });
   }
-  response.success();
+  else response.success();
 });
 function req(module){
   return require('cloud/'+module+'.js');
@@ -250,71 +226,45 @@ function sendError(response,error){
     }
   });
 }
-function runQueue(queue,done,options){
-  function performQuery(object,callback){
-    var query = object.query;
-    if(object.skip) query.skip(object.skip);
-    var optionObject = {
-      success:function(result){
-        callback(object,result);
-      },
-      error:function(error){
-        callback(object,null,error);
-      }
-    };
-    if(object.count) query.count(optionObject);
-    else query.find(optionObject);
-  }
+
+Parse.Cloud.define('update',function(request,response){
+  var user = Parse.User.current();
+  var updateTime = new Date(new Date().getTime());
+  if(!user) return sendError(response,'You have to be logged in');
+
   var limit = 1000;
-  if(options && options.limit) limit = parseInt(options.limit);
-  var recurring = 1;
-  if(options && options.recurring) recurring = options.recurring;
-  var k = 0;
-  var doneCounter = 0;
-  var calledDone= false;
-  if(queue.length === 0) return done(false,null);
-  var returnObj = {};
-  function checkDone(){
-    if(calledDone) return;
-    if(doneCounter == queue.length){
-      done(returnObj,null);
-      calledDone = true;
-    }
-    else next();
-  }
-  function next(){
-    if(k>=queue.length){
-      return;
-    }
-    performQuery(queue[k],function(object,result,error){
-      if(error && !calledDone){
-        done(null,error);
-        calledDone = true;
+  var skip = request.params.skip;
+  var lastUpdate = false;
+  if(request.params.lastUpdate) lastUpdate = new Date(request.params.lastUpdate);
+  var changesOnly = request.params.changesOnly ? lastUpdate : false;
+
+  var queue = require('cloud/queue.js');
+
+  var resultObjects = {};
+  var queryError;
+  var updateTime = new Date();
+
+  var queryUtility = req('queryUtility');
+  var queries = queryUtility.queriesForUpdating(user,lastUpdate,updateTime);
+  queue.push(queries,true);
+  queue.run(function(query){
+    runQueryToTheEnd(query,function(result,error){
+      if(!error && result && result.length > 0){
+        for(var i = 0 ; i < result.length ; i++)
+          scrapeChanges(result[i],lastUpdate);
+        var index = result[0].className;
+        resultObjects[index] = result;
+        queue.next();
       }
       else{
-      	var length = result.length;
-      	if(options.changesSince){
-	        if(result && length > 0){
-	          for(var i = 0 ; i < result.length ; i++){
-	            var obj = result[i];
-	            scrapeChanges(obj,options.changesSince);
-	          }
-	        }
-    	}
-    	if(length == limit){
-    		object.skip += limit;
-  			queue.push(object);
-    	}
-        if(returnObj[object.title]) returnObj[object.title] = returnObj[object.title].concat(result);
-        else returnObj[object.title] = result;
-        doneCounter++;
-        checkDone();
+        if(error) queryError = error;
+        queue.next();
       }
-      
     });
-    k++;
-  }
-  for(var i = 0 ; i < recurring ; i++){
-    next();
-  }
-}
+  },function(finished){
+    if(queryError) return response.error(queryError);
+    resultObjects.updateTime = updateTime.toISOString();
+    resultObjects.serverTime = new Date().toISOString();
+    response.success(resultObjects);
+  });
+});

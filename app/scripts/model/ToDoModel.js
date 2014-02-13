@@ -38,9 +38,10 @@
         this.setScheduleStr();
         this.setTimeStr();
         this.on("change:tags", function(me, tags) {
-          if (tags.length) {
-            return _this.syncTags(tags);
+          if (!tags) {
+            _this.set("tags", []);
           }
+          return _this.syncTags(tags);
         });
         this.on("change:schedule", function() {
           _this.setScheduleStr();
