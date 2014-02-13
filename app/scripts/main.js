@@ -34,7 +34,8 @@ require.config({
         'localytics-sdk': '../scripts/plugins/localytics',
         hammerjs: '../bower_components/hammerjs/hammer',
         'jquery-hammerjs': '../bower_components/jquery-hammerjs/jquery.hammer',
-        mousetrap: '../bower_components/mousetrap/mousetrap'
+        mousetrap: '../bower_components/mousetrap/mousetrap',
+        mousetrapGlobal: '../bower_components/mousetrap/plugins/global-bind/mousetrap-global-bind'
     },
     shim: {
         bootstrapAffix: {
@@ -123,6 +124,9 @@ require.config({
             deps: [
                 'hammerjs'
             ]
+        },
+        mousetrapGlobal: {
+            deps: ['mousetrap']
         }
     }
 });
