@@ -32,8 +32,9 @@ require.config({
         clndr: '../bower_components/clndr/src/clndr',
         'parse-js-sdk': '../scripts/plugins/parse-js-sdk/lib/parse',
         'localytics-sdk': '../scripts/plugins/localytics',
-        hammerjs: '../scripts/plugins/hammer',
-        'jquery-hammerjs': '../scripts/plugins/jquery.hammer'
+        hammerjs: '../bower_components/hammerjs/hammer',
+        'jquery-hammerjs': '../bower_components/jquery-hammerjs/jquery.hammer',
+        mousetrap: '../bower_components/mousetrap/mousetrap'
     },
     shim: {
         bootstrapAffix: {

@@ -39,6 +39,7 @@ define [
 			if @todos.length?
 				for task in @todos.models when task._saving
 					return yes
+
 			# Are any tags being saved right now?
 			if @tags.length?
 				for tag in @tags.models when tag._saving

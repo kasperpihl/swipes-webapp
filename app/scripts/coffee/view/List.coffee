@@ -3,8 +3,9 @@ define [
 	"view/list/ActionBar"
 	"view/list/DesktopTask"
 	"view/list/TouchTask"
+	"mousetrap"
 	"text!templates/todo-list.html"
-	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
+	], (_, ActionBar, DesktopTaskView, TouchTaskView, Mousetrap, ToDoListTmpl) ->
 	Parse.View.extend
 		initialize: ->
 			# This deferred is resolved after view has been transitioned in
@@ -30,6 +31,8 @@ define [
 			# Re-render list once per minute, activating any scheduled tasks.
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
+			Mousetrap.bind( "mod+a", @selectAllTasks )
+
 			@render()
 		render: ->
 			@renderList()
@@ -44,6 +47,9 @@ define [
 		getTasks: ->
 			# Fetch todos that are active
 			return swipy.todos.getActive()
+		selectAllTasks: (e) ->
+			e.preventDefault()
+			task.set( "selected", yes ) for task in swipy.todos.getActive()
 		moveTasksToActive: ->
 			now = new Date().getTime()
 			# Get all tasks that are scheduled within the current 1001ms
@@ -185,6 +191,9 @@ define [
 		cleanUp: ->
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
+
+			# Disable cmd+a shortcut
+			Mousetrap.unbind "mod+a"
 
 			# Reset transitionDeferred
 			@transitionDeferred = null

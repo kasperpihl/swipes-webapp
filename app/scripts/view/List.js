@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "view/list/ActionBar", "view/list/DesktopTask", "view/list/TouchTask", "text!templates/todo-list.html"], function(_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) {
+  define(["underscore", "view/list/ActionBar", "view/list/DesktopTask", "view/list/TouchTask", "mousetrap", "text!templates/todo-list.html"], function(_, ActionBar, DesktopTaskView, TouchTaskView, Mousetrap, ToDoListTmpl) {
     return Parse.View.extend({
       initialize: function() {
         this.transitionDeferred = new $.Deferred();
@@ -13,6 +13,7 @@
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
         this.listenTo(Backbone, "clockwork/update", this.moveTasksToActive);
+        Mousetrap.bind("mod+a", this.selectAllTasks);
         return this.render();
       },
       render: function() {
@@ -47,6 +48,17 @@
       },
       getTasks: function() {
         return swipy.todos.getActive();
+      },
+      selectAllTasks: function(e) {
+        var task, _i, _len, _ref, _results;
+        e.preventDefault();
+        _ref = swipy.todos.getActive();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          task = _ref[_i];
+          _results.push(task.set("selected", true));
+        }
+        return _results;
       },
       moveTasksToActive: function() {
         var movedFromScheduled, now;
@@ -240,6 +252,7 @@
       cleanUp: function() {
         var _ref;
         this.customCleanUp();
+        Mousetrap.unbind("mod+a");
         this.transitionDeferred = null;
         this.stopListening();
         this.undelegateEvents();
