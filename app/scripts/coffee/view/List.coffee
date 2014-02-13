@@ -52,7 +52,9 @@ define [
 			taskInput = swipy.input.view.$el.find "input"
 			unless taskInput.val() and taskInput.is ":focus"
 				e.preventDefault()
-				task.set( "selected", yes ) for task in @getTasks()
+				tasks = @getTasks()
+				doSelect = _.any tasks, (task) -> not task.get("selected")
+				_.invoke( tasks, "set", "selected", doSelect )
 		moveTasksToActive: ->
 			now = new Date().getTime()
 			# Get all tasks that are scheduled within the current 1001ms

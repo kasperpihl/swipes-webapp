@@ -50,17 +50,15 @@
         return swipy.todos.getActive();
       },
       selectAllTasks: function(e) {
-        var task, taskInput, _i, _len, _ref, _results;
+        var doSelect, taskInput, tasks;
         taskInput = swipy.input.view.$el.find("input");
         if (!(taskInput.val() && taskInput.is(":focus"))) {
           e.preventDefault();
-          _ref = this.getTasks();
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            task = _ref[_i];
-            _results.push(task.set("selected", true));
-          }
-          return _results;
+          tasks = this.getTasks();
+          doSelect = _.any(tasks, function(task) {
+            return !task.get("selected");
+          });
+          return _.invoke(tasks, "set", "selected", doSelect);
         }
       },
       moveTasksToActive: function() {
