@@ -62,6 +62,7 @@ function scrapeChanges(object,lastUpdateTime){
     }
   }
 }
+
 Parse.Cloud.beforeSave('Payment',function(request,response){
   var user = request.user;
   if(!user && !request.master) return sendError(response,'You have to be logged in to save Payment');
@@ -174,6 +175,7 @@ Parse.Cloud.beforeSave("Signup",function(request,response){
   });
 });
 
+
 Parse.Cloud.beforeSave(Parse.User,function(request,response){
   var object = request.object;
   var mandrill = req('mandrill');
@@ -226,6 +228,33 @@ function sendError(response,error){
     }
   });
 }
+
+Parse.Cloud.job("trialRevoke", function(request, status) {
+  // Set up to modify user data
+  Parse.Cloud.useMasterKey();
+  var counter = 0;
+  // Query for all users
+  var now = new Date();
+  var query = new Parse.Query("Trial");
+  query.include('user');
+  query.notEqualTo('revoked',true);
+  query.lessThan('endDate',now);
+  query.each(function(trial){
+    var user = trial.get('user');
+    user.set('userLevel',0);
+    trial.set('revoked',true);
+    trial.save();
+    counter++;
+    return user.save();
+  }).then(function() {
+    // Set the job's success status
+    status.success("Migration completed " + counter + " successfully.");
+  }, function(error) {
+    // Set the job's error status
+    status.error("Uh oh, something went wrong.");
+  });
+});
+
 
 Parse.Cloud.define('update',function(request,response){
   var user = Parse.User.current();

@@ -10,3 +10,6 @@
 [submodule "webapp/app/bower_components/clndr"]
 	path = webapp/app/bower_components/clndr
 	url = git@github.com:Ahrengot/CLNDR.git
+[submodule "backend"]
+	path = backend
+	url = git@heroku.com:swipes-test.git
