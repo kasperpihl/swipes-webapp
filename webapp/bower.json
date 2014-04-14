@@ -18,6 +18,7 @@
     "sinon-chai": "~2.4.0",
     "sinon": "~1.7.3",
     "hammerjs": "~1.0.5",
-    "jquery-hammerjs": "*"
+    "jquery-hammerjs": "*",
+    "mousetrap": "~1.4.6"
   }
 }

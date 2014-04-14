@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "view/list/ActionBar", "view/list/DesktopTask", "view/list/TouchTask", "text!templates/todo-list.html"], function(_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) {
+  define(["underscore", "view/list/ActionBar", "view/list/DesktopTask", "view/list/TouchTask", "text!templates/todo-list.html", "mousetrapGlobal"], function(_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) {
     return Parse.View.extend({
       initialize: function() {
         this.transitionDeferred = new $.Deferred();
@@ -13,6 +13,7 @@
         this.listenTo(Backbone, "schedule-task", this.scheduleTasks);
         this.listenTo(Backbone, "scheduler-cancelled", this.handleSchedulerCancelled);
         this.listenTo(Backbone, "clockwork/update", this.moveTasksToActive);
+        Mousetrap.bindGlobal("mod+a", $.proxy(this.selectAllTasks, this));
         return this.render();
       },
       render: function() {
@@ -47,6 +48,18 @@
       },
       getTasks: function() {
         return swipy.todos.getActive();
+      },
+      selectAllTasks: function(e) {
+        var doSelect, taskInput, tasks;
+        taskInput = swipy.input.view.$el.find("input");
+        if (!(taskInput.val() && taskInput.is(":focus"))) {
+          e.preventDefault();
+          tasks = this.getTasks();
+          doSelect = _.any(tasks, function(task) {
+            return !task.get("selected");
+          });
+          return _.invoke(tasks, "set", "selected", doSelect);
+        }
       },
       moveTasksToActive: function() {
         var movedFromScheduled, now;

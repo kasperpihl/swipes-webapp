@@ -4,6 +4,7 @@ define [
 	"view/list/DesktopTask"
 	"view/list/TouchTask"
 	"text!templates/todo-list.html"
+	"mousetrapGlobal"
 	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
 	Parse.View.extend
 		initialize: ->
@@ -30,6 +31,8 @@ define [
 			# Re-render list once per minute, activating any scheduled tasks.
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
+			Mousetrap.bindGlobal( "mod+a", $.proxy( @selectAllTasks, @ ) )
+
 			@render()
 		render: ->
 			@renderList()
@@ -44,6 +47,14 @@ define [
 		getTasks: ->
 			# Fetch todos that are active
 			return swipy.todos.getActive()
+		selectAllTasks: (e) ->
+			# Prevent default (select all text on page || select all text in input), unless input is focused AND have text input.
+			taskInput = swipy.input.view.$el.find "input"
+			unless taskInput.val() and taskInput.is ":focus"
+				e.preventDefault()
+				tasks = @getTasks()
+				doSelect = _.any tasks, (task) -> not task.get("selected")
+				_.invoke( tasks, "set", "selected", doSelect )
 		moveTasksToActive: ->
 			now = new Date().getTime()
 			# Get all tasks that are scheduled within the current 1001ms
