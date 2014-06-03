@@ -1,89 +1,90 @@
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
+    hammerPkg: grunt.file.readJSON 'hammer.js/package.json'
 
-    # meta options
     meta:
       banner: '
 /*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n
  * <%= pkg.homepage %>\n
  *\n
  * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <<%= pkg.author.email %>>;\n
- * Licensed under the <%= _.pluck(pkg.licenses, "type").join(", ") %> license */' 
+ * Licensed under the <%= _.pluck(pkg.licenses, "type").join(", ") %> license */\n'
 
-    # concat src files
     concat:
       options:
         separator: '\n\n'
         banner: '<%= meta.banner %>'
-      standalone:
-        src: [
-          'src/intro.js'
-          'src/plugin.js'
-          'src/outro.js']
+      standalone: # only the plugin
         dest: 'jquery.hammer.js'
-      full:
         src: [
-          'hammer.js/hammer.js'
-          'jquery.hammer.js']
+          'src/jquery.hammer.prefix'
+          'src/plugin.js'
+          'src/standalone-export.js'
+          'src/jquery.hammer.suffix']
+      full: # hammer + plugin
         dest: 'jquery.hammer-full.js'
+        src: [
+          'src/jquery.hammer.prefix'
+          'hammer.js/src/setup.js'
+          'hammer.js/src/utils.js'
+          'hammer.js/src/instance.js'
+          'hammer.js/src/event.js'
+          'hammer.js/src/pointerevent.js'
+          'hammer.js/src/detection.js'
+          'hammer.js/src/gestures/*.js'
+          'src/hammer-export.js' # simple export
 
-    # minify the sourcecode
+          'src/plugin.js'
+          'src/full-export.js'
+          'src/jquery.hammer.suffix']
+
     uglify:
       options:
         report: 'gzip'
         banner: '<%= meta.banner %>'
       standalone:
-        options:          
-          sourceMap: 'jquery.hammer.min.map'
-        files:
-          'jquery.hammer.min.js': ['jquery.hammer.js']
+        options: sourceMap: 'jquery.hammer.min.map'
+        files: 'jquery.hammer.min.js': ['jquery.hammer.js']
       full:
-        options:          
-          sourceMap: 'jquery.hammer-full.min.map'
-        files:
-          'jquery.hammer-full.min.js': ['jquery.hammer-full.js']
+        options: sourceMap: 'jquery.hammer-full.min.map'
+        files: 'jquery.hammer-full.min.js': ['jquery.hammer-full.js']
 
-    # check for optimisations and errors
     jshint:
       options:
-        curly: true
-        expr: true
-        newcap: true
-        quotmark: 'single'
-        regexdash: true
-        trailing: true
-        undef: true
-        unused: true
-        maxerr: 100
-        eqnull: true
-        sub: false
-        browser: true
-        node: true
-        globals:
-          Hammer: true,
-          define: false
+        jshintrc: true
       dist:
         src: ['jquery.hammer.js']
 
-    # watch for changes
+    jscs:
+      src: ['src/**/*.js', 'plugins/**/*.js']
+      options:
+        force: true
+
     watch:
       scripts:
-        files: ['src/*.js']
-        tasks: ['concat']
+        files: ['src/*.js','hammer.js/src/**/*.js']
+        tasks: ['concat','jscs']
         options:
           interrupt: true
 
-    # simple node server
+    'string-replace':
+      version:
+        files:
+          'jquery.hammer-full.js': 'jquery.hammer-full.js'
+        options:
+          replacements: [
+              pattern: '{{PKG_VERSION}}'
+              replacement: '<%= hammerPkg.version %>'
+            ]
     connect:
       server:
         options:
           hostname: "0.0.0.0"
-    
-    # tests
+          port: 8000
+
     qunit:
       all: ['tests/**/*.html']
-
 
   # Load tasks
   grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -92,10 +93,11 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jshint'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-qunit'
-
+  grunt.loadNpmTasks 'grunt-string-replace'
+  grunt.loadNpmTasks 'grunt-jscs-checker'
 
   # Default task(s).
   grunt.registerTask 'default', ['connect','watch']
-  grunt.registerTask 'test', ['jshint','connect','qunit']
-  grunt.registerTask 'build', ['concat','uglify','test']
-  grunt.registerTask 'build-simple', ['concat','uglify','jshint']
+  grunt.registerTask 'test', ['jshint','jscs','connect','qunit']
+  grunt.registerTask 'build', ['concat','string-replace','uglify','test']
+  grunt.registerTask 'build-simple', ['concat','string-replace','uglify','jshint']

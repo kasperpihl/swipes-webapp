@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "model/ClockWork", "controller/ViewController", "controller/AnalyticsController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController", "controller/SyncQueue", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue) {
+  define(["backbone", "model/ClockWork", "controller/ViewController", "controller/AnalyticsController", "router/MainRouter", "collection/ToDoCollection", "collection/TagCollection", "view/nav/ListNavigation", "controller/TaskInputController", "controller/SidebarController", "controller/ScheduleController", "controller/FilterController", "controller/SettingsController", "controller/ErrorController", "controller/SyncQueue", "controller/SyncController", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue, SyncController) {
     var Swipes;
     return Swipes = (function() {
       Swipes.prototype.UPDATE_INTERVAL = 30;
@@ -7,7 +7,6 @@
       Swipes.prototype.UPDATE_COUNT = 0;
 
       function Swipes() {
-        var _this = this;
         this.hackParseAPI();
         this.queue = new SyncQueue();
         this.analytics = new AnalyticsController();
@@ -15,11 +14,8 @@
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
         this.tags = new TagCollection();
-        this.tags.once("reset", function() {
-          return _this.fetchTodos();
-        });
         this.todos.once("reset", this.init, this);
-        this.tags.fetch();
+        this.sync = new SyncController();
       }
 
       Swipes.prototype.isBusy = function() {
@@ -146,7 +142,7 @@
       };
 
       Swipes.prototype.fetchTodos = function() {
-        return this.todos.fetch();
+        return this.sync.sync();
       };
 
       return Swipes;

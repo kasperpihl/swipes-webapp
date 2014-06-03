@@ -1,39 +1,30 @@
-# Hammer.js 
-[![Build Status](https://travis-ci.org/EightMedia/hammer.js.png)](https://travis-ci.org/EightMedia/hammer.js/)
-[![Selenium Test Status](https://saucelabs.com/buildstatus/hammerjs-ci)](https://saucelabs.com/u/hammerjs-ci)
+# Hammer.js [![Build Status](http://img.shields.io/travis/EightMedia/hammer.js.svg)](https://travis-ci.org/EightMedia/hammer.js/)
 
-### A javascript library for multi-touch gestures
+#### A javascript library for multi-touch gestures
 
 > I told you, homeboy /
 > You *CAN* touch this /
 > Yeah, that's how we living and you know /
 > You *CAN* touch this
 
-[__Looking for the jQuery plugin? It has his own repository now.__](https://github.com/EightMedia/jquery.hammer.js)
-
 ## Features
-- Detects Tap, DoubleTap, Swipe, Drag, Pinch, and Rotate gestures
-- DOM Events
-- Debug plugins
-- Custom gestures
+- Under 3kb minified and gzipped!
+- [Detects Tap, DoubleTap, Swipe, Drag, Pinch, and Rotate gestures](http://rawgithub.com/EightMedia/hammer.js/master/tests/manual/events.html)
+- Triggers DOM Events, so works with almost every event-listener.
+- [Debug plugins](/plugins) to emulate multitouch on desktop and make them visible.
+- Easy to build your own [custom gestures](/src/gestures/README.md).
 - Chainable instance methods
-- AMD support (RequireJS)
+- AMD/CommonJS support
 - Unit tests
 - Option to disable mouse support, so only for touch and pen input.
 - Sourcemaps
-- [jQuery plugin available](https://github.com/EightMedia/jquery.hammer.js)
+- Highly configurable
+- [jQuery plugin available here](https://github.com/EightMedia/jquery.hammer.js)
 
 ## Getting Started
 See the [Wiki on GitHub](https://github.com/EightMedia/hammer.js/wiki) for documentation.
 
+### Further notes
+Developed by [Jorik Tangelder](http://twitter.com/jorikdelaporik) in his spare time and at [Eight Media](http://www.eight.nl/) in Arnhem, the Netherlands.
 
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style.
-Add unit tests for any new or changed functionality. Lint and test your code using grunt.
-Please don't commit the dist versions with your changes, only the changed source files.
-
-
-## Further notes
-Created by [Jorik Tangelder](http://twitter.com/jorikdelaporik) and developed at [Eight Media](http://www.eight.nl/) in Arnhem, the Netherlands.
-
-It's recommend to listen to [this loop](http://soundcloud.com/eightmedia/hammerhammerhammer) while using hammer.js.
+It's recommended to listen to [this loop](http://soundcloud.com/eightmedia/hammerhammerhammer) while using hammer.js.

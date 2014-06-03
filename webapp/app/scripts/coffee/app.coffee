@@ -14,9 +14,10 @@ define [
 	"controller/SettingsController"
 	"controller/ErrorController"
 	"controller/SyncQueue"
+	"controller/SyncController"
 	"gsap"
 	"localytics-sdk"
-	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue) ->
+	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue, SyncController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -29,11 +30,16 @@ define [
 			@todos = new ToDoCollection()
 			@updateTimer = new ClockWork()
 
+			
+
 			@tags = new TagCollection()
-			@tags.once( "reset", => @fetchTodos() )
+			##@tags.once( "reset", => @fetchTodos() )
 			@todos.once( "reset", @init, @ )
 
-			@tags.fetch()
+			##@tags.fetch()
+
+			@sync = new SyncController()
+
 		isBusy: ->
 			# Are any todos being saved right now?
 			if @todos.length?
@@ -83,6 +89,7 @@ define [
 			# $("")
 
 			@startAutoUpdate()
+
 		update: ->
 			if not @isBusy()
 				@fetchTodos()
@@ -110,4 +117,4 @@ define [
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
 		fetchTodos: ->
-			@todos.fetch()
+			@sync.sync()
