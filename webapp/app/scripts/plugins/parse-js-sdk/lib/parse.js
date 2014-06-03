@@ -1,14 +1,13 @@
-//
-// THIS FILE HAS BEEN MODIFIED TO WORK WITH SWIPES!!!
-//
+// EDITED FOR USE WITH SWIPES
+
 
 /*!
  * Parse JavaScript SDK
- * Version: 1.2.13
- * Built: Wed Nov 13 2013 16:58:16
+ * Version: 1.2.18
+ * Built: Wed Mar 12 2014 15:36:03
  * http://parse.com
  *
- * Copyright 2013 Parse, Inc.
+ * Copyright 2014 Parse, Inc.
  * The Parse JavaScript SDK is freely distributable under the MIT license.
  *
  * Includes: Underscore.js
@@ -17,7 +16,7 @@
  */
 (function(root) {
   root.Parse = root.Parse || {};
-  root.Parse.VERSION = "js1.2.13";
+  root.Parse.VERSION = "js1.2.18";
 }(this));
 //     Underscore.js 1.4.4
 //     http://underscorejs.org
@@ -1288,7 +1287,7 @@
   // Shared empty constructor function to aid in prototype-chain creation.
   var EmptyConstructor = function() {};
 
-
+  
   // Helper function to correctly set up the prototype chain, for subclasses.
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
   // class properties to be extended.
@@ -1480,7 +1479,14 @@
       }
     };
     xdr.onerror = xdr.ontimeout = function() {
-      promise.reject(xdr);
+      // Let's fake a real error message.
+      var fakeResponse = {
+        responseText: JSON.stringify({
+          code: Parse.Error.X_DOMAIN_REQUEST,
+          error: "IE's XDomainRequest does not supply error info."
+        })
+      };
+      promise.reject(fakeResponse);
     };
     xdr.onprogress = function() {};
     xdr.open(method, url);
@@ -1488,14 +1494,26 @@
     return promise;
   };
 
+  Parse._useXDomainRequest = function() {
+    if (typeof(XDomainRequest) !== "undefined") {
+      // We're in IE 8+.
+      if ('withCredentials' in new XMLHttpRequest()) {
+        // We're in IE 10+.
+        return false;
+      }
+      return true;
+    }
+    return false;
+  };
 
+  
   Parse._ajax = function(method, url, data, success, error) {
     var options = {
       success: success,
       error: error
     };
 
-    if (typeof(XDomainRequest) !== "undefined") {
+    if (Parse._useXDomainRequest()) {
       return Parse._ajaxIE8(method, url, data)._thenRunCallbacks(options);
     }
 
@@ -1570,7 +1588,7 @@
       throw "You must specify a key using Parse.initialize.";
     }
 
-
+    
     if (!sessionToken) {
       // Use the current user session token if none was provided.
       var currentUser = Parse.User.current();
@@ -1579,7 +1597,7 @@
       }
     }
 
-
+    
     if (route !== "batch" &&
         route !== "classes" &&
         route !== "events" &&
@@ -1637,14 +1655,19 @@
       if (response && response.responseText) {
         try {
           var errorJSON = JSON.parse(response.responseText);
-          if (errorJSON) {
-            error = new Parse.Error(errorJSON.code, errorJSON.error);
-          }
+          error = new Parse.Error(errorJSON.code, errorJSON.error);
         } catch (e) {
           // If we fail to parse the error text, that's okay.
+          error = new Parse.Error(
+              Parse.Error.INVALID_JSON,
+              "Received an error with invalid JSON from Parse: " +
+                  response.responseText);
         }
+      } else {
+        error = new Parse.Error(
+            Parse.Error.CONNECTION_FAILED,
+            "XMLHttpRequest failed: " + JSON.stringify(response));
       }
-      error = error || new Parse.Error(-1, response.responseText);
       // By explicitly returning a rejected Promise, this will work with
       // either jQuery or Promises/A semantics.
       return Parse.Promise.error(error);
@@ -1911,7 +1934,10 @@
      * to the server completes.
      */
     track: function(name, dimensions) {
-      if (!name || name.trim().length === 0) {
+      name = name || '';
+      name = name.replace(/^\s*/, '');
+      name = name.replace(/\s*$/, '');
+      if (name.length === 0) {
         throw 'A name for the custom event must be provided';
       }
 
@@ -1958,7 +1984,7 @@
 
     /**
      * Error code indicating that something has gone wrong with the server.
-     * If you get this error code, it is Parse's fault. Contact us at
+     * If you get this error code, it is Parse's fault. Contact us at 
      * https://parse.com/help
      * @constant
      */
@@ -2272,7 +2298,22 @@
      * detail about each error that occurred.
      * @constant
      */
-    AGGREGATE_ERROR: 600
+    AGGREGATE_ERROR: 600,
+
+    /**
+     * Error code indicating the client was unable to read an input file.
+     * @constant
+     */
+    FILE_READ_ERROR: 601,
+
+    /**
+     * Error code indicating a real error code is unavailable because
+     * we had to use an XDomainRequest object to allow CORS requests in
+     * Internet Explorer, which strips the body from HTTP responses that have
+     * a non-2XX status code.
+     * @constant
+     */
+    X_DOMAIN_REQUEST: 602
   });
 
 }(this));
@@ -2314,48 +2355,49 @@
       this._events || (this._events = {});
       var events = this._events[name] || (this._events[name] = []);
       events.push({callback: callback, context: context, ctx: context || this});
+
       return this;
     },
 
     // Bind an event to only be triggered a single time. After the first time
-    // the callback is invoked, it will be removed.
-    once: function(name, callback, context) {
-      if (!eventsApi(this, 'once', name, [callback, context]) || !callback) return this;
-      var self = this;
+     // the callback is invoked, it will be removed.
+     once: function(name, callback, context) {
+       if (!eventsApi(this, 'once', name, [callback, context]) || !callback) return this;
+       var self = this;
       var once = _.once(function() {
-        self.off(name, once);
-        callback.apply(this, arguments);
-      });
-      once._callback = callback;
-      return this.on(name, once, context);
-    },
-
-    // Remove one or many callbacks. If `context` is null, removes all
-    // callbacks with that function. If `callback` is null, removes all
-    // callbacks for the event. If `name` is null, removes all bound
-    // callbacks for all events.
-    off: function(name, callback, context) {
-      var retain, ev, events, names, i, l, j, k;
-      if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
-      if (!name && !callback && !context) {
-        this._events = {};
-        return this;
-      }
+         self.off(name, once);
+         callback.apply(this, arguments);
+       });
+       once._callback = callback;
+       return this.on(name, once, context);
+     },
+ 
+     // Remove one or many callbacks. If `context` is null, removes all
+     // callbacks with that function. If `callback` is null, removes all
+     // callbacks for the event. If `name` is null, removes all bound
+     // callbacks for all events.
+     off: function(name, callback, context) {
+        var retain, ev, events, names, i, l, j, k;
+        if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
+        if (!name && !callback && !context) {
+          this._events = {};
+          return this;
+        }
 
       names = name ? [name] : _.keys(this._events);
-      for (i = 0, l = names.length; i < l; i++) {
-        name = names[i];
-        if (events = this._events[name]) {
-          this._events[name] = retain = [];
-          if (callback || context) {
-            for (j = 0, k = events.length; j < k; j++) {
-              ev = events[j];
-              if ((callback && callback !== ev.callback && callback !== ev.callback._callback) ||
-                  (context && context !== ev.context)) {
-                retain.push(ev);
+        for (i = 0, l = names.length; i < l; i++) {
+          name = names[i];
+          if (events = this._events[name]) {
+            this._events[name] = retain = [];
+            if (callback || context) {
+              for (j = 0, k = events.length; j < k; j++) {
+                ev = events[j];
+                if ((callback && callback !== ev.callback && callback !== ev.callback._callback) ||
+                   (context && context !== ev.context)) {
+                  retain.push(ev);
+                }
               }
             }
-          }
           if (!retain.length) delete this._events[name];
         }
       }
@@ -2364,96 +2406,93 @@
     },
 
     // Trigger one or many events, firing all bound callbacks. Callbacks are
-    // passed the same arguments as `trigger` is, apart from the event name
-    // (unless you're listening on `"all"`, which will cause your callback to
-    // receive the true name of the event as the first argument).
-    trigger: function(name) {
-      if (!this._events) return this;
-      var args = slice.call(arguments, 1);
-      if (!eventsApi(this, 'trigger', name, args)) return this;
-      var events = this._events[name];
-      var allEvents = this._events.all;
-      if (events) triggerEvents(events, args);
-      if (allEvents) triggerEvents(allEvents, arguments);
-      return this;
-    },
-
-    // Tell this object to stop listening to either specific events ... or
-    // to every object it's currently listening to.
-    stopListening: function(obj, name, callback) {
-      var listeners = this._listeners;
-      if (!listeners) return this;
-      var deleteListener = !name && !callback;
-      if (typeof name === 'object') callback = this;
-      if (obj) (listeners = {})[obj._listenerId] = obj;
-      for (var id in listeners) {
-        listeners[id].off(name, callback, this);
-        if (deleteListener) delete this._listeners[id];
+     // passed the same arguments as `trigger` is, apart from the event name
+     // (unless you're listening on `"all"`, which will cause your callback to
+     // receive the true name of the event as the first argument).
+     trigger: function(name) {
+       if (!this._events) return this;
+       var args = slice.call(arguments, 1);
+       if (!eventsApi(this, 'trigger', name, args)) return this;
+       var events = this._events[name];
+       var allEvents = this._events.all;
+       if (events) triggerEvents(events, args);
+       if (allEvents) triggerEvents(allEvents, arguments);
+       return this;
+     },
+ 
+     // Tell this object to stop listening to either specific events ... or
+     // to every object it's currently listening to.
+     stopListening: function(obj, name, callback) {
+       var listeners = this._listeners;
+       if (!listeners) return this;
+       var deleteListener = !name && !callback;
+       if (typeof name === 'object') callback = this;
+       if (obj) (listeners = {})[obj._listenerId] = obj;
+       for (var id in listeners) {
+         listeners[id].off(name, callback, this);
+         if (deleteListener) delete this._listeners[id];
       }
-      return this;
-    }
-
-  };
-
-  // Regular expression used to split event strings.
-  var eventSplitter = /\s+/;
-
-  // Implement fancy features of the Events API such as multiple event
-  // names `"change blur"` and jQuery-style event maps `{change: action}`
-  // in terms of the existing API.
-  var eventsApi = function(obj, action, name, rest) {
-    if (!name) return true;
-
-    // Handle event maps.
-    if (typeof name === 'object') {
+        return this;
+     }
+ 
+   };
+ 
+   // Regular expression used to split event strings.
+   var eventSplitter = /\s+/;
+ 
+   // Implement fancy features of the Events API such as multiple event
+   // names `"change blur"` and jQuery-style event maps `{change: action}`
+   // in terms of the existing API.
+   var eventsApi = function(obj, action, name, rest) {
+     if (!name) return true;
+ 
+     // Handle event maps.
+     if (typeof name === 'object') {
       for (var key in name) {
-        obj[action].apply(obj, [key, name[key]].concat(rest));
+         obj[action].apply(obj, [key, name[key]].concat(rest));
       }
       return false;
-    }
-
-    // Handle space separated event names.
-    if (eventSplitter.test(name)) {
-      var names = name.split(eventSplitter);
-      for (var i = 0, l = names.length; i < l; i++) {
-        obj[action].apply(obj, [names[i]].concat(rest));
       }
-      return false;
+      // Handle space separated event names.
+     if (eventSplitter.test(name)) {
+       var names = name.split(eventSplitter);
+       for (var i = 0, l = names.length; i < l; i++) {
+         obj[action].apply(obj, [names[i]].concat(rest));
+       }
+       return false;
     }
-
     return true;
   };
-
   // A difficult-to-believe, but optimized internal dispatch function for
-  // triggering events. Tries to keep the usual cases speedy (most internal
-  // Backbone events have 3 arguments).
-  var triggerEvents = function(events, args) {
-    var ev, i = -1, l = events.length, a1 = args[0], a2 = args[1], a3 = args[2];
-    switch (args.length) {
-      case 0: while (++i < l) (ev = events[i]).callback.call(ev.ctx); return;
-      case 1: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1); return;
-      case 2: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2); return;
-      case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2, a3); return;
-      default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args);
-    }
-  };
-
+   // triggering events. Tries to keep the usual cases speedy (most internal
+   // Backbone events have 3 arguments).
+   var triggerEvents = function(events, args) {
+     var ev, i = -1, l = events.length, a1 = args[0], a2 = args[1], a3 = args[2];
+     switch (args.length) {
+       case 0: while (++i < l) (ev = events[i]).callback.call(ev.ctx); return;
+       case 1: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1); return;
+       case 2: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2); return;
+       case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2, a3); return;
+       default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args);
+     }
+   };
+ 
   var listenMethods = {listenTo: 'on', listenToOnce: 'once'};
-
-  // Inversion-of-control versions of `on` and `once`. Tell *this* object to
-  // listen to an event in another object ... keeping track of what it's
-  // listening to.
-  Parse._.each(listenMethods, function(implementation, method) {
-    Parse.Events[method] = function(obj, name, callback) {
-      var listeners = this._listeners || (this._listeners = {});
-      var id = obj._listenerId || (obj._listenerId = Parse._.uniqueId('l'));
-      listeners[id] = obj;
-      if (typeof name === 'object') callback = this;
-      obj[implementation](name, callback, this);
-      return this;
-    };
-  });
-
+ 
+   // Inversion-of-control versions of `on` and `once`. Tell *this* object to
+   // listen to an event in another object ... keeping track of what it's
+   // listening to.
+   Parse._.each(listenMethods, function(implementation, method) {
+     Parse.Events[method] = function(obj, name, callback) {
+       var listeners = this._listeners || (this._listeners = {});
+       var id = obj._listenerId || (obj._listenerId = Parse._.uniqueId('l'));
+       listeners[id] = obj;
+       if (typeof name === 'object') callback = this;
+       obj[implementation](name, callback, this);
+       return this;
+     };
+   });
+ 
   /**
    * @function
    */
@@ -2820,12 +2859,12 @@
   Parse.ACL.prototype.getPublicWriteAccess = function() {
     return this.getWriteAccess(PUBLIC_KEY);
   };
-
+  
   /**
    * Get whether users belonging to the given role are allowed
    * to read this object. Even if this returns false, the role may
    * still be able to write it if a parent role has read access.
-   *
+   * 
    * @param role The name of the role, or a Parse.Role object.
    * @return {Boolean} true if the role has read access. false otherwise.
    * @throws {String} If role is neither a Parse.Role nor a String.
@@ -2840,12 +2879,12 @@
     }
     throw "role must be a Parse.Role or a String";
   };
-
+  
   /**
    * Get whether users belonging to the given role are allowed
    * to write this object. Even if this returns false, the role may
    * still be able to write it if a parent role has write access.
-   *
+   * 
    * @param role The name of the role, or a Parse.Role object.
    * @return {Boolean} true if the role has write access. false otherwise.
    * @throws {String} If role is neither a Parse.Role nor a String.
@@ -2860,11 +2899,11 @@
     }
     throw "role must be a Parse.Role or a String";
   };
-
+  
   /**
    * Set whether users belonging to the given role are allowed
    * to read this object.
-   *
+   * 
    * @param role The name of the role, or a Parse.Role object.
    * @param {Boolean} allowed Whether the given role can read this object.
    * @throws {String} If role is neither a Parse.Role nor a String.
@@ -2880,11 +2919,11 @@
     }
     throw "role must be a Parse.Role or a String";
   };
-
+  
   /**
    * Set whether users belonging to the given role are allowed
    * to write this object.
-   *
+   * 
    * @param role The name of the role, or a Parse.Role object.
    * @param {Boolean} allowed Whether the given role can write this object.
    * @throws {String} If role is neither a Parse.Role nor a String.
@@ -3553,7 +3592,7 @@
    *    });
    * </pre></p>
    *
-   * @see Parse.Promise.prototype.next
+   * @see Parse.Promise.prototype.then
    * @class
    */
   Parse.Promise = function() {
@@ -3597,8 +3636,26 @@
      * Returns a new promise that is fulfilled when all of the input promises
      * are resolved. If any promise in the list fails, then the returned promise
      * will fail with the last error. If they all succeed, then the returned
-     * promise will succeed, with the result being an array with the results of
-     * all the input promises.
+     * promise will succeed, with the results being the results of all the input
+     * promises. For example: <pre>
+     *   var p1 = Parse.Promise.as(1);
+     *   var p2 = Parse.Promise.as(2);
+     *   var p3 = Parse.Promise.as(3);
+     *
+     *   Parse.Promise.when(p1, p2, p3).then(function(r1, r2, r3) {
+     *     console.log(r1);  // prints 1
+     *     console.log(r2);  // prints 2
+     *     console.log(r3);  // prints 3
+     *   });</pre>
+     *
+     * The input promises can also be specified as an array: <pre>
+     *   var promises = [p1, p2, p3];
+     *   Parse.Promise.when(promises).then(function(r1, r2, r3) {
+     *     console.log(r1);  // prints 1
+     *     console.log(r2);  // prints 2
+     *     console.log(r3);  // prints 3
+     *   });
+     * </pre>
      * @param {Array} promises a list of promises to wait for.
      * @return {Parse.Promise} the new promise.
      */
@@ -3781,7 +3838,7 @@
     },
 
     /**
-     * Add handlers to be called when the promise
+     * Add handlers to be called when the promise 
      * is either resolved or rejected
      */
     always: function(callback) {
@@ -3920,7 +3977,7 @@
     return chunks.join("");
   };
 
-
+  
   // A list of file extensions to mime types as found here:
   // http://stackoverflow.com/questions/58510/using-net-how-can-you-find-the-
   //     mime-type-of-a-file-based-on-the-file-signature
@@ -4028,7 +4085,7 @@
     pgn: "application/x-chess-pgn",
     pic: "image/pict",
     pict: "image/pict",
-    png: "image/png",
+    png: "image/png", 
     pnm: "image/x-portable-anymap",
     pnt: "image/x-macpaint",
     pntg: "image/x-macpaint",
@@ -4133,21 +4190,25 @@
 
     if (typeof(FileReader) === "undefined") {
       return Parse.Promise.error(new Parse.Error(
-          -1, "Attempted to use a FileReader on an unsupported browser."));
+          Parse.Error.FILE_READ_ERROR,
+          "Attempted to use a FileReader on an unsupported browser."));
     }
 
     var reader = new FileReader();
     reader.onloadend = function() {
       if (reader.readyState !== 2) {
-        promise.reject(new Parse.Error(-1, "Error reading file."));
+        promise.reject(new Parse.Error(
+            Parse.Error.FILE_READ_ERROR,
+            "Error reading file."));
         return;
       }
 
       var dataURL = reader.result;
       var matches = /^data:([^;]*);base64,(.*)$/.exec(dataURL);
       if (!matches) {
-        promise.reject(
-            new Parse.Error(-1, "Unable to interpret data URL: " + dataURL));
+        promise.reject(new Parse.Error(
+            Parse.ERROR.FILE_READ_ERROR,
+            "Unable to interpret data URL: " + dataURL));
         return;
       }
 
@@ -4357,9 +4418,8 @@
   /**
    * Saves the given list of Parse.Object.
    * If any error is encountered, stops and calls the error handler.
-   * There are two ways you can call this function.
    *
-   * The Backbone way:<pre>
+   * <pre>
    *   Parse.Object.saveAll([object1, object2, ...], {
    *     success: function(list) {
    *       // All the objects were saved.
@@ -4367,15 +4427,6 @@
    *     error: function(error) {
    *       // An error occurred while saving one of the objects.
    *     },
-   *   });
-   * </pre>
-   * A simplified syntax:<pre>
-   *   Parse.Object.saveAll([object1, object2, ...], function(list, error) {
-   *     if (list) {
-   *       // All the objects were saved.
-   *     } else {
-   *       // An error occurred.
-   *     }
    *   });
    * </pre>
    *
@@ -4410,14 +4461,12 @@
    *       array of other Parse.Error objects. Each error object in this array
    *       has an "object" property that references the object that could not be
    *       deleted (for instance, because that object could not be found).</li>
-   *   <li>A non-aggregate Parse.Error. This indicates a serious error that
-   *       caused the delete operation to be aborted partway through (for
+   *   <li>A non-aggregate Parse.Error. This indicates a serious error that 
+   *       caused the delete operation to be aborted partway through (for 
    *       instance, a connection failure in the middle of the delete).</li>
    * </ul>
    *
-   * <p>There are two ways you can call this function.
-   *
-   * The Backbone way:<pre>
+   * <pre>
    *   Parse.Object.destroyAll([object1, object2, ...], {
    *     success: function() {
    *       // All the objects were deleted.
@@ -4429,33 +4478,13 @@
    *       // object was not deleted.
    *       if (error.code == Parse.Error.AGGREGATE_ERROR) {
    *         for (var i = 0; i < error.errors.length; i++) {
-   *           console.log("Couldn't delete " + error.errors[i].object.id +
+   *           console.log("Couldn't delete " + error.errors[i].object.id + 
    *             "due to " + error.errors[i].message);
    *         }
    *       } else {
    *         console.log("Delete aborted because of " + error.message);
    *       }
    *     },
-   *   });
-   * </pre>
-   * A simplified syntax:<pre>
-   *   Parse.Object.destroyAll([obj1, obj2, ...], function(success, error) {
-   *     if (success) {
-   *       // All the objects were saved.
-   *     } else {
-   *       // An error occurred while deleting one or more of the objects.
-   *       // If this is an aggregate error, then we can inspect each error
-   *       // object individually to determine the reason why a particular
-   *       // object was not deleted.
-   *       if (error.code == Parse.Error.AGGREGATE_ERROR) {
-   *         for (var i = 0; i < error.errors.length; i++) {
-   *           console.log("Couldn't delete " + error.errors[i].object.id +
-   *             "due to " + error.errors[i].message);
-   *         }
-   *       } else {
-   *         console.log("Delete aborted because of " + error.message);
-   *       }
-   *     }
    *   });
    * </pre>
    *
@@ -4543,6 +4572,64 @@
       }
     })._thenRunCallbacks(options);
   };
+
+  /**
+   * Fetches the given list of Parse.Object.
+   * If any error is encountered, stops and calls the error handler.
+   *
+   * <pre>
+   *   Parse.Object.fetchAll([object1, object2, ...], {
+   *     success: function(list) {
+   *       // All the objects were fetched.
+   *     },
+   *     error: function(error) {
+   *       // An error occurred while fetching one of the objects.
+   *     },
+   *   });
+   * </pre>
+   *
+   * @param {Array} list A list of <code>Parse.Object</code>.
+   * @param {Object} options A Backbone-style callback object.
+   * Valid options are:<ul>
+   *   <li>success: A Backbone-style success callback.
+   *   <li>error: An Backbone-style error callback.   
+   * </ul>
+   */
+  Parse.Object.fetchAll = function(list, options) {
+    return Parse.Object._fetchAll(
+      list, 
+      true
+    )._thenRunCallbacks(options);    
+  };  
+
+  /**
+   * Fetches the given list of Parse.Object if needed.
+   * If any error is encountered, stops and calls the error handler.
+   *
+   * <pre>
+   *   Parse.Object.fetchAllIfNeeded([object1, ...], {
+   *     success: function(list) {
+   *       // Objects were fetched and updated.
+   *     },
+   *     error: function(error) {
+   *       // An error occurred while fetching one of the objects.
+   *     },
+   *   });
+   * </pre>
+   *
+   * @param {Array} list A list of <code>Parse.Object</code>.
+   * @param {Object} options A Backbone-style callback object.
+   * Valid options are:<ul>
+   *   <li>success: A Backbone-style success callback.
+   *   <li>error: An Backbone-style error callback.   
+   * </ul>
+   */
+  Parse.Object.fetchAllIfNeeded = function(list, options) {    
+    return Parse.Object._fetchAll(
+      list, 
+      false
+    )._thenRunCallbacks(options);
+  };    
 
   // Attach all inheritable methods to the Parse.Object prototype.
   _.extend(Parse.Object.prototype, Parse.Events,
@@ -4743,6 +4830,48 @@
     },
 
     /**
+     * Copies the given serverData to "this", refreshes attributes, and
+     * clears pending changes;
+     */
+    _copyServerData: function(serverData) {
+      // Copy server data
+      var tempServerData = {};
+      Parse._objectEach(serverData, function(value, key) {
+        tempServerData[key] = Parse._decode(key, value);
+      });
+      this._serverData = tempServerData;
+
+      // Refresh the attributes.
+      this._rebuildAllEstimatedData();
+
+      
+      // Clear out any changes the user might have made previously.
+      this._refreshCache();
+      this._opSetQueue = [{}];
+
+      // Refresh the attributes again.
+      this._rebuildAllEstimatedData();       
+    },
+
+    /**
+     * Merges another object's attributes into this object.
+     */
+    _mergeFromObject: function(other) {
+      if (!other) {
+        return;
+      }
+      
+      // This does the inverse of _mergeMagicFields.
+      this.id = other.id;
+      this.createdAt = other.createdAt;
+      this.updatedAt = other.updatedAt;
+
+      this._copyServerData(other._serverData);
+
+      this._hasData = true;
+    },
+
+    /**
      * Returns the json to be sent to the server.
      */
     _startSave: function() {
@@ -4823,24 +4952,12 @@
      * the given object.
      */
     _finishFetch: function(serverData, hasData) {
-      // Clear out any changes the user might have made previously.
+      
       this._opSetQueue = [{}];
 
       // Bring in all the new server data.
       this._mergeMagicFields(serverData);
-      var self = this;
-      var tempServerData = {};
-      Parse._objectEach(serverData, function(value, key) {
-        tempServerData[key] = Parse._decode(key, value);
-      });
-      self._serverData = tempServerData;
-
-      // Refresh the attributes.
-      this._rebuildAllEstimatedData();
-
-      // Clear out the cache of mutable containers.
-      this._refreshCache();
-      this._opSetQueue = [{}];
+      this._copyServerData(serverData);
 
       this._hasData = hasData;
     },
@@ -4954,7 +5071,7 @@
      *   });
      *
      *   game.set("finished", true);</pre></p>
-     *
+     * 
      * @param {String} key The key to set.
      * @param {} value The value to give it.
      * @param {Object} options A set of Backbone-like options for the set.
@@ -5234,7 +5351,7 @@
      *   }, function(error) {
      *     // The save failed.  Error is an instance of Parse.Error.
      *   });</pre>
-     *
+     * 
      * @param {Object} options A Backbone-style callback object.
      * Valid options are:<ul>
      *   <li>wait: Set to true to wait for the server to confirm a successful
@@ -5303,7 +5420,7 @@
       // If there is any unsaved child, save it first.
       model._refreshCache();
 
-
+      
 
       var unsavedChildren = [];
       var unsavedFiles = [];
@@ -5577,7 +5694,7 @@
      * You should not call this function directly unless you subclass
      * <code>Parse.Object</code>, in which case you can override this method
      * to provide additional validation on <code>set</code> and
-     * <code>save</code>.  Your implementation should return
+     * <code>save</code>.  Your implementation should return 
      *
      * @param {Object} attrs The current data to validate.
      * @param {Object} options A Backbone-like options object.
@@ -5596,7 +5713,7 @@
         }
       });
       if (!correct) {
-        return new Parse.Error(Parse.Error.INVALID_KEY_NAME);
+        return new Parse.Error(Parse.Error.INVALID_KEY_NAME); 
       }
       return false;
     },
@@ -5669,6 +5786,88 @@
     var ObjectClass = Parse.Object._getSubclass(className);
     return new ObjectClass(attributes, options);
   };
+  
+  /**
+   * Returns a list of object ids given a list of objects.
+   */
+  Parse.Object._toObjectIdArray = function(list, omitObjectsWithData) {
+    if (list.length === 0) {
+      return Parse.Promise.as(list);
+    }
+
+    var error;
+    var className = list[0].className;
+    var objectIds = [];   
+    for (var i = 0; i < list.length; i++) {
+      var object = list[i];
+      if (className !== object.className) {
+        error = new Parse.Error(Parse.Error.INVALID_CLASS_NAME, 
+                                "All objects should be of the same class");
+        return Parse.Promise.error(error);
+      } else if (!object.id) {
+        error = new Parse.Error(Parse.Error.MISSING_OBJECT_ID,
+                                "All objects must have an ID");
+        return Parse.Promise.error(error);
+      } else if (omitObjectsWithData && object._hasData) {
+        continue;
+      }
+      objectIds.push(object.id);
+    }
+
+    return Parse.Promise.as(objectIds);
+  };
+
+  /**
+   * Updates a list of objects with fetched results.
+   */
+  Parse.Object._updateWithFetchedResults = function(list, fetched, forceFetch) {
+    var fetchedObjectsById = {};
+    Parse._arrayEach(fetched, function(object, i) {
+      fetchedObjectsById[object.id] = object;
+    });
+
+    for (var i = 0; i < list.length; i++) {
+      var object = list[i];  
+      var fetchedObject = fetchedObjectsById[object.id];
+      if (!fetchedObject && forceFetch) {
+        var error = new Parse.Error(Parse.Error.OBJECT_NOT_FOUND,
+                                "All objects must exist on the server");
+        return Parse.Promise.error(error);        
+      }   
+
+      object._mergeFromObject(fetchedObject);
+    }
+
+    return Parse.Promise.as(list);
+  };  
+  
+  /**
+   * Fetches the objects given in list.  The forceFetch option will fetch all
+   * objects if true and ignore objects with data if false.
+   */
+  Parse.Object._fetchAll = function(list, forceFetch) {    
+    if (list.length === 0) {
+      return Parse.Promise.as(list);
+    } 
+    
+    var omitObjectsWithData = !forceFetch;
+    return Parse.Object._toObjectIdArray(
+      list, 
+      omitObjectsWithData
+    ).then(function(objectIds) {
+      var className = list[0].className;
+      var query = new Parse.Query(className);
+      query.containedIn("objectId", objectIds);
+      query.limit = objectIds.length;
+      return query.find();
+    }).then(function(results) {
+      return Parse.Object._updateWithFetchedResults(
+        list, 
+        results, 
+        forceFetch
+      );
+    });   
+  };  
 
   // Set up a map of className to class so that we can create new instances of
   // Parse Objects from JSON automatically.
@@ -5686,14 +5885,22 @@
    *
    * <p>You should call either:<pre>
    *     var MyClass = Parse.Object.extend("MyClass", {
-   *         <i>Instance properties</i>
+   *         <i>Instance methods</i>,
+   *         initialize: function(attrs, options) {
+   *             this.someInstanceProperty = [],
+   *             <i>Other instance properties</i>
+   *         }
    *     }, {
    *         <i>Class properties</i>
    *     });</pre>
    * or, for Backbone compatibility:<pre>
    *     var MyClass = Parse.Object.extend({
    *         className: "MyClass",
-   *         <i>Other instance properties</i>
+   *         <i>Instance methods</i>,
+   *         initialize: function(attrs, options) {
+   *             this.someInstanceProperty = [],
+   *             <i>Other instance properties</i>
+   *         }
    *     }, {
    *         <i>Class properties</i>
    *     });</pre></p>
@@ -5765,7 +5972,7 @@
   };
 
   Parse.Object._canBeSerializedAsValue = function(object) {
-
+    
     if (object instanceof Parse.Object) {
       return !!object.id;
     }
@@ -5860,15 +6067,15 @@
               requests: _.map(batch, function(object) {
                 var json = object._getSaveJSON();
                 var method = "POST";
-
+  
                 var path = "/1/classes/" + object.className;
                 if (object.id) {
                   path = path + "/" + object.id;
                   method = "PUT";
                 }
-
+  
                 object._startSave();
-
+  
                 return {
                   method: method,
                   path: path,
@@ -5928,10 +6135,10 @@
    */
   Parse.Role = Parse.Object.extend("_Role", /** @lends Parse.Role.prototype */ {
     // Instance Methods
-
+    
     /**
      * Constructs a new ParseRole with the given name and ACL.
-     *
+     * 
      * @param {String} name The name of the Role to create.
      * @param {Parse.ACL} acl The ACL for this role. Roles must have an ACL.
      */
@@ -5944,28 +6151,28 @@
         Parse.Object.prototype.constructor.call(this, name, acl);
       }
     },
-
+    
     /**
      * Gets the name of the role.  You can alternatively call role.get("name")
-     *
+     * 
      * @return {String} the name of the role.
      */
     getName: function() {
       return this.get("name");
     },
-
+    
     /**
      * Sets the name for a role. This value must be set before the role has
      * been saved to the server, and cannot be set once the role has been
      * saved.
-     *
+     * 
      * <p>
      *   A role's name can only contain alphanumeric characters, _, -, and
      *   spaces.
      * </p>
      *
      * <p>This is equivalent to calling role.set("name", name)</p>
-     *
+     * 
      * @param {String} name The name of the role.
      * @param {Object} options Standard options object with success and error
      *     callbacks.
@@ -5973,37 +6180,37 @@
     setName: function(name, options) {
       return this.set("name", name, options);
     },
-
+    
     /**
      * Gets the Parse.Relation for the Parse.Users that are direct
      * children of this role. These users are granted any privileges that this
      * role has been granted (e.g. read or write access through ACLs). You can
      * add or remove users from the role through this relation.
-     *
+     * 
      * <p>This is equivalent to calling role.relation("users")</p>
-     *
+     * 
      * @return {Parse.Relation} the relation for the users belonging to this
      *     role.
      */
     getUsers: function() {
       return this.relation("users");
     },
-
+    
     /**
      * Gets the Parse.Relation for the Parse.Roles that are direct
      * children of this role. These roles' users are granted any privileges that
      * this role has been granted (e.g. read or write access through ACLs). You
      * can add or remove child roles from this role through this relation.
-     *
+     * 
      * <p>This is equivalent to calling role.relation("roles")</p>
-     *
+     * 
      * @return {Parse.Relation} the relation for the roles belonging to this
      *     role.
      */
     getRoles: function() {
       return this.relation("roles");
     },
-
+    
     /**
      * @ignore
      */
@@ -6089,7 +6296,7 @@
 
     // The default model for a collection is just a Parse.Object.
     // This should be overridden in most cases.
-
+    
     model: Parse.Object,
 
     /**
@@ -6159,7 +6366,7 @@
       // Insert models into the collection, re-sorting if needed, and triggering
       // `add` events unless silenced.
       this.length += length;
-      index = Parse._isNullOrUndefined(options.at) ?
+      index = Parse._isNullOrUndefined(options.at) ? 
           this.models.length : options.at;
       this.models.splice.apply(this.models, [index, 0].concat(models));
       if (this.comparator) {
@@ -6530,7 +6737,7 @@
   var eventSplitter = /^(\S+)\s*(.*)$/;
 
   // List of view options to be merged as properties.
-
+  
   var viewOptions = ['model', 'collection', 'el', 'id', 'attributes',
                      'className', 'tagName'];
 
@@ -6727,6 +6934,16 @@
 
 
     // Instance Methods
+    
+    /**
+     * Merges another object's attributes into this object.
+     */
+    _mergeFromObject: function(other) {
+      if (other.getSessionToken()) {
+        this._sessionToken = other.getSessionToken();      
+      }    
+      Parse.User.__super__._mergeFromObject.call(this, other);
+    },    
 
     /**
      * Internal method to handle special fields in a _User response.
@@ -7120,6 +7337,16 @@
     authenticated: function() {
       return !!this._sessionToken &&
           (Parse.User.current() && Parse.User.current().id === this.id);
+    },
+
+    /**
+     * Returns the session token for this user, if the user has been logged in,
+     * or if it is the result of a query with the master key. Otherwise, returns
+     * undefined.
+     * @return {String} the session token, or undefined
+     */
+    getSessionToken: function() {
+      return this._sessionToken;
     }
 
   }, /** @lends Parse.User */ {
@@ -7269,7 +7496,7 @@
       }
 
       if (Parse.User._currentUserMatchesDisk) {
-
+        
         return Parse.User._currentUser;
       }
 
@@ -7279,7 +7506,7 @@
       var userData = Parse.localStorage.getItem(Parse._getParsePath(
           Parse.User._CURRENT_USER_KEY));
       if (!userData) {
-
+        
         return null;
       }
       Parse.User._currentUser = Parse.Object._create("_User");
@@ -7290,7 +7517,7 @@
       delete json._id;
       Parse.User._currentUser._sessionToken = json._sessionToken;
       delete json._sessionToken;
-      Parse.User._currentUser.set(json);
+      Parse.User._currentUser._finishFetch(json);
 
       Parse.User._currentUser._synchronizeAllAuthData();
       Parse.User._currentUser._refreshCache();
@@ -7363,7 +7590,7 @@
    * <code>find</code> method. For example, this sample code fetches all objects
    * of class <code>MyClass</code>. It calls a different function depending on
    * whether the fetch succeeded or not.
-   *
+   * 
    * <pre>
    * var query = new Parse.Query(MyClass);
    * query.find({
@@ -7375,12 +7602,12 @@
    *     // error is an instance of Parse.Error.
    *   }
    * });</pre></p>
-   *
+   * 
    * <p>A Parse.Query can also be used to retrieve a single object whose id is
    * known, through the get method. For example, this sample code fetches an
    * object of class <code>MyClass</code> and id <code>myId</code>. It calls a
    * different function depending on whether the fetch succeeded or not.
-   *
+   * 
    * <pre>
    * var query = new Parse.Query(MyClass);
    * query.get(myId, {
@@ -7392,7 +7619,7 @@
    *     // error is an instance of Parse.Error.
    *   }
    * });</pre></p>
-   *
+   * 
    * <p>A Parse.Query can also be used to count the number of objects that match
    * the query without retrieving all of those objects. For example, this
    * sample code counts the number of objects of the class <code>MyClass</code>
@@ -7462,13 +7689,20 @@
      * Valid options are:<ul>
      *   <li>success: A Backbone-style success callback
      *   <li>error: An Backbone-style error callback.
+     *   <li>useMasterKey: In Cloud Code and Node only, causes the Master Key to
+     *     be used for this request.
      * </ul>
      */
     get: function(objectId, options) {
       var self = this;
       self.equalTo('objectId', objectId);
 
-      return self.first().then(function(response) {
+      var firstOptions = {};
+      if (options && _.has(options, 'useMasterKey')) {
+        firstOptions = { useMasterKey: options.useMasterKey };
+      }
+
+      return self.first(firstOptions).then(function(response) {
         if (response) {
           return response;
         }
@@ -7502,7 +7736,7 @@
         params.skip = this._skip;
       }
       if (this._order !== undefined) {
-        params.order = this._order;
+        params.order = this._order.join(",");
       }
 
       Parse._objectEach(this._extraOptions, function(v, k) {
@@ -7579,7 +7813,7 @@
       params.count = 1;
       var request = Parse._request({
         route: "classes",
-        className: self.className,
+        className: self.className, 
         method: "GET",
         useMasterKey: options.useMasterKey,
         data: params
@@ -7615,7 +7849,7 @@
       params.limit = 1;
       var request = Parse._request({
         route: "classes",
-        className: this.className,
+        className: this.className, 
         method: "GET",
         useMasterKey: options.useMasterKey,
         data: params
@@ -7683,7 +7917,7 @@
     equalTo: function(key, value) {
       if (_.isUndefined(value)) {
         return this.doesNotExist(key);
-      }
+      } 
 
       this._where[key] = Parse._encode(value);
       return this;
@@ -7829,7 +8063,7 @@
     matches: function(key, regex, modifiers) {
       this._addCondition(key, "$regex", regex);
       if (!modifiers) { modifiers = ""; }
-      // Javascript regex options support mig as inline options but store them
+      // Javascript regex options support mig as inline options but store them 
       // as properties of the object. We support mi & should migrate them to
       // modifiers
       if (regex.ignoreCase) { modifiers += 'i'; }
@@ -7970,23 +8204,71 @@
 
     /**
      * Sorts the results in ascending order by the given key.
-     *
-     * @param {String} key The key to order by.
+     * 
+     * @param {(String|String[]|...String} key The key to order by, which is a 
+     * string of comma separated values, or an Array of keys, or multiple keys.
      * @return {Parse.Query} Returns the query, so you can chain this call.
      */
-    ascending: function(key) {
-      this._order = key;
+    ascending: function() {
+      this._order = [];
+      return this.addAscending.apply(this, arguments);
+    },
+
+    /**
+     * Sorts the results in ascending order by the given key, 
+     * but can also add secondary sort descriptors without overwriting _order.
+     * 
+     * @param {(String|String[]|...String} key The key to order by, which is a
+     * string of comma separated values, or an Array of keys, or multiple keys.
+     * @return {Parse.Query} Returns the query, so you can chain this call.
+     */
+    addAscending: function(key) {
+      var self = this; 
+      if (!this._order) {
+        this._order = [];
+      }
+      Parse._arrayEach(arguments, function(key) {
+        if (Array.isArray(key)) {
+          key = key.join();
+        }
+        self._order = self._order.concat(key.replace(/\s/g, "").split(","));
+      });
       return this;
     },
 
     /**
      * Sorts the results in descending order by the given key.
-     *
-     * @param {String} key The key to order by.
+     * 
+     * @param {(String|String[]|...String} key The key to order by, which is a
+     * string of comma separated values, or an Array of keys, or multiple keys.
      * @return {Parse.Query} Returns the query, so you can chain this call.
      */
     descending: function(key) {
-      this._order = "-" + key;
+      this._order = [];
+      return this.addDescending.apply(this, arguments);
+    },
+
+    /**
+     * Sorts the results in descending order by the given key,
+     * but can also add secondary sort descriptors without overwriting _order.
+     * 
+     * @param {(String|String[]|...String} key The key to order by, which is a
+     * string of comma separated values, or an Array of keys, or multiple keys.
+     * @return {Parse.Query} Returns the query, so you can chain this call.
+     */
+    addDescending: function(key) {
+      var self = this; 
+      if (!this._order) {
+        this._order = [];
+      }
+      Parse._arrayEach(arguments, function(key) {
+        if (Array.isArray(key)) {
+          key = key.join();
+        }
+        self._order = self._order.concat(
+          _.map(key.replace(/\s/g, "").split(","), 
+            function(k) { return "-" + k; }));
+      });
       return this;
     },
 
@@ -8265,7 +8547,7 @@
     init: function(options) {
       if (typeof(FB) === 'undefined') {
         throw "The Facebook JavaScript SDK must be loaded before calling init.";
-      }
+      } 
       initOptions = _.clone(options) || {};
       if (initOptions.status && typeof(console) !== "undefined") {
         var warn = console.warn || console.log || function() {};
@@ -8282,7 +8564,7 @@
 
     /**
      * Gets whether the user has their account linked to Facebook.
-     *
+     * 
      * @param {Parse.User} user User to check for a facebook link.
      *     The user must be logged in on this device.
      * @return {Boolean} <code>true</code> if the user has their account
@@ -8296,7 +8578,7 @@
      * Logs in a user using Facebook. This method delegates to the Facebook
      * SDK to authenticate the user, and then automatically logs in (or
      * creates, in the case where it is a new user) a Parse.User.
-     *
+     * 
      * @param {String, Object} permissions The permissions required for Facebook
      *    log in.  This is a comma-separated string of permissions.
      *    Alternatively, supply a Facebook authData object as described in our
@@ -8327,7 +8609,7 @@
      * @param {Parse.User} user User to link to Facebook. This must be the
      *     current user.
      * @param {String, Object} permissions The permissions required for Facebook
-     *    log in.  This is a comma-separated string of permissions.
+     *    log in.  This is a comma-separated string of permissions. 
      *    Alternatively, supply a Facebook authData object as described in our
      *    REST API docs if you want to handle getting facebook auth tokens
      *    yourself.
@@ -8349,8 +8631,8 @@
     },
 
     /**
-     * Unlinks the Parse.User from a Facebook account.
-     *
+     * Unlinks the Parse.User from a Facebook account. 
+     * 
      * @param {Parse.User} user User to unlink from Facebook. This must be the
      *     current user.
      * @param {Object} options Standard options object with success and error
@@ -8363,7 +8645,7 @@
       return user._unlinkFrom("facebook", options);
     }
   };
-
+  
 }(this));
 
 /*global _: false, document: false, window: false, navigator: false */
@@ -8376,13 +8658,13 @@
    * History serves as a global router (per frame) to handle hashchange
    * events or pushState, match the appropriate route, and trigger
    * callbacks. You shouldn't ever have to create one of these yourself
-   * â€” you should use the reference to <code>Parse.history</code>
-   * that will be created for you automatically if you make use of
+   * — you should use the reference to <code>Parse.history</code>
+   * that will be created for you automatically if you make use of 
    * Routers with routes.
    * @class
-   *
-   * <p>A fork of Backbone.History, provided for your convenience.  If you
-   * use this class, you must also include jQuery, or another library
+   *   
+   * <p>A fork of Backbone.History, provided for your convenience.  If you 
+   * use this class, you must also include jQuery, or another library 
    * that provides a jQuery-compatible $ function.  For more information,
    * see the <a href="http://documentcloud.github.com/backbone/#History">
    * Backbone documentation</a>.</p>
@@ -8453,7 +8735,7 @@
       this.options = _.extend({}, {root: '/'}, this.options, options);
       this._wantsHashChange = this.options.hashChange !== false;
       this._wantsPushState = !!this.options.pushState;
-      this._hasPushState = !!(this.options.pushState &&
+      this._hasPushState = !!(this.options.pushState && 
                               window.history &&
                               window.history.pushState);
       var fragment = this.getFragment();
@@ -8488,8 +8770,8 @@
 
       // If we've started off with a route from a `pushState`-enabled browser,
       // but we're currently in a browser that doesn't support it...
-      if (this._wantsHashChange &&
-          this._wantsPushState &&
+      if (this._wantsHashChange && 
+          this._wantsPushState && 
           !this._hasPushState &&
           !atRoot) {
         this.fragment = this.getFragment(null, true);
@@ -8500,7 +8782,7 @@
       // Or if we've started out with a hash-based route, but we're currently
       // in a browser where it could be `pushState`-based instead...
       } else if (this._wantsPushState &&
-                 this._hasPushState &&
+                 this._hasPushState && 
                  atRoot &&
                  loc.hash) {
         this.fragment = this.getHash().replace(routeStripper, '');
@@ -8681,7 +8963,7 @@
       Parse.history = Parse.history || new Parse.History();
       if (!_.isRegExp(route)) {
         route = this._routeToRegExp(route);
-      }
+      } 
       if (!callback) {
         callback = this[name];
       }
@@ -8699,7 +8981,7 @@
     /**
      * Whenever you reach a point in your application that you'd
      * like to save as a URL, call navigate in order to update the
-     * URL. If you wish to also call the route function, set the
+     * URL. If you wish to also call the route function, set the 
      * trigger option to true. To update the URL without creating
      * an entry in the browser's history, set the replace option
      * to true.
@@ -8712,7 +8994,7 @@
     // order of the routes here to support behavior where the most general
     // routes can be defined at the bottom of the route map.
     _bindRoutes: function() {
-      if (!this.routes) {
+      if (!this.routes) { 
         return;
       }
       var routes = [];
@@ -8842,8 +9124,8 @@
       data.expiration_time = data.expiration_time.toJSON();
     }
 
-    if (data.expiration_time && data.expiration_time_interval) {
-      throw "Both expiration_time and expiration_time_interval can't be set";
+    if (data.expiration_time && data.expiration_interval) {
+      throw "Both expiration_time and expiration_interval can't be set";
     }
 
     var request = Parse._request({
