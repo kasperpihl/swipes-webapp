@@ -34,8 +34,8 @@ define ["model/BaseModel","momentjs"],( BaseModel ) ->
 			priority: 0
 			deleted: no
 		set: ->
-			BaseModel.prototype.handleForSync.apply( @ , arguments )
-			Parse.Object.prototype.set.apply( @ , arguments )
+			BaseModel.prototype.handleForSync.apply @ , arguments
+			Parse.Object.prototype.set.apply @ , arguments 
 		constructor: ( attributes ) ->
 
 			if attributes.tags and attributes.tags.length > 0
