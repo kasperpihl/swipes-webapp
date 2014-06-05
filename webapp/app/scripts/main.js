@@ -16,22 +16,22 @@ require.config({
         'sass-bootstrap': '../bower_components/sass-bootstrap/dist/js/bootstrap',
         underscore: '../bower_components/underscore/underscore',
         'backbone.localStorage': '../bower_components/backbone.localStorage/backbone.localStorage',
-        'greensock-js': 'js/plugins/greensock-js/src/minified/TweenMax.min',
-        gsap: 'js/plugins/greensock-js/src/uncompressed/TweenLite',
-        timelinelite: 'js/plugins/greensock-js/src/uncompressed/TimelineLite',
-        'gsap-scroll': 'js/plugins/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
-        'gsap-text': 'js/plugins/greensock-js/src/uncompressed/plugins/TextPlugin',
-        'gsap-easing': 'js/plugins/greensock-js/src/uncompressed/easing/EasePack',
-        'gsap-css': 'js/plugins/greensock-js/src/uncompressed/plugins/CSSPlugin',
-        'gsap-throwprops': 'js/plugins/greensock-js/src/uncompressed/plugins/ThrowPropsPlugin',
-        'gsap-draggable': 'js/plugins/greensock-js/src/uncompressed/utils/Draggable',
+        'greensock-js': 'plugins/greensock-js/src/minified/TweenMax.min',
+        gsap: 'plugins/greensock-js/src/uncompressed/TweenLite',
+        timelinelite: 'plugins/greensock-js/src/uncompressed/TimelineLite',
+        'gsap-scroll': 'plugins/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
+        'gsap-text': 'plugins/greensock-js/src/uncompressed/plugins/TextPlugin',
+        'gsap-easing': 'plugins/greensock-js/src/uncompressed/easing/EasePack',
+        'gsap-css': 'plugins/greensock-js/src/uncompressed/plugins/CSSPlugin',
+        'gsap-throwprops': 'plugins/greensock-js/src/uncompressed/plugins/ThrowPropsPlugin',
+        'gsap-draggable': 'plugins/greensock-js/src/uncompressed/utils/Draggable',
         text: '../bower_components/requirejs-text/text',
         momentjs: '../bower_components/momentjs/moment',
         'requirejs-text': '../bower_components/requirejs-text/text',
-        'slider-control': 'js/plugins/slider-control/app/scripts/SliderControl',
+        'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
         clndr: '../bower_components/clndr/src/clndr',
-        'parse-js-sdk': 'js/plugins/parse-js-sdk/lib/parse',
-        'localytics-sdk': 'js/plugins/localytics',
+        'parse-js-sdk': 'plugins/parse-js-sdk/lib/parse',
+        'localytics-sdk': 'plugins/localytics',
         hammerjs: '../bower_components/hammerjs/hammer',
         'jquery-hammerjs': '../bower_components/jquery-hammerjs/jquery.hammer',
         mousetrap: '../bower_components/mousetrap/mousetrap',
@@ -142,7 +142,7 @@ require(["jquery"], function($) {
         Parse.initialize(appId, jsId);
 
         if (Parse.User.current()) {
-            require(["js/app", "js/DebugHelper", "js/plugins/log"], function (App, DebugHelper) {
+            require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
                 'use strict';
 
                 window.swipy = new App();

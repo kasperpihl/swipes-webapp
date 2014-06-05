@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "jquery", "js/plugins/lockablestorage"], function(_, Backbone, $) {
+  define(["underscore", "backbone", "jquery", "plugins/lockablestorage"], function(_, Backbone, $) {
     var ChangedAttributesController;
     return ChangedAttributesController = (function() {
       function ChangedAttributesController() {

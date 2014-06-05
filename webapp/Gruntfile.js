@@ -310,7 +310,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'login/*.*',
                         'scripts/js/Login.js',
-                        'scripts/js/plugins/localytics.js',
+                        'scripts/plugins/localytics.js',
                         'styles/img/{,*/}*.*',
                         'styles/fonts/{,*/}*.*'
                     ]
