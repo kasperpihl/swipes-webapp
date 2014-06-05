@@ -4,7 +4,6 @@
       model: ToDoModel,
       initialize: function() {
         var _this = this;
-        this.setQuery();
         this.on("change:deleted", function(model, deleted) {
           if (deleted) {
             return _this.remove(model);
@@ -34,12 +33,6 @@
             rejectedBySearch: false
           });
         });
-      },
-      setQuery: function() {
-        this.query = new Parse.Query(ToDoModel);
-        this.query.equalTo("owner", Parse.User.current());
-        this.query.notEqualTo("deleted", true);
-        return this.query.limit(1000);
       },
       updateQuery: function() {},
       getActive: function() {

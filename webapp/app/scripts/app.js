@@ -14,7 +14,7 @@
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
         this.tags = new TagCollection();
-        this.todos.once("reset", this.init, this);
+        this.tags.once("reset", this.init, this);
         this.sync = new SyncController();
       }
 
@@ -104,37 +104,34 @@
       };
 
       Swipes.prototype.cleanUp = function() {
-        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
         this.stopAutoUpdate();
-        if ((_ref = this.tags) != null) {
+        if ((_ref = this.viewController) != null) {
           _ref.destroy();
         }
-        if ((_ref1 = this.viewController) != null) {
+        if ((_ref1 = this.nav) != null) {
           _ref1.destroy();
         }
-        if ((_ref2 = this.nav) != null) {
+        if ((_ref2 = this.router) != null) {
           _ref2.destroy();
         }
-        if ((_ref3 = this.router) != null) {
+        if ((_ref3 = this.scheduler) != null) {
           _ref3.destroy();
         }
-        if ((_ref4 = this.scheduler) != null) {
+        if ((_ref4 = this.input) != null) {
           _ref4.destroy();
         }
-        if ((_ref5 = this.input) != null) {
+        if ((_ref5 = this.sidebar) != null) {
           _ref5.destroy();
         }
-        if ((_ref6 = this.sidebar) != null) {
+        if ((_ref6 = this.filter) != null) {
           _ref6.destroy();
         }
-        if ((_ref7 = this.filter) != null) {
+        if ((_ref7 = this.settings) != null) {
           _ref7.destroy();
         }
-        if ((_ref8 = this.settings) != null) {
+        if ((_ref8 = this.queue) != null) {
           _ref8.destroy();
-        }
-        if ((_ref9 = this.queue) != null) {
-          _ref9.destroy();
         }
         if (Parse.History.started) {
           return Parse.history.stop();

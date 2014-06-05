@@ -1,17 +1,19 @@
-define ["underscore", "model/TagModel"], (_, TagModel) ->
+define [ "underscore", "model/TagModel"], ( _, TagModel) ->
 	Parse.Collection.extend
 		model: TagModel
 		initialize: ->
-			@setQuery()
 			@on( "remove", @handleTagDeleted )
 			@on( "add", @handleAddTag, @ )
 
 			@on "reset", ->
 				removeThese = ( m for m in @models when m.get "deleted" )
 				@remove( m, { silent: yes } ) for m in removeThese
-		setQuery: ->
-			@query = new Parse.Query TagModel
-			@query.equalTo( "owner", Parse.User.current() )
+
+		handleObjects: ( objects ) ->
+			return false if !objects or objects.length is 0
+			for obj in objects
+				model = new @model obj
+				console.log model
 		getTagsFromTasks: ->
 			tags = []
 			for m in swipy.todos.models when m.has "tags"

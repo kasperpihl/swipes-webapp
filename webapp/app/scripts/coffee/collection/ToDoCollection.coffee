@@ -1,8 +1,7 @@
-define ["model/ToDoModel"], (ToDoModel) ->
+define ["model/ToDoModel"], ( ToDoModel) ->
 	Parse.Collection.extend
 		model: ToDoModel
 		initialize: ->
-			@setQuery()
 			@on( "change:deleted", (model, deleted) => if deleted then @remove model else @add model )
 			@on( "change:title", (model, newTitle) => console.log "Changed title to #{newTitle}" )
 
@@ -12,11 +11,6 @@ define ["model/ToDoModel"], (ToDoModel) ->
 				@remove m for m in removeThese
 
 				@invoke( "set", { rejectedByTag: no, rejectedBySearch: no } )
-		setQuery: ->
-			@query = new Parse.Query ToDoModel
-			@query.equalTo( "owner", Parse.User.current() )
-			@query.notEqualTo( "deleted", true )
-			@query.limit 1000
 		updateQuery: ->
 
 		getActive: ->

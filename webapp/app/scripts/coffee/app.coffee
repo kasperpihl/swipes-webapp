@@ -34,7 +34,7 @@ define [
 
 			@tags = new TagCollection()
 			##@tags.once( "reset", => @fetchTodos() )
-			@todos.once( "reset", @init, @ )
+			@tags.once( "reset", @init, @ )
 
 			##@tags.fetch()
 
@@ -103,7 +103,7 @@ define [
 			TweenLite.killDelayedCallsTo @update
 		cleanUp: ->
 			@stopAutoUpdate()
-			@tags?.destroy()
+			##@tags?.destroy()
 			@viewController?.destroy()
 			@nav?.destroy()
 			@router?.destroy()

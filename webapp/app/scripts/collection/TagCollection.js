@@ -3,7 +3,6 @@
     return Parse.Collection.extend({
       model: TagModel,
       initialize: function() {
-        this.setQuery();
         this.on("remove", this.handleTagDeleted);
         this.on("add", this.handleAddTag, this);
         return this.on("reset", function() {
@@ -30,9 +29,18 @@
           return _results;
         });
       },
-      setQuery: function() {
-        this.query = new Parse.Query(TagModel);
-        return this.query.equalTo("owner", Parse.User.current());
+      handleObjects: function(objects) {
+        var model, obj, _i, _len, _results;
+        if (!objects || objects.length === 0) {
+          return false;
+        }
+        _results = [];
+        for (_i = 0, _len = objects.length; _i < _len; _i++) {
+          obj = objects[_i];
+          model = new this.model(obj);
+          _results.push(console.log(model));
+        }
+        return _results;
       },
       getTagsFromTasks: function() {
         var m, tag, tags, _i, _j, _len, _len1, _ref, _ref1;

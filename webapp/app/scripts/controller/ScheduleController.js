@@ -56,6 +56,8 @@
           task.save({
             schedule: date,
             completionDate: null
+          }, {
+            sync: true
           });
         }
         swipy.analytics.tagEvent("Scheduled Tasks", this.getAnalyticsDataFromOption(option, date));

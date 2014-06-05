@@ -3,8 +3,8 @@
  http://stackoverflow.com/questions/15912222/how-do-i-save-just-a-subset-of-a-backbone-models-attributes-to-the-server-witho
 ###
 
-define ["momentjs"], ->
-	Parse.Object.extend
+define ["model/BaseModel","momentjs"],( BaseModel ) ->
+	BaseModel.extend
 		className: "ToDo"
 		attrWhitelist: [
 			"title"
@@ -33,6 +33,25 @@ define ["momentjs"], ->
 			location: undefined
 			priority: 0
 			deleted: no
+		set: ->
+			BaseModel.prototype.handleForSync.apply( @ , arguments )
+			Parse.Object.prototype.set.apply( @ , arguments )
+		constructor: ( attributes ) ->
+
+			if attributes.tags and attributes.tags.length > 0
+				modelTags = []
+				hasTagsFromServer = null
+				for tag in attributes.tags
+					if !tag.objectId
+						continue
+					hasTagsFromServer = true
+					model = swipy.tags.get tag.objectId
+					if model
+						modelTags.push model
+				if hasTagsFromServer
+					attributes.tags = modelTags
+			Parse.Object.apply @, arguments
+			
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
 			# because null should be an allowed without triggering any logic, as null is used for
@@ -139,9 +158,9 @@ define ["momentjs"], ->
 			else
 				return fullStr
 		syncTags: (tags) ->
+			
 			# Remove falsy values first
 			tags = _.compact tags
-
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
 
 			if pointers && pointers.length

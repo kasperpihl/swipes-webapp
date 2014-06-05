@@ -5,8 +5,8 @@
 
 
 (function() {
-  define(["momentjs"], function() {
-    return Parse.Object.extend({
+  define(["model/BaseModel", "momentjs"], function(BaseModel) {
+    return BaseModel.extend({
       className: "ToDo",
       attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority", "deleted"],
       defaults: {
@@ -22,6 +22,33 @@
         location: void 0,
         priority: 0,
         deleted: false
+      },
+      set: function() {
+        BaseModel.prototype.handleForSync.apply(this, arguments);
+        return Parse.Object.prototype.set.apply(this, arguments);
+      },
+      constructor: function(attributes) {
+        var hasTagsFromServer, model, modelTags, tag, _i, _len, _ref;
+        if (attributes.tags && attributes.tags.length > 0) {
+          modelTags = [];
+          hasTagsFromServer = null;
+          _ref = attributes.tags;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            tag = _ref[_i];
+            if (!tag.objectId) {
+              continue;
+            }
+            hasTagsFromServer = true;
+            model = swipy.tags.get(tag.objectId);
+            if (model) {
+              modelTags.push(model);
+            }
+          }
+          if (hasTagsFromServer) {
+            attributes.tags = modelTags;
+          }
+        }
+        return Parse.Object.apply(this, arguments);
       },
       initialize: function() {
         var saveOrder,
