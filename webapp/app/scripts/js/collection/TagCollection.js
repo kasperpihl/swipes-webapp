@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "js/model/TagModel"], function(_, TagModel) {
-    return Parse.Collection.extend({
+    return Backbone.Collection.extend({
       model: TagModel,
       initialize: function() {
         this.on("remove", this.handleTagDeleted);

@@ -25,7 +25,7 @@
       },
       set: function() {
         BaseModel.prototype.handleForSync.apply(this, arguments);
-        return Parse.Object.prototype.set.apply(this, arguments);
+        return Backbone.Model.prototype.set.apply(this, arguments);
       },
       constructor: function(attributes) {
         var hasTagsFromServer, model, modelTags, tag, _i, _len, _ref;
@@ -48,7 +48,7 @@
             attributes.tags = modelTags;
           }
         }
-        return Parse.Object.apply(this, arguments);
+        return Backbone.Model.apply(this, arguments);
       },
       initialize: function() {
         var saveOrder,
@@ -115,8 +115,15 @@
         return this.off("change:order", this.debouncedSaveOrder);
       },
       reviveDate: function(prop) {
+        var value;
         if (typeof this.get(prop) === "string") {
-          return this.set(prop, new Date(this.get(prop)), {
+          this.set(prop, new Date(this.get(prop)), {
+            silent: true
+          });
+        }
+        if (_.isObject(this.get(prop)) && this.get(prop).__type === "Date") {
+          value = new Date(this.get(prop).iso);
+          return this.set(prop, value, {
             silent: true
           });
         }
@@ -299,17 +306,17 @@
       },
       togglePriority: function() {
         if (this.get("priority")) {
-          return this.save("priority", 0, {
+          return this.set("priority", 0, {
             sync: true
           });
         } else {
-          return this.save("priority", 1, {
+          return this.set("priority", 1, {
             sync: true
           });
         }
       },
       scheduleTask: function(date) {
-        return this.save({
+        return this.set({
           schedule: date,
           completionDate: null
         }, {
@@ -330,7 +337,7 @@
         }
         duplicate.completeTask();
         swipy.todos.add(duplicate);
-        return this.save({
+        return this.set({
           schedule: nextDate,
           repeatCount: this.get("repeatCount") + 1,
           repeatDate: nextDate
@@ -342,7 +349,7 @@
         if (this.has("repeatDate")) {
           return this.completeRepeatedTask();
         }
-        return this.save("completionDate", new Date(), {
+        return this.set("completionDate", new Date(), {
           sync: true
         });
       },
@@ -353,10 +360,30 @@
         if (this.get("schedule") && repeatOption !== "never") {
           repeatDate = this.get("schedule");
         }
-        return this.save({
+        return this.set({
           repeatDate: repeatDate,
           repeatOption: repeatOption
         }, {
+          sync: true
+        });
+      },
+      updateTags: function(tags) {
+        return this.set("tags", tags, {
+          sync: true
+        });
+      },
+      updateTitle: function(title) {
+        return this.set("title", title, {
+          sync: true
+        });
+      },
+      updateNotes: function(notes) {
+        return this.set("notes", notes, {
+          sync: true
+        });
+      },
+      deleteTask: function() {
+        return this.set("deleted", true, {
           sync: true
         });
       }

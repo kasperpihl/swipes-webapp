@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"], (_, Backbone, Draggable, SliderControl) ->
-	Parse.View.extend
+	Backbone.View.extend
 		tagName: "div"
 		className: "range-slider lobster"
 		initialize: ->

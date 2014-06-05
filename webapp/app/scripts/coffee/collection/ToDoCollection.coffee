@@ -1,5 +1,5 @@
 define ["js/model/ToDoModel"], ( ToDoModel) ->
-	Parse.Collection.extend
+	Backbone.Collection.extend
 		model: ToDoModel
 		initialize: ->
 			@on( "change:deleted", (model, deleted) => if deleted then @remove model else @add model )

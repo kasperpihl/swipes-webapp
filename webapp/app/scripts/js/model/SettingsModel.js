@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone"], function(_, Backbone) {
-    return Parse.Object.extend({
+    return Backbone.Model.extend({
       className: "Settings",
       defaults: {
         snoozes: {

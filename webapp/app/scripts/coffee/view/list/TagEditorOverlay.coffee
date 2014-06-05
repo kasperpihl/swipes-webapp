@@ -76,16 +76,14 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 				if @modelHasTag( model, tag ) then return
 				tags = model.get "tags"
 				tags.push tag
-				model.unset( "tags", { silent: yes } )
-				swipy.queue.add model.save( "tags", tags )
+				model.updateTags tags
 			else
-				swipy.queue.add model.save( "tags", [tag] )
+				model.updateTags [ tag ]
 		removeTagFromModels: (tagName) ->
 			for model in @options.models
 				tags = model.get "tags"
 				newTags = _.reject( tags, (tagModel) -> tagModel.get( "title" ) is tagName )
-				model.unset( "tags", { silent: yes } )
-				swipy.queue.add model.save( "tags", newTags )
+				model.updateTags newTags
 
 			@render()
 		handleResize: ->

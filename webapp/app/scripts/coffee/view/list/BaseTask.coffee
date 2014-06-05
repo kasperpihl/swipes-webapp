@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.html"], (_, Backbone, TweenLite, TimelineLite, TaskTmpl) ->
-	Parse.View.extend
+	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
 			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "edit", "handleAction" )

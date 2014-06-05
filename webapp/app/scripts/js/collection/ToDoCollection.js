@@ -1,6 +1,6 @@
 (function() {
   define(["js/model/ToDoModel"], function(ToDoModel) {
-    return Parse.Collection.extend({
+    return Backbone.Collection.extend({
       model: ToDoModel,
       initialize: function() {
         var _this = this;

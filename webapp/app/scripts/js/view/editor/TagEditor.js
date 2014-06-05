@@ -2,7 +2,7 @@
   var __slice = [].slice;
 
   define(["underscore", "js/model/TagModel"], function(_, TagModel) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       events: {
         "click .add-new-tag": "toggleTagPool",
         "submit .add-tag": "createTag",
@@ -48,10 +48,7 @@
         tags = _.reject(this.model.get("tags"), function(t) {
           return t.get("title") === tagName;
         });
-        this.model.unset("tags", {
-          silent: true
-        });
-        return swipy.queue.add(this.model.save("tags", tags));
+        return this.model.updateTags(tags);
       },
       createTag: function(e) {
         var tagName;

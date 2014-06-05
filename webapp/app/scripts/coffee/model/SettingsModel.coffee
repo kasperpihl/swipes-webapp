@@ -1,5 +1,5 @@
 define ["underscore", "backbone"], (_, Backbone) ->
-	Parse.Object.extend
+	Backbone.Model.extend
 		className: "Settings"
 		defaults:
 			snoozes:

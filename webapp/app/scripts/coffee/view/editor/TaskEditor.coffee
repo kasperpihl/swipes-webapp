@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, TagEditor) ->
-	Parse.View.extend
+	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
 		events:
@@ -41,9 +41,9 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/ed
 		setRepeat: (e) ->
 			@model.setRepeatOption $(e.currentTarget).data "option"
 		updateTitle: ->
-			swipy.queue.add @model.save( "title", @getTitle() )
+			@model.updateTitle @getTitle()
 		updateNotes: ->
-			swipy.queue.add @model.save( "notes", @getNotes() )
+			@model.updateNotes @getNotes()
 		getTitle: ->
 			@$el.find( ".title input" ).val()
 		getNotes: ->

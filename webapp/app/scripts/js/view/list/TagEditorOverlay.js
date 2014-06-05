@@ -120,12 +120,9 @@
           }
           tags = model.get("tags");
           tags.push(tag);
-          model.unset("tags", {
-            silent: true
-          });
-          return swipy.queue.add(model.save("tags", tags));
+          return model.updateTags(tags);
         } else {
-          return swipy.queue.add(model.save("tags", [tag]));
+          return model.updateTags([tag]);
         }
       },
       removeTagFromModels: function(tagName) {
@@ -137,10 +134,7 @@
           newTags = _.reject(tags, function(tagModel) {
             return tagModel.get("title") === tagName;
           });
-          model.unset("tags", {
-            silent: true
-          });
-          swipy.queue.add(model.save("tags", newTags));
+          model.updateTags(newTags);
         }
         return this.render();
       },

@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone"], function(_, Backbone) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       events: {
         "click li:not(.delete)": "handleClickTag",
         "click .delete": "toggleDeleteMode",

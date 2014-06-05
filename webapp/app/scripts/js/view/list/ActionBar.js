@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "js/view/list/TagEditorOverlay"], function(_, Backbone, TagEditorOverlay) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       el: ".action-bar",
       events: {
         "click .edit": "editTask",
@@ -70,7 +70,7 @@
               model.unset("order");
               swipy.todos.bumpOrder("up", order);
             }
-            swipy.queue.add(model.save("deleted", true));
+            model.deleteTask();
           }
           return this.hide();
         }

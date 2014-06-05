@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone"], function(_, Backbone) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       events: {
         "click .close-sidebar": "handleAction",
         "click .log-out": "handleAction"

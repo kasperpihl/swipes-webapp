@@ -1,5 +1,5 @@
 define ["underscore", "backbone"], (_, Backbone) ->
-	Parse.View.extend
+	Backbone.View.extend
 		events:
 			"submit form": "search"
 			"keyup input": "search"

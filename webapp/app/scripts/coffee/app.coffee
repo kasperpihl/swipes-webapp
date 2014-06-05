@@ -22,7 +22,7 @@ define [
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
 		constructor: ->
-			@hackParseAPI()
+			#@hackParseAPI()
 
 			@queue = new SyncQueue()
 			@analytics = new AnalyticsController()
@@ -65,12 +65,12 @@ define [
 				return yes
 
 			return no
-		hackParseAPI: ->
+		###hackParseAPI: ->
 			# Add missing mehods to Parse.Collection.prototype
 			for method in ["where", "findWhere"]
 				if not Parse.Collection::[method]?
 					Parse.Collection::[method] = Backbone.Collection::[method]
-
+		###
 		init: ->
 			@cleanUp()
 

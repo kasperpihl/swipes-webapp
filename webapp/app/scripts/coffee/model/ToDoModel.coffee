@@ -35,9 +35,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			deleted: no
 		set: ->
 			BaseModel.prototype.handleForSync.apply @ , arguments
-			Parse.Object.prototype.set.apply @ , arguments 
+			Backbone.Model.prototype.set.apply @ , arguments 
 		constructor: ( attributes ) ->
-
 			if attributes.tags and attributes.tags.length > 0
 				modelTags = []
 				hasTagsFromServer = null
@@ -50,8 +49,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 						modelTags.push model
 				if hasTagsFromServer
 					attributes.tags = modelTags
-			Parse.Object.apply @, arguments
-			
+
+			Backbone.Model.apply @, arguments
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
 			# because null should be an allowed without triggering any logic, as null is used for
@@ -115,9 +114,11 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		reviveDate: (prop) ->
 			if typeof @get( prop ) is "string"
 				@set( prop, new Date( @get prop ), { silent: yes } )
+			if _.isObject( @get prop ) and @get(prop).__type is "Date"
+				value = new Date @get(prop).iso
+				@set prop, value, { silent: true }
 		getState: ->
 			schedule = @getValidatedSchedule()
-
 			# Check if completed
 			if @get "completionDate"
 				return "completed"
@@ -274,12 +275,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 		togglePriority: ->
 			if @get "priority"
-				@save( "priority", 0, { sync: true } )
+				@set( "priority", 0, { sync: true } )
 			else
-				@save( "priority", 1 , { sync: true } )
+				@set( "priority", 1 , { sync: true } )
 
 		scheduleTask: ( date ) ->
-			@save({
+			@set({
 				schedule: date,
 				completionDate: null
 			},
@@ -300,7 +301,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			duplicate.completeTask()
 			swipy.todos.add duplicate
 
-			@save({
+			@set({
 				schedule: nextDate
 				repeatCount: @get( "repeatCount" ) + 1
 				repeatDate: nextDate
@@ -310,7 +311,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		completeTask: ->
 			if @has "repeatDate"
 				return @completeRepeatedTask()
-			@save "completionDate" , new Date() , { sync: true }
+			@set "completionDate" , new Date() , { sync: true }
 
 
 		setRepeatOption: ( repeatOption ) ->
@@ -318,6 +319,16 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			repeatDate = null
 			if @get( "schedule" ) and repeatOption isnt "never"
 				repeatDate =  @get "schedule"
-			@save({ repeatDate, repeatOption },{ sync: true })
+			@set({ repeatDate, repeatOption },{ sync: true })
 		
-		
+		updateTags: ( tags ) ->
+			@set "tags", tags, { sync: true }
+
+		updateTitle: ( title ) ->
+			@set "title", title, { sync: true }
+
+		updateNotes: ( notes ) ->
+			@set "notes", notes, { sync: true }
+
+		deleteTask: ->
+			@set "deleted", yes, { sync: true }

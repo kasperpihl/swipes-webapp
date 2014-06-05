@@ -1,6 +1,6 @@
 (function() {
-  define([], function() {
-    return Parse.Object.extend({
+  define(["backbone"], function() {
+    return Backbone.Model.extend({
       className: "BaseModel",
       handleForSync: function(key, val, options) {
         var attrs;

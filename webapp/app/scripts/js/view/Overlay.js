@@ -1,6 +1,6 @@
 (function() {
   define(["backbone"], function(Backbone) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       tagName: 'article',
       className: 'overlay',
       events: {

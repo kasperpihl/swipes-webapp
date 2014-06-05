@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "text!templates/task-editor.html", "js/view/editor/TagEditor"], function(_, Backbone, TaskEditorTmpl, TagEditor) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       tagName: "article",
       className: "task-editor",
       events: {
@@ -56,10 +56,10 @@
         return this.model.setRepeatOption($(e.currentTarget).data("option"));
       },
       updateTitle: function() {
-        return swipy.queue.add(this.model.save("title", this.getTitle()));
+        return this.model.updateTitle(this.getTitle());
       },
       updateNotes: function() {
-        return swipy.queue.add(this.model.save("notes", this.getNotes()));
+        return this.model.updateNotes(this.getNotes());
       },
       getTitle: function() {
         return this.$el.find(".title input").val();

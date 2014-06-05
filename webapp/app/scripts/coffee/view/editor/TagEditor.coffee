@@ -1,5 +1,5 @@
 define ["underscore", "js/model/TagModel"], (_, TagModel) ->
-	Parse.View.extend
+	Backbone.View.extend
 		events:
 			"click .add-new-tag": "toggleTagPool"
 			"submit .add-tag": "createTag"
@@ -38,8 +38,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 			tagName = $.trim $(e.currentTarget).text()
 			tags = _.reject( @model.get( "tags" ), (t) -> t.get( "title" ) is tagName )
 
-			@model.unset( "tags", { silent: yes } )
-			swipy.queue.add @model.save( "tags", tags )
+			@model.updateTags tags
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
@@ -58,7 +57,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 			@model.unset( "tags", { silent: yes } )
 			swipy.queue.add @model.save( "tags", tags )
 
-			# If it's a new tag, add it to the stack. getTagsFromTasks will automatically save new tags.
+			# If it's a new tag, add it to the stack. getTagsFromTasks will automatically sav new tags.
 			if addToCollection then swipy.tags.getTagsFromTasks()
 		render: ->
 			@renderTags()

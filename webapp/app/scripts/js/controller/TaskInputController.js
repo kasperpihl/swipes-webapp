@@ -50,7 +50,7 @@
       };
 
       TaskInputController.prototype.createTask = function(str) {
-        var animateIn, msg, order, tags, taskTitleLength, title;
+        var animateIn, msg, newTodo, order, tags, taskTitleLength, title;
         if (swipy.todos == null) {
           return;
         }
@@ -64,12 +64,13 @@
           return;
         }
         swipy.todos.bumpOrder();
-        swipy.todos.create({
+        newTodo = swipy.todos.create({
           title: title,
           tags: tags,
           order: order,
           animateIn: animateIn
         });
+        console.log(newTodo);
         if (tags.length) {
           swipy.tags.getTagsFromTasks();
         }

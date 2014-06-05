@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "backbone", "text!templates/calendar.html", "momentjs", "clndr"], function(_, Backbone, CalendarTmpl) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       tagName: "div",
       className: "calendar-wrap",
       initialize: function() {

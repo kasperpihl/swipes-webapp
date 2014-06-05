@@ -1,5 +1,5 @@
 define [ "underscore", "js/model/TagModel"], ( _, TagModel) ->
-	Parse.Collection.extend
+	Backbone.Collection.extend
 		model: TagModel
 		initialize: ->
 			@on( "remove", @handleTagDeleted )

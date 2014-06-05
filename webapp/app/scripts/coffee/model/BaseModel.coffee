@@ -1,5 +1,5 @@
-define [], ->
-	Parse.Object.extend
+define ["backbone"], ->
+	Backbone.Model.extend
 		className: "BaseModel"
 		handleForSync: ( key, val, options ) ->
 			attrs = {}

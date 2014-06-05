@@ -1,5 +1,5 @@
 define ["underscore", "backbone"], (_, Backbone) ->
-	Parse.View.extend
+	Backbone.View.extend
 		events:
 			"click .close-sidebar": "handleAction"
 			"click .log-out": "handleAction"

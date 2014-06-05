@@ -8,7 +8,7 @@
       },
       set: function() {
         BaseModel.prototype.handleForSync.apply(this, arguments);
-        return Parse.Object.prototype.set.apply(this, arguments);
+        return Backbone.Model.prototype.set.apply(this, arguments);
       }
     });
   });

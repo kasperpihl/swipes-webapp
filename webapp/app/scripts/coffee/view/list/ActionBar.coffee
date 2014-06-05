@@ -1,5 +1,5 @@
 define ["underscore", "backbone", "js/view/list/TagEditorOverlay"], (_, Backbone, TagEditorOverlay) ->
-	Parse.View.extend
+	Backbone.View.extend
 		el: ".action-bar"
 		events:
 			"click .edit": "editTask"
@@ -43,7 +43,7 @@ define ["underscore", "backbone", "js/view/list/TagEditorOverlay"], (_, Backbone
 						model.unset "order"
 						swipy.todos.bumpOrder( "up", order )
 
-					swipy.queue.add model.save( "deleted", yes )
+					model.deleteTask()
 				@hide()
 		shareTasks: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"

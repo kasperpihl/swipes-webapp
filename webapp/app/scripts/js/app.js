@@ -7,7 +7,6 @@
       Swipes.prototype.UPDATE_COUNT = 0;
 
       function Swipes() {
-        this.hackParseAPI();
         this.queue = new SyncQueue();
         this.analytics = new AnalyticsController();
         this.errors = new ErrorController();
@@ -54,20 +53,13 @@
         return false;
       };
 
-      Swipes.prototype.hackParseAPI = function() {
-        var method, _i, _len, _ref, _results;
-        _ref = ["where", "findWhere"];
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          method = _ref[_i];
-          if (Parse.Collection.prototype[method] == null) {
-            _results.push(Parse.Collection.prototype[method] = Backbone.Collection.prototype[method]);
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
-      };
+      /*hackParseAPI: ->
+      			# Add missing mehods to Parse.Collection.prototype
+      			for method in ["where", "findWhere"]
+      				if not Parse.Collection::[method]?
+      					Parse.Collection::[method] = Backbone.Collection::[method]
+      */
+
 
       Swipes.prototype.init = function() {
         this.cleanUp();
