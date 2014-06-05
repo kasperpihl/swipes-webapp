@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "view/Overlay", "model/TagModel", "text!templates/tags-editor-overlay.html"], (_, Backbone, Overlay, TagModel, TagsEditorOverlayTmpl) ->
+define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!templates/tags-editor-overlay.html"], (_, Backbone, Overlay, TagModel, TagsEditorOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay tags-editor'
 		events:

@@ -1,4 +1,4 @@
-define ["underscore", "view/TaskInput", "model/TagModel"], (_, TaskInputView, TagModel) ->
+define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputView, TagModel) ->
 	class TaskInputController
 		constructor: ->
 			@view = new TaskInputView()

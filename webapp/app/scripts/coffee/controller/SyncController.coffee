@@ -7,7 +7,7 @@
 
 ###
 
-define ["underscore", "backbone", "jquery", "controller/ChangedAttributesController"], (_, Backbone, $, ChangedAttributesController) ->
+define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesController"], (_, Backbone, $, ChangedAttributesController) ->
 	class SyncController
 		constructor: ->
 			@changedAttributes = new ChangedAttributesController();

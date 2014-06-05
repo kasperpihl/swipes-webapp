@@ -1,8 +1,8 @@
 define [
 	"underscore"
-	"view/list/ActionBar"
-	"view/list/DesktopTask"
-	"view/list/TouchTask"
+	"js/view/list/ActionBar"
+	"js/view/list/DesktopTask"
+	"js/view/list/TouchTask"
 	"text!templates/todo-list.html"
 	"mousetrapGlobal"
 	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->

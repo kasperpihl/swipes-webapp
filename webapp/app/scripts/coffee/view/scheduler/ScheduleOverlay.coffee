@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overlay.html"], (_, Backbone, Overlay, ScheduleOverlayTmpl) ->
+define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-overlay.html"], (_, Backbone, Overlay, ScheduleOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay scheduler'
 		events:
@@ -48,7 +48,7 @@ define ["underscore", "backbone", "view/Overlay", "text!templates/schedule-overl
 
 			Overlay::hide.apply( @, arguments )
 		showDatePicker: ->
-			if not @datePicker? then require ["view/modules/DatePicker"], (DatePicker) =>
+			if not @datePicker? then require ["js/view/modules/DatePicker"], (DatePicker) =>
 				@datePicker = new DatePicker()
 
 				@$el.find( ".overlay-content" ).append @datePicker.el

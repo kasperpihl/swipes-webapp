@@ -34,7 +34,7 @@ define [
 			else @loadTaskEditor model
 
 		loadTaskEditor: (model) ->
-			require ["view/editor/TaskEditor"], (EditTaskView) =>
+			require ["js/view/editor/TaskEditor"], (EditTaskView) =>
 				editView = new EditTaskView( model: model )
 				$("#main-content").prepend editView.el
 				@transitionIn( editView ).then ->
@@ -42,9 +42,9 @@ define [
 
 		loadView: (slug) ->
 			dfd = new $.Deferred()
-			if slug is "scheduled" then require ["view/Scheduled"], (View) -> dfd.resolve View
-			else if slug is "completed" then require ["view/Completed"], (View) -> dfd.resolve View
-			else require ["view/Todo"], (View) -> dfd.resolve View
+			if slug is "scheduled" then require ["js/view/Scheduled"], (View) -> dfd.resolve View
+			else if slug is "completed" then require ["js/view/Completed"], (View) -> dfd.resolve View
+			else require ["js/view/Todo"], (View) -> dfd.resolve View
 
 			return dfd.promise()
 

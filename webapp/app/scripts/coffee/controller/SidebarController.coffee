@@ -1,4 +1,4 @@
-define ["view/sidebar/Sidebar", "view/sidebar/TagFilter", "view/sidebar/SearchFilter"], (SidebarView, TagFilter, SearchFilter) ->
+define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar/SearchFilter"], (SidebarView, TagFilter, SearchFilter) ->
 	class SidebarController
 		constructor: ->
 			@view = new SidebarView( el: $(".sidebar") )

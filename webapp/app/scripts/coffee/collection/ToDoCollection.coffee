@@ -1,4 +1,4 @@
-define ["model/ToDoModel"], ( ToDoModel) ->
+define ["js/model/ToDoModel"], ( ToDoModel) ->
 	Parse.Collection.extend
 		model: ToDoModel
 		initialize: ->

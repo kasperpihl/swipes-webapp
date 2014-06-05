@@ -1,4 +1,4 @@
-define ["view/settings/BaseSubview", "text!templates/settings-subscription.html"], (BaseView, Tmpl) ->
+define ["js/view/settings/BaseSubview", "text!templates/settings-subscription.html"], (BaseView, Tmpl) ->
 	BaseView.extend
 		className: "subscription"
 		setTemplate: ->

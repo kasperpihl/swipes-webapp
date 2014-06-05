@@ -1,4 +1,4 @@
-define ["underscore", "view/list/BaseTask"], (_, BaseTaskView) ->
+define ["underscore", "js/view/list/BaseTask"], (_, BaseTaskView) ->
 	BaseTaskView.extend
 		events:
 			"mouseenter": "trackMouse"

@@ -1,4 +1,4 @@
-define ["view/settings/BaseSubview", "text!templates/settings-policies.html"], (BaseView, Tmpl) ->
+define ["js/view/settings/BaseSubview", "text!templates/settings-policies.html"], (BaseView, Tmpl) ->
 	BaseView.extend
 		className: "policy"
 		setTemplate: ->

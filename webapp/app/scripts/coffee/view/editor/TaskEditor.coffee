@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/task-editor.html", "view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, TagEditor) ->
+define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, TagEditor) ->
 	Parse.View.extend
 		tagName: "article"
 		className: "task-editor"

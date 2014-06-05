@@ -1,15 +1,15 @@
 define [
 	"underscore"
 	"backbone"
-	"view/Overlay"
+	"js/view/Overlay"
 	"text!templates/settings-overlay.html"
 	# Pre-load subviews
-	"view/settings/BaseSubview"
-	"view/settings/Faq"
-	"view/settings/Policies"
-	"view/settings/Snoozes"
-	"view/settings/Subscription"
-	"view/settings/Support"
+	"js/view/settings/BaseSubview"
+	"js/view/settings/Faq"
+	"js/view/settings/Policies"
+	"js/view/settings/Snoozes"
+	"js/view/settings/Subscription"
+	"js/view/settings/Support"
 	], (_, Backbone, Overlay, SettingsOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay settings'
@@ -38,7 +38,7 @@ define [
 			@killSubView().then =>
 				# Make first letter uppercase
 				viewName = subView[0].toUpperCase() + subView[1...]
-				require ["view/settings/#{ viewName }"], (View) =>
+				require ["js/view/settings/#{ viewName }"], (View) =>
 					@subview = new View()
 					@$el.find( ".overlay-content" ).append @subview.el
 					@$el.addClass "has-active-subview"

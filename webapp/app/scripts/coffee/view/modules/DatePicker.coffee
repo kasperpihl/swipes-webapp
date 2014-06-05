@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "view/modules/Calendar", "view/modules/TimeSlider", "text!templates/datepicker.html"], (_, Backbone, CalendarView, TimeSliderView, DatePickerTmpl) ->
+define ["underscore", "backbone", "js/view/modules/Calendar", "js/view/modules/TimeSlider", "text!templates/datepicker.html"], (_, Backbone, CalendarView, TimeSliderView, DatePickerTmpl) ->
 	Parse.View.extend
 		className: "date-picker"
 		initialize: ->

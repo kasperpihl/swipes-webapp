@@ -1,4 +1,4 @@
-define ["view/List"], (ListView) ->
+define ["js/view/List"], (ListView) ->
 	ListView.extend
 		sortTasks: (tasks) ->
 			result = _.sortBy tasks, (model) ->

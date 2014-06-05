@@ -1,4 +1,4 @@
-define ["underscore", "view/List", "controller/ListSortController", "model/TaskSortModel"], (_, ListView, ListSortController, TaskSortModel) ->
+define ["underscore", "js/view/List", "js/controller/ListSortController", "js/model/TaskSortModel"], (_, ListView, ListSortController, TaskSortModel) ->
 	ListView.extend
 		initialize: ->
 			@sorter = new TaskSortModel()

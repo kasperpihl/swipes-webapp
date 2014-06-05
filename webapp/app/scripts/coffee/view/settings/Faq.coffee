@@ -1,4 +1,4 @@
-define ["view/settings/BaseSubview", "gsap", "text!templates/settings-faq.html"], (BaseView, TweenLite, Tmpl) ->
+define ["js/view/settings/BaseSubview", "gsap", "text!templates/settings-faq.html"], (BaseView, TweenLite, Tmpl) ->
 	BaseView.extend
 		className: "faq"
 		events:

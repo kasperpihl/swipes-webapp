@@ -1,4 +1,4 @@
-define ["underscore", "model/TagModel"], (_, TagModel) ->
+define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 	Parse.View.extend
 		events:
 			"click .add-new-tag": "toggleTagPool"

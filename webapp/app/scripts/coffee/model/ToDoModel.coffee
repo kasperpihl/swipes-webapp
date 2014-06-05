@@ -3,7 +3,7 @@
  http://stackoverflow.com/questions/15912222/how-do-i-save-just-a-subset-of-a-backbone-models-attributes-to-the-server-witho
 ###
 
-define ["model/BaseModel","momentjs"],( BaseModel ) ->
+define ["js/model/BaseModel","momentjs"],( BaseModel ) ->
 	BaseModel.extend
 		className: "ToDo"
 		attrWhitelist: [

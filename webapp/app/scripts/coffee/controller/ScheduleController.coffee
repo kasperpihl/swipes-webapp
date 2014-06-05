@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "model/ScheduleModel", "momentjs"], (_, Backbone, ScheduleModel) ->
+define ["underscore", "backbone", "js/model/ScheduleModel", "momentjs"], (_, Backbone, ScheduleModel) ->
 	class ScheduleController
 		constructor: (opts) ->
 			@init()
@@ -12,7 +12,7 @@ define ["underscore", "backbone", "model/ScheduleModel", "momentjs"], (_, Backbo
 		showScheduleView: (tasks) ->
 			loadViewDfd = new $.Deferred()
 
-			if not @view? then require ["view/scheduler/ScheduleOverlay"], (ScheduleOverlayView) =>
+			if not @view? then require ["js/view/scheduler/ScheduleOverlay"], (ScheduleOverlayView) =>
 				@view = new ScheduleOverlayView( model: @model )
 				$("body").append @view.render().el
 				loadViewDfd.resolve()

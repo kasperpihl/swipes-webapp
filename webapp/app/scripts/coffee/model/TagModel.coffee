@@ -1,4 +1,4 @@
-define ["model/BaseModel"], (BaseModel) ->
+define ["js/model/BaseModel"], (BaseModel) ->
 	BaseModel.extend
 		className: "Tag"
 		defaults: { title: "", deleted: no }
