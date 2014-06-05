@@ -4,6 +4,11 @@
     return TimeUtility = (function() {
       function TimeUtility() {}
 
+      /*
+      			Time based Helpers
+      */
+
+
       TimeUtility.prototype.isWeekend = function(schedule) {
         if (schedule.getDay() === 0 || schedule.getDay() === 6) {
           return true;
@@ -18,9 +23,9 @@
 
       TimeUtility.prototype.getMonFriSatSunFromDate = function(schedule) {
         if (this.isWeekday(schedule)) {
-          return this.getNextWeekDay(schedule);
+          return this.getNextWeekDay(moment(schedule));
         } else {
-          return this.getNextWeekendDay(schedule);
+          return this.getNextWeekendDay(moment(schedule));
         }
       };
 
@@ -32,20 +37,21 @@
         return date.add("days", date.day() === 0 ? 6 : 1).toDate();
       };
 
-      TimeUtility.prototype.getNextDateFrom = function(date, option) {
+      TimeUtility.prototype.getNextDateFrom = function(date, repeatOption) {
         var diff, nextDate, now, type;
+        console.log(repeatOption);
         now = new Date().getTime();
         nextDate = date;
         while (true) {
           nextDate = moment(nextDate);
-          switch (option) {
+          switch (repeatOption) {
             case "every day":
               nextDate = nextDate.add("days", 1).toDate();
               break;
             case "every week":
             case "every month":
             case "every year":
-              type = option.replace("every ", "") + "s";
+              type = repeatOption.replace("every ", "") + "s";
               diff = 1;
               nextDate = nextDate.add(type, Math.ceil(diff)).toDate();
               break;

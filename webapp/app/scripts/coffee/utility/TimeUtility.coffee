@@ -1,5 +1,8 @@
 define ->
 	class TimeUtility
+		###
+			Time based Helpers
+		###
 		isWeekend: (schedule) ->
 			if schedule.getDay() is 0 or schedule.getDay() is 6 then return yes
 			else return no
@@ -9,9 +12,9 @@ define ->
 
 		getMonFriSatSunFromDate: ( schedule ) ->
 			if @isWeekday schedule
-				@getNextWeekDay schedule
+				@getNextWeekDay moment schedule
 			else
-				@getNextWeekendDay schedule
+				@getNextWeekendDay moment schedule
 
 		getNextWeekDay: (date) ->
 			# If date is friday, go to next monday, else go to tomorrow
@@ -20,15 +23,16 @@ define ->
 		getNextWeekendDay: (date) ->
 			# If date is sunday, go to next saturday, else go to tomorrow (Which will always be sunday)
 			return date.add( "days", if date.day() is 0 then 6 else 1 ).toDate()
-		getNextDateFrom: ( date, option )->
+		getNextDateFrom: ( date, repeatOption ) ->
+			console.log repeatOption
 			now = new Date().getTime()
 			nextDate = date
 			loop
 				nextDate = moment nextDate
-				switch option
+				switch repeatOption
 					when "every day" then nextDate = nextDate.add( "days", 1 ).toDate()
 					when "every week", "every month", "every year"
-						type = option.replace( "every ", "" ) + "s"
+						type = repeatOption.replace( "every ", "" ) + "s"
 						diff = 1
 						nextDate = nextDate.add( type, Math.ceil diff ).toDate()
 					when "mon-fri or sat+sun"

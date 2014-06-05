@@ -20,7 +20,7 @@
 
       SyncController.prototype.handleModelForSync = function(model, attributes) {
         this.changedAttributes.saveAttributesToSync(model, attributes);
-        return console.log(this.changedAttributes.changedAttributes);
+        return console.log(this.changedAttributes.newChangedAttributes);
       };
 
       SyncController.prototype.handleObjectsFromSync = function(objects, className) {

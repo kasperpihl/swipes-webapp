@@ -84,7 +84,6 @@
         this.on("change:repeatDate", function() {
           return _this.reviveDate("repeatDate");
         });
-        this.on("change:repeatOption", this.setRepeatOption);
         this.on("destroy", this.cleanUp);
         if (this.has("completionDate")) {
           this.setCompletionStr();
@@ -320,11 +319,12 @@
       completeRepeatedTask: function() {
         var duplicate, nextDate, timeUtil;
         timeUtil = new TimeUtility();
-        nextDate = timeUtil.getNextDateFrom(this.get("repeatDate"));
+        nextDate = timeUtil.getNextDateFrom(this.get("repeatDate"), this.get("repeatOption"));
+        console.log(nextDate);
         if (!nextDate) {
           return;
         }
-        duplicate = model.getRepeatableDuplicate();
+        duplicate = this.getRepeatableDuplicate();
         if (!duplicate) {
           return false;
         }
@@ -346,16 +346,19 @@
           sync: true
         });
       },
-      setRepeatOption: function(option) {
-        if (this.get("schedule") && option !== "never") {
-          return this.set("repeatDate", this.get("schedule", {
-            sync: true
-          }));
-        } else {
-          return this.set("repeatDate", null, {
-            sync: true
-          });
+      setRepeatOption: function(repeatOption) {
+        var repeatDate;
+        console.log(repeatOption);
+        repeatDate = null;
+        if (this.get("schedule") && repeatOption !== "never") {
+          repeatDate = this.get("schedule");
         }
+        return this.save({
+          repeatDate: repeatDate,
+          repeatOption: repeatOption
+        }, {
+          sync: true
+        });
       }
     });
   });

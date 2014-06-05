@@ -17,7 +17,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 
 		handleModelForSync: (model, attributes) ->
 			@changedAttributes.saveAttributesToSync( model , attributes )
-			console.log @changedAttributes.changedAttributes
+			console.log @changedAttributes.newChangedAttributes
 		handleObjectsFromSync: ( objects, className ) ->
 			collection = if className is "ToDo" then swipy.todos else swipy.tags
 			newModels = []

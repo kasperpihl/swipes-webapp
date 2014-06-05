@@ -28,10 +28,11 @@
           return;
         }
         currentChanges = this.newChangedAttributes[model.className][model.id];
+        attributes = _.keys(attributes);
         if (currentChanges) {
           attributes = _.uniq(attributes.concat(currentChanges));
         }
-        return this.newChangedAttributes[model.className][model.id] = _.keys(attributes);
+        return this.newChangedAttributes[model.className][model.id] = attributes;
       };
 
       return ChangedAttributesController;

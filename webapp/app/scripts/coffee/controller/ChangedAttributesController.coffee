@@ -18,6 +18,7 @@ define ["underscore", "backbone", "jquery", "plugins/lockablestorage"], (_, Back
 		saveAttributesToSync: ( model, attributes ) ->
 			return if !model.id
 			currentChanges = @newChangedAttributes[ model.className ][ model.id ]
+			attributes = _.keys attributes
 			attributes = _.uniq(attributes.concat( currentChanges )) if currentChanges
-			@newChangedAttributes[ model.className ][ model.id ] = _.keys attributes
+			@newChangedAttributes[ model.className ][ model.id ] = attributes
 		

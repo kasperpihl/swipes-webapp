@@ -89,7 +89,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 			@on "change:repeatDate", => @reviveDate "repeatDate"
 
-			@on( "change:repeatOption", @setRepeatOption )
+			##@on( "change:repeatOption", @setRepeatOption )
 			@on( "destroy", @cleanUp )
 
 			if @has "completionDate"
@@ -289,9 +289,10 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		
 		completeRepeatedTask: ->
 			timeUtil = new TimeUtility()
-			nextDate = timeUtil.getNextDateFrom @get "repeatDate"
+			nextDate = timeUtil.getNextDateFrom( @get("repeatDate"), @get "repeatOption"  )
+			console.log nextDate
 			return if !nextDate
-			duplicate = model.getRepeatableDuplicate()
+			duplicate = @getRepeatableDuplicate()
 
 			# Make sure we can actually duplicate the task...
 			return false unless duplicate
@@ -312,11 +313,11 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			@save "completionDate" , new Date() , { sync: true }
 
 
-		setRepeatOption: ( option ) ->
-			if @get( "schedule" ) and option isnt "never"
-				@set( "repeatDate", @get "schedule" , { sync: true } )
-			else
-				@set( "repeatDate", null , { sync: true } )
-
-
+		setRepeatOption: ( repeatOption ) ->
+			console.log repeatOption
+			repeatDate = null
+			if @get( "schedule" ) and repeatOption isnt "never"
+				repeatDate =  @get "schedule"
+			@save({ repeatDate, repeatOption },{ sync: true })
+		
 		
