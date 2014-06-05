@@ -34,8 +34,7 @@ define ["underscore", "backbone", "js/model/ScheduleModel", "momentjs"], (_, Bac
 				date = option.toDate()
 
 			for task in @currentTasks
-				task.unset( "schedule", {silent: yes} )
-				task.save( { schedule: date, completionDate: null } , { sync:true } )
+				task.scheduleTask date
 
 			swipy.analytics.tagEvent( "Scheduled Tasks", @getAnalyticsDataFromOption( option, date ) )
 

@@ -3,7 +3,7 @@
  http://stackoverflow.com/questions/15912222/how-do-i-save-just-a-subset-of-a-backbone-models-attributes-to-the-server-witho
 ###
 
-define ["js/model/BaseModel","momentjs"],( BaseModel ) ->
+define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel, TimeUtility ) ->
 	BaseModel.extend
 		className: "ToDo"
 		attrWhitelist: [
@@ -64,7 +64,7 @@ define ["js/model/BaseModel","momentjs"],( BaseModel ) ->
 			@reviveDate "repeatDate"
 
 			# If model was created as a duplicate/repeat task, set up the new repeatDate
-			@updateRepeatDate() unless @get( "repeatOption" ) is "never"
+			##@updateRepeatDate() unless @get( "repeatOption" ) is "never"
 
 			@setScheduleStr()
 			@setTimeStr()
@@ -239,79 +239,7 @@ define ["js/model/BaseModel","momentjs"],( BaseModel ) ->
 			# We have a completionDate set, update timeStr prop
 			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
 
-		setRepeatOption: (model, option) ->
-			if @get( "schedule" ) and option isnt "never"
-				@set( "repeatDate", @getNextDate option )
-			else
-				@set( "repeatDate", null )
-
-		updateRepeatDate: ->
-			option = @get "repeatOption"
-
-			if @get( "schedule" ) and option isnt "never"
-				@set( "repeatDate", @getNextDate option )
-			else
-				@set( "repeatDate", null )
-
-		isWeekend: (schedule) ->
-			if schedule.getDay() is 0 or schedule.getDay() is 6 then return yes
-			else return no
-
-		isWeekday: (schedule) ->
-			return !@isWeekend schedule
-
-		getMonFriSatSunFromDate: ( schedule, completionDate ) ->
-			if @isWeekday schedule
-				@getNextWeekDay completionDate
-			else
-				@getNextWeekendDay completionDate
-
-		getNextWeekDay: (date) ->
-			# If date is friday, go to next monday, else go to tomorrow
-			return date.add( "days", if date.day() is 5 then 3 else 1 ).toDate()
-
-		getNextWeekendDay: (date) ->
-			# If date is sunday, go to next saturday, else go to tomorrow (Which will always be sunday)
-			return date.add( "days", if date.day() is 0 then 6 else 1 ).toDate()
-
-		getNextDate: (option) ->
-			if @has "completionDate"
-				repeatDate = @get "repeatDate"
-				completionDate = @get "completionDate"
-
-				if repeatDate
-					if repeatDate.getTime() > completionDate.getTime() then return repeatDate
-					else switch option
-						when "every week", "every month", "every year"
-							date = moment @get "schedule"
-						else
-							date = moment completionDate
-				else
-					date = moment completionDate
-			else
-				date = moment @get "schedule"
-
-				# If we moved the task from scheduled to today and completed it, use the old repeatDate instead of the
-				# modified date.
-				repeatDate = @get "repeatDate"
-				if repeatDate and repeatDate.getTime() > @get( "schedule" ).getTime()
-					date = moment repeatDate
-
-			switch option
-				when "every day" then date.add( "days", 1 ).toDate()
-				when "every week", "every month", "every year"
-					type = option.replace( "every ", "" ) + "s"
-					if @has "completionDate"
-						# In this case, date is the scheduled date
-						diff = moment( @get "completionDate" ).diff( date, type, yes )
-					else
-						diff = 1
-
-					date.add( type, Math.ceil diff ).toDate()
-				when "mon-fri or sat+sun"
-					@getMonFriSatSunFromDate( @get( "schedule" ), date )
-				# "never" + catch-all
-				else null
+		
 
 		sanitizeDataForDuplication: (data) ->
 			# Make sure to only duplicate the white-listed attributes
@@ -324,9 +252,6 @@ define ["js/model/BaseModel","momentjs"],( BaseModel ) ->
 			sanitizedData.repeatDate = null
 
 			return sanitizedData
-		getScheduleBasedOnRepeatDate: (repeatDate) ->
-			# Look at completionDate and determine the correct date.
-			return repeatDate
 
 		getRepeatableDuplicate: ->
 			if @has "repeatDate"
@@ -344,3 +269,54 @@ define ["js/model/BaseModel","momentjs"],( BaseModel ) ->
 		###
 		cleanUp: ->
 			@off()
+
+
+
+		togglePriority: ->
+			if @get "priority"
+				@save( "priority", 0, { sync: true } )
+			else
+				@save( "priority", 1 , { sync: true } )
+
+		scheduleTask: ( date ) ->
+			@save({
+				schedule: date,
+				completionDate: null
+			},
+			sync: true
+			)
+
+		
+		completeRepeatedTask: ->
+			timeUtil = new TimeUtility()
+			nextDate = timeUtil.getNextDateFrom @get "repeatDate"
+			return if !nextDate
+			duplicate = model.getRepeatableDuplicate()
+
+			# Make sure we can actually duplicate the task...
+			return false unless duplicate
+
+			duplicate.completeTask()
+			swipy.todos.add duplicate
+
+			@save({
+				schedule: nextDate
+				repeatCount: @get( "repeatCount" ) + 1
+				repeatDate: nextDate
+				},{ sync: true }
+			)
+
+		completeTask: ->
+			if @has "repeatDate"
+				return @completeRepeatedTask()
+			@save "completionDate" , new Date() , { sync: true }
+
+
+		setRepeatOption: ( option ) ->
+			if @get( "schedule" ) and option isnt "never"
+				@set( "repeatDate", @get "schedule" , { sync: true } )
+			else
+				@set( "repeatDate", null , { sync: true } )
+
+
+		

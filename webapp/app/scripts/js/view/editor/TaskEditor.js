@@ -50,14 +50,10 @@
       },
       transitionInComplete: function() {},
       togglePriority: function() {
-        if (this.model.get("priority")) {
-          return swipy.queue.add(this.model.save("priority", 0));
-        } else {
-          return swipy.queue.add(this.model.save("priority", 1));
-        }
+        return this.model.togglePriority();
       },
       setRepeat: function(e) {
-        return swipy.queue.add(this.model.save("repeatOption", $(e.currentTarget).data("option")));
+        return this.model.setRepeatOption($(e.currentTarget).data("option"));
       },
       updateTitle: function() {
         return swipy.queue.add(this.model.save("title", this.getTitle()));

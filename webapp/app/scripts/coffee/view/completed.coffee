@@ -19,6 +19,4 @@ define ["js/view/List"], (ListView) ->
 				if view? then do ->
 					m = task
 					view.swipeLeft("todo").then =>
-						m.save
-							completionDate: null
-							schedule: m.getDefaultSchedule()
+						m.scheduleTask m.getDefaultSchedule()

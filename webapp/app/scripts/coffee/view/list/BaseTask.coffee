@@ -32,10 +32,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@model.set( "selected", !currentlySelected )
 		togglePriority: (e) ->
 			e.stopPropagation()
-			if @model.get "priority"
-				swipy.queue.add @model.save( "priority", 0 )
-			else
-				swipy.queue.add @model.save( "priority", 1 )
+			@model.togglePriority()
 		handleAction: (e) ->
 			# Set trigger. One or more elements, but always wrapped in an array ready to loop over.
 			trigger = [@model]

@@ -5,7 +5,7 @@
 
 
 (function() {
-  define(["js/model/BaseModel", "momentjs"], function(BaseModel) {
+  define(["js/model/BaseModel", "js/utility/TimeUtility", "momentjs"], function(BaseModel, TimeUtility) {
     return BaseModel.extend({
       className: "ToDo",
       attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority", "deleted"],
@@ -59,9 +59,6 @@
         this.reviveDate("schedule");
         this.reviveDate("completionDate");
         this.reviveDate("repeatDate");
-        if (this.get("repeatOption") !== "never") {
-          this.updateRepeatDate();
-        }
         this.setScheduleStr();
         this.setTimeStr();
         this.on("change:tags", function(me, tags) {
@@ -272,93 +269,6 @@
         }
         return this.set("completionTimeStr", moment(completionDate).format("h:mmA"));
       },
-      setRepeatOption: function(model, option) {
-        if (this.get("schedule") && option !== "never") {
-          return this.set("repeatDate", this.getNextDate(option));
-        } else {
-          return this.set("repeatDate", null);
-        }
-      },
-      updateRepeatDate: function() {
-        var option;
-        option = this.get("repeatOption");
-        if (this.get("schedule") && option !== "never") {
-          return this.set("repeatDate", this.getNextDate(option));
-        } else {
-          return this.set("repeatDate", null);
-        }
-      },
-      isWeekend: function(schedule) {
-        if (schedule.getDay() === 0 || schedule.getDay() === 6) {
-          return true;
-        } else {
-          return false;
-        }
-      },
-      isWeekday: function(schedule) {
-        return !this.isWeekend(schedule);
-      },
-      getMonFriSatSunFromDate: function(schedule, completionDate) {
-        if (this.isWeekday(schedule)) {
-          return this.getNextWeekDay(completionDate);
-        } else {
-          return this.getNextWeekendDay(completionDate);
-        }
-      },
-      getNextWeekDay: function(date) {
-        return date.add("days", date.day() === 5 ? 3 : 1).toDate();
-      },
-      getNextWeekendDay: function(date) {
-        return date.add("days", date.day() === 0 ? 6 : 1).toDate();
-      },
-      getNextDate: function(option) {
-        var completionDate, date, diff, repeatDate, type;
-        if (this.has("completionDate")) {
-          repeatDate = this.get("repeatDate");
-          completionDate = this.get("completionDate");
-          if (repeatDate) {
-            if (repeatDate.getTime() > completionDate.getTime()) {
-              return repeatDate;
-            } else {
-              switch (option) {
-                case "every week":
-                case "every month":
-                case "every year":
-                  date = moment(this.get("schedule"));
-                  break;
-                default:
-                  date = moment(completionDate);
-              }
-            }
-          } else {
-            date = moment(completionDate);
-          }
-        } else {
-          date = moment(this.get("schedule"));
-          repeatDate = this.get("repeatDate");
-          if (repeatDate && repeatDate.getTime() > this.get("schedule").getTime()) {
-            date = moment(repeatDate);
-          }
-        }
-        switch (option) {
-          case "every day":
-            return date.add("days", 1).toDate();
-          case "every week":
-          case "every month":
-          case "every year":
-            type = option.replace("every ", "") + "s";
-            if (this.has("completionDate")) {
-              diff = moment(this.get("completionDate")).diff(date, type, true);
-            } else {
-              diff = 1;
-            }
-            return date.add(type, Math.ceil(diff)).toDate();
-          case "mon-fri or sat+sun":
-            return this.getMonFriSatSunFromDate(this.get("schedule"), date);
-          default:
-            return null;
-        }
-      },
       sanitizeDataForDuplication: function(data) {
         var sanitizedData;
         sanitizedData = _.clone(data);
@@ -367,9 +277,6 @@
         sanitizedData.repeatOption = "never";
         sanitizedData.repeatDate = null;
         return sanitizedData;
-      },
-      getScheduleBasedOnRepeatDate: function(repeatDate) {
-        return repeatDate;
       },
       getRepeatableDuplicate: function() {
         if (this.has("repeatDate")) {
@@ -390,6 +297,65 @@
 
       cleanUp: function() {
         return this.off();
+      },
+      togglePriority: function() {
+        if (this.get("priority")) {
+          return this.save("priority", 0, {
+            sync: true
+          });
+        } else {
+          return this.save("priority", 1, {
+            sync: true
+          });
+        }
+      },
+      scheduleTask: function(date) {
+        return this.save({
+          schedule: date,
+          completionDate: null
+        }, {
+          sync: true
+        });
+      },
+      completeRepeatedTask: function() {
+        var duplicate, nextDate, timeUtil;
+        timeUtil = new TimeUtility();
+        nextDate = timeUtil.getNextDateFrom(this.get("repeatDate"));
+        if (!nextDate) {
+          return;
+        }
+        duplicate = model.getRepeatableDuplicate();
+        if (!duplicate) {
+          return false;
+        }
+        duplicate.completeTask();
+        swipy.todos.add(duplicate);
+        return this.save({
+          schedule: nextDate,
+          repeatCount: this.get("repeatCount") + 1,
+          repeatDate: nextDate
+        }, {
+          sync: true
+        });
+      },
+      completeTask: function() {
+        if (this.has("repeatDate")) {
+          return this.completeRepeatedTask();
+        }
+        return this.save("completionDate", new Date(), {
+          sync: true
+        });
+      },
+      setRepeatOption: function(option) {
+        if (this.get("schedule") && option !== "never") {
+          return this.set("repeatDate", this.get("schedule", {
+            sync: true
+          }));
+        } else {
+          return this.set("repeatDate", null, {
+            sync: true
+          });
+        }
       }
     });
   });

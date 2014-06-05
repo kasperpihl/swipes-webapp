@@ -43,10 +43,7 @@
                 _this = this;
               m = task;
               return view.swipeLeft("todo").then(function() {
-                return m.save({
-                  completionDate: null,
-                  schedule: m.getDefaultSchedule()
-                });
+                return m.scheduleTask(m.getDefaultSchedule());
               });
             })());
           } else {

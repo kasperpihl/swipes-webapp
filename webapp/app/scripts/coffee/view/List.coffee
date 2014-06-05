@@ -125,32 +125,10 @@ define [
 				if view? then do =>
 					m = task
 					view.swipeRight( "completed" ).then =>
-						if m.has "repeatDate"
-							@createRepeatedTask m
-						else
-							swipy.queue.add m.save( "completionDate", new Date() )
+						m.completeTask()
 
 			swipy.analytics.tagEvent( "Completed Tasks", { "Number of Tasks": tasks.length } )
-		createRepeatedTask: (model) ->
-			# First create a duplicate of the current task and put it in the completed pile.
-			duplicate = model.getRepeatableDuplicate()
 
-			# Make sure we can actually duplicate the task...
-			return false unless duplicate
-
-			duplicate.save { completionDate: new Date() }
-			swipy.todos.add duplicate
-
-			# Then update the repeatDate (Based on current schedule) and use that to set the new schedule
-			model.set
-				schedule: model.get "repeatDate"
-				repeatCount: model.get( "repeatCount" ) + 1
-
-			# Update the repeatDate on the model
-			model.updateRepeatDate()
-
-			# Finally persist the changes on the server
-			swipy.queue.add model.save()
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task
@@ -159,9 +137,7 @@ define [
 				if view? then do ->
 					m = task
 					view.swipeRight("todo").then ->
-						oneSecondAgo = new Date()
-						oneSecondAgo.setSeconds oneSecondAgo.getSeconds() - 1
-						m.save { completionDate: null, schedule: oneSecondAgo }
+						m.scheduleTask m.getDefaultSchedule()
 
 		scheduleTasks: (tasks) ->
 			deferredArr = []

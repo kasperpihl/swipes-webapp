@@ -32,11 +32,7 @@
       },
       togglePriority: function(e) {
         e.stopPropagation();
-        if (this.model.get("priority")) {
-          return swipy.queue.add(this.model.save("priority", 0));
-        } else {
-          return swipy.queue.add(this.model.save("priority", 1));
-        }
+        return this.model.togglePriority();
       },
       handleAction: function(e) {
         var selectedTasks, task, trigger, _i, _len,

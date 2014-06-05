@@ -37,12 +37,9 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/ed
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
 		togglePriority: ->
-			if @model.get "priority"
-				swipy.queue.add @model.save( "priority", 0 )
-			else
-				swipy.queue.add @model.save( "priority", 1 )
+			@model.togglePriority()
 		setRepeat: (e) ->
-			swipy.queue.add @model.save( "repeatOption", $(e.currentTarget).data "option" )
+			@model.setRepeatOption $(e.currentTarget).data "option"
 		updateTitle: ->
 			swipy.queue.add @model.save( "title", @getTitle() )
 		updateNotes: ->

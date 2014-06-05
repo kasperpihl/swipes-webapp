@@ -144,11 +144,7 @@
               var m;
               m = task;
               return view.swipeRight("completed").then(function() {
-                if (m.has("repeatDate")) {
-                  return _this.createRepeatedTask(m);
-                } else {
-                  return swipy.queue.add(m.save("completionDate", new Date()));
-                }
+                return m.completeTask();
               });
             })();
           }
@@ -156,23 +152,6 @@
         return swipy.analytics.tagEvent("Completed Tasks", {
           "Number of Tasks": tasks.length
         });
-      },
-      createRepeatedTask: function(model) {
-        var duplicate;
-        duplicate = model.getRepeatableDuplicate();
-        if (!duplicate) {
-          return false;
-        }
-        duplicate.save({
-          completionDate: new Date()
-        });
-        swipy.todos.add(duplicate);
-        model.set({
-          schedule: model.get("repeatDate"),
-          repeatCount: model.get("repeatCount") + 1
-        });
-        model.updateRepeatDate();
-        return swipy.queue.add(model.save());
       },
       markTaskAsTodo: function(tasks) {
         var task, view, _i, _len, _results;
@@ -185,13 +164,7 @@
               var m;
               m = task;
               return view.swipeRight("todo").then(function() {
-                var oneSecondAgo;
-                oneSecondAgo = new Date();
-                oneSecondAgo.setSeconds(oneSecondAgo.getSeconds() - 1);
-                return m.save({
-                  completionDate: null,
-                  schedule: oneSecondAgo
-                });
+                return m.scheduleTask(m.getDefaultSchedule());
               });
             })());
           } else {

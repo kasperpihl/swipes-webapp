@@ -50,15 +50,7 @@
         _ref = this.currentTasks;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           task = _ref[_i];
-          task.unset("schedule", {
-            silent: true
-          });
-          task.save({
-            schedule: date,
-            completionDate: null
-          }, {
-            sync: true
-          });
+          task.scheduleTask(date);
         }
         swipy.analytics.tagEvent("Scheduled Tasks", this.getAnalyticsDataFromOption(option, date));
         this.view.currentTasks = void 0;
