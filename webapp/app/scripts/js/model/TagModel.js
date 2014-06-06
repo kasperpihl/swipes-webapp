@@ -3,6 +3,7 @@
     return BaseModel.extend({
       className: "Tag",
       idAttribute: "objectId",
+      attrWhitelist: ["title"],
       defaults: {
         title: "",
         deleted: false

@@ -1,12 +1,22 @@
 (function() {
-  define(["backbone"], function() {
+  define(["js/utility/Utility", "backbone"], function(Utility) {
     return Backbone.Model.extend({
       className: "BaseModel",
+      defaultAttributes: ["objectId", "tempId", "deleted"],
       sync: function() {
         return true;
       },
+      constructor: function(attributes) {
+        var util;
+        if (attributes && !attributes.objectId) {
+          util = new Utility();
+          attributes.tempId = util.generateId(12);
+          console.log("generated tempId " + this.className + " - " + attributes.tempId);
+        }
+        return Backbone.Model.apply(this, arguments);
+      },
       handleForSync: function(key, val, options) {
-        var att, attrs, valOfAtt, _results;
+        var attrs;
         attrs = {};
         if (key === null || typeof key === 'object') {
           attrs = key;
@@ -16,17 +26,17 @@
         }
         if (options) {
           if (options.sync) {
-            swipy.sync.handleModelForSync(this, attrs);
-          }
-          if (options.fire) {
-            _results = [];
-            for (att in attrs) {
-              valOfAtt = attrs[att];
-              _results.push(console.log(att));
+            if (this.id) {
+              return swipy.sync.handleModelForSync(this, attrs);
             }
-            return _results;
           }
         }
+      },
+      toServerJSON: function() {
+        if (!this.attrWhitelist) {
+          return console.log("please add attrWhiteList in model for sync support");
+        }
+        return _.pick(this.attributes, this.attrWhitelist.concat(this.defaultAttributes));
       }
     });
   });

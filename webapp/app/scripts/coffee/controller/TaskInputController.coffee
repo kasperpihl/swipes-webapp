@@ -1,4 +1,4 @@
-define ["underscore", "js/view/TaskInput", "js/model/TagModel", "js/utility/Utility"], (_, TaskInputView, TagModel, Utility) ->
+define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputView, TagModel ) ->
 	class TaskInputController
 		constructor: ->
 			@view = new TaskInputView()
@@ -42,9 +42,7 @@ define ["underscore", "js/view/TaskInput", "js/model/TagModel", "js/utility/Util
 				return
 
 			swipy.todos.bumpOrder()
-			util = new Utility()
-			tempId = util.generateId 12
-			newTodo = swipy.todos.create { title, tags, order, animateIn, tempId }
+			newTodo = swipy.todos.create { title, tags, order, animateIn }
 			if tags.length then swipy.tags.getTagsFromTasks()
 
 			taskTitleLength = "1-10"

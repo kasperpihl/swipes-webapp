@@ -35,6 +35,8 @@
         return this.newChangedAttributes[model.className][model.id] = attributes;
       };
 
+      ChangedAttributesController.prototype.saveTempAttributesToSync = function(model, attributes) {};
+
       return ChangedAttributesController;
 
     })();

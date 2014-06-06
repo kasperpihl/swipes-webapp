@@ -19,7 +19,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			"notes"
 			"location"
 			"priority"
-			"deleted"
 		]
 		defaults:
 			title: ""
@@ -38,7 +37,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			BaseModel.prototype.handleForSync.apply @ , arguments
 			Backbone.Model.prototype.set.apply @ , arguments 
 		constructor: ( attributes ) ->
-
 			if attributes.tags and attributes.tags.length > 0
 				#console.log "has tags"
 				modelTags = []
@@ -49,9 +47,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					if model
 						modelTags.push model
 				attributes.tags = modelTags
-				
-				#console.log attributes.tags
-			Backbone.Model.apply @, arguments
+			BaseModel.apply @, arguments
+
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
 			# because null should be an allowed without triggering any logic, as null is used for

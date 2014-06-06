@@ -9,7 +9,7 @@
     return BaseModel.extend({
       className: "ToDo",
       idAttribute: "objectId",
-      attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority", "deleted"],
+      attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority"],
       defaults: {
         title: "",
         order: void 0,
@@ -45,7 +45,7 @@
           }
           attributes.tags = modelTags;
         }
-        return Backbone.Model.apply(this, arguments);
+        return BaseModel.apply(this, arguments);
       },
       initialize: function() {
         var _this = this;

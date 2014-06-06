@@ -21,4 +21,5 @@ define ["underscore", "backbone", "jquery", "plugins/lockablestorage"], (_, Back
 			attributes = _.keys attributes
 			attributes = _.uniq(attributes.concat( currentChanges )) if currentChanges
 			@newChangedAttributes[ model.className ][ model.id ] = attributes
+		saveTempAttributesToSync: ( model, attributes ) ->
 		

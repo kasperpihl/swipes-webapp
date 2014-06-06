@@ -57,7 +57,8 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			return false if e.target.className is "priority"
 
 			# Else navigator to editor.
-			swipy.router.navigate( "edit/#{ @model.id }", yes )
+			identifier = if @model.id then @model.id else @model.get "tempId"
+			swipy.router.navigate( "edit/#{ identifier }", yes )
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?

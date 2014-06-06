@@ -62,10 +62,12 @@
         return this.$el.toggleClass("selected", selected);
       },
       edit: function(e) {
+        var identifier;
         if (e.target.className === "priority") {
           return false;
         }
-        return swipy.router.navigate("edit/" + this.model.id, true);
+        identifier = this.model.id ? this.model.id : this.model.get("tempId");
+        return swipy.router.navigate("edit/" + identifier, true);
       },
       render: function() {
         if (this.template == null) {
