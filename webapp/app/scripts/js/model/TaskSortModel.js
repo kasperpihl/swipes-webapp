@@ -75,11 +75,11 @@
           if (!_.contains(orders, i)) {
             if (withoutOrder.length) {
               task = withoutOrder.pop();
-              task.set("order", i);
+              task.updateOrder(i);
               continue;
             } else {
               this.swapSpots(i, order, orders);
-              task.set("order", i);
+              task.updateOrder(i);
             }
           }
         }
@@ -97,9 +97,9 @@
           if (_.contains(ordersMinusCurrent, order)) {
             spot = this.findSpotForTask(order, ordersMinusCurrent);
             this.swapSpots(spot, order, orders);
-            task.set("order", spot);
+            task.updateOrder(spot);
           } else if (order === todos.length - 1) {
-            task.set("order", order);
+            task.updateOrder(order);
           } else {
             continue;
           }
@@ -110,7 +110,7 @@
             spot = this.findSpotForTask(i, orders);
             orders.push(spot);
             console.log("A task (" + (task.get('title')) + ") didn't have a spot, so we assigned it " + spot);
-            task.set("order", spot);
+            task.updateOrder(spot);
           }
         }
         return todos;

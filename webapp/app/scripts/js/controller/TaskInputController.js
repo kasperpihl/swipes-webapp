@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "js/view/TaskInput", "js/model/TagModel"], function(_, TaskInputView, TagModel) {
+  define(["underscore", "js/view/TaskInput", "js/model/TagModel", "js/utility/Utility"], function(_, TaskInputView, TagModel, Utility) {
     var TaskInputController;
     return TaskInputController = (function() {
       function TaskInputController() {
@@ -50,7 +50,7 @@
       };
 
       TaskInputController.prototype.createTask = function(str) {
-        var animateIn, msg, newTodo, order, tags, taskTitleLength, title;
+        var animateIn, msg, newTodo, order, tags, taskTitleLength, tempId, title, util;
         if (swipy.todos == null) {
           return;
         }
@@ -64,13 +64,15 @@
           return;
         }
         swipy.todos.bumpOrder();
+        util = new Utility();
+        tempId = util.generateId(12);
         newTodo = swipy.todos.create({
           title: title,
           tags: tags,
           order: order,
-          animateIn: animateIn
+          animateIn: animateIn,
+          tempId: tempId
         });
-        console.log(newTodo);
         if (tags.length) {
           swipy.tags.getTagsFromTasks();
         }

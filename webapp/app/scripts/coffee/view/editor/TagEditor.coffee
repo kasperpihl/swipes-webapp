@@ -54,8 +54,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 			tag = swipy.tags.findWhere { title: tagName }
 			if tag then tags.push tag else tags.push new TagModel( title: tagName )
 
-			@model.unset( "tags", { silent: yes } )
-			swipy.queue.add @model.save( "tags", tags )
+			@model.updateTags tags
 
 			# If it's a new tag, add it to the stack. getTagsFromTasks will automatically sav new tags.
 			if addToCollection then swipy.tags.getTagsFromTasks()

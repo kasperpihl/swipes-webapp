@@ -143,18 +143,16 @@
           _ref = this.getViewsBetween(newOrder, oldOrder, view.model.cid);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             affectedView = _ref[_i];
-            affectedView.model.set("order", affectedView.model.get("order") + 1);
+            affectedView.model.updateOrder(affectedView.model.get("order") + 1);
           }
         } else if (newOrder > oldOrder) {
           _ref1 = this.getViewsBetween(oldOrder, newOrder, view.model.cid);
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             affectedView = _ref1[_j];
-            affectedView.model.set("order", affectedView.model.get("order") - 1);
+            affectedView.model.updateOrder(affectedView.model.get("order") - 1);
           }
         }
-        return view.model.set({
-          order: newOrder
-        }, {
+        return view.model.updateOrder(newOrder, {
           silent: true
         });
       };

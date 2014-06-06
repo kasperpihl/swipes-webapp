@@ -105,15 +105,14 @@
         if (bumps == null) {
           bumps = 1;
         }
+        console.log("order");
         if (direction === "down") {
           _ref = swipy.todos.getActive();
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             model = _ref[_i];
             if (model.has("order") && model.get("order") >= startFrom) {
-              _results.push(model.set("order", model.get("order") + bumps, {
-                sync: true
-              }));
+              _results.push(model.updateOrder(model.get("order") + bumps));
             }
           }
           return _results;
@@ -123,9 +122,7 @@
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             model = _ref1[_j];
             if (model.has("order") && model.get("order") > startFrom) {
-              _results1.push(model.set("order", model.get("order") - bumps, {
-                sync: true
-              }));
+              _results1.push(model.updateOrder(model.get("order") - bumps));
             }
           }
           return _results1;

@@ -1,7 +1,7 @@
 define ["backbone"], ->
 	Backbone.Model.extend
 		className: "BaseModel"
-		sync: -> false
+		sync: -> true
 		handleForSync: ( key, val, options ) ->
 			attrs = {}
 			if key is null or typeof key is 'object'
@@ -9,7 +9,9 @@ define ["backbone"], ->
 				options = val
 			else 
 				attrs[ key ] = val
-			if options and options.sync
-				console.log options
-				console.log attrs
-				swipy.sync.handleModelForSync( @, attrs )
+			if options
+				if options.sync
+					swipy.sync.handleModelForSync( @, attrs )
+				if options.fire
+					for att, valOfAtt of attrs
+						console.log att

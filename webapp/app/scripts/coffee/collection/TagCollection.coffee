@@ -96,11 +96,9 @@ define [ "underscore", "js/model/TagModel", "backbone.localStorage"], ( _, TagMo
 			affectedTasks = swipy.todos.filter (m) ->
 				m.has( "tags" ) and _.contains( m.getTagStrList(), tagName )
 
-			console.log "tag"
 			for task in affectedTasks
 				oldTags = task.get "tags"
-				task.unset( "tags", { silent: yes } )
 				newTags = _.reject( oldTags, (tag) -> tag.get("title") is model.get "title" )
-				task.set( "tags", newTags )
+				task.updateTags newTags
 		destroy: ->
 			@off( null, null, @ )

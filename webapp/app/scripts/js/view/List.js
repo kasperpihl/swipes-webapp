@@ -107,9 +107,6 @@
           _ref1 = group.tasks;
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             model = _ref1[_j];
-            if (model.get("tags")) {
-              console.log(model.get("tags"));
-            }
             view = Modernizr.touch ? new TouchTaskView({
               model: model
             }) : new DesktopTaskView({

@@ -10,6 +10,11 @@
       set: function() {
         BaseModel.prototype.handleForSync.apply(this, arguments);
         return Backbone.Model.prototype.set.apply(this, arguments);
+      },
+      deleteTag: function() {
+        return this.set("deleted", true, {
+          sync: true
+        });
       }
     });
   });

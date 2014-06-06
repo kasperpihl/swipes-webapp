@@ -27,7 +27,6 @@
       init: function() {},
       toggleSelected: function() {
         var currentlySelected;
-        console.log(this.model);
         currentlySelected = this.model.get("selected") || false;
         return this.model.set("selected", !currentlySelected);
       },

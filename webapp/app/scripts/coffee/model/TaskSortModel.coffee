@@ -52,13 +52,13 @@ define ["underscore"], (_) ->
 					if withoutOrder.length
 						# First see if we can find a task without order to fit the spot
 						task = withoutOrder.pop()
-						task.set( "order", i )
+						task.updateOrder i
 						continue
 
 					else
 						# We couldn't, then move around items in current list
 						@swapSpots( i, order, orders )
-						task.set( "order", i )
+						task.updateOrder i
 
 
 			# 2nd loop — Reorder todos so no 2 todos have the same order and
@@ -82,10 +82,10 @@ define ["underscore"], (_) ->
 					# Replace old spot with new spot
 					@swapSpots( spot, order, orders )
 
-					task.set( "order", spot )
+					task.updateOrder spot 
 				else if order is todos.length - 1
 					# Order was assigned to the last spot in the list and that spot isnt taken
-					task.set( "order", order )
+					task.updateOrder order
 
 				# Curr spot is available. Do nothing.
 				else continue
@@ -96,6 +96,6 @@ define ["underscore"], (_) ->
 					spot = @findSpotForTask( i, orders )
 					orders.push spot
 					console.log "A task (#{task.get 'title'}) didn't have a spot, so we assigned it #{spot}"
-					task.set( "order", spot )
+					task.updateOrder spot
 
 			return todos

@@ -3,10 +3,10 @@
     return Backbone.Model.extend({
       className: "BaseModel",
       sync: function() {
-        return false;
+        return true;
       },
       handleForSync: function(key, val, options) {
-        var attrs;
+        var att, attrs, valOfAtt, _results;
         attrs = {};
         if (key === null || typeof key === 'object') {
           attrs = key;
@@ -14,10 +14,18 @@
         } else {
           attrs[key] = val;
         }
-        if (options && options.sync) {
-          console.log(options);
-          console.log(attrs);
-          return swipy.sync.handleModelForSync(this, attrs);
+        if (options) {
+          if (options.sync) {
+            swipy.sync.handleModelForSync(this, attrs);
+          }
+          if (options.fire) {
+            _results = [];
+            for (att in attrs) {
+              valOfAtt = attrs[att];
+              _results.push(console.log(att));
+            }
+            return _results;
+          }
         }
       }
     });

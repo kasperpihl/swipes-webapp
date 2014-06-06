@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "js/model/ClockWork", "js/controller/ViewController", "js/controller/AnalyticsController", "js/router/MainRouter", "js/collection/ToDoCollection", "js/collection/TagCollection", "js/view/nav/ListNavigation", "js/controller/TaskInputController", "js/controller/SidebarController", "js/controller/ScheduleController", "js/controller/FilterController", "js/controller/SettingsController", "js/controller/ErrorController", "js/controller/SyncQueue", "js/controller/SyncController", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue, SyncController) {
+  define(["backbone", "js/model/ClockWork", "js/controller/ViewController", "js/controller/AnalyticsController", "js/router/MainRouter", "js/collection/ToDoCollection", "js/collection/TagCollection", "js/view/nav/ListNavigation", "js/controller/TaskInputController", "js/controller/SidebarController", "js/controller/ScheduleController", "js/controller/FilterController", "js/controller/SettingsController", "js/controller/ErrorController", "js/controller/SyncController", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) {
     var Swipes;
     return Swipes = (function() {
       Swipes.prototype.UPDATE_INTERVAL = 30;
@@ -7,7 +7,6 @@
       Swipes.prototype.UPDATE_COUNT = 0;
 
       function Swipes() {
-        this.queue = new SyncQueue();
         this.analytics = new AnalyticsController();
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
@@ -46,9 +45,6 @@
           }).length) {
             return true;
           }
-        }
-        if (this.queue.isBusy()) {
-          return true;
         }
         return false;
       };

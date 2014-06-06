@@ -161,18 +161,14 @@
         affectedTasks = swipy.todos.filter(function(m) {
           return m.has("tags") && _.contains(m.getTagStrList(), tagName);
         });
-        console.log("tag");
         _results = [];
         for (_i = 0, _len = affectedTasks.length; _i < _len; _i++) {
           task = affectedTasks[_i];
           oldTags = task.get("tags");
-          task.unset("tags", {
-            silent: true
-          });
           newTags = _.reject(oldTags, function(tag) {
             return tag.get("title") === model.get("title");
           });
-          _results.push(task.set("tags", newTags));
+          _results.push(task.updateTags(newTags));
         }
         return _results;
       },

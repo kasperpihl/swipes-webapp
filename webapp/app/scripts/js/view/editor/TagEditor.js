@@ -80,10 +80,7 @@
             title: tagName
           }));
         }
-        this.model.unset("tags", {
-          silent: true
-        });
-        swipy.queue.add(this.model.save("tags", tags));
+        this.model.updateTags(tags);
         if (addToCollection) {
           return swipy.tags.getTagsFromTasks();
         }

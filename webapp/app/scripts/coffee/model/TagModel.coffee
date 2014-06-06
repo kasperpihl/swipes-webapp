@@ -6,3 +6,5 @@ define ["js/model/BaseModel"], (BaseModel) ->
 		set: ->
 			BaseModel.prototype.handleForSync.apply( @ , arguments )
 			Backbone.Model.prototype.set.apply( @ , arguments )
+		deleteTag: ->
+			@set "deleted", yes, { sync: true }

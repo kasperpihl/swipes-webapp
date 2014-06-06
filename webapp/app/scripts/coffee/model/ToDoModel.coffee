@@ -56,7 +56,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
 			# because null should be an allowed without triggering any logic, as null is used for
 			# tasks scheduled as 'unspecified'
-			if @get( "schedule" ) is "default" then @set( "schedule", @getDefaultSchedule() )
+			if @get( "schedule" ) is "default" then @scheduleTask @getDefaultSchedule()
 
 			# Convert schedule dates to actual date obj if for some reason it's a string (Like if it was saved to LocalStorage)
 			@reviveDate "schedule"
@@ -70,7 +70,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			@setTimeStr()
 
 			@on "change:tags", (me, tags) =>
-				if !tags then @set( "tags", [], { sync: true } )
+				if !tags then @updateTags []
 				@syncTags tags
 
 			@on "change:schedule", =>
@@ -78,14 +78,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@setTimeStr()
 				@set( "selected", no )
 				@reviveDate "schedule"
-				@checkIfWeShouldListenForOrderChange()
 
 			@on "change:completionDate", =>
 				@setCompletionStr()
 				@setCompletionTimeStr()
 				@set( "selected", no )
 				@reviveDate "completionDate"
-				@checkIfWeShouldListenForOrderChange()
 
 			@on "change:repeatDate", => @reviveDate "repeatDate"
 
@@ -95,7 +93,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if @has "completionDate"
 				@setCompletionStr()
 				@setCompletionTimeStr()
-
 
 		reviveDate: (prop) ->
 			if typeof @get( prop ) is "string"
@@ -125,7 +122,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			schedule = @get "schedule"
 
 			if typeof schedule is "string"
-				@set( "schedule", new Date schedule )
+				@scheduleTask( new Date schedule )
 
 			return @get "schedule"
 
@@ -145,12 +142,11 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				return fullStr
 		syncTags: (tags) ->
-			console.trace @get "tags"
+			console.log "changed tags"
 			# Remove falsy values first
-			console.log tags
 			tags = _.compact tags
 			
-			###pointers = ( tag.id for tag in tags when !tag.has "title" )
+			pointers = ( tag.id for tag in tags when !tag.has "title" )
 
 			if pointers && pointers.length
 				# remove pointers
@@ -160,7 +156,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				tags.push tag for tag in actualTags
 
 				@set( "tags", tags, { silent: yes } )
-			###
+			
 		getTagsFromPointers: (pointers) ->
 			result = []
 			for tagid in pointers
@@ -269,6 +265,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@set( "priority", 1 , { sync: true } )
 
 		scheduleTask: ( date ) ->
+			@unset "schedule"
 			@set({
 				schedule: date,
 				completionDate: null
@@ -310,7 +307,14 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				repeatDate =  @get "schedule"
 			@set({ repeatDate, repeatOption },{ sync: true })
 		
+		updateOrder: ( order, opt ) ->
+			options = { sync: true }
+			for key, value of opt
+				options[key] = value
+			@set "order", order, options
+
 		updateTags: ( tags ) ->
+			@unset "tags", { silent: true }
 			@set "tags", tags, { sync: true }
 
 		updateTitle: ( title ) ->

@@ -75,14 +75,14 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 
 			if newOrder < oldOrder
 				for affectedView in @getViewsBetween( newOrder, oldOrder, view.model.cid )
-					affectedView.model.set( "order", affectedView.model.get( "order" ) + 1 )
+					affectedView.model.updateOrder (affectedView.model.get( "order" ) + 1)
 
 			else if newOrder > oldOrder
 				for affectedView in @getViewsBetween( oldOrder, newOrder, view.model.cid )
-					affectedView.model.set( "order", affectedView.model.get( "order" ) - 1 )
+					affectedView.model.updateOrder (affectedView.model.get( "order" ) - 1 )
 
 			# Silently set order for this view, because we don't want to trigger the handler that tweens the position for it.
-			view.model.set( { order: newOrder }, { silent: yes } )
+			view.model.updateOrder newOrder, { silent: true } 
 
 		scrollWindow: (minY, maxY, y, pointerY) ->
 			amount = minAmount = 20

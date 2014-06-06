@@ -4,7 +4,7 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 			@sorter = new TaskSortModel()
 			ListView::initialize.apply( @, arguments )
 		sortTasks: (tasks) ->
-			return _.sortBy( tasks, (model) -> model.get "order" )
+			return _.sortBy tasks, (model) -> model.get "order" 
 		groupTasks: (tasksArr) ->
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]

@@ -50,7 +50,7 @@
       initialize: function() {
         var _this = this;
         if (this.get("schedule") === "default") {
-          this.set("schedule", this.getDefaultSchedule());
+          this.scheduleTask(this.getDefaultSchedule());
         }
         this.reviveDate("schedule");
         this.reviveDate("completionDate");
@@ -59,9 +59,7 @@
         this.setTimeStr();
         this.on("change:tags", function(me, tags) {
           if (!tags) {
-            _this.set("tags", [], {
-              sync: true
-            });
+            _this.updateTags([]);
           }
           return _this.syncTags(tags);
         });
@@ -69,15 +67,13 @@
           _this.setScheduleStr();
           _this.setTimeStr();
           _this.set("selected", false);
-          _this.reviveDate("schedule");
-          return _this.checkIfWeShouldListenForOrderChange();
+          return _this.reviveDate("schedule");
         });
         this.on("change:completionDate", function() {
           _this.setCompletionStr();
           _this.setCompletionTimeStr();
           _this.set("selected", false);
-          _this.reviveDate("completionDate");
-          return _this.checkIfWeShouldListenForOrderChange();
+          return _this.reviveDate("completionDate");
         });
         this.on("change:repeatDate", function() {
           return _this.reviveDate("repeatDate");
@@ -125,7 +121,7 @@
         var schedule;
         schedule = this.get("schedule");
         if (typeof schedule === "string") {
-          this.set("schedule", new Date(schedule));
+          this.scheduleTask(new Date(schedule));
         }
         return this.get("schedule");
       },
@@ -147,21 +143,33 @@
         }
       },
       syncTags: function(tags) {
-        console.trace(this.get("tags"));
-        console.log(tags);
-        return tags = _.compact(tags);
-        /*pointers = ( tag.id for tag in tags when !tag.has "title" )
-        
-        			if pointers && pointers.length
-        				# remove pointers
-        				tags = _.reject tags, (t) -> _.contains( pointers, t.id )
-        
-        				actualTags = @getTagsFromPointers pointers
-        				tags.push tag for tag in actualTags
-        
-        				@set( "tags", tags, { silent: yes } )
-        */
-
+        var actualTags, pointers, tag, _i, _len;
+        console.log("changed tags");
+        tags = _.compact(tags);
+        pointers = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = tags.length; _i < _len; _i++) {
+            tag = tags[_i];
+            if (!tag.has("title")) {
+              _results.push(tag.id);
+            }
+          }
+          return _results;
+        })();
+        if (pointers && pointers.length) {
+          tags = _.reject(tags, function(t) {
+            return _.contains(pointers, t.id);
+          });
+          actualTags = this.getTagsFromPointers(pointers);
+          for (_i = 0, _len = actualTags.length; _i < _len; _i++) {
+            tag = actualTags[_i];
+            tags.push(tag);
+          }
+          return this.set("tags", tags, {
+            silent: true
+          });
+        }
       },
       getTagsFromPointers: function(pointers) {
         var result, tag, tagid, _i, _len;
@@ -279,6 +287,7 @@
         }
       },
       scheduleTask: function(date) {
+        this.unset("schedule");
         return this.set({
           schedule: date,
           completionDate: null
@@ -330,7 +339,21 @@
           sync: true
         });
       },
+      updateOrder: function(order, opt) {
+        var key, options, value;
+        options = {
+          sync: true
+        };
+        for (key in opt) {
+          value = opt[key];
+          options[key] = value;
+        }
+        return this.set("order", order, options);
+      },
       updateTags: function(tags) {
+        this.unset("tags", {
+          silent: true
+        });
         return this.set("tags", tags, {
           sync: true
         });

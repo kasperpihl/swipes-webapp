@@ -13,18 +13,16 @@ define [
 	"js/controller/FilterController"
 	"js/controller/SettingsController"
 	"js/controller/ErrorController"
-	"js/controller/SyncQueue"
 	"js/controller/SyncController"
 	"gsap"
 	"localytics-sdk"
-	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncQueue, SyncController) ->
+	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
 		constructor: ->
 			#@hackParseAPI()
 
-			@queue = new SyncQueue()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()
@@ -59,10 +57,6 @@ define [
 			if @todos.length
 				if @todos.where( selected:yes ).length
 					return yes
-
-			# Are we pushing changes to the server right now?
-			if @queue.isBusy()
-				return yes
 
 			return no
 		###hackParseAPI: ->
