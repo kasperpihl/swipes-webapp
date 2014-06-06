@@ -57,6 +57,7 @@
 
       SyncController.prototype.sync = function() {
         var data, isSyncing, serData, settings, token, url, user;
+        console.log("syncing");
         if (isSyncing) {
           return;
         }

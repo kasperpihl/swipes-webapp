@@ -1,7 +1,8 @@
 (function() {
-  define(["underscore", "js/model/TagModel"], function(_, TagModel) {
+  define(["underscore", "js/model/TagModel", "backbone.localStorage"], function(_, TagModel) {
     return Backbone.Collection.extend({
       model: TagModel,
+      localStorage: new Backbone.LocalStorage("TagCollection"),
       initialize: function() {
         this.on("remove", this.handleTagDeleted);
         this.on("add", this.handleAddTag, this);
@@ -160,6 +161,7 @@
         affectedTasks = swipy.todos.filter(function(m) {
           return m.has("tags") && _.contains(m.getTagStrList(), tagName);
         });
+        console.log("tag");
         _results = [];
         for (_i = 0, _len = affectedTasks.length; _i < _len; _i++) {
           task = affectedTasks[_i];

@@ -97,8 +97,8 @@ define [
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
 				$html = $( @template { title: group.deadline, tasks: tasksJSON } )
 				list = $html.find "ol"
-
 				for model in group.tasks
+					if model.get "tags" then console.log model.get "tags"
 					view = if Modernizr.touch then new TouchTaskView( { model } ) else new DesktopTaskView( { model } )
 					@subviews.push view
 					list.append view.el

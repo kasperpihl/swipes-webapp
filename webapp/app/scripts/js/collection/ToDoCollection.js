@@ -1,7 +1,8 @@
 (function() {
-  define(["js/model/ToDoModel"], function(ToDoModel) {
+  define(["js/model/ToDoModel", "backbone.localStorage"], function(ToDoModel) {
     return Backbone.Collection.extend({
       model: ToDoModel,
+      localStorage: new Backbone.LocalStorage("ToDoCollection"),
       initialize: function() {
         var _this = this;
         this.on("change:deleted", function(model, deleted) {
@@ -110,7 +111,9 @@
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             model = _ref[_i];
             if (model.has("order") && model.get("order") >= startFrom) {
-              _results.push(model.set("order", model.get("order") + bumps));
+              _results.push(model.set("order", model.get("order") + bumps, {
+                sync: true
+              }));
             }
           }
           return _results;
@@ -120,7 +123,9 @@
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             model = _ref1[_j];
             if (model.has("order") && model.get("order") > startFrom) {
-              _results1.push(model.set("order", model.get("order") - bumps));
+              _results1.push(model.set("order", model.get("order") - bumps, {
+                sync: true
+              }));
             }
           }
           return _results1;

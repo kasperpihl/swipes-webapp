@@ -29,7 +29,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 						return if model.id is objectId or model.get 'tempId' is tempId then true else false
 				)
 				if !model
-					model = new collection.model obj 
+					model = new collection.model obj
 					newModels.push model
 			if newModels.length > 0
 				collection.add(
@@ -43,6 +43,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 
 
 		sync: ->
+			console.log "syncing"
 			return if isSyncing
 			isSyncing = true
 

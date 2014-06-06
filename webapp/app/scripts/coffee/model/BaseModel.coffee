@@ -1,6 +1,7 @@
 define ["backbone"], ->
 	Backbone.Model.extend
 		className: "BaseModel"
+		sync: -> false
 		handleForSync: ( key, val, options ) ->
 			attrs = {}
 			if key is null or typeof key is 'object'

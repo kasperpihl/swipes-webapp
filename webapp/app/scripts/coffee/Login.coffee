@@ -63,7 +63,7 @@ class AnalyticsController
 
 ### /Analytics Controller ###
 
-LoginView = Backbone.View.extend
+LoginView = Parse.View.extend
 	el: "#login"
 	events:
 		"submit form": "handleSubmitForm"

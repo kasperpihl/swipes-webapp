@@ -1,6 +1,7 @@
-define ["js/model/ToDoModel"], ( ToDoModel) ->
+define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 	Backbone.Collection.extend
 		model: ToDoModel
+		localStorage: new Backbone.LocalStorage("ToDoCollection")
 		initialize: ->
 			@on( "change:deleted", (model, deleted) => if deleted then @remove model else @add model )
 			@on( "change:title", (model, newTitle) => console.log "Changed title to #{newTitle}" )
@@ -48,7 +49,7 @@ define ["js/model/ToDoModel"], ( ToDoModel) ->
 		bumpOrder: (direction = "down", startFrom = 0, bumps = 1) ->
 			if direction is "down"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom
-					model.set( "order", model.get( "order" ) + bumps )
+					model.set( "order", model.get( "order" ) + bumps , { sync: true })
 			else if direction is "up"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
-					model.set( "order", model.get( "order" ) - bumps )
+					model.set( "order", model.get( "order" ) - bumps , { sync: true })

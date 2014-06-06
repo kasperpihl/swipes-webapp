@@ -2,6 +2,7 @@
   define(["js/model/BaseModel"], function(BaseModel) {
     return BaseModel.extend({
       className: "Tag",
+      idAttribute: "objectId",
       defaults: {
         title: "",
         deleted: false

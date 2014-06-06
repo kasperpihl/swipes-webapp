@@ -7,16 +7,24 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 			"click .rounded-tags li:not(.tag-input)": "toggleTag"
 			"submit form": "createTag"
 		initialize: ->
+			console.log arguments
+			if arguments[ 0 ]
+				@options = arguments[ 0 ]
 			Overlay::initialize.apply( @, arguments )
 			@showClassName = "tags-editor-open"
 			@hideClassName = "hide-tags-editor"
+			console.log @
+			console.log @options
 			@render()
+
 		bindEvents: ->
 			_.bindAll( @, "handleResize" )
 			$(window).on( "resize", @handleResize )
 		setTemplate: ->
 			@template = _.template TagsEditorOverlayTmpl
 		getTagsAppliedToAll: ->
+			console.log @
+			console.log @options
 			# First check that all currently selected tasks have tags applied
 			tagLists = _.invoke( @options.models, "get", "tags" )
 			return [] if _.contains( tagLists, null )

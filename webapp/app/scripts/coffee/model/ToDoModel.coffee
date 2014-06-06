@@ -6,6 +6,7 @@
 define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel, TimeUtility ) ->
 	BaseModel.extend
 		className: "ToDo"
+		idAttribute: "objectId"
 		attrWhitelist: [
 			"title"
 			"order"
@@ -37,19 +38,19 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			BaseModel.prototype.handleForSync.apply @ , arguments
 			Backbone.Model.prototype.set.apply @ , arguments 
 		constructor: ( attributes ) ->
+
 			if attributes.tags and attributes.tags.length > 0
+				#console.log "has tags"
 				modelTags = []
-				hasTagsFromServer = null
 				for tag in attributes.tags
 					if !tag.objectId
 						continue
-					hasTagsFromServer = true
 					model = swipy.tags.get tag.objectId
 					if model
 						modelTags.push model
-				if hasTagsFromServer
-					attributes.tags = modelTags
-
+				attributes.tags = modelTags
+				
+				#console.log attributes.tags
 			Backbone.Model.apply @, arguments
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
@@ -69,7 +70,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			@setTimeStr()
 
 			@on "change:tags", (me, tags) =>
-				if !tags then @set( "tags", [] )
+				if !tags then @set( "tags", [], { sync: true } )
 				@syncTags tags
 
 			@on "change:schedule", =>
@@ -95,21 +96,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@setCompletionStr()
 				@setCompletionTimeStr()
 
-			saveOrder = => @save()
-			@debouncedSaveOrder = _.debounce( saveOrder, 3000 )
-
-			@checkIfWeShouldListenForOrderChange( no )
-		checkIfWeShouldListenForOrderChange: (removeEventListeners) ->
-			if @getState() is "active"
-				if @get "title"
-					if not @get "deleted"
-						@listenForOrderChanges()
-			else
-				if removeEventListeners then @stopListeningForOrderChanges()
-		listenForOrderChanges: ->
-			@on( "change:order", @debouncedSaveOrder )
-		stopListeningForOrderChanges: ->
-			@off( "change:order", @debouncedSaveOrder )
 
 		reviveDate: (prop) ->
 			if typeof @get( prop ) is "string"
@@ -159,10 +145,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				return fullStr
 		syncTags: (tags) ->
-			
+			console.trace @get "tags"
 			# Remove falsy values first
+			console.log tags
 			tags = _.compact tags
-			pointers = ( tag.id for tag in tags when !tag.has "title" )
+			
+			###pointers = ( tag.id for tag in tags when !tag.has "title" )
 
 			if pointers && pointers.length
 				# remove pointers
@@ -172,6 +160,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				tags.push tag for tag in actualTags
 
 				@set( "tags", tags, { silent: yes } )
+			###
 		getTagsFromPointers: (pointers) ->
 			result = []
 			for tagid in pointers

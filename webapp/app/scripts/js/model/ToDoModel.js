@@ -8,6 +8,7 @@
   define(["js/model/BaseModel", "js/utility/TimeUtility", "momentjs"], function(BaseModel, TimeUtility) {
     return BaseModel.extend({
       className: "ToDo",
+      idAttribute: "objectId",
       attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority", "deleted"],
       defaults: {
         title: "",
@@ -28,31 +29,26 @@
         return Backbone.Model.prototype.set.apply(this, arguments);
       },
       constructor: function(attributes) {
-        var hasTagsFromServer, model, modelTags, tag, _i, _len, _ref;
+        var model, modelTags, tag, _i, _len, _ref;
         if (attributes.tags && attributes.tags.length > 0) {
           modelTags = [];
-          hasTagsFromServer = null;
           _ref = attributes.tags;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             tag = _ref[_i];
             if (!tag.objectId) {
               continue;
             }
-            hasTagsFromServer = true;
             model = swipy.tags.get(tag.objectId);
             if (model) {
               modelTags.push(model);
             }
           }
-          if (hasTagsFromServer) {
-            attributes.tags = modelTags;
-          }
+          attributes.tags = modelTags;
         }
         return Backbone.Model.apply(this, arguments);
       },
       initialize: function() {
-        var saveOrder,
-          _this = this;
+        var _this = this;
         if (this.get("schedule") === "default") {
           this.set("schedule", this.getDefaultSchedule());
         }
@@ -63,7 +59,9 @@
         this.setTimeStr();
         this.on("change:tags", function(me, tags) {
           if (!tags) {
-            _this.set("tags", []);
+            _this.set("tags", [], {
+              sync: true
+            });
           }
           return _this.syncTags(tags);
         });
@@ -87,32 +85,8 @@
         this.on("destroy", this.cleanUp);
         if (this.has("completionDate")) {
           this.setCompletionStr();
-          this.setCompletionTimeStr();
+          return this.setCompletionTimeStr();
         }
-        saveOrder = function() {
-          return _this.save();
-        };
-        this.debouncedSaveOrder = _.debounce(saveOrder, 3000);
-        return this.checkIfWeShouldListenForOrderChange(false);
-      },
-      checkIfWeShouldListenForOrderChange: function(removeEventListeners) {
-        if (this.getState() === "active") {
-          if (this.get("title")) {
-            if (!this.get("deleted")) {
-              return this.listenForOrderChanges();
-            }
-          }
-        } else {
-          if (removeEventListeners) {
-            return this.stopListeningForOrderChanges();
-          }
-        }
-      },
-      listenForOrderChanges: function() {
-        return this.on("change:order", this.debouncedSaveOrder);
-      },
-      stopListeningForOrderChanges: function() {
-        return this.off("change:order", this.debouncedSaveOrder);
       },
       reviveDate: function(prop) {
         var value;
@@ -173,32 +147,21 @@
         }
       },
       syncTags: function(tags) {
-        var actualTags, pointers, tag, _i, _len;
-        tags = _.compact(tags);
-        pointers = (function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = tags.length; _i < _len; _i++) {
-            tag = tags[_i];
-            if (!tag.has("title")) {
-              _results.push(tag.id);
-            }
-          }
-          return _results;
-        })();
-        if (pointers && pointers.length) {
-          tags = _.reject(tags, function(t) {
-            return _.contains(pointers, t.id);
-          });
-          actualTags = this.getTagsFromPointers(pointers);
-          for (_i = 0, _len = actualTags.length; _i < _len; _i++) {
-            tag = actualTags[_i];
-            tags.push(tag);
-          }
-          return this.set("tags", tags, {
-            silent: true
-          });
-        }
+        console.trace(this.get("tags"));
+        console.log(tags);
+        return tags = _.compact(tags);
+        /*pointers = ( tag.id for tag in tags when !tag.has "title" )
+        
+        			if pointers && pointers.length
+        				# remove pointers
+        				tags = _.reject tags, (t) -> _.contains( pointers, t.id )
+        
+        				actualTags = @getTagsFromPointers pointers
+        				tags.push tag for tag in actualTags
+        
+        				@set( "tags", tags, { silent: yes } )
+        */
+
       },
       getTagsFromPointers: function(pointers) {
         var result, tag, tagid, _i, _len;

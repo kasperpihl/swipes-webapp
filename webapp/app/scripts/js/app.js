@@ -13,7 +13,7 @@
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
         this.tags = new TagCollection();
-        this.tags.once("reset", this.init, this);
+        this.todos.once("reset", this.init, this);
         this.sync = new SyncController();
       }
 
@@ -130,9 +130,7 @@
         }
       };
 
-      Swipes.prototype.fetchTodos = function() {
-        return this.sync.sync();
-      };
+      Swipes.prototype.fetchTodos = function() {};
 
       return Swipes;
 

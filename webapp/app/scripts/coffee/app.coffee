@@ -34,7 +34,7 @@ define [
 
 			@tags = new TagCollection()
 			##@tags.once( "reset", => @fetchTodos() )
-			@tags.once( "reset", @init, @ )
+			@todos.once( "reset", @init, @ )
 
 			##@tags.fetch()
 
@@ -117,4 +117,4 @@ define [
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
 		fetchTodos: ->
-			@sync.sync()
+			#@sync.sync()

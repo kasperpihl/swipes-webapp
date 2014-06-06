@@ -9,9 +9,15 @@
         "submit form": "createTag"
       },
       initialize: function() {
+        console.log(arguments);
+        if (arguments[0]) {
+          this.options = arguments[0];
+        }
         Overlay.prototype.initialize.apply(this, arguments);
         this.showClassName = "tags-editor-open";
         this.hideClassName = "hide-tags-editor";
+        console.log(this);
+        console.log(this.options);
         return this.render();
       },
       bindEvents: function() {
@@ -23,6 +29,8 @@
       },
       getTagsAppliedToAll: function() {
         var modelList, stringLists, tagLists, _i, _len;
+        console.log(this);
+        console.log(this.options);
         tagLists = _.invoke(this.options.models, "get", "tags");
         if (_.contains(tagLists, null)) {
           return [];

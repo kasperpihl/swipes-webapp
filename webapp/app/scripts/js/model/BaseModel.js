@@ -2,6 +2,9 @@
   define(["backbone"], function() {
     return Backbone.Model.extend({
       className: "BaseModel",
+      sync: function() {
+        return false;
+      },
       handleForSync: function(key, val, options) {
         var attrs;
         attrs = {};

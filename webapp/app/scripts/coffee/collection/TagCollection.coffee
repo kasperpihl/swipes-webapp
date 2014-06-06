@@ -1,6 +1,7 @@
-define [ "underscore", "js/model/TagModel"], ( _, TagModel) ->
+define [ "underscore", "js/model/TagModel", "backbone.localStorage"], ( _, TagModel) ->
 	Backbone.Collection.extend
 		model: TagModel
+		localStorage: new Backbone.LocalStorage("TagCollection")
 		initialize: ->
 			@on( "remove", @handleTagDeleted )
 			@on( "add", @handleAddTag, @ )
@@ -95,6 +96,7 @@ define [ "underscore", "js/model/TagModel"], ( _, TagModel) ->
 			affectedTasks = swipy.todos.filter (m) ->
 				m.has( "tags" ) and _.contains( m.getTagStrList(), tagName )
 
+			console.log "tag"
 			for task in affectedTasks
 				oldTags = task.get "tags"
 				task.unset( "tags", { silent: yes } )
