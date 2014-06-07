@@ -29,21 +29,8 @@
         return Backbone.Model.prototype.set.apply(this, arguments);
       },
       constructor: function(attributes) {
-        var model, modelTags, tag, _i, _len, _ref;
         if (attributes.tags && attributes.tags.length > 0) {
-          modelTags = [];
-          _ref = attributes.tags;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            tag = _ref[_i];
-            if (!tag.objectId) {
-              continue;
-            }
-            model = swipy.tags.get(tag.objectId);
-            if (model) {
-              modelTags.push(model);
-            }
-          }
-          attributes.tags = modelTags;
+          attributes.tags = this.handleTagsFromServer(attributes.tags);
         }
         return BaseModel.apply(this, arguments);
       },
@@ -86,17 +73,10 @@
       },
       reviveDate: function(prop) {
         var value;
-        if (typeof this.get(prop) === "string") {
-          this.set(prop, new Date(this.get(prop)), {
-            silent: true
-          });
-        }
-        if (_.isObject(this.get(prop)) && this.get(prop).__type === "Date") {
-          value = new Date(this.get(prop).iso);
-          return this.set(prop, value, {
-            silent: true
-          });
-        }
+        value = this.handleDateFromServer(this.get(prop));
+        return this.set(prop, value, {
+          silent: true
+        });
       },
       getState: function() {
         var schedule;
@@ -372,6 +352,56 @@
         return this.set("deleted", true, {
           sync: true
         });
+      },
+      updateFromServerObj: function(obj, recentChanges) {
+        var attribute, dateKeys, val, _i, _len, _ref, _results;
+        BaseModel.prototype.updateFromServerObj.apply(this, arguments);
+        console.log("here in " + this.className);
+        dateKeys = ["schedule", "completionDate", "repeatDate"];
+        _ref = this.attrWhitelist;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          attribute = _ref[_i];
+          if (obj[attribute] == null) {
+            continue;
+          }
+          if ((recentChanges != null) && _.indexOf(recentChanges, attribute !== -1)) {
+            continue;
+          }
+          val = obj[attribute];
+          if (attribute === "tags") {
+            _results.push(this.set("tags", this.handleTagsFromServer(val)));
+          } else if (_.indexOf(dateKeys, attribute !== -1)) {
+            _results.push(this.set(attribute, this.handleDateFromServer(val)));
+          } else {
+            console.log("set attribute from server " + attribute);
+            _results.push(this.set(attribute, val));
+          }
+        }
+        return _results;
+      },
+      handleTagsFromServer: function(tags) {
+        var model, modelTags, tag, _i, _len;
+        modelTags = [];
+        for (_i = 0, _len = tags.length; _i < _len; _i++) {
+          tag = tags[_i];
+          if (!tag.objectId) {
+            continue;
+          }
+          model = swipy.tags.get(tag.objectId);
+          if (model) {
+            modelTags.push(model);
+          }
+        }
+        return modelTags;
+      },
+      handleDateFromServer: function(date) {
+        if (typeof date === "string") {
+          date = new Date(date);
+        } else if (_.isObject(date) && date.__type === "Date") {
+          date = new Date(date.iso);
+        }
+        return date;
       }
     });
   });

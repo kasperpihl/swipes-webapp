@@ -37,16 +37,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			BaseModel.prototype.handleForSync.apply @ , arguments
 			Backbone.Model.prototype.set.apply @ , arguments 
 		constructor: ( attributes ) ->
+
 			if attributes.tags and attributes.tags.length > 0
-				#console.log "has tags"
-				modelTags = []
-				for tag in attributes.tags
-					if !tag.objectId
-						continue
-					model = swipy.tags.get tag.objectId
-					if model
-						modelTags.push model
-				attributes.tags = modelTags
+				attributes.tags = @handleTagsFromServer attributes.tags
 			BaseModel.apply @, arguments
 
 		initialize: ->
@@ -92,11 +85,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@setCompletionTimeStr()
 
 		reviveDate: (prop) ->
-			if typeof @get( prop ) is "string"
-				@set( prop, new Date( @get prop ), { silent: yes } )
-			if _.isObject( @get prop ) and @get(prop).__type is "Date"
-				value = new Date @get(prop).iso
-				@set prop, value, { silent: true }
+			value = @handleDateFromServer @get( prop )
+			@set prop, value, { silent: true }
+		
 		getState: ->
 			schedule = @getValidatedSchedule()
 			# Check if completed
@@ -322,3 +313,38 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 		deleteTask: ->
 			@set "deleted", yes, { sync: true }
+
+
+
+		updateFromServerObj: ( obj, recentChanges ) ->
+			BaseModel.prototype.updateFromServerObj.apply @, arguments
+			console.log "here in " + @className
+			dateKeys = [ "schedule", "completionDate", "repeatDate" ]
+			for attribute in @attrWhitelist
+				continue if !obj[ attribute ]?
+				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1  
+				val = obj[ attribute ]
+				if attribute is "tags"
+					@set "tags", @handleTagsFromServer val
+				else if _.indexOf dateKeys, attribute isnt -1
+					@set attribute, @handleDateFromServer val
+				else
+					console.log "set attribute from server " + attribute
+					@set attribute, val
+
+		handleTagsFromServer: ( tags ) ->
+			modelTags = []
+			for tag in tags
+				if !tag.objectId
+					continue
+				model = swipy.tags.get tag.objectId
+				if model
+					modelTags.push model
+			modelTags
+
+		handleDateFromServer: ( date ) ->
+			if typeof date is "string"
+				date = new Date date
+			else if _.isObject( date ) and date.__type is "Date"
+				date = new Date date.iso
+			date

@@ -16,11 +16,19 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 				options = val
 			else 
 				attrs[ key ] = val
-			if options
-				if options.sync
-					if @id
-						swipy.sync.handleModelForSync( @, attrs )
-		toServerJSON: ->
+			if options and options.sync
+				swipy.sync.handleModelForSync( @, attrs )
+		toServerJSON: ( attrList ) ->
 			if !@attrWhitelist
 				return console.log "please add attrWhiteList in model for sync support"
-			_.pick( @attributes, @attrWhitelist.concat( @defaultAttributes ) )
+			attrList = @attrWhitelist.concat( @defaultAttributes ) if !attrList
+			json = _.pick( @attributes, attrList )
+			# Prepare all the dates to proper format for server
+			for key, value of json
+				if _.isDate value
+					json[ key ] = { "__type": "Date", "iso": value }
+			json
+
+		updateFromServerObj: ( obj ) ->
+			@id = obj.objectId if !@id
+			@set "deleted", obj.deleted if obj.deleted

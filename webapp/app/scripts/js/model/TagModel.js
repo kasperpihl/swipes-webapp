@@ -16,6 +16,12 @@
         return this.set("deleted", true, {
           sync: true
         });
+      },
+      updateFromServerObj: function(obj) {
+        BaseModel.prototype.updateFromServerObj.apply(this, arguments);
+        if (obj.title != null) {
+          return this.set("title", obj.title);
+        }
       }
     });
   });

@@ -18,20 +18,21 @@
         this.lastUpdate = null;
         this.sync();
         this.bouncedSync = _.debounce(this.sync, 3000);
+        this.currentSyncing = null;
       }
 
       SyncController.prototype.handleModelForSync = function(model, attributes) {
         if (model.id) {
           this.changedAttributes.saveAttributesToSync(model, attributes);
-        } else if (this.isSyncing) {
+        } else if (this.isSyncing && !model.id) {
           this.changedAttributes.saveTempAttributesToSync(model, attributes);
+          console.log("handling new object while syncing");
         }
-        console.log("handling");
         return this.bouncedSync();
       };
 
       SyncController.prototype.handleObjectsFromSync = function(objects, className) {
-        var collection, model, newModels, obj, objectId, tempId, _i, _len;
+        var collection, model, newModels, obj, objectId, recentChanges, tempId, _i, _len;
         collection = className === "ToDo" ? swipy.todos : swipy.tags;
         newModels = [];
         for (_i = 0, _len = objects.length; _i < _len; _i++) {
@@ -47,14 +48,17 @@
           });
           if (!model) {
             model = new collection.model(obj);
+            this.changedAttributes.moveTempChangesForModel(model);
             newModels.push(model);
+          } else {
+            recentChanges = this.changedAttributes.getChangesForModel(model);
+            model.updateFromServerObj(obj, recentChanges);
           }
         }
         if (newModels.length > 0) {
-          collection.add(newModels, {
+          return collection.add(newModels, {
             silent: true
           });
-          return collection.trigger("reset");
         }
       };
 
@@ -74,7 +78,7 @@
 
       SyncController.prototype.prepareUpdatesForCollection = function(collection, className) {
         var identifiers, json, mdl, mdlsChanges, serverJSON, updateModels, updatedAttributes, _i, _len;
-        updatedAttributes = this.changedAttributes.newChangedAttributes[className];
+        updatedAttributes = this.currentSyncing[className];
         identifiers = _.keys(updatedAttributes);
         serverJSON = [];
         updateModels = collection.filter(function(model) {
@@ -83,27 +87,54 @@
         for (_i = 0, _len = updateModels.length; _i < _len; _i++) {
           mdl = updateModels[_i];
           mdlsChanges = updatedAttributes[mdl.id];
-          json = _.pick(mdl.toServerJSON(), mdlsChanges);
+          json = mdl.toServerJSON(mdlsChanges);
           json.objectId = mdl.id;
           serverJSON.push(json);
         }
         return serverJSON;
       };
 
+      SyncController.prototype.combineAttributes = function(newAttributes) {
+        var className, existingChanges, identifier, newChanges, _i, _len, _ref, _results;
+        if (this.currentSyncing == null) {
+          return this.currentSyncing = newAttributes;
+        }
+        _ref = ["Tag", "ToDo"];
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          className = _ref[_i];
+          _results.push((function() {
+            var _ref1, _results1;
+            _ref1 = newAttributes[className];
+            _results1 = [];
+            for (identifier in _ref1) {
+              newChanges = _ref1[identifier];
+              existingChanges = this.currentSyncing[className][identifier];
+              if (existingChanges != null) {
+                newChanges = _.uniq(existingChanges.concat(newChanges));
+              }
+              _results1.push(this.currentSyncing[className][identifier] = newChanges);
+            }
+            return _results1;
+          }).call(this));
+        }
+        return _results;
+      };
+
       SyncController.prototype.prepareObjectsToSaveOnServer = function() {
-        var newTags, newTodos, serverJSON, updateTags, updateTodos;
-        console.log("prepare");
+        var newAttributes, newTags, newTodos, serverJSON, updateTags, updateTodos;
         if (typeof swipy === "undefined" || swipy === null) {
-          this.needSync = true;
           return;
         }
+        newAttributes = this.changedAttributes.getIdentifiersAndAttributesForSyncing("reset");
+        this.combineAttributes(newAttributes);
         newTags = this.prepareNewObjectsForCollection(swipy.tags);
         newTodos = this.prepareNewObjectsForCollection(swipy.todos);
         updateTags = this.prepareUpdatesForCollection(swipy.tags, "Tag");
         updateTodos = this.prepareUpdatesForCollection(swipy.todos, "ToDo");
         serverJSON = {
-          ToDo: newTags.concat(updateTags),
-          Tag: newTodos.concat(updateTodos)
+          Tag: newTags.concat(updateTags),
+          ToDo: newTodos.concat(updateTodos)
         };
         return serverJSON;
       };
@@ -148,12 +179,14 @@
         return $.ajax(settings);
       };
 
-      SyncController.prototype.finalizeSync = function() {
+      SyncController.prototype.finalizeSync = function(error) {
         this.isSyncing = false;
+        this.changedAttributes.resetTempChanges();
         if (this.needSync) {
           this.needSync = false;
-          return this.sync(true);
+          this.sync(true);
         }
+        return Backbone.trigger("sync-complete", this);
       };
 
       SyncController.prototype.errorFromSync = function(data, textStatus, error) {
@@ -164,13 +197,13 @@
       SyncController.prototype.responseFromSync = function(data, textStatus) {
         console.log(data);
         if (data && data.serverTime) {
+          this.currentSyncing = null;
           if (data.Tag != null) {
             this.handleObjectsFromSync(data.Tag, "Tag");
           }
           if (data.ToDo != null) {
             this.handleObjectsFromSync(data.ToDo, "ToDo");
           }
-          console.log(data);
           if (data.updateTime) {
             this.lastUpdate = data.updateTime;
           }

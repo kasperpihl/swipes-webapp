@@ -12,7 +12,7 @@
         this.todos = new ToDoCollection();
         this.updateTimer = new ClockWork();
         this.tags = new TagCollection();
-        this.todos.once("reset", this.init, this);
+        Backbone.once("sync-complete", this.init, this);
         this.sync = new SyncController();
       }
 

@@ -9,19 +9,22 @@
 
 define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesController"], (_, Backbone, $, ChangedAttributesController) ->
 	class SyncController
+
 		constructor: ->
 			@changedAttributes = new ChangedAttributesController();
 			@isSyncing = false
 			@needSync = false
 			@lastUpdate = null
 			@sync()
-			@bouncedSync = _.debounce( @sync, 3000 );
+			@bouncedSync = _.debounce( @sync, 3000 )
+			@currentSyncing = null
+
 		handleModelForSync: (model, attributes) ->
 			if model.id
 				@changedAttributes.saveAttributesToSync( model , attributes )
-			else if @isSyncing
+			else if @isSyncing and !model.id
 				@changedAttributes.saveTempAttributesToSync( model, attributes )
-			console.log "handling"
+				console.log "handling new object while syncing"
 			@bouncedSync()
 
 		handleObjectsFromSync: ( objects, className ) ->
@@ -36,13 +39,17 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				)
 				if !model
 					model = new collection.model obj
+					@changedAttributes.moveTempChangesForModel model
 					newModels.push model
+				else
+					recentChanges = @changedAttributes.getChangesForModel model
+					model.updateFromServerObj obj, recentChanges
 			if newModels.length > 0
 				collection.add(
 					newModels,
 					silent : true
 				)
-				collection.trigger "reset"
+
 		prepareNewObjectsForCollection: ( collection ) ->
 			newModels = collection.filter (model) -> 
 				return (!model.id and model.get "tempId")
@@ -51,33 +58,47 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				json = mdl.toServerJSON()
 				serverJSON.push json
 			serverJSON
+
+
 		prepareUpdatesForCollection: ( collection, className ) ->
-			updatedAttributes = @changedAttributes.newChangedAttributes[ className ]
+			updatedAttributes = @currentSyncing[ className ]
 			identifiers = _.keys( updatedAttributes )
 			serverJSON = []
 			updateModels = collection.filter (model) ->
 				return (_.indexOf(identifiers , model.id ) isnt -1)
 			for mdl in updateModels
 				mdlsChanges = updatedAttributes[ mdl.id ]
-				json = _.pick(mdl.toServerJSON(), mdlsChanges)
+				json = mdl.toServerJSON mdlsChanges
 				json.objectId = mdl.id
 				serverJSON.push json 
 			serverJSON
+
+
+		combineAttributes: ( newAttributes ) ->
+			return @currentSyncing = newAttributes if !@currentSyncing?
+			for className in ["Tag", "ToDo"]
+				for identifier, newChanges of newAttributes[ className ]
+					existingChanges = @currentSyncing[ className ][ identifier ]
+					newChanges = _.uniq( existingChanges.concat( newChanges ) ) if existingChanges?
+					@currentSyncing[ className ][ identifier ] = newChanges
+
 		prepareObjectsToSaveOnServer: ->
-			console.log "prepare"
-			if !swipy?
-				@needSync = true
-				return
-			
+			return if !swipy?
+			newAttributes = @changedAttributes.getIdentifiersAndAttributesForSyncing( "reset" )
+			@combineAttributes newAttributes
+
 			newTags = @prepareNewObjectsForCollection swipy.tags
 			newTodos = @prepareNewObjectsForCollection swipy.todos
 
 			updateTags = @prepareUpdatesForCollection swipy.tags, "Tag"
 			updateTodos = @prepareUpdatesForCollection swipy.todos, "ToDo"
 			serverJSON =
-				ToDo : newTags.concat( updateTags )
-				Tag: newTodos.concat( updateTodos )
+				Tag : newTags.concat( updateTags )
+				ToDo : newTodos.concat( updateTodos )
 			return serverJSON
+
+
+
 		sync: ->
 			console.log "syncing"
 			return @needSync = true if isSyncing
@@ -114,11 +135,13 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				processData : false
 			
 			$.ajax( settings ) 
-		finalizeSync: ->
+		finalizeSync: ( error ) ->
 			@isSyncing = false
+			@changedAttributes.resetTempChanges()
 			if @needSync
 				@needSync = false
 				@sync( true )
+			Backbone.trigger( "sync-complete", @ )
 		errorFromSync: ( data, textStatus, error ) ->
 			@finalizeSync()
 			console.log error
@@ -126,9 +149,9 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			
 			console.log data
 			if data and data.serverTime
+				@currentSyncing = null;
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
-				console.log data
 				@lastUpdate = data.updateTime if data.updateTime
 				##swipy.todos.handleObjects data.ToDo
 			@finalizeSync()

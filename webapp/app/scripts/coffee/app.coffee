@@ -32,7 +32,7 @@ define [
 
 			@tags = new TagCollection()
 			##@tags.once( "reset", => @fetchTodos() )
-			@todos.once( "reset", @init, @ )
+			Backbone.once( "sync-complete", @init, @ )
 
 			##@tags.fetch()
 
