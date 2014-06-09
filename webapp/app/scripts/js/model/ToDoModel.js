@@ -321,6 +321,9 @@
       },
       updateOrder: function(order, opt) {
         var key, options, value;
+        if (order === this.get("order")) {
+          return;
+        }
         options = {
           sync: true
         };

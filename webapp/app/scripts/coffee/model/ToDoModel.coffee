@@ -296,6 +296,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			@set({ repeatDate, repeatOption },{ sync: true })
 		
 		updateOrder: ( order, opt ) ->
+			if order == @get "order"
+				return
 			options = { sync: true }
 			for key, value of opt
 				options[key] = value

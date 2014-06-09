@@ -53,6 +53,7 @@ define ["underscore"], (_) ->
 						# First see if we can find a task without order to fit the spot
 						task = withoutOrder.pop()
 						task.updateOrder i
+
 						continue
 
 					else

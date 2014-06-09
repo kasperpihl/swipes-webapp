@@ -56,9 +56,7 @@
           }
         }
         if (newModels.length > 0) {
-          return collection.add(newModels, {
-            silent: true
-          });
+          return collection.add(newModels);
         }
       };
 

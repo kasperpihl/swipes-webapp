@@ -46,8 +46,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 					model.updateFromServerObj obj, recentChanges
 			if newModels.length > 0
 				collection.add(
-					newModels,
-					silent : true
+					newModels
 				)
 
 		prepareNewObjectsForCollection: ( collection ) ->
