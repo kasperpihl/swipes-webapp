@@ -49,7 +49,7 @@
         return json;
       },
       updateFromServerObj: function(obj) {
-        if (!this.id) {
+        if (this.id == null) {
           this.id = obj.objectId;
         }
         if (obj.deleted) {

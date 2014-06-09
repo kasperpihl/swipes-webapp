@@ -35,9 +35,13 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				tempId = obj.tempId
 				model = collection.find( 
 					( model ) ->
-						return if model.id is objectId or model.get 'tempId' is tempId then true else false
+						return true if objectId? and model.id is objectId
+						return true if tempId? and model.get("tempId") is tempId
+						false
 				)
 				if !model
+					console.log "new"
+					#console.log obj
 					model = new collection.model obj
 					@changedAttributes.moveTempChangesForModel model
 					newModels.push model

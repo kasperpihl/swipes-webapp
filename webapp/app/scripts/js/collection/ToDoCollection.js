@@ -13,7 +13,8 @@
           }
         });
         this.on("change:title", function(model, newTitle) {
-          return console.log("Changed title to " + newTitle);
+          console.log("Changed title to " + newTitle);
+          return console.log(model);
         });
         return this.on("reset", function() {
           var m, removeThese, _i, _j, _len, _len1, _ref;

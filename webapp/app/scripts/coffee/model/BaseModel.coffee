@@ -30,5 +30,5 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 			json
 
 		updateFromServerObj: ( obj ) ->
-			@id = obj.objectId if !@id
+			@id = obj.objectId if !@id?
 			@set "deleted", obj.deleted if obj.deleted

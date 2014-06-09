@@ -357,12 +357,11 @@
         });
       },
       updateFromServerObj: function(obj, recentChanges) {
-        var attribute, dateKeys, val, _i, _len, _ref, _results;
+        var attribute, dateKeys, val, _i, _len, _ref;
         BaseModel.prototype.updateFromServerObj.apply(this, arguments);
         console.log("here in " + this.className);
         dateKeys = ["schedule", "completionDate", "repeatDate"];
         _ref = this.attrWhitelist;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           attribute = _ref[_i];
           if (obj[attribute] == null) {
@@ -373,15 +372,15 @@
           }
           val = obj[attribute];
           if (attribute === "tags") {
-            _results.push(this.set("tags", this.handleTagsFromServer(val)));
-          } else if (_.indexOf(dateKeys, attribute !== -1)) {
-            _results.push(this.set(attribute, this.handleDateFromServer(val)));
+            this.set("tags", this.handleTagsFromServer(val));
+          } else if (_.indexOf(dateKeys, attribute) !== -1) {
+            this.set(attribute, this.handleDateFromServer(val));
           } else {
             console.log("set attribute from server " + attribute);
-            _results.push(this.set(attribute, val));
+            this.set(attribute, val);
           }
         }
-        return _results;
+        return false;
       },
       handleTagsFromServer: function(tags) {
         var model, modelTags, tag, _i, _len;

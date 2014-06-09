@@ -40,13 +40,16 @@
           objectId = obj.objectId;
           tempId = obj.tempId;
           model = collection.find(function(model) {
-            if (model.id === objectId || model.get('tempId' === tempId)) {
+            if ((objectId != null) && model.id === objectId) {
               return true;
-            } else {
-              return false;
             }
+            if ((tempId != null) && model.get("tempId") === tempId) {
+              return true;
+            }
+            return false;
           });
           if (!model) {
+            console.log("new");
             model = new collection.model(obj);
             this.changedAttributes.moveTempChangesForModel(model);
             newModels.push(model);

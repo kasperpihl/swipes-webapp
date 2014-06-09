@@ -328,11 +328,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				val = obj[ attribute ]
 				if attribute is "tags"
 					@set "tags", @handleTagsFromServer val
-				else if _.indexOf dateKeys, attribute isnt -1
+				else if _.indexOf(dateKeys, attribute) isnt -1
 					@set attribute, @handleDateFromServer val
 				else
 					console.log "set attribute from server " + attribute
 					@set attribute, val
+			false
 
 		handleTagsFromServer: ( tags ) ->
 			modelTags = []

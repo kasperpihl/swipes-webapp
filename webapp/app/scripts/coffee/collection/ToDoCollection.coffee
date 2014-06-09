@@ -4,7 +4,10 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 		localStorage: new Backbone.LocalStorage("ToDoCollection")
 		initialize: ->
 			@on( "change:deleted", (model, deleted) => if deleted then @remove model else @add model )
-			@on( "change:title", (model, newTitle) => console.log "Changed title to #{newTitle}" )
+			@on( "change:title", (model, newTitle) => 
+				console.log "Changed title to #{newTitle}"
+				console.log model 
+			)
 
 			@on "reset", ->
 				removeThese = []
