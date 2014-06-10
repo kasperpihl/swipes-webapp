@@ -1,4 +1,5 @@
 define [
+	"jquery"
 	"backbone"
 	"js/model/ClockWork"
 	"js/controller/ViewController"
@@ -16,7 +17,7 @@ define [
 	"js/controller/SyncController"
 	"gsap"
 	"localytics-sdk"
-	], (Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) ->
+	], ($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -29,15 +30,19 @@ define [
 			@updateTimer = new ClockWork()
 
 			
-
+			
 			@tags = new TagCollection()
 			##@tags.once( "reset", => @fetchTodos() )
+
 			Backbone.once( "sync-complete", @init, @ )
 
 			##@tags.fetch()
 
 			@sync = new SyncController()
-
+			
+			$(window).focus =>
+				@fetchTodos()
+				
 		isBusy: ->
 			# Are any todos being saved right now?
 			if @todos.length?
@@ -82,9 +87,9 @@ define [
 			$("body").removeClass "loading"
 			# $("")
 
-			@startAutoUpdate()
+			#@startAutoUpdate()
 
-		update: ->
+		###update: ->
 			if not @isBusy()
 				@fetchTodos()
 				@UPDATE_COUNT++
@@ -94,9 +99,9 @@ define [
 		startAutoUpdate: ->
 			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
 		stopAutoUpdate: ->
-			TweenLite.killDelayedCallsTo @update
+			TweenLite.killDelayedCallsTo @update###
 		cleanUp: ->
-			@stopAutoUpdate()
+			#@stopAutoUpdate()
 			##@tags?.destroy()
 			@viewController?.destroy()
 			@nav?.destroy()
@@ -106,9 +111,8 @@ define [
 			@sidebar?.destroy()
 			@filter?.destroy()
 			@settings?.destroy()
-			@queue?.destroy()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
 		fetchTodos: ->
-			#@sync.sync()
+			@sync.sync()

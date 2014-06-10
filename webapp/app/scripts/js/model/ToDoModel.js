@@ -269,6 +269,7 @@
       scheduleTask: function(date) {
         this.unset("schedule");
         return this.set({
+          order: -1,
           schedule: date,
           completionDate: null
         }, {
@@ -359,7 +360,6 @@
       updateFromServerObj: function(obj, recentChanges) {
         var attribute, dateKeys, val, _i, _len, _ref;
         BaseModel.prototype.updateFromServerObj.apply(this, arguments);
-        console.log("here in " + this.className);
         dateKeys = ["schedule", "completionDate", "repeatDate"];
         _ref = this.attrWhitelist;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -376,7 +376,6 @@
           } else if (_.indexOf(dateKeys, attribute) !== -1) {
             this.set(attribute, this.handleDateFromServer(val));
           } else {
-            console.log("set attribute from server " + attribute);
             this.set(attribute, val);
           }
         }

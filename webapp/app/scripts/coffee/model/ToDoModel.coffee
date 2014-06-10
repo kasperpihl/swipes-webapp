@@ -255,7 +255,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		scheduleTask: ( date ) ->
 			@unset "schedule"
 			@set({
-				schedule: date,
+				order: -1
+				schedule: date
 				completionDate: null
 			},
 			sync: true
@@ -320,7 +321,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 		updateFromServerObj: ( obj, recentChanges ) ->
 			BaseModel.prototype.updateFromServerObj.apply @, arguments
-			console.log "here in " + @className
 			dateKeys = [ "schedule", "completionDate", "repeatDate" ]
 			for attribute in @attrWhitelist
 				continue if !obj[ attribute ]?
@@ -331,7 +331,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				else if _.indexOf(dateKeys, attribute) isnt -1
 					@set attribute, @handleDateFromServer val
 				else
-					console.log "set attribute from server " + attribute
 					@set attribute, val
 			false
 

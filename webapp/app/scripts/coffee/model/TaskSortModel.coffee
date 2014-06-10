@@ -1,5 +1,6 @@
 define ["underscore"], (_) ->
 	class TaskSortModel
+
 		sortBySchedule: (todos) ->
 			result = _.sortBy( todos, (m) -> m.get("schedule").getTime() )
 			result.reverse()
@@ -38,10 +39,24 @@ define ["underscore"], (_) ->
 
 			return result
 		setTodoOrder: (todos) ->
+			defaultOrderVal = -1
 			orders = _.invoke( todos, "get", "order" )
 			orders = _.without( orders, undefined ) #Remove falsy values from array, like undefined.
+			console.log orders
+
+			sortedTodoArray = []
+			groupedItems = _.groupBy( todos, (m) -> 
+				if m.has("order") and m.get("order") > defaultOrderVal then "ordered" else "unordered"
+			)
+			if groupedItems.ordered?
+				orderedItems = _.sortBy( groupedItems.ordered , (m) -> m.get "order" )
+			if groupedItems.unordered?
+				unorderedItems = _.sortBy( groupedItems.unordered, (m) -> m.get "schedule" )
+			for item in orderedItems
+				console.log item.get "order"
 
 			ordersBefore = orders
+
 			withoutOrder = @sortBySchedule _.filter( todos, (m) -> not m.has "order" )
 
 			# 1st loop – Remove any white space from orders array (Turn [3,4,5] into [0,1,2])

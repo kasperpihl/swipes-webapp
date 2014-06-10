@@ -1,5 +1,5 @@
 (function() {
-  define(["backbone", "js/model/ClockWork", "js/controller/ViewController", "js/controller/AnalyticsController", "js/router/MainRouter", "js/collection/ToDoCollection", "js/collection/TagCollection", "js/view/nav/ListNavigation", "js/controller/TaskInputController", "js/controller/SidebarController", "js/controller/ScheduleController", "js/controller/FilterController", "js/controller/SettingsController", "js/controller/ErrorController", "js/controller/SyncController", "gsap", "localytics-sdk"], function(Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) {
+  define(["jquery", "backbone", "js/model/ClockWork", "js/controller/ViewController", "js/controller/AnalyticsController", "js/router/MainRouter", "js/collection/ToDoCollection", "js/collection/TagCollection", "js/view/nav/ListNavigation", "js/controller/TaskInputController", "js/controller/SidebarController", "js/controller/ScheduleController", "js/controller/FilterController", "js/controller/SettingsController", "js/controller/ErrorController", "js/controller/SyncController", "gsap", "localytics-sdk"], function($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) {
     var Swipes;
     return Swipes = (function() {
       Swipes.prototype.UPDATE_INTERVAL = 30;
@@ -7,6 +7,7 @@
       Swipes.prototype.UPDATE_COUNT = 0;
 
       function Swipes() {
+        var _this = this;
         this.analytics = new AnalyticsController();
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
@@ -14,6 +15,9 @@
         this.tags = new TagCollection();
         Backbone.once("sync-complete", this.init, this);
         this.sync = new SyncController();
+        $(window).focus(function() {
+          return _this.fetchTodos();
+        });
       }
 
       Swipes.prototype.isBusy = function() {
@@ -70,30 +74,25 @@
         Parse.history.start({
           pushState: false
         });
-        $("body").removeClass("loading");
-        return this.startAutoUpdate();
+        return $("body").removeClass("loading");
       };
 
-      Swipes.prototype.update = function() {
-        if (!this.isBusy()) {
-          this.fetchTodos();
-          this.UPDATE_COUNT++;
-        }
-        this.lastUpdate = new Date();
-        return TweenLite.delayedCall(this.UPDATE_INTERVAL, this.update, null, this);
-      };
+      /*update: ->
+      			if not @isBusy()
+      				@fetchTodos()
+      				@UPDATE_COUNT++
+      
+      			@lastUpdate = new Date()
+      			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
+      		startAutoUpdate: ->
+      			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
+      		stopAutoUpdate: ->
+      			TweenLite.killDelayedCallsTo @update
+      */
 
-      Swipes.prototype.startAutoUpdate = function() {
-        return TweenLite.delayedCall(this.UPDATE_INTERVAL, this.update, null, this);
-      };
-
-      Swipes.prototype.stopAutoUpdate = function() {
-        return TweenLite.killDelayedCallsTo(this.update);
-      };
 
       Swipes.prototype.cleanUp = function() {
-        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
-        this.stopAutoUpdate();
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
         if ((_ref = this.viewController) != null) {
           _ref.destroy();
         }
@@ -118,15 +117,14 @@
         if ((_ref7 = this.settings) != null) {
           _ref7.destroy();
         }
-        if ((_ref8 = this.queue) != null) {
-          _ref8.destroy();
-        }
         if (Parse.History.started) {
           return Parse.history.stop();
         }
       };
 
-      Swipes.prototype.fetchTodos = function() {};
+      Swipes.prototype.fetchTodos = function() {
+        return this.sync.sync();
+      };
 
       return Swipes;
 

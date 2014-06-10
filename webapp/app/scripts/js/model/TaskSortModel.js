@@ -62,14 +62,38 @@
       };
 
       TaskSortModel.prototype.setTodoOrder = function(todos) {
-        var i, order, orders, ordersBefore, ordersMinusCurrent, spot, task, withoutOrder, _i, _j, _k, _len, _len1, _len2;
+        var defaultOrderVal, groupedItems, i, item, order, orderedItems, orders, ordersBefore, ordersMinusCurrent, sortedTodoArray, spot, task, unorderedItems, withoutOrder, _i, _j, _k, _l, _len, _len1, _len2, _len3;
+        defaultOrderVal = -1;
         orders = _.invoke(todos, "get", "order");
         orders = _.without(orders, void 0);
+        console.log(orders);
+        sortedTodoArray = [];
+        groupedItems = _.groupBy(todos, function(m) {
+          if (m.has("order") && m.get("order") > defaultOrderVal) {
+            return "ordered";
+          } else {
+            return "unordered";
+          }
+        });
+        if (groupedItems.ordered != null) {
+          orderedItems = _.sortBy(groupedItems.ordered, function(m) {
+            return m.get("order");
+          });
+        }
+        if (groupedItems.unordered != null) {
+          unorderedItems = _.sortBy(groupedItems.unordered, function(m) {
+            return m.get("schedule");
+          });
+        }
+        for (_i = 0, _len = orderedItems.length; _i < _len; _i++) {
+          item = orderedItems[_i];
+          console.log(item.get("order"));
+        }
         ordersBefore = orders;
         withoutOrder = this.sortBySchedule(_.filter(todos, function(m) {
           return !m.has("order");
         }));
-        for (i = _i = 0, _len = todos.length; _i < _len; i = ++_i) {
+        for (i = _j = 0, _len1 = todos.length; _j < _len1; i = ++_j) {
           task = todos[i];
           order = task.get("order");
           if (!_.contains(orders, i)) {
@@ -83,8 +107,8 @@
             }
           }
         }
-        for (_j = 0, _len1 = todos.length; _j < _len1; _j++) {
-          task = todos[_j];
+        for (_k = 0, _len2 = todos.length; _k < _len2; _k++) {
+          task = todos[_k];
           order = task.get("order");
           if (order == null) {
             continue;
@@ -105,7 +129,7 @@
           }
         }
         if (withoutOrder.length) {
-          for (i = _k = 0, _len2 = withoutOrder.length; _k < _len2; i = ++_k) {
+          for (i = _l = 0, _len3 = withoutOrder.length; _l < _len3; i = ++_l) {
             task = withoutOrder[i];
             spot = this.findSpotForTask(i, orders);
             orders.push(spot);
