@@ -27,6 +27,7 @@ define ["underscore", "backbone", "jquery", "plugins/lockablestorage"], (_, Back
 			return null
 
 		saveAttributesToSync: ( model, attributes ) ->
+			console.log _.keys attributes
 			@_saveAttributesForSyncing @newChangedAttributes, model, attributes
 
 		saveTempAttributesToSync: ( model, attributes ) ->

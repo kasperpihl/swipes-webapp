@@ -7,17 +7,14 @@
       Swipes.prototype.UPDATE_COUNT = 0;
 
       function Swipes() {
-        var _this = this;
+        Backbone.once("sync-complete", this.init, this);
         this.analytics = new AnalyticsController();
         this.errors = new ErrorController();
         this.todos = new ToDoCollection();
-        this.updateTimer = new ClockWork();
         this.tags = new TagCollection();
-        Backbone.once("sync-complete", this.init, this);
         this.sync = new SyncController();
-        $(window).focus(function() {
-          return _this.fetchTodos();
-        });
+        this.updateTimer = new ClockWork();
+        $(window).focus(this.fetchTodos);
       }
 
       Swipes.prototype.isBusy = function() {
@@ -123,7 +120,8 @@
       };
 
       Swipes.prototype.fetchTodos = function() {
-        return this.sync.sync();
+        console.log("fetch");
+        return swipy.sync.sync();
       };
 
       return Swipes;

@@ -23,25 +23,22 @@ define [
 		UPDATE_COUNT: 0
 		constructor: ->
 			#@hackParseAPI()
+			Backbone.once( "sync-complete", @init, @ )
 
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
 			@todos = new ToDoCollection()
-			@updateTimer = new ClockWork()
-
-			
-			
 			@tags = new TagCollection()
-			##@tags.once( "reset", => @fetchTodos() )
-
-			Backbone.once( "sync-complete", @init, @ )
-
-			##@tags.fetch()
 
 			@sync = new SyncController()
 			
-			$(window).focus =>
-				@fetchTodos()
+			@updateTimer = new ClockWork()
+
+			
+			##@tags.fetch()
+
+			
+			$(window).focus @fetchTodos
 				
 		isBusy: ->
 			# Are any todos being saved right now?
@@ -115,4 +112,5 @@ define [
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
 		fetchTodos: ->
-			@sync.sync()
+			console.log "fetch"
+			swipy.sync.sync()

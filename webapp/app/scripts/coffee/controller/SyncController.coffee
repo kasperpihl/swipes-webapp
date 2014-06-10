@@ -40,12 +40,12 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 						false
 				)
 				if !model
-					console.log "new"
-					#console.log obj
+					continue if obj.deleted
 					model = new collection.model obj
 					@changedAttributes.moveTempChangesForModel model
 					newModels.push model
 				else
+					model.deleteTask() if obj.deleted
 					recentChanges = @changedAttributes.getChangesForModel model
 					model.updateFromServerObj obj, recentChanges
 			if newModels.length > 0
@@ -65,8 +65,19 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 
 		prepareUpdatesForCollection: ( collection, className ) ->
 			updatedAttributes = @currentSyncing[ className ]
-			identifiers = _.keys( updatedAttributes )
 			serverJSON = []
+
+			for objID, attr of updatedAttributes
+				console.log attr
+				if _.indexOf( attr, "deleted" ) isnt -1
+					deleteJSON = 
+						objectId: objID
+						deleted: true
+					serverJSON.push deleteJSON
+					console.log objID
+					console.log attr
+			identifiers = _.keys( updatedAttributes )
+			
 			updateModels = collection.filter (model) ->
 				return (_.indexOf(identifiers , model.id ) isnt -1)
 			for mdl in updateModels
@@ -103,7 +114,6 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 
 
 		sync: ->
-			console.log "syncing"
 			return @needSync = true if isSyncing
 			isSyncing = true
 
@@ -136,8 +146,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				context: @
 				data : serData
 				processData : false
-			
-			$.ajax( settings ) 
+			$.ajax( settings )
 		finalizeSync: ( error ) ->
 			@isSyncing = false
 			@changedAttributes.resetTempChanges()

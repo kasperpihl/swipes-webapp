@@ -49,11 +49,16 @@
             return false;
           });
           if (!model) {
-            console.log("new");
+            if (obj.deleted) {
+              continue;
+            }
             model = new collection.model(obj);
             this.changedAttributes.moveTempChangesForModel(model);
             newModels.push(model);
           } else {
+            if (obj.deleted) {
+              model.deleteTask();
+            }
             recentChanges = this.changedAttributes.getChangesForModel(model);
             model.updateFromServerObj(obj, recentChanges);
           }
@@ -78,10 +83,23 @@
       };
 
       SyncController.prototype.prepareUpdatesForCollection = function(collection, className) {
-        var identifiers, json, mdl, mdlsChanges, serverJSON, updateModels, updatedAttributes, _i, _len;
+        var attr, deleteJSON, identifiers, json, mdl, mdlsChanges, objID, serverJSON, updateModels, updatedAttributes, _i, _len;
         updatedAttributes = this.currentSyncing[className];
-        identifiers = _.keys(updatedAttributes);
         serverJSON = [];
+        for (objID in updatedAttributes) {
+          attr = updatedAttributes[objID];
+          console.log(attr);
+          if (_.indexOf(attr, "deleted") !== -1) {
+            deleteJSON = {
+              objectId: objID,
+              deleted: true
+            };
+            serverJSON.push(deleteJSON);
+            console.log(objID);
+            console.log(attr);
+          }
+        }
+        identifiers = _.keys(updatedAttributes);
         updateModels = collection.filter(function(model) {
           return _.indexOf(identifiers, model.id) !== -1;
         });
@@ -142,7 +160,6 @@
 
       SyncController.prototype.sync = function() {
         var data, isSyncing, objects, serData, settings, token, url, user;
-        console.log("syncing");
         if (isSyncing) {
           return this.needSync = true;
         }

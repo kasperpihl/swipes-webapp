@@ -37,6 +37,7 @@
       };
 
       ChangedAttributesController.prototype.saveAttributesToSync = function(model, attributes) {
+        console.log(_.keys(attributes));
         return this._saveAttributesForSyncing(this.newChangedAttributes, model, attributes);
       };
 
