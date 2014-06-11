@@ -112,7 +112,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			return @needSync = true if @isSyncing
 			@isSyncing = true
 
-			url = "http://localhost:5000/sync"
+			url = "http://localhost:5000/v1/sync"
 			user = Parse.User.current()
 			token = user.getSessionToken()
 
