@@ -13,15 +13,15 @@
 		width: 100%;
 		font-family: $font-bold;
 		text-align:center;
-		font-size: emCalc(45px);
+		font-size: emCalc(35px);
 		line-height: 1;
 
-		@include breakpoint(min-width, emCalc(415px)) { font-size: emCalc(55px); }
+		@include breakpoint(min-width, emCalc(415px)) { font-size: emCalc(45px); }
 
 		@include breakpoint(tablet) {
 			text-indent: 0;
 		}
-		@include breakpoint(min-height, emCalc(768px)) { font-size: emCalc(75px); }
-		@include breakpoint(min-height, emCalc(1024px)) { font-size: emCalc(100px); }
+		//@include breakpoint(min-height, emCalc(768px)) { font-size: emCalc(75px); }
+		@include breakpoint(min-height, $breakheight) { font-size: emCalc(75px); }
 	}
 }

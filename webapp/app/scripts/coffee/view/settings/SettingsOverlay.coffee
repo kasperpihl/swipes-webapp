@@ -32,7 +32,7 @@ define [
 		afterShow: ->
 			@handleResize()
 		show: ->
-			if Parse.history.fragment is "settings" then @killSubView()
+			if Backbone.history.fragment is "settings" then @killSubView()
 			Overlay::show.apply( @, arguments )
 		showSubview: (subView) ->
 			@killSubView().then =>

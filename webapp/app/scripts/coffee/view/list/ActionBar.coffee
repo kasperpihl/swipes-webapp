@@ -43,7 +43,7 @@ define ["underscore", "backbone", "js/view/list/TagEditorOverlay"], (_, Backbone
 						model.unset "order"
 						swipy.todos.bumpOrder( "up", order )
 
-					model.deleteTask()
+					model.deleteObj()
 				@hide()
 		shareTasks: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"

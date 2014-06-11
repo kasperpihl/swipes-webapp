@@ -80,10 +80,7 @@
             title: tagName
           }));
         }
-        this.model.updateTags(tags);
-        if (addToCollection) {
-          return swipy.tags.getTagsFromTasks();
-        }
+        return this.model.updateTags(tags);
       },
       render: function() {
         this.renderTags();

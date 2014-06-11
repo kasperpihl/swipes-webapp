@@ -9,6 +9,8 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 				attributes.tempId = util.generateId 12
 				console.log "generated tempId " + @className + " - " + attributes.tempId
 			Backbone.Model.apply @, arguments
+		deleteObj: ->
+			@set "deleted", yes, { sync: true }
 		handleForSync: ( key, val, options ) ->
 			attrs = {}
 			if key is null or typeof key is 'object'

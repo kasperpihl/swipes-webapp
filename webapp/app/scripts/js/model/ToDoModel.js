@@ -352,11 +352,6 @@
           sync: true
         });
       },
-      deleteTask: function() {
-        return this.set("deleted", true, {
-          sync: true
-        });
-      },
       updateFromServerObj: function(obj, recentChanges) {
         var attribute, dateKeys, val, _i, _len, _ref;
         BaseModel.prototype.updateFromServerObj.apply(this, arguments);

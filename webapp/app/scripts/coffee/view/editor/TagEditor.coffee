@@ -57,7 +57,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 			@model.updateTags tags
 
 			# If it's a new tag, add it to the stack. getTagsFromTasks will automatically sav new tags.
-			if addToCollection then swipy.tags.getTagsFromTasks()
+			#if addToCollection then swipy.tags.getTagsFromTasks()
 		render: ->
 			@renderTags()
 			@renderTagPool()

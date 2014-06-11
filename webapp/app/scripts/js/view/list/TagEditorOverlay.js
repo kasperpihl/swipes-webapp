@@ -47,6 +47,9 @@
         }
       },
       render: function() {
+        console.log("render");
+        console.log(swipy.tags.length);
+        console.log(_.pluck(swipy.tags.toJSON(), "title"));
         this.$el.html(this.template({
           allTags: swipy.tags.toJSON(),
           tagsAppliedToAll: this.getTagsAppliedToAll()
@@ -92,7 +95,7 @@
         } else {
           tag = this.getTagFromName(tagName);
           if (!tag && addToCollection) {
-            tag = new TagModel({
+            tag = swipy.tags.create({
               title: tagName
             });
           }

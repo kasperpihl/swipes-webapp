@@ -4,8 +4,8 @@
 	margin: 0 auto;
 	padding: 0;
 
-	width: 85%;
-	@include breakpoint(min-width, emCalc(600px)) { width: 70%; }
+	width: emCalc(220px);
+	@include breakpoint(min-width, emCalc(700px)) { width: emCalc(250px); }
 
 
 	body.edit-mode & {
@@ -25,9 +25,9 @@
 
 	a {
 		color: $gray;
-		font-size: 1.9em;
+		font-size: 1.6em;
 		line-height: 1;
-
+		//@include breakpoint(min-width, emCalc(700px)) { font-size: 1.9em; }
 		@include transition(color 0.15s ease-out);
 
 		&:focus, &:hover {

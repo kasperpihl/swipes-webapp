@@ -56,9 +56,6 @@
             this.changedAttributes.moveTempChangesForModel(model);
             newModels.push(model);
           } else {
-            if (obj.deleted) {
-              model.deleteTask();
-            }
             recentChanges = this.changedAttributes.getChangesForModel(model);
             model.updateFromServerObj(obj, recentChanges);
           }
@@ -159,12 +156,12 @@
       };
 
       SyncController.prototype.sync = function() {
-        var data, isSyncing, objects, serData, settings, token, url, user;
-        if (isSyncing) {
+        var data, objects, serData, settings, token, url, user;
+        if (this.isSyncing) {
           return this.needSync = true;
         }
-        isSyncing = true;
-        url = "http://localhost:5000/sync";
+        this.isSyncing = true;
+        url = "http://localhost:5000/v1/sync";
         user = Parse.User.current();
         token = user.getSessionToken();
         data = {

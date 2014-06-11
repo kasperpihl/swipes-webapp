@@ -34,7 +34,7 @@
 	pointer-events: none;
 
 	height: 5em;
-	@include breakpoint(min-height, emCalc(900px)) {
+	@include breakpoint(min-height, $breakheight) {
 		height: 7em;
 	}
 

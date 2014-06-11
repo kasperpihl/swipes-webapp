@@ -36,6 +36,9 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 			tag = swipy.tags.findWhere { title: tagName }
 			if tag then return tag
 		render: () ->
+			console.log "render"
+			console.log swipy.tags.length
+			console.log _.pluck(swipy.tags.toJSON(), "title")
 			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
 			if not $("body").find(".overlay.tags-editor").length
 				$("body").append @$el
@@ -64,7 +67,7 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 				return alert "That tag already exists"
 			else
 				tag = @getTagFromName tagName
-				if not tag and addToCollection then tag = new TagModel { title: tagName }
+				if not tag and addToCollection then tag = swipy.tags.create { title: tagName }
 
 				@addTagToModel( tag, model ) for model in @options.models
 				if addToCollection then swipy.tags.getTagsFromTasks()

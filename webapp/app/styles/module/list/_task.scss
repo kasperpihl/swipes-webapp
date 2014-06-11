@@ -1,5 +1,5 @@
-$list-item-height: 80px;
-$list-item-height-lg: 105px;
+$list-item-height: 65px;
+$list-item-height-lg: 85px;
 
 // General task styling
 .todo-list {
@@ -10,12 +10,14 @@ $list-item-height-lg: 105px;
 
 		font-family: $font-light;
 		font-weight: lighter;
-		font-size: 1.85em;
+		font-size: 1.5em;
+		@include breakpoint(min-height, $breakheight) { font-size: 1.85em; }
 		margin: 0 0 .2em;
 	}
 
 	.center-title h2 {
-		margin-top: 0.45em;
+		margin-top: 0.6em;
+		@include breakpoint(min-height, $breakheight) { margin-top: 0.5em; }
 	}
 
 	.priority {
@@ -79,12 +81,12 @@ $list-item-height-lg: 105px;
 // List item content
 .todo-content {
 	position: relative;
-	padding: 1.8em 3em 0 20%;
+	padding: 1.4em 3em 0 20%;
 	@include breakpoint(tablet) { padding-left: 28% }
 	height: $list-item-height;
 
-	@include breakpoint(min-height, 900px) {
-		padding-top: 3em;
+	@include breakpoint(min-height, $breakheight) {
+		padding-top: 2em;
 		height: $list-item-height-lg;
 	}
 
@@ -115,7 +117,7 @@ $list-item-height-lg: 105px;
 		text-decoration: none;
 		font-size: 1.7em;
 
-		@include breakpoint(min-height, 900px) {
+		@include breakpoint(min-height, $breakheight) {
 			width: $list-item-height-lg;
 			line-height: $list-item-height-lg;
 		}
@@ -156,7 +158,7 @@ $list-item-height-lg: 105px;
 
 		.todo-content {
 			left: $list-item-height;
-			@include breakpoint(min-height, 900px) { left: 95px; }
+			@include breakpoint(min-height, $breakheight) { left: 95px; }
 		}
 		.action.complete { background: $green; }
 		.action.todo { background: $yellow; }
@@ -165,7 +167,7 @@ $list-item-height-lg: 105px;
 	.hover-right {
 		.todo-content {
 			right: $list-item-height;
-			@include breakpoint(min-height, 900px) { right: 95px; }
+			@include breakpoint(min-height, $breakheight) { right: 95px; }
 		}
 		.action.schedule { background: $lobster; }
 	}

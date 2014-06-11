@@ -1,6 +1,6 @@
 (function() {
   define(["underscore", "js/view/list/ActionBar", "js/view/list/DesktopTask", "js/view/list/TouchTask", "text!templates/todo-list.html", "mousetrapGlobal"], function(_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) {
-    return Parse.View.extend({
+    return Backbone.View.extend({
       initialize: function() {
         this.transitionDeferred = new $.Deferred();
         this.template = _.template(ToDoListTmpl);

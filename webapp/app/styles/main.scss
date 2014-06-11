@@ -3,7 +3,7 @@
 @import "compass/typography/text";
 
 $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
-
+@import "vars";
 @import "functions";
 @import "mixins";
 @import "fonts";

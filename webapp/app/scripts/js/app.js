@@ -68,7 +68,7 @@
         this.sidebar = new SidebarController();
         this.filter = new FilterController();
         this.settings = new SettingsController();
-        Parse.history.start({
+        Backbone.history.start({
           pushState: false
         });
         return $("body").removeClass("loading");

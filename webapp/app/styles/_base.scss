@@ -32,14 +32,14 @@ div[role=main] {
 	}
 
 	header.add-new {
-		margin: emCalc(25px) 0 emCalc(10px);
+		margin: emCalc(18px) 0 emCalc(10px);
 
 		@include breakpoint(max-width, emCalc(400px)) {
 			margin-top: emCalc(5px);
 		}
 
 		@include transition(margin 0.4s ease-in-out);
-		@include breakpoint(min-height, emCalc(768px)) { margin: emCalc(58px) 0 emCalc(43px); }
+		@include breakpoint(min-height, emCalc(1024px)) { margin: emCalc(26px) 0 emCalc(26px); }
 
 		body.edit-mode & {
 			margin: emCalc(5px) 0 emCalc(10px);
@@ -50,7 +50,7 @@ div[role=main] {
 		margin-bottom: emCalc(10px);
 		@include transition(margin-bottom 0.4s ease-in-out);
 
-		@include breakpoint(min-height, emCalc(768px)) { margin-bottom: emCalc(40px); }
+		@include breakpoint(min-height, emCalc(1024px)) { margin-bottom: emCalc(20px); }
 	}
 
 	padding-bottom: 11em;

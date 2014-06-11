@@ -1,5 +1,5 @@
 define ['backbone'], (Backbone) ->
-	MainRouter = Parse.Router.extend
+	MainRouter = Backbone.Router.extend
 		routes:
 			"settings/:id": "settings"
 			"settings": "settings"
@@ -8,7 +8,7 @@ define ['backbone'], (Backbone) ->
 			"*all": "root"
 		initialize: ->
 			@history = []
-			Parse.history.on( "route", @updateHistory, @ )
+			Backbone.history.on( "route", @updateHistory, @ )
 		root: ->
 			@navigate( "list/todo", { trigger: yes, replace: yes } )
 		list: (id = "todo") ->
@@ -48,4 +48,4 @@ define ['backbone'], (Backbone) ->
 			else
 				@root()
 		destroy: ->
-			Parse.history.off( null, null, @ )
+			Backbone.history.off( null, null, @ )

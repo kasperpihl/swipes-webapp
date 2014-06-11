@@ -15,6 +15,11 @@
         }
         return Backbone.Model.apply(this, arguments);
       },
+      deleteObj: function() {
+        return this.set("deleted", true, {
+          sync: true
+        });
+      },
       handleForSync: function(key, val, options) {
         var attrs;
         attrs = {};

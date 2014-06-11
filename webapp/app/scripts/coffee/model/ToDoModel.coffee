@@ -314,8 +314,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		updateNotes: ( notes ) ->
 			@set "notes", notes, { sync: true }
 
-		deleteTask: ->
-			@set "deleted", yes, { sync: true }
 
 
 

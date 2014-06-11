@@ -44,27 +44,17 @@
         return _results;
       },
       getTagsFromTasks: function() {
-        var m, tag, tags, _i, _j, _len, _len1, _ref, _ref1;
-        tags = [];
-        _ref = swipy.todos.models;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          m = _ref[_i];
-          if (m.has("tags")) {
-            _ref1 = m.get("tags");
-            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-              tag = _ref1[_j];
-              if (this.validateTag(tag)) {
-                if (!_.findWhere(tags, {
-                  cid: tag.cid
-                })) {
-                  tags.push(tag);
-                }
-              }
-            }
-          }
-        }
-        this.reset(tags);
-        return this.saveNewTags();
+        /*tags = []
+        			for m in swipy.todos.models when m.has "tags"
+        				for tag in m.get "tags" when @validateTag tag
+        					# Make sure we don't get duplicates
+        					unless _.findWhere( tags, { cid: tag.cid } )
+        						tags.push tag
+        
+        			# Finally add tags to our collection
+        			@reset tags
+        */
+
       },
       getTagByName: function(tagName) {
         var result;
@@ -77,18 +67,6 @@
         } else {
           return void 0;
         }
-      },
-      saveNewTags: function() {
-        var model, _i, _len, _ref, _results;
-        _ref = this.models;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          model = _ref[_i];
-          if (model.isNew()) {
-            _results.push(swipy.queue.add(model.save()));
-          }
-        }
-        return _results;
       },
       handleAddTag: function(model) {
         if (!this.validateTag(model)) {

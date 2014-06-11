@@ -44,7 +44,7 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			if tag and confirm( "Are you sure you want to permenently delete this tag?" )
 				swipy.tags.remove tag
-				tag.deleteTag()
+				tag.deleteObj()
 				if wasSelected then Backbone.trigger( "remove-filter", "tag", tagName )
 		getTagsForCurrentTasks: ->
 			tags = []

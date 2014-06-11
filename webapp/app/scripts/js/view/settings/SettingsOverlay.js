@@ -26,7 +26,7 @@
         return this.handleResize();
       },
       show: function() {
-        if (Parse.history.fragment === "settings") {
+        if (Backbone.history.fragment === "settings") {
           this.killSubView();
         }
         return Overlay.prototype.show.apply(this, arguments);

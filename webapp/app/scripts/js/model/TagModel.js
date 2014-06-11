@@ -12,11 +12,6 @@
         BaseModel.prototype.handleForSync.apply(this, arguments);
         return Backbone.Model.prototype.set.apply(this, arguments);
       },
-      deleteTag: function() {
-        return this.set("deleted", true, {
-          sync: true
-        });
-      },
       updateFromServerObj: function(obj) {
         BaseModel.prototype.updateFromServerObj.apply(this, arguments);
         if (obj.title != null) {

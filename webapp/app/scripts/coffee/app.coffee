@@ -79,7 +79,7 @@ define [
 			@filter = new FilterController()
 			@settings = new SettingsController()
 
-			Parse.history.start( pushState: no )
+			Backbone.history.start( pushState: no )
 
 			$("body").removeClass "loading"
 			# $("")

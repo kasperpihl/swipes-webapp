@@ -6,7 +6,7 @@ define [
 	"text!templates/todo-list.html"
 	"mousetrapGlobal"
 	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
-	Parse.View.extend
+	Backbone.View.extend
 		initialize: ->
 			# This deferred is resolved after view has been transitioned in
 			@transitionDeferred = new $.Deferred()

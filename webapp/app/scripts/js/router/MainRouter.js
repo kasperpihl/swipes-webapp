@@ -1,7 +1,7 @@
 (function() {
   define(['backbone'], function(Backbone) {
     var MainRouter;
-    return MainRouter = Parse.Router.extend({
+    return MainRouter = Backbone.Router.extend({
       routes: {
         "settings/:id": "settings",
         "settings": "settings",
@@ -11,7 +11,7 @@
       },
       initialize: function() {
         this.history = [];
-        return Parse.history.on("route", this.updateHistory, this);
+        return Backbone.history.on("route", this.updateHistory, this);
       },
       root: function() {
         return this.navigate("list/todo", {
@@ -82,7 +82,7 @@
         }
       },
       destroy: function() {
-        return Parse.history.off(null, null, this);
+        return Backbone.history.off(null, null, this);
       }
     });
   });
