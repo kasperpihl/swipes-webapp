@@ -39,7 +39,6 @@
 
       TimeUtility.prototype.getNextDateFrom = function(date, repeatOption) {
         var diff, nextDate, now, type;
-        console.log(repeatOption);
         now = new Date().getTime();
         nextDate = date;
         while (true) {

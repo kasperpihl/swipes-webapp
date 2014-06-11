@@ -36,9 +36,6 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 			tag = swipy.tags.findWhere { title: tagName }
 			if tag then return tag
 		render: () ->
-			console.log "render"
-			console.log swipy.tags.length
-			console.log _.pluck(swipy.tags.toJSON(), "title")
 			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
 			if not $("body").find(".overlay.tags-editor").length
 				$("body").append @$el

@@ -24,7 +24,6 @@ define ->
 			# If date is sunday, go to next saturday, else go to tomorrow (Which will always be sunday)
 			return date.add( "days", if date.day() is 0 then 6 else 1 ).toDate()
 		getNextDateFrom: ( date, repeatOption ) ->
-			console.log repeatOption
 			now = new Date().getTime()
 			nextDate = date
 			loop

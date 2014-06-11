@@ -130,10 +130,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				return fullStr
 		syncTags: (tags) ->
-			console.log "changed tags"
 			# Remove falsy values first
 			tags = _.compact tags
-			
+			console.log _.invoke( tags, "get", "tags" )
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
 
 			if pointers && pointers.length
@@ -236,11 +235,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		toJSON: ->
 			@set( "state", @getState() )
 			_.clone @attributes
-		###
-		toJSON: ->
-			console.log "toJSON called!!!", _.pick( @attributes, @attrWhitelist )
-			_.pick( @attributes, @attrWhitelist )
-		###
 		cleanUp: ->
 			@off()
 
@@ -266,7 +260,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		completeRepeatedTask: ->
 			timeUtil = new TimeUtility()
 			nextDate = timeUtil.getNextDateFrom( @get("repeatDate"), @get "repeatOption"  )
-			console.log nextDate
 			return if !nextDate
 			duplicate = @getRepeatableDuplicate()
 
@@ -290,7 +283,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 
 		setRepeatOption: ( repeatOption ) ->
-			console.log repeatOption
 			repeatDate = null
 			if @get( "schedule" ) and repeatOption isnt "never"
 				repeatDate =  @get "schedule"
@@ -325,11 +317,10 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1  
 				val = obj[ attribute ]
 				if attribute is "tags"
-					@set "tags", @handleTagsFromServer val
+					val = @handleTagsFromServer val
 				else if _.indexOf(dateKeys, attribute) isnt -1
-					@set attribute, @handleDateFromServer val
-				else
-					@set attribute, val
+					val = @handleDateFromServer val
+				@set attribute, val if val isnt @get(attribute)
 			false
 
 		handleTagsFromServer: ( tags ) ->

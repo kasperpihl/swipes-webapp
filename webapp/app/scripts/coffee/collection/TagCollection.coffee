@@ -14,7 +14,6 @@ define [ "underscore", "js/model/TagModel", "backbone.localStorage"], ( _, TagMo
 			return false if !objects or objects.length is 0
 			for obj in objects
 				model = new @model obj
-				console.log model
 		getTagsFromTasks: ->
 			###tags = []
 			for m in swipy.todos.models when m.has "tags"

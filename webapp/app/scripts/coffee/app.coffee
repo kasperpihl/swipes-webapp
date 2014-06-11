@@ -112,5 +112,4 @@ define [
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
 		fetchTodos: ->
-			console.log "fetch"
 			swipy.sync.sync()

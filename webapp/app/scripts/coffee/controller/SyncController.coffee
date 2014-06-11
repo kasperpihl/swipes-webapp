@@ -24,7 +24,6 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				@changedAttributes.saveAttributesToSync( model , attributes )
 			else if @isSyncing and !model.id
 				@changedAttributes.saveTempAttributesToSync( model, attributes )
-				console.log "handling new object while syncing"
 			@bouncedSync()
 
 		handleObjectsFromSync: ( objects, className ) ->
@@ -67,14 +66,11 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			serverJSON = []
 
 			for objID, attr of updatedAttributes
-				console.log attr
 				if _.indexOf( attr, "deleted" ) isnt -1
 					deleteJSON = 
 						objectId: objID
 						deleted: true
 					serverJSON.push deleteJSON
-					console.log objID
-					console.log attr
 			identifiers = _.keys( updatedAttributes )
 			
 			updateModels = collection.filter (model) ->
@@ -116,7 +112,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			return @needSync = true if @isSyncing
 			@isSyncing = true
 
-			url = "http://localhost:5000/v1/sync"
+			url = "http://localhost:5000/sync"
 			user = Parse.User.current()
 			token = user.getSessionToken()
 
@@ -133,7 +129,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				data.objects = objects
 
 			serData = JSON.stringify data
-			console.log serData
+			console.log data
 			settings = 
 				url : url
 				type : 'POST'

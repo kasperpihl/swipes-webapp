@@ -11,7 +11,6 @@
         if (attributes && !attributes.objectId) {
           util = new Utility();
           attributes.tempId = util.generateId(12);
-          console.log("generated tempId " + this.className + " - " + attributes.tempId);
         }
         return Backbone.Model.apply(this, arguments);
       },
@@ -54,8 +53,8 @@
         return json;
       },
       updateFromServerObj: function(obj) {
-        if (this.id == null) {
-          this.id = obj.objectId;
+        if ((this.id == null) && obj.objectId !== this.id) {
+          this.set("objectId", obj.objectId);
         }
         if (obj.deleted) {
           return this.set("deleted", obj.deleted);

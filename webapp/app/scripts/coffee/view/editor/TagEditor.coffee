@@ -52,7 +52,13 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 				return alert "You've already added that tag"
 
 			tag = swipy.tags.findWhere { title: tagName }
-			if tag then tags.push tag else tags.push new TagModel( title: tagName )
+
+			if tag?
+				tags.push tag 
+			else
+				newTag = swipy.tags.create 
+					title : tagName
+				tags.push newTag
 
 			@model.updateTags tags
 

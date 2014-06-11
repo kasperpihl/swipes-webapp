@@ -26,7 +26,6 @@
           this.changedAttributes.saveAttributesToSync(model, attributes);
         } else if (this.isSyncing && !model.id) {
           this.changedAttributes.saveTempAttributesToSync(model, attributes);
-          console.log("handling new object while syncing");
         }
         return this.bouncedSync();
       };
@@ -85,15 +84,12 @@
         serverJSON = [];
         for (objID in updatedAttributes) {
           attr = updatedAttributes[objID];
-          console.log(attr);
           if (_.indexOf(attr, "deleted") !== -1) {
             deleteJSON = {
               objectId: objID,
               deleted: true
             };
             serverJSON.push(deleteJSON);
-            console.log(objID);
-            console.log(attr);
           }
         }
         identifiers = _.keys(updatedAttributes);
@@ -161,7 +157,7 @@
           return this.needSync = true;
         }
         this.isSyncing = true;
-        url = "http://localhost:5000/v1/sync";
+        url = "http://localhost:5000/sync";
         user = Parse.User.current();
         token = user.getSessionToken();
         data = {
@@ -178,7 +174,7 @@
           data.objects = objects;
         }
         serData = JSON.stringify(data);
-        console.log(serData);
+        console.log(data);
         settings = {
           url: url,
           type: 'POST',

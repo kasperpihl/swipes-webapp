@@ -12,10 +12,6 @@
             return _this.add(model);
           }
         });
-        this.on("change:title", function(model, newTitle) {
-          console.log("Changed title to " + newTitle);
-          return console.log(model);
-        });
         return this.on("reset", function() {
           var m, removeThese, _i, _j, _len, _len1, _ref;
           removeThese = [];
@@ -106,7 +102,6 @@
         if (bumps == null) {
           bumps = 1;
         }
-        console.log("order");
         if (direction === "down") {
           _ref = swipy.todos.getActive();
           _results = [];

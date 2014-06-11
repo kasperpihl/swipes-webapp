@@ -154,7 +154,6 @@
             }
           });
         case "register":
-          console.log("Registering a new user");
           email = this.$el.find("#email").val().toLowerCase();
           password = this.$el.find("#password").val();
           if (!this.validateFields(email, password)) {

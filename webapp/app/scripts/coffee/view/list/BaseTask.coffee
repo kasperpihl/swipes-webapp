@@ -28,7 +28,6 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@bounds = @el.getClientRects()[0]
 		init: -> # Hook for views extending me
 		toggleSelected: ->
-			#console.log @model
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
 		togglePriority: (e) ->

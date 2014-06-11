@@ -4,11 +4,6 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 		localStorage: new Backbone.LocalStorage("ToDoCollection")
 		initialize: ->
 			@on( "change:deleted", (model, deleted) => if deleted then @remove model else @add model )
-			@on( "change:title", (model, newTitle) => 
-				console.log "Changed title to #{newTitle}"
-				console.log model 
-			)
-
 			@on "reset", ->
 				removeThese = []
 				removeThese.push m for m in @models when m.get "deleted"
@@ -50,7 +45,6 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 				# the model has all of the provided tags in it's tags property
 				return _.all( tags, (tag) -> _.contains( m.getTagStrList(), tag )  )
 		bumpOrder: (direction = "down", startFrom = 0, bumps = 1) ->
-			console.log "order"
 			if direction is "down"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom
 					model.updateOrder (model.get( "order" ) + bumps)

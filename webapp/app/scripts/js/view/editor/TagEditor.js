@@ -60,7 +60,7 @@
         return this.addTagToModel(tagName);
       },
       addTagToModel: function(tagName, addToCollection) {
-        var tag, tags;
+        var newTag, tag, tags;
         if (addToCollection == null) {
           addToCollection = true;
         }
@@ -73,12 +73,13 @@
         tag = swipy.tags.findWhere({
           title: tagName
         });
-        if (tag) {
+        if (tag != null) {
           tags.push(tag);
         } else {
-          tags.push(new TagModel({
+          newTag = swipy.tags.create ({
             title: tagName
-          }));
+          });
+          tags.push(newTag);
         }
         return this.model.updateTags(tags);
       },

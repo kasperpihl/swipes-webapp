@@ -120,7 +120,6 @@
       };
 
       Swipes.prototype.fetchTodos = function() {
-        console.log("fetch");
         return swipy.sync.sync();
       };
 

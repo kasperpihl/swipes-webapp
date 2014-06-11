@@ -94,7 +94,6 @@ LoginView = Parse.View.extend
 					error: (user, error) => @handleError( user, error, { email, password } )
 				})
 			when "register"
-				console.log "Registering a new user"
 				email = @$el.find( "#email" ).val().toLowerCase()
 				password = @$el.find( "#password" ).val()
 				return @removeBusyState() unless @validateFields( email, password )

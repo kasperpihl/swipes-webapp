@@ -124,8 +124,8 @@
       },
       syncTags: function(tags) {
         var actualTags, pointers, tag, _i, _len;
-        console.log("changed tags");
         tags = _.compact(tags);
+        console.log(_.invoke(tags, "get", "tags"));
         pointers = (function() {
           var _i, _len, _results;
           _results = [];
@@ -246,12 +246,6 @@
         this.set("state", this.getState());
         return _.clone(this.attributes);
       },
-      /*
-      		toJSON: ->
-      			console.log "toJSON called!!!", _.pick( @attributes, @attrWhitelist )
-      			_.pick( @attributes, @attrWhitelist )
-      */
-
       cleanUp: function() {
         return this.off();
       },
@@ -280,7 +274,6 @@
         var duplicate, nextDate, timeUtil;
         timeUtil = new TimeUtility();
         nextDate = timeUtil.getNextDateFrom(this.get("repeatDate"), this.get("repeatOption"));
-        console.log(nextDate);
         if (!nextDate) {
           return;
         }
@@ -308,7 +301,6 @@
       },
       setRepeatOption: function(repeatOption) {
         var repeatDate;
-        console.log(repeatOption);
         repeatDate = null;
         if (this.get("schedule") && repeatOption !== "never") {
           repeatDate = this.get("schedule");
@@ -367,10 +359,11 @@
           }
           val = obj[attribute];
           if (attribute === "tags") {
-            this.set("tags", this.handleTagsFromServer(val));
+            val = this.handleTagsFromServer(val);
           } else if (_.indexOf(dateKeys, attribute) !== -1) {
-            this.set(attribute, this.handleDateFromServer(val));
-          } else {
+            val = this.handleDateFromServer(val);
+          }
+          if (val !== this.get(attribute)) {
             this.set(attribute, val);
           }
         }

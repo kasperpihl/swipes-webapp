@@ -7,7 +7,6 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 			if attributes && !attributes.objectId
 				util = new Utility()
 				attributes.tempId = util.generateId 12
-				console.log "generated tempId " + @className + " - " + attributes.tempId
 			Backbone.Model.apply @, arguments
 		deleteObj: ->
 			@set "deleted", yes, { sync: true }
@@ -32,5 +31,5 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 			json
 
 		updateFromServerObj: ( obj ) ->
-			@id = obj.objectId if !@id?
+			@set "objectId", obj.objectId if !@id? and obj.objectId isnt @id
 			@set "deleted", obj.deleted if obj.deleted

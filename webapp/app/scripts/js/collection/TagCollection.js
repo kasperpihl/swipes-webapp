@@ -38,8 +38,7 @@
         _results = [];
         for (_i = 0, _len = objects.length; _i < _len; _i++) {
           obj = objects[_i];
-          model = new this.model(obj);
-          _results.push(console.log(model));
+          _results.push(model = new this.model(obj));
         }
         return _results;
       },
