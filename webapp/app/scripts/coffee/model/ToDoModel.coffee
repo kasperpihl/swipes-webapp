@@ -132,7 +132,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		syncTags: (tags) ->
 			# Remove falsy values first
 			tags = _.compact tags
-			console.log _.invoke( tags, "get", "tags" )
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
 
 			if pointers && pointers.length

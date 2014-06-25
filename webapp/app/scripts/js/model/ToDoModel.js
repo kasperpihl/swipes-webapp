@@ -125,7 +125,6 @@
       syncTags: function(tags) {
         var actualTags, pointers, tag, _i, _len;
         tags = _.compact(tags);
-        console.log(_.invoke(tags, "get", "tags"));
         pointers = (function() {
           var _i, _len, _results;
           _results = [];

@@ -111,8 +111,9 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 		sync: ->
 			return @needSync = true if @isSyncing
 			@isSyncing = true
-
-			url = "http://localhost:5000/v1/sync"
+			url = liveEnvironment ? "http://api.swipesapp.com/sync" : "http://localhost:5000/v1/sync"
+			url = "http://api.swipesapp.com/sync"
+			url = "http://swipesapi.elasticbeanstalk.com/sync"
 			user = Parse.User.current()
 			token = user.getSessionToken()
 
@@ -129,7 +130,6 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				data.objects = objects
 
 			serData = JSON.stringify data
-			console.log data
 			settings = 
 				url : url
 				type : 'POST'
@@ -151,10 +151,8 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			Backbone.trigger( "sync-complete", @ )
 		errorFromSync: ( data, textStatus, error ) ->
 			@finalizeSync()
-			console.log error
 		responseFromSync: ( data, textStatus ) ->
 			
-			console.log data
 			if data and data.serverTime
 				@currentSyncing = null;
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?

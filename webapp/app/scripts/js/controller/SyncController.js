@@ -157,7 +157,11 @@
           return this.needSync = true;
         }
         this.isSyncing = true;
-        url = "http://localhost:5000/v1/sync";
+        url = typeof liveEnvironment !== "undefined" && liveEnvironment !== null ? liveEnvironment : {
+          "http://api.swipesapp.com/sync": "http://localhost:5000/v1/sync"
+        };
+        url = "http://api.swipesapp.com/sync";
+        url = "http://swipesapi.elasticbeanstalk.com/sync";
         user = Parse.User.current();
         token = user.getSessionToken();
         data = {
@@ -174,7 +178,6 @@
           data.objects = objects;
         }
         serData = JSON.stringify(data);
-        console.log(data);
         settings = {
           url: url,
           type: 'POST',
@@ -201,12 +204,10 @@
       };
 
       SyncController.prototype.errorFromSync = function(data, textStatus, error) {
-        this.finalizeSync();
-        return console.log(error);
+        return this.finalizeSync();
       };
 
       SyncController.prototype.responseFromSync = function(data, textStatus) {
-        console.log(data);
         if (data && data.serverTime) {
           this.currentSyncing = null;
           if (data.Tag != null) {

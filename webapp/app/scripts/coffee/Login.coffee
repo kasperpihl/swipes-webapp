@@ -134,12 +134,7 @@ LoginView = Parse.View.extend
 		user = Parse.User.current()
 		level = user.get "userLevel"
 
-		if level and parseInt( level ) >= 1
-			location.pathname = "/"
-		else
-			@removeBusyState()
-			$("body").addClass( "swipes-plus-required" ).one "click", ".plus-required .cancel", ->
-				$("body").removeClass "swipes-plus-required"
+		location.pathname = "/"
 	resetPassword: ->
 		email = prompt "Which email did you register with?"
 		if email then Parse.User.requestPasswordReset( email, {
