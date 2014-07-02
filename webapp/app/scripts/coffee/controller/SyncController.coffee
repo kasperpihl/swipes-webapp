@@ -32,6 +32,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			for obj in objects
 				objectId = obj.objectId
 				tempId = obj.tempId
+				if obj.parentLocalId? then continue
 				model = collection.find( 
 					( model ) ->
 						return true if objectId? and model.id is objectId
@@ -150,6 +151,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
 			if data and data.serverTime
+
 				@currentSyncing = null;
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?

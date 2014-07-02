@@ -38,6 +38,9 @@
           obj = objects[_i];
           objectId = obj.objectId;
           tempId = obj.tempId;
+          if (obj.parentLocalId != null) {
+            continue;
+          }
           model = collection.find(function(model) {
             if ((objectId != null) && model.id === objectId) {
               return true;
@@ -157,7 +160,7 @@
           return this.needSync = true;
         }
         this.isSyncing = true;
-        url = liveEnvironment ? "http://swipesapi.elasticbeanstalk.com/sync" : "http://localhost:5000/v1/sync";
+        url = liveEnvironment ? "http://api.swipesapp.com/v1/sync" : "http://localhost:5000/v1/sync";
         user = Parse.User.current();
         token = user.getSessionToken();
         data = {
