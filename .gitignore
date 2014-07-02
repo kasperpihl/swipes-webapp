@@ -3,6 +3,7 @@
 .sass-cache
 .DS_Store
 cloud/public
+webapp/public
 *.httpclient
 *.sublime-project
 *.sublime-workspace

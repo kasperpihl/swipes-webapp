@@ -157,11 +157,7 @@
           return this.needSync = true;
         }
         this.isSyncing = true;
-        url = typeof liveEnvironment !== "undefined" && liveEnvironment !== null ? liveEnvironment : {
-          "http://api.swipesapp.com/sync": "http://localhost:5000/v1/sync"
-        };
-        url = "http://api.swipesapp.com/sync";
-        url = "http://swipesapi.elasticbeanstalk.com/sync";
+        url = liveEnvironment ? "http://swipesapi.elasticbeanstalk.com/sync" : "http://localhost:5000/v1/sync";
         user = Parse.User.current();
         token = user.getSessionToken();
         data = {
