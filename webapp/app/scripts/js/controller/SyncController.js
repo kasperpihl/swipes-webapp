@@ -166,6 +166,7 @@
         data = {
           sessionToken: token,
           platform: "web",
+          version: 1,
           sendLogs: true,
           changesOnly: true
         };
