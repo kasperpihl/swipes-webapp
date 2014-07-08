@@ -8,20 +8,24 @@
 		<span class="priority"></span>
 		<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">
 	</h1>
-	<% if (subtasks && subtasks.length > 0) { %>
-		<section class="action-steps">
+	<section class="action-steps">
+		<% if (subtasks && subtasks.length > 0) { %>
 			<% _.each( subtasks, function( task ){ %>
 				<div class="step">
+					<a href="JavaScript:void(0);" class="action complete" title="Mark todo as completed">
+						<span class="icon-checkmark-act"></span>
+					</a>
 					<span class="dot"></span>
-					<input class="borderless" type="text" placeholder="Add an action step" value="<%= task.title %>">
+					<input class="borderless" type="text" placeholder="Edit the action step" value="<%= task.title %>">
 				</div>
 			<% }); %>
-			<div class="step">
-				<span class="dot"></span>
-				<input class="borderless" type="text" placeholder="Add an action step" value="">
-			</div>
-		</section>
-	<% } %>
+			
+		<% } %>
+		<div class="step add-step">
+			<span class="dot"></span>
+			<input class="borderless" type="text" placeholder="Add action step" value="">
+		</div>
+	</section>
 	<% if (scheduleStr) { %>
 		<section>
 			<time class="icon-clock-bold has-icon no-select">

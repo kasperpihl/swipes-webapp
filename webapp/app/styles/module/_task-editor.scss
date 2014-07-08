@@ -3,7 +3,7 @@
 	$action-step-dot-size: 12px;
 	$action-step-height: 40px;
 	$action-step-cell-x: 26px;
-	$placeholder-color: #333; 
+	$placeholder-color: #333;
 	color: $gray;
 	::-webkit-input-placeholder { /* WebKit browsers */
 	    color:    $placeholder-color;
@@ -41,21 +41,63 @@
 			.step{
 				height:$action-step-height;
 				position:relative;
-				.dot{
+				.action{
+					display:none;
+					$icon-size: 15px;
+					$closure-size: 30px;
+					$border-width: 1px;
+					$unselected-color: #ccc;
+					color: $unselected-color;
 					position:absolute;
-					left:$padding - $action-step-cell-x;//$action-step-cell-x/2;
-					margin-top: -($action-step-dot-size/2);
-					top:50%;
-					width:$action-step-dot-size;
-					height:$action-step-dot-size;
-					border: 2px solid $yellow;
-					border-radius: $action-step-dot-size/2;
+					top: $action-step-height/2 - $closure-size/2;
+					width:$closure-size;
+					height:$closure-size;
+					border-radius: 5px;
+					border: $border-width solid $unselected-color;
+					font-size: $icon-size;
+					line-height: 1;
+					span{
+						text-align:center;
+						display:block;
+						margin-top:($closure-size/2 - $icon-size/2 - $border-width);
+					}
+					span:hover{
+						text-decoration:none;
+					}
+					&:hover{
+						text-decoration:none;
+					}
+
 				}
-				
+
 				input{
-					margin-top:7px;
+					margin-top:8px;
 					margin-left:$padding;
-					
+				}
+			}
+			.step:hover{
+				.action{
+					display:block;
+				}
+				.action:hover{
+					color:$green;
+					border: 1px solid $green;
+				}
+			}
+			.dot{
+				position:absolute;
+				left:$padding - $action-step-cell-x;//$action-step-cell-x/2;
+				margin-top: -($action-step-dot-size/2);
+				top:50%;
+				width:$action-step-dot-size;
+				height:$action-step-dot-size;
+				border: 2px solid $yellow;
+				border-radius: $action-step-dot-size/2;
+			}
+			.add-step{
+				.dot{
+					border: 2px solid $gray;
+
 				}
 			}
 			
