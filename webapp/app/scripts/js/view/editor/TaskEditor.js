@@ -36,7 +36,17 @@
         return this.$el.removeClass("active scheduled completed").addClass(this.model.getState());
       },
       render: function() {
-        this.$el.html(this.template(this.model.toJSON()));
+        var jsonedSubtasks, jsonedTask, subtasks, task, taskJSON, _i, _len;
+        subtasks = this.model.getOrderedSubtasks();
+        jsonedSubtasks = [];
+        for (_i = 0, _len = subtasks.length; _i < _len; _i++) {
+          task = subtasks[_i];
+          jsonedTask = task.toJSON();
+          jsonedSubtasks.push(jsonedTask);
+        }
+        taskJSON = this.model.toJSON();
+        taskJSON.subtasks = jsonedSubtasks;
+        this.$el.html(this.template(taskJSON));
         this.setStateClass();
         this.killTagEditor();
         this.createTagEditor();

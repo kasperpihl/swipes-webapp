@@ -9,7 +9,8 @@
     return BaseModel.extend({
       className: "ToDo",
       idAttribute: "objectId",
-      attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "priority"],
+      subtasks: [],
+      attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "parentLocalId", "priority", "origin", "originIdentifier"],
       defaults: {
         title: "",
         order: void 0,
@@ -21,18 +22,32 @@
         tags: null,
         notes: "",
         location: void 0,
+        parentLocalId: null,
         priority: 0,
-        deleted: false
+        deleted: false,
+        origin: null,
+        originIdentifier: null
       },
       set: function() {
         BaseModel.prototype.handleForSync.apply(this, arguments);
         return Backbone.Model.prototype.set.apply(this, arguments);
       },
       constructor: function(attributes) {
+        var parentModel;
         if (attributes.tags && attributes.tags.length > 0) {
           attributes.tags = this.handleTagsFromServer(attributes.tags);
         }
-        return BaseModel.apply(this, arguments);
+        BaseModel.apply(this, arguments);
+        if (attributes.parentLocalId) {
+          parentModel = swipy.todos.get(attributes.parentLocalId);
+          if (parentModel) {
+            this.set("parent", parentModel);
+            return parentModel.addSubtask(this);
+          }
+        }
+      },
+      addSubtask: function(model) {
+        return this.subtasks.push(model);
       },
       initialize: function() {
         var _this = this;
@@ -77,6 +92,16 @@
         return this.set(prop, value, {
           silent: true
         });
+      },
+      isSubtask: function() {
+        if (this.get("parent")) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      getOrderedSubtasks: function() {
+        return swipy.todos.getSubtasksForModel(this);
       },
       getState: function() {
         var schedule;

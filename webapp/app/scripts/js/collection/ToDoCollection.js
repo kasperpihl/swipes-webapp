@@ -32,20 +32,24 @@
           });
         });
       },
-      updateQuery: function() {},
       getActive: function() {
         return this.filter(function(m) {
-          return m.getState() === "active";
+          return m.getState() === "active" && !m.isSubtask();
         });
       },
       getScheduled: function() {
         return this.filter(function(m) {
-          return m.getState() === "scheduled";
+          return m.getState() === "scheduled" && !m.isSubtask();
         });
       },
       getCompleted: function() {
         return this.filter(function(m) {
-          return m.getState() === "completed";
+          return m.getState() === "completed" && !m.isSubtask();
+        });
+      },
+      getSubtasksForModel: function(model) {
+        return this.sortBy("order").filter(function(m) {
+          return m.get("parentLocalId") === model.id;
         });
       },
       getActiveList: function() {

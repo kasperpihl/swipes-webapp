@@ -10,14 +10,14 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 				@remove m for m in removeThese
 
 				@invoke( "set", { rejectedByTag: no, rejectedBySearch: no } )
-		updateQuery: ->
-
 		getActive: ->
-			@filter (m) -> m.getState() is "active"
+			@filter (m) -> m.getState() is "active" and !m.isSubtask()
 		getScheduled: ->
-			@filter (m) -> m.getState() is "scheduled"
+			@filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
 		getCompleted: ->
-			@filter (m) -> m.getState() is "completed"
+			@filter (m) -> m.getState() is "completed" and !m.isSubtask()
+		getSubtasksForModel: ( model ) ->
+			@sortBy( "order" ).filter (m) -> m.get( "parentLocalId" ) is model.id
 		getActiveList: ->
 			route = swipy.router.getCurrRoute()
 			switch route

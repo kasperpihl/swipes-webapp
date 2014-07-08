@@ -30,9 +30,11 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			collection = if className is "ToDo" then swipy.todos else swipy.tags
 			newModels = []
 			for obj in objects
+				if obj.parentLocalId? and newModels.length > 0
+					collection.add newModels
+					newModels = []
 				objectId = obj.objectId
 				tempId = obj.tempId
-				if obj.parentLocalId? then continue
 				model = collection.find( 
 					( model ) ->
 						return true if objectId? and model.id is objectId
@@ -43,6 +45,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 					continue if obj.deleted
 					model = new collection.model obj
 					@changedAttributes.moveTempChangesForModel model
+					collection.add model
 					newModels.push model
 				else
 					recentChanges = @changedAttributes.getChangesForModel model

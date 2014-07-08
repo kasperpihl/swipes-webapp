@@ -7,6 +7,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 	BaseModel.extend
 		className: "ToDo"
 		idAttribute: "objectId"
+		subtasks: []
 		attrWhitelist: [
 			"title"
 			"order"
@@ -18,7 +19,10 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			"tags"
 			"notes"
 			"location"
+			"parentLocalId"
 			"priority"
+			"origin"
+			"originIdentifier"
 		]
 		defaults:
 			title: ""
@@ -31,8 +35,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			tags: null
 			notes: ""
 			location: undefined
+			parentLocalId: null
 			priority: 0
 			deleted: no
+			origin: null
+			originIdentifier: null
+
 		set: ->
 			BaseModel.prototype.handleForSync.apply @ , arguments
 			Backbone.Model.prototype.set.apply @ , arguments 
@@ -41,6 +49,14 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if attributes.tags and attributes.tags.length > 0
 				attributes.tags = @handleTagsFromServer attributes.tags
 			BaseModel.apply @, arguments
+			if attributes.parentLocalId
+				parentModel = swipy.todos.get( attributes.parentLocalId )
+				if parentModel
+					@set "parent", parentModel
+					parentModel.addSubtask @
+					
+		addSubtask: ( model ) ->
+			@subtasks.push( model )
 
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
@@ -88,6 +104,13 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			value = @handleDateFromServer @get( prop )
 			@set prop, value, { silent: true }
 		
+		isSubtask: ->
+			if @get "parent"
+				return true
+			else 
+				return false
+		getOrderedSubtasks: ->
+			swipy.todos.getSubtasksForModel @
 		getState: ->
 			schedule = @getValidatedSchedule()
 			# Check if completed

@@ -1,18 +1,34 @@
 .task-editor {
 	$padding: 66px;
-
+	$action-step-dot-size: 12px;
+	$action-step-height: 40px;
+	$action-step-cell-x: 26px;
+	$placeholder-color: #333; 
 	color: $gray;
-
+	::-webkit-input-placeholder { /* WebKit browsers */
+	    color:    $placeholder-color;
+	}
+	:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+	    color:    $placeholder-color;
+	    opacity:  1;
+	}
+	::-moz-placeholder { /* Mozilla Firefox 19+ */
+	    color:    $placeholder-color;
+	    opacity:  1;
+	}
+	:-ms-input-placeholder { /* Internet Explorer 10+ */
+	    color:    $placeholder-color;
+	}
 	.title {
 		position: relative;
 		font-size: emCalc(20px);
 		padding-left: $padding;
 
-		margin-bottom: emCalc(24px);
+		margin-bottom: emCalc(12px);
 		margin-top: 0.8em;
 
 		@include breakpoint(tablet) {
-			margin-bottom: emCalc(50px);
+			margin-bottom: emCalc(20px);
 			margin-top: emCalc(25px);
 		}
 	}
@@ -20,7 +36,30 @@
 	.editor-content {
 		width: 84%;
 		margin: auto;
-
+		.action-steps{
+			position:relative;
+			.step{
+				height:$action-step-height;
+				position:relative;
+				.dot{
+					position:absolute;
+					left:$padding - $action-step-cell-x;//$action-step-cell-x/2;
+					margin-top: -($action-step-dot-size/2);
+					top:50%;
+					width:$action-step-dot-size;
+					height:$action-step-dot-size;
+					border: 2px solid $yellow;
+					border-radius: $action-step-dot-size/2;
+				}
+				
+				input{
+					margin-top:7px;
+					margin-left:$padding;
+					
+				}
+			}
+			
+		}
 		.has-icon {
 			// Can't use em, because font-size might vary
 			padding-left: $padding;

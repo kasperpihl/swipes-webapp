@@ -26,7 +26,15 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/ed
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->
-			@$el.html @template @model.toJSON()
+			subtasks = @model.getOrderedSubtasks()
+			jsonedSubtasks = [] 
+			for task in subtasks
+				jsonedTask = task.toJSON()
+				jsonedSubtasks.push(jsonedTask)
+			taskJSON = @model.toJSON()
+			taskJSON.subtasks = jsonedSubtasks
+			@$el.html @template taskJSON
+
 			@setStateClass()
 			@killTagEditor()
 			@createTagEditor()

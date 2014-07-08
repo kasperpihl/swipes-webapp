@@ -8,7 +8,20 @@
 		<span class="priority"></span>
 		<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">
 	</h1>
-
+	<% if (subtasks && subtasks.length > 0) { %>
+		<section class="action-steps">
+			<% _.each( subtasks, function( task ){ %>
+				<div class="step">
+					<span class="dot"></span>
+					<input class="borderless" type="text" placeholder="Add an action step" value="<%= task.title %>">
+				</div>
+			<% }); %>
+			<div class="step">
+				<span class="dot"></span>
+				<input class="borderless" type="text" placeholder="Add an action step" value="">
+			</div>
+		</section>
+	<% } %>
 	<% if (scheduleStr) { %>
 		<section>
 			<time class="icon-clock-bold has-icon no-select">

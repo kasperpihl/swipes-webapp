@@ -36,11 +36,12 @@
         newModels = [];
         for (_i = 0, _len = objects.length; _i < _len; _i++) {
           obj = objects[_i];
+          if ((obj.parentLocalId != null) && newModels.length > 0) {
+            collection.add(newModels);
+            newModels = [];
+          }
           objectId = obj.objectId;
           tempId = obj.tempId;
-          if (obj.parentLocalId != null) {
-            continue;
-          }
           model = collection.find(function(model) {
             if ((objectId != null) && model.id === objectId) {
               return true;
@@ -56,6 +57,7 @@
             }
             model = new collection.model(obj);
             this.changedAttributes.moveTempChangesForModel(model);
+            collection.add(model);
             newModels.push(model);
           } else {
             recentChanges = this.changedAttributes.getChangesForModel(model);
