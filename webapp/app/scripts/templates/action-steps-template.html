@@ -1,0 +1,14 @@
+<% if (subtasks && subtasks.length > 0) { %>
+	<% _.each( subtasks, function( task ){ %>
+		<% var state = task.completionDate ? 'complete' : 'todo'; %>
+		<% var action = task.completionDate ? 'todo' : 'complete'; %>
+		<div class="step <%= state %>" data-cid="<%= task.cid %>">
+			<a href="JavaScript:void(0);" class="action <%= action %>" title="Mark todo as completed">
+				<span class="<% print(task.completionDate ? 'icon-todo-act' : 'icon-checkmark-act'); %>"></span>
+			</a>
+			<span class="dot"></span>
+			<input class="borderless" type="text" placeholder="Edit the action step" value="<%= task.title %>">
+		</div>
+	<% }); %>
+	
+<% } %>

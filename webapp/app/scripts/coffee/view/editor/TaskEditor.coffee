@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, TagEditor) ->
+define ["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TagEditor) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
@@ -9,10 +9,12 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/ed
 			"click .repeat-picker a": "setRepeat"
 			"blur .title input": "updateTitle"
 			"blur .notes textarea": "updateNotes"
+			"change .step input": "updateActionStep"
+			"click .step .action": "clickedAction"
 		initialize: ->
 			$("body").addClass "edit-mode"
 			@setTemplate()
-
+			_.bindAll( @, "clickedAction" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority", @render )
 		setTemplate: ->
@@ -26,19 +28,23 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/ed
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->
-			subtasks = @model.getOrderedSubtasks()
-			jsonedSubtasks = [] 
-			for task in subtasks
-				jsonedTask = task.toJSON()
-				jsonedSubtasks.push(jsonedTask)
-			taskJSON = @model.toJSON()
-			taskJSON.subtasks = jsonedSubtasks
-			@$el.html @template taskJSON
-
+			@subtasks = @model.getOrderedSubtasks()
+			@$el.html @template @model.toJSON()
+			@renderSubtasks()
 			@setStateClass()
 			@killTagEditor()
 			@createTagEditor()
 			return @el
+		renderSubtasks: ->
+			tmplData = {}
+			jsonedSubtasks = [] 
+			for task in @subtasks
+				jsonedTask = task.toJSON()
+				jsonedTask.cid = task.cid;
+				jsonedSubtasks.push(jsonedTask)
+			tmplData.subtasks = jsonedSubtasks
+			$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
+
 		save: ->
 			swipy.router.back()
 		reschedule: ->
@@ -52,6 +58,27 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "js/view/ed
 			@model.updateTitle @getTitle()
 		updateNotes: ->
 			@model.updateNotes @getNotes()
+		updateActionStep: (e) ->
+			console.log e
+			console.log $(e.target)
+		getModelFromEl: ( el ) ->
+			step = el.closest( ".step" )
+			cid = step.attr("data-cid")
+			for task in @subtasks
+				if task.cid is cid
+					foundTask = task
+			foundTask
+		clickedAction: (e) ->
+			target = $(e.currentTarget)
+			model = @getModelFromEl( target );
+			console.log model
+			action = "complete"
+			action = "todo" if target.hasClass("todo")
+			if action is "complete"
+				model.completeTask()
+			else
+				model.scheduleTask( null )
+			@renderSubtasks()
 		getTitle: ->
 			@$el.find( ".title input" ).val()
 		getNotes: ->
