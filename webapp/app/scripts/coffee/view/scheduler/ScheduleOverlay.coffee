@@ -68,7 +68,8 @@ define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-ov
 
 			content = @$el.find ".overlay-content"
 			offset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
-			content.css( "margin-top", offset )
+			content.css( "margin", offset + "px auto 0" )
+			content.css( "width", content.height() )
 		cleanUp: ->
 			$(window).off( "resize", @handleResize )
 			@datePicker.remove()

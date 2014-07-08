@@ -83,7 +83,8 @@
         }
         content = this.$el.find(".overlay-content");
         offset = (window.innerHeight / 2) - (content.height() / 2);
-        return content.css("margin-top", offset);
+        content.css("margin", offset + "px auto 0");
+        return content.css("width", content.height());
       },
       cleanUp: function() {
         $(window).off("resize", this.handleResize);
