@@ -11,9 +11,11 @@
 	<section class="action-steps">
 		<% if (subtasks && subtasks.length > 0) { %>
 			<% _.each( subtasks, function( task ){ %>
-				<div class="step">
-					<a href="JavaScript:void(0);" class="action complete" title="Mark todo as completed">
-						<span class="icon-checkmark-act"></span>
+				<% var state = task.completionDate ? 'complete' : 'todo'; %>
+				<% var action = task.completionDate ? 'todo' : 'complete'; %>
+				<div class="step <%= state %>">
+					<a href="JavaScript:void(0);" class="action <%= action %>" title="Mark todo as completed">
+						<span class="<% print(task.completionDate ? 'icon-todo-act' : 'icon-checkmark-act'); %>"></span>
 					</a>
 					<span class="dot"></span>
 					<input class="borderless" type="text" placeholder="Edit the action step" value="<%= task.title %>">

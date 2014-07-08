@@ -4,6 +4,7 @@
 	$action-step-height: 40px;
 	$action-step-cell-x: 26px;
 	$placeholder-color: #333;
+	$unselected-color: #ccc;
 	color: $gray;
 	::-webkit-input-placeholder { /* WebKit browsers */
 	    color:    $placeholder-color;
@@ -46,7 +47,7 @@
 					$icon-size: 15px;
 					$closure-size: 30px;
 					$border-width: 1px;
-					$unselected-color: #ccc;
+					
 					color: $unselected-color;
 					position:absolute;
 					top: $action-step-height/2 - $closure-size/2;
@@ -60,9 +61,6 @@
 						text-align:center;
 						display:block;
 						margin-top:($closure-size/2 - $icon-size/2 - $border-width);
-					}
-					span:hover{
-						text-decoration:none;
 					}
 					&:hover{
 						text-decoration:none;
@@ -80,8 +78,22 @@
 					display:block;
 				}
 				.action:hover{
-					color:$green;
-					border: 1px solid $green;
+					&.complete{
+						color:$green;
+						border: 1px solid $green;
+					}
+					&.todo{
+						color: $yellow;
+						border: 1px solid $yellow;
+					}
+				}
+			}
+			.step.complete{
+				.dot{
+					border: 2px solid $green;
+				}
+				input{
+					color: $unselected-color;
 				}
 			}
 			.dot{
@@ -93,12 +105,13 @@
 				height:$action-step-dot-size;
 				border: 2px solid $yellow;
 				border-radius: $action-step-dot-size/2;
+				
 			}
 			.add-step{
 				.dot{
 					border: 2px solid $gray;
-
 				}
+
 			}
 			
 		}
