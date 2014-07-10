@@ -6,6 +6,11 @@
 			<a href="JavaScript:void(0);" class="action <%= action %>" title="Mark todo as completed">
 				<span class="<% print(task.completionDate ? 'icon-todo-act' : 'icon-checkmark-act'); %>"></span>
 			</a>
+			<!-- <% if( task.completionDate ) { %> 
+			<a href="JavaScript:void(0);" class="action delete" title="Delete the action step">
+				<span class="icon-trashcan-act"></span>
+			</a>
+			<% } %>-->
 			<span class="dot"></span>
 			<input class="borderless" type="text" placeholder="Edit the action step" value="<%= task.title %>">
 		</div>

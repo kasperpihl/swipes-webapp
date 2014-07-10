@@ -56,19 +56,18 @@
         return this.model;
       },
       addNewSubtask: function(title) {
-        var currentSubtasks, newSubtask, order, parentLocalId;
+        var currentSubtasks, order, parentLocalId;
         currentSubtasks = this.getOrderedSubtasks();
         parentLocalId = this.get("tempId");
         if (this.id != null) {
           parentLocalId = this.id;
         }
         order = currentSubtasks.length;
-        newSubtask = swipy.todos.create({
+        return swipy.todos.create({
           title: title,
           parentLocalId: parentLocalId,
           order: order
         });
-        return this.addSubtask(newSubtask);
       },
       initialize: function() {
         var _this = this;
