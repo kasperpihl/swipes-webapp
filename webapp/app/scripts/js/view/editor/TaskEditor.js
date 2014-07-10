@@ -130,7 +130,6 @@
         var action, model, target;
         target = $(e.currentTarget);
         model = this.getModelFromEl(target);
-        console.log(model);
         action = "complete";
         if (target.hasClass("todo")) {
           action = "todo";

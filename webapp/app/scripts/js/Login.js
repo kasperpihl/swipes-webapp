@@ -211,7 +211,6 @@
     },
     handleUserLoginSuccess: function() {
       var level, user;
-      console.log("handling login");
       this.handleAnalyticsForLogin();
       user = Parse.User.current();
       level = user.get("userLevel");

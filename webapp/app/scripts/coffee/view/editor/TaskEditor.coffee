@@ -94,7 +94,6 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		clickedAction: (e) ->
 			target = $(e.currentTarget)
 			model = @getModelFromEl( target );
-			console.log model
 			action = "complete"
 			action = "todo" if target.hasClass("todo")
 			if action is "complete"

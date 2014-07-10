@@ -130,7 +130,6 @@ LoginView = Parse.View.extend
 		else
 			analytics.tagEvent("Logged In")
 	handleUserLoginSuccess: ->
-		console.log "handling login"
 		@handleAnalyticsForLogin()
 		user = Parse.User.current()
 		level = user.get "userLevel"

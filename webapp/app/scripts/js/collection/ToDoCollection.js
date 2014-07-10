@@ -48,10 +48,6 @@
         });
       },
       getSubtasksForModel: function(model) {
-        console.log("searching for: " + model.id);
-        console.log(this.filter(function(m) {
-          return m.get("parentLocalId") === model.id;
-        }));
         return this.sortBy("order").filter(function(m) {
           return m.get("parentLocalId") === model.id;
         });
