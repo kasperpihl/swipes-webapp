@@ -38,16 +38,21 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			return @el
 		renderSubtasks: ->
 			@subtasks = @sorter.setTodoOrder( @model.getOrderedSubtasks(), false )
-			tmplData = {}
-			jsonedSubtasks = [] 
-			for task in @subtasks
-				console.log task.get "order"
-				jsonedTask = task.toJSON()
-				jsonedTask.cid = task.cid;
-				jsonedSubtasks.push(jsonedTask)
-			tmplData.subtasks = jsonedSubtasks
-			$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
-
+			titleString = "Tasks"
+			if @subtasks.length > 0
+				tmplData = {}
+				jsonedSubtasks = []
+				completedCounter = 0
+				for task in @subtasks
+					if task.get("completionDate")
+						completedCounter++
+					jsonedTask = task.toJSON()
+					jsonedTask.cid = task.cid;
+					jsonedSubtasks.push(jsonedTask)
+				tmplData.subtasks = jsonedSubtasks
+				$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
+				titleString = "" + completedCounter + " / " + jsonedSubtasks.length + " Steps"
+			$( @el ).find( ".divider h2" ).html( titleString )
 		save: ->
 			swipy.router.back()
 		reschedule: ->

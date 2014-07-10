@@ -48,20 +48,28 @@
         return this.el;
       },
       renderSubtasks: function() {
-        var jsonedSubtasks, jsonedTask, task, tmplData, _i, _len, _ref;
+        var completedCounter, jsonedSubtasks, jsonedTask, task, titleString, tmplData, _i, _len, _ref;
         this.subtasks = this.sorter.setTodoOrder(this.model.getOrderedSubtasks(), false);
-        tmplData = {};
-        jsonedSubtasks = [];
-        _ref = this.subtasks;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          task = _ref[_i];
-          console.log(task.get("order"));
-          jsonedTask = task.toJSON();
-          jsonedTask.cid = task.cid;
-          jsonedSubtasks.push(jsonedTask);
+        titleString = "Tasks";
+        if (this.subtasks.length > 0) {
+          tmplData = {};
+          jsonedSubtasks = [];
+          completedCounter = 0;
+          _ref = this.subtasks;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            task = _ref[_i];
+            if (task.get("completionDate")) {
+              completedCounter++;
+            }
+            jsonedTask = task.toJSON();
+            jsonedTask.cid = task.cid;
+            jsonedSubtasks.push(jsonedTask);
+          }
+          tmplData.subtasks = jsonedSubtasks;
+          $(this.el).find("#current-steps-container").html(_.template(ActionStepsTmpl)(tmplData));
+          titleString = "" + completedCounter + " / " + jsonedSubtasks.length + " Steps";
         }
-        tmplData.subtasks = jsonedSubtasks;
-        return $(this.el).find("#current-steps-container").html(_.template(ActionStepsTmpl)(tmplData));
+        return $(this.el).find(".divider h2").html(titleString);
       },
       save: function() {
         return swipy.router.back();
