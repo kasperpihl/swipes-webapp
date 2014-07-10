@@ -47,13 +47,13 @@
       },
       addSubtask: function(model) {
         var currentSubtasks;
-        currentSubtasks = this.get("subtasks");
+        currentSubtasks = this.get("subtasksLocal");
         if (!currentSubtasks) {
           currentSubtasks = [];
         }
         currentSubtasks.push(model);
-        this.set("subtasks", currentSubtasks);
-        return console.log(this.get("subtasks"));
+        this.set("subtasksLocal", currentSubtasks);
+        return this.model;
       },
       addNewSubtask: function(title) {
         var currentSubtasks, order, parentLocalId;

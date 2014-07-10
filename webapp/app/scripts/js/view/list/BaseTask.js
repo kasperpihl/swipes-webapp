@@ -76,9 +76,9 @@
         }
         renderJSON = this.model.toJSON();
         numberOfActionStepsLeft = 0;
-        if (this.model.get("subtasks")) {
-          numberOfActionStepsLeft = this.model.get("subtasks").length;
-          _ref = this.model.get("subtasks");
+        if (this.model.get("subtasksLocal")) {
+          numberOfActionStepsLeft = this.model.get("subtasksLocal").length;
+          _ref = this.model.get("subtasksLocal");
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             subtask = _ref[_i];
             if (subtask.get("completionDate")) {

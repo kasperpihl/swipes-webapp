@@ -55,12 +55,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					parentModel.addSubtask @
 					
 		addSubtask: ( model ) ->
-			currentSubtasks = @get "subtasks"
+			currentSubtasks = @get "subtasksLocal"
 			if !currentSubtasks
 				currentSubtasks = []
 			currentSubtasks.push( model )
-			@set "subtasks", currentSubtasks
-			console.log @get "subtasks"
+			@set "subtasksLocal", currentSubtasks
+			return @model
 		addNewSubtask: ( title ) ->
 			currentSubtasks = @getOrderedSubtasks()
 			parentLocalId = @get "tempId" 

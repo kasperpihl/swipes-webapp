@@ -66,8 +66,8 @@
             jsonedSubtasks.push(jsonedTask);
           }
           tmplData.subtasks = jsonedSubtasks;
-          $(this.el).find("#current-steps-container").html(_.template(ActionStepsTmpl)(tmplData));
           titleString = "" + completedCounter + " / " + jsonedSubtasks.length + " Steps";
+          $(this.el).find("#current-steps-container").html(_.template(ActionStepsTmpl)(tmplData));
         }
         return $(this.el).find(".divider h2").html(titleString);
       },

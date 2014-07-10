@@ -63,9 +63,9 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			return @ unless @template?
 			renderJSON = @model.toJSON()
 			numberOfActionStepsLeft = 0
-			if @model.get "subtasks" 
-				numberOfActionStepsLeft = @model.get("subtasks").length
-				for subtask in @model.get "subtasks"
+			if @model.get "subtasksLocal" 
+				numberOfActionStepsLeft = @model.get("subtasksLocal").length
+				for subtask in @model.get "subtasksLocal"
 					if subtask.get "completionDate"
 						numberOfActionStepsLeft--
 			renderJSON.numberOfActionStepsLeft = numberOfActionStepsLeft

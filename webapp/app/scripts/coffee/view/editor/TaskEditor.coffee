@@ -50,8 +50,8 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 					jsonedTask.cid = task.cid;
 					jsonedSubtasks.push(jsonedTask)
 				tmplData.subtasks = jsonedSubtasks
-				$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
 				titleString = "" + completedCounter + " / " + jsonedSubtasks.length + " Steps"
+				$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
 			$( @el ).find( ".divider h2" ).html( titleString )
 		save: ->
 			swipy.router.back()

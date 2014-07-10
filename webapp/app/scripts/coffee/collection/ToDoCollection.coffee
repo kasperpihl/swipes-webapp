@@ -17,6 +17,8 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 		getCompleted: ->
 			@filter (m) -> m.getState() is "completed" and !m.isSubtask()
 		getSubtasksForModel: ( model ) ->
+			console.log "searching for: " + model.id
+			console.log( @filter (m) -> m.get("parentLocalId") is model.id)
 			@sortBy( "order" ).filter (m) -> m.get( "parentLocalId" ) is model.id
 		getActiveList: ->
 			route = swipy.router.getCurrRoute()
