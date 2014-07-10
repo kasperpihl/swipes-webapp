@@ -20,7 +20,7 @@
         ];
       },
       setTodoOrder: function(todos) {
-        return this.sorter.setTodoOrder(todos);
+        return this.sorter.setTodoOrder(todos, true);
       },
       beforeRenderList: function(todos) {
         swipy.todos.invoke("set", "selected", false);

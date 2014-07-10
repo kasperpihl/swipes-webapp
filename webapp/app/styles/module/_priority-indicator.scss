@@ -1,6 +1,6 @@
 .priority {
-	$size: 12px;
-	$big-size: 16px;
+	$size: $priority-size;
+	$big-size: $priority-big-size;
 	$border-size: 4px;
 
 	// Normalize size independent of container

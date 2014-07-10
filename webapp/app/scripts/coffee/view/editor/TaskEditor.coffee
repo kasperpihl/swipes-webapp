@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TagEditor) ->
+define ["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/model/TaskSortModel" ,  "js/view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TaskSortModel, TagEditor) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
@@ -14,9 +14,10 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		initialize: ->
 			$("body").addClass "edit-mode"
 			@setTemplate()
-			_.bindAll( @, "clickedAction" )
+			@sorter = new TaskSortModel()
+			_.bindAll( @, "clickedAction", 'updateActionStep' )
 			@render()
-			@listenTo( @model, "change:schedule change:repeatOption change:priority", @render )
+			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title", @render )
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
 		killTagEditor: ->
@@ -28,7 +29,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->
-			@subtasks = @model.getOrderedSubtasks()
+			
 			@$el.html @template @model.toJSON()
 			@renderSubtasks()
 			@setStateClass()
@@ -36,9 +37,11 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			@createTagEditor()
 			return @el
 		renderSubtasks: ->
+			@subtasks = @sorter.setTodoOrder( @model.getOrderedSubtasks(), false )
 			tmplData = {}
 			jsonedSubtasks = [] 
 			for task in @subtasks
+				console.log task.get "order"
 				jsonedTask = task.toJSON()
 				jsonedTask.cid = task.cid;
 				jsonedSubtasks.push(jsonedTask)
@@ -59,8 +62,23 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		updateNotes: ->
 			@model.updateNotes @getNotes()
 		updateActionStep: (e) ->
-			console.log e
-			console.log $(e.target)
+			target = $(e.currentTarget)
+			title = target.val()
+			title = title.trim()
+			model = @getModelFromEl($(e.currentTarget))
+			if title.length is 0
+				if model?
+					target.val(model.get("title"))
+				return false
+			if title.length > 255
+				title = title.substr(0,255)
+			
+			if model?
+				model.updateTitle title
+			else
+				@model.addNewSubtask title
+				target.val("")
+			@renderSubtasks()
 		getModelFromEl: ( el ) ->
 			step = el.closest( ".step" )
 			cid = step.attr("data-cid")

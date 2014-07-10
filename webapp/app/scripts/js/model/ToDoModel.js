@@ -49,6 +49,20 @@
       addSubtask: function(model) {
         return this.subtasks.push(model);
       },
+      addNewSubtask: function(title) {
+        var currentSubtasks, order, parentLocalId;
+        currentSubtasks = this.getOrderedSubtasks();
+        parentLocalId = this.get("tempId");
+        if (this.id != null) {
+          parentLocalId = this.id;
+        }
+        order = currentSubtasks.length;
+        return swipy.todos.create({
+          title: title,
+          parentLocalId: parentLocalId,
+          order: order
+        });
+      },
       initialize: function() {
         var _this = this;
         if (this.get("schedule") === "default") {
@@ -285,12 +299,16 @@
         }
       },
       scheduleTask: function(date) {
-        this.unset("schedule");
-        return this.set({
-          order: -1,
+        var updateObj;
+        updateObj = {
           schedule: date,
           completionDate: null
-        }, {
+        };
+        if (!this.isSubtask()) {
+          updateObj.order = -1;
+        }
+        this.unset("schedule");
+        return this.set(updateObj, {
           sync: true
         });
       },

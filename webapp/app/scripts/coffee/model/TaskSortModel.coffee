@@ -2,13 +2,18 @@ define ["underscore"], (_) ->
 	class TaskSortModel
 
 		sortBySchedule: (todos) ->
-			result = _.sortBy( todos, (m) -> m.get("schedule").getTime() )
+			result = _.sortBy( todos, (m) -> 
+				schedule = m.get("schedule")
+				if !schedule
+					0
+				else 
+					schedule.getTime()
+			)
 			result.reverse()
 			return result
 
 		setTodoOrder: (todos, newOnTop) ->
 			defaultOrderVal = -1
-			newOnTop = true
 			sortedTodoArray = []
 
 			groupedItems = _.groupBy( todos, (m) -> 

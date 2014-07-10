@@ -1,5 +1,5 @@
 (function() {
-  define(["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html", "js/view/editor/TagEditor"], function(_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TagEditor) {
+  define(["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html", "js/model/TaskSortModel", "js/view/editor/TagEditor"], function(_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TaskSortModel, TagEditor) {
     return Backbone.View.extend({
       tagName: "article",
       className: "task-editor",
@@ -16,9 +16,10 @@
       initialize: function() {
         $("body").addClass("edit-mode");
         this.setTemplate();
-        _.bindAll(this, "clickedAction");
+        this.sorter = new TaskSortModel();
+        _.bindAll(this, "clickedAction", 'updateActionStep');
         this.render();
-        return this.listenTo(this.model, "change:schedule change:repeatOption change:priority", this.render);
+        return this.listenTo(this.model, "change:schedule change:repeatOption change:priority change:title", this.render);
       },
       setTemplate: function() {
         return this.template = _.template(TaskEditorTmpl);
@@ -39,7 +40,6 @@
         return this.$el.removeClass("active scheduled completed").addClass(this.model.getState());
       },
       render: function() {
-        this.subtasks = this.model.getOrderedSubtasks();
         this.$el.html(this.template(this.model.toJSON()));
         this.renderSubtasks();
         this.setStateClass();
@@ -49,11 +49,13 @@
       },
       renderSubtasks: function() {
         var jsonedSubtasks, jsonedTask, task, tmplData, _i, _len, _ref;
+        this.subtasks = this.sorter.setTodoOrder(this.model.getOrderedSubtasks(), false);
         tmplData = {};
         jsonedSubtasks = [];
         _ref = this.subtasks;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           task = _ref[_i];
+          console.log(task.get("order"));
           jsonedTask = task.toJSON();
           jsonedTask.cid = task.cid;
           jsonedSubtasks.push(jsonedTask);
@@ -81,8 +83,27 @@
         return this.model.updateNotes(this.getNotes());
       },
       updateActionStep: function(e) {
-        console.log(e);
-        return console.log($(e.target));
+        var model, target, title;
+        target = $(e.currentTarget);
+        title = target.val();
+        title = title.trim();
+        model = this.getModelFromEl($(e.currentTarget));
+        if (title.length === 0) {
+          if (model != null) {
+            target.val(model.get("title"));
+          }
+          return false;
+        }
+        if (title.length > 255) {
+          title = title.substr(0, 255);
+        }
+        if (model != null) {
+          model.updateTitle(title);
+        } else {
+          this.model.addNewSubtask(title);
+          target.val("");
+        }
+        return this.renderSubtasks();
       },
       getModelFromEl: function(el) {
         var cid, foundTask, step, task, _i, _len, _ref;

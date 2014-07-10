@@ -7,7 +7,13 @@
       TaskSortModel.prototype.sortBySchedule = function(todos) {
         var result;
         result = _.sortBy(todos, function(m) {
-          return m.get("schedule").getTime();
+          var schedule;
+          schedule = m.get("schedule");
+          if (!schedule) {
+            return 0;
+          } else {
+            return schedule.getTime();
+          }
         });
         result.reverse();
         return result;
@@ -16,7 +22,6 @@
       TaskSortModel.prototype.setTodoOrder = function(todos, newOnTop) {
         var defaultOrderVal, groupedItems, m, orderNumber, orderedItems, sortedTodoArray, unorderedItems, _i, _len;
         defaultOrderVal = -1;
-        newOnTop = true;
         sortedTodoArray = [];
         groupedItems = _.groupBy(todos, function(m) {
           if (m.has("order") && m.get("order") > defaultOrderVal) {

@@ -51,6 +51,7 @@
 					color: $unselected-color;
 					position:absolute;
 					top: $action-step-height/2 - $closure-size/2;
+					left:-$closure-size/2 + $priority-size/2;
 					width:$closure-size;
 					height:$closure-size;
 					border-radius: 5px;
@@ -69,7 +70,8 @@
 				}
 
 				input{
-					margin-top:8px;
+					margin-top:11px;
+					font: 1em/1 $font-light;
 					margin-left:$padding;
 				}
 			}
@@ -94,6 +96,7 @@
 				}
 				input{
 					color: $unselected-color;
+					opacity:0.6;
 				}
 			}
 			.dot{

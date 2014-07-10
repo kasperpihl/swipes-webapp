@@ -57,6 +57,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					
 		addSubtask: ( model ) ->
 			@subtasks.push( model )
+		addNewSubtask: ( title ) ->
+			currentSubtasks = @getOrderedSubtasks()
+			parentLocalId = @get "tempId" 
+			parentLocalId = @id if @id?
+			order = currentSubtasks.length
+			swipy.todos.create { title, parentLocalId, order }
 
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
@@ -269,13 +275,16 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@set( "priority", 1 , { sync: true } )
 
 		scheduleTask: ( date ) ->
-			@unset "schedule"
-			@set({
-				order: -1
+			updateObj = {
 				schedule: date
 				completionDate: null
-			},
-			sync: true
+			}
+			if !@isSubtask()
+				updateObj.order = -1
+			
+			@unset "schedule"
+			@set(updateObj,
+				sync: true
 			)
 
 		
