@@ -7,7 +7,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 	BaseModel.extend
 		className: "ToDo"
 		idAttribute: "objectId"
-		subtasks: []
 		attrWhitelist: [
 			"title"
 			"order"
@@ -56,7 +55,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					parentModel.addSubtask @
 					
 		addSubtask: ( model ) ->
-			@subtasks.push( model )
+			currentSubtasks = @get "subtasks"
+			if !currentSubtasks
+				currentSubtasks = []
+			currentSubtasks.push( model )
+			@set "subtasks", currentSubtasks
+			console.log @get "subtasks"
 		addNewSubtask: ( title ) ->
 			currentSubtasks = @getOrderedSubtasks()
 			parentLocalId = @get "tempId" 

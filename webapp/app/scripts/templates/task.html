@@ -30,8 +30,7 @@
 	}
 %>
 <div class="<%= classList %>">
-	<h2><span class="priority"></span><%= title %></h2>
-
+	<h2><span class="priority"></span><%= title %> <% if(numberOfActionStepsLeft && numberOfActionStepsLeft > 0) print( " ( " + numberOfActionStepsLeft + " )" ); %></h2>
 
 	<ul class="meta">
 		<% if (notes) { %>

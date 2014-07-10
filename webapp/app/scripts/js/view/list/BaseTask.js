@@ -70,10 +70,24 @@
         return swipy.router.navigate("edit/" + identifier, true);
       },
       render: function() {
+        var numberOfActionStepsLeft, renderJSON, subtask, _i, _len, _ref;
         if (this.template == null) {
           return this;
         }
-        this.$el.html(this.template(this.model.toJSON()));
+        renderJSON = this.model.toJSON();
+        numberOfActionStepsLeft = 0;
+        if (this.model.get("subtasks")) {
+          numberOfActionStepsLeft = this.model.get("subtasks").length;
+          _ref = this.model.get("subtasks");
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            subtask = _ref[_i];
+            if (subtask.get("completionDate")) {
+              numberOfActionStepsLeft--;
+            }
+          }
+        }
+        renderJSON.numberOfActionStepsLeft = numberOfActionStepsLeft;
+        this.$el.html(this.template(renderJSON));
         this.$el.attr("data-id", this.model.id);
         this.afterRender();
         return this;

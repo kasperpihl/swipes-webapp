@@ -61,7 +61,16 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
-			@$el.html @template @model.toJSON()
+			renderJSON = @model.toJSON()
+			numberOfActionStepsLeft = 0
+			if @model.get "subtasks" 
+				numberOfActionStepsLeft = @model.get("subtasks").length
+				for subtask in @model.get "subtasks"
+					if subtask.get "completionDate"
+						numberOfActionStepsLeft--
+			renderJSON.numberOfActionStepsLeft = numberOfActionStepsLeft
+
+			@$el.html @template renderJSON
 			@$el.attr( "data-id", @model.id )
 			@afterRender()
 			return @

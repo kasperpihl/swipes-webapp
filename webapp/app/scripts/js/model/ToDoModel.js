@@ -9,7 +9,6 @@
     return BaseModel.extend({
       className: "ToDo",
       idAttribute: "objectId",
-      subtasks: [],
       attrWhitelist: ["title", "order", "schedule", "completionDate", "repeatOption", "repeatDate", "repeatCount", "tags", "notes", "location", "parentLocalId", "priority", "origin", "originIdentifier"],
       defaults: {
         title: "",
@@ -47,7 +46,14 @@
         }
       },
       addSubtask: function(model) {
-        return this.subtasks.push(model);
+        var currentSubtasks;
+        currentSubtasks = this.get("subtasks");
+        if (!currentSubtasks) {
+          currentSubtasks = [];
+        }
+        currentSubtasks.push(model);
+        this.set("subtasks", currentSubtasks);
+        return console.log(this.get("subtasks"));
       },
       addNewSubtask: function(title) {
         var currentSubtasks, order, parentLocalId;
