@@ -24,23 +24,13 @@
               display: "block"
             });
           },
-          onComplete: function() {
-            return TweenMax.fromTo(_this.$('.icon'), 1, {
-              rotation: 0
-            }, {
-              rotation: 360,
-              repeat: -1,
-              transformOrigin: "55% 43%",
-              ease: Power1.easeInOut
-            });
-          },
           onReverseComplete: function() {
             return TweenLite.set(_this.el, {
               display: "none"
             });
           }
         });
-        this.tl.fromTo(this.$('.icon'), 0.3, {
+        this.tl.fromTo(this.$('.spinner'), 0.3, {
           scale: 0,
           opacity: 0
         }, {
@@ -74,7 +64,7 @@
         return this.shown = false;
       },
       getHTML: function() {
-        return "<div class='icon-wrap'>\n	<div class=\"icon icon-repeat\"></div>\n</div>\n<p class='sync-text'>Syncing</p>";
+        return "<div class='icon-wrap'>\n	<div class=\"spinner\">\n		<div class='bounce1'></div>\n		<div class='bounce2'></div>\n		<div class='bounce3'></div>\n	</div>\n</div>\n<p class='sync-text'>Syncing</p>";
       },
       render: function() {
         this.$el.html(this.getHTML());

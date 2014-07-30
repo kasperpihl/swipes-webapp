@@ -19,4 +19,11 @@
 		height: $size;
 		line-height: $size;
 	}
+
+	.spinner { margin-top: 0; }
+
+	.spinner > div {
+		width: 9px;
+		height: 9px;
+	}
 }
