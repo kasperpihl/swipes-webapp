@@ -17,7 +17,7 @@ require.config({
         underscore: '../bower_components/underscore/underscore',
         'backbone.localStorage': '../bower_components/backbone.localStorage/backbone.localStorage',
         'greensock-js': 'plugins/greensock-js/src/minified/TweenMax.min',
-        gsap: 'plugins/greensock-js/src/uncompressed/TweenLite',
+        gsap: 'plugins/greensock-js/src/uncompressed/TweenMax',
         timelinelite: 'plugins/greensock-js/src/uncompressed/TimelineLite',
         'gsap-scroll': 'plugins/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
         'gsap-text': 'plugins/greensock-js/src/uncompressed/plugins/TextPlugin',
@@ -103,7 +103,7 @@ require.config({
                 'gsap-easing',
                 'gsap-css'
             ],
-            exports: 'TweenLite'
+            exports: 'TweenMax'
         },
         timelinelite: {
             exports: 'TimelineLite'
@@ -138,7 +138,7 @@ require(["jquery"], function($) {
         // First check that the user is actually logged in
         var appId = liveEnvironment ? "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3" : "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr";
         var jsId = liveEnvironment ? "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg" : "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag";
-        
+
         Parse.initialize(appId, jsId);
 
         if (Parse.User.current()) {

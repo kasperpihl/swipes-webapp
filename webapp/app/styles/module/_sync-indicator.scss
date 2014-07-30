@@ -1,0 +1,22 @@
+.sync-indicator {
+	position: fixed;
+	top: 16px;
+	right: 14px;
+
+	text-align: center;
+	font-size: 12px;
+	color: #c0c0be;
+
+	display: none;
+	body.syncing & { display: block; }
+
+	.icon {
+		$size: 13px;
+
+		margin: auto;
+
+		width: $size;
+		height: $size;
+		line-height: $size;
+	}
+}

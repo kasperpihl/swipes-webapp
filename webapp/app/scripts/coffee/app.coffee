@@ -8,6 +8,7 @@ define [
 	"js/collection/ToDoCollection"
 	"js/collection/TagCollection"
 	"js/view/nav/ListNavigation"
+	"js/view/SyncIndicator"
 	"js/controller/TaskInputController"
 	"js/controller/SidebarController"
 	"js/controller/ScheduleController"
@@ -17,7 +18,7 @@ define [
 	"js/controller/SyncController"
 	"gsap"
 	"localytics-sdk"
-	], ($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) ->
+	], ($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, SyncIndicator, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -27,19 +28,21 @@ define [
 
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
+
+			# Base app data
 			@todos = new ToDoCollection()
 			@tags = new TagCollection()
 
+			# Synchronization
 			@sync = new SyncController()
-			
+			@syncIndicator = new SyncIndicator()
+			document.getElementById( "main" ).appendChild @syncIndicator.el
 			@updateTimer = new ClockWork()
 
-			
 			##@tags.fetch()
 
-			
 			$(window).focus @fetchTodos
-				
+
 		isBusy: ->
 			# Are any todos being saved right now?
 			if @todos.length?
