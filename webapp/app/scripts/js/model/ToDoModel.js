@@ -38,7 +38,6 @@
         }
         BaseModel.apply(this, arguments);
         if (attributes.parentLocalId) {
-          console.log(attributes.parentLocalId);
           identifier = attributes.parentLocalId;
           parentModel = swipy.todos.find(function(model) {
             if ((identifier != null) && model.id === identifier) {
@@ -50,7 +49,6 @@
             return false;
           });
           if (parentModel) {
-            console.log("found parent model");
             this.set("parent", parentModel);
             return parentModel.addSubtask(this);
           }

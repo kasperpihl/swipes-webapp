@@ -49,7 +49,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				attributes.tags = @handleTagsFromServer attributes.tags
 			BaseModel.apply @, arguments
 			if attributes.parentLocalId
-				console.log attributes.parentLocalId
 				identifier = attributes.parentLocalId
 				parentModel = swipy.todos.find( 
 					( model ) ->
@@ -58,7 +57,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 						false
 				)
 				if parentModel
-					console.log "found parent model"
 					@set "parent", parentModel
 					parentModel.addSubtask @
 					
@@ -342,8 +340,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					schedule: subtask.get "schedule"
 
 				swipy.todos.create attributes
-				#console.log duplicateSubtask
-				#swipy.todos.add duplicateSubtask
+
 				if subtask.get "completionDate"
 					subtask.scheduleTask()
 
