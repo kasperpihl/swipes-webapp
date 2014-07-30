@@ -80,6 +80,17 @@
           order: order
         });
       },
+      deleteObj: function() {
+        var subtask, _i, _len, _ref, _results;
+        BaseModel.prototype.deleteObj.apply(this, arguments);
+        _ref = this.getOrderedSubtasks();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          subtask = _ref[_i];
+          _results.push(subtask.deleteObj());
+        }
+        return _results;
+      },
       initialize: function() {
         var _this = this;
         if (this.get("schedule") === "default") {

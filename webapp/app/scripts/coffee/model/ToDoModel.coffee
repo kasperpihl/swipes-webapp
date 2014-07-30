@@ -76,7 +76,10 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			order = currentSubtasks.length
 			swipy.todos.create { title, parentLocalId, order }
 			#@addSubtask newSubtask
-			
+		deleteObj: ->
+			BaseModel.prototype.deleteObj.apply @ , arguments
+			for subtask in @getOrderedSubtasks()
+				subtask.deleteObj()
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
 			# because null should be an allowed without triggering any logic, as null is used for
