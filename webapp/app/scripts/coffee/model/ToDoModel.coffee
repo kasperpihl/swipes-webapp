@@ -49,8 +49,16 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				attributes.tags = @handleTagsFromServer attributes.tags
 			BaseModel.apply @, arguments
 			if attributes.parentLocalId
-				parentModel = swipy.todos.get( attributes.parentLocalId )
+				console.log attributes.parentLocalId
+				identifier = attributes.parentLocalId
+				parentModel = swipy.todos.find( 
+					( model ) ->
+						return true if identifier? and model.id is identifier
+						return true if identifier? and model.get("tempId") is identifier
+						false
+				)
 				if parentModel
+					console.log "found parent model"
 					@set "parent", parentModel
 					parentModel.addSubtask @
 					
@@ -257,6 +265,11 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			sanitizedData.repeatOption = "never"
 			sanitizedData.repeatDate = null
 
+			sanitizedData.parentLocalId = null
+
+			sanitizedData.origin = null
+			sanitizedData.originIdentifier = null
+
 			return sanitizedData
 
 		getRepeatableDuplicate: ->
@@ -305,12 +318,32 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			duplicate.completeTask()
 			swipy.todos.add duplicate
 
+			@copyActionStepsToDuplicate duplicate
+
 			@set({
 				schedule: nextDate
 				repeatCount: @get( "repeatCount" ) + 1
 				repeatDate: nextDate
 				},{ sync: true }
 			)
+
+		copyActionStepsToDuplicate: ( duplicate ) ->
+			for subtask in @getOrderedSubtasks()
+				parentLocalId = duplicate.get "tempId" 
+				parentLocalId = duplicate.id if duplicate.id?
+				attributes = 
+					title: subtask.get "title"
+					order: subtask.get "order"
+					parentLocalId: parentLocalId
+					completionDate: subtask.get "completionDate"
+					schedule: subtask.get "schedule"
+
+				swipy.todos.create attributes
+				#console.log duplicateSubtask
+				#swipy.todos.add duplicateSubtask
+				if subtask.get "completionDate"
+					subtask.scheduleTask()
+
 
 		completeTask: ->
 			if @has "repeatDate"

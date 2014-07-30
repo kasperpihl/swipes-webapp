@@ -32,14 +32,25 @@
         return Backbone.Model.prototype.set.apply(this, arguments);
       },
       constructor: function(attributes) {
-        var parentModel;
+        var identifier, parentModel;
         if (attributes.tags && attributes.tags.length > 0) {
           attributes.tags = this.handleTagsFromServer(attributes.tags);
         }
         BaseModel.apply(this, arguments);
         if (attributes.parentLocalId) {
-          parentModel = swipy.todos.get(attributes.parentLocalId);
+          console.log(attributes.parentLocalId);
+          identifier = attributes.parentLocalId;
+          parentModel = swipy.todos.find(function(model) {
+            if ((identifier != null) && model.id === identifier) {
+              return true;
+            }
+            if ((identifier != null) && model.get("tempId") === identifier) {
+              return true;
+            }
+            return false;
+          });
           if (parentModel) {
+            console.log("found parent model");
             this.set("parent", parentModel);
             return parentModel.addSubtask(this);
           }
@@ -277,6 +288,9 @@
         sanitizedData.repeatCount = 0;
         sanitizedData.repeatOption = "never";
         sanitizedData.repeatDate = null;
+        sanitizedData.parentLocalId = null;
+        sanitizedData.origin = null;
+        sanitizedData.originIdentifier = null;
         return sanitizedData;
       },
       getRepeatableDuplicate: function() {
@@ -331,6 +345,7 @@
         }
         duplicate.completeTask();
         swipy.todos.add(duplicate);
+        this.copyActionStepsToDuplicate(duplicate);
         return this.set({
           schedule: nextDate,
           repeatCount: this.get("repeatCount") + 1,
@@ -338,6 +353,32 @@
         }, {
           sync: true
         });
+      },
+      copyActionStepsToDuplicate: function(duplicate) {
+        var attributes, parentLocalId, subtask, _i, _len, _ref, _results;
+        _ref = this.getOrderedSubtasks();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          subtask = _ref[_i];
+          parentLocalId = duplicate.get("tempId");
+          if (duplicate.id != null) {
+            parentLocalId = duplicate.id;
+          }
+          attributes = {
+            title: subtask.get("title"),
+            order: subtask.get("order"),
+            parentLocalId: parentLocalId,
+            completionDate: subtask.get("completionDate"),
+            schedule: subtask.get("schedule")
+          };
+          swipy.todos.create(attributes);
+          if (subtask.get("completionDate")) {
+            _results.push(subtask.scheduleTask());
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       },
       completeTask: function() {
         if (this.has("repeatDate")) {
