@@ -202,8 +202,8 @@ LoginView = Parse.View.extend
 			else alert "something went wrong. Please try again."
 
 # Log into services
-appId = if liveEnvironment then "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3" else "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr"
-jsId = if liveEnvironment then "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg" else "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag"
+appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3"
+jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg"
 Parse.initialize(appId, jsId);
 
 # Handle Fabebook Login

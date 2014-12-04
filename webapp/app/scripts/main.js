@@ -136,8 +136,8 @@ require(["jquery"], function($) {
 
     require(["parse-js-sdk"], function() {
         // First check that the user is actually logged in
-        var appId = liveEnvironment ? "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3" : "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr";
-        var jsId = liveEnvironment ? "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg" : "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag";
+        var appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3";
+        var jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg";
         
         Parse.initialize(appId, jsId);
 
