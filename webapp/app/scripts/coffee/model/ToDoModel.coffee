@@ -176,7 +176,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			# Remove falsy values first
 			tags = _.compact tags
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
-
+			console.log tags
 			if pointers && pointers.length
 				# remove pointers
 				tags = _.reject tags, (t) -> _.contains( pointers, t.id )

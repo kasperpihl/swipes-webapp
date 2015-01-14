@@ -42,8 +42,8 @@ define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputVi
 				return
 
 			swipy.todos.bumpOrder()
-			newTodo = swipy.todos.create { title, tags, order, animateIn }
-			
+			newTodo = swipy.todos.create { title, order, animateIn }
+			newTodo.set( "tags", tags )
 			if tags.length then swipy.tags.getTagsFromTasks()
 
 			taskTitleLength = "1-10"

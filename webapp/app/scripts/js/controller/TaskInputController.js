@@ -66,10 +66,10 @@
         swipy.todos.bumpOrder();
         newTodo = swipy.todos.create({
           title: title,
-          tags: tags,
           order: order,
           animateIn: animateIn
         });
+        newTodo.set("tags", tags);
         if (tags.length) {
           swipy.tags.getTagsFromTasks();
         }

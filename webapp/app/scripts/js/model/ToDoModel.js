@@ -201,6 +201,7 @@
           }
           return _results;
         })();
+        console.log(tags);
         if (pointers && pointers.length) {
           tags = _.reject(tags, function(t) {
             return _.contains(pointers, t.id);
