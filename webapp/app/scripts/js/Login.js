@@ -334,6 +334,7 @@
       appId: fbKey,
       channelUrl: 'http://swipesapp.com/channel.php',
       status: false,
+      version: 'v2.2',
       cookie: true,
       xfbml: true
     });
@@ -347,7 +348,7 @@
     firstScriptElement = document.getElementsByTagName('script')[0];
     facebookJS = document.createElement('script');
     facebookJS.id = 'facebook-jssdk';
-    facebookJS.src = '//connect.facebook.net/en_US/all.js';
+    facebookJS.src = '//connect.facebook.net/en_US/sdk.js';
     return firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
   })();
 
