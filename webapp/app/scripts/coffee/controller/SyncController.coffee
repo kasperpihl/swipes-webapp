@@ -7,17 +7,20 @@
 
 ###
 
-define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesController"], (_, Backbone, $, ChangedAttributesController) ->
+define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesController", "js/view/SyncIndicator"], (_, Backbone, $, ChangedAttributesController, SyncIndicator) ->
 	class SyncController
 
 		constructor: ->
 			@changedAttributes = new ChangedAttributesController();
+			@syncIndicator = new SyncIndicator()
+			document.getElementById( "main" ).appendChild @syncIndicator.el
 			@isSyncing = false
 			@needSync = false
 			@lastUpdate = null
 			@sync()
 			@bouncedSync = _.debounce( @sync, 3000 )
 			@currentSyncing = null
+
 
 		handleModelForSync: (model, attributes) ->
 			if model.id
@@ -115,7 +118,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 		sync: ->
 			return @needSync = true if @isSyncing
 			@isSyncing = true
-			url = if liveEnvironment then "http://api.swipesapp.com/v1/sync" else "http://localhost:5000/v1/sync"
+			url = if liveEnvironment then "http://api.swipesapp.com/v1/sync" else "http://api.swipesapp.com/v1/sync" #"http://localhost:5000/v1/sync"
 			user = Parse.User.current()
 			token = user.getSessionToken()
 			data =
@@ -132,6 +135,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				data.objects = objects
 
 			serData = JSON.stringify data
+			@syncIndicator.show()
 			settings = 
 				url : url
 				type : 'POST'
@@ -145,6 +149,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				processData : false
 			$.ajax( settings )
 		finalizeSync: ( error ) ->
+			@syncIndicator.hide()
 			@isSyncing = false
 			@changedAttributes.resetTempChanges()
 			if @needSync
@@ -155,7 +160,6 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
 			if data and data.serverTime
-
 				@currentSyncing = null;
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?

@@ -8,11 +8,13 @@
 
 
 (function() {
-  define(["underscore", "backbone", "jquery", "js/controller/ChangedAttributesController"], function(_, Backbone, $, ChangedAttributesController) {
+  define(["underscore", "backbone", "jquery", "js/controller/ChangedAttributesController", "js/view/SyncIndicator"], function(_, Backbone, $, ChangedAttributesController, SyncIndicator) {
     var SyncController;
     return SyncController = (function() {
       function SyncController() {
         this.changedAttributes = new ChangedAttributesController();
+        this.syncIndicator = new SyncIndicator();
+        document.getElementById("main").appendChild(this.syncIndicator.el);
         this.isSyncing = false;
         this.needSync = false;
         this.lastUpdate = null;
@@ -162,7 +164,7 @@
           return this.needSync = true;
         }
         this.isSyncing = true;
-        url = liveEnvironment ? "http://api.swipesapp.com/v1/sync" : "http://localhost:5000/v1/sync";
+        url = liveEnvironment ? "http://api.swipesapp.com/v1/sync" : "http://api.swipesapp.com/v1/sync";
         user = Parse.User.current();
         token = user.getSessionToken();
         data = {
@@ -180,6 +182,7 @@
           data.objects = objects;
         }
         serData = JSON.stringify(data);
+        this.syncIndicator.show();
         settings = {
           url: url,
           type: 'POST',
@@ -196,6 +199,7 @@
       };
 
       SyncController.prototype.finalizeSync = function(error) {
+        this.syncIndicator.hide();
         this.isSyncing = false;
         this.changedAttributes.resetTempChanges();
         if (this.needSync) {
