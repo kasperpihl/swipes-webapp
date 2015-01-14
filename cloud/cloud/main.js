@@ -206,6 +206,18 @@ Parse.Cloud.beforeSave(Parse.User,function(request,response){
   }
   else response.success();
 });
+
+Parse.Cloud.define('test',function(request,response){
+  var vero = req('vero');
+  var object = Parse.User.current();
+  vero.track('Signs up',{user:object},function(result,error){
+    if(error)
+      response.error(error);
+    else 
+      response.success("success");
+  });
+});
+
 function req(module){
   return require('cloud/'+module+'.js');
 }

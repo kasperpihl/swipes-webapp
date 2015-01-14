@@ -1,6 +1,4 @@
 exports.track = function(eventName,options,callback){
-    var conf = require('cloud/conf.js');
-    var keys = conf.keys;
 
     var user = Parse.User.current();
     if(options && options.user) user = options.user;
@@ -12,19 +10,19 @@ exports.track = function(eventName,options,callback){
     if((!email || !validateEmail(email)) && callback) return callback(false,'User has no email');
     else if(!email || !validateEmail(email)) return false;
     
-    var identity = {
-        id:user.id,
-        email:email
-    };
-    
     Parse.Cloud.httpRequest({
-        url:'https://www.getvero.com/api/v2/events/track.json',
+        url:'http://api.swipesapp.com/vero',
         method:'POST',
+        headers:{
+            'Content-Type': 'application/json'
+        },
         params:{
-            auth_token:keys.veroToken,
-            identity:JSON.stringify(identity),
-            event_name:eventName,
-            development_mode:keys.veroDevelopment
+
+        },
+        body:{
+            eventName: eventName,
+            identifier: user.id,
+            email: email
         },
         success:function(result){
             if(callback) callback(result);
