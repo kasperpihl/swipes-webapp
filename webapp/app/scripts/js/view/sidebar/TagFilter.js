@@ -96,6 +96,7 @@
         return _.unique(tags);
       },
       getValidatedTags: function() {
+        return swipy.tags.pluck("title");
         if ((swipy.filter != null) && swipy.filter.tagsFilter.length) {
           return swipy.tags.getSiblings(swipy.filter.tagsFilter, false);
         } else {

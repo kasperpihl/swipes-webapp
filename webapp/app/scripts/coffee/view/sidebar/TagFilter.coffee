@@ -60,6 +60,8 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 			return _.unique tags
 		getValidatedTags: ->
+			return swipy.tags.pluck "title"
+
 			if swipy.filter? and swipy.filter.tagsFilter.length
 				swipy.tags.getSiblings( swipy.filter.tagsFilter, no )
 			else
