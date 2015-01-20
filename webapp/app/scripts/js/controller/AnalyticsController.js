@@ -10,68 +10,37 @@
       }
 
       AnalyticsController.prototype.init = function() {
-        this.customDimensions = ["Standard"];
-        this.screens = [];
-        return this.createSession();
+        return this.screens = [];
       };
 
-      AnalyticsController.prototype.createSession = function() {
-        this.session = LocalyticsSession(this.getKey());
-        this.session.open();
-        this.session.upload();
-        return this.setUser(Parse.User.current());
-      };
-
-      AnalyticsController.prototype.getKey = function() {
-        var key;
-        key = liveEnvironment ? "0c159f237171213e5206f21-6bd270e2-076d-11e3-11ec-004a77f8b47f" : "f2f927e0eafc7d3c36835fe-c0a84d84-18d8-11e3-3b24-00a426b17dd8";
-        return key;
-      };
-
-      AnalyticsController.prototype.hasDimension = function(dimension) {
-        if (isInt(dimension) && (this.customDimensions.length < dimension && dimension >= 0)) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-
-      AnalyticsController.prototype.customDimension = function(dimension) {
-        if (this.hasDimension(dimension)) {
-          return this.customDimensions[dimension];
-        } else {
-          return false;
-        }
-      };
-
-      AnalyticsController.prototype.setCustomDimension = function(dimension, value) {
-        if (this.hasDimension(dimension)) {
-          return this.customDimensions[dimension] = value;
-        }
-      };
-
-      AnalyticsController.prototype.tagEvent = function(ev, options) {
-        return this.session.tagEvent(ev, options, this.customDimensions);
-      };
-
-      AnalyticsController.prototype.tagScreen = function(screenName) {
-        return this.session.tagScreen(screenName);
+      AnalyticsController.prototype.sendEvent = function(category, action, label, value) {
+        return ga('send', 'event', category, action, label, value);
       };
 
       AnalyticsController.prototype.pushScreen = function(screenName) {
-        this.session.tagScreen(screenName);
+        ga('send', 'screenview', {
+          'screenName': screenName
+        });
         return this.screens.push(screenName);
       };
 
       AnalyticsController.prototype.popScreen = function() {
+        var lastScreen;
         if (this.screens.length) {
           this.screens.pop();
-          return this.session.tagScreen(_.last(this.screens));
+          lastScreen = _.last(this.screens);
+          if (lastScreen == null) {
+            return;
+          }
+          return ga('send', 'screenview', {
+            'screenName': lastScreen
+          });
         }
       };
 
-      AnalyticsController.prototype.setUser = function(user) {
-        var cdUserLevel;
+      AnalyticsController.prototype.updateIdentity = function() {
+        var cdUserLevel, user;
+        user = Parse.user.current();
         cdUserLevel = (function() {
           switch (parseInt(user.get("userLevel"), 10)) {
             case 1:

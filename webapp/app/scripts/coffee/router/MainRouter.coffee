@@ -16,18 +16,18 @@ define ['backbone'], (Backbone) ->
 			Backbone.trigger( "navigate/view", id )
 
 			eventName = switch id
-				when "todo" then "Tasks Tab"
+				when "todo" then "Today Tab"
 				when "scheduled" then "Later Tab"
 				when "completed" then "Done Tab"
 
-			swipy.analytics.tagScreen eventName
+			swipy.analytics.pushScreen eventName
 		edit: (taskId) ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
 		settings: (subview) ->
 			Backbone.trigger "show-settings"
 			if subview then Backbone.trigger( "settings/view", subview )
-			else swipy.analytics.tagScreen "Settings menu"
+			else swipy.analytics.pushScreen "Settings menu"
 		updateHistory: (me, page, subpage) ->
 			# We skip root, because it's just a redirect to another route.
 			return false if page is "" or page is "root"

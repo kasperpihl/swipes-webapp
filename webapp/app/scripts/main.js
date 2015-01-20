@@ -30,8 +30,7 @@ require.config({
         'requirejs-text': '../bower_components/requirejs-text/text',
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
         clndr: '../bower_components/clndr/src/clndr',
-        'parse-js-sdk': 'plugins/parse-js-sdk/lib/parse',
-        'localytics-sdk': 'plugins/localytics',
+        'parse': '../bower_components/parse/parse',
         hammerjs: '../bower_components/hammerjs/hammer',
         'jquery-hammerjs': '../bower_components/jquery-hammerjs/jquery.hammer',
         mousetrap: '../bower_components/mousetrap/mousetrap',
@@ -134,7 +133,7 @@ require.config({
 require(["jquery"], function($) {
     window.$ = window.jQuery = $;
 
-    require(["parse-js-sdk"], function() {
+    require(["parse"], function() {
         // First check that the user is actually logged in
         
         var appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3";

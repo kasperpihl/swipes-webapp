@@ -16,7 +16,6 @@ define [
 	"js/controller/ErrorController"
 	"js/controller/SyncController"
 	"gsap"
-	"localytics-sdk"
 	], ($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30

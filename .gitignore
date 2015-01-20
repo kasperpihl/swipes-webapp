@@ -4,6 +4,7 @@
 .DS_Store
 cloud/public
 webapp/public
+webapp/app/scripts/js
 *.httpclient
 *.sublime-project
 *.sublime-workspace

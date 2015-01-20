@@ -29,14 +29,14 @@
         eventName = (function() {
           switch (id) {
             case "todo":
-              return "Tasks Tab";
+              return "Today Tab";
             case "scheduled":
               return "Later Tab";
             case "completed":
               return "Done Tab";
           }
         })();
-        return swipy.analytics.tagScreen(eventName);
+        return swipy.analytics.pushScreen(eventName);
       },
       edit: function(taskId) {
         Backbone.trigger("hide-settings");
@@ -47,7 +47,7 @@
         if (subview) {
           return Backbone.trigger("settings/view", subview);
         } else {
-          return swipy.analytics.tagScreen("Settings menu");
+          return swipy.analytics.pushScreen("Settings menu");
         }
       },
       updateHistory: function(me, page, subpage) {

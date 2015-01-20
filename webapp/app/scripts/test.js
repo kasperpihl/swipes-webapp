@@ -31,7 +31,7 @@ require.config({
         'slider-control': 'plugins/slider-control/app/scripts/SliderControl',
         clndr: '../bower_components/clndr/src/clndr',
         hammerjs: '../bower_components/hammerjs/dist/jquery.hammer',
-        'parse-js-sdk': '../bower_components/parse-js-sdk/lib/parse'
+        'parse': '../bower_components/parse/parse'
     },
     shim: {
         bootstrapAffix: {
@@ -119,7 +119,7 @@ require.config({
     }
 });
 
-require(["jquery", "app", "DebugHelper", "plugins/log", "parse-js-sdk"], function ($, App, DebugHelper) {
+require(["jquery", "app", "DebugHelper", "plugins/log", "parse"], function ($, App, DebugHelper) {
     'use strict';
 
     Parse.initialize( "0qD3LLZIOwLOPRwbwLia9GJXTEUnEsSlBCufqDvr", "TcteeVBhtJEERxRtaavJtFznsXrh84WvOlE6hMag" )
