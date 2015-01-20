@@ -20,16 +20,17 @@
           tap: false,
           transform: false,
           prevent_default: true,
-          hold_timeout: Modernizr.touch ? 400 : 400
+          hold_timeout: Modernizr.touch ? 400 : 400,
+          domEvents: true
         };
       };
 
       ListSortController.prototype.enableTouchListners = function() {
-        return $(this.model.container[0]).hammer(this.getHammerOpts()).on("hold", "ol > li", this.activate);
+        return $(this.model.container[0]).hammer(this.getHammerOpts()).on("press", "ol > li", this.activate);
       };
 
       ListSortController.prototype.disableTouchListeners = function() {
-        return $(this.model.container[0]).hammer().off("hold", this.activate);
+        return $(this.model.container[0]).hammer().off("press", this.activate);
       };
 
       ListSortController.prototype.activate = function(e) {
@@ -40,7 +41,7 @@
         this.setInitialOrder();
         this.createDraggable(this.model.getViewFromId(e.currentTarget.getAttribute("data-id")));
         if (e) {
-          return this.draggable.startDrag(e.gesture.srcEvent);
+          return this.draggable.startDrag(e.originalEvent.gesture.srcEvent);
         }
       };
 

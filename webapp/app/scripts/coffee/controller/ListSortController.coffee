@@ -13,11 +13,12 @@ define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-ha
 				# hold_threshold: 50
 				prevent_default: yes
 				hold_timeout: if Modernizr.touch then 400 else 400
+				domEvents:true
 			}
 		enableTouchListners: ->
-			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "hold", "ol > li", @activate )
+			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "press", "ol > li", @activate )
 		disableTouchListeners: ->
-			$( @model.container[0] ).hammer().off( "hold", @activate )
+			$( @model.container[0] ).hammer().off( "press", @activate )
 		activate: (e) =>
 			@disableTouchListeners()
 			@model.init()
@@ -25,7 +26,7 @@ define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-ha
 			@listenForOrderChanges()
 			@setInitialOrder()
 			@createDraggable @model.getViewFromId e.currentTarget.getAttribute "data-id"
-			if e then @draggable.startDrag e.gesture.srcEvent
+			if e then @draggable.startDrag e.originalEvent.gesture.srcEvent
 		deactivate: (removeCSS = no) =>
 			@stopListenForOrderChanges()
 			@killDraggable removeCSS
