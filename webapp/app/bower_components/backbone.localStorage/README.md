@@ -1,4 +1,4 @@
-# Backbone localStorage Adapter v1.1.7
+# Backbone localStorage Adapter v1.1.15
 
 [![Build Status](https://secure.travis-ci.org/jeromegn/Backbone.localStorage.png?branch=master)](http://travis-ci.org/jeromegn/Backbone.localStorage)
 
@@ -26,6 +26,15 @@ window.SomeCollection = Backbone.Collection.extend({
   
 });
 ```
+
+If needed, you can use the default `Backbone.sync` (instead of local storage) by passing the `ajaxSync` option flag to any Backbone AJAX function, for example:
+
+```javascript
+var myModel = new SomeModel();
+myModel.fetch({ ajaxSync: true });
+myModel.save({ new: "value" }, { ajaxSync: true });
+```
+
 ### RequireJS
 
 Include [RequireJS](http://requirejs.org):
@@ -48,25 +57,27 @@ require.config({
 
 Define your collection as a module:
 ```javascript
-define("someCollection", ["localstorage"], function() {
+define("SomeCollection", ["localstorage"], function() {
     var SomeCollection = Backbone.Collection.extend({
         localStorage: new Backbone.LocalStorage("SomeCollection") // Unique name within your app.
     });
   
-    return new SomeCollection();
+    return SomeCollection;
 });
 ```
 
 Require your collection:
 ```javascript
-require(["someCollection"], function(someCollection) {
-  // ready to use someCollection
+require(["SomeCollection"], function(SomeCollection) {
+  // ready to use SomeCollection
 });
 ```
 
 ### CommonJS
 
 If you're using [browserify](https://github.com/substack/node-browserify).
+
+Install using `npm install backbone.localstorage`, and require the module.
 
 ```javascript
 Backbone.LocalStorage = require("backbone.localstorage");

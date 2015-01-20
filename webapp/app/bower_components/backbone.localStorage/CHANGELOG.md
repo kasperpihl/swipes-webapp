@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.1.15 - January 7, 2015
+
+- You can now pass `{ajaxSync: true}` as an option to `fetch` and `save` to force remote syncing. (@adamterlson)
+- Various fixes. Thanks to @nbergseng, @richardchen331, @eush77, @malept, @HenriqueSilverio
+
+## 1.1.14 - skipped due to some weirdness, inconsistent versioning.
+
+## 1.1.13 - August 5, 2014
+
+- Forgot a comma, broke it for bower.
+
+## 1.1.10 - August 4, 2014
+
+- Various fixes, thanks everybody
+
 ## 1.1.7 - October 4, 2013
 
 - Fix CommonJS requiring (Brandon Dimcheff)

@@ -1,10 +1,7 @@
-// EDITED FOR USE WITH SWIPES
-
-
 /*!
  * Parse JavaScript SDK
- * Version: 1.2.18
- * Built: Wed Mar 12 2014 15:36:03
+ * Version: 1.3.3
+ * Built: Mon Dec 29 2014 17:41:46
  * http://parse.com
  *
  * Copyright 2014 Parse, Inc.
@@ -16,7 +13,7 @@
  */
 (function(root) {
   root.Parse = root.Parse || {};
-  root.Parse.VERSION = "js1.2.18";
+  root.Parse.VERSION = "js1.3.3";
 }(this));
 //     Underscore.js 1.4.4
 //     http://underscorejs.org
@@ -1608,7 +1605,8 @@
         route !== "requestPasswordReset" &&
         route !== "rest_verify_analytics" &&
         route !== "users" &&
-        route !== "jobs") {
+        route !== "jobs" &&
+        route !== "config") {
       throw "Bad route: '" + route + "'.";
     }
 
@@ -1779,12 +1777,12 @@
     if (value.__op) {
       return Parse.Op._decode(value);
     }
-    if (value.__type === "Pointer") {
+    if (value.__type === "Pointer" && value.className) {
       var pointer = Parse.Object._create(value.className);
       pointer._finishFetch({ objectId: value.objectId }, false);
       return pointer;
     }
-    if (value.__type === "Object") {
+    if (value.__type === "Object" && value.className) {
       // It's an Object included in a query result.
       var className = value.className;
       delete value.__type;
@@ -1924,16 +1922,17 @@
      * Parse.Analytics.track('signup', dimensions);
      * </pre>
      *
-     * There is a default limit of 4 dimensions per event tracked.
+     * There is a default limit of 8 dimensions per event tracked.
      *
      * @param {String} name The name of the custom event to report to Parse as
      * having happened.
      * @param {Object} dimensions The dictionary of information by which to
      * segment this event.
+     * @param {Object} options A Backbone-style callback object.
      * @return {Parse.Promise} A promise that is resolved when the round-trip
      * to the server completes.
      */
-    track: function(name, dimensions) {
+    track: function(name, dimensions, options) {
       name = name || '';
       name = name.replace(/^\s*/, '');
       name = name.replace(/\s*$/, '');
@@ -1947,15 +1946,130 @@
         }
       });
 
+      options = options || {};
       return Parse._request({
         route: 'events',
         className: name,
         method: 'POST',
         data: { dimensions: dimensions }
-      });
+      })._thenRunCallbacks(options);
     }
   });
 }(this));
+
+(function(root) {
+  root.Parse = root.Parse || {};
+  var Parse = root.Parse;
+  var _ = Parse._;
+
+  /**
+   * @class Parse.Config is a local representation of configuration data that
+   * can be set from the Parse dashboard.
+   */
+  Parse.Config = function() {
+    this.attributes = {};
+    this._escapedAttributes = {};
+  };
+
+  /**
+   * Retrieves the most recently-fetched configuration object, either from
+   * memory or from local storage if necessary.
+   *
+   * @return {Parse.Config} The most recently-fetched Parse.Config if it
+   *     exists, else an empty Parse.Config.
+   */
+  Parse.Config.current = function() {
+    if (Parse.Config._currentConfig) {
+      return Parse.Config._currentConfig;
+    }
+
+    var configData = Parse.localStorage.getItem(Parse._getParsePath(
+          Parse.Config._CURRENT_CONFIG_KEY));
+
+    var config = new Parse.Config();
+    if (configData) {  
+      config._finishFetch(JSON.parse(configData));
+      Parse.Config._currentConfig = config;
+    }
+    return config;
+  };
+
+  /**
+   * Gets a new configuration object from the server.
+   * @param {Object} options A Backbone-style options object.
+   * Valid options are:<ul>
+   *   <li>success: Function to call when the get completes successfully.
+   *   <li>error: Function to call when the get fails.
+   * </ul>
+   * @return {Parse.Promise} A promise that is resolved with a newly-created
+   *     configuration object when the get completes.
+   */
+  Parse.Config.get = function(options) {
+    options = options || {};
+
+    var request = Parse._request({
+      route: "config",
+      method: "GET",
+    });
+
+    return request.then(function(response) {
+      if (!response || !response.params) {
+        var errorObject = new Parse.Error(
+          Parse.Error.INVALID_JSON,
+          "Config JSON response invalid.");
+        return Parse.Promise.error(errorObject);
+      }
+
+      var config = new Parse.Config();
+      config._finishFetch(response);
+      Parse.Config._currentConfig = config;
+      return config;
+    })._thenRunCallbacks(options);
+  };
+
+  Parse.Config.prototype = {
+
+    /**
+     * Gets the HTML-escaped value of an attribute.
+     */
+    escape: function(attr) {
+      var html = this._escapedAttributes[attr];
+      if (html) {
+        return html;
+      }
+      var val = this.attributes[attr];
+      var escaped;
+      if (Parse._isNullOrUndefined(val)) {
+        escaped = '';
+      } else {
+        escaped = _.escape(val.toString());
+      }
+      this._escapedAttributes[attr] = escaped;
+      return escaped;
+    },
+
+    /**
+     * Gets the value of an attribute.
+     * @param {String} attr The name of an attribute.
+     */
+    get: function(attr) {
+      return this.attributes[attr];
+    },
+
+    _finishFetch: function(serverData) {
+      this.attributes = Parse._decode(null, _.clone(serverData.params));
+      Parse.localStorage.setItem(
+          Parse._getParsePath(Parse.Config._CURRENT_CONFIG_KEY),
+          JSON.stringify(serverData));
+    }
+  };
+
+  Parse.Config._currentConfig = null;
+
+  Parse.Config._CURRENT_CONFIG_KEY = "currentConfig";
+
+}(this));
+
 
 (function(root) {
   root.Parse = root.Parse || {};
@@ -2161,12 +2275,6 @@
     FILE_SAVE_ERROR: 130,
 
     /**
-     * Error code indicating an error deleting a file.
-     * @constant
-     */
-    FILE_DELETE_ERROR: 153,
-
-    /**
      * Error code indicating that a unique field was given a value that is
      * already taken.
      * @constant
@@ -2214,6 +2322,24 @@
      * Error code indicating an invalid push time.
      */
     INVALID_PUSH_TIME_ERROR: 152,
+
+    /**
+     * Error code indicating an error deleting a file.
+     * @constant
+     */
+    FILE_DELETE_ERROR: 153,
+
+    /**
+     * Error code indicating that the application has exceeded its analytics
+     * request limit.
+     * @constant
+     */
+    REQUEST_LIMIT_EXCEEDED: 155,
+
+    /**
+     * Error code indicating an invalid event name.
+     */
+    INVALID_EVENT_NAME: 160,
 
     /**
      * Error code indicating that the username is missing or empty.
@@ -2348,151 +2474,122 @@
    * documentation</a>.</p>
    */
   Parse.Events = {
-    // Bind an event to a `callback` function. Passing `"all"` will bind
-    // the callback to all events fired.
-    on: function(name, callback, context) {
-      if (!eventsApi(this, 'on', name, [callback, context]) || !callback) return this;
-      this._events || (this._events = {});
-      var events = this._events[name] || (this._events[name] = []);
-      events.push({callback: callback, context: context, ctx: context || this});
+    /**
+     * Bind one or more space separated events, `events`, to a `callback`
+     * function. Passing `"all"` will bind the callback to all events fired.
+     */
+    on: function(events, callback, context) {
 
-      return this;
-    },
-
-    // Bind an event to only be triggered a single time. After the first time
-     // the callback is invoked, it will be removed.
-     once: function(name, callback, context) {
-       if (!eventsApi(this, 'once', name, [callback, context]) || !callback) return this;
-       var self = this;
-      var once = _.once(function() {
-         self.off(name, once);
-         callback.apply(this, arguments);
-       });
-       once._callback = callback;
-       return this.on(name, once, context);
-     },
- 
-     // Remove one or many callbacks. If `context` is null, removes all
-     // callbacks with that function. If `callback` is null, removes all
-     // callbacks for the event. If `name` is null, removes all bound
-     // callbacks for all events.
-     off: function(name, callback, context) {
-        var retain, ev, events, names, i, l, j, k;
-        if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
-        if (!name && !callback && !context) {
-          this._events = {};
-          return this;
-        }
-
-      names = name ? [name] : _.keys(this._events);
-        for (i = 0, l = names.length; i < l; i++) {
-          name = names[i];
-          if (events = this._events[name]) {
-            this._events[name] = retain = [];
-            if (callback || context) {
-              for (j = 0, k = events.length; j < k; j++) {
-                ev = events[j];
-                if ((callback && callback !== ev.callback && callback !== ev.callback._callback) ||
-                   (context && context !== ev.context)) {
-                  retain.push(ev);
-                }
-              }
-            }
-          if (!retain.length) delete this._events[name];
-        }
-      }
-
-      return this;
-    },
-
-    // Trigger one or many events, firing all bound callbacks. Callbacks are
-     // passed the same arguments as `trigger` is, apart from the event name
-     // (unless you're listening on `"all"`, which will cause your callback to
-     // receive the true name of the event as the first argument).
-     trigger: function(name) {
-       if (!this._events) return this;
-       var args = slice.call(arguments, 1);
-       if (!eventsApi(this, 'trigger', name, args)) return this;
-       var events = this._events[name];
-       var allEvents = this._events.all;
-       if (events) triggerEvents(events, args);
-       if (allEvents) triggerEvents(allEvents, arguments);
-       return this;
-     },
- 
-     // Tell this object to stop listening to either specific events ... or
-     // to every object it's currently listening to.
-     stopListening: function(obj, name, callback) {
-       var listeners = this._listeners;
-       if (!listeners) return this;
-       var deleteListener = !name && !callback;
-       if (typeof name === 'object') callback = this;
-       if (obj) (listeners = {})[obj._listenerId] = obj;
-       for (var id in listeners) {
-         listeners[id].off(name, callback, this);
-         if (deleteListener) delete this._listeners[id];
-      }
+      var calls, event, node, tail, list;
+      if (!callback) {
         return this;
-     }
- 
-   };
- 
-   // Regular expression used to split event strings.
-   var eventSplitter = /\s+/;
- 
-   // Implement fancy features of the Events API such as multiple event
-   // names `"change blur"` and jQuery-style event maps `{change: action}`
-   // in terms of the existing API.
-   var eventsApi = function(obj, action, name, rest) {
-     if (!name) return true;
- 
-     // Handle event maps.
-     if (typeof name === 'object') {
-      for (var key in name) {
-         obj[action].apply(obj, [key, name[key]].concat(rest));
       }
-      return false;
+      events = events.split(eventSplitter);
+      calls = this._callbacks || (this._callbacks = {});
+
+      // Create an immutable callback list, allowing traversal during
+      // modification.  The tail is an empty object that will always be used
+      // as the next node.
+      event = events.shift();
+      while (event) {
+        list = calls[event];
+        node = list ? list.tail : {};
+        node.next = tail = {};
+        node.context = context;
+        node.callback = callback;
+        calls[event] = {tail: tail, next: list ? list.next : node};
+        event = events.shift();
       }
-      // Handle space separated event names.
-     if (eventSplitter.test(name)) {
-       var names = name.split(eventSplitter);
-       for (var i = 0, l = names.length; i < l; i++) {
-         obj[action].apply(obj, [names[i]].concat(rest));
-       }
-       return false;
+
+      return this;
+    },
+
+    /**
+     * Remove one or many callbacks. If `context` is null, removes all callbacks
+     * with that function. If `callback` is null, removes all callbacks for the
+     * event. If `events` is null, removes all bound callbacks for all events.
+     */
+    off: function(events, callback, context) {
+      var event, calls, node, tail, cb, ctx;
+
+      // No events, or removing *all* events.
+      if (!(calls = this._callbacks)) {
+        return;
+      }
+      if (!(events || callback || context)) {
+        delete this._callbacks;
+        return this;
+      }
+
+      // Loop through the listed events and contexts, splicing them out of the
+      // linked list of callbacks if appropriate.
+      events = events ? events.split(eventSplitter) : _.keys(calls);
+      event = events.shift();
+      while (event) {
+        node = calls[event];
+        delete calls[event];
+        if (!node || !(callback || context)) {
+          event = events.shift();
+          continue;
+        }
+        // Create a new list, omitting the indicated callbacks.
+        tail = node.tail;
+        node = node.next;
+        while (node !== tail) {
+          cb = node.callback;
+          ctx = node.context;
+          if ((callback && cb !== callback) || (context && ctx !== context)) {
+            this.on(event, cb, ctx);
+          }
+          node = node.next;
+        }
+        event = events.shift();
+      }
+
+      return this;
+    },
+
+    /**
+     * Trigger one or many events, firing all bound callbacks. Callbacks are
+     * passed the same arguments as `trigger` is, apart from the event name
+     * (unless you're listening on `"all"`, which will cause your callback to
+     * receive the true name of the event as the first argument).
+     */
+    trigger: function(events) {
+      var event, node, calls, tail, args, all, rest;
+      if (!(calls = this._callbacks)) {
+        return this;
+      }
+      all = calls.all;
+      events = events.split(eventSplitter);
+      rest = slice.call(arguments, 1);
+
+      // For each event, walk through the linked list of callbacks twice,
+      // first to trigger the event, then to trigger any `"all"` callbacks.
+      event = events.shift();
+      while (event) {
+        node = calls[event];
+        if (node) {
+          tail = node.tail;
+          while ((node = node.next) !== tail) {
+            node.callback.apply(node.context || this, rest);
+          }
+        }
+        node = all;
+        if (node) {
+          tail = node.tail;
+          args = [event].concat(rest);
+          while ((node = node.next) !== tail) {
+            node.callback.apply(node.context || this, args);
+          }
+        }
+        event = events.shift();
+      }
+
+      return this;
     }
-    return true;
-  };
-  // A difficult-to-believe, but optimized internal dispatch function for
-   // triggering events. Tries to keep the usual cases speedy (most internal
-   // Backbone events have 3 arguments).
-   var triggerEvents = function(events, args) {
-     var ev, i = -1, l = events.length, a1 = args[0], a2 = args[1], a3 = args[2];
-     switch (args.length) {
-       case 0: while (++i < l) (ev = events[i]).callback.call(ev.ctx); return;
-       case 1: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1); return;
-       case 2: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2); return;
-       case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2, a3); return;
-       default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args);
-     }
-   };
- 
-  var listenMethods = {listenTo: 'on', listenToOnce: 'once'};
- 
-   // Inversion-of-control versions of `on` and `once`. Tell *this* object to
-   // listen to an event in another object ... keeping track of what it's
-   // listening to.
-   Parse._.each(listenMethods, function(implementation, method) {
-     Parse.Events[method] = function(obj, name, callback) {
-       var listeners = this._listeners || (this._listeners = {});
-       var id = obj._listenerId || (obj._listenerId = Parse._.uniqueId('l'));
-       listeners[id] = obj;
-       if (typeof name === 'object') callback = this;
-       obj[implementation](name, callback, this);
-       return this;
-     };
-   });
- 
+  };  
+
   /**
    * @function
    */
@@ -3574,6 +3671,7 @@
   };
 }(this));
 
+/*global window: false, process: false */
 (function(root) {
   root.Parse = root.Parse || {};
   var Parse = root.Parse;
@@ -3603,6 +3701,8 @@
   };
 
   _.extend(Parse.Promise, /** @lends Parse.Promise */ {
+
+    _isPromisesAPlusCompliant: false,
 
     /**
      * Returns true iff the given object fulfils the Promise interface.
@@ -3792,7 +3892,15 @@
       var wrappedResolvedCallback = function() {
         var result = arguments;
         if (resolvedCallback) {
-          result = [resolvedCallback.apply(this, result)];
+          if (Parse.Promise._isPromisesAPlusCompliant) {
+            try {
+              result = [resolvedCallback.apply(this, result)];
+            } catch (e) {
+              result = [Parse.Promise.error(e)];
+            }
+          } else {
+            result = [resolvedCallback.apply(this, result)];
+          }
         }
         if (result.length === 1 && Parse.Promise.is(result[0])) {
           result[0].then(function() {
@@ -3808,7 +3916,15 @@
       var wrappedRejectedCallback = function(error) {
         var result = [];
         if (rejectedCallback) {
-          result = [rejectedCallback(error)];
+          if (Parse.Promise._isPromisesAPlusCompliant) {
+            try {
+              result = [rejectedCallback(error)];
+            } catch (e) {
+              result = [Parse.Promise.error(e)];
+            }
+          } else {
+            result = [rejectedCallback(error)];
+          }
           if (result.length === 1 && Parse.Promise.is(result[0])) {
             result[0].then(function() {
               promise.resolve.apply(promise, arguments);
@@ -3816,19 +3932,41 @@
               promise.reject(error);
             });
           } else {
-            // A Promises/A+ compliant implementation would call:
-            // promise.resolve.apply(promise, result);
-            promise.reject(result[0]);
+            if (Parse.Promise._isPromisesAPlusCompliant) {
+              promise.resolve.apply(promise, result);
+            } else {
+              promise.reject(result[0]);
+            }
           }
         } else {
           promise.reject(error);
         }
       };
 
+      var runLater = function(func) {
+        func.call();
+      };
+      if (Parse.Promise._isPromisesAPlusCompliant) {
+        if (typeof(window) !== 'undefined' && window.setTimeout) {
+          runLater = function(func) {
+            window.setTimeout(func, 0);
+          };
+        } else if (typeof(process) !== 'undefined' && process.nextTick) {
+          runLater = function(func) {
+            process.nextTick(func);
+          };
+        }
+      }
+
+      var self = this;
       if (this._resolved) {
-        wrappedResolvedCallback.apply(this, this._result);
+        runLater(function() {
+          wrappedResolvedCallback.apply(self, self._result);
+        });
       } else if (this._rejected) {
-        wrappedRejectedCallback(this._error);
+        runLater(function() {
+          wrappedRejectedCallback(self._error);
+        });
       } else {
         this._resolvedCallbacks.push(wrappedResolvedCallback);
         this._rejectedCallbacks.push(wrappedRejectedCallback);
@@ -4207,7 +4345,7 @@
       var matches = /^data:([^;]*);base64,(.*)$/.exec(dataURL);
       if (!matches) {
         promise.reject(new Parse.Error(
-            Parse.ERROR.FILE_READ_ERROR,
+            Parse.Error.FILE_READ_ERROR,
             "Unable to interpret data URL: " + dataURL));
         return;
       }
@@ -4411,8 +4549,27 @@
   };
 
   /**
-   * @lends Parse.Object.prototype
-   * @property {String} id The objectId of the Parse Object.
+   * The ID of this object, unique within its class.
+   * @name id
+   * @type String
+   * @field
+   * @memberOf Parse.Object.prototype
+   */
+
+  /**
+   * The first time this object was saved on the server.
+   * @name createdAt
+   * @type Date
+   * @field
+   * @memberOf Parse.Object.prototype
+   */
+
+  /**
+   * The last time this object was updated on the server.
+   * @name updatedAt
+   * @type Date
+   * @field
+   * @memberOf Parse.Object.prototype
    */
 
   /**
@@ -4494,6 +4651,8 @@
    *   <li>useMasterKey: In Cloud Code and Node only, causes the Master Key to
    *     be used for this request.
    * </ul>
+   * @return {Parse.Promise} A promise that is fulfilled when the destroyAll
+   *     completes.
    */
   Parse.Object.destroyAll = function(list, options) {
     options = options || {};
@@ -4987,8 +5146,9 @@
         value = value.toJSON ? value.toJSON() : value;
         var json = JSON.stringify(value);
         if (this._hashedJSON[key] !== json) {
+          var wasSet = !!this._hashedJSON[key];
           this._hashedJSON[key] = json;
-          return true;
+          return wasSet;
         }
       }
       return false;
@@ -7857,7 +8017,12 @@
 
       return request.then(function(response) {
         return _.map(response.results, function(json) {
-          var obj = new self.objectClass();
+          var obj;
+          if (response.className) {
+            obj = new Parse.Object(response.className);
+          } else {
+            obj = new self.objectClass();
+          }
           obj._finishFetch(json, true);
           return obj;
         })[0];
@@ -8426,12 +8591,17 @@
 
       query.ascending('objectId');
 
+      var findOptions = {};
+      if (_.has(options, "useMasterKey")) {
+        findOptions.useMasterKey = options.useMasterKey;
+      }
+
       var finished = false;
       return Parse.Promise._continueWhile(function() {
         return !finished;
 
       }, function() {
-        return query.find().then(function(results) {
+        return query.find(findOptions).then(function(results) {
           var callbacksDone = Parse.Promise.as();
           Parse._.each(results, function(result) {
             callbacksDone = callbacksDone.then(function() {
@@ -9108,6 +9278,8 @@
    * that takes no arguments and will be called on a successful push, and
    * an error function that takes a Parse.Error and will be called if the push
    * failed.
+   * @return {Parse.Promise} A promise that is fulfilled when the push request
+   *     completes.
    */
   Parse.Push.send = function(data, options) {
     options = options || {};
