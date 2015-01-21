@@ -64,11 +64,13 @@ LoginView = Parse.View.extend
 	handleAnalyticsForLogin: ->
 		#analytics = new AnalyticsController()
 		user = Parse.User.current()
-
-		#if @wasSignup
-		#	analytics.tagEvent("Signed Up")
-		#else
-		# 	analytics.tagEvent("Logged In")
+		
+		if @wasSignup
+			action = "Signed Up"
+		else
+		 	action = "Logged In"
+		ga('send', 'event', "Onboarding", action, "No", 0)
+		
 	handleUserLoginSuccess: ->
 		@handleAnalyticsForLogin()
 		user = Parse.User.current()

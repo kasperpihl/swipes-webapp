@@ -35,7 +35,7 @@
       };
 
       ScheduleController.prototype.pickOption = function(option) {
-        var date, task, _i, _len, _ref;
+        var analyticsOptions, date, task, _i, _len, _ref;
         if (!this.currentTasks) {
           return;
         }
@@ -52,7 +52,8 @@
           task = _ref[_i];
           task.scheduleTask(date);
         }
-        swipy.analytics.tagEvent("Scheduled Tasks", this.getAnalyticsDataFromOption(option, date));
+        analyticsOptions = this.getAnalyticsDataFromOption(option, date);
+        swipy.analytics.sendEvent("Tasks", "Snoozed", analyticsOptions["Button Pressed"], analyticsOptions["Number of days ahead"]);
         this.view.currentTasks = void 0;
         return this.view.hide();
       };

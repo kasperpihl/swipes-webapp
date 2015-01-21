@@ -149,9 +149,7 @@
             })();
           }
         }
-        return swipy.analytics.tagEvent("Completed Tasks", {
-          "Number of Tasks": tasks.length
-        });
+        return swipy.analytics.sendEvent("Tasks", "Completed", "", tasks.length);
       },
       markTaskAsTodo: function(tasks) {
         var task, view, _i, _len, _results;

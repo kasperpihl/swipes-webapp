@@ -85,9 +85,7 @@
         } else if (title.length > 11) {
           taskTitleLength = "11-20";
         }
-        return swipy.analytics.tagEvent("Added Task", {
-          length: taskTitleLength
-        });
+        return swipy.analytics.sendEvent("Tasks", "Added", "Input", taskTitleLength);
       };
 
       TaskInputController.prototype.destroy = function() {

@@ -35,8 +35,8 @@ define ["underscore", "backbone", "js/model/ScheduleModel", "momentjs"], (_, Bac
 
 			for task in @currentTasks
 				task.scheduleTask date
-
-			swipy.analytics.tagEvent( "Scheduled Tasks", @getAnalyticsDataFromOption( option, date ) )
+			analyticsOptions =  @getAnalyticsDataFromOption( option, date )
+			swipy.analytics.sendEvent( "Tasks", "Snoozed", analyticsOptions["Button Pressed"], analyticsOptions["Number of days ahead"])
 
 			@view.currentTasks = undefined
 			@view.hide()

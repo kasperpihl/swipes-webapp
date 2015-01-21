@@ -126,8 +126,7 @@ define [
 					view.swipeRight( "completed" ).then =>
 						m.completeTask()
 
-			swipy.analytics.tagEvent( "Completed Tasks", { "Number of Tasks": tasks.length } )
-
+			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task

@@ -102,8 +102,14 @@
       }
     },
     handleAnalyticsForLogin: function() {
-      var user;
-      return user = Parse.User.current();
+      var action, user;
+      user = Parse.User.current();
+      if (this.wasSignup) {
+        action = "Signed Up";
+      } else {
+        action = "Logged In";
+      }
+      return ga('send', 'event', "Onboarding", action, "No", 0);
     },
     handleUserLoginSuccess: function() {
       var level, user;
