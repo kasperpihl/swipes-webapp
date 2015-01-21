@@ -51,8 +51,12 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 			remove = target.hasClass "selected"
 			tag = target.text()
 
-			if remove then @removeTagFromModels tag
-			else @addTagToModels( tag, no )
+			if remove
+				@removeTagFromModels tag
+				swipy.analytics.sendEvent( "Tags", "Unassigned", "Select Tasks", 1)
+			else 
+				@addTagToModels( tag, no )
+				swipy.analytics.sendEvent( "Tags", "Assigned", "Select Tasks", 1)
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
@@ -64,7 +68,9 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 				return alert "That tag already exists"
 			else
 				tag = @getTagFromName tagName
-				if not tag and addToCollection then tag = swipy.tags.create { title: tagName }
+				if not tag and addToCollection 
+					tag = swipy.tags.create { title: tagName }
+					swipy.analytics.sendEvent("Tags", "Added", "Select Tasks", tagName.length)
 
 				@addTagToModel( tag, model ) for model in @options.models
 				if addToCollection then swipy.tags.getTagsFromTasks()

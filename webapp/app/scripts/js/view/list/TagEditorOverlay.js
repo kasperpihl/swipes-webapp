@@ -68,9 +68,11 @@
         remove = target.hasClass("selected");
         tag = target.text();
         if (remove) {
-          return this.removeTagFromModels(tag);
+          this.removeTagFromModels(tag);
+          return swipy.analytics.sendEvent("Tags", "Unassigned", "Select Tasks", 1);
         } else {
-          return this.addTagToModels(tag, false);
+          this.addTagToModels(tag, false);
+          return swipy.analytics.sendEvent("Tags", "Assigned", "Select Tasks", 1);
         }
       },
       createTag: function(e) {
@@ -95,6 +97,7 @@
             tag = swipy.tags.create({
               title: tagName
             });
+            swipy.analytics.sendEvent("Tags", "Added", "Select Tasks", tagName.length);
           }
           _ref = this.options.models;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {

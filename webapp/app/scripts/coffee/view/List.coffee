@@ -108,15 +108,17 @@ define [
 
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
+		afterMovedItems: ->
 
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
+		
+			
 		completeTasks: (tasks) ->
 			minOrder = Math.min _.invoke( tasks, "get", "order" )...
 
 			# Bump order for tasks
 			swipy.todos.bumpOrder( "up", minOrder, tasks.length )
-
 			for task in tasks
 				view = @getViewForModel task
 
@@ -127,6 +129,7 @@ define [
 						m.completeTask()
 
 			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)
+			@afterMovedItems()
 		markTaskAsTodo: (tasks) ->
 			for task in tasks
 				view = @getViewForModel task
@@ -136,6 +139,7 @@ define [
 					m = task
 					view.swipeRight("todo").then ->
 						m.scheduleTask m.getDefaultSchedule()
+			@afterMovedItems()
 
 		scheduleTasks: (tasks) ->
 			deferredArr = []
@@ -147,7 +151,7 @@ define [
 				if view? then do ->
 					m = task
 					deferredArr.push view.swipeLeft("scheduled", no)
-
+			@afterMovedItems()
 			$.when( deferredArr... ).then -> Backbone.trigger( "show-scheduler", tasks )
 
 		handleSchedulerCancelled: (tasks) ->

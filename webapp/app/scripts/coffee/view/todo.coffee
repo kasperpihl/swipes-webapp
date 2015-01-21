@@ -10,6 +10,9 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
 		setTodoOrder: (todos) ->
 			@sorter.setTodoOrder( todos, true )
+		afterMovedItems: ->
+			if @getTasks().length is 0
+				swipy.analytics.sendEvent("Actions", "Cleared Tasks", "For Today", 0)
 		beforeRenderList: (todos) ->
 			# Make sure all todos are unselected before rendering the list
 			swipy.todos.invoke( "set", "selected", no )

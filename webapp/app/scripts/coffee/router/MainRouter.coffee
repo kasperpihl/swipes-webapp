@@ -24,6 +24,7 @@ define ['backbone'], (Backbone) ->
 		edit: (taskId) ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
+			swipy.analytics.pushScreen "Edit Task"
 		settings: (subview) ->
 			Backbone.trigger "show-settings"
 			if subview then Backbone.trigger( "settings/view", subview )

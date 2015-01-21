@@ -72,7 +72,8 @@
             }
             model.deleteObj();
           }
-          return this.hide();
+          this.hide();
+          return swipy.analytics.sendEvent("Tasks", "Deleted", "", selectedTasks.length);
         }
       },
       shareTasks: function() {
@@ -90,7 +91,8 @@
           emailString += encodeURIComponent("◯ " + task.get("title") + "\r\n");
         }
         emailString += encodeURIComponent("\r\nSent from Swipes — http://swipesapp.com");
-        return location.href = emailString;
+        location.href = emailString;
+        return swipy.analytics.sendEvent("Share Task", "Opened", "", selectedTasks.length);
       }
     });
   });

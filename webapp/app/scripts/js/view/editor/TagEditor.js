@@ -40,15 +40,20 @@
         return icon.addClass(flag === true ? "icon-plus" : "icon-minus");
       },
       addTag: function(e) {
-        return this.addTagToModel($(e.currentTarget).text(), false);
+        this.addTagToModel($(e.currentTarget).text(), false);
+        return swipy.analytics.sendEvent("Tags", "Assigned", "Edit Task", 1);
       },
       removeTag: function(e) {
         var tagName, tags;
+        if ($(e.currentTarget).hasClass("add-new-tag")) {
+          return;
+        }
         tagName = $.trim($(e.currentTarget).text());
         tags = _.reject(this.model.get("tags"), function(t) {
           return t.get("title") === tagName;
         });
-        return this.model.updateTags(tags);
+        this.model.updateTags(tags);
+        return swipy.analytics.sendEvent("Tags", "Unassigned", "Edit Task", 1);
       },
       createTag: function(e) {
         var tagName;
@@ -80,6 +85,7 @@
             title: tagName
           });
           tags.push(newTag);
+          swipy.analytics.sendEvent("Tags", "Added", "Edit Task", newTag.length);
         }
         return this.model.updateTags(tags);
       },

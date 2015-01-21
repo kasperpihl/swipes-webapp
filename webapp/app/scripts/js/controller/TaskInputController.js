@@ -50,7 +50,7 @@
       };
 
       TaskInputController.prototype.createTask = function(str) {
-        var animateIn, msg, newTodo, order, tags, taskTitleLength, title;
+        var animateIn, msg, newTodo, order, tags, title;
         if (swipy.todos == null) {
           return;
         }
@@ -73,19 +73,7 @@
         if (tags.length) {
           swipy.tags.getTagsFromTasks();
         }
-        taskTitleLength = "1-10";
-        if (title.length > 50) {
-          taskTitleLength = "50+";
-        } else if (title.length > 41) {
-          taskTitleLength = "41-50";
-        } else if (title.length > 31) {
-          taskTitleLength = "31-40";
-        } else if (title.length > 21) {
-          taskTitleLength = "21-30";
-        } else if (title.length > 11) {
-          taskTitleLength = "11-20";
-        }
-        return swipy.analytics.sendEvent("Tasks", "Added", "Input", taskTitleLength);
+        return swipy.analytics.sendEvent("Tasks", "Added", "Input", title.length);
       };
 
       TaskInputController.prototype.destroy = function() {

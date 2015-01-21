@@ -42,6 +42,11 @@
           return m.getState() === "scheduled" && !m.isSubtask();
         });
       },
+      getScheduledLaterToday: function() {
+        return this.filter(function(m) {
+          return m.getState() === "scheduled" && !m.isSubtask();
+        });
+      },
       getCompleted: function() {
         return this.filter(function(m) {
           return m.getState() === "completed" && !m.isSubtask();

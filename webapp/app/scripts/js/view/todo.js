@@ -22,6 +22,11 @@
       setTodoOrder: function(todos) {
         return this.sorter.setTodoOrder(todos, true);
       },
+      afterMovedItems: function() {
+        if (this.getTasks().length === 0) {
+          return swipy.analytics.sendEvent("Actions", "Cleared Tasks", "For Today", 0);
+        }
+      },
       beforeRenderList: function(todos) {
         swipy.todos.invoke("set", "selected", false);
         return this.setTodoOrder(todos);

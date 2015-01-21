@@ -40,7 +40,8 @@
       },
       edit: function(taskId) {
         Backbone.trigger("hide-settings");
-        return Backbone.trigger("edit/task", taskId);
+        Backbone.trigger("edit/task", taskId);
+        return swipy.analytics.pushScreen("Edit Task");
       },
       settings: function(subview) {
         Backbone.trigger("show-settings");

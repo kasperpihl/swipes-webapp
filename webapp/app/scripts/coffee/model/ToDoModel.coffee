@@ -67,12 +67,15 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			currentSubtasks.push( model )
 			@set "subtasksLocal", currentSubtasks
 			return @model
-		addNewSubtask: ( title ) ->
+		addNewSubtask: ( title, from ) ->
 			currentSubtasks = @getOrderedSubtasks()
 			parentLocalId = @get "tempId" 
 			parentLocalId = @id if @id?
 			order = currentSubtasks.length
+			if from
+				swipy.analytics.sendEvent( "Action Steps", "Added", from, title.length )
 			swipy.todos.create { title, parentLocalId, order }
+
 			#@addSubtask newSubtask
 		deleteObj: ->
 			BaseModel.prototype.deleteObj.apply @ , arguments
@@ -176,7 +179,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			# Remove falsy values first
 			tags = _.compact tags
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
-			console.log tags
 			if pointers && pointers.length
 				# remove pointers
 				tags = _.reject tags, (t) -> _.contains( pointers, t.id )
@@ -292,6 +294,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@set( "priority", 0, { sync: true } )
 			else
 				@set( "priority", 1 , { sync: true } )
+			if @get("priority") then priorityLabel = "On" else priorityLabel = "Off"
+			swipy.analytics.sendEvent( "Tasks", "Priority", priorityLabel )
 
 		scheduleTask: ( date ) ->
 			updateObj = {
@@ -356,6 +360,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if @get( "schedule" ) and repeatOption isnt "never"
 				repeatDate =  @get "schedule"
 			@set({ repeatDate, repeatOption },{ sync: true })
+			swipy.analytics.sendEvent( "Tasks", "Recurring", repeatOption )
 		
 		updateOrder: ( order, opt ) ->
 			if order == @get "order"

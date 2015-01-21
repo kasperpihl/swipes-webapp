@@ -64,7 +64,7 @@
         this.set("subtasksLocal", currentSubtasks);
         return this.model;
       },
-      addNewSubtask: function(title) {
+      addNewSubtask: function(title, from) {
         var currentSubtasks, order, parentLocalId;
         currentSubtasks = this.getOrderedSubtasks();
         parentLocalId = this.get("tempId");
@@ -72,6 +72,9 @@
           parentLocalId = this.id;
         }
         order = currentSubtasks.length;
+        if (from) {
+          swipy.analytics.sendEvent("Action Steps", "Added", from, title.length);
+        }
         return swipy.todos.create({
           title: title,
           parentLocalId: parentLocalId,
@@ -201,7 +204,6 @@
           }
           return _results;
         })();
-        console.log(tags);
         if (pointers && pointers.length) {
           tags = _.reject(tags, function(t) {
             return _.contains(pointers, t.id);
@@ -318,15 +320,22 @@
         return this.off();
       },
       togglePriority: function() {
+        var priorityLabel;
         if (this.get("priority")) {
-          return this.set("priority", 0, {
+          this.set("priority", 0, {
             sync: true
           });
         } else {
-          return this.set("priority", 1, {
+          this.set("priority", 1, {
             sync: true
           });
         }
+        if (this.get("priority")) {
+          priorityLabel = "On";
+        } else {
+          priorityLabel = "Off";
+        }
+        return swipy.analytics.sendEvent("Tasks", "Priority", priorityLabel);
       },
       scheduleTask: function(date) {
         var updateObj;
@@ -404,12 +413,13 @@
         if (this.get("schedule") && repeatOption !== "never") {
           repeatDate = this.get("schedule");
         }
-        return this.set({
+        this.set({
           repeatDate: repeatDate,
           repeatOption: repeatOption
         }, {
           sync: true
         });
+        return swipy.analytics.sendEvent("Tasks", "Recurring", repeatOption);
       },
       updateOrder: function(order, opt) {
         var key, options, value;

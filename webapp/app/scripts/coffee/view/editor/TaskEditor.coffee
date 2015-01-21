@@ -65,7 +65,10 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		updateTitle: ->
 			@model.updateTitle @getTitle()
 		updateNotes: ->
-			@model.updateNotes @getNotes()
+			if @getNotes() != @model.get "notes"
+				@model.updateNotes @getNotes()
+				swipy.analytics.sendEvent("Tasks", "Notes", "", @getNotes().length )
+			
 		updateActionStep: (e) ->
 			target = $(e.currentTarget)
 			title = target.val()
@@ -81,7 +84,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			if model?
 				model.updateTitle title
 			else
-				@model.addNewSubtask title
+				@model.addNewSubtask( title, "Input" )
 				target.val("")
 			@renderSubtasks()
 		getModelFromEl: ( el ) ->
@@ -98,6 +101,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			action = "todo" if target.hasClass("todo")
 			if action is "complete"
 				model.completeTask()
+				swipy.analytics.sendEvent( "Action Steps", "Completed" )
 			else
 				model.scheduleTask( null )
 			@renderSubtasks()

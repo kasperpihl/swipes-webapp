@@ -88,7 +88,10 @@
         return this.model.updateTitle(this.getTitle());
       },
       updateNotes: function() {
-        return this.model.updateNotes(this.getNotes());
+        if (this.getNotes() !== this.model.get("notes")) {
+          this.model.updateNotes(this.getNotes());
+          return swipy.analytics.sendEvent("Tasks", "Notes", "", this.getNotes().length);
+        }
       },
       updateActionStep: function(e) {
         var model, target, title;
@@ -108,7 +111,7 @@
         if (model != null) {
           model.updateTitle(title);
         } else {
-          this.model.addNewSubtask(title);
+          this.model.addNewSubtask(title, "Input");
           target.val("");
         }
         return this.renderSubtasks();
@@ -136,6 +139,7 @@
         }
         if (action === "complete") {
           model.completeTask();
+          swipy.analytics.sendEvent("Action Steps", "Completed");
         } else {
           model.scheduleTask(null);
         }

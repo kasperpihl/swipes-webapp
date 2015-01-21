@@ -121,6 +121,7 @@
       },
       beforeRenderList: function(todos) {},
       afterRenderList: function(todos) {},
+      afterMovedItems: function() {},
       getViewForModel: function(model) {
         var view, _i, _len, _ref;
         _ref = this.subviews;
@@ -149,27 +150,25 @@
             })();
           }
         }
-        return swipy.analytics.sendEvent("Tasks", "Completed", "", tasks.length);
+        swipy.analytics.sendEvent("Tasks", "Completed", "", tasks.length);
+        return this.afterMovedItems();
       },
       markTaskAsTodo: function(tasks) {
-        var task, view, _i, _len, _results;
-        _results = [];
+        var task, view, _i, _len;
         for (_i = 0, _len = tasks.length; _i < _len; _i++) {
           task = tasks[_i];
           view = this.getViewForModel(task);
           if (view != null) {
-            _results.push((function() {
+            (function() {
               var m;
               m = task;
               return view.swipeRight("todo").then(function() {
                 return m.scheduleTask(m.getDefaultSchedule());
               });
-            })());
-          } else {
-            _results.push(void 0);
+            })();
           }
         }
-        return _results;
+        return this.afterMovedItems();
       },
       scheduleTasks: function(tasks) {
         var deferredArr, task, view, _i, _len;
@@ -185,6 +184,7 @@
             })();
           }
         }
+        this.afterMovedItems();
         return $.when.apply($, deferredArr).then(function() {
           return Backbone.trigger("show-scheduler", tasks);
         });

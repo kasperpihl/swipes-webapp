@@ -46,13 +46,6 @@ define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputVi
 			newTodo.set( "tags", tags )
 			if tags.length then swipy.tags.getTagsFromTasks()
 
-			taskTitleLength = "1-10"
-			if title.length > 50 then taskTitleLength = "50+"
-			else if title.length > 41 then taskTitleLength = "41-50"
-			else if title.length > 31 then taskTitleLength = "31-40"
-			else if title.length > 21 then taskTitleLength = "21-30"
-			else if title.length > 11 then taskTitleLength = "11-20"
-
-			swipy.analytics.sendEvent("Tasks", "Added", "Input", taskTitleLength )
+			swipy.analytics.sendEvent("Tasks", "Added", "Input", title.length )
 		destroy: ->
 			Backbone.off( null, null, @ )

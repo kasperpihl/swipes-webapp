@@ -33,12 +33,17 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 
 		addTag: (e) ->
 			@addTagToModel( $( e.currentTarget ).text(), no )
+			swipy.analytics.sendEvent( "Tags", "Assigned", "Edit Task", 1)
+				
 
 		removeTag: (e) ->
+			return if $(e.currentTarget).hasClass("add-new-tag")
+				
 			tagName = $.trim $(e.currentTarget).text()
 			tags = _.reject( @model.get( "tags" ), (t) -> t.get( "title" ) is tagName )
-
 			@model.updateTags tags
+			swipy.analytics.sendEvent( "Tags", "Unassigned", "Edit Task", 1)
+
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
@@ -59,6 +64,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 				newTag = swipy.tags.create 
 					title : tagName
 				tags.push newTag
+				swipy.analytics.sendEvent("Tags", "Added", "Edit Task", newTag.length )
 
 			@model.updateTags tags
 

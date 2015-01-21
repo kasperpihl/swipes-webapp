@@ -14,6 +14,8 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 			@filter (m) -> m.getState() is "active" and !m.isSubtask()
 		getScheduled: ->
 			@filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
+		getScheduledLaterToday: ->
+			@filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
 		getCompleted: ->
 			@filter (m) -> m.getState() is "completed" and !m.isSubtask()
 		getSubtasksForModel: ( model ) ->
