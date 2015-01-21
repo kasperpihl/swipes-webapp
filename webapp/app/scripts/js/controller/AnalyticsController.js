@@ -10,7 +10,20 @@
       }
 
       AnalyticsController.prototype.init = function() {
-        return this.screens = [];
+        var analyticsKey;
+        analyticsKey = 'UA-XXXX-Y';
+        this.screens = [];
+        this.customDimensions = {};
+        this.user = Parse.User.current();
+        if ((this.user != null) && this.user.id) {
+          ga('create', analyticsKey, {
+            'userId': this.user.id
+          });
+        } else {
+          ga('create', analyticsKey, 'auto');
+        }
+        ga('send', 'pageview');
+        return this.updateIdentity();
       };
 
       AnalyticsController.prototype.sendEvent = function(category, action, label, value) {
@@ -39,28 +52,43 @@
       };
 
       AnalyticsController.prototype.updateIdentity = function() {
-        var cdUserLevel, user;
-        user = Parse.user.current();
-        cdUserLevel = (function() {
-          switch (parseInt(user.get("userLevel"), 10)) {
-            case 1:
-              return "Trial";
-            case 2:
-              return "Plus Monthly";
-            case 3:
-              return "Plus Yearly";
-            default:
-              return "Standard";
+        var currentNumberOfTags, currentRecurringCount, currentTheme, currentUserLevel, gaSendIdentity, numberOfTags, numberUserLevel, recurringCount, recurringTasks, theme, userLevel;
+        gaSendIdentity = {};
+        userLevel = "None";
+        if (this.user != null) {
+          userLevel = "User";
+          numberUserLevel = parseInt(this.user.get("userLevel"), 10);
+          if (numberUserLevel > 1) {
+            userLevel = "Plus";
           }
-        })();
-        if (cdUserLevel !== this.customDimensions[0]) {
-          this.setCustomDimension(0, cdUserLevel);
         }
-        if (user.get("email") !== this.session.customerEmail) {
-          this.session.setCustomerEmail(user.get("email"));
+        currentUserLevel = this.customDimensions['user_level'];
+        if (currentUserLevel !== userLevel) {
+          gaSendIdentity["dimension1"] = userLevel;
         }
-        if ((user.id != null) !== this.session.customerId) {
-          return this.session.setCustomerId(user.id);
+        theme = "Light";
+        currentTheme = this.customDimensions['active_theme'];
+        if (currentTheme !== theme) {
+          gaSendIdentity['dimension3'] = theme;
+        }
+        if (typeof swipy !== "undefined" && swipy !== null) {
+          recurringTasks = swipy.todos.filter(function(m) {
+            return m.get("repeatOption") !== "never";
+          });
+          recurringCount = recurringTasks.length;
+          currentRecurringCount = this.customDimensions['recurring_tasks'];
+          if (currentRecurringCount !== recurringCount) {
+            gaSendIdentity['dimension4'] = recurringCount;
+          }
+          numberOfTags = swipy.tags.length;
+          currentNumberOfTags = this.customDimensions['number_of_tags'];
+          if (currentNumberOfTags !== numberOfTags) {
+            gaSendIdentity['dimension5'] = numberOfTags;
+          }
+        }
+        if (_.size(gaSendIdentity) > 0) {
+          ga('set', gaSendIdentity);
+          return this.sendEvent("Session", "Updated Identity");
         }
       };
 

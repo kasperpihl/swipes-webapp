@@ -21,6 +21,7 @@
         this.sync();
         this.bouncedSync = _.debounce(this.sync, 3000);
         this.currentSyncing = null;
+        this.firstSync = false;
       }
 
       SyncController.prototype.handleModelForSync = function(model, attributes) {
@@ -224,6 +225,10 @@
           }
           if (data.updateTime) {
             this.lastUpdate = data.updateTime;
+          }
+          if (!this.firstSync) {
+            this.firstSync = true;
+            swipy.analytics.updateIdentity();
           }
         }
         return this.finalizeSync();

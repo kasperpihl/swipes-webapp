@@ -20,6 +20,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			@sync()
 			@bouncedSync = _.debounce( @sync, 3000 )
 			@currentSyncing = null
+			@firstSync = false
 
 
 		handleModelForSync: (model, attributes) ->
@@ -164,5 +165,8 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
 				@lastUpdate = data.updateTime if data.updateTime
+				if not @firstSync
+					@firstSync = true
+					swipy.analytics.updateIdentity()
 				##swipy.todos.handleObjects data.ToDo
 			@finalizeSync()

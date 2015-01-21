@@ -6,7 +6,19 @@ define ["underscore"], (_) ->
 		constructor: ->
 			@init()
 		init: ->
+			analyticsKey = 'UA-XXXX-Y'
 			@screens = []
+			@customDimensions = {}
+
+			@user = Parse.User.current()
+			if @user? and @user.id
+				ga('create', analyticsKey, { 'userId' : @user.id } )
+			else
+				ga('create', analyticsKey, 'auto' )
+
+			ga('send', 'pageview');
+			@updateIdentity()
+
 		sendEvent: (category, action, label, value) ->
 			ga('send', 'event', category, action, label, value)
 		pushScreen: (screenName) ->
@@ -23,21 +35,40 @@ define ["underscore"], (_) ->
   					'screenName': lastScreen
 				})
 		updateIdentity: ->
-			user = Parse.user.current()
-			cdUserLevel = switch parseInt( user.get( "userLevel" ), 10 )
-				when 1 then "Trial"
-				when 2 then "Plus Monthly"
-				when 3 then "Plus Yearly"
-				else "Standard"
+			gaSendIdentity = {}
 
-			# Update custom dimensions if not standard user
-			if cdUserLevel isnt @customDimensions[0]
-				@setCustomDimension( 0, cdUserLevel )
 
-			# If user email changed, update the one used by the session
-			if user.get( "email" ) isnt @session.customerEmail
-				@session.setCustomerEmail user.get "email"
+			userLevel = "None"
+			if @user?
+				userLevel = "User"
+				numberUserLevel = parseInt( @user.get( "userLevel" ), 10 )
+				if numberUserLevel > 1
+					userLevel = "Plus"
 
-			# If user id changed, update the one used by the session
-			if user.id? isnt @session.customerId
-				@session.setCustomerId user.id
+			currentUserLevel = @customDimensions['user_level']
+			if currentUserLevel isnt userLevel
+				gaSendIdentity["dimension1"] = userLevel
+
+
+			theme = "Light"
+			currentTheme = @customDimensions['active_theme']
+			if currentTheme isnt theme
+				gaSendIdentity['dimension3'] = theme
+
+			if swipy?
+				recurringTasks = swipy.todos.filter (m) -> m.get("repeatOption") isnt "never"
+				recurringCount = recurringTasks.length
+				currentRecurringCount = @customDimensions['recurring_tasks']
+				if currentRecurringCount isnt recurringCount
+					gaSendIdentity['dimension4'] = recurringCount
+
+				numberOfTags = swipy.tags.length
+				currentNumberOfTags = @customDimensions['number_of_tags']
+				if currentNumberOfTags isnt numberOfTags
+					gaSendIdentity['dimension5'] = numberOfTags
+
+			if _.size( gaSendIdentity ) > 0
+				ga('set', gaSendIdentity)
+				@sendEvent("Session", "Updated Identity")
+
+			
