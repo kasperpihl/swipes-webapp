@@ -6,7 +6,7 @@ define ["underscore"], (_) ->
 		constructor: ->
 			@init()
 		init: ->
-			analyticsKey = 'UA-XXXX-Y'
+			analyticsKey = 'UA-41592802-4'
 			@screens = []
 			@customDimensions = {}
 
@@ -71,4 +71,3 @@ define ["underscore"], (_) ->
 				ga('set', gaSendIdentity)
 				@sendEvent("Session", "Updated Identity")
 
-			

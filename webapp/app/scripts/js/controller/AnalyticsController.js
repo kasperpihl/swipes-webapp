@@ -11,7 +11,7 @@
 
       AnalyticsController.prototype.init = function() {
         var analyticsKey;
-        analyticsKey = 'UA-XXXX-Y';
+        analyticsKey = 'UA-41592802-4';
         this.screens = [];
         this.customDimensions = {};
         this.user = Parse.User.current();
