@@ -33,7 +33,7 @@ define ["underscore"], (_) ->
 				app_id: 'yobuz4ff'
 				email: email
 				user_id: userId
-				createdAt: parseInt(@user.createdAt.getTime()/1000,10)
+				created_at: parseInt(@user.createdAt.getTime()/1000,10)
 			})
 			@loadedIntercom = true
 		validateEmail: (email) ->
