@@ -112,7 +112,7 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 					opts =
 						onDrag: => @updateValue( "delay", arguments... )
 						onDragEnd: => @updateValue( "delay", yes, arguments... )
-						steps: 49
+						steps: ( 24 * 4 ) + 1
 
 					@delaySlider.destroy() if @delaySlider?
 					@delaySlider = new SliderControl( el, opts, @getSliderVal "delay" )
