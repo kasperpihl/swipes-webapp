@@ -11,13 +11,13 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 			( hour / 24 ) + ( minute / 60 / 24 )
 		getTimeFromFloat: (value) ->
 			# There are 1440 minutes in a day
-			minutesTotal = 1440 * value
+			minutesTotal = Math.ceil(1440 * value)
 
 			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
 			if value is 0
-				{ hour: 0, minute: 5 }
+				{ hour: 0, minute: 0 }
 			else if value is 1
-				{ hour: 23, minute: 55 }
+				{ hour: 23, minute: 45 }
 			else
 				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.round( minutesTotal ) % 60 }
 		getFormattedTime: (hour, minute, addAmPm = yes) ->
@@ -82,7 +82,7 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 					opts =
 						onDrag: => @updateValue( "start-day", arguments... )
 						onDragEnd: => @updateValue( "start-day", yes, arguments... )
-						steps: 25
+						steps: ( 24 * 4 ) + 1
 
 					@startDaySlider.destroy() if @startDaySlider?
 					@startDaySlider = new SliderControl( el, opts, @getSliderVal "start-day" )
@@ -92,7 +92,7 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 					opts =
 						onDrag: => @updateValue( "start-evening", arguments... )
 						onDragEnd: => @updateValue( "start-evening", yes, arguments... )
-						steps: 25
+						steps: ( 24 * 4 ) + 1
 
 					@startEveSlider.destroy() if @startEveSlider?
 					@startEveSlider = new SliderControl( el, opts, @getSliderVal "start-evening" )
@@ -102,7 +102,7 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 					opts =
 						onDrag: => @updateValue( "start-weekend", arguments... )
 						onDragEnd: => @updateValue( "start-weekend", yes, arguments... )
-						steps: 25
+						steps: ( 24 * 4 ) + 1
 
 					@startWeekendSlider.destroy() if @startWeekendSlider?
 					@startWeekendSlider = new SliderControl( el, opts, @getSliderVal "start-weekend" )
