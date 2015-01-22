@@ -81,7 +81,7 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 				@render()
 		modelHasTag: (model, tag) ->
 			tagName = tag.get "title"
-			return !!_.filter( model.get( "tag" ), (t) -> t.get( "title" ) is tagName ).length
+			return !!_.filter( model.get( "tags" ), (t) -> t.get( "title" ) is tagName ).length
 		addTagToModel: (tag, model) ->
 			if model.has "tags"
 				if @modelHasTag( model, tag ) then return
