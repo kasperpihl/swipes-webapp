@@ -34,9 +34,6 @@ define ["underscore"], (_) ->
 				email: email
 				user_id: userId
 				createdAt: parseInt(@user.createdAt.getTime()/1000,10)
-				widget: {
-      				activator: '#IntercomDefaultWidget'
-   				}  
 			})
 			@loadedIntercom = true
 		validateEmail: (email) ->

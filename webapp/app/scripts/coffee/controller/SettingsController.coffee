@@ -2,6 +2,8 @@ define ["underscore", "backbone", "js/model/SettingsModel"], (_, Backbone, Setti
 	class SettingsController
 		constructor: (opts) ->
 			@init()
+		events:
+			"click #support-button": "clickedSupport"
 		init: ->
 			@model = new SettingsModel()
 
@@ -9,6 +11,9 @@ define ["underscore", "backbone", "js/model/SettingsModel"], (_, Backbone, Setti
 			Backbone.on( "hide-settings", @hide, @ )
 
 			_.bindAll( @, "get", "set", "unset" )
+		clickedSupport: ->
+			console.log "clicked"
+			false
 		get: ->
 			@model.get arguments...
 		set: ->
