@@ -1,6 +1,7 @@
 define ["underscore", "backbone"], (_, Backbone) ->
 	class FilterController
 		constructor: ->
+
 			@tagsFilter = []
 			@searchFilter = ""
 
@@ -10,7 +11,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			Backbone.on( "apply-filter", @applyFilter, @ )
 			Backbone.on( "remove-filter", @removeFilter, @ )
 
-			Backbone.on( 'navigate/view', @clearFilters, @ )
 		applyFilter: (type, filter) ->
 			if type is "tag" then @applyTagsFilter filter else @debouncedSearch filter
 
