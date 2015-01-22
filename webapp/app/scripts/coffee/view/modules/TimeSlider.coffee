@@ -13,9 +13,9 @@ define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"
 
 			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
 			if value is 0
-				{ hour: 0, minute: 5 }
+				{ hour: 0, minute: 15 }
 			else if value is 1
-				{ hour: 23, minute: 55 }
+				{ hour: 23, minute: 45 }
 			else
 				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.round( minutesTotal ) % 60 }
 		getOpts: ->

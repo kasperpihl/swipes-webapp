@@ -15,7 +15,7 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 
 			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
 			if value is 0
-				{ hour: 0, minute: 0 }
+				{ hour: 0, minute: 15 }
 			else if value is 1
 				{ hour: 23, minute: 45 }
 			else
