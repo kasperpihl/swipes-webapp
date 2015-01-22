@@ -58,7 +58,7 @@ define ["underscore"], (_) ->
 				})
 		updateIdentity: ->
 			gaSendIdentity = {}
-
+			intercomIdentity = {}
 
 			userLevel = "None"
 			if @user?
@@ -70,12 +70,14 @@ define ["underscore"], (_) ->
 			currentUserLevel = @customDimensions['user_level']
 			if currentUserLevel isnt userLevel
 				gaSendIdentity["dimension1"] = userLevel
+				intercomIdentity["user_level"] = userLevel
 
 
 			theme = "Light"
 			currentTheme = @customDimensions['active_theme']
 			if currentTheme isnt theme
 				gaSendIdentity['dimension3'] = theme
+				intercomIdentity['active_theme'] = theme
 
 			if swipy?
 				recurringTasks = swipy.todos.filter (m) -> m.get("repeatOption") isnt "never"
@@ -83,13 +85,18 @@ define ["underscore"], (_) ->
 				currentRecurringCount = @customDimensions['recurring_tasks']
 				if currentRecurringCount isnt recurringCount
 					gaSendIdentity['dimension4'] = recurringCount
+					intercomIdentity["recurring_tasks"] = recurringCount
 
 				numberOfTags = swipy.tags.length
 				currentNumberOfTags = @customDimensions['number_of_tags']
 				if currentNumberOfTags isnt numberOfTags
 					gaSendIdentity['dimension5'] = numberOfTags
+					intercomIdentity["number_of_tags"] = numberOfTags
 
 			if _.size( gaSendIdentity ) > 0
 				ga('set', gaSendIdentity)
 				@sendEvent("Session", "Updated Identity")
+
+			if _.size( intercomIdentity ) > 0
+				Intercom("update", intercomIdentity)
 
