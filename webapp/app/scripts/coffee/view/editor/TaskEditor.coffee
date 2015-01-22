@@ -68,6 +68,8 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			if @getNotes() != @model.get "notes"
 				@model.updateNotes @getNotes()
 				swipy.analytics.sendEvent("Tasks", "Notes", "", @getNotes().length )
+				swipy.analytics.sendEventToIntercom("Update Note", { "Length": @getNotes().length })
+
 			
 		updateActionStep: (e) ->
 			target = $(e.currentTarget)
@@ -102,6 +104,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			if action is "complete"
 				model.completeTask()
 				swipy.analytics.sendEvent( "Action Steps", "Completed" )
+				swipy.analytics.sendEventToIntercom( "Completed Action Step" )
 			else
 				model.scheduleTask( null )
 			@renderSubtasks()

@@ -46,6 +46,7 @@ define ["underscore", "backbone", "js/view/list/TagEditorOverlay"], (_, Backbone
 					model.deleteObj()
 				@hide()
 				swipy.analytics.sendEvent( "Tasks", "Deleted", "", selectedTasks.length )
+				swipy.analytics.sendEventToIntercom( "Deleted Tasks", { "Number of Tasks": selectedTasks.length })
 		shareTasks: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
 			return unless selectedTasks.length
@@ -68,3 +69,4 @@ define ["underscore", "backbone", "js/view/list/TagEditorOverlay"], (_, Backbone
 			location.href = emailString
 
 			swipy.analytics.sendEvent( "Share Task", "Opened", "", selectedTasks.length )
+			swipy.analytics.sendEventToIntercom( "Share Task Opened", {"Number of Tasks": selectedTasks.length })

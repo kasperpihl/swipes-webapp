@@ -129,6 +129,7 @@ define [
 						m.completeTask()
 
 			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)
+			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Number of Tasks": tasks.length })
 			@afterMovedItems()
 		markTaskAsTodo: (tasks) ->
 			for task in tasks

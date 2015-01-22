@@ -74,6 +74,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			order = currentSubtasks.length
 			if from
 				swipy.analytics.sendEvent( "Action Steps", "Added", from, title.length )
+				swipy.analytics.sendEventToIntercom( "Added Action Step", { "From": "Input", "Length": title.length })
 			swipy.todos.create { title, parentLocalId, order }
 
 			#@addSubtask newSubtask
@@ -296,7 +297,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@set( "priority", 1 , { sync: true } )
 			if @get("priority") then priorityLabel = "On" else priorityLabel = "Off"
 			swipy.analytics.sendEvent( "Tasks", "Priority", priorityLabel )
-
+			swipy.analytics.sendEventToIntercom("Update Priority",  { "Assigned" : priorityLabel } )
 		scheduleTask: ( date ) ->
 			updateObj = {
 				schedule: date
@@ -361,7 +362,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				repeatDate =  @get "schedule"
 			@set({ repeatDate, repeatOption },{ sync: true })
 			swipy.analytics.sendEvent( "Tasks", "Recurring", repeatOption )
-		
+			swipy.analytics.sendEventToIntercom( "Recurring Task", { "Reoccurrence": repeatOption } )
+
 		updateOrder: ( order, opt ) ->
 			if order == @get "order"
 				return

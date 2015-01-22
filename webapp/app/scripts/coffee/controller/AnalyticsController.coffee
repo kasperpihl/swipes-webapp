@@ -9,6 +9,7 @@ define ["underscore"], (_) ->
 			analyticsKey = 'UA-41592802-4'
 			@screens = []
 			@customDimensions = {}
+			@loadedIntercom = false
 
 			@user = Parse.User.current()
 			if @user? and @user.id
@@ -17,10 +18,34 @@ define ["underscore"], (_) ->
 				ga('create', analyticsKey, 'auto' )
 
 			ga('send', 'pageview');
+			@startIntercom()
 			@updateIdentity()
+		startIntercom: ->
+			return if !@user?
+			userId = @user.id
 
+			if @validateEmail @user.get("username")
+				email = @user.get("username")
+			else if @validateEmail @user.get("email")
+				email = @user.get("email")
+			
+			window.Intercom('boot', {
+				app_id: 'yobuz4ff'
+				email: email
+				user_id: userId
+				createdAt: parseInt(@user.createdAt.getTime()/1000,10)
+				widget: {
+      				activator: '#IntercomDefaultWidget'
+   				}  
+			})
+			@loadedIntercom = true
+		validateEmail: (email) ->
+			regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			regex.test email
 		sendEvent: (category, action, label, value) ->
 			ga('send', 'event', category, action, label, value)
+		sendEventToIntercom: (eventName, metadata) ->
+			Intercom('trackEvent', eventName, metadata )
 		pushScreen: (screenName) ->
 			ga('send', 'screenview', {
   				'screenName': screenName

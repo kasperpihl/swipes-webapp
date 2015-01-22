@@ -34,6 +34,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 		addTag: (e) ->
 			@addTagToModel( $( e.currentTarget ).text(), no )
 			swipy.analytics.sendEvent( "Tags", "Assigned", "Edit Task", 1)
+			swipy.analytics.sendEventToIntercom( "Assign Tags", { "From": "Edit Task", "Number of Tasks": 1, "Number of Tags": 1 })
 				
 
 		removeTag: (e) ->
@@ -43,6 +44,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 			tags = _.reject( @model.get( "tags" ), (t) -> t.get( "title" ) is tagName )
 			@model.updateTags tags
 			swipy.analytics.sendEvent( "Tags", "Unassigned", "Edit Task", 1)
+			swipy.analytics.sendEventToIntercom( "Unassign Tags", { "From": "Edit Task", "Number of Tasks": 1, "Number of Tags": 1 })
 
 		createTag: (e) ->
 			e.preventDefault()
@@ -65,6 +67,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 					title : tagName
 				tags.push newTag
 				swipy.analytics.sendEvent("Tags", "Added", "Edit Task", newTag.length )
+				swipy.analytics.sendEventToIntercom( "Added Tag", { "From": "Edit Task", "Length": newTag.length })
 
 			@model.updateTags tags
 

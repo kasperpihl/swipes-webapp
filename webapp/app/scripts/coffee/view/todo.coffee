@@ -12,7 +12,9 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 			@sorter.setTodoOrder( todos, true )
 		afterMovedItems: ->
 			if @getTasks().length is 0
-				swipy.analytics.sendEvent("Actions", "Cleared Tasks", "For Today", 0)
+				todayOrNow = "For Today"
+				swipy.analytics.sendEvent("Actions", "Cleared Tasks", todayOrNow, 0)
+				swipy.analytics.sendEventToIntercom("Cleared Tasks", {"Streak": 0, "All Done for Today": todayOrNow, "Sharing Services Available": 0})
 		beforeRenderList: (todos) ->
 			# Make sure all todos are unselected before rendering the list
 			swipy.todos.invoke( "set", "selected", no )

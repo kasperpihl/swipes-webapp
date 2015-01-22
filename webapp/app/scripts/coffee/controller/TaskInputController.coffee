@@ -47,5 +47,6 @@ define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputVi
 			if tags.length then swipy.tags.getTagsFromTasks()
 
 			swipy.analytics.sendEvent("Tasks", "Added", "Input", title.length )
+			swipy.analytics.sendEventToIntercom( "Added Task", { "From": "Input", "Length": title.length } )
 		destroy: ->
 			Backbone.off( null, null, @ )
