@@ -9,7 +9,7 @@ define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"
 			( hour / 24 ) + ( minute / 60 / 24 )
 		getTimeFromFloat: (value) ->
 			# There are 1440 minutes in a day
-			minutesTotal = 1440 * value
+			minutesTotal = Math.ceil(1440 * value)
 
 			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
 			if value is 0
