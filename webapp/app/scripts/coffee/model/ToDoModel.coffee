@@ -285,10 +285,10 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		toJSON: ->
 			@set( "state", @getState() )
 			clonedAttributes = _.clone @attributes
-			if clonedAttributes.title and clonedAttributes.title.length > 0
+			###if clonedAttributes.title and clonedAttributes.title.length > 0
 				clonedAttributes.title = _.escape(clonedAttributes.title)
 			if clonedAttributes.notes and clonedAttributes.notes.length > 0
-				clonedAttributes.notes = _.escape(clonedAttributes.notes)
+				clonedAttributes.notes = _.escape(clonedAttributes.notes)###
 			clonedAttributes
 		cleanUp: ->
 			@off()
