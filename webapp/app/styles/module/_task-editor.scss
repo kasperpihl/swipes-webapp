@@ -67,7 +67,7 @@
 		}
 	}
 
-	textarea, input {
+	textarea, input, .input-note {
 		color: inherit;
 		text-indent: 0;
 		width: 100%;
@@ -84,8 +84,7 @@
 		}
 	}
 
-	textarea {
-		min-height: 6em;
+	textarea, .input-note {
 		@include input-placeholder() {
 			color: lighten($gray, 30%);
 		}

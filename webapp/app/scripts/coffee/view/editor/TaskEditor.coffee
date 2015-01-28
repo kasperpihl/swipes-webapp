@@ -8,7 +8,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			"click time": "reschedule"
 			"click .repeat-picker a": "setRepeat"
 			"blur .title input": "updateTitle"
-			"blur .notes textarea": "updateNotes"
+			"blur .notes .input-note": "updateNotes"
 			"change .step input": "updateActionStep"
 			"click .step .action": "clickedAction"
 		initialize: ->
@@ -29,8 +29,21 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->
-			
-			@$el.html @template @model.toJSON()
+			renderedContent = @model.toJSON()
+			if renderedContent.notes and renderedContent.notes.length > 0
+				renderedContent.notes = renderedContent.notes.replace(/(?:\r\n|\r|\n)/g, '<br>')
+				expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+				regex = new RegExp(expression)
+				tempNoteString = renderedContent.notes
+				foundURLs = []
+				while m = regex.exec(tempNoteString)
+					index = m.index
+					url = m[0]
+					if foundURLs.indexOf(url) is -1
+						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable=\"false\"><a href=\""+ url + "\" target=\"black\">" + url + "</a></div>")
+						foundURLs.push url
+
+			@$el.html @template renderedContent
 			@renderSubtasks()
 			@setStateClass()
 			@killTagEditor()
@@ -69,8 +82,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 				@model.updateNotes @getNotes()
 				swipy.analytics.sendEvent("Tasks", "Notes", "", @getNotes().length )
 				swipy.analytics.sendEventToIntercom("Update Note", { "Length": @getNotes().length })
-
-			
+				@render()
 		updateActionStep: (e) ->
 			target = $(e.currentTarget)
 			title = target.val()
@@ -111,7 +123,12 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		getTitle: ->
 			@$el.find( ".title input" ).val()
 		getNotes: ->
-			@$el.find( ".notes textarea" ).val()
+			$noteField = @$el.find('.notes .input-note')
+			replacedBrs = $noteField.html().replace(/<br>/g , "\r\n")
+			console.log replacedBrs
+			replacedBrs = replacedBrs.replace(/<(?:.|\n)*?>/gm, '')
+			console.log replacedBrs
+			replacedBrs
 		remove: ->
 			$("body").removeClass "edit-mode"
 			@undelegateEvents()
