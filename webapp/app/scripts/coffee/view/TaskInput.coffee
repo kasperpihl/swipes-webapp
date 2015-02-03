@@ -37,6 +37,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		resizeText: ->
 			@input.css( "font-size", @getFontSize() )
 		remove: ->
-			@undelegateEvents();
+			@undelegateEvents()
 			@$el.remove()
 			$(window).off( "resize.taskinput" )

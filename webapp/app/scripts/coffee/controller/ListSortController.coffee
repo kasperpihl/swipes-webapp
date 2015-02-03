@@ -56,7 +56,7 @@ define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-ha
 				throwResistance: 3000
 				snap: y: (endValue) ->
 					# Snap to closest row
-					return Math.max( @minY, Math.min( @maxY, Math.round( endValue / self.model.rowHeight ) * self.model.rowHeight ) );
+					return Math.max( @minY, Math.min( @maxY, Math.round( endValue / self.model.rowHeight ) * self.model.rowHeight ) )
 
 				# Handlers
 				onDragStartParams: [view, @model.views]

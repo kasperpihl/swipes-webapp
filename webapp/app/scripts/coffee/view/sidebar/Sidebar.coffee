@@ -17,9 +17,9 @@ define ["underscore", "backbone"], (_, Backbone) ->
 			else if trigger.hasClass "log-out"
 				e.preventDefault()
 				if confirm "Are you sure you want to log out?"
-					Parse.User.logOut();
+					Parse.User.logOut()
 					location.pathname = "/login/"
 
 		destroy: ->
-			@stopListening();
+			@stopListening()
 			$( ".open-sidebar" ).off( "click", @handleAction )

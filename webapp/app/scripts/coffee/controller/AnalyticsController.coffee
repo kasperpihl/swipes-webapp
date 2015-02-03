@@ -1,6 +1,6 @@
 define ["underscore"], (_) ->
 	isInt = (n) ->
-		typeof n is 'number' and n % 1 is 0;
+		typeof n is 'number' and n % 1 is 0
 
 	class AnalyticsController
 		constructor: ->
@@ -17,7 +17,7 @@ define ["underscore"], (_) ->
 			else
 				ga('create', analyticsKey, 'auto' )
 
-			ga('send', 'pageview');
+			ga('send', 'pageview')
 			@startIntercom()
 			@updateIdentity()
 		startIntercom: ->

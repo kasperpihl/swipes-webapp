@@ -11,7 +11,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 	class SyncController
 
 		constructor: ->
-			@changedAttributes = new ChangedAttributesController();
+			@changedAttributes = new ChangedAttributesController()
 			@syncIndicator = new SyncIndicator()
 			document.getElementById( "main" ).appendChild @syncIndicator.el
 			@isSyncing = false
@@ -161,7 +161,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
 			if data and data.serverTime
-				@currentSyncing = null;
+				@currentSyncing = null
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
 				@lastUpdate = data.updateTime if data.updateTime

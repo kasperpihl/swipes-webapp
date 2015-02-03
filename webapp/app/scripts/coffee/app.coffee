@@ -91,9 +91,9 @@ define [
 				@UPDATE_COUNT++
 
 			@lastUpdate = new Date()
-			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
+			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ )
 		startAutoUpdate: ->
-			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ );
+			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ )
 		stopAutoUpdate: ->
 			TweenLite.killDelayedCallsTo @update###
 		cleanUp: ->

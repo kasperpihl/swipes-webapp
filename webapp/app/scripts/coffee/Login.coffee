@@ -1,7 +1,7 @@
 ### Analytics Controller ###
 
 isInt = (n) ->
-		typeof n is 'number' and n % 1 is 0;
+		typeof n is 'number' and n % 1 is 0
 
 LoginView = Parse.View.extend
 	el: "#login"
@@ -127,7 +127,7 @@ LoginView = Parse.View.extend
 					alert "Something went wrong. Please try again."
 					@removeBusyState()
 
-			Parse.Cloud.run( "checkEmail" , { email:triedLoginWithCredentials.email }, checkEmailOpts );
+			Parse.Cloud.run( "checkEmail" , { email:triedLoginWithCredentials.email }, checkEmailOpts )
 
 		else
 			@removeBusyState()
@@ -146,7 +146,7 @@ LoginView = Parse.View.extend
 # Log into services
 appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3"
 jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg"
-Parse.initialize(appId, jsId);
+Parse.initialize(appId, jsId)
 
 # Handle Fabebook Login
 window.fbAsyncInit = ->

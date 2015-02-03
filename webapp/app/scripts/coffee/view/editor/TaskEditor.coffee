@@ -40,7 +40,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 					index = m.index
 					url = m[0]
 					if foundURLs.indexOf(url) is -1
-						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable=\"false\"><a href=\""+ url + "\" target=\"black\">" + url + "</a></div>")
+						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\""+ url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "</a></div><br>")
 						foundURLs.push url
 
 			@$el.html @template renderedContent
@@ -60,7 +60,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 					if task.get("completionDate")
 						completedCounter++
 					jsonedTask = task.toJSON()
-					jsonedTask.cid = task.cid;
+					jsonedTask.cid = task.cid
 					jsonedSubtasks.push(jsonedTask)
 				tmplData.subtasks = jsonedSubtasks
 				titleString = "" + completedCounter + " / " + jsonedSubtasks.length + " Steps"
@@ -77,6 +77,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			@model.setRepeatOption $(e.currentTarget).data "option"
 		updateTitle: ->
 			@model.updateTitle @getTitle()
+
 		updateNotes: ->
 			if @getNotes() != @model.get "notes"
 				@model.updateNotes @getNotes()
@@ -110,7 +111,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			foundTask
 		clickedAction: (e) ->
 			target = $(e.currentTarget)
-			model = @getModelFromEl( target );
+			model = @getModelFromEl( target )
 			action = "complete"
 			action = "todo" if target.hasClass("todo")
 			if action is "complete"
@@ -125,9 +126,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		getNotes: ->
 			$noteField = @$el.find('.notes .input-note')
 			replacedBrs = $noteField.html().replace(/<br>/g , "\r\n")
-			console.log replacedBrs
 			replacedBrs = replacedBrs.replace(/<(?:.|\n)*?>/gm, '')
-			console.log replacedBrs
 			replacedBrs
 		remove: ->
 			$("body").removeClass "edit-mode"

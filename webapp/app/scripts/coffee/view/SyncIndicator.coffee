@@ -45,5 +45,5 @@ define ["underscore", "backbone", "jquery", "gsap", "timelinelite"], (_, Backbon
 				<p class='sync-text'>Syncing</p>
 			"""
 		render: ->
-			@$el.html @getHTML();
+			@$el.html @getHTML()
 			TweenLite.set( @el, { display: "none" } )

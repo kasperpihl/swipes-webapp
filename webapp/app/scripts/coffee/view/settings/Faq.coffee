@@ -14,6 +14,6 @@ define ["js/view/settings/BaseSubview", "gsap", "text!templates/settings-faq.htm
 			li = $(e.currentTarget.parentNode).toggleClass "toggled"
 
 			if li.hasClass "toggled"
-				TweenLite.to( li.find( "section" ), 0.55, { alpha: 1, height: "auto", marginBottom: "3.2em", rotationX: 0, display: "block", ease: Back.easeOut } );
+				TweenLite.to( li.find( "section" ), 0.55, { alpha: 1, height: "auto", marginBottom: "3.2em", rotationX: 0, display: "block", ease: Back.easeOut } )
 			else
-				TweenLite.to( li.find( "section" ), 0.2, { alpha: 0, height: 0, marginBottom: 0, rotationX: -90, display: "none" } );
+				TweenLite.to( li.find( "section" ), 0.2, { alpha: 0, height: 0, marginBottom: 0, rotationX: -90, display: "none" } )
