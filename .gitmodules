@@ -1,15 +1,12 @@
-[submodule "webapp/app/scripts/plugins/jwerty"]
-	path = webapp/app/scripts/plugins/jwerty
+[submodule "app/scripts/plugins/jwerty"]
+	path = app/scripts/plugins/jwerty
 	url = git://github.com/keithamus/jwerty
-[submodule "webapp/app/styles/animate"]
-	path = webapp/app/styles/animate
+[submodule "app/styles/animate"]
+	path = app/styles/animate
 	url = git@github.com:Ahrengot/animate.sass.git
-[submodule "webapp/app/scripts/plugins/slider-control"]
-	path = webapp/app/scripts/plugins/slider-control
+[submodule "app/scripts/plugins/slider-control"]
+	path = app/scripts/plugins/slider-control
 	url = git@github.com:Ahrengot/Simple-Slider-Control.git
-[submodule "webapp/app/bower_components/clndr"]
-	path = webapp/app/bower_components/clndr
+[submodule "app/bower_components/clndr"]
+	path = app/bower_components/clndr
 	url = git@github.com:Ahrengot/CLNDR.git
-[submodule "backend"]
-	path = backend
-	url = git@heroku.com:swipes-test.git
