@@ -36,11 +36,28 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 				regex = new RegExp(expression)
 				tempNoteString = renderedContent.notes
 				foundURLs = []
+				counter = 0
 				while m = regex.exec(tempNoteString)
+					counter++
 					index = m.index
 					url = m[0]
+					input = m.input
+					brStartIndex = index + url.length
+					nextText = input.substring( brStartIndex )
+					addedNewline = false
+					if nextText? and nextText.length > 3
+						if nextText.indexOf("<br>") is 0
+							url += "<br>"
+							addedNewline = true
+							tempNoteString = tempNoteString.slice(0, brStartIndex) + tempNoteString.substr(brStartIndex+4)
+					if !nextText? or nextText.length < 5
+						addExtraPoint = false
+						addExtraPoint = true if nextText.length is 0
+						addExtraPoint = true if addedNewline
+						if addExtraPoint
+							renderedContent.notes += "<div><br></div>"
 					if foundURLs.indexOf(url) is -1
-						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\""+ url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "<br></a></div>")
+						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\""+ url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "</a></div>")
 						foundURLs.push url
 
 			@$el.html @template renderedContent

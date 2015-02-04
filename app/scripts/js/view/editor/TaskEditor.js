@@ -40,7 +40,7 @@
         return this.$el.removeClass("active scheduled completed").addClass(this.model.getState());
       },
       render: function() {
-        var expression, foundURLs, index, m, regex, renderedContent, tempNoteString, url;
+        var addExtraPoint, addedNewline, brStartIndex, counter, expression, foundURLs, index, input, m, nextText, regex, renderedContent, tempNoteString, url;
         renderedContent = this.model.toJSON();
         if (renderedContent.notes && renderedContent.notes.length > 0) {
           renderedContent.notes = renderedContent.notes.replace(/(?:\r\n|\r|\n)/g, '<br>');
@@ -48,11 +48,36 @@
           regex = new RegExp(expression);
           tempNoteString = renderedContent.notes;
           foundURLs = [];
+          counter = 0;
           while (m = regex.exec(tempNoteString)) {
+            counter++;
             index = m.index;
             url = m[0];
+            input = m.input;
+            brStartIndex = index + url.length;
+            nextText = input.substring(brStartIndex);
+            addedNewline = false;
+            if ((nextText != null) && nextText.length > 3) {
+              if (nextText.indexOf("<br>") === 0) {
+                url += "<br>";
+                addedNewline = true;
+                tempNoteString = tempNoteString.slice(0, brStartIndex) + tempNoteString.substr(brStartIndex + 4);
+              }
+            }
+            if ((nextText == null) || nextText.length < 5) {
+              addExtraPoint = false;
+              if (nextText.length === 0) {
+                addExtraPoint = true;
+              }
+              if (addedNewline) {
+                addExtraPoint = true;
+              }
+              if (addExtraPoint) {
+                renderedContent.notes += "<div><br></div>";
+              }
+            }
             if (foundURLs.indexOf(url) === -1) {
-              renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\"" + url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "<br></a></div>");
+              renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\"" + url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "</a></div>");
               foundURLs.push(url);
             }
           }
