@@ -8,3 +8,5 @@ app/scripts/js
 *.httpclient
 *.sublime-project
 *.sublime-workspace
+bower_components*
+app/bower_components*

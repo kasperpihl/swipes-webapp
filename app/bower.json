@@ -6,8 +6,10 @@
     "requirejs": "~2.1.8",
     "modernizr": "~2.6.2",
     "jquery": "~2.1.1",
+    "parse": "~1.3",
     "backbone": "~1.1.2",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "Backbone.localStorage": "*"
   },
   "devDependencies": {
     "jquery": "~2.1.1",
@@ -18,11 +20,8 @@
     "clndr": "~1.0.12",
     "sinon-chai": "~2.4.0",
     "sinon": "~1.7.3",
-    "hammerjs": "~1.0.5",
+    "hammerjs": "~2.0.4",
     "jquery-hammerjs": "*",
     "mousetrap": "~1.4.6"
-  },
-  "resolutions": {
-    "hammerjs": "1.1.x"
   }
 }
