@@ -5,6 +5,8 @@ define [
 	"js/view/list/TouchTask"
 	"text!templates/todo-list.html"
 	"mousetrapGlobal"
+	"gsap-scroll" 
+	"gsap"
 	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
 	Backbone.View.extend
 		initialize: ->
@@ -20,20 +22,108 @@ define [
 			# Render the list whenever it updates, 5ms is just enough to work around mutiple events firing frequently
 			@renderList = _.debounce( @renderList, 5 )
 			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
-
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
-			@listenTo( Backbone, "todo-task", @markTaskAsTodo )
-			@listenTo( Backbone, "schedule-task", @scheduleTasks )
+			@listenTo( Backbone, "todo-task", @markTasksAsTodo )
 			@listenTo( Backbone, "schedule-task", @scheduleTasks )
 			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
+
+			@listenTo( Backbone, "did-press-task", @handleDidPressTask )
 
 			# Re-render list once per minute, activating any scheduled tasks.
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
 			Mousetrap.bindGlobal( "mod+a", $.proxy( @selectAllTasks, @ ) )
-
+			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift" )
+			@setLastIndex( -1, true )
 			@render()
+		setLastIndex: (index, saveToShift) ->
+			@lastSelectedIndex = index
+			if saveToShift
+				@currentToStartFromInShift = index
+		keyDownHandling: (e) ->
+			# shift key
+			if e.keyCode is 16
+				if !@holdModifier?
+					@holdModifier = "shift";
+					if @currentToStartFromInShift is -1
+						@setLastIndex( 0, true )
+					else 
+						@setLastIndex(@currentToStartFromInShift, true )
+			if e.keyCode is 91 or e.keyCode is 17
+				if !@holdModifier?
+					@holdModifier = "cmd";
+			# left arrow
+			if e.keyCode is 37
+				@scheduleTasks()
+			# right arrow
+			if e.keyCode is 39
+				@completeTasks()
+			# arrow up and arrow down
+			if e.keyCode is 40 or e.keyCode is 38
+				e.preventDefault()
+				numberOfTasks = @subviews.length
+				if e.keyCode is 40
+					index = @lastSelectedIndex + 1
+				else if e.keyCode is 38
+					index = @lastSelectedIndex - 1
+				index = 0 if index < 0
+				index = numberOfTasks - 1 if index >= numberOfTasks
+
+				task = view.model for view, i in @subviews when index is i
+				if task?
+					task.set( "selected", true )
+					saveToShift = @holdModifier isnt "shift"
+					@setLastIndex( index, saveToShift )
+					@selectedModels([task])
+		keyUpHandling: (e) ->
+			if e.keyCode is 16 or e.keyCode is 17 or e.keyCode is 91
+				@holdModifier = null
+			if e.keyCode is 16
+				@currentToStartFromInShift = null
+		selectedModels: (tasks, shouldScroll) ->
+			if !@holdModifier?
+				@deselectAllTasksButTasks( tasks, true )
+			else if @holdModifier is "shift"
+				@selectTasksForTasksWithShift( tasks )
+		selectTasksForTasksWithShift: ( tasks ) ->
+			selectedTask = tasks[0]
+			selectTheFollowingTasks = []
+			isRunningSelection = false
+			shouldTurnOffSelection = false
+			for view, i in @subviews
+				model = view.model
+				if i is @currentToStartFromInShift and model.cid is selectedTask.cid
+					selectTheFollowingTasks.push model
+				else if i is @currentToStartFromInShift or model.cid is selectedTask.cid
+					if !isRunningSelection
+						isRunningSelection = true
+					else 
+						shouldTurnOffSelection = true
+
+				if isRunningSelection
+					selectTheFollowingTasks.push model
+				if shouldTurnOffSelection
+					isRunningSelection = false
+			@deselectAllTasksButTasks(selectTheFollowingTasks)
+		deselectAllTasksButTasks: (selectedTasks, filter) ->
+			if swipy.todos.getSelected().length <= 1 and filter?
+				selectedTasks = _.reject( selectedTasks, (m) -> !m.get "selected" )
+			tasks = @getTasks()
+			for task in tasks
+				if _.indexOf(selectedTasks, task) is -1
+					task.set("selected", false)
+				else
+					task.set("selected", true)
+		handleDidPressTask: ( tasks ) ->
+			@selectedModels(tasks)
+			model = tasks[0]
+			newIndex = 0
+			newIndex = i for view, i in @subviews when view.model.cid is model.cid
+			if model.get "selected"
+				saveToShift = @holdModifier isnt "shift"
+				@setLastIndex( newIndex, saveToShift )
+					
 		render: ->
 			@renderList()
 			$("#add-task input").focus()
@@ -47,6 +137,7 @@ define [
 		getTasks: ->
 			# Fetch todos that are active
 			return swipy.todos.getActive()
+		
 		selectAllTasks: (e) ->
 			# Prevent default (select all text on page || select all text in input), unless input is focused AND have text input.
 			taskInput = swipy.input.view.$el.find "input"
@@ -112,9 +203,9 @@ define [
 
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
-		
-			
-		completeTasks: (tasks) ->
+
+		completeTasks: (model) ->
+			tasks = swipy.todos.getSelected( model )
 			minOrder = Math.min _.invoke( tasks, "get", "order" )...
 
 			# Bump order for tasks
@@ -131,7 +222,8 @@ define [
 			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Number of Tasks": tasks.length })
 			@afterMovedItems()
-		markTaskAsTodo: (tasks) ->
+		markTasksAsTodo: (model) ->
+			tasks = swipy.todos.getSelected( model )
 			for task in tasks
 				view = @getViewForModel task
 
@@ -142,7 +234,8 @@ define [
 						m.scheduleTask m.getDefaultSchedule()
 			@afterMovedItems()
 
-		scheduleTasks: (tasks) ->
+		scheduleTasks: (model) ->
+			tasks = swipy.todos.getSelected( model )
 			deferredArr = []
 
 			for task in tasks
@@ -161,8 +254,11 @@ define [
 				if view? then view.reset()
 
 		transitionInComplete: ->
+			@lastSelectedIndex = -1
 			@actionbar = new ActionBar()
 			@transitionDeferred.resolve()
+			$(document).on('keydown', @keyDownHandling )
+			$(document).on('keyup', @keyUpHandling )
 		killSubViews: ->
 			view.remove() for view in @subviews
 			@subviews = []
@@ -175,7 +271,9 @@ define [
 		cleanUp: ->
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
-
+			$(document).off('keydown', @keyDownHandling )
+			$(document).off('keyup', @keyUpHandling )
+			@lastSelectedIndex = -1
 			# Reset transitionDeferred
 			@transitionDeferred = null
 

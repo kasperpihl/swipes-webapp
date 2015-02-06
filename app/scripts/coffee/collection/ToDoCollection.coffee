@@ -18,6 +18,8 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 			@filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
 		getCompleted: ->
 			@filter (m) -> m.getState() is "completed" and !m.isSubtask()
+		getSelected: (model) ->
+			@filter (m) -> m.get("selected") or model? and m.cid is model.cid
 		getSubtasksForModel: ( model ) ->
 			@sortBy( "order" ).filter (m) -> m.get( "parentLocalId" ) is model.id
 		getActiveList: ->

@@ -30,25 +30,19 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 		toggleSelected: ->
 			currentlySelected = @model.get( "selected" ) or false
 			@model.set( "selected", !currentlySelected )
+			Backbone.trigger( "did-press-task", [@model])
+			
 		togglePriority: (e) ->
 			e.stopPropagation()
 			@model.togglePriority()
 		handleAction: (e) ->
-			# Set trigger. One or more elements, but always wrapped in an array ready to loop over.
-			trigger = [@model]
-			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
-			if selectedTasks.length
-				selectedTasks = _.reject( selectedTasks, (m) => m.cid is @model.cid )
-				trigger.push task for task in selectedTasks
-
 			# Actual trigger logic
 			if $( e.currentTarget ).hasClass "schedule"
-
-				Backbone.trigger( "schedule-task", trigger )
+				Backbone.trigger( "schedule-task", @model )
 			else if $( e.currentTarget ).hasClass "complete"
-				Backbone.trigger( "complete-task", trigger )
+				Backbone.trigger( "complete-task", @model )
 			else if $( e.currentTarget ).hasClass "todo"
-				Backbone.trigger( "todo-task", trigger )
+				Backbone.trigger( "todo-task", @model )
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
 		edit: (e) ->
