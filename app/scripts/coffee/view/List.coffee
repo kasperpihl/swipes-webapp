@@ -21,6 +21,9 @@ define [
 
 			# Render the list whenever it updates, 5ms is just enough to work around mutiple events firing frequently
 			@renderList = _.debounce( @renderList, 5 )
+
+			@listenTo( Backbone, "opened-window", @clearForOpening )
+
 			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
@@ -34,9 +37,11 @@ define [
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
 			Mousetrap.bindGlobal( "mod+a", $.proxy( @selectAllTasks, @ ) )
-			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift" )
+			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening" )
 			@setLastIndex( -1, true )
 			@render()
+		clearForOpening: ->
+			@holdModifier = null
 		setLastIndex: (index, saveToShift) ->
 			@lastSelectedIndex = index
 			if saveToShift

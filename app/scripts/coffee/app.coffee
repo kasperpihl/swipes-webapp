@@ -36,8 +36,7 @@ define [
 			@updateTimer = new ClockWork()
 
 			##@tags.fetch()
-
-			$(window).focus @fetchTodos
+			$(window).focus @openedWindow
 
 		isBusy: ->
 			# Are any todos being saved right now?
@@ -110,5 +109,7 @@ define [
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
-		fetchTodos: ->
+		openedWindow: ->
+			Backbone.trigger("opened-window")
 			swipy.sync.sync()
+			
