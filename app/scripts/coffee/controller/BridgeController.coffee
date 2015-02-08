@@ -20,7 +20,5 @@ define ["underscore"], () ->
                 callback(WebViewJavascriptBridge)
             , false)
         callHandler: (handler, data, callback) ->
-            console.log "trying"
             return if !@bridge?
-            console.log "sending"
             @bridge.callHandler( handler, data, callback )
