@@ -20,6 +20,7 @@ define ["underscore", "backbone", "js/model/ScheduleModel", "momentjs"], (_, Bac
 				loadViewDfd.resolve()
 
 			loadViewDfd.promise().done =>
+				@view.render()
 				@view.show()
 				@view.currentTasks = @currentTasks = tasks
 

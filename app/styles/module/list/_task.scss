@@ -3,6 +3,13 @@ $list-item-height-lg: 85px;
 
 // General task styling
 .todo-list {
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
 	ol { padding: 0; }
 
 	h2 {
@@ -84,7 +91,6 @@ $list-item-height-lg: 85px;
 	padding: 1.4em 3em 0 20%;
 	@include breakpoint(tablet) { padding-left: 28% }
 	height: $list-item-height;
-
 	@include breakpoint(min-height, $breakheight) {
 		padding-top: 2em;
 		height: $list-item-height-lg;

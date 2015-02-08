@@ -12,12 +12,13 @@ define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-ov
 			@showClassName = "scheduler-open"
 			@hideClassName = "hide-scheduler"
 		bindEvents: ->
-			_.bindAll( @, "handleResize", "handleKeyUp" )
+			_.bindAll( @, "handleResize", "keyUpHandling" )
 			$(window).on( "resize", @handleResize )
-			$(document).on( 'keyup.overlay-content', @handleKeyUp )
+			#$(document).on( 'keyup.overlay-content', @handleKeyUp )
 				
-		handleKeyUp: (e) ->
-			if e.keyCode > 48 and e.keyCode < 58
+		keyUpHandling: (e) ->
+			console.log e.keyCode
+			if e.keyCode > 48 and e.keyCode < 58 and @$el.html
 				#if @$el.hasClass "show-datepicker"
 				elNumber = parseInt( e.keyCode - 48, 10 )
 				pressedKey = $('.overlay .grid > a:nth-child(' + elNumber + ')')
@@ -33,6 +34,9 @@ define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-ov
 			return @
 		afterShow: ->
 			@handleResize()
+			swipy.shortcuts.pushDelegate( @ )
+		afterHide: ->
+			swipy.shortcuts.popDelegate()
 		selectOptionFromTarget: (target) ->
 			if target.hasClass( "save" ) and @datePicker?
 				moment = @datePicker.calendar.selectedDay
@@ -55,7 +59,6 @@ define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-ov
 		hide: (cancelled = yes) ->
 			if cancelled and @currentTasks?
 				Backbone.trigger( "scheduler-cancelled", @currentTasks )
-
 			Overlay::hide.apply( @, arguments )
 		showDatePicker: ->
 			if not @datePicker? then require ["js/view/modules/DatePicker"], (DatePicker) =>
@@ -83,7 +86,7 @@ define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-ov
 		cleanUp: ->
 			$(window).off( "resize", @handleResize )
 			@datePicker.remove()
-			$(document).off(".overlay-content")
+			#$(document).off(".overlay-content")
 			# Same as super() in real OOP programming
 			Overlay::cleanUp.apply( @, arguments )
 

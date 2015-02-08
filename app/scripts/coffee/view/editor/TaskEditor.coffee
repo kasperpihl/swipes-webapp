@@ -88,6 +88,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
+			swipy.shortcuts.setDelegate( @ )
 		togglePriority: ->
 			@model.togglePriority()
 		setRepeat: (e) ->

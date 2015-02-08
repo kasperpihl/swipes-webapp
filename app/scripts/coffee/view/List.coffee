@@ -10,6 +10,9 @@ define [
 	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
 	Backbone.View.extend
 		initialize: ->
+			@longPressThreshold = 2
+			@currentLongPressCount = 0
+			@didHitALongPress = false
 			# This deferred is resolved after view has been transitioned in
 			@transitionDeferred = new $.Deferred()
 
@@ -37,15 +40,42 @@ define [
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
 			Mousetrap.bindGlobal( "mod+a", $.proxy( @selectAllTasks, @ ) )
-			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening" )
+			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening", "longPressHandling" )
 			@setLastIndex( -1, true )
 			@render()
 		clearForOpening: ->
 			@holdModifier = null
+			#@clearLongPress()
 		setLastIndex: (index, saveToShift) ->
 			@lastSelectedIndex = index
 			if saveToShift
 				@currentToStartFromInShift = index
+		longPressHandling: (e) ->
+			@currentLongPressCount = 0
+			@didHitALongPress = true
+			@actionForDirection( e, true )
+		actionForDirection: ( e , longSwipe ) ->
+			if e.keyCode is 37 or e.keyCode is 39
+				if e.keyCode is 37
+					left = true
+			else return
+			type = null
+			type = "todo" if @$el.hasClass("todo")
+			type = "completed" if @$el.hasClass("completed")
+			type = "scheduled" if @$el.hasClass("scheduled")
+			return if !type?
+			console.log type
+			if left?
+				if type is "todo" or type is "scheduled" or type is "completed" and longSwipe
+					@scheduleTasks()
+				else if type is "completed" and !longSwipe
+					@markTasksAsTodo()
+			else
+				if type is "todo" or type is "scheduled" and longSwipe
+					@completeTasks()
+				else if type is "scheduled" and !longSwipe
+					@markTasksAsTodo()
+				
 		keyDownHandling: (e) ->
 			# shift key
 			if e.keyCode is 16
@@ -55,15 +85,19 @@ define [
 						@setLastIndex( 0, true )
 					else 
 						@setLastIndex(@currentToStartFromInShift, true )
+			# cmd / ctrl
 			if e.keyCode is 91 or e.keyCode is 17
 				if !@holdModifier?
 					@holdModifier = "cmd";
-			# left arrow
-			if e.keyCode is 37
-				@scheduleTasks()
-			# right arrow
-			if e.keyCode is 39
-				@completeTasks()
+			# left arrow / right arrow
+			if e.keyCode is 37 or e.keyCode is 39
+				if !@currentLongPressKey?
+					@currentLongPressKey = e.keyCode
+				if e.keyCode is @currentLongPressKey and !@didHitALongPress
+					@currentLongPressCount++
+					if @currentLongPressCount > @longPressThreshold
+						@longPressHandling(e)
+
 			# arrow up and arrow down
 			if e.keyCode is 40 or e.keyCode is 38
 				e.preventDefault()
@@ -81,11 +115,27 @@ define [
 					saveToShift = @holdModifier isnt "shift"
 					@setLastIndex( index, saveToShift )
 					@selectedModels([task])
+		clearLongPress: ->
+			@didHitALongPress = false
+			@currentLongPressKey = null
+			@currentLongPressCount = 0
 		keyUpHandling: (e) ->
+			# shift / ctrl / cmd
 			if e.keyCode is 16 or e.keyCode is 17 or e.keyCode is 91
 				@holdModifier = null
+			# shift
 			if e.keyCode is 16
 				@currentToStartFromInShift = null
+			# left arrow / right arrow
+			if e.keyCode is 37 or e.keyCode is 39
+				if @currentLongPressKey?
+					if @currentLongPressKey is e.keyCode
+						if !@didHitALongPress
+							@actionForDirection(e, false)	
+						@clearLongPress()
+						
+					
+
 		selectedModels: (tasks, shouldScroll) ->
 			if !@holdModifier?
 				@deselectAllTasksButTasks( tasks, true )
@@ -211,6 +261,7 @@ define [
 
 		completeTasks: (model) ->
 			tasks = swipy.todos.getSelected( model )
+			return if tasks.length is 0
 			minOrder = Math.min _.invoke( tasks, "get", "order" )...
 
 			# Bump order for tasks
@@ -229,6 +280,7 @@ define [
 			@afterMovedItems()
 		markTasksAsTodo: (model) ->
 			tasks = swipy.todos.getSelected( model )
+			return if tasks.length is 0
 			for task in tasks
 				view = @getViewForModel task
 
@@ -241,6 +293,7 @@ define [
 
 		scheduleTasks: (model) ->
 			tasks = swipy.todos.getSelected( model )
+			return if tasks.length is 0
 			deferredArr = []
 
 			for task in tasks
@@ -262,8 +315,7 @@ define [
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar()
 			@transitionDeferred.resolve()
-			$(document).on('keydown', @keyDownHandling )
-			$(document).on('keyup', @keyUpHandling )
+			swipy.shortcuts.setDelegate( @ )
 		killSubViews: ->
 			view.remove() for view in @subviews
 			@subviews = []
@@ -276,8 +328,6 @@ define [
 		cleanUp: ->
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
-			$(document).off('keydown', @keyDownHandling )
-			$(document).off('keyup', @keyUpHandling )
 			@lastSelectedIndex = -1
 			# Reset transitionDeferred
 			@transitionDeferred = null

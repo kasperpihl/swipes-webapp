@@ -22,6 +22,10 @@ define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
 			@filter (m) -> m.get("selected") or model? and m.cid is model.cid
 		getSubtasksForModel: ( model ) ->
 			@sortBy( "order" ).filter (m) -> m.get( "parentLocalId" ) is model.id
+		getScheduledAsJSONText: ->
+			scheduled = @filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
+			tasksJSON = _.invoke( scheduled, "toJSON" )
+			JSON.stringify({"objects":"test"})
 		getActiveList: ->
 			route = swipy.router.getCurrRoute()
 			switch route

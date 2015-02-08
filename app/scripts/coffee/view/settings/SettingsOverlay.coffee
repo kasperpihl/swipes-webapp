@@ -30,7 +30,10 @@ define [
 			@$el.html html
 			return @
 		afterShow: ->
+			swipy.shortcuts.lock()
 			@handleResize()
+		afterHide: ->
+			swipy.shortcuts.unlock()
 		show: ->
 			if Backbone.history.fragment is "settings" then @killSubView()
 			Overlay::show.apply( @, arguments )
