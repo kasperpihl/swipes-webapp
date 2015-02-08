@@ -15,15 +15,17 @@ define [
 	"js/controller/SettingsController"
 	"js/controller/ErrorController"
 	"js/controller/SyncController"
+	"js/controller/KeyboardController"
+	"js/controller/BridgeController"
 	"gsap"
-	], ($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController) ->
+	], ($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
 		constructor: ->
 			#@hackParseAPI()
 			Backbone.once( "sync-complete", @init, @ )
-
+			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
 
@@ -35,9 +37,11 @@ define [
 			@sync = new SyncController()
 			@updateTimer = new ClockWork()
 
+			# Keyboard/Shortcut handler
+			@shortcuts = new KeyboardController()
+			
 			##@tags.fetch()
 			$(window).focus @openedWindow
-
 		isBusy: ->
 			# Are any todos being saved right now?
 			if @todos.length?
