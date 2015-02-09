@@ -69,14 +69,14 @@ define [
 			return if !type?
 			if left?
 				if type is "todo" or type is "scheduled" or type is "completed" and longSwipe
-					@scheduleTasks()
+					@scheduleTasks(null, true)
 				else if type is "completed" and !longSwipe
-					@markTasksAsTodo()
+					@markTasksAsTodo(null, true)
 			else
 				if type is "todo" or type is "scheduled" and longSwipe
-					@completeTasks()
+					@completeTasks(null, true)
 				else if type is "scheduled" and !longSwipe
-					@markTasksAsTodo()
+					@markTasksAsTodo(null, true)
 				
 		keyDownHandling: (e) ->
 
@@ -286,23 +286,32 @@ define [
 
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
-			if @shouldResetLast? and @shouldResetLast
-				console.log "after move: " + @lastSelectedIndex + " items : " + @subviews.length
-				@shouldResetLast = false
+			newSelectIndex = -1
+			if @shouldSelectNext? and @shouldSelectNext
+				@shouldSelectNext = false
 				if @lastSelectedIndex isnt -1
 					searchIndex = @lastSelectedIndex
 					searchIndex = @subviews.length-1 if @lastSelectedIndex >= @subviews.length
 					selectNewModel = view.model for view, i in @subviews when i is searchIndex
 					if selectNewModel
+						newSelectIndex = searchIndex
 						selectNewModel.set "selected", true
-						@setLastIndex(searchIndex,true)
 						@selectedModels([selectNewModel])
+			if @shouldResetLast? and @shouldResetLast
+				@shouldResetLast = false
+				@setLastIndex(newSelectIndex,true)
+				
+			
 		afterMovedItems: ->
-			@shouldResetLast = true
+			
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
 
-		completeTasks: (model) ->
+		completeTasks: (model, shouldSelectNext) ->
+			@shouldResetLast = true
+			if shouldSelectNext
+				@shouldSelectNext = true
+
 			tasks = swipy.todos.getSelected( model )
 			return if tasks.length is 0
 			minOrder = Math.min _.invoke( tasks, "get", "order" )...
@@ -313,16 +322,22 @@ define [
 				view = @getViewForModel task
 				self = @
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
+				compFunc = _.debounce(->
+					self.afterMovedItems()
+				, 10)
 				if view? then do =>
 					m = task
 					view.swipeRight( "completed" ).then =>
 						m.completeTask()
-						self.afterMovedItems()
+						compFunc()
 
 			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Number of Tasks": tasks.length })
 			
-		markTasksAsTodo: (model) ->
+		markTasksAsTodo: (model, shouldSelectNext) ->
+			@shouldResetLast = true
+			if shouldSelectNext
+				@shouldSelectNext = true
 			tasks = swipy.todos.getSelected( model )
 			return if tasks.length is 0
 			for task in tasks
@@ -332,16 +347,22 @@ define [
 				if view? then do ->
 					m = task
 					oldState = m.previous("state")
+					compFunc = _.debounce(->
+						self.afterMovedItems()
+					, 10)
 					if oldState is "scheduled"
 						view.swipeRight("todo").then ->
 							m.scheduleTask m.getDefaultSchedule()
-							self.afterMovedItems()
+							compFunc()
 					else
 						view.swipeLeft("todo").then ->
 							m.scheduleTask m.getDefaultSchedule()
-							self.afterMovedItems()
+							compFunc()
 
-		scheduleTasks: (model) ->
+		scheduleTasks: (model, shouldSelectNext) ->
+			@shouldResetLast = true
+			if shouldSelectNext
+				@shouldSelectNext = true
 			tasks = swipy.todos.getSelected( model )
 			return if tasks.length is 0
 			deferredArr = []
