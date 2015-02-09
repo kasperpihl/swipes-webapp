@@ -135,6 +135,8 @@ define [
 			@currentLongPressCount = 0
 		keyUpHandling: (e) ->
 			#console.log e.keyCode
+			if e.keyCode is 27
+				@deselectAllTasksButTasks([])
 			if e.keyCode is 32
 				$("#add-task input").focus()
 				TweenLite.set( window, { scrollTo: 0 } )
