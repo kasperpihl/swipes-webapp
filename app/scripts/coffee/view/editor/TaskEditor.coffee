@@ -91,14 +91,14 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 		transitionInComplete: ->
 			swipy.shortcuts.setDelegate( @ )
 		keyDownHandling: (e) ->
-			if e.keyCode is 32 and !$(".add-step input").is(":focus")
+			if e.keyCode is 32 and !$("input").is(":focus")
 				e.preventDefault()
 		keyUpHandling: (e) ->
-			if e.keyCode is 13 and !$(".add-step input").is(":focus")
+			if e.keyCode is 13 and !$("input").is(":focus")
 				@save()
 			else if e.keyCode is 13 and $(".add-step input").val().length is 0
 				$(".add-step input").blur()
-			if e.keyCode is 32
+			if e.keyCode is 32 and !$("input").is(":focus")
 				$(".add-step input").focus()
 				TweenLite.set( window, { scrollTo: 0 } )
 				e.preventDefault()
@@ -106,6 +106,8 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 				if $(".add-step input").is(":focus")
 					$(".add-step input").val("")
 					$(".add-step input").blur()
+				else if $(".task-editor input").is(":focus")
+					$(".task-editor input").blur()
 				else @save()
 		togglePriority: ->
 			@model.togglePriority()
