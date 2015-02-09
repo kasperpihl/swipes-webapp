@@ -138,13 +138,11 @@ $list-item-height-lg: 85px;
 		&:hover {
 			span { opacity: 1; }
 		}
-
-		&.complete, &.todo {
-			left: 0;
-		}
-
-		&.schedule {
+		&.right{
 			right: 0;
+		}
+		&.left{
+			left: 0;
 		}
 	}
 }
@@ -163,19 +161,19 @@ $list-item-height-lg: 85px;
 	.hover-left {
 
 		.todo-content {
-			left: $list-item-height;
-			@include breakpoint(min-height, $breakheight) { left: 95px; }
+			//left: $list-item-height;
+			//@include breakpoint(min-height, $breakheight) { left: 95px; }
 		}
-		.action.complete { background: $green; }
-		.action.todo { background: $yellow; }
+		//.action.complete { background: $green; }
+		//.action.todo { background: $yellow; }
 	}
 
 	.hover-right {
 		.todo-content {
-			right: $list-item-height;
-			@include breakpoint(min-height, $breakheight) { right: 95px; }
+			//right: $list-item-height;
+			//@include breakpoint(min-height, $breakheight) { right: 95px; }
 		}
-		.action.schedule { background: $lobster; }
+		//.action.schedule { background: $lobster; }
 	}
 }
 

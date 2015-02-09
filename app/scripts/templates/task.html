@@ -1,14 +1,14 @@
 <% if (state === "active") { %>
-<a href="JavaScript:void(0);" class="action complete" title="Mark todo as completed">
+<a href="JavaScript:void(0);" class="action complete left" title="Mark todo as completed">
 	<span class="icon-checkmark-act"></span>
 </a>
 <% } else { %>
-<a href="JavaScript:void(0);" class="action todo" title="Move task to todo list">
+<a href="JavaScript:void(0);" class="action todo <%= (state === "completed") ? 'right' : 'left' %>" title="Move task to todo list">
 	<span class="icon-todo-act"></span>
 </a>
 <% } %>
 
-<a href="JavaScript:void(0);" class="action schedule" title="Schedule todo">
+<a href="JavaScript:void(0);" class="action schedule right" title="Schedule todo">
 	<span class="icon-schedule-act"></span>
 </a>
 <%
