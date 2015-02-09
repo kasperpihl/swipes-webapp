@@ -20,6 +20,7 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 			# Make sure all todos are unselected before rendering the list
 			swipy.todos.invoke( "set", "selected", no )
 			@setTodoOrder todos
+			ListView::beforeRenderList.apply( @, arguments )
 		afterRenderList: (todos) ->
 			swipy.bridge.callHandler("update-notification", { "number": todos.length })
 			return unless todos.length
@@ -30,6 +31,7 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 					@sortController.model.setViews @subviews
 				else
 					@sortController = new ListSortController( @$el, @subviews, => @render() )
+			ListView::afterRenderList.apply( @, arguments )
 		customCleanUp: ->
 			@sortController.destroy() if @sortController?
 			@sortController = null

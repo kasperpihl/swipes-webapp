@@ -35,14 +35,17 @@ define [
 			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
 
 			@listenTo( Backbone, "did-press-task", @handleDidPressTask )
-
+			@listenTo( Backbone, "pick-schedule-option", @snoozedATask )
 			# Re-render list once per minute, activating any scheduled tasks.
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
 			Mousetrap.bindGlobal( "mod+a", $.proxy( @selectAllTasks, @ ) )
-			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening", "longPressHandling" )
+			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening", "longPressHandling", "snoozedATask" )
 			@setLastIndex( -1, true )
+			@shouldResetLast = false
 			@render()
+		snoozedATask: ->
+			@afterMovedItems()
 		clearForOpening: ->
 			@holdModifier = null
 			#@clearLongPress()
@@ -283,8 +286,19 @@ define [
 
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
+			if @shouldResetLast? and @shouldResetLast
+				console.log "after move: " + @lastSelectedIndex + " items : " + @subviews.length
+				@shouldResetLast = false
+				if @lastSelectedIndex isnt -1
+					searchIndex = @lastSelectedIndex
+					searchIndex = @subviews.length-1 if @lastSelectedIndex >= @subviews.length
+					selectNewModel = view.model for view, i in @subviews when i is searchIndex
+					if selectNewModel
+						selectNewModel.set "selected", true
+						@setLastIndex(searchIndex,true)
+						@selectedModels([selectNewModel])
 		afterMovedItems: ->
-			console.log "after move" + @lastSelectedIndex
+			@shouldResetLast = true
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
 
@@ -297,28 +311,35 @@ define [
 			swipy.todos.bumpOrder( "up", minOrder, tasks.length )
 			for task in tasks
 				view = @getViewForModel task
-
+				self = @
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do =>
 					m = task
 					view.swipeRight( "completed" ).then =>
 						m.completeTask()
+						self.afterMovedItems()
 
 			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Number of Tasks": tasks.length })
-			@afterMovedItems()
+			
 		markTasksAsTodo: (model) ->
 			tasks = swipy.todos.getSelected( model )
 			return if tasks.length is 0
 			for task in tasks
 				view = @getViewForModel task
-
+				self = @
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				if view? then do ->
 					m = task
-					view.swipeRight("todo").then ->
-						m.scheduleTask m.getDefaultSchedule()
-			@afterMovedItems()
+					oldState = m.previous("state")
+					if oldState is "scheduled"
+						view.swipeRight("todo").then ->
+							m.scheduleTask m.getDefaultSchedule()
+							self.afterMovedItems()
+					else
+						view.swipeLeft("todo").then ->
+							m.scheduleTask m.getDefaultSchedule()
+							self.afterMovedItems()
 
 		scheduleTasks: (model) ->
 			tasks = swipy.todos.getSelected( model )
@@ -332,7 +353,6 @@ define [
 				if view? then do ->
 					m = task
 					deferredArr.push view.swipeLeft("scheduled", no)
-			@afterMovedItems()
 			$.when( deferredArr... ).then -> Backbone.trigger( "show-scheduler", tasks )
 
 		handleSchedulerCancelled: (tasks) ->
