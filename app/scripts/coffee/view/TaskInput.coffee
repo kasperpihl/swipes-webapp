@@ -3,11 +3,20 @@ define ["underscore", "backbone"], (_, Backbone) ->
 		el: "#add-task"
 		events:
 			"submit": "triggerAddTask"
+			"focus input": "focusInput"
+			"blur input": "blurInput"
 			"keyup input": "resizeText"
 		initialize: ->
 			@input = @$el.find "input"
 			_.bindAll( @, "resizeText" )
 			$(window).on( "resize.taskinput", @resizeText )
+		focusInput: (e) ->
+			swipy.shortcuts.pushDelegate(@)
+		blurInput: (e) ->
+			swipy.shortcuts.popDelegate()
+		keyUpHandling: (e) ->
+			if e.keyCode is 27
+				@input.blur()
 		triggerAddTask: (e) ->
 			e.preventDefault()
 			return if @input.val() is ""

@@ -15,6 +15,7 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 				todayOrNow = "For Today"
 				swipy.analytics.sendEvent("Actions", "Cleared Tasks", todayOrNow, 0)
 				swipy.analytics.sendEventToIntercom("Cleared Tasks", {"Streak": 0, "All Done for Today": todayOrNow, "Sharing Services Available": 0})
+			ListView::afterMovedItems.apply( @, arguments )
 		beforeRenderList: (todos) ->
 			# Make sure all todos are unselected before rendering the list
 			swipy.todos.invoke( "set", "selected", no )

@@ -15,7 +15,7 @@ define [ "underscore", "js/model/TagModel", "backbone.localStorage"], ( _, TagMo
 			for obj in objects
 				model = new @model obj
 		getTagsFromTasks: ->
-			###tags = []
+			tags = []
 			for m in swipy.todos.models when m.has "tags"
 				for tag in m.get "tags" when @validateTag tag
 					# Make sure we don't get duplicates
@@ -24,7 +24,6 @@ define [ "underscore", "js/model/TagModel", "backbone.localStorage"], ( _, TagMo
 
 			# Finally add tags to our collection
 			@reset tags
-			###
 			# Save the models to the server if they are unsaved
 		getTagByName: (tagName) ->
 			tagName = tagName.toLowerCase()

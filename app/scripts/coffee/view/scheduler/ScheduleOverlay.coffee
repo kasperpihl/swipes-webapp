@@ -17,7 +17,6 @@ define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-ov
 			#$(document).on( 'keyup.overlay-content', @handleKeyUp )
 				
 		keyUpHandling: (e) ->
-			console.log e.keyCode
 			if e.keyCode > 48 and e.keyCode < 58 and @$el.html
 				#if @$el.hasClass "show-datepicker"
 				elNumber = parseInt( e.keyCode - 48, 10 )

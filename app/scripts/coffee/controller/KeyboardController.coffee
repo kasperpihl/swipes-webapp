@@ -14,11 +14,11 @@ define ["underscore"], (_) ->
 			$(document).off('keydown', @keyDownHandling )
 			$(document).off('keyup', @keyUpHandling )
 		keyDownHandling: (e) ->
-			return if @isLocked
+			return if @isLocked or !@delegate?
 			if _.isFunction(@delegate.keyDownHandling)
 				@delegate.keyDownHandling(e)
 		keyUpHandling: (e) ->
-			return if @isLocked
+			return if @isLocked or !@delegate?
 			if _.isFunction(@delegate.keyUpHandling)
 				@delegate.keyUpHandling(e)
 		setDelegate: ( delegate ) ->

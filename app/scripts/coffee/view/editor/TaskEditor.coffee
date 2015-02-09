@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/model/TaskSortModel" ,  "js/view/editor/TagEditor"], (_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TaskSortModel, TagEditor) ->
+define ["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/model/TaskSortModel" ,  "js/view/editor/TagEditor", "gsap-scroll", "gsap"], (_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TaskSortModel, TagEditor) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
@@ -15,7 +15,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			$("body").addClass "edit-mode"
 			@setTemplate()
 			@sorter = new TaskSortModel()
-			_.bindAll( @, "clickedAction", 'updateActionStep' )
+			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title", @render )
 		setTemplate: ->
@@ -66,6 +66,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			@killTagEditor()
 			@createTagEditor()
 			return @el
+
 		renderSubtasks: ->
 			@subtasks = @sorter.setTodoOrder( @model.getOrderedSubtasks(), false )
 			titleString = "Tasks"
@@ -89,6 +90,23 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
 			swipy.shortcuts.setDelegate( @ )
+		keyDownHandling: (e) ->
+			if e.keyCode is 32 and !$(".add-step input").is(":focus")
+				e.preventDefault()
+		keyUpHandling: (e) ->
+			if e.keyCode is 13 and !$(".add-step input").is(":focus")
+				@save()
+			else if e.keyCode is 13 and $(".add-step input").val().length is 0
+				$(".add-step input").blur()
+			if e.keyCode is 32
+				$(".add-step input").focus()
+				TweenLite.set( window, { scrollTo: 0 } )
+				e.preventDefault()
+			if e.keyCode is 27
+				if $(".add-step input").is(":focus")
+					$(".add-step input").val("")
+					$(".add-step input").blur()
+				else @save()
 		togglePriority: ->
 			@model.togglePriority()
 		setRepeat: (e) ->

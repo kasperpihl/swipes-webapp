@@ -64,7 +64,6 @@ define [
 			type = "completed" if @$el.hasClass("completed")
 			type = "scheduled" if @$el.hasClass("scheduled")
 			return if !type?
-			console.log type
 			if left?
 				if type is "todo" or type is "scheduled" or type is "completed" and longSwipe
 					@scheduleTasks()
@@ -77,11 +76,14 @@ define [
 					@markTasksAsTodo()
 				
 		keyDownHandling: (e) ->
+
+			if e.keyCode is 32 and !$("#add-task input").is(":focus")
+				e.preventDefault()
 			# shift key
 			if e.keyCode is 16
 				if !@holdModifier?
 					@holdModifier = "shift";
-					if @currentToStartFromInShift is -1
+					if !@currentToStartFromInShift? or @currentToStartFromInShift is -1
 						@setLastIndex( 0, true )
 					else 
 						@setLastIndex(@currentToStartFromInShift, true )
@@ -109,33 +111,58 @@ define [
 				index = 0 if index < 0
 				index = numberOfTasks - 1 if index >= numberOfTasks
 
-				task = view.model for view, i in @subviews when index is i
-				if task?
+				foundView = view for view, i in @subviews when index is i
+				if foundView?
+					task = foundView.model
 					task.set( "selected", true )
 					saveToShift = @holdModifier isnt "shift"
 					@setLastIndex( index, saveToShift )
 					@selectedModels([task])
+					topY = foundView.$el.offset().top
+					height = window.innerHeight
+					bottomPadding = 200
+					targetY = topY - height + bottomPadding
+					if targetY < 0 and window.screenY > 0
+						targetY = 0
+					if targetY >= 0
+						TweenLite.set( window, { scrollTo: targetY } )
 		clearLongPress: ->
 			@didHitALongPress = false
 			@currentLongPressKey = null
 			@currentLongPressCount = 0
 		keyUpHandling: (e) ->
+			#console.log e.keyCode
+			if e.keyCode is 32
+				$("#add-task input").focus()
+				TweenLite.set( window, { scrollTo: 0 } )
+			if e.keyCode is 13
+				@openSelectedTask()
+			if e.keyCode is 49 and Backbone.history.fragment isnt "list/scheduled"
+				swipy.router.navigate("list/scheduled",true)
+			if e.keyCode is 50 and Backbone.history.fragment isnt "list/todo"
+				swipy.router.navigate("list/todo",true )
+			if e.keyCode is 51 and Backbone.history.fragment isnt "list/completed"
+				swipy.router.navigate("list/completed",true )
+
 			# shift / ctrl / cmd
 			if e.keyCode is 16 or e.keyCode is 17 or e.keyCode is 91
 				@holdModifier = null
 			# shift
-			if e.keyCode is 16
-				@currentToStartFromInShift = null
+			###if e.keyCode is 16
+				@currentToStartFromInShift = null###
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if @currentLongPressKey?
 					if @currentLongPressKey is e.keyCode
 						if !@didHitALongPress
-							@actionForDirection(e, false)	
+							@actionForDirection(e, false)
 						@clearLongPress()
-						
+			
 					
-
+		openSelectedTask: ->
+			lastTask = view.model for view, i in @subviews when i is @lastSelectedIndex
+			if lastTask and swipy.todos.getSelected().length > 0
+				swipy.router.navigate( "edit/#{ lastTask.id }", yes ) 
 		selectedModels: (tasks, shouldScroll) ->
 			if !@holdModifier?
 				@deselectAllTasksButTasks( tasks, true )
@@ -164,6 +191,8 @@ define [
 		deselectAllTasksButTasks: (selectedTasks, filter) ->
 			if swipy.todos.getSelected().length <= 1 and filter?
 				selectedTasks = _.reject( selectedTasks, (m) -> !m.get "selected" )
+			if selectedTasks.length is 0
+				@setLastIndex(-1, true)
 			tasks = @getTasks()
 			for task in tasks
 				if _.indexOf(selectedTasks, task) is -1
@@ -181,7 +210,7 @@ define [
 					
 		render: ->
 			@renderList()
-			$("#add-task input").focus()
+			#$("#add-task input").focus()
 			return @
 		sortTasks: (tasks) ->
 			return _.sortBy tasks, (model) -> model.get( "schedule" )?.getTime()
@@ -255,7 +284,7 @@ define [
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
 		afterMovedItems: ->
-
+			console.log "after move" + @lastSelectedIndex
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
 

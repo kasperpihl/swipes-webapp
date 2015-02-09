@@ -44,8 +44,11 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 			@handleResize()
 			@$el.find( ".tag-input input" ).focus()
 			return @
+		afterShow: ->
+			swipy.shortcuts.lock()
 		afterHide: ->
 			Backbone.trigger "redraw-sortable-list"
+			swipy.shortcuts.unlock()
 		toggleTag: (e) ->
 			target = $ e.currentTarget
 			remove = target.hasClass "selected"
