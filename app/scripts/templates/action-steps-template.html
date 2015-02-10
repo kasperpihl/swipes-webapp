@@ -4,7 +4,7 @@
 		<% var action = task.completionDate ? 'todo' : 'complete'; %>
 		<div class="step <%= state %>" data-cid="<%= task.cid %>">
 			<a href="JavaScript:void(0);" class="action <%= action %>" title="Mark todo as completed">
-				<span class="<% print(task.completionDate ? 'icon-todo-act' : 'icon-checkmark-act'); %>"></span>
+				<span class="<% print(task.completionDate ? 'icon-todo' : 'icon-checkmark'); %>"></span>
 			</a>
 			<!-- <% if( task.completionDate ) { %> 
 			<a href="JavaScript:void(0);" class="action delete" title="Delete the action step">

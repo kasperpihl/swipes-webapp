@@ -75,76 +75,99 @@ $font_name: 'swipes';
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-
-.icon-triangle-right, .icon-triangle-right-act, .icon-triangle-left, .icon-triangle-left-act, .icon-trashcan, .icon-trashcan-act, .icon-todo, .icon-todo-act, .icon-tags, .icon-tags-act, .icon-tag-bold, .icon-swipes-plus, .icon-swipes-logo-square, .icon-swipes-logo-square-act, .icon-support, .icon-support-act, .icon-snooze-unspecified, .icon-snooze-unspecified-act, .icon-snooze-tomorrow, .icon-snooze-tomorrow-act, .icon-snooze-this-weekend, .icon-snooze-this-weekend-act, .icon-snooze-this-evening, .icon-snooze-this-evening-act, .icon-snooze-pick-a-date, .icon-snooze-pick-a-date-act, .icon-snooze-next-week, .icon-snooze-next-week-act, .icon-snooze-location, .icon-snooze-location-act, .icon-snooze-later-today, .icon-snooze-later-today-act, .icon-snooze-day-after-tomorrow, .icon-snooze-day-after-tomorrow-act, .icon-share, .icon-share-act, .icon-schedule, .icon-schedule-act, .icon-repeat, .icon-repeat-bold, .icon-questionmark-circle, .icon-questionmark-circle-act, .icon-policy, .icon-policy-act, .icon-plus, .icon-pencil, .icon-pencil-act, .icon-note, .icon-note-bold, .icon-minus, .icon-log-out, .icon-log-out-act, .icon-cross, .icon-cross-act, .icon-cog, .icon-cog-act, .icon-clock, .icon-clock-bold, .icon-clock-alt, .icon-clock-alt-act, .icon-clock-act, .icon-checkmark, .icon-checkmark-nav, .icon-checkmark-alt, .icon-checkmark-alt-act, .icon-checkmark-act, .icon-arr-right, .icon-arr-left {
+@mixin icon($iconString) {
 	@extend .icon;
+	content: $iconString;
 }
 
-.icon-triangle-right:before { content: "\e600"; }
-.icon-triangle-right-act:before { content: "\e601"; }
-.icon-triangle-left:before { content: "\e602"; }
-.icon-triangle-left-act:before { content: "\e603"; }
-.icon-trashcan:before { content: "\e604"; }
-.icon-trashcan-act:before { content: "\e605"; }
-.icon-todo:before { content: "\e606"; }
-.icon-todo-act:before { content: "\e607"; }
-.icon-tags:before { content: "\e608"; }
-.icon-tags-act:before { content: "\e609"; }
-.icon-tag-bold:before { content: "\e60a"; }
-.icon-swipes-plus:before { content: "\e60b"; }
-.icon-swipes-logo-square:before { content: "\e60c"; }
-.icon-swipes-logo-square-act:before { content: "\e60d"; }
-.icon-support:before { content: "\e60e"; }
-.icon-support-act:before { content: "\e60f"; }
-.icon-snooze-unspecified:before { content: "\e610"; }
-.icon-snooze-unspecified-act:before { content: "\e611"; }
-.icon-snooze-tomorrow:before { content: "\e612"; }
-.icon-snooze-tomorrow-act:before { content: "\e613"; }
-.icon-snooze-this-weekend:before { content: "\e614"; }
-.icon-snooze-this-weekend-act:before { content: "\e615"; }
-.icon-snooze-this-evening:before { content: "\e616"; }
-.icon-snooze-this-evening-act:before { content: "\e617"; }
-.icon-snooze-pick-a-date:before { content: "\e618"; }
-.icon-snooze-pick-a-date-act:before { content: "\e619"; }
-.icon-snooze-next-week:before { content: "\e61a"; }
-.icon-snooze-next-week-act:before { content: "\e61b"; }
-.icon-snooze-location:before { content: "\e61c"; }
-.icon-snooze-location-act:before { content: "\e61d"; }
-.icon-snooze-later-today:before { content: "\e61e"; }
-.icon-snooze-later-today-act:before { content: "\e61f"; }
-.icon-snooze-day-after-tomorrow:before { content: "\e620"; }
-.icon-snooze-day-after-tomorrow-act:before { content: "\e621"; }
-.icon-share:before { content: "\e622"; }
-.icon-share-act:before { content: "\e623"; }
-.icon-schedule:before { content: "\e624"; }
-.icon-schedule-act:before { content: "\e625"; }
-.icon-repeat:before { content: "\e626"; }
-.icon-repeat-bold:before { content: "\e627"; }
-.icon-questionmark-circle:before { content: "\e628"; }
-.icon-questionmark-circle-act:before { content: "\e629"; }
-.icon-policy:before { content: "\e62a"; }
-.icon-policy-act:before { content: "\e62b"; }
-.icon-plus:before { content: "\e62c"; }
-.icon-pencil:before { content: "\e62d"; }
-.icon-pencil-act:before { content: "\e62e"; }
-.icon-note:before { content: "\e62f"; }
-.icon-note-bold:before { content: "\e630"; }
-.icon-minus:before { content: "\e631"; }
-.icon-log-out:before { content: "\e632"; }
-.icon-log-out-act:before { content: "\e633"; }
-.icon-cross:before { content: "\e634"; }
-.icon-cross-act:before { content: "\e635"; }
-.icon-cog:before { content: "\e636"; }
-.icon-cog-act:before { content: "\e637"; }
-.icon-clock:before { content: "\e638"; }
-.icon-clock-bold:before { content: "\e639"; }
-.icon-clock-alt:before { content: "\e63a"; }
-.icon-clock-alt-act:before { content: "\e63b"; }
-.icon-clock-act:before { content: "\e63c"; }
-.icon-checkmark:before { content: "\e63d"; }
-.icon-checkmark-nav:before { content: "\e63e"; }
-.icon-checkmark-alt:before { content: "\e63f"; }
-.icon-checkmark-alt-act:before { content: "\e640"; }
-.icon-checkmark-act:before { content: "\e641"; }
-.icon-arr-right:before { content: "\e642"; }
-.icon-arr-left:before { content: "\e643"; }
+.icon-todo:before { @include icon("\e603"); }
+.icon-todo-bold:before { @include icon("\e662"); }
+.icon-checkmark:before { @include icon("\e602"); }
+.icon-checkmark-bold:before { @include icon("\e660"); }
+.icon-clock:before { @include icon("\e604"); }
+
+
+.icon-snooze-unspecified:before { @include icon("\e612"); }
+.icon-snooze-unspecified-act:before { @include icon("\e614"); }
+.icon-snooze-tomorrow:before { @include icon("\e643"); }
+.icon-snooze-tomorrow-act:before { @include icon("\e64c"); }
+.icon-snooze-this-weekend:before { @include icon("\e641"); }
+.icon-snooze-this-weekend-act:before { @include icon("\e64a"); }
+.icon-snooze-this-evening:before { @include icon("\e638"); }
+.icon-snooze-this-evening-act:before { @include icon("\e61c"); }
+.icon-snooze-pick-a-date:before { @include icon("\e63d"); }
+.icon-snooze-pick-a-date-act:before { @include icon("\e646"); }
+.icon-snooze-next-week:before { @include icon("\e640"); }
+.icon-snooze-next-week-act:before { @include icon("\e649"); }
+.icon-snooze-location:before { @include icon("\e63e"); }
+.icon-snooze-location-act:before { @include icon("\e647"); }
+.icon-snooze-later-today:before { @include icon("\e645"); }
+.icon-snooze-later-today-act:before { @include icon("\e64e"); }
+.icon-snooze-day-after-tomorrow:before { @include icon("\e652"); }
+.icon-snooze-day-after-tomorrow-act:before { @include icon("\e64b"); }
+
+.icon-settings-snooze:before{ @include icon("\e653"); }
+.icon-settings-snooze-act:before{ @include icon("\e608"); }
+
+
+.icon-note:before { @include icon("\e609"); }
+.icon-repeat:before { @include icon("\e60a"); }
+.icon-trashcan:before { @include icon("\e635"); }
+.icon-trashcan-act:before { @include icon("\e63b"); }
+
+.icon-tags:before { @include icon("\e634"); }
+.icon-tags-act:before { @include icon("\e63a"); }
+.icon-tag-bold:before { @include icon("\e60b"); }
+
+.icon-share:before { @include icon("\e633"); }
+.icon-share-act:before { @include icon("\e639"); }
+
+
+.icon-cog:before { @include icon("\e601"); }
+.icon-cog-act:before { @include icon("\e605"); }
+.icon-support:before { @include icon("\e619"); }
+.icon-support-act:before { @include icon("\e621"); }
+.icon-policy:before { @include icon("\e616"); }
+.icon-policy-act:before { @include icon("\e61f"); }
+
+
+.icon-plus:before { @include icon("\e65f"); }
+.icon-minus:before { @include icon("\e625"); }
+
+
+.icon-cross:before { @include icon("\e629"); }
+.icon-cross-act:before { @include icon("\e62e"); }
+
+.icon-log-out:before { @include icon("\e617"); }
+.icon-log-out-act:before { @include icon("\e620"); }
+
+.icon-triangle-right:before { @include icon("\e628"); }
+.icon-triangle-right-act:before { @include icon("\e62d"); }
+
+.icon-arr-left:before { @include icon("\e63f"); }
+
+
+
+.icon-swipes-logo-square:before { @include icon("\e64f"); }
+.icon-swipes-logo-square-act:before { @include icon("\e654"); }
+
+.icon-questionmark-circle:before { @include icon("\e627"); }
+.icon-questionmark-circle-act:before { @include icon("\e636"); }
+
+.icon-pencil:before { @include icon("\e63c"); }
+
+// To be fixed:
+.icon-triangle-left:before { @include icon("\e628"); direction: rtl; }
+.icon-triangle-left-act:before { @include icon("\e62d"); direction: rtl; }
+
+
+
+
+
+
+
+
+
+
+
+

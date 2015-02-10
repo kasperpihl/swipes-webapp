@@ -18,7 +18,7 @@
 	</section>
 	<% if (scheduleStr) { %>
 		<section>
-			<time class="icon-clock-bold has-icon no-select">
+			<time class="icon-clock has-icon no-select">
 				<%= scheduleStr %>
 				<% if (timeStr && schedule !== null) print(", " + timeStr); %>
 			</time>
@@ -63,7 +63,7 @@
 	</section>
 
 	<section>
-		<div class="notes icon-note-bold has-icon">
+		<div class="notes icon-note has-icon">
 			<div class="input-note" contenteditable><%= notes %></div>
 		</div>
 	</section>
@@ -72,6 +72,6 @@
 
 <nav class="sticky-if-small">
 	<a href="JavaScript:void(0);" class="save round-btn ">
-		<span class="icon-checkmark-nav"></span>
+		<span class="icon-checkmark-bold"></span>
 	</a>
 </nav>

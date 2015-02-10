@@ -1,14 +1,14 @@
 <% if (state === "active") { %>
 <a href="JavaScript:void(0);" class="action complete left" title="Mark todo as completed">
-	<span class="icon-checkmark-act"></span>
+	<span class="icon-checkmark"></span>
 </a>
 <% } else { %>
 <a href="JavaScript:void(0);" class="action todo <%= (state === "completed") ? 'right' : 'left' %>" title="Move task to todo list">
-	<span class="icon-todo-act"></span>
+	<span class="icon-todo"></span>
 </a>
 <% } %>
 <a href="JavaScript:void(0);" class="action schedule right" title="Schedule todo">
-	<span class="icon-schedule-act"></span>
+	<span class="icon-clock"></span>
 </a>
 <%
 	var centerTitle, isPriority, classList
@@ -87,15 +87,15 @@
 	<div>
 
 		<a href="JavaScript:void(0);" class="schedule-button" title="Schedule todo">
-			<span class="icon-schedule"></span>
+			<span class="icon-clock"></span>
 		</a>
 	<% if (state === "completed" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="todo-button" title="Move task to todo list">
-			<span class="icon-todo"></span>
+			<span class="icon-todo-bold"></span>
 		</a>
 	<% } if (state === "active" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="complete-button" title="Mark todo as completed">
-			<span class="icon-checkmark"></span>
+			<span class="icon-checkmark-bold"></span>
 		</a>
 	<% } %>
 	</div>

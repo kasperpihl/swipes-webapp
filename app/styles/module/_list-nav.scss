@@ -33,9 +33,9 @@
 		&:focus, &:hover {
 			text-decoration: none;
 			outline: none;
-			&.schedule { @extend .icon-clock-act; }
-			&.todo { @extend .icon-todo-act; }
-			&.checkmark { @extend .icon-checkmark-act; }
+			&.schedule { @extend .icon-clock; }
+			&.todo { @extend .icon-todo; }
+			&.checkmark { @extend .icon-checkmark; }
 		}
 	}
 
@@ -48,19 +48,20 @@
 
 	.schedule.active {
 		color: $lobster;
-		@extend .icon-clock-act;
+		@extend .icon-clock;
 		&:focus { @extend .icon-clock; }
+		// TODO: Fix the hover things here
 	}
 
 	.todo.active {
 		color: $yellow;
-		@extend .icon-todo-act;
+		@extend .icon-todo;
 		&:focus { @extend .icon-todo; }
 	}
 
 	.checkmark.active {
 		color: $green;
-		@extend .icon-checkmark-act;
+		@extend .icon-checkmark;
 		&:focus { @extend .icon-checkmark; }
 	}
 }

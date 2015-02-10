@@ -7,9 +7,9 @@ define ["js/view/list/BaseTask", "jquery-hammerjs"], (BaseTaskView) ->
 			@$el.hammer().on( "tap", ".action", @handleAction )
 		afterRender: ->
 			classNameMap = {
-				"icon-schedule-act": "icon-clock-alt"
-				"icon-todo-act": "icon-todo"
-				"icon-checkmark-act": "icon-checkmark-alt"
+				"icon-clock": "icon-clock"
+				"icon-todo": "icon-todo"
+				"icon-checkmark": "icon-checkmark"
 			}
 
 			for key, val of classNameMap
