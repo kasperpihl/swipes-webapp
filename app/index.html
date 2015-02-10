@@ -42,7 +42,9 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 	<![endif]-->
 
 	<div class="container">
-
+		<a class="open-sidebar" href="JavaScript:void(0);" tabindex="5" title="Open sidebar">
+			<span></span>
+		</a>
 		<aside class="sidebar">
 			<a href="JavaScript:void(0);" title="Close sidebar" class="close-sidebar icon-cross"></a>
 
@@ -64,53 +66,49 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 			<a class="log-out" href="http://swipesapp.com/app"><span class="icon-log-out"></span></a>
 			<a class="settings" href="#settings"><span class="icon-cog"></span></a>
 		</aside>
+		<div class="scroll-container">
+			<div id="main" role="main">
 
-		<div id="main" role="main">
-			<a class="open-sidebar" href="JavaScript:void(0);" tabindex="5" title="Open sidebar">
-				<span></span>
-			</a>
+				<header class="add-new row">
+					<form id="add-task">
+						<input type="text" tabindex="1" placeholder="Add a task" class="borderless" autocomplete>
+					</form>
+				</header>
 
+				<nav class="row">
+					<ul class="list-nav">
+						<li><a tabindex="2" class="schedule" href="#list/scheduled"><span class="sr-only">Schedule</span></a></li>
+						<li><a tabindex="3" class="todo" href="#list/todo"><span class="sr-only">Todo</span></a></li>
+						<li><a tabindex="4" class="checkmark" href="#list/completed"><span class="sr-only">Completed</span></a></li>
+					</ul>
+				</nav>
 
-
-			<header class="add-new row">
-				<form id="add-task">
-					<input type="text" tabindex="1" placeholder="Add a task" class="borderless" autocomplete>
-				</form>
-			</header>
-
-			<nav class="row">
-				<ul class="list-nav">
-					<li><a tabindex="2" class="schedule" href="#list/scheduled"><span class="sr-only">Schedule</span></a></li>
-					<li><a tabindex="3" class="todo" href="#list/todo"><span class="sr-only">Todo</span></a></li>
-					<li><a tabindex="4" class="checkmark" href="#list/completed"><span class="sr-only">Completed</span></a></li>
-				</ul>
-			</nav>
-
-			<section id="main-content" class="row">
-				<ol class="todo-list hidden scheduled"></ol>
-				<ol class="todo-list hidden todo"></ol>
-				<ol class="todo-list hidden completed"></ol>
+				<section id="main-content" class="row">
+					<ol class="todo-list hidden scheduled"></ol>
+					<ol class="todo-list hidden todo"></ol>
+					<ol class="todo-list hidden completed"></ol>
 
 
-				<ul class="action-bar fadeout">
-					<li><a href="JavaScript:void(0);" class="edit" title="Edit"><span class="icon-pencil"></span></a></li>
-					<li><a href="JavaScript:void(0);" class="tags" title="Set tags"><span class="icon-tags"></span></a></li>
-					<li><a href="JavaScript:void(0);" class="delete" title="Delete"><span class="icon-trashcan"></span></a></li>
-					<li><a href="JavaScript:void(0);" class="share" title="Share"><span class="icon-share"></span></a></li>
-				</ul>
+					<ul class="action-bar fadeout">
+						<li><a href="JavaScript:void(0);" class="edit" title="Edit"><span class="icon-pencil"></span></a></li>
+						<li><a href="JavaScript:void(0);" class="tags" title="Set tags"><span class="icon-tags"></span></a></li>
+						<li><a href="JavaScript:void(0);" class="delete" title="Delete"><span class="icon-trashcan"></span></a></li>
+						<li><a href="JavaScript:void(0);" class="share" title="Share"><span class="icon-share"></span></a></li>
+					</ul>
 
-				<div class="list-fade hidden-xs"></div>
+					<div class="list-fade hidden-xs"></div>
 
-			</section>
+				</section>
 
-			<div class="load-indicator">
-				<div class="spinner">
-					<div class="bounce1"></div>
-					<div class="bounce2"></div>
-					<div class="bounce3"></div>
+				<div class="load-indicator">
+					<div class="spinner">
+						<div class="bounce1"></div>
+						<div class="bounce2"></div>
+						<div class="bounce3"></div>
+					</div>
 				</div>
 			</div>
-		</div>
+		</div><!-- .scroll-container -->
 	</div>
 
 	<!-- build:js scripts/main.js -->

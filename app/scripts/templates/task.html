@@ -85,11 +85,11 @@
 </div>
 <div class="actions">
 	<div>
-
+	<% if (state === "completed" || state === "active"){ %>
 		<a href="JavaScript:void(0);" class="schedule-button" title="Schedule todo">
 			<span class="icon-clock"></span>
 		</a>
-	<% if (state === "completed" || state === "scheduled"){ %>
+	<% } if (state === "completed" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="todo-button" title="Move task to todo list">
 			<span class="icon-todo-bold"></span>
 		</a>

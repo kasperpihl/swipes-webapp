@@ -107,6 +107,16 @@ $border-width: 1px;
 .tasks > li:last-child .todo-content:after { content: none; }
 
 // action buttons
+.sidebar-open{
+	.todo-list{
+		.actions{
+			a:first-child{
+				margin-left:0px;
+				@include breakpoint(tablet) { margin-left: 0px; }
+			}
+		}
+	}
+}
 .todo-list {
 	.actions{
 		$button-size: 30px;
@@ -119,7 +129,8 @@ $border-width: 1px;
 		left:0;
 		margin-top:-$button-size/2;
 		a:first-child{
-			margin-left:30px;
+			margin-left:0px;
+			@include breakpoint(tablet) { margin-left: 30px; }
 		}
 		a{
 			&:hover{
@@ -130,7 +141,8 @@ $border-width: 1px;
 			font-size: $icon-size;
 			line-height: 1;
 			float:left;
-			margin-right:10px;
+			margin-right:5px;
+			@include breakpoint(tablet) { margin-right: 10px; }
 			height:$button-size;
 			width: $button-size;
 			border-radius: $button-size/2;
