@@ -13,7 +13,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@setTemplate()
 			@init()
 			@render()
-
+			
 			@bindEvents()
 		bindEvents: ->
 			# Bind all events manually, so events extending me can use the
@@ -21,7 +21,7 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@$el.on( "click", ".todo-content", @toggleSelected )
 			@$el.on( "click", ".priority", @togglePriority )
 			@$el.on( "dblclick", ".todo-content", @edit )
-			@$el.on( "click", ".action", @handleAction )
+			@$el.on( "click", ".actions a", @handleAction )
 		setTemplate: ->
 			@template = _.template TaskTmpl
 		setBounds: ->
@@ -37,11 +37,11 @@ define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.h
 			@model.togglePriority()
 		handleAction: (e) ->
 			# Actual trigger logic
-			if $( e.currentTarget ).hasClass "schedule"
+			if $( e.currentTarget ).hasClass "schedule-button"
 				Backbone.trigger( "schedule-task", @model )
-			else if $( e.currentTarget ).hasClass "complete"
+			else if $( e.currentTarget ).hasClass "complete-button"
 				Backbone.trigger( "complete-task", @model )
-			else if $( e.currentTarget ).hasClass "todo"
+			else if $( e.currentTarget ).hasClass "todo-button"
 				Backbone.trigger( "todo-task", @model )
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )

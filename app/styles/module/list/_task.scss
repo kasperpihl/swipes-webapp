@@ -1,6 +1,6 @@
 $list-item-height: 65px;
 $list-item-height-lg: 85px;
-
+$border-width: 1px;
 // General task styling
 .todo-list {
 	-webkit-touch-callout: none;
@@ -16,9 +16,8 @@ $list-item-height-lg: 85px;
 		@include ellipsis();
 
 		font-family: $font-light;
-		font-weight: lighter;
-		font-size: 1.5em;
-		@include breakpoint(min-height, $breakheight) { font-size: 1.85em; }
+		font-size: 1.6em;
+		//@include breakpoint(min-height, $breakheight) { font-size: 1.85em; }
 		margin: 0 0 .2em;
 	}
 
@@ -109,6 +108,60 @@ $list-item-height-lg: 85px;
 
 // action buttons
 .todo-list {
+	.actions{
+		$button-size: 30px;
+		display:block;
+		opacity:0;
+		//@include transition(opacity 0.1s ease-in);
+		position:absolute;
+		height:$button-size;
+		top: 50%;
+		left:0;
+		margin-top:-$button-size/2;
+		a:first-child{
+			margin-left:30px;
+		}
+		a{
+			&:hover{
+				text-decoration:none;
+			}
+			text-align:center;
+			$icon-size: 16px;
+			font-size: $icon-size;
+			line-height: 1;
+			float:left;
+			margin-right:10px;
+			height:$button-size;
+			width: $button-size;
+			border-radius: $button-size/2;
+			border: $border-width solid $gray;
+			padding-top:($button-size - $icon-size)/2-$border-width;
+			&.schedule-button{
+				color: $red;
+				border-color: $red;
+			}
+			&.todo-button{
+				color: $yellow;
+				border-color: $yellow;
+			}
+			&.complete-button{
+				color: $green;
+				border-color: $green;
+			}
+			&.schedule-button:hover{
+				background-color:$red;
+				color:white;
+			}
+			&.todo-button:hover{
+				background-color:$yellow;
+				color:white;
+			}
+			&.complete-button:hover{
+				background-color:$green;
+				color:white;
+			}
+		}
+	}
 	.action {
 		position: absolute;
 		display: block;
@@ -135,9 +188,6 @@ $list-item-height-lg: 85px;
 			@include transition(opacity 0.1s ease-out);
 		}
 
-		&:hover {
-			span { opacity: 1; }
-		}
 		&.right{
 			right: 0;
 		}
@@ -157,23 +207,18 @@ $list-item-height-lg: 85px;
 		@include transition(all 0.2s ease-out);
 		@include box-shadow(0 0 30px #ddd);
 	}
-
-	.hover-left {
-
+	.hover {
+		
+		.actions{
+			opacity: 1.0;
+			@include transition(opacity 0.2s ease-out);
+		}
 		.todo-content {
 			//left: $list-item-height;
 			//@include breakpoint(min-height, $breakheight) { left: 95px; }
 		}
 		//.action.complete { background: $green; }
 		//.action.todo { background: $yellow; }
-	}
-
-	.hover-right {
-		.todo-content {
-			//right: $list-item-height;
-			//@include breakpoint(min-height, $breakheight) { right: 95px; }
-		}
-		//.action.schedule { background: $lobster; }
 	}
 }
 

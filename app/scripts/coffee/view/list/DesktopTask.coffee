@@ -5,33 +5,36 @@ define ["underscore", "js/view/list/BaseTask"], (_, BaseTaskView) ->
 			"mouseleave": "stopTrackingMouse"
 		init: ->
 			@throttledOnMouseMove = _.throttle( @onMouseMove, 250 )
+			@bouncedHover = _.debounce(@onHoverTask, 150)
+			_.bindAll( @, "setBounds", "onHoverTask", "onUnhoverTask", "bouncedHover" )
 
-			_.bindAll( @, "setBounds", "onMouseMove", "throttledOnMouseMove", "onHoverComplete", "onHoverSchedule", "onUnhoverComplete", "onUnhoverSchedule" )
-
-			@listenTo( Backbone, "hover-complete", @onHoverComplete )
-			@listenTo( Backbone, "hover-schedule", @onHoverSchedule )
-			@listenTo( Backbone, "unhover-complete", @onUnhoverComplete )
-			@listenTo( Backbone, "unhover-schedule", @onUnhoverSchedule )
+			@listenTo( Backbone, "hover-task", @onHoverTask )
+			@listenTo( Backbone, "unhover-task", @onUnhoverTask )
 
 		getMousePos: (mouseX) ->
 			if !@bounds then @setBounds()
 			Math.round ( ( mouseX - @bounds.left ) / @bounds.width ) * 100
 		trackMouse: ->
-			@allowThrottledMoveHandler = yes
-			@$el.on( "mousemove", @throttledOnMouseMove )
+			@isHovering = true
+			@bouncedHover()
+			#@allowThrottledMoveHandler = yes
+			#@$el.on( "mousemove", @throttledOnMouseMove )
 		stopTrackingMouse: ->
-			@$el.off "mousemove"
+			@isHovering = false
+			@onUnhoverTask( @cid )
+			###@$el.off "mousemove"
 			@isHoveringComplete = @isHoveringSchedule = false
 
 			# Because mouse-move is throttled, we need to catch that throttled function
 			@allowThrottledMoveHandler = no
 
 			Backbone.trigger( "unhover-complete", @.cid )
-			Backbone.trigger( "unhover-schedule", @.cid )
-		onMouseMove: (e) ->
+			Backbone.trigger( "unhover-schedule", @.cid )###
+		###onMouseMove: (e) ->
 			return unless @allowThrottledMoveHandler
 			@determineUserIntent @getMousePos e.pageX
 		determineUserIntent: (mousePos) ->
+			console.log mousePos
 			if mousePos <= 15 and not @isHoveringComplete
 				Backbone.trigger( "hover-complete", @.cid )
 				@isHoveringComplete = true
@@ -47,22 +50,18 @@ define ["underscore", "js/view/list/BaseTask"], (_, BaseTaskView) ->
 			else if mousePos < 85 and @isHoveringSchedule
 				Backbone.trigger( "unhover-schedule", @.cid )
 				@isHoveringSchedule = false
+		###
+		onHoverTask: (target) ->
+			if @isHovering
+				@$el.addClass "hover"
+			#if @model.get( "selected" ) or target is @cid
+				
 
-		onHoverComplete: (target) ->
-			if @model.get( "selected" ) or target is @cid
-				@$el.addClass "hover-left"
+		onUnhoverTask: (target) ->
+			@$el.removeClass "hover"
+			#if @model.get( "selected" ) or target is @cid
+				
 
-		onHoverSchedule: (target) ->
-			if @model.get( "selected" ) or target is @cid
-				@$el.addClass "hover-right"
-
-		onUnhoverComplete: (target) ->
-			if @model.get( "selected" ) or target is @cid
-				@$el.removeClass "hover-left"
-
-		onUnhoverSchedule: (target) ->
-			if @model.get( "selected" ) or target is @cid
-				@$el.removeClass "hover-right"
 
 		render: ->
 			if @model.get "animateIn"
