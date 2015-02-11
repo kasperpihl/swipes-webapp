@@ -121,14 +121,25 @@ define [
 					saveToShift = @holdModifier isnt "shift"
 					@setLastIndex( index, saveToShift )
 					@selectedModels([task])
-					topY = foundView.$el.offset().top
-					height = window.innerHeight
-					bottomPadding = 200
-					targetY = topY - height + bottomPadding
-					if targetY < 0 and window.screenY > 0
+					scrollableView = $("#scrollcont")
+					mainContentView = $('#main-content')
+
+					contentY = mainContentView.position().top
+					itemY = foundView.$el.position().top
+					sectionY = foundView.$el.closest(".divider").position().top
+					totalItemY = contentY+sectionY+itemY
+					#console.log task.get("title")
+					height = scrollableView.height()
+					totalContentHeight = mainContentView.height() + mainContentView.offset().top
+					padding = 150
+
+					#console.log foundView.$el.position()
+					targetY = totalItemY - height + padding
+					#console.log targetY
+					if targetY < 0 and scrollableView.scrollTop() > 0
 						targetY = 0
 					if targetY >= 0
-						TweenLite.set( window, { scrollTo: targetY } )
+						TweenLite.set( scrollableView, { scrollTo: targetY } )
 		clearLongPress: ->
 			@didHitALongPress = false
 			@currentLongPressKey = null

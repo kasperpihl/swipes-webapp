@@ -1,7 +1,9 @@
 html{
 	height:100%;
+	overflow: hidden;
 	body{
 		height:100%;
+		overflow: hidden;
 	}
 }
 html.touch body {
@@ -14,12 +16,13 @@ html.touch body {
 	margin-right:0px;
 }
 #main-content{
-	padding-bottom:3em;
+	padding-bottom:5em;
 }
 .container {
 	margin: auto;
 	padding: 0;
 	max-width: none;
+	overflow:hidden;
 	height:100%;
 	width:100%;
 	.scroll-container{

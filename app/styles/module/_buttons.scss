@@ -63,7 +63,7 @@ nav.centered-buttons {
 		&:before {
 			content: "";
 			@include background-image( linear-gradient( rgba(white, 0), white 35% ) );
-			position: fixed;
+			position: absolute;
 			bottom: 0; left: 0; right: 0;
 			height: emCalc(90px);
 		}
