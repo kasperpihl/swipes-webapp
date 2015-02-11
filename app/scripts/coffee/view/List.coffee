@@ -150,7 +150,7 @@ define [
 				@deselectAllTasksButTasks([])
 			if e.keyCode is 32
 				$("#add-task input").focus()
-				TweenLite.set( window, { scrollTo: 0 } )
+				TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
 			if e.keyCode is 13
 				@openSelectedTask()
 			if e.keyCode is 49 and Backbone.history.fragment isnt "list/scheduled"

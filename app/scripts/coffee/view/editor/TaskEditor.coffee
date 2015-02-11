@@ -100,7 +100,7 @@ define ["underscore", "backbone", "text!templates/task-editor.html", "text!templ
 				$(".add-step input").blur()
 			if e.keyCode is 32 and !$("input").is(":focus")
 				$(".add-step input").focus()
-				TweenLite.set( window, { scrollTo: 0 } )
+				TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
 				e.preventDefault()
 			if e.keyCode is 27
 				if $(".add-step input").is(":focus")
