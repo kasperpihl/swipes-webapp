@@ -1,4 +1,4 @@
-define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-hammerjs"], ($, ListSortModel, TweenLite, Draggable) ->
+define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-hammerjs"], (_, $, ListSortModel, TweenLite, Draggable) ->
 	class ListSortController
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )
@@ -46,7 +46,7 @@ define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-ha
 			self = @
 
 			dragOpts =
-				type: "y"
+				type: "top"
 				bounds: @model.container
 
 				# Throwing / Dragging
@@ -56,7 +56,8 @@ define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-ha
 				throwResistance: 3000
 				snap: y: (endValue) ->
 					# Snap to closest row
-					return Math.max( @minY, Math.min( @maxY, Math.round( endValue / self.model.rowHeight ) * self.model.rowHeight ) )
+					result = Math.max( @minY, Math.min( @maxY, Math.round( endValue / self.model.rowHeight ) * self.model.rowHeight ) )
+					return result
 
 				# Handlers
 				onDragStartParams: [view, @model.views]
@@ -84,7 +85,8 @@ define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-ha
 			view.$el.off( "click", ".todo-content", view.toggleSelected )
 			view.$el.addClass "dragging"
 		onDrag: (view, model) ->
-			model.reorderRows( view, @y )
+			model.reorderRows( view, @y+$("#scrollcont").scrollTop() )
+			#console.log @minY + "-" + @maxY + " : " + @y + " : " + @pointerY
 			model.scrollWindow( @minY, @maxY, @y, @pointerY )
 		onDragEnd: (view, model, self) ->
 			model.reorderRows( view, @endY )
@@ -96,7 +98,8 @@ define ["jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-ha
 				, 500
 		reorderView: (model, newOrder, animate = yes) ->
 			dur = if animate then 0.3 else 0
-			TweenLite.to( @el, dur, { y: newOrder * @$el.height() } )
+			newY = newOrder * @$el.height()
+			TweenLite.to( @$el, dur, { y: newY } )
 		killDraggable: (removeCSS) ->
 			if @draggable?
 				@draggable.disable()

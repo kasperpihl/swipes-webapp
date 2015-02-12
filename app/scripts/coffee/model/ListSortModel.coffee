@@ -12,9 +12,10 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 		init: ->
 			@rows = @getRows()
 			@setBounds()
-
-			debouncedSetBounds = _.debounce( @setBounds, 300 )
-			$(window).on( "resize.sortmodel scroll.sortmodel", => debouncedSetBounds() )
+			_.bindAll( @, "scrolled")
+			@debouncedSetBounds = _.debounce( @setBounds, 300 )
+			$('#scrollcont').on('scroll.sortmodel', @scrolled )
+			$(window).on( "resize.sortmodel", => debouncedSetBounds() )
 
 			@currRowHeight = if window.innerHeight < ListSortModel.HEIGHT_BREAKPOINT then "small" else "big"
 			$(window).on "resize.sortmodel", =>
@@ -26,6 +27,8 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 					Backbone.trigger "redraw-sortable-list"
 
 			@active = yes
+		scrolled: (e) ->
+			@debouncedSetBounds()
 		getRows: ->
 			@rowHeight = @views[0].$el.height()
 			rows = ( i * @rowHeight for view, i in @views )
@@ -36,8 +39,8 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 			bounds = @container[0].getClientRects()[0]? or { top: 0 }
 
 			@bounds =
-				top: window.pageYOffset
-				bottom: window.innerHeight + window.pageYOffset
+				top: $('#scrollcont').scrollTop()
+				bottom: $('#scrollcont').height() + $('#scrollcont').scrollTop()
 
 		getViewAtPos: (order) ->
 			return view for view in @views when view.model.get( "order" ) is order
@@ -70,7 +73,6 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 		reorderRows: (view, yPos) ->
 			newOrder = @getOrderFromPos yPos
 			oldOrder = view.model.get "order"
-
 			return if newOrder is oldOrder
 
 			if newOrder < oldOrder
@@ -87,13 +89,14 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 		scrollWindow: (minY, maxY, y, pointerY) ->
 			amount = minAmount = 20
 			maxAmount = 100
-			trigger = window.innerHeight * 0.3
-
+			$scrollEl = $('#scrollcont')
+			extraHeight = $("#main-content").position().top
+			viewHeight = $scrollEl.height()
+			trigger = viewHeight * 0.3
 
 			if @oldTaskY
 				delta = Math.abs @oldTaskY - y
 				amount = delta
-
 				# If user dragged thingy to the bottom/top of the screen and just want to auto-scroll fast.
 				if delta < minAmount
 					distToTop = pointerY - @bounds.top
@@ -110,17 +113,20 @@ define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
 
 
 				amount = Math.max( 5, Math.min( maxAmount, amount ) )
-
+				#console.log amount
 			if pointerY - trigger < @bounds.top
-				newScroll = window.pageYOffset - amount
+				newScroll = $scrollEl.scrollTop() - amount
 
 			else if pointerY + trigger > @bounds.bottom
-				newScroll = window.pageYOffset + amount
-
+				newScroll = $scrollEl.scrollTop() + amount
+			#console.log( "oldY: " + @oldTaskY + " new: " + y) 
+			#console.log("c: " + $scrollEl.scrollTop() + " n: " + newScroll)
+			TweenLite.set( $scrollEl, { scrollTo: newScroll } )
 			TweenLite.set( window, { scrollTo: newScroll } )
 
 			@oldTaskY = y
-
+			@setBounds()
 		destroy: ->
+			$('#scrollcont').off(".sortmodel")
 			$(window).off(".sortmodel")
 			@active = no
