@@ -8,6 +8,6 @@ input.borderless, textarea.borderless {
 
 input, textarea {
 	@include input-placeholder {
-		color: $gray-light;
+		color: $nav-gray;
 	}
 }

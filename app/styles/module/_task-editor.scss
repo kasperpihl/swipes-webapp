@@ -18,8 +18,11 @@
 	    color:    $placeholder-color;
 	}
 	.title {
+		input{
+			font-family: $font-light;
+		}
 		position: relative;
-		font-size: emCalc(20px);
+		font-size: emCalc(40px);
 		padding-left: $padding;
 
 		margin-bottom: emCalc(12px);
@@ -48,7 +51,7 @@
 		}
 
 		> section {
-			margin-bottom: 1em;
+			margin-bottom: 0.8em;
 
 			@include breakpoint(tablet) {
 				margin-bottom: emCalc(36px);

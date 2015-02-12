@@ -20,6 +20,7 @@ $priority-big-size: 16px;
 // Grays
 // -------------------------
 $gray:            		#24282E;
+$nav-gray:				#9E9E9E;
 $gray-light:            #ededee !default;
 
 // Brand colors
@@ -150,7 +151,7 @@ $input-border:                   #ccc !default;
 $input-border-radius:            $border-radius-base !default;
 $input-border-focus:             #66afe9 !default;
 
-$input-color-placeholder:        $gray-light !default;
+$input-color-placeholder:        $nav-gray !default;
 
 $input-height-base:              ($line-height-computed + ($padding-base-vertical * 2) + 2) !default;
 $input-height-large:             (floor($font-size-large * $line-height-large) + ($padding-large-vertical * 2) + 2) !default;

@@ -1,6 +1,9 @@
 .priority {
 	$size: $priority-size;
 	$big-size: $priority-big-size;
+	$biggerSize: $size + 6;
+	$biggerBig-size: $big-size + 6;
+
 	$border-size: 4px;
 
 	// Normalize size independent of container
@@ -10,14 +13,30 @@
 
 	width: $size;
 	height: $size;
-
 	border-radius: $size;
+	&.bigger{
+		width: $biggerSize;
+		height: $biggerSize;
+		border-radius: $biggerSize;
+	}
 	left: 0; top: 50%;
 	cursor: pointer;
 
 	background: $yellow;
+	&.bigger{
+		&:after{
+			$bigger-inner-size: 22px;
+			margin-top: 0 - ($bigger-inner-size / 2);
+			margin-left: 0 - ($bigger-inner-size / 2);
+			width: $bigger-inner-size;
+			height: $bigger-inner-size;
+			border-radius: $bigger-inner-size;
+		}
+	}	
 	&:after {
 		$inner-size: 18px;
+		
+
 		position: absolute;
 		display: none;
 		left: 50%; top: 50%;
@@ -26,6 +45,8 @@
 		width: $inner-size;
 		height: $inner-size;
 		border-radius: $inner-size;
+
+		
 		background: $yellow;
 		border: $border-size solid white;
 		content: "";
@@ -39,17 +60,23 @@
 		background: $green;
 		&:after { background: $green; }
 	}
-
+	$big-size: 22px;
 	.is-priority & {
-		$big-size: 22px;
+
 		width: $big-size;
 		height: $big-size;
 		left: -5px;
 		margin-top: -11px;
-
 		border-radius: $big-size;
+		$big-size:26px;
+		&.bigger{
+			width: $big-size;
+			height: $big-size;
+			border-radius: $big-size;
+		}
+		&:after { display: block; 
 
-		&:after { display: block; }
+		}
 	}
 
 	@include box-sizing(content-box);

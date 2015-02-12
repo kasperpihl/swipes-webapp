@@ -85,6 +85,7 @@ $font_name: 'swipes';
 .icon-checkmark:before { @include icon("\e602"); }
 .icon-checkmark-bold:before { @include icon("\e660"); }
 .icon-clock:before { @include icon("\e604"); }
+.icon-clock-bold:before { @include icon("\e699"); }
 
 
 .icon-snooze-unspecified:before { @include icon("\e612"); }

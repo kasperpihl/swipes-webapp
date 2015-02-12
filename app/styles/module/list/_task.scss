@@ -65,7 +65,7 @@ $border-width: 1px;
 		.tags {
 			margin: 0;
 			padding: 0;
-			font-family: $font-bold;
+			font-family: $font-normal;
 
 			li {
 				strong {
@@ -151,10 +151,15 @@ $border-width: 1px;
 			&.schedule-button{
 				color: $red;
 				border-color: $red;
+				font-size: $icon-size+4;
+				padding-top:($button-size - ($icon-size+4))/2-$border-width;
+				padding-left:1px;
 			}
 			&.todo-button{
 				color: $yellow;
 				border-color: $yellow;
+				font-size: $icon-size+2;
+				padding-top:($button-size - ($icon-size+2))/2-$border-width;
 			}
 			&.complete-button{
 				color: $green;

@@ -3,9 +3,9 @@
 	list-style: none;
 	margin: 0 auto;
 	padding: 0;
-
-	width: emCalc(180px);
-	@include breakpoint(min-width, emCalc(700px)) { width: emCalc(180px); }
+	margin-bottom: 0.5em;
+	width: 18em;
+	//@include breakpoint(min-width, emCalc(700px)) { width: emCalc(220px); }
 
 
 	body.edit-mode & {
@@ -24,8 +24,8 @@
 	}
 
 	a {
-		color: $gray;
-		font-size: 1.2em;
+		color: $nav-gray;
+		font-size: 1.4em;
 		line-height: 1;
 		//@include breakpoint(min-width, emCalc(700px)) { font-size: 1.9em; }
 		@include transition(color 0.15s ease-out);
@@ -33,9 +33,9 @@
 		&:focus, &:hover {
 			text-decoration: none;
 			outline: none;
-			&.schedule { @extend .icon-clock; }
-			&.todo { @extend .icon-todo; }
-			&.checkmark { @extend .icon-checkmark; }
+			&.schedule { color: $lobster; }
+			&.todo { color: $yellow; }
+			&.checkmark { color: $green; }
 		}
 	}
 
@@ -48,20 +48,14 @@
 
 	.schedule.active {
 		color: $lobster;
-		@extend .icon-clock;
-		&:focus { @extend .icon-clock; }
 		// TODO: Fix the hover things here
 	}
 
 	.todo.active {
 		color: $yellow;
-		@extend .icon-todo;
-		&:focus { @extend .icon-todo; }
 	}
 
 	.checkmark.active {
 		color: $green;
-		@extend .icon-checkmark;
-		&:focus { @extend .icon-checkmark; }
 	}
 }
