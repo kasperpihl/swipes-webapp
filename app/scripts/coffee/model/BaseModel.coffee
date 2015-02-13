@@ -9,7 +9,7 @@ define ["js/utility/Utility"], ( Utility ) ->
 				attributes.tempId = util.generateId 12
 			Backbone.Model.apply @, arguments
 		deleteObj: ->
-			@save "deleted", yes, { sync: true }
+			@save "deleted", yes, { silent:true, sync: true }
 		handleForSync: ( key, val, options ) ->
 			attrs = {}
 			if key is null or typeof key is 'object'
@@ -18,6 +18,7 @@ define ["js/utility/Utility"], ( Utility ) ->
 			else 
 				attrs[ key ] = val
 			if options and options.sync
+				console.log "syncing"
 				swipy.sync.handleModelForSync( @, attrs )
 				return true
 			return false
@@ -25,8 +26,14 @@ define ["js/utility/Utility"], ( Utility ) ->
 			command = "update"
 			if @isNew()
 				command = "create"
+			if @get "deleted"
+				command = "delete"
 			Backbone.sync(command, @)
-			console.log "syncing" + @className
+			if command is "delete"
+				if @className is "ToDo"
+					swipy.todos.remove(@)
+				else if @className is "Tag"
+					swipy.tags.remove(@)
 		toServerJSON: ( attrList ) ->
 			if !@attrWhitelist
 				return console.log "please add attrWhiteList in model for sync support"

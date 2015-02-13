@@ -7,10 +7,9 @@ define ["js/model/BaseModel"], (BaseModel) ->
 		save: ->
 			shouldSync = BaseModel.prototype.handleForSync.apply @ , arguments
 			Backbone.Model.prototype.save.apply @ , arguments
-			console.log "saving tag"
 			if shouldSync
-				console.log "syncing tag"
 				BaseModel.prototype.doSync.apply @ , []
 		updateFromServerObj: ( obj ) ->
 			BaseModel.prototype.updateFromServerObj.apply @, arguments
 			@save "title", obj.title if obj.title?
+			BaseModel.prototype.doSync.apply( @ )

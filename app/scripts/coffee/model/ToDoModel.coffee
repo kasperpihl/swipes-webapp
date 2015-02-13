@@ -79,9 +79,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 			#@addSubtask newSubtask
 		deleteObj: ->
-			BaseModel.prototype.deleteObj.apply @ , arguments
 			for subtask in @getOrderedSubtasks()
 				subtask.deleteObj()
+			BaseModel.prototype.deleteObj.apply @ , arguments
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
 			# because null should be an allowed without triggering any logic, as null is used for
@@ -422,6 +422,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					val = @handleDateFromServer val
 				@set attribute, val if val isnt @get(attribute)
 			@save()
+			BaseModel.prototype.doSync.apply( @ )
 			false
 
 		handleTagsFromServer: ( tags ) ->
