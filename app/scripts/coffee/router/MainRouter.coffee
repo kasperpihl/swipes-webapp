@@ -22,7 +22,6 @@ define [], () ->
 
 			swipy.analytics.pushScreen eventName
 		on_keypress: (e) ->
-			console.log e
 		edit: (taskId) ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )

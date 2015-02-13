@@ -16,7 +16,6 @@ define ["underscore", "js/view/TaskInput"], (_, TaskInputView ) ->
 					if !tag?
 						tag = swipy.tags.create( title: tagName )
 						tag.save({}, {sync:true})
-						console.log tag
 
 					tags.push tag
 

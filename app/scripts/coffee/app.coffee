@@ -50,7 +50,7 @@ define [
 				@init()
 			else
 				Backbone.once( "sync-complete", @init, @ )
-				@sync.sync()
+			@sync.sync()
 		isBusy: ->
 			# Are any todos being saved right now?
 			if @todos.length?

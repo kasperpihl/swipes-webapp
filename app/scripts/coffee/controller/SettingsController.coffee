@@ -12,7 +12,6 @@ define ["underscore", "js/model/SettingsModel"], (_, SettingsModel) ->
 
 			_.bindAll( @, "get", "set", "unset" )
 		clickedSupport: ->
-			console.log "clicked"
 			false
 		get: ->
 			@model.get arguments...

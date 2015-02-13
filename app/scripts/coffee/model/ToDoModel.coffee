@@ -181,8 +181,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				return fullStr
 		syncTags: (tags) ->
-			if @id is "xFzJwHKGeFQnS"
-				console.log @id + " : " + tags.length
 			###replacementTags = []
 			replace = false
 			for tag in tags

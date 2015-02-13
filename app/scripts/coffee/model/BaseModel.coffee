@@ -18,7 +18,6 @@ define ["js/utility/Utility"], ( Utility ) ->
 			else 
 				attrs[ key ] = val
 			if options and options.sync
-				console.log "syncing"
 				swipy.sync.handleModelForSync( @, attrs )
 				return true
 			return false

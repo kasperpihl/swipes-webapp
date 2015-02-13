@@ -53,6 +53,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					@changedAttributes.moveTempChangesForModel model
 					collection.add model
 					newModels.push model
+					model.doSync()
 				else
 					recentChanges = @changedAttributes.getChangesForModel model
 					model.updateFromServerObj obj, recentChanges
@@ -119,7 +120,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 
 		sync: ->
-			return
 			return @needSync = true if @isSyncing
 			@isSyncing = true
 			url = if liveEnvironment then "http://api.swipesapp.com/v1/sync" else "http://api.swipesapp.com/v1/sync" #"http://localhost:5000/v1/sync"
