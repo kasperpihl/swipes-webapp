@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "gsap-draggable", "slider-control", "momentjs"], (_, Backbone, Draggable, SliderControl) ->
+define ["underscore", "gsap-draggable", "slider-control", "momentjs"], (_, Draggable, SliderControl) ->
 	Backbone.View.extend
 		tagName: "div"
 		className: "range-slider lobster"

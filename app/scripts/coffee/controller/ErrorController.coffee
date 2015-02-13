@@ -1,4 +1,4 @@
-define ["underscore", "backbone"], (_, Backbone) ->
+define ["underscore"], (_) ->
 	class ErrorController
 		constructor: ->
 			Backbone.on( "throw-error", @throwError, @ )

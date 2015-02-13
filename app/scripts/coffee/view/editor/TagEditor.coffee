@@ -66,6 +66,7 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 				newTag = swipy.tags.create 
 					title : tagName
 				tags.push newTag
+				newTag.save({}, {sync:true})
 				swipy.analytics.sendEvent("Tags", "Added", "Edit Task", newTag.length )
 				swipy.analytics.sendEventToIntercom( "Added Tag", { "From": "Edit Task", "Length": newTag.length })
 

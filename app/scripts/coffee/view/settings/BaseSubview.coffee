@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "gsap"], (_, Backbone, TweenLite) ->
+define ["gsap"], (TweenLite) ->
 	Backbone.View.extend
 		tagName: "article"
 		initialize: ->

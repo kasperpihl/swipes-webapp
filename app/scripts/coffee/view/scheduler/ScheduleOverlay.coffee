@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "js/view/Overlay", "text!templates/schedule-overlay.html"], (_, Backbone, Overlay, ScheduleOverlayTmpl) ->
+define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html"], (_, Overlay, ScheduleOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay scheduler'
 		events:

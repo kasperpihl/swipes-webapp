@@ -1,4 +1,4 @@
-define ['backbone'], (Backbone) ->
+define [], () ->
 	MainRouter = Backbone.Router.extend
 		routes:
 			"settings/:id": "settings"

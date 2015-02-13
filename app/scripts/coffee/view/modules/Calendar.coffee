@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "clndr"], (_, Backbone, CalendarTmpl) ->
+define ["underscore", "text!templates/calendar.html", "momentjs", "clndr"], (_, CalendarTmpl) ->
 	Backbone.View.extend
 		tagName: "div"
 		className: "calendar-wrap"
@@ -76,6 +76,7 @@ define ["underscore", "backbone", "text!templates/calendar.html", "momentjs", "c
 			else
 				@model.set( "time", @getTimeObj @selectedDay )
 				@model.set( "timeEditedBy", "calendar" )
+			@model.save()
 		handleClickDay: (day) ->
 			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )

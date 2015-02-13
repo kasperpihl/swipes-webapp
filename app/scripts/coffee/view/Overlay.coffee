@@ -1,4 +1,4 @@
-define ["backbone"], (Backbone) ->
+define [], () ->
 	Backbone.View.extend
 		tagName: 'article'
 		className: 'overlay'

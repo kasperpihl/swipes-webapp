@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/model/TaskSortModel" ,  "js/view/editor/TagEditor", "gsap-scroll", "gsap"], (_, Backbone, TaskEditorTmpl, ActionStepsTmpl, TaskSortModel, TagEditor) ->
+define ["underscore", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/model/TaskSortModel" ,  "js/view/editor/TagEditor", "gsap-scroll", "gsap"], (_, TaskEditorTmpl, ActionStepsTmpl, TaskSortModel, TagEditor) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"

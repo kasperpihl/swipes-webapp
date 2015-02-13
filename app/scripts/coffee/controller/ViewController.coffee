@@ -1,8 +1,7 @@
 define [
 	"underscore"
-	"backbone"
 	"gsap"
-	], (_, Backbone, TweenLite, EditTaskView) ->
+	], (_, TweenLite, EditTaskView) ->
 	class ViewController
 		constructor: (opts) ->
 			@init()

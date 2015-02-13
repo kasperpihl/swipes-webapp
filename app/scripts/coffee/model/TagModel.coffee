@@ -4,9 +4,13 @@ define ["js/model/BaseModel"], (BaseModel) ->
 		idAttribute: "objectId"
 		attrWhitelist: [ "title" ]
 		defaults: { title: "", deleted: no }
-		set: ->
-			BaseModel.prototype.handleForSync.apply( @ , arguments )
-			Backbone.Model.prototype.set.apply( @ , arguments )
+		save: ->
+			shouldSync = BaseModel.prototype.handleForSync.apply @ , arguments
+			Backbone.Model.prototype.save.apply @ , arguments
+			console.log "saving tag"
+			if shouldSync
+				console.log "syncing tag"
+				BaseModel.prototype.doSync.apply @ , []
 		updateFromServerObj: ( obj ) ->
 			BaseModel.prototype.updateFromServerObj.apply @, arguments
-			@set "title", obj.title if obj.title?
+			@save "title", obj.title if obj.title?

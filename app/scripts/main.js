@@ -15,7 +15,7 @@ require.config({
         requirejs: '../bower_components/requirejs/require',
         'sass-bootstrap': '../bower_components/sass-bootstrap/dist/js/bootstrap',
         underscore: '../bower_components/underscore/underscore',
-        'backbone.localStorage': '../bower_components/backbone.localStorage/backbone.localStorage',
+        localStorage: '../bower_components/Backbone.localStorage/backbone.localStorage',
         'greensock-js': 'plugins/greensock-js/src/minified/TweenMax.min',
         gsap: 'plugins/greensock-js/src/uncompressed/TweenMax',
         timelinelite: 'plugins/greensock-js/src/uncompressed/TimelineLite',
@@ -94,6 +94,12 @@ require.config({
             ],
             exports: 'Backbone'
         },
+        localStorage:{
+            deps:[
+                'backbone'
+            ],
+            exports: 'localStorage'
+        },
         underscore: {
             exports: '_'
         },
@@ -130,7 +136,7 @@ require.config({
     }
 });
 
-require(["jquery"], function($) {
+require(["jquery", "backbone"], function($) {
     window.$ = window.jQuery = $;
 
     require(["parse"], function() {
@@ -147,6 +153,7 @@ require(["jquery"], function($) {
 
                 window.swipy = new App();
                 window.debugHelper = new DebugHelper();
+                swipy.start();
             });
         } else {
             location.pathname = "/login/"

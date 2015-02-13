@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "jquery", "plugins/lockablestorage"], (_, Backbone, $) ->
+define ["underscore", "jquery", "plugins/lockablestorage"], (_, $) ->
 	class ChangedAttributesController
 		constructor: ->
 			@localKey = "changedAttributesStore"

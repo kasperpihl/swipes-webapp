@@ -7,7 +7,7 @@
 
 ###
 
-define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesController", "js/view/SyncIndicator"], (_, Backbone, $, ChangedAttributesController, SyncIndicator) ->
+define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js/view/SyncIndicator"], (_, $, ChangedAttributesController, SyncIndicator) ->
 	class SyncController
 
 		constructor: ->
@@ -17,7 +17,9 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 			@isSyncing = false
 			@needSync = false
 			@lastUpdate = null
-			@sync()
+			if typeof(Storage) isnt "undefined"
+				if localStorage.getItem("syncLastUpdate")?
+					@lastUpdate = localStorage.getItem("syncLastUpdate")
 			@bouncedSync = _.debounce( @sync, 3000 )
 			@currentSyncing = null
 			@firstSync = false
@@ -117,6 +119,7 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 
 
 		sync: ->
+			return
 			return @needSync = true if @isSyncing
 			@isSyncing = true
 			url = if liveEnvironment then "http://api.swipesapp.com/v1/sync" else "http://api.swipesapp.com/v1/sync" #"http://localhost:5000/v1/sync"
@@ -164,7 +167,10 @@ define ["underscore", "backbone", "jquery", "js/controller/ChangedAttributesCont
 				@currentSyncing = null
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
-				@lastUpdate = data.updateTime if data.updateTime
+				if data.updateTime
+					@lastUpdate = data.updateTime 
+					if typeof(Storage) isnt "undefined"
+						localStorage.setItem("syncLastUpdate", data.updateTime)
 				if not @firstSync
 					@firstSync = true
 					swipy.analytics.updateIdentity()

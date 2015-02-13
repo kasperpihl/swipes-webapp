@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "jquery", "gsap", "timelinelite"], (_, Backbone, $) ->
+define ["gsap", "timelinelite"], () ->
 	Backbone.View.extend
 		shown: no
 		className: "sync-indicator"

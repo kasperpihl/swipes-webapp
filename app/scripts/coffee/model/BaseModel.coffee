@@ -1,4 +1,4 @@
-define ["js/utility/Utility","backbone"], ( Utility ) ->
+define ["js/utility/Utility"], ( Utility ) ->
 	Backbone.Model.extend
 		className: "BaseModel"
 		defaultAttributes: [ "objectId", "tempId", "deleted" ]
@@ -9,7 +9,7 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 				attributes.tempId = util.generateId 12
 			Backbone.Model.apply @, arguments
 		deleteObj: ->
-			@set "deleted", yes, { sync: true }
+			@save "deleted", yes, { sync: true }
 		handleForSync: ( key, val, options ) ->
 			attrs = {}
 			if key is null or typeof key is 'object'
@@ -19,6 +19,14 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 				attrs[ key ] = val
 			if options and options.sync
 				swipy.sync.handleModelForSync( @, attrs )
+				return true
+			return false
+		doSync: ->
+			command = "update"
+			if @isNew()
+				command = "create"
+			Backbone.sync(command, @)
+			console.log "syncing" + @className
 		toServerJSON: ( attrList ) ->
 			if !@attrWhitelist
 				return console.log "please add attrWhiteList in model for sync support"
@@ -31,5 +39,5 @@ define ["js/utility/Utility","backbone"], ( Utility ) ->
 			json
 
 		updateFromServerObj: ( obj ) ->
-			@set "objectId", obj.objectId if !@id? and obj.objectId isnt @id
-			@set "deleted", obj.deleted if obj.deleted
+			@save "objectId", obj.objectId if !@id? and obj.objectId isnt @id
+			@save "deleted", obj.deleted if obj.deleted

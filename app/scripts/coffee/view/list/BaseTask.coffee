@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "gsap", "timelinelite", "text!templates/task.html"], (_, Backbone, TweenLite, TimelineLite, TaskTmpl) ->
+define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, TweenLite, TimelineLite, TaskTmpl) ->
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->

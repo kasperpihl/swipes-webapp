@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "js/model/ScheduleModel", "momentjs"], (_, Backbone, ScheduleModel) ->
+define ["underscore", "js/model/ScheduleModel", "momentjs"], (_, ScheduleModel) ->
 	class ScheduleController
 		constructor: (opts) ->
 			@init()

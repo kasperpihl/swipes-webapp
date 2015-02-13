@@ -40,11 +40,12 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			origin: null
 			originIdentifier: null
 
-		set: ->
-			BaseModel.prototype.handleForSync.apply @ , arguments
-			Backbone.Model.prototype.set.apply @ , arguments 
+		save: ->
+			shouldSync = BaseModel.prototype.handleForSync.apply @ , arguments
+			Backbone.Model.prototype.save.apply @ , arguments
+			if shouldSync
+				BaseModel.prototype.doSync.apply @ , []
 		constructor: ( attributes ) ->
-
 			if attributes.tags and attributes.tags.length > 0
 				attributes.tags = @handleTagsFromServer attributes.tags
 			BaseModel.apply @, arguments
@@ -57,7 +58,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 						false
 				)
 				if parentModel
-					@set "parent", parentModel
+					@save "parent", parentModel
 					parentModel.addSubtask @
 					
 		addSubtask: ( model ) ->
@@ -65,7 +66,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if !currentSubtasks
 				currentSubtasks = []
 			currentSubtasks.push( model )
-			@set "subtasksLocal", currentSubtasks
+			@save "subtasksLocal", currentSubtasks
 			return @model
 		addNewSubtask: ( title, from ) ->
 			currentSubtasks = @getOrderedSubtasks()
@@ -101,18 +102,20 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 			@on "change:tags", (me, tags) =>
 				if !tags then @updateTags []
-				@syncTags tags
+				if @replaced? and @replaced
+					@replaced = null
+				else @syncTags tags
 
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
-				@set( "selected", no )
+				@save( "selected", no )
 				@reviveDate "schedule"
 
 			@on "change:completionDate", =>
 				@setCompletionStr()
 				@setCompletionTimeStr()
-				@set( "selected", no )
+				@save( "selected", no )
 				@reviveDate "completionDate"
 
 			@on "change:repeatDate", => @reviveDate "repeatDate"
@@ -179,6 +182,22 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				return fullStr
 		syncTags: (tags) ->
+			if @id is "xFzJwHKGeFQnS"
+				console.log @id + " : " + tags.length
+			###replacementTags = []
+			replace = false
+			for tag in tags
+				if tag.id
+					replacementTags.push(tag)
+				else if tag.objectId
+					repTag = swipy.tags.get( tag.objectId)
+					if repTag
+						replacementTags.push(repTag)
+						replace = true
+			if replace
+				tags = replacementTags
+				@replaced = true
+				#@save( { "tags": tags } )###
 			# Remove falsy values first
 			tags = _.compact tags
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
@@ -189,8 +208,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				actualTags = @getTagsFromPointers pointers
 				tags.push tag for tag in actualTags
 
-				@set( "tags", tags, { silent: yes } )
-			
+				@save( "tags", tags, { silent: yes } )
 		getTagsFromPointers: (pointers) ->
 			result = []
 			for tagid in pointers
@@ -299,9 +317,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 		togglePriority: ->
 			if @get "priority"
-				@set( "priority", 0, { sync: true } )
+				@save( "priority", 0, { sync: true } )
 			else
-				@set( "priority", 1 , { sync: true } )
+				@save( "priority", 1 , { sync: true } )
 			if @get("priority") then priorityLabel = "On" else priorityLabel = "Off"
 			swipy.analytics.sendEvent( "Tasks", "Priority", priorityLabel )
 			swipy.analytics.sendEventToIntercom("Update Priority",  { "Assigned" : priorityLabel } )
@@ -314,7 +332,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				updateObj.order = -1
 			
 			@unset "schedule"
-			@set(updateObj,
+			@save(updateObj,
 				sync: true
 			)
 
@@ -333,7 +351,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 			@copyActionStepsToDuplicate duplicate
 
-			@set({
+			@save({
 				schedule: nextDate
 				repeatCount: @get( "repeatCount" ) + 1
 				repeatDate: nextDate
@@ -360,14 +378,14 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		completeTask: ->
 			if @has "repeatDate"
 				return @completeRepeatedTask()
-			@set "completionDate" , new Date() , { sync: true }
+			@save "completionDate" , new Date() , { sync: true }
 
 
 		setRepeatOption: ( repeatOption ) ->
 			repeatDate = null
 			if @get( "schedule" ) and repeatOption isnt "never"
 				repeatDate =  @get "schedule"
-			@set({ repeatDate, repeatOption },{ sync: true })
+			@save({ repeatDate, repeatOption },{ sync: true })
 			swipy.analytics.sendEvent( "Tasks", "Recurring", repeatOption )
 			swipy.analytics.sendEventToIntercom( "Recurring Task", { "Reoccurrence": repeatOption } )
 
@@ -377,17 +395,17 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			options = { sync: true }
 			for key, value of opt
 				options[key] = value
-			@set "order", order, options
+			@save "order", order, options
 
 		updateTags: ( tags ) ->
 			@unset "tags", { silent: true }
-			@set "tags", tags, { sync: true }
+			@save "tags", tags, { sync: true }
 
 		updateTitle: ( title ) ->
-			@set "title", title, { sync: true }
+			@save "title", title, { sync: true }
 
 		updateNotes: ( notes ) ->
-			@set "notes", notes, { sync: true }
+			@save "notes", notes, { sync: true }
 
 
 
@@ -404,6 +422,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				else if _.indexOf(dateKeys, attribute) isnt -1
 					val = @handleDateFromServer val
 				@set attribute, val if val isnt @get(attribute)
+			@save()
 			false
 
 		handleTagsFromServer: ( tags ) ->

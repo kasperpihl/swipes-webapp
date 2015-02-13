@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!templates/tags-editor-overlay.html"], (_, Backbone, Overlay, TagModel, TagsEditorOverlayTmpl) ->
+define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/tags-editor-overlay.html"], (_, Overlay, TagModel, TagsEditorOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay tags-editor'
 		events:
@@ -77,9 +77,8 @@ define ["underscore", "backbone", "js/view/Overlay", "js/model/TagModel", "text!
 					tag = swipy.tags.create { title: tagName }
 					swipy.analytics.sendEvent("Tags", "Added", "Select Tasks", tagName.length)
 					swipy.analytics.sendEventToIntercom( "Added Tag", { "From": "Select Tasks", "Length": tagName.length })
-
+					tag.save({}, {sync:true})
 				@addTagToModel( tag, model ) for model in @options.models
-				if addToCollection then swipy.tags.getTagsFromTasks()
 
 				@render()
 		modelHasTag: (model, tag) ->

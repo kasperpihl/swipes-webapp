@@ -1,6 +1,5 @@
 define [
 	"underscore"
-	"backbone"
 	"js/view/Overlay"
 	"text!templates/settings-overlay.html"
 	# Pre-load subviews
@@ -10,7 +9,7 @@ define [
 	"js/view/settings/Snoozes"
 	"js/view/settings/Subscription"
 	"js/view/settings/Support"
-	], (_, Backbone, Overlay, SettingsOverlayTmpl) ->
+	], (_, Overlay, SettingsOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay settings'
 		initialize: ->

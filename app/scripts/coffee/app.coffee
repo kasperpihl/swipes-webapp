@@ -1,6 +1,7 @@
 define [
 	"jquery"
 	"backbone"
+	"localStorage"
 	"js/model/ClockWork"
 	"js/controller/ViewController"
 	"js/controller/AnalyticsController"
@@ -18,13 +19,12 @@ define [
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
 	"gsap"
-	], ($, Backbone, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController) ->
+	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
 		constructor: ->
 			#@hackParseAPI()
-			Backbone.once( "sync-complete", @init, @ )
 			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
@@ -42,6 +42,15 @@ define [
 			
 			##@tags.fetch()
 			$(window).focus @openedWindow
+		start: ->
+			if @sync.lastUpdate?
+				@tags.fetch()
+				@todos.fetch()
+				console.log @todos.length
+				@init()
+			else
+				Backbone.once( "sync-complete", @init, @ )
+				@sync.sync()
 		isBusy: ->
 			# Are any todos being saved right now?
 			if @todos.length?

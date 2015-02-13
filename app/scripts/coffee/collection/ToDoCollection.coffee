@@ -1,4 +1,4 @@
-define ["js/model/ToDoModel", "backbone.localStorage"], ( ToDoModel ) ->
+define ["js/model/ToDoModel", "localStorage"], ( ToDoModel ) ->
 	Backbone.Collection.extend
 		model: ToDoModel
 		localStorage: new Backbone.LocalStorage("ToDoCollection")

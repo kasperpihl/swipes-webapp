@@ -1,4 +1,4 @@
-define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputView, TagModel ) ->
+define ["underscore", "js/view/TaskInput"], (_, TaskInputView ) ->
 	class TaskInputController
 		constructor: ->
 			@view = new TaskInputView()
@@ -13,7 +13,10 @@ define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputVi
 
 				for tagName in tagNameList
 					tag = swipy.tags.getTagByName tagName
-					if not tag then tag = new TagModel( title: tagName )
+					if !tag?
+						tag = swipy.tags.create( title: tagName )
+						tag.save({}, {sync:true})
+						console.log tag
 
 					tags.push tag
 
@@ -44,8 +47,8 @@ define ["underscore", "js/view/TaskInput", "js/model/TagModel"], (_, TaskInputVi
 			swipy.todos.bumpOrder()
 			newTodo = swipy.todos.create { title, order, animateIn }
 			newTodo.set( "tags", tags )
-			if tags.length then swipy.tags.getTagsFromTasks()
-
+			newTodo.save({}, {sync:true})
+			
 			swipy.analytics.sendEvent("Tasks", "Added", "Input", title.length )
 			swipy.analytics.sendEventToIntercom( "Added Task", { "From": "Input", "Length": title.length } )
 		destroy: ->

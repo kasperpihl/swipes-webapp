@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "gsap"], (_, Backbone) ->
+define ["underscore", "gsap"], (_) ->
 
 	# The clockwork of Swipes that tells the rest of the system, when it's time to move
 	# tasks from scheduled to active.

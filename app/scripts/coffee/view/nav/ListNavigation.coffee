@@ -1,4 +1,4 @@
-define ["jquery", "backbone"], ($, Backbone) ->
+define ["jquery"], ($) ->
 	class ListNavigation
 		constructor: ->
 			@navLinks = $ ".list-nav a"

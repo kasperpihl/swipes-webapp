@@ -1,4 +1,4 @@
-define ["underscore", "backbone"], (_, Backbone) ->
+define ["underscore"], (_) ->
 	Backbone.Model.extend
 		className: "Settings"
 		defaults:

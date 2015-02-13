@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "js/view/list/TagEditorOverlay"], (_, Backbone, TagEditorOverlay) ->
+define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 	Backbone.View.extend
 		el: ".action-bar"
 		events:

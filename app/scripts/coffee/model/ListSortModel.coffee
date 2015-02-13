@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "gsap-scroll", "gsap"], (_, Backbone) ->
+define ["underscore", "gsap-scroll", "gsap"], (_) ->
 	class ListSortModel
 		@HEIGHT_BREAKPOINT = 800
 		constructor: (@container, views) ->
