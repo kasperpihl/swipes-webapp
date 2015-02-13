@@ -59,8 +59,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				)
 				if parentModel
 					@save "parent", parentModel
-					parentModel.addSubtask @
-					
+					parentModel.addSubtask @		
 		addSubtask: ( model ) ->
 			currentSubtasks = @get "subtasksLocal"
 			if !currentSubtasks
