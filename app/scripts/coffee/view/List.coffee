@@ -271,6 +271,7 @@ define [
 				@renderList()
 		renderList: ->
 			# Remove any old HTML before appending new stuff.
+			return if !@$el
 			@$el.empty()
 			@killSubViews()
 
