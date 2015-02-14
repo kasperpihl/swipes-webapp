@@ -121,6 +121,8 @@ define [
 					saveToShift = @holdModifier isnt "shift"
 					@setLastIndex( index, saveToShift )
 					@selectedModels([task])
+					
+					# Handle auto scroll
 					scrollableView = $("#scrollcont")
 					mainContentView = $('#main-content')
 
@@ -128,17 +130,21 @@ define [
 					itemY = foundView.$el.position().top
 					sectionY = foundView.$el.closest(".divider").position().top
 					totalItemY = contentY+sectionY+itemY
-					#console.log task.get("title")
+					itemHeight = foundView.$el.height()
 					height = scrollableView.height()
 					totalContentHeight = mainContentView.height() + mainContentView.offset().top
 					padding = 150
+					currentScroll = scrollableView.scrollTop()
 
-					#console.log foundView.$el.position()
-					targetY = totalItemY - height + padding
-					#console.log targetY
-					if targetY < 0 and scrollableView.scrollTop() > 0
+					doScroll = true
+					if totalItemY < (currentScroll + padding + itemHeight )
+						targetY = totalItemY - padding - itemHeight
+					else if totalItemY > (currentScroll + height - padding)
+						targetY = totalItemY - height + padding
+					else doScroll = false
+					if targetY <= contentY
 						targetY = 0
-					if targetY >= 0
+					if doScroll
 						TweenLite.set( scrollableView, { scrollTo: targetY } )
 		clearLongPress: ->
 			@didHitALongPress = false

@@ -46,7 +46,6 @@ define [
 			if @sync.lastUpdate?
 				@tags.fetch()
 				@todos.fetch()
-				console.log @todos.length
 				@init()
 			else
 				Backbone.once( "sync-complete", @init, @ )
@@ -72,12 +71,6 @@ define [
 					return yes
 
 			return no
-		###hackParseAPI: ->
-			# Add missing mehods to Parse.Collection.prototype
-			for method in ["where", "findWhere"]
-				if not Parse.Collection::[method]?
-					Parse.Collection::[method] = Backbone.Collection::[method]
-		###
 		init: ->
 			@cleanUp()
 

@@ -100,8 +100,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 			@on "change:tags", (me, tags) =>
 				if !tags then @updateTags []
-				if @replaced? and @replaced
-					@replaced = null
 				else @syncTags tags
 
 			@on "change:schedule", =>
@@ -180,20 +178,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				return fullStr
 		syncTags: (tags) ->
-			###replacementTags = []
-			replace = false
-			for tag in tags
-				if tag.id
-					replacementTags.push(tag)
-				else if tag.objectId
-					repTag = swipy.tags.get( tag.objectId)
-					if repTag
-						replacementTags.push(repTag)
-						replace = true
-			if replace
-				tags = replacementTags
-				@replaced = true
-				#@save( { "tags": tags } )###
 			# Remove falsy values first
 			tags = _.compact tags
 			pointers = ( tag.id for tag in tags when !tag.has "title" )
