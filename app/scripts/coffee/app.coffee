@@ -93,6 +93,13 @@ define [
 			Backbone.history.start( pushState: no )
 
 			$("body").removeClass "loading"
+
+			$('.search-result a').click( (e) ->
+				swipy.filter.clearFilters()
+				Backbone.trigger( "remove-filter", "all" )
+				return false
+			)
+
 			# $("")
 
 			#@startAutoUpdate()
@@ -108,6 +115,7 @@ define [
 			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ )
 		stopAutoUpdate: ->
 			TweenLite.killDelayedCallsTo @update###
+			
 		cleanUp: ->
 			#@stopAutoUpdate()
 			##@tags?.destroy()

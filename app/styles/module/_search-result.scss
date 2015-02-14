@@ -7,6 +7,9 @@
 		position:relative;
 		font: 0.8em/1 $font-normal;
 		display:table;
+		b{
+			font: 1em/1 $font-bold;
+		}
 	}
 	a{
 		font: 0.7em/1 $font-normal;

@@ -297,6 +297,11 @@ define [
 				@$el.append $html
 
 			@afterRenderList todos
+			if swipy.filter.hasFilters()
+				$('.search-result').removeClass("hidden")
+			else
+				$('.search-result').addClass("hidden")
+			swipy.filter.updateFilterString(todos.length)
 
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
@@ -412,6 +417,7 @@ define [
 		cleanUp: ->
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
+			$('.search-result').addClass("hidden")
 			@lastSelectedIndex = -1
 			# Reset transitionDeferred
 			@transitionDeferred = null

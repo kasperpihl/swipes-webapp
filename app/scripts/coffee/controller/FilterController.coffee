@@ -11,11 +11,49 @@ define ["underscore"], (_) ->
 			Backbone.on( "apply-filter", @applyFilter, @ )
 			Backbone.on( "remove-filter", @removeFilter, @ )
 
+		hasFilters: ->
+			@tagsFilter.length or @searchFilter.length
 		applyFilter: (type, filter) ->
 			if type is "tag" then @applyTagsFilter filter else @debouncedSearch filter
 
 		removeFilter: (type, filter) ->
 			if type is "tag" then @removeTagsFilter filter else @debouncedClearSearch filter
+
+		updateFilterString: (number) ->
+			
+			if !number 
+				numString = "No"			
+			else numString = ""+number
+			
+
+			category = "current"
+			if Backbone.history.fragment is "list/scheduled"
+				category = "scheduled"
+			if Backbone.history.fragment is "list/completed"
+				category = "completed"
+			
+
+			filterString = "<b>" + numString + " " + category + "</b> "
+
+
+			filterString += "task"
+			filterString += "s" if number != 1
+
+			counter = 0
+
+
+			if @searchFilter.length
+				 filterString += " matching <b>\"" + @searchFilter + "\"</b>"
+				 counter++
+
+			if @tagsFilter.length
+				withOrAndString = " with"
+				withOrAndString = " and" if counter > 0
+				tagString = @tagsFilter.join(", ")
+				filterString += withOrAndString + " tags: <b>" + tagString + "</b>" 
+				counter++
+
+			$('#search-result-string').html(filterString)
 
 		clearFilters: ->
 			if @searchFilter.length then @removeSearchFilter()
@@ -44,7 +82,6 @@ define ["underscore"], (_) ->
 
 		removeTagsFilter: (tag) ->
 			@tagsFilter = _.without( @tagsFilter, tag )
-
 			if @tagsFilter.length is 0
 				swipy.todos.invoke( "set", "rejectedByTag", no )
 			else

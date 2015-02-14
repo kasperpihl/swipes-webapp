@@ -16,7 +16,7 @@ define ["underscore"], (_) ->
 			# We defer 'till next event loop, because we need to make sure
 			# FilterController has done its thing first.
 			_.defer =>
-				if type is "tag" then @render()
+				if type is "tag" or type is "all" then @render()
 		handleClickTag: (e) ->
 			if @deleteMode
 				@removeTag e
