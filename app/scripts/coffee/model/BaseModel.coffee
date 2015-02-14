@@ -7,6 +7,8 @@ define ["js/utility/Utility"], ( Utility ) ->
 			if attributes && !attributes.objectId
 				util = new Utility()
 				attributes.tempId = util.generateId 12
+				attributes.objectId = attributes.tempId
+				attributes.needSaveToServer = true
 			Backbone.Model.apply @, arguments
 		deleteObj: ->
 			@save "deleted", yes, { silent:true, sync: true }
@@ -45,5 +47,5 @@ define ["js/utility/Utility"], ( Utility ) ->
 			json
 
 		updateFromServerObj: ( obj ) ->
-			@save "objectId", obj.objectId if !@id? and obj.objectId isnt @id
-			@save "deleted", obj.deleted if obj.deleted
+			@set("needSaveToServer", false) if @get("needSaveToServer")
+			@set "deleted", obj.deleted if obj.deleted

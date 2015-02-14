@@ -50,7 +50,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			return false if e.target.className is "priority"
 
 			# Else navigator to editor.
-			identifier = if @model.id then @model.id else @model.get "tempId"
+			identifier = @model.id
 			swipy.router.navigate( "edit/#{ identifier }", yes )
 		render: ->
 			# If template isnt set yet, just return the empty element

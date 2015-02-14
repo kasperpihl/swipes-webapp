@@ -1,55 +1,60 @@
-define ["underscore", "jquery", "plugins/lockablestorage"], (_, $) ->
+define ["underscore", "jquery"], (_, $) ->
 	class ChangedAttributesController
 		constructor: ->
-			@localKey = "changedAttributesStore"
+			@changesKey = "changedAttributesKey"
+			@tempChangesKey = "tempChangedAttributesKey"
 			_.bindAll( @ , "saveAttributesToSync" )
 
-			@newChangedAttributes = @newCollection()
-			@tempChangedAttributes = @newCollection()
-
-		###		initializeChanges: ->
-			LockableStorage.lock( @localKey, =>
-				localStorage[@localKey] = 
-					"Tag": {} 
-					"ToDo": {}
-			)
-		getAllChanges: ->
-			localStorage.getItem( @localKey )###
+			@newChangedAttributes = @collectionForKey(@changesKey)
+			@tempChangedAttributes = @collectionForKey(@tempChangesKey)
+		collectionForKey: (key) ->
+			collection = localStorage.getItem(key)
+			if collection
+				collection = $.parseJSON( collection )
+			collection = @newCollection() if !collection
+			collection
+		resetCollectionForKey:(key) ->
+			collection = @newCollection()
+			@saveCollectionForKey(key, collection)
+			collection
+		saveCollectionForKey: (key, collection) ->
+			localStorage.setItem(key, JSON.stringify(collection))
 		newCollection: () ->
 			"ToDo" : {}
 			"Tag" : {}
 
 		getChangesForModel: ( model ) ->
-			if model.id?
+			if !model.get("needSaveToServer")
 				return @newChangedAttributes[ model.className ][ model.id ]
-			else if model.get "tempId"
-				return @tempChangedAttributes[ model.className ][ model.get "tempId" ]
+			else
+				return @tempChangedAttributes[ model.className ][ model.id ]
 			return null
 
 		saveAttributesToSync: ( model, attributes ) ->
 			@_saveAttributesForSyncing @newChangedAttributes, model, attributes
-
+			@saveCollectionForKey( @changesKey, @newChangedAttributes )
 		saveTempAttributesToSync: ( model, attributes ) ->
 			@_saveAttributesForSyncing @tempChangedAttributes, model, attributes
-
+			@saveCollectionForKey( @tempChangesKey, tempChangedAttributes )
 		_saveAttributesForSyncing: ( collection, model, attributes ) ->
-			identifier = if model.id? then model.id else model.get "tempId"
+			identifier = model.id
 			return if !identifier
 			currentChanges = collection[ model.className ][ identifier ]
 			attributes = _.keys attributes
 			attributes = _.uniq( currentChanges.concat( attributes ) ) if currentChanges
 			collection[ model.className ][ identifier ] = attributes
-		
 
 		getIdentifiersAndAttributesForSyncing: ( reset ) ->
 			collection = $.parseJSON JSON.stringify @newChangedAttributes
-			@newChangedAttributes = @newCollection() if reset
+			if reset
+				@newChangedAttributes = @resetCollectionForKey(@changesKey)
 			collection
 
 		moveTempChangesForModel: ( model ) ->
-			return if !model.id? or !model.get "tempId"?
+			return if !model.get("needSaveToServer") or !model.get "tempId"?
 			tempAttributes = @tempChangedAttributes[ model.className ][ model.get "tempId" ]
-			saveAttributesToSync model, tempAttributes if tempAttributes? and tempAttributes.length > 0
-		
+			@saveAttributesToSync model, tempAttributes if tempAttributes? and tempAttributes.length > 0
+		resetChanges: ->
+			
 		resetTempChanges: ->
-			@tempChangedAttributes = @newCollection()
+			@tempChangedAttributes = @resetCollectionForKey(@tempChangesKey)

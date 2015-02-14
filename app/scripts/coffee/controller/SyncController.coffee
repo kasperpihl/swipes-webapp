@@ -26,9 +26,9 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 
 		handleModelForSync: (model, attributes) ->
-			if model.id
+			if !model.get("needSaveToServer")
 				@changedAttributes.saveAttributesToSync( model , attributes )
-			else if @isSyncing and !model.id
+			else if @isSyncing
 				@changedAttributes.saveTempAttributesToSync( model, attributes )
 			@bouncedSync()
 
@@ -40,11 +40,9 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					collection.add newModels
 					newModels = []
 				objectId = obj.objectId
-				tempId = obj.tempId
 				model = collection.find( 
 					( model ) ->
 						return true if objectId? and model.id is objectId
-						return true if tempId? and model.get("tempId") is tempId
 						false
 				)
 				if !model
@@ -63,8 +61,8 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				)
 
 		prepareNewObjectsForCollection: ( collection ) ->
-			newModels = collection.filter (model) -> 
-				return (!model.id and model.get "tempId")
+			newModels = collection.filter (model) ->
+				return (model.get "needSaveToServer")
 			serverJSON = []
 			for mdl in newModels
 				json = mdl.toServerJSON()
@@ -165,8 +163,10 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 		responseFromSync: ( data, textStatus ) ->
 			if data and data.serverTime
 				@currentSyncing = null
+				@changedAttributes.resetChanges()
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
+
 				if data.updateTime
 					@lastUpdate = data.updateTime 
 					if typeof(Storage) isnt "undefined"
@@ -175,4 +175,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					@firstSync = true
 					swipy.analytics.updateIdentity()
 				##swipy.todos.handleObjects data.ToDo
+			else
+				console.log data
 			@finalizeSync()

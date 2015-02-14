@@ -69,8 +69,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			return @model
 		addNewSubtask: ( title, from ) ->
 			currentSubtasks = @getOrderedSubtasks()
-			parentLocalId = @get "tempId" 
-			parentLocalId = @id if @id?
+			parentLocalId = @id
 			order = currentSubtasks.length
 			if from
 				swipy.analytics.sendEvent( "Action Steps", "Added", from, title.length )
