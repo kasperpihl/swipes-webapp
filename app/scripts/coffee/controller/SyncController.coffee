@@ -119,6 +119,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 		sync: ->
 			return @needSync = true if @isSyncing
+			return if !Parse.User.current()
 			@isSyncing = true
 			url = if liveEnvironment then "http://api.swipesapp.com/v1/sync" else "http://api.swipesapp.com/v1/sync" #"http://localhost:5000/v1/sync"
 			user = Parse.User.current()
