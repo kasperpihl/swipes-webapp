@@ -17,6 +17,7 @@ define ["underscore"], (_) ->
 			else if trigger.hasClass "log-out"
 				e.preventDefault()
 				if confirm "Are you sure you want to log out?"
+					localStorage.clear()
 					Parse.User.logOut()
 					location.pathname = "/login/"
 
