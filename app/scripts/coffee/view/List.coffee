@@ -24,10 +24,12 @@ define [
 
 			# Render the list whenever it updates, 5ms is just enough to work around mutiple events firing frequently
 			@renderList = _.debounce( @renderList, 5 )
-
+			@longBounceRenderList = _.debounce( @renderList, 500 )
 			@listenTo( Backbone, "opened-window", @clearForOpening )
 
-			@listenTo( swipy.todos, "add remove reset change:order change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
+			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
+			#@listenTo( swipy.todos, "change:order", @changedOrder )
+
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
 			@listenTo( Backbone, "todo-task", @markTasksAsTodo )
@@ -40,10 +42,12 @@ define [
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
 			Mousetrap.bindGlobal( "mod+a", $.proxy( @selectAllTasks, @ ) )
-			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening", "longPressHandling", "snoozedATask" )
+			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening", "longPressHandling", "snoozedATask", "changedOrder" )
 			@setLastIndex( -1, true )
 			@shouldResetLast = false
 			@render()
+		changedOrder: ->
+			@longBounceRenderList()
 		snoozedATask: ->
 			@afterMovedItems()
 		clearForOpening: ->
@@ -81,12 +85,10 @@ define [
 		keyDownHandling: (e) ->
 			return if $("input").is(":focus")
 
-			
+
 			if e.keyCode is 32
 				e.preventDefault()
 			# shift key
-
-			
 
 			if e.keyCode is 16
 				if !@holdModifier?
@@ -361,6 +363,7 @@ define [
 					m = task
 					view.swipeRight( "completed" ).then =>
 						m.completeTask()
+						console.log "completed task"
 						compFunc()
 
 			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)

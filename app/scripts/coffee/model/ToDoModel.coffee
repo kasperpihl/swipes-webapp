@@ -326,8 +326,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			# Make sure we can actually duplicate the task...
 			return false unless duplicate
 
-			duplicate.completeTask()
 			swipy.todos.add duplicate
+			duplicate.completeTask()
 
 			@copyActionStepsToDuplicate duplicate
 
