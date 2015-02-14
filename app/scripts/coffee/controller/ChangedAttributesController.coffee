@@ -35,7 +35,7 @@ define ["underscore", "jquery"], (_, $) ->
 			@saveCollectionForKey( @changesKey, @newChangedAttributes )
 		saveTempAttributesToSync: ( model, attributes ) ->
 			@_saveAttributesForSyncing @tempChangedAttributes, model, attributes
-			@saveCollectionForKey( @tempChangesKey, tempChangedAttributes )
+			@saveCollectionForKey( @tempChangesKey, @tempChangedAttributes )
 		_saveAttributesForSyncing: ( collection, model, attributes ) ->
 			identifier = model.id
 			return if !identifier

@@ -27,7 +27,7 @@ define [
 
 			@listenTo( Backbone, "opened-window", @clearForOpening )
 
-			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
+			@listenTo( swipy.todos, "add remove reset change:order change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
 			@listenTo( Backbone, "todo-task", @markTasksAsTodo )
