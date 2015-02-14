@@ -1,43 +1,32 @@
 html.login, html.login body {
 	min-height: 100%;
 }
-
+$text-gray: #9e9e9e;
 html.login {
 	body {
-		background: #69ceb5 image-url("login-bg.jpg") center no-repeat;
-		@include breakpoint(min-width, 1280px) {
-			background-image: image-url("login-bg-large.jpg");
-		}
-		background-size: cover;
+		background: #fff;
 		color: white;
 	}
 
 	.container {
 		width: 84%;
-		max-width: emCalc(432px);
+		max-width: emCalc(300px);
 		margin: auto;
 		text-align: center;
 	}
 
 	header.logo {
 		$src: "swipes-logo.png";
-		width: image-width($src) / 2;
-		height: image-height($src) / 6;
-		margin: 0.5em auto 0.5em;
+		width: image-width($src) / 3;
+		height: image-height($src) / 5;
+		margin: 0.5em auto 1.5em;
 
 		@include breakpoint(min-height, 600px) {
-			height: image-height($src) / 3;
-			margin: 1.5em auto 3em;
+			height: image-height($src) / 4;
+			margin: 5em auto 3em;
 		}
-
-		@include breakpoint(min-height, 1000px) {
-			height: image-height($src) / 2.5;
-			margin: 3em auto 4em;
-		}
-
-		@include breakpoint(min-height, 1130px) {
-			height: image-height($src) / 2;
-			margin: 5.93333em auto 4.16667em;
+		@include breakpoint(min-height, 800px){
+			margin-bottom:6em;
 		}
 
 		background: image-url($src) no-repeat top center;
@@ -49,49 +38,53 @@ html.login {
 	}
 
 	#login > h3 {
-		color: #36705c;
+		letter-spacing: 1px;
+		color: $text-gray;
+		font-size: 0.6em;
 		@include breakpoint(max-height, 700px) {
-			font-size: 100%;
+			
 		}
 		@include breakpoint(min-height, 1000px) { margin-bottom: 0.6em; }
-		font-family: $font-bold;
+		font-family: $font-normal;
 	}
 
 	input {
-		padding: emCalc(10px);
+		padding: emCalc(20px);
+		padding-top: emCalc(28px);
 		margin-bottom: emCalc(13px);
-
-		@include breakpoint(min-height, 800px) {
-			padding: emCalc(20px);
-		}
+		text-align: center;
+		color: $text-gray;
 
 		width: 100%;
-		background: white;
+		background: #EEEEEE;
+		font: 0.6em/1 $font-bold;
+		letter-spacing: 2px;
 		@include border-radius(emCalc(4px));
 
 		&[type=submit] {
-			padding: 0.75em;
-			border: 2px solid white;
+			padding: 1.0em;
+			background: #1B1E23;
+			border: 0px solid #424448;
+			border-top: 2px solid #424448;
 			outline: none;
-			background: transparent;
+			
 
 			color: white;
-			font: 1em/1 $font-bold;
+			font: 0.7em/1 $font-bold;
 			text-transform: uppercase;
 
-			max-width: 70%;
+			max-width: 50%;
 
 			@include breakpoint(min-height, 800px) {
-				padding: 0.65em;
+//				padding: 0.65em;
 				margin-top: emCalc(32px);
-				font-size: 1.4em;
+//				font-size: 1.4em;
 			}
 
 			@include transition(background 0.15s ease-out);
 
 			&:hover {
-				background: white;
-				color: #5cc6a2;
+				opacity:0.85;
 			}
 		}
 	}
@@ -102,10 +95,13 @@ html.login {
 
 	.reset-password {
 		display: block;
-		color: #36705c;
-		margin-bottom: emCalc(35px);
-		@include breakpoint(min-height, 730px) { margin-bottom: emCalc(55px); }
-		@include breakpoint(min-height, 1130px) { margin-bottom: emCalc(115px); }
+		color: $text-gray;
+		font-size:0.7em;
+		font-family: $font-light;
+		margin-bottom: emCalc(10px);
+		text-align:right;
+		//@include breakpoint(min-height, 730px) { margin-bottom: emCalc(55px); }
+		//@include breakpoint(min-height, 1130px) { margin-bottom: emCalc(115px); }
 		@include transition(opacity 0.15s ease-out);
 
 		&:hover {
@@ -115,25 +111,33 @@ html.login {
 	}
 
 	.facebook {
+		margin-top:30px;
+		@include breakpoint(min-height, 800px){ margin-top:80px; }
 		h3 {
-			margin-bottom: 0.15em;
-			font-family: $font-light;
-			@include breakpoint(max-height, 600px) { font-size: 85%; }
+			margin-bottom: 1.30em;
+			font-family: $font-normal;
+			font-size:0.6em;
+			color: $text-gray;
+			letter-spacing:1px;
+			//@include breakpoint(max-height, 600px) { font-size: 85%; }
 			@include breakpoint(min-height, 600px) { margin-bottom: 1.5em; }
 		}
 
 		a {
 			display: block;
 			margin: auto;
-			width: 233px;
+			width: 140px;
+			padding:1em;
+			letter-spacing: 1px;
+			@include border-radius(emCalc(4px));
 			color: white;
-			font-size: 60px;
-
+			font: 0.7em/1 $font-bold;
 			@include breakpoint(max-height, 700px) {
-				font-size: 50px;
 			}
-
-			background: image-url("facebook-btn.svg") no-repeat center center;
+			
+			border: 0px solid #4ec2f6;
+			border-top: 2px solid #4ec2f6;
+			background: #29B6F6;
 
 			line-height: 1;
 			@include transition(opacity 0.15s ease-out);
