@@ -79,10 +79,15 @@ define [
 					@markTasksAsTodo(null, true)
 				
 		keyDownHandling: (e) ->
+			return if $("input").is(":focus")
 
-			if e.keyCode is 32 and !$("input").is(":focus")
+			
+			if e.keyCode is 32
 				e.preventDefault()
 			# shift key
+
+			
+
 			if e.keyCode is 16
 				if !@holdModifier?
 					@holdModifier = "shift";
@@ -151,10 +156,12 @@ define [
 			@currentLongPressKey = null
 			@currentLongPressCount = 0
 		keyUpHandling: (e) ->
+			return if $("input").is(":focus")
 			#console.log e.keyCode
 			if e.keyCode is 27
 				@deselectAllTasksButTasks([])
-			if e.keyCode is 32 and !$("input").is(":focus")
+				
+			if e.keyCode is 32
 				$("#add-task input").focus()
 				TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
 			if e.keyCode is 13
