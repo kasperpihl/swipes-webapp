@@ -91,14 +91,17 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		transitionInComplete: ->
 			swipy.shortcuts.setDelegate( @ )
 		keyDownHandling: (e) ->
-			if e.keyCode is 32 and !$("input").is(":focus")
+			if e.keyCode is 32 and !$("input").is(":focus") and !$('.input-note').is(':focus') 
 				e.preventDefault()
 		keyUpHandling: (e) ->
-			if e.keyCode is 13 and !$("input").is(":focus")
-				@save()
-			else if e.keyCode is 13 and $(".add-step input").val().length is 0
-				$(".add-step input").blur()
-			if e.keyCode is 32 and !$("input").is(":focus")
+			if e.keyCode is 13
+				if $(".add-step input").is(":focus")
+					if $(".add-step input").val().length is 0
+						$(".add-step input").blur()
+				else if $('.title input').is(':focus')
+					$('.title input').blur()
+				
+			if e.keyCode is 32 and !$("input").is(":focus") and !$('.input-note').is(':focus') 
 				$(".add-step input").focus()
 				TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
 				e.preventDefault()
@@ -108,6 +111,8 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 					$(".add-step input").blur()
 				else if $(".task-editor input").is(":focus")
 					$(".task-editor input").blur()
+				else if $('.input-note').is(':focus')
+					$('.input-note').blur()
 				else @save()
 		togglePriority: ->
 			@model.togglePriority()
