@@ -1,6 +1,5 @@
 define ["underscore", "gsap-scroll", "gsap"], (_) ->
 	class ListSortModel
-		@HEIGHT_BREAKPOINT = 800
 		constructor: (@container, views) ->
 			@active = no
 			@setViews views
@@ -16,16 +15,6 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 			@debouncedSetBounds = _.debounce( @setBounds, 300 )
 			$('#scrollcont').on('scroll.sortmodel', @scrolled )
 			$(window).on( "resize.sortmodel", => debouncedSetBounds() )
-
-			@currRowHeight = if window.innerHeight < ListSortModel.HEIGHT_BREAKPOINT then "small" else "big"
-			$(window).on "resize.sortmodel", =>
-				if window.innerHeight < ListSortModel.HEIGHT_BREAKPOINT and @currRowHeight isnt "small"
-					@currRowHeight = "small"
-					Backbone.trigger "redraw-sortable-list"
-				else if window.innerHeight >= ListSortModel.HEIGHT_BREAKPOINT and @currRowHeight isnt "big"
-					@currRowHeight = "big"
-					Backbone.trigger "redraw-sortable-list"
-
 			@active = yes
 		scrolled: (e) ->
 			@debouncedSetBounds()
