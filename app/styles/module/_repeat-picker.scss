@@ -37,7 +37,7 @@
 
 		line-height: $height;
 		text-align: center;
-		font-family: $font-bold;
+		font-family: $font-normal;
 		color: $gray;
 
 		border-left: thin solid rgba($gray, 0.3);
@@ -48,7 +48,7 @@
 		}
 
 		&.selected {
-			background: $yellow;
+			background: $gray;
 			color: white;
 
 			.scheduled & { background: $lobster; }
