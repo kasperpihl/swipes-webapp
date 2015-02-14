@@ -80,7 +80,7 @@ define [
 				
 		keyDownHandling: (e) ->
 
-			if e.keyCode is 32 and !$("#add-task input").is(":focus")
+			if e.keyCode is 32 and !$("input").is(":focus")
 				e.preventDefault()
 			# shift key
 			if e.keyCode is 16
@@ -154,7 +154,7 @@ define [
 			#console.log e.keyCode
 			if e.keyCode is 27
 				@deselectAllTasksButTasks([])
-			if e.keyCode is 32
+			if e.keyCode is 32 and !$("input").is(":focus")
 				$("#add-task input").focus()
 				TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
 			if e.keyCode is 13
