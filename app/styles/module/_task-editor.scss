@@ -26,11 +26,11 @@
 		padding-left: $padding;
 
 		margin-bottom: emCalc(12px);
-		margin-top: 0.8em;
+		margin-top: 0.3em;
 
 		@include breakpoint(tablet) {
-			margin-bottom: emCalc(20px);
-			margin-top: emCalc(25px);
+			//margin-bottom: emCalc(20px);
+			//margin-top: emCalc(25px);
 		}
 	}
 

@@ -34,7 +34,7 @@ define ["underscore", "js/view/TaskInput"], (_, TaskInputView ) ->
 
 			tags = @parseTags str
 			title = @parseTitle str
-			order = 0
+			order = -1
 			animateIn = yes
 
 			# If user is trying to add
