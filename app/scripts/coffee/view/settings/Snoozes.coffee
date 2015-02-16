@@ -1,11 +1,13 @@
-define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!templates/settings-snoozes.html"], (BaseView, Draggable, SliderControl, Tmpl) ->
+define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "text!templates/settings-snoozes.html", "js/utility/TimeUtility"], (BaseView, Draggable, SliderControl, Tmpl, TimeUtility) ->
 	BaseView.extend
 		className: "snoozes"
 		events:
 			"click button": "toggleSection"
-			"click .day-picker li": "toggleDay"
+			"click .week-start-day .day-picker li": "toggleWeekDay"
+			"click .weekend-start-day .day-picker li": "toggleWeekendDay"
 		initialize: ->
 			BaseView::initialize.apply( @, arguments )
+			@timeUtil = new TimeUtility()
 			_.bindAll( @, "updateValue" )
 		getFloatFromTime: (hour, minute) ->
 			( hour / 24 ) + ( minute / 60 / 24 )
@@ -32,46 +34,55 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 			else
 				return hour + ":" + minute
 		getSliderVal: (sliderId) ->
-			snoozes = swipy.settings.get "snoozes"
-
+			###
+			NSInteger hours = eveningStartTime.integerValue/D_HOUR;
+			NSInteger minutes = (eveningStartTime.integerValue % D_HOUR) / D_MINUTE;
+			###
 			switch sliderId
 				when "start-day"
-					@getFloatFromTime( snoozes.weekday.morning.hour, snoozes.weekday.morning.minute )
+					setting = swipy.settings.get "SettingWeekStartTime"
 				when "start-evening"
-					@getFloatFromTime( snoozes.weekday.evening.hour, snoozes.weekday.evening.minute )
+					setting = swipy.settings.get "SettingEveningStartTime"
 				when "start-weekend"
-					@getFloatFromTime( snoozes.weekend.morning.hour, snoozes.weekend.morning.minute )
+					setting = swipy.settings.get "SettingWeekendStartTime"
 				when "delay"
-					@getFloatFromTime( snoozes.laterTodayDelay.hours, snoozes.laterTodayDelay.minutes )
+					setting = swipy.settings.get "SettingLaterToday"
+			
+			hours = @timeUtil.hourForSeconds setting
+			minutes = @timeUtil.minutesForSeconds setting
+			@getFloatFromTime( hours, minutes )
+			
 		updateValue: (sliderId, updateModel = no) ->
-			snoozes = swipy.settings.get "snoozes"
-
 			switch sliderId
 				when "start-day"
+					setting = "SettingWeekStartTime"
 					time = @getTimeFromFloat @startDaySlider.value
-					snoozes.weekday.morning = time
 					@$el.find(".day button").text @getFormattedTime( time.hour, time.minute )
 				when "start-evening"
+					setting = "SettingEveningStartTime"
 					time = @getTimeFromFloat @startEveSlider.value
-					snoozes.weekday.evening = time
 					@$el.find(".evening button").text @getFormattedTime( time.hour, time.minute )
 				when "start-weekend"
+					setting = "SettingWeekendStartTime"
 					time = @getTimeFromFloat @startWeekendSlider.value
-					snoozes.weekend.morning = time
 					@$el.find(".weekends button").text @getFormattedTime( time.hour, time.minute )
 				when "delay"
+					setting = "SettingLaterToday"
 					time = @getTimeFromFloat @delaySlider.value
-					snoozes.laterTodayDelay.hours = time.hour
-					snoozes.laterTodayDelay.minutes = time.minute
 					@$el.find(".later-today button").text "+#{ @getFormattedTime( time.hour, time.minute, no ) }h"
 
-			if updateModel
-				swipy.settings.unset( "snoozes", { silent: yes } )
-				swipy.settings.set( "snoozes", snoozes )
+			if updateModel and setting?
+				newVal = @timeUtil.secondsSinceStartOfDay time
+				swipy.settings.set(setting, newVal)
 		setTemplate: ->
 			@template = _.template Tmpl
 		render: ->
-			@$el.html @template { snoozes: swipy.settings.get "snoozes" }
+			settings = swipy.settings.model.toJSON()
+			@$el.html @template { settings: settings }
+			weekFindString = ".week-start-day .day-picker li[data-num="+swipy.settings.get("SettingWeekStart")+"]"
+			weekendFindString = ".weekend-start-day .day-picker li[data-num="+swipy.settings.get("SettingWeekendStart")+"]"
+			@$el.find(weekFindString).addClass("selected")
+			@$el.find(weekendFindString).addClass("selected")
 			@transitionIn()
 		toggleSection: (e) ->
 			$parent = $(e.currentTarget.parentNode.parentNode).toggleClass "toggled"
@@ -116,18 +127,24 @@ define ["js/view/settings/BaseSubview", "gsap-draggable", "slider-control", "tex
 
 					@delaySlider.destroy() if @delaySlider?
 					@delaySlider = new SliderControl( el, opts, @getSliderVal "delay" )
-		toggleDay: (e) ->
-			$(".day-picker li").removeClass "selected"
+		toggleWeekendDay: (e) ->
+			$(".weekend-start-day .day-picker li").removeClass "selected"
+			$(e.currentTarget).addClass "selected"
+			dayName = e.currentTarget.getAttribute "data-name"
+			dayNum = e.currentTarget.getAttribute "data-num"
+
+			@$el.find( ".weekend-start-day button" ).text dayName
+
+			swipy.settings.set( "SettingWeekendStart", parseInt(dayNum, 10) )
+		toggleWeekDay: (e) ->
+			$(".week-start-day .day-picker li").removeClass "selected"
 			$(e.currentTarget).addClass "selected"
 			dayName = e.currentTarget.getAttribute "data-name"
 			dayNum = e.currentTarget.getAttribute "data-num"
 
 			@$el.find( ".week-start-day button" ).text dayName
 
-			snoozes = swipy.settings.get "snoozes"
-			snoozes.weekday.startDay = { name: dayName, number: dayNum }
-			swipy.settings.unset( "snoozes", { silent: yes } )
-			swipy.settings.set( "snoozes", snoozes )
+			swipy.settings.set( "SettingWeekStart", parseInt(dayNum, 10) )
 		cleanUp: ->
 			@startDaySlider?.destroy()
 			@startEveSlider?.destroy()

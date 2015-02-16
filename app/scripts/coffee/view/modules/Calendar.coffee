@@ -1,4 +1,4 @@
-define ["underscore", "text!templates/calendar.html", "momentjs", "clndr"], (_, CalendarTmpl) ->
+define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", "momentjs", "clndr"], (_, CalendarTmpl, TimeUtility) ->
 	Backbone.View.extend
 		tagName: "div"
 		className: "calendar-wrap"
@@ -9,6 +9,7 @@ define ["underscore", "text!templates/calendar.html", "momentjs", "clndr"], (_, 
 			@listenTo( @model, "change:time", @renderTime )
 
 			@today = moment()
+			@timeUtil = new TimeUtility()
 		getCalendarOpts: ->
 			return {
 				template: CalendarTmpl
@@ -19,7 +20,7 @@ define ["underscore", "text!templates/calendar.html", "momentjs", "clndr"], (_, 
 				clickEvents:
 					click: @handleClickDay
 					onMonthChange: @handleMonthChanged
-				weekOffset: swipy.settings.get( "snoozes" ).weekday.startDay.number
+				weekOffset: swipy.settings.get( "SettingWeekStart" )
 				doneRendering: @afterRender
 				adjacentDaysChangeMonth: on
 				constraints:
@@ -37,14 +38,15 @@ define ["underscore", "text!templates/calendar.html", "momentjs", "clndr"], (_, 
 		getTimeObj: (moment) ->
 			snoozes = swipy.settings.get "snoozes"
 			day = @selectedDay.day()
-
+			weekSetting = swipy.settings.get "SettingWeekStartTime"
+			weekendSetting = swipy.settings.get "SettingWeekendStartTime"
 					  # sunday    # Saturday
 			if day is 0 or day is 6
-				hour: snoozes.weekend.morning.hour
-				minute: snoozes.weekend.morning.minute
+				hour: @timeUtil.hourForSeconds( weekendSetting )
+				minute: @timeUtil.minutesForSeconds( weekendSetting)
 			else
-				hour: snoozes.weekday.morning.hour
-				minute: snoozes.weekday.morning.minute
+				hour: @timeUtil.hourForSeconds( weekSetting )
+				minute: @timeUtil.minutesForSeconds( weekSetting )
 		getFormattedTime: (hour, minute) ->
 			if minute < 10 then minute = "0" + minute
 
@@ -76,7 +78,6 @@ define ["underscore", "text!templates/calendar.html", "momentjs", "clndr"], (_, 
 			else
 				@model.set( "time", @getTimeObj @selectedDay )
 				@model.set( "timeEditedBy", "calendar" )
-			@model.save()
 		handleClickDay: (day) ->
 			return false if $( day.element ).hasClass "past"
 			@selectDay( day.date, day.element )

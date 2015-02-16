@@ -1,10 +1,11 @@
-define ["underscore", "gsap-draggable", "slider-control", "momentjs"], (_, Draggable, SliderControl) ->
+define ["underscore", "gsap-draggable", "slider-control", "js/utility/TimeUtility", "momentjs"], (_, Draggable, SliderControl, TimeUtility) ->
 	Backbone.View.extend
 		tagName: "div"
 		className: "range-slider lobster"
 		initialize: ->
 			_.bindAll( @, "updateValue" )
 			@listenTo( @model, "change:time", _.debounce( @updateSlider, 50 ) )
+			@timeUtil = new TimeUtility()
 		getFloatFromTime: (hour, minute) ->
 			( hour / 24 ) + ( minute / 60 / 24 )
 		getTimeFromFloat: (value) ->
@@ -28,7 +29,9 @@ define ["underscore", "gsap-draggable", "slider-control", "momentjs"], (_, Dragg
 		getStartVal: ->
 			snoozes = swipy.settings.get "snoozes"
 			day = snoozes.weekday
-			result = @getFloatFromTime( day.morning.hour, day.morning.minute )
+			weekStartTime = swipy.settings.get "SettingWeekStartTime"
+
+			result = @getFloatFromTime( @timeUtil.hourForSeconds(weekStartTime), @timeUtil.minutesForSeconds(weekStartTime) )
 			return result
 		updateValue: ->
 			unless @model.get "userManuallySetTime" then @model.set( "userManuallySetTime", yes )

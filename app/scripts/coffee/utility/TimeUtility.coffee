@@ -1,14 +1,36 @@
-define ->
+define ["momentjs"], (Moment)->
 	class TimeUtility
 		###
 			Time based Helpers
 		###
+		hourForSeconds: ( seconds ) ->
+			return seconds / 3600
+		minutesForSeconds: ( seconds ) ->
+			return ( seconds % 3600 ) / 60
+		daysToNextDayFromDay: (fromDay, toDay) ->
+			return 0 if fromDay is toDay
+			deltaDay = fromDay
+			for number in [1...6]
+				deltaDay++
+				deltaDay is 0 if deltaDay > 6
+				return number if deltaDay is toDay
+		nextDayFromDay: (day) ->
+			nextDay = day + 1
+			nextDay = 0 if nextDay > 6
+			nextDay
 		isWeekend: (schedule) ->
-			if schedule.getDay() is 0 or schedule.getDay() is 6 then return yes
+			weekendStartDay = swipy.settings.get "SettingWeekendStart"
+			weekendSecondDay = @nextDayFromDay(weekendStartDay)
+			if schedule.getDay() is weekendStartDay or schedule.getDay() is weekendSecondDay then return yes
 			else return no
 
 		isWeekday: (schedule) ->
 			return !@isWeekend schedule
+
+		secondsSinceStartOfDay: ( date ) ->
+			compareMoment = moment(date)
+			startDayMomentDate = moment(date).startOf("day")
+			parseInt(Math.abs(compareMoment.diff(startDayMomentDate) / 1000), 10)
 
 		getMonFriSatSunFromDate: ( schedule ) ->
 			if @isWeekday schedule

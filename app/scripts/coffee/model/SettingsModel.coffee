@@ -2,24 +2,28 @@ define ["underscore"], (_) ->
 	Backbone.Model.extend
 		className: "Settings"
 		defaults:
+			SettingLaterToday:
+				3 * 3600
+			SettingEveningStartTime:
+				19 * 3600
+			SettingWeekStartTime:
+				9 * 3600
+			SettingWeekStart:
+				1
+			SettingWeekendStartTime:
+				10 * 3600
+			SettingWeekendStart:
+				2
+			SettingAddToBottom:
+				false
+			SettingFilter:
+				""
 			snoozes:
-				laterTodayDelay:
-					hours: 3
-					minutes: 0
 				weekday:
-					morning:
-						hour: 9
-						minute: 0
-					evening:
-						hour: 18
-						minute: 0
 					startDay:
 						name: "Monday"
 						number: 1 # Sunday, monday is 1
 				weekend:
-					morning:
-						hour: 10
-						minute: 0
 					startDay:
 						name: "Saturday"
 						number: 6 # Saturday

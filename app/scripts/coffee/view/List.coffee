@@ -363,7 +363,6 @@ define [
 					m = task
 					view.swipeRight( "completed" ).then =>
 						m.completeTask()
-						console.log "completed task"
 						compFunc()
 
 			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)

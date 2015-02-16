@@ -73,7 +73,7 @@ define [
 			return no
 		init: ->
 			@cleanUp()
-
+			@settings = new SettingsController()
 			@viewController = new ViewController()
 			@nav = new ListNavigation()
 			@router = new MainRouter()
@@ -81,7 +81,7 @@ define [
 			@input = new TaskInputController()
 			@sidebar = new SidebarController()
 			@filter = new FilterController()
-			@settings = new SettingsController()
+			
 
 			Backbone.history.start( pushState: no )
 

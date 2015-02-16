@@ -30,6 +30,31 @@
 		}
 
 	}
+	function dayStringForNumber( number ){
+		switch(number){
+			case 0:
+				return "Sunday";
+			case 1:
+				return "Monday";
+			case 2:
+				return "Tuesday";
+			case 3:
+				return "Wednesday";
+			case 4:
+				return "Thursday";
+			case 5:
+				return "Friday";
+			case 6:
+				return "Saturday";
+
+		}
+	}
+	function numberOfHoursFromSetting( setting ){
+		return setting / 3600
+	}
+	function numberOfMinutesFromSetting( setting ){
+		return (setting % 3600) / 60
+	}
 %>
 
 <section>
@@ -37,7 +62,7 @@
 		<li class="day">
 			<header>
 				<h3 class="h5">Start my day at</h3>
-				<button><%= formatTime( snoozes.weekday.morning.hour, snoozes.weekday.morning.minute ) %></button>
+				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingWeekStartTime), numberOfMinutesFromSetting(settings.SettingWeekStartTime) ) %></button>
 			</header>
 			<section>
 				<div class="range-slider">
@@ -49,7 +74,7 @@
 		<li class="evening">
 			<header>
 				<h3 class="h5">Start my evening at</h3>
-				<button><%= formatTime( snoozes.weekday.evening.hour, snoozes.weekday.evening.minute ) %></button>
+				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingEveningStartTime), numberOfMinutesFromSetting(settings.SettingEveningStartTime) ) %></button>
 			</header>
 			<section>
 				<div class="range-slider">
@@ -61,7 +86,7 @@
 		<li class="weekends">
 			<header>
 				<h3 class="h5">Start my weekend at</h3>
-				<button><%= formatTime( snoozes.weekend.morning.hour, snoozes.weekend.morning.minute ) %></button>
+				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingWeekendStartTime), numberOfMinutesFromSetting(settings.SettingWeekendStartTime) ) %></button>
 			</header>
 			<section>
 				<div class="range-slider">
@@ -73,12 +98,29 @@
 		<li class="week-start-day">
 			<header>
 				<h3 class="h5">My week starts</h3>
-				<button><%= snoozes.weekday.startDay.name %></button>
+				<button><%= dayStringForNumber(settings.SettingWeekStart) %></button>
 			</header>
 			<section>
 				<ol class="day-picker">
 					<!-- Make dynamic -->
-					<li class="selected" data-name="Monday" data-num="1">Mon</li>
+					<li data-name="Monday" data-num="1">Mon</li>
+					<li data-name="Tuesday" data-num="2">Tue</li>
+					<li data-name="Wednesday" data-num="3">Wed</li>
+					<li data-name="Thursday" data-num="4">Thu</li>
+					<li data-name="Friday" data-num="5">Fri</li>
+					<li data-name="Saturday" data-num="6">Sat</li>
+					<li data-name="Sunday" data-num="0">Sun</li>
+				</ol>
+			</section>
+		</li>
+		<li class="weekend-start-day">
+			<header>
+				<h3 class="h5">My weekend starts</h3>
+				<button><%= dayStringForNumber(settings.SettingWeekendStart) %></button>
+			</header>
+			<section>
+				<ol class="day-picker">
+					<li data-name="Monday" data-num="1">Mon</li>
 					<li data-name="Tuesday" data-num="2">Tue</li>
 					<li data-name="Wednesday" data-num="3">Wed</li>
 					<li data-name="Thursday" data-num="4">Thu</li>
@@ -91,7 +133,7 @@
 		<li class="later-today">
 			<header>
 				<h3 class="h5">Snooze Later Today</h3>
-				<button>+<%=formatTime(snoozes.laterTodayDelay.hours, snoozes.laterTodayDelay.minutes, false) %>h</button>
+				<button>+<%=formatTime(numberOfHoursFromSetting(settings.SettingLaterToday), numberOfMinutesFromSetting(settings.SettingLaterToday), false) %>h</button>
 			</header>
 			<section>
 				<div class="range-slider">
