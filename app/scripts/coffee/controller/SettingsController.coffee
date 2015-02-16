@@ -5,7 +5,10 @@ define ["underscore", "js/model/SettingsModel"], (_, SettingsModel) ->
 		events:
 			"click #support-button": "clickedSupport"
 		init: ->
-			@model = new SettingsModel()
+			currentJson = localStorage.getItem("SettingModel")
+			if currentJson
+				modelData = $.parseJSON(currentJson)
+			@model = new SettingsModel(modelData)
 
 			Backbone.on( "show-settings", @show, @ )
 			Backbone.on( "hide-settings", @hide, @ )

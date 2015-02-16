@@ -1,6 +1,7 @@
 define ["underscore"], (_) ->
 	Backbone.Model.extend
 		className: "Settings"
+
 		defaults:
 			SettingLaterToday:
 				3 * 3600
@@ -18,13 +19,6 @@ define ["underscore"], (_) ->
 				false
 			SettingFilter:
 				""
-			snoozes:
-				weekday:
-					startDay:
-						name: "Monday"
-						number: 1 # Sunday, monday is 1
-				weekend:
-					startDay:
-						name: "Saturday"
-						number: 6 # Saturday
-			hasPlus: no
+		set: ->
+			Backbone.Model.prototype.set.apply @ , arguments
+			localStorage.setItem("SettingModel", JSON.stringify(@toJSON()))
