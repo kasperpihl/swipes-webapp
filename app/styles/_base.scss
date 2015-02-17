@@ -53,8 +53,10 @@ div[role=main] {
 	}
 
 	header.add-new {
-		margin: emCalc(18px) 0 emCalc(10px);
-
+		margin: 0 0 emCalc(10px);
+		#add-task{
+			margin-top: emCalc(18px);
+		}
 		@include breakpoint(max-width, emCalc(400px)) {
 			margin-top: emCalc(5px);
 		}
