@@ -22,7 +22,6 @@ LoginView = Parse.View.extend
 	doAction: (action) ->
 		if $("body").hasClass "busy" then return console.warn "Can't do #{action} right now — I'm busy ..."
 		@setBusyState()
-
 		switch action
 			when "login"
 				email = @$el.find( "#email" ).val().toLowerCase()

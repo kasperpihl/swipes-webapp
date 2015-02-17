@@ -213,7 +213,6 @@ html.login body.busy {
 
 	input[type=submit] {
 		@include transition(border-color 0.3s ease-out);
-		border-color: #97dcc6;
 	}
 
 	.reset-password, .facebook h3 {
