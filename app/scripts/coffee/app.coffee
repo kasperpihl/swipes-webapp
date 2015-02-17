@@ -18,8 +18,9 @@ define [
 	"js/controller/SyncController"
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
+	"js/controller/UserController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController) ->
+	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController, UserController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -81,7 +82,7 @@ define [
 			@input = new TaskInputController()
 			@sidebar = new SidebarController()
 			@filter = new FilterController()
-			
+			@userController = new UserController()
 
 			Backbone.history.start( pushState: no )
 
@@ -126,4 +127,5 @@ define [
 		openedWindow: ->
 			Backbone.trigger("opened-window")
 			swipy.sync.sync()
+			swipy.userController.fetchUser()
 			

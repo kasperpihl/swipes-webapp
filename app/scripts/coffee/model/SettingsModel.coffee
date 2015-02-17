@@ -32,6 +32,10 @@ define ["underscore"], (_) ->
 			"SettingAddToBottom"
 			"SettingFilter"
 		]
+		parseSettingsFromServer:( settings ) ->
+			for key, value of settings
+				if @has(key) and @get(key) isnt value
+					@set key, value, {silent: true}
 		set: (key, val, options)->
 			Backbone.Model.prototype.set.apply @ , arguments
 			localStorage.setItem("SettingModel", JSON.stringify(@toJSON()))
@@ -42,10 +46,11 @@ define ["underscore"], (_) ->
 					options = val
 				else 
 					attrs[ key ] = val
+				return if options? and options.silent
 				for setting, value of attrs
 					if _.indexOf(@syncedSettings, setting) isnt -1
 						@debouncedSync()
-		syncedToJSON: ->
+		toSyncedJSON: ->
 			defaultJson = @toJSON()
 			_.pick( defaultJson, @syncedSettings )
 		syncSettings: ->
