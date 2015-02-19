@@ -111,7 +111,7 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 			#console.log( "oldY: " + @oldTaskY + " new: " + y) 
 			#console.log("c: " + $scrollEl.scrollTop() + " n: " + newScroll)
 			TweenLite.set( $scrollEl, { scrollTo: newScroll } )
-			TweenLite.set( window, { scrollTo: newScroll } )
+			#TweenLite.set( window, { scrollTo: newScroll } )
 
 			@oldTaskY = y
 			@setBounds()

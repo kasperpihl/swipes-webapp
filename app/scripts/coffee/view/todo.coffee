@@ -22,7 +22,6 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 			@setTodoOrder todos
 			ListView::beforeRenderList.apply( @, arguments )
 		afterRenderList: (todos) ->
-			swipy.bridge.callHandler("update-notification", { "number": todos.length })
 			return unless todos.length
 
 			# Dont init sort controller before transition in, because we need to read the height of the elements

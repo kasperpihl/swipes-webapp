@@ -85,9 +85,8 @@ define [
 		keyDownHandling: (e) ->
 			return if $("input").is(":focus")
 
-
 			if e.keyCode is 32
-				e.preventDefault()
+				e.preventDefault()	
 			# shift key
 
 			if e.keyCode is 16
@@ -152,7 +151,7 @@ define [
 					if targetY <= contentY
 						targetY = 0
 					if doScroll
-						TweenLite.set( scrollableView, { scrollTo: targetY } )
+						TweenLite.to( scrollableView, 0.05, { scrollTo: targetY } )
 		clearLongPress: ->
 			@didHitALongPress = false
 			@currentLongPressKey = null

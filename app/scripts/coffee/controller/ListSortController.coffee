@@ -3,6 +3,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )
 			@enableTouchListners()
+			_.bindAll( @, "scrolled" )
 		getHammerOpts: ->
 			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
 			{
@@ -70,7 +71,10 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 					@onDragCompleteCallback?.call @
 
 			dragOpts.trigger = view.$el.find ".todo-content"
+			$('#scrollcont').on('scroll.sortcontrol', @scrolled )
 			@draggable = new Draggable( view.el, dragOpts )
+		scrolled: ->
+			@draggable?.update()
 		redraw: ->
 			@killDraggable()
 			@model.rows = @model.getRows()
@@ -87,7 +91,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		onDrag: (view, model) ->
 			model.reorderRows( view, @y+$("#scrollcont").scrollTop() )
 			#console.log @minY + "-" + @maxY + " : " + @y + " : " + @pointerY
-			model.scrollWindow( @minY, @maxY, @y, @pointerY )
+			#model.scrollWindow( @minY, @maxY, @y, @pointerY )
 		onDragEnd: (view, model, self) ->
 			model.reorderRows( view, @endY )
 			model.oldTaskY = null
@@ -102,6 +106,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			TweenLite.to( @$el, dur, { y: newY } )
 		killDraggable: (removeCSS) ->
 			if @draggable?
+				$('#scrollcont').off("scroll.sortcontrol")
 				@draggable.disable()
 				@draggable = null
 				@removeInlineStyles() if removeCSS
