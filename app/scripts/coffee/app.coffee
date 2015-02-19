@@ -48,6 +48,7 @@ define [
 				@tags.fetch()
 				@todos.fetch()
 				@init()
+				@todos.prepareScheduledForNotifications()
 			else
 				Backbone.once( "sync-complete", @init, @ )
 			@sync.sync()
