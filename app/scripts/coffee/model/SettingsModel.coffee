@@ -34,8 +34,12 @@ define ["underscore"], (_) ->
 		]
 		parseSettingsFromServer:( settings ) ->
 			for key, value of settings
-				if @has(key) and @get(key) isnt value
-					@set key, value, {silent: true}
+				if @has(key)
+					if key is "SettingWeekStart" or key is "SettingWeekendStart"
+						value = parseInt(value, 10) - 1
+					currentValue = @get(key)
+					if value isnt currentValue
+						@set key, value, {silent: true}
 		set: (key, val, options)->
 			Backbone.Model.prototype.set.apply @ , arguments
 			localStorage.setItem("SettingModel", JSON.stringify(@toJSON()))
@@ -52,6 +56,9 @@ define ["underscore"], (_) ->
 						@debouncedSync()
 		toSyncedJSON: ->
 			defaultJson = @toJSON()
-			_.pick( defaultJson, @syncedSettings )
+			pickedValues = _.pick( defaultJson, @syncedSettings )
+			pickedValues["SettingWeekStart"] = pickedValues["SettingWeekStart"] + 1
+			pickedValues["SettingWeekendStart"] = pickedValues["SettingWeekendStart"] + 1
+			pickedValues
 		syncSettings: ->
 			Backbone.trigger("sync-settings")
