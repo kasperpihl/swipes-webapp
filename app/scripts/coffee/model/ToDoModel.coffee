@@ -39,7 +39,16 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			deleted: no
 			origin: null
 			originIdentifier: null
-
+		set: ( key, val, options ) ->
+			Backbone.Model.prototype.set.apply @ , arguments
+			attrs = {}
+			if key is null or typeof key is 'object'
+				attrs = key
+				options = val
+			else 
+				attrs[ key ] = val
+			if options and options.localSync
+				BaseModel.prototype.doSync.apply @ , []
 		save: ->
 			shouldSync = BaseModel.prototype.handleForSync.apply @ , arguments
 			Backbone.Model.prototype.save.apply @ , arguments
@@ -48,24 +57,34 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		constructor: ( attributes ) ->
 			if attributes.tags and attributes.tags.length > 0
 				attributes.tags = @handleTagsFromServer attributes.tags
+			if attributes.subtasksLocal
+				delete attributes.subtasksLocal
 			BaseModel.apply @, arguments
 			if attributes.parentLocalId
 				identifier = attributes.parentLocalId
 				parentModel = swipy.todos.find( 
 					( model ) ->
 						return true if identifier? and model.id is identifier
-						return true if identifier? and model.get("tempId") is identifier
 						false
 				)
 				if parentModel
-					@save "parent", parentModel
-					parentModel.addSubtask @		
+					parentModel.addSubtask @
+		linkToParent: (parent) ->
+			parent.addSubtask @
+
+		hasSubtask: ( model ) ->
+			currentSubtasks = @get "subtasksLocal"
+			return false if !currentSubtasks
+			for subtask in currentSubtasks
+				if subtask.id is model.id
+					return true
+			return false
 		addSubtask: ( model ) ->
 			currentSubtasks = @get "subtasksLocal"
 			if !currentSubtasks
 				currentSubtasks = []
 			currentSubtasks.push( model )
-			@save "subtasksLocal", currentSubtasks
+			@set "subtasksLocal", currentSubtasks, {localSync: true}
 			return @model
 		addNewSubtask: ( title, from ) ->
 			currentSubtasks = @getOrderedSubtasks()
@@ -130,7 +149,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			@set prop, value, { silent: true }
 		
 		isSubtask: ->
-			if @get "parent"
+			if @get "parentLocalId"
 				return true
 			else 
 				return false
@@ -401,8 +420,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					val = @handleTagsFromServer val
 				else if _.indexOf(dateKeys, attribute) isnt -1
 					val = @handleDateFromServer val
-				@set attribute, val if val isnt @get(attribute)
-			@save()
+				@set attribute, val, { localSync: true } if val isnt @get(attribute)
 			BaseModel.prototype.doSync.apply( @ )
 			false
 

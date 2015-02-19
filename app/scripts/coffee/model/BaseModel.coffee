@@ -23,9 +23,9 @@ define ["js/utility/Utility"], ( Utility ) ->
 				swipy.sync.handleModelForSync( @, attrs )
 				return true
 			return false
-		doSync: ->
+		doSync: (create) ->
 			command = "update"
-			if @isNew()
+			if @isNew() # or create? and create
 				command = "create"
 			if @get "deleted"
 				command = "delete"
@@ -35,6 +35,7 @@ define ["js/utility/Utility"], ( Utility ) ->
 					swipy.todos.remove(@)
 				else if @className is "Tag"
 					swipy.tags.remove(@)
+			console.log @get("title") + " " + @id + " " + command
 		toServerJSON: ( attrList ) ->
 			if !@attrWhitelist
 				return console.log "please add attrWhiteList in model for sync support"
@@ -47,5 +48,6 @@ define ["js/utility/Utility"], ( Utility ) ->
 			json
 
 		updateFromServerObj: ( obj ) ->
-			@set("needSaveToServer", false) if @get("needSaveToServer")
-			@set "deleted", obj.deleted if obj.deleted
+			if @get("needSaveToServer")
+				@set("needSaveToServer", false, {localSync: true})
+			@set "deleted", obj.deleted, {localSync: true} if obj.deleted

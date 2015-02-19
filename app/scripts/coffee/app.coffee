@@ -47,6 +47,7 @@ define [
 			if @sync.lastUpdate?
 				@tags.fetch()
 				@todos.fetch()
+				@todos.repairActionStepsRelations()
 				@init()
 				@todos.prepareScheduledForNotifications()
 			else
@@ -127,6 +128,7 @@ define [
 			if Parse.History.started then Parse.history.stop()
 		openedWindow: ->
 			Backbone.trigger("opened-window")
-			swipy.sync.sync()
-			swipy.userController.fetchUser()
+			if swipy?
+				swipy.sync.sync()
+				swipy.userController.fetchUser()
 			
