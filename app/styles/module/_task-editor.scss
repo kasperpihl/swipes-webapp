@@ -22,15 +22,15 @@
 			font-family: $font-light;
 		}
 		position: relative;
-		font-size: emCalc(20px);
+		font-size: emCalc(40px);
 		padding-left: $padding;
 
 		margin-bottom: emCalc(12px);
-		margin-top: 0.3em;
+		margin-top: 0.8em;
 
 		@include breakpoint(tablet) {
-			//margin-bottom: emCalc(20px);
-			//margin-top: emCalc(25px);
+			margin-bottom: emCalc(20px);
+			margin-top: emCalc(25px);
 		}
 	}
 

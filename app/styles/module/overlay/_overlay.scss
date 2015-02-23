@@ -40,20 +40,20 @@
 	}
 }
 
-html.no-touch {
-	body.overlay-open, body.settings-open, body.scheduler-open, body.tags-editor-open {
-		.container {
-			-webkit-filter: blur(5px);
-		}
+// html.no-touch {
+// 	body.overlay-open, body.settings-open, body.scheduler-open, body.tags-editor-open {
+// 		.container {
+// 			-webkit-filter: blur(5px);
+// 		}
 
-		&.hide-overlay, &.hide-settings, &.hide-scheduler, &.hide-tags-editor {
-			.container {
-				-webkit-filter: none;
-			}
-		}
+// 		&.hide-overlay, &.hide-settings, &.hide-scheduler, &.hide-tags-editor {
+// 			.container {
+// 				-webkit-filter: none;
+// 			}
+// 		}
 
-	}
-}
+// 	}
+// }
 
 body.overlay-open {
 	.overlay { visibility: visible; }
@@ -81,75 +81,96 @@ body.overlay-open {
 
 	margin: 0 auto;
 	width: 96%;
+
 	@include breakpoint(min-width, 427px) {
 		width: emCalc(410px);
 	}
 
+		.option {
+			padding: 21% 0 0;
+			@include breakpoint(min-width, 410px) { padding: 10% 0 0; }
 
-	a {
-		display: block;
-		width: 33.3%;
-		float: left;
+			p {
+				font-family: $font-bold;
+				margin: 0;
+				font-size: 0.7em;
 
-		// Proportional height
-		height: 0;
-		padding-bottom: 33.3%;
+				@include breakpoint(min-width, 410px) {
+					// font-size: 0.9em;
+					@include transition(all 0.17s ease-out);
+				}
+			}
+		}
 
-		color: white;
-		text-align: center;
+		a {
+			display: block;
+			width: 33.3%;
+			float: left;
+			overflow: hidden;
 
-		@include transition(all 0.2s ease-out);
+			// Proportional height
+			height: 0;
+			padding-bottom: 33.3%;
 
-		&:hover {
+			color: #1b1e23;
+			text-align: center;
 			text-decoration: none;
 
-			&:not(.disabled) {
-				background: rgba(white, 0.5);
+			@include transition(all 0.2s ease-out);
+
+			&:hover {
+
+				&:not(.disabled) {
+					background: rgba(black, 0.03);
+				}
+				
+				// Hover effect
+				@include breakpoint(min-width, 410px) {
+
+					div[class^="icon-"],
+					p {
+						color: $brand-swipes;
+					}
+
+				}
 			}
 		}
-	}
-
-	.option {
-		padding: 21% 0 0;
-		@include breakpoint(min-width, 410px) { padding: 18% 0 0; }
-
-		p {
-			margin: 0;
-			font-size: 0.75em;
-
-			@include breakpoint(min-width, 410px) {
-				font-size: 0.9em;
-			}
-		}
-	}
 }
 
 // Grid lines
 .overlay .grid a {
 	&:nth-child(3n-1) {
-		border-left: thin solid rgba(white, 0.5);
-		border-right: thin solid rgba(white, 0.5);
+		border-left: thin solid #ececec;
+		border-right: thin solid #ececec;
 	}
 
 	&:nth-child(4), &:nth-child(5), &:nth-child(6) {
-		border-top: thin solid rgba(white, 0.5);
-		border-bottom: thin solid rgba(white, 0.5);
+		border-top: thin solid #ececec;
+		border-bottom: thin solid #ececec;
 	}
 }
 
 // Icons
 .overlay .grid div[class^="icon-"] {
 	font-size: 2em;
-	margin-bottom: -0.2em;
+	// margin-bottom: 0;
 
 	@include breakpoint(min-width, 410px) {
-		font-size: 3em;
+		@include transition(all 0.17s ease-in-out);
+		font-size: 2.8em;
+		min-height: 1.7em;
+		line-height: 1.7em;
+
+			&:before {
+				display: inline;
+				vertical-align: middle;
+			}
 	}
 }
 
 // Rounded corners
 .overlay .grid {
-	border-radius: 1em;
+	// border-radius: 1em;
 	overflow: hidden;
 }
 

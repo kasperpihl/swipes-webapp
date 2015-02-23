@@ -3,6 +3,7 @@
 .sass-cache
 .DS_Store
 cloud/public
+npm-debug.log
 node_modules*
 public
 app/scripts/js

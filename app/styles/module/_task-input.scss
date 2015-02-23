@@ -22,6 +22,6 @@
 			text-indent: 0;
 		}
 		//@include breakpoint(min-height, emCalc(768px)) { font-size: emCalc(75px); }
-		@include breakpoint(min-height, $breakheight) { margin-top:20px; }
+		@include breakpoint(min-height, $breakheight) { font-size: emCalc(75px); }
 	}
 }

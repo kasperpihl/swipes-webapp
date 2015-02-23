@@ -16,8 +16,8 @@ body.scheduler-open {
 }
 
 .overlay.scheduler {
-	color: white;
-	.overlay-bg { background: rgba($lobster, 0.8); }
+	// color: white;
+	// .overlay-bg { background: rgba($lobster, 0.9); }
 
 	.round-btn.inverted:hover {
 		color: $lobster;
@@ -51,4 +51,11 @@ body.scheduler-open {
 		}
 	}
 
+}
+
+.snooze-options {
+	background-color: #fff;
+	border-radius: $border-radius-base;
+	border-bottom: 2px solid rgba(#000, 0.23);
+	@include drop-shadow(0, 0, 7px, rgba(#000, 0.20));
 }

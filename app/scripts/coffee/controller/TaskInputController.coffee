@@ -2,7 +2,21 @@ define ["underscore", "js/view/TaskInput"], (_, TaskInputView ) ->
 	class TaskInputController
 		constructor: ->
 			@view = new TaskInputView()
+			Backbone.on( "show-add", @showAddTask, @)
 			Backbone.on( "create-task", @createTask, @ )
+		showAddTask: ->
+			loadViewDfd = new $.Deferred()
+
+			if not @overlayView? then require ["js/view/overlays/AddOverlay"], (AddOverlayView) =>
+				@overlayView = new AddOverlayView()
+				$("body").append @overlayView.render().el
+				loadViewDfd.resolve()
+			else
+				loadViewDfd.resolve()
+
+			loadViewDfd.promise().done =>
+				@overlayView.render()
+				@overlayView.show()
 		parseTags: (str) ->
 			result = str.match /#(.[^,#]+)/g
 
