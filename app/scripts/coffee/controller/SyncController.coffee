@@ -48,11 +48,10 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if !model
 					continue if obj.deleted
 					model = new collection.model obj
-					console.log model
 					@changedAttributes.moveTempChangesForModel model
 					collection.add model
 					newModels.push model
-					model.doSync(true)
+					model.doSync()
 				else
 					recentChanges = @changedAttributes.getChangesForModel model
 					model.updateFromServerObj obj, recentChanges

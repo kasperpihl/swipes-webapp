@@ -35,7 +35,6 @@ define ["js/utility/Utility"], ( Utility ) ->
 					swipy.todos.remove(@)
 				else if @className is "Tag"
 					swipy.tags.remove(@)
-			console.log @get("title") + " " + @id + " " + command
 		toServerJSON: ( attrList ) ->
 			if !@attrWhitelist
 				return console.log "please add attrWhiteList in model for sync support"
