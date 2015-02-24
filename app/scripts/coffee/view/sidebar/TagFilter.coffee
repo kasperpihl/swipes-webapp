@@ -1,10 +1,11 @@
-define ["underscore"], (_) ->
+define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, WorkspacesTmpl) ->
 	Backbone.View.extend
 		events:
 			"click li:not(.delete)": "handleClickTag"
 			"click .delete": "toggleDeleteMode"
 			"click .remove": "removeTag"
 		initialize: ->
+			@template = _.template WorkspacesTmpl
 			@render = _.throttle( @render, 500 )
 
 			@listenTo( swipy.tags, "add remove reset", @render )
@@ -66,6 +67,7 @@ define ["underscore"], (_) ->
 			else
 				@getTagsForCurrentTasks()
 		render: ->
+			@$el.html @template {}
 			list = @$el.find ".rounded-tags"
 			list.empty()
 

@@ -1,11 +1,12 @@
-define ["underscore"], (_) ->
+define ["underscore", "text!templates/sidemenu/sidemenu-search.html"], (_, SearchTmpl) ->
 	Backbone.View.extend
+		className: "search-filter"
 		events:
 			"submit form": "search"
 			"keyup input": "search"
 			"change input": "search"
 		initialize: ->
-			@input = $ "form input"
+			@template = _.template SearchTmpl
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 		search: (e) ->
 			e.preventDefault()
@@ -19,9 +20,11 @@ define ["underscore"], (_) ->
 			_.defer =>
 				if type is "all" then @render()
 		render: ->
+			@$el.html @template {}
+			@input = $ "form input"
 			searchString = ""
 			searchString = swipy.filter.searchFilter if swipy.filter.searchFilter.length
-			$('.search input').val(searchString)
+			$('.search-filter input').val(searchString)
 		destroy: ->
 			@stopListening()
 			@undelegateEvents()

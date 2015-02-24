@@ -11,10 +11,11 @@ define ["underscore", "gsap-draggable", "slider-control", "js/utility/TimeUtilit
 		getTimeFromFloat: (value) ->
 			# There are 1440 minutes in a day
 			minutesTotal = Math.ceil(1440 * value)
+			#minutesTotal = minutesTotal/2
 
 			# Set hour and minute. Limit to 23.55, so we don't move over to the next day
 			if value is 0
-				{ hour: 0, minute: 15 }
+				{ hour: 0, minute: 0 }
 			else if value is 1
 				{ hour: 23, minute: 45 }
 			else

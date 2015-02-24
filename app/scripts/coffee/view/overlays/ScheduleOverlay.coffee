@@ -1,4 +1,4 @@
-define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html", "js/view/modules/TimeSlider"], (_, Overlay, ScheduleOverlayTmpl, TimeSliderView) ->
+define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html", "js/view/modules/TimeSlider", "js/utility/TimeUtility", "jquery-hammerjs"], (_, Overlay, ScheduleOverlayTmpl, TimeSliderView, TimeUtility) ->
 	Overlay.extend
 		className: 'overlay scheduler'
 		events:
@@ -9,21 +9,43 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 			"click .date-picker .save-button": "selectOption"
 		initialize: ->
 			Overlay::initialize.apply( @, arguments )
-
+			_.bindAll( @, "longPress" )
+			@timeUtil = new TimeUtility()
 			@showClassName = "scheduler-open"
 			@hideClassName = "hide-scheduler"
 			@activeMenu = "grid"
+			@enableTouchListners()
+		enableTouchListners: ->
+			@$el.hammer( @getHammerOpts() ).on( "press", ".snooze-options .grid > a", @longPress )
+		disableTouchListeners: ->
+			@$el.hammer().off( "press", @longPress )
+		longPress:(e) ->
+			target = $ e.currentTarget
+			@selectOptionFromTarget(target, true)
+			console.log e
+		getHammerOpts: ->
+			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
+			{
+				drag: off
+				swipe: off
+				tap: off
+				transform: off
+				# hold_threshold: 50
+				prevent_default: yes
+				hold_timeout: if Modernizr.touch then 400 else 400
+				domEvents:true
+			}
 		bindEvents: ->
 			_.bindAll( @, "handleResize", "keyUpHandling" )
 			$(window).on( "resize", @handleResize )
 			#$(document).on( 'keyup.overlay-content', @handleKeyUp )
-				
+
 		keyUpHandling: (e) ->
 			if e.keyCode > 48 and e.keyCode < 58 and @$el.html
 				#if @$el.hasClass "show-datepicker"
 				elNumber = parseInt( e.keyCode - 48, 10 )
 				pressedKey = $('.overlay .grid > a:nth-child(' + elNumber + ')')
-				@selectOptionFromTarget(pressedKey)
+				@selectOptionFromTarget(pressedKey, false)
 				e.stopPropagation()
 		setTemplate: ->
 			@template = _.template ScheduleOverlayTmpl
@@ -38,7 +60,7 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 			swipy.shortcuts.pushDelegate( @ )
 		afterHide: ->
 			swipy.shortcuts.popDelegate()
-		selectOptionFromTarget: (target) ->
+		selectOptionFromTarget: (target, longPress) ->
 			if target.hasClass( "save-button" ) and @datePicker?
 				moment = @datePicker.calendar.selectedDay
 				time = @datePicker.model.get "time"
@@ -52,15 +74,20 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 				@hideDatePicker()
 			else
 				option = target.attr "data-option"
+				if longPress? and longPress
+					switch option
+						when "later today", "this evening", "tomorrow", "day after tomorrow", "this weekend", "next week"
+							@showTimePicker()
+							@didLongPress = true
+							return
+
 			Backbone.trigger( "pick-schedule-option", option )
 		selectOption: (e) ->
-			if $(e.currentTarget).attr("data-option") is "pick a date"
-				@showDatePicker()
-			else
-				@showTimePicker()
-			return
+			return if @didLongPress? and @didLongPress
+#			if $(e.currentTarget).attr("data-option") is "pick a date"
+#				return @showDatePicker()
 			target = $ e.currentTarget
-			@selectOptionFromTarget(target)
+			@selectOptionFromTarget(target, false)
 			
 		hide: (cancelled = yes) ->
 			if cancelled and @currentTasks?
@@ -84,17 +111,24 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 				#@$el.addClass "show-datepicker"
 			
 			@setActiveMenu("date-picker")
-		showTimePicker: ->
+		changedTimeOnPicker: (model, value) ->
+			amPm = true
+			@$el.find(".time-label").html(@timeUtil.getFormattedTime(value.hour, value.minute, amPm))
+		showTimePicker: () ->
 			if not @timePickerSlider?
 				model = new Backbone.Model()
+				model.on("change:time", @changedTimeOnPicker, @)
 				@timePickerSlider = new TimeSliderView { model: model }
 				@$el.find( ".overlay-content .snooze-options .time-picker .time-slider" ).html @timePickerSlider.el
 				@timePickerSlider.render()
-				@timePickerSlider.model.set("time", { hour: 9, minute: 0})
+
+			@timePickerSlider.model.set("time", { hour: 9, minute: 0})
 			@setActiveMenu("time-picker")
 		hideDatePicker: ->
+			@didLongPress = false
 			@setActiveMenu( "grid" )
 		hideTimePicker: ->
+			@didLongPress = false
 			@setActiveMenu( "grid")
 		handleResize: ->
 			return unless @shown
@@ -106,6 +140,7 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 		cleanUp: ->
 			$(window).off( "resize", @handleResize )
 			@datePicker.remove()
+			@disableTouchListeners()
 			#$(document).off(".overlay-content")
 			# Same as super() in real OOP programming
 			Overlay::cleanUp.apply( @, arguments )
