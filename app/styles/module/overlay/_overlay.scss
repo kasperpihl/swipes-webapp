@@ -184,11 +184,11 @@ body.overlay-open {
 }
 
 // Grid intro animation
-.overlay.scheduler .grid {
-	display: none;
+.overlay.scheduler .snooze-options {
+	// display: none;
 
 	body.scheduler-open & {
-		display: block;
+		// display: block;
 
 		@extend .animated;
 		@extend .scaleDown;

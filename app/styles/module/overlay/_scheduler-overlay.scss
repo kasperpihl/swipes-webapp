@@ -24,7 +24,9 @@ body.scheduler-open {
 	}
 }
 
+// overlay inned elements
 .overlay {
+
 	.date-picker {
 		display: none;
 		margin: 0 auto;
@@ -41,21 +43,114 @@ body.scheduler-open {
 		}
 	}
 
-	&.show-datepicker {
-		.date-picker {
-			display: block;
-		}
+	.time-picker {
+		text-align: center;
+		padding: 4em 3em 0;
+		line-height: 1;
 
-		.grid {
-			display: none !important;
-		}
+			h1, h2, h3, h4, h5 {
+				line-height: 1;
+			}
+			
+			.day-label {
+				margin: 0 0 .3em;
+				color: #505966;
+				font-size: 16.5px;
+			}
+
+			.time-label {
+				font-size: 85px;
+				color: $gray-dark;
+				margin: 0 0 4rem;
+				font-family: $font-light;
+			}
+
+			.time-slider {
+				margin: 0;
+				line-height: 1;
+				font-weight: normal;
+
+					.range-slider {
+						margin: 0 0 1.2em;
+					}
+			}
+
+			.am-button,
+			.pm-button {
+				display: none;
+			}
+
+	}
+
+
+	.done-button,
+	.save-button {
+		display: inline-block;
+		@extend .ca-button;
+		@include centerBlock(auto, 1em, 1.3em, auto, auto, absolute);
+	}
+
+
+	.back-button {
+		display: inline-block;
+		color: $gray;
+		background-color: transparent;
+		border: none;
+		outline: none;
+		@extend .icon;
+		@extend .icon-arr-left;
+		@include centerBlock(auto, auto, 1.3em, 1em, auto, absolute);
 	}
 
 }
 
+
+// customizing slider structure
+.overlay .range-slider {
+
+	.track {
+		margin-top: -6px;
+		background-color: transparent;
+		border: 2px solid #e0e0e0;
+		height: 15px;
+		@include border-radius(25px);
+	}
+
+	.handle {
+		@include square(1.9em);
+		border-width: 1px;
+		margin-left: -( 1.9em / 2);
+		margin-top: -( 1.9em / 2);
+	}
+
+}
+
+
 .snooze-options {
+	position: relative;
 	background-color: #fff;
+	max-width: 100%;
+	min-height: 400px;
 	border-radius: $border-radius-base;
 	border-bottom: 2px solid rgba(#000, 0.23);
 	@include drop-shadow(0, 0, 7px, rgba(#000, 0.20));
+	overflow: hidden;
+
+	@include breakpoint(mobile-horizontal) {
+		@include square(413px);
+	}
+
+	> nav {
+		@include square(inherit);
+		display: none;
+		background-color: #fff;
+
+			&.active {
+				display: block;
+				@extend .animated;
+				@extend .fadeIn;
+				@include experimental(animation-duration, 0.35s);
+			}
+	}
+
 }

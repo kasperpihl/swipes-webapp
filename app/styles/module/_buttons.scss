@@ -41,6 +41,21 @@
 	}
 }
 
+.ca-button {
+	display: inline-block;
+	line-height: 1;
+	outline: none;
+	padding: .6em .7em;
+	min-width: 120px;
+	letter-spacing: 1px;
+	text-align: center;
+	font-size: 16px;
+	color: #fff;
+	background-color: #1b1e23;
+	border: none;
+	@include border-radius(25px);
+}
+
 nav.centered-buttons {
 	text-align: center;
 
