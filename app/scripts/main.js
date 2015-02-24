@@ -138,7 +138,9 @@ require.config({
 
 require(["jquery", "backbone"], function($) {
     window.$ = window.jQuery = $;
-
+    require(["bootstrapTooltip"],function(){
+        $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});
+    })
     require(["parse"], function() {
         // First check that the user is actually logged in
         

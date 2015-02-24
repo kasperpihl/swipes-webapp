@@ -1,6 +1,6 @@
 define ["underscore", "js/view/modules/Calendar", "js/view/modules/TimeSlider", "text!templates/datepicker.html"], (_, CalendarView, TimeSliderView, DatePickerTmpl) ->
 	Backbone.View.extend
-		className: "date-picker"
+		className: "picker"
 		initialize: ->
 			@setTemplate()
 			@model = new Backbone.Model()
@@ -13,7 +13,7 @@ define ["underscore", "js/view/modules/Calendar", "js/view/modules/TimeSlider", 
 			# Add Calendar view
 			@timeSlider = new TimeSliderView { model: @model }
 			@calendar = new CalendarView { model: @model }
-			@$el.find( ".content" ).append( @calendar.el ).append( @timeSlider.el )
+			@$el.prepend( @timeSlider.el ).prepend( @calendar.el )
 
 			@timeSlider.render()
 			@calendar.render()

@@ -4,12 +4,12 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
+ 
 	<title>Swipes</title>
-
+ 
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
-
+ 
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 	<!-- build:css(.tmp) styles/main.css -->
 	<link rel="stylesheet" href="styles/main.css">
@@ -26,55 +26,63 @@
 	<script>
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 	</script>
-
 	<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;
 s.src='https://widget.intercom.io/widget/yobuz4ff';
 var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
-
+ 
 	<!-- build:js scripts/vendor/modernizr.js -->
 	<script src="bower_components/modernizr/modernizr.js"></script>
 	<!-- endbuild -->
 </head>
-
+ 
 <body class="loading">
 	<!--[if lt IE 10]>
 	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
-
+ 
 	<div class="container">
-		<a class="open-sidebar" href="JavaScript:void(0);" tabindex="5" title="Open sidebar">
-			<span></span>
-		</a>
-		<aside class="sidebar">
-			<a href="JavaScript:void(0);" title="Close sidebar" class="close-sidebar icon-cross"></a>
-
-			<section class="search">
-				<form>
-					<input class="borderless" type="search" placeholder="Search" autocomplete>
-				</form>
-			</section>
-
-			<section class="date-filter">
-				<!-- calendar filter -->
-			</section>
-
-			<section class="tags-filter">
-				<ul class="rounded-tags">
+ 
+ 
+		<aside class="sidebar sub-opened">
+			<div class="sidebar_content">
+				
+				<a href="#" class="swipes-logo">
+					<img src="styles/img/logo.svg" alt="Swipes">
+				</a>
+ 
+				<ul class="sidebar-controls">
+					<li>
+						<a href="#" class="btn-icon addtask" data-toggle="tooltip" data-placement="right" title="Add a task">Add task</a>
+					</li>
+					<li>
+						<a href="#" class="btn-icon search" data-toggle="tooltip" data-placement="right" title="Search for task">Search</a>
+					</li>
+					<li>
+						<a href="#" class="btn-icon workspaces" data-toggle="tooltip" data-placement="right" title="Workspaces">Workspaces</a>
+					</li>
+					<li>
+						<a href="#" class="btn-icon settings" data-toggle="tooltip" data-placement="right" title="Settings">Settings</a>
+					</li>
 				</ul>
-			</section>
-
-			<a class="log-out" href="http://swipesapp.com/app"><span class="icon-log-out"></span></a>
-			<a class="settings" href="#settings"><span class="icon-cog"></span></a>
-		</aside>
-		<div class="scroll-container" id="scrollcont">
+ 
+			</div><!-- content -->
+ 
+			<div class="sidebar-sub">
+				[sub structures]
+			</div><!-- sub structures come here -->
+ 
+		</aside><!-- sidebar -->
+ 
+ 
+		<section class="scroll-container" id="scrollcont">
 			<div id="main" role="main">
-
+ 
 				<header class="add-new row">
 					<form id="add-task">
 						<input type="text" tabindex="1" placeholder="Add a task" class="borderless" autocomplete>
 					</form>
 				</header>
-
+ 
 				<nav class="row">
 					<ul class="list-nav">
 						<li><a tabindex="2" class="schedule" href="#list/scheduled"><span class="sr-only">Schedule</span></a></li>
@@ -82,7 +90,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 						<li><a tabindex="4" class="checkmark" href="#list/completed"><span class="sr-only">Completed</span></a></li>
 					</ul>
 				</nav>
-
+ 
 				<section id="main-content" class="row">
 					<ol class="todo-list hidden scheduled"></ol>
 					<ol class="todo-list hidden todo"></ol>
@@ -91,18 +99,18 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 						<span id="search-result-string"></span>
 						<a href="#">Clear workspace</a>
 					</div>
-
+ 
 					<ul class="action-bar fadeout">
 						<li><a href="JavaScript:void(0);" class="edit" title="Edit"><span class="icon-pencil"></span></a></li>
 						<li><a href="JavaScript:void(0);" class="tags" title="Set tags"><span class="icon-tags"></span></a></li>
 						<li><a href="JavaScript:void(0);" class="delete" title="Delete"><span class="icon-trashcan"></span></a></li>
 						<li><a href="JavaScript:void(0);" class="share" title="Share"><span class="icon-share"></span></a></li>
 					</ul>
-
+ 
 					<div class="list-fade hidden-xs"></div>
-
+ 
 				</section>
-
+ 
 				<div class="load-indicator">
 					<div class="spinner">
 						<div class="bounce1"></div>
@@ -110,10 +118,12 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 						<div class="bounce3"></div>
 					</div>
 				</div>
+ 
 			</div>
-		</div><!-- .scroll-container -->
+		</section><!-- .scroll-container -->
+ 
 	</div>
-
+ 
 	<!-- build:js scripts/main.js -->
 	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
 	<!-- endbuild -->

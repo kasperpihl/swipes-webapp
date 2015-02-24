@@ -16,20 +16,15 @@ define ["js/model/ToDoModel", "localStorage"], ( ToDoModel ) ->
 				@invoke( "set", { rejectedByTag: no, rejectedBySearch: no } )
 		repairActionStepsRelations: ->
 			lostActionSteps = @filter (m) -> m.has("parentLocalId")
-			#console.log lostActionSteps
 			parentsById = {}
 			for actionStep in lostActionSteps
-				console.log actionStep.get("title")
 				parentId = actionStep.get "parentLocalId"
 				parent = parentsById[ parentId ]
 				if !parent
 					parent = @get(parentId)
 					parentsById[parentId] = parent
 				if parent and !parent.hasSubtask(actionStep)
-					console.log "linked"
 					actionStep.linkToParent(parent)
-
-
 		getActive: ->
 			@filter (m) -> m.getState() is "active" and !m.isSubtask()
 		getScheduled: ->

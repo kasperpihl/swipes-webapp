@@ -3,24 +3,25 @@ define ["underscore"], (_) ->
 		events:
 			"click .close-sidebar": "handleAction"
 			"click .log-out": "handleAction"
+			"click .addtask": "handleAction"
+			"click .search": "handleAction"
+			"click .workspaces": "handleAction"
+			"click .settings": "handleAction"
 		initialize: ->
 			_.bindAll( @, "handleAction" )
-			$( ".open-sidebar" ).on( "click", @handleAction )
 
 		handleAction: (e) ->
 			trigger = $ e.currentTarget
-
-			if trigger.hasClass "open-sidebar"
-				$("body").toggleClass( "sidebar-open", yes )
-			else if trigger.hasClass "close-sidebar"
-				$("body").toggleClass( "sidebar-open", no )
+			if trigger.hasClass "addtask"
+				return Backbone.trigger("show-add")
+			else if trigger.hasClass "search"
+			else if trigger.hasClass "workspaces"
+			else if trigger.hasClass "settings"
 			else if trigger.hasClass "log-out"
 				e.preventDefault()
 				if confirm "Are you sure you want to log out?"
 					localStorage.clear()
 					Parse.User.logOut()
 					location.pathname = "/login/"
-
 		destroy: ->
 			@stopListening()
-			$( ".open-sidebar" ).off( "click", @handleAction )

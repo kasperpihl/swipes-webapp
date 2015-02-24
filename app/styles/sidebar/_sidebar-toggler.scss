@@ -1,42 +1,42 @@
-.open-sidebar {
-	$padding: 0.5em;
-	position: fixed;
-	display: block;
+// .open-sidebar {
+// 	$padding: 0.5em;
+// 	position: fixed;
+// 	display: block;
 
-	body.loading & {
-		display: none;
-	}
+// 	body.loading & {
+// 		display: none;
+// 	}
 
-	body.sidebar-open & { display: none; }
+// 	body.sidebar-open & { display: none; }
 
-	bottom: $padding;
-	left: $padding;
-	z-index: 9999;
+// 	bottom: $padding;
+// 	left: $padding;
+// 	z-index: 9999;
 
-	&:focus {
-		outline: none;
-	}
+// 	&:focus {
+// 		outline: none;
+// 	}
 
-	@include breakpoint(tablet) {
-		top: $padding;
-		bottom: auto;
-	}
+// 	@include breakpoint(tablet) {
+// 		top: $padding;
+// 		bottom: auto;
+// 	}
 
-	color: inherit;
-	text-align: center;
-	@include transition(all 0.2s ease-out);
+// 	color: inherit;
+// 	text-align: center;
+// 	@include transition(all 0.2s ease-out);
 
-	span {
-		@extend .icon-swipes-logo-square;
-		font-size: 2.2em;
-		line-height: 1.4em;
-	}
+// 	span {
+// 		@extend .icon-swipes-logo-square;
+// 		font-size: 2.2em;
+// 		line-height: 1.4em;
+// 	}
 
-	&:hover, &:focus {
-		text-decoration: none;
-		color: inherit;
-		span {
-			@extend .icon-swipes-logo-square-act;
-		}
-	}
-}
+// 	&:hover, &:focus {
+// 		text-decoration: none;
+// 		color: inherit;
+// 		span {
+// 			@extend .icon-swipes-logo-square-act;
+// 		}
+// 	}
+// }

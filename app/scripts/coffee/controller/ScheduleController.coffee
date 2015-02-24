@@ -11,14 +11,17 @@ define ["underscore", "js/model/ScheduleModel", "momentjs"], (_, ScheduleModel) 
 		showScheduleView: (tasks) ->
 			loadViewDfd = new $.Deferred()
 
-			if not @view? then require ["js/view/overlays/ScheduleOverlay"], (ScheduleOverlayView) =>
-				@view = new ScheduleOverlayView( model: @model )
-				$("body").append @view.render().el
+			if not @scheduleTemplate? then require ["js/view/overlays/ScheduleOverlay"], (ScheduleOverlayView) =>
+				@scheduleTemplate = ScheduleOverlayView
 				loadViewDfd.resolve()
 			else
 				loadViewDfd.resolve()
 
 			loadViewDfd.promise().done =>
+				@view = new @scheduleTemplate( model: @model )
+				$('.overlay.scheduler').remove()
+				$("body").append @view.render().el
+				
 				@view.render()
 				@view.show()
 				@view.currentTasks = @currentTasks = tasks
@@ -27,7 +30,6 @@ define ["underscore", "js/model/ScheduleModel", "momentjs"], (_, ScheduleModel) 
 			return unless @currentTasks
 			if option is "pick a date"
 				return Backbone.trigger( "select-date" )
-
 			if typeof option is "string"
 				date = @model.getDateFromScheduleOption option
 			else if typeof option is "object"

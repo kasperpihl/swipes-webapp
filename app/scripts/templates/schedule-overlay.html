@@ -1,19 +1,29 @@
 <div class="overlay-bg"></div>
 <div class="overlay-content">
-	
-	<nav class="grid">
-
-		<% _.each(options, function(option) { %>
-			<a href="JavaScript:void(0);" data-option="<%= option.id %>" <% if (option.disabled) print( "class='disabled'" ) %>>
-				<% if (!option.disabled) { %>
-					<div class="option">
-						<div class="icon-snooze-<%= option.id.replace(/\s/g, "-") %>"></div>
-						<p><%= option.title %></p>
-					</div>
-				<% } %>
-			</a>
-		<% }); %>
-		
-	</nav>
-
+	<div class="snooze-options">
+		<nav class="grid active">
+			<% _.each(options, function(option) { %>
+				<a href="JavaScript:void(0);" data-option="<%= option.id %>" <% if (option.disabled) print( "class='disabled'" ) %>>
+					<% if (!option.disabled) { %>
+						<div class="option">
+							<div class="icon-snooze-<%= option.id.replace(/\s/g, "-") %>"></div>
+							<p><%= option.title %></p>
+						</div>
+					<% } %>
+				</a>
+			<% }); %>
+			
+		</nav>
+		<nav class="time-picker">
+			<h3 class="day-label">Tomorrow</h3>
+			<h1 class="time-label">09:00</h1>
+			<div class="time-slider"></div>
+			<button class="am-button">am</button><button class="pm-button">pm</button>
+			<button class="back-button">Back</button>
+			<button class="done-button">Set</button>
+		</nav>
+		<nav class="date-picker">
+			
+		</nav>
+	</div>
 </div>

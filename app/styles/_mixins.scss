@@ -92,6 +92,16 @@
 }
 
 
+@mixin centerBlock($top, $right, $bottom, $left, $margin, $position) {
+	position: $position;
+	top: $top;
+	right: $right;
+	bottom: $bottom;
+	left: $left;
+	margin: $margin;
+}
+
+
 .no-select {
 	cursor: default;
 

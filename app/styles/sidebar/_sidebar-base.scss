@@ -1,29 +1,52 @@
+
+// Structure holder
 .sidebar {
-	display: none;
-	body.sidebar-open & { display: block; }
-
-	position: absolute;
-	left: 0;
-
-	min-height: 100%;
 	width: $sidebar-width;
-	padding: 12px;
+	z-index: 5;
+	@include centerBlock(0, auto, 0, 0, 0, fixed);
+	@include user-select(none);
+		
 
-	@include breakpoint(desktop) {
-		width: $sidebar-width-big;
-		padding: 20px;
-	}
+		// wide desktop
+		// @include breakpoint(desktop-wide) {
+		// 	width: $sidebar-width-big;
+		// };
 
-	background: $gray;
 
-	color: #9FA8B2;
-	#{headers()} { color: white; }
+		// Base content wrapper
+	
+
+}
+.sidebar-sub {
+	display:none;
+	width: $sidebar-sub-width;
+	height: 100%;
+	overflow-y: auto;
+	border-right: 1px solid #e0e0e0;
+	padding: 5em 2em .5em;
+	@include centerBlock(0, auto, 0, $sidebar-width, 0, absolute);
+}
+.sidebar_content {
+	padding: 60px 10px 0;
+	width: inherit;
+	text-align: center;
+	background-color: $sidebar-bg;
+	border-right: 2px solid #e0e0e0;
+	z-index: 1;
+	@include centerBlock(0, auto, 0, 0, 0, absolute);
 }
 
-.sidebar > section {
-	margin-top: 45px;
+// Body structure when sidebar is opened
+// body.sidebar-opened & {
+// 	padding-left: ( $sidebar-width + $sidebar-sub-width );
+// }
 
-	@include breakpoint(min-height, emCalc(800px)) {
-		margin-top: 75px;
-	}
-}
+
+
+// .sidebar > section {
+// 	margin-top: 45px;
+
+// 	@include breakpoint(min-height, emCalc(800px)) {
+// 		margin-top: 75px;
+// 	}
+// }

@@ -12,8 +12,6 @@ $brand-swipes: $red;
 // --------------------------------------------------
 $blue: #56606a;
 $blue-dark: #39414a;
-$sidebar-width: 280px;
-$sidebar-width-big: 340px;
 
 $priority-size: 12px;
 $priority-big-size: 16px;
@@ -626,3 +624,14 @@ $container-desktop:           ((940px + $grid-gutter-width)) !default;
 
 // Large screen / wide desktop
 $container-lg-desktop:        ((1140px + $grid-gutter-width)) !default;
+
+
+
+
+
+// Sidebar varialbes
+// -------------------------
+$sidebar-width: 125px;
+$sidebar-width-big: 160px;
+$sidebar-sub-width: 400px;
+$sidebar-bg: #fff;

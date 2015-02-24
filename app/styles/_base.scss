@@ -1,4 +1,4 @@
-html{
+html {
 	height:100%;
 	overflow: hidden;
 	body{
@@ -6,18 +6,22 @@ html{
 		overflow: hidden;
 	}
 }
+
 html.touch body {
 	@include breakpoint(tablet-horizontal) {
 		min-width: 1180px;
 	}
 }
-.row{
+
+.row {
 	margin-left:0px;
 	margin-right:0px;
 }
-#main-content{
+
+#main-content {
 	padding-bottom:5em;
 }
+
 .container {
 	margin: auto;
 	padding: 0;
@@ -25,18 +29,26 @@ html.touch body {
 	overflow:hidden;
 	height:100%;
 	width:100%;
-	.scroll-container{
-		height:100%;
-		width:100%;
-		overflow-y:scroll;
-	}
-	.sidebar-open & {
-		padding-left: $sidebar-width + 15px;
 
-		@include breakpoint(desktop) {
-			left: $sidebar-width-big + 30px;
+		.scroll-container{
+			height:100%;
+			width:100%;
+			overflow-y:scroll;
+			padding-left: $sidebar-width;
+
+				// wide desktop
+				// @include breakpoint(desktop-wide) {
+				// 	padding-left: $sidebar-width-big;
+				// }
 		}
-	}
+
+		// .sidebar-open & {
+		// 	padding-left: $sidebar-width + 15px;
+
+		// 	@include breakpoint(desktop) {
+		// 		left: $sidebar-width-big + 30px;
+		// 	}
+		// }
 }
 
 div[role=main] {
