@@ -119,7 +119,7 @@
 		
 		@include border-radius(50%);
 		@include opacity(.4);
-		@include transition(all 0.2s ease-out);
+		@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);
 
 			svg {
 				display: inline-block;
