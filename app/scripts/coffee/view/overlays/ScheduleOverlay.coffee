@@ -61,6 +61,7 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 			swipy.shortcuts.pushDelegate( @ )
 		afterHide: ->
 			swipy.shortcuts.popDelegate()
+			@destroy()
 		selectOptionFromTarget: (target, longPress) ->
 			if target.hasClass( "done-button" )
 				if @activeDate? and @timePickerSlider?
@@ -185,7 +186,7 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 			
 		cleanUp: ->
 			$(window).off( "resize", @handleResize )
-			@datePicker.remove()
+			@datePicker?.remove()
 			@disableTouchListeners()
 			#$(document).off(".overlay-content")
 			# Same as super() in real OOP programming
