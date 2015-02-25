@@ -75,23 +75,22 @@
 	z-index: 10000;
 	position: fixed;
 	bottom: 0;
-	top: -30%;
+	top: 0;
 	left: 20%;
 	margin: auto 0;
 
-	padding: 0;
+	padding: emCalc(210px) 0 0;
 	text-align: center;
 
 	width: 40px;
-	height: 200px;
 	// max-width: emCalc(350px);
 
 	@include breakpoint(min-width, emCalc(350px)) {
 		left: 50%;
-		margin-left: 0 - emCalc(300px);
+		margin-left: 0 - emCalc(310px);
 
 		.sidebar-open & {
-			margin-left: 0 - emCalc(350px - $sidebar-width);
+			margin-left: 0 - emCalc(360px - $sidebar-width);
 		}
 	}
 
@@ -103,7 +102,7 @@
 
 	li {
 		list-style: none;
-		margin-bottom: emCalc(25px);
+		margin-bottom: emCalc(30px);
 	}
 
 	a {
