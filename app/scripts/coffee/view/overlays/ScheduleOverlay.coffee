@@ -1,4 +1,4 @@
-define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html", "js/view/modules/TimeSlider", "js/utility/TimeUtility", "jquery-hammerjs"], (_, Overlay, ScheduleOverlayTmpl, TimeSliderView, TimeUtility) ->
+define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html", "js/view/modules/TimeSlider", "js/utility/TimeUtility", "jquery-hammerjs", "momentjs"], (_, Overlay, ScheduleOverlayTmpl, TimeSliderView, TimeUtility) ->
 	Overlay.extend
 		className: 'overlay scheduler'
 		events:
@@ -7,6 +7,7 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 			"click .date-picker .back-button": "hideDatePicker"
 			"click .time-picker .back-button" :"hideTimePicker"
 			"click .date-picker .save-button": "selectOption"
+			"click .time-picker .done-button": "selectedOptionFromTimePicker"
 		initialize: ->
 			Overlay::initialize.apply( @, arguments )
 			_.bindAll( @, "longPress" )
@@ -61,27 +62,65 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 		afterHide: ->
 			swipy.shortcuts.popDelegate()
 		selectOptionFromTarget: (target, longPress) ->
-			if target.hasClass( "save-button" ) and @datePicker?
-				moment = @datePicker.calendar.selectedDay
+			if target.hasClass( "done-button" )
+				if @activeDate? and @timePickerSlider?
+					date = moment(@activeDate)
+					time = @timePickerSlider.model.get "time"
+					date.millisecond 0
+					date.second 0
+					date.hour time.hour
+					date.minute time.minute
+					@activeDate = null
+					option = date
+					@hideTimePicker()
+
+			else if target.hasClass( "save-button" ) and @datePicker?
+				locMoment = @datePicker.calendar.selectedDay
 				time = @datePicker.model.get "time"
 
-				moment.millisecond 0
-				moment.second 0
-				moment.hour time.hour
-				moment.minute time.minute
+				locMoment.millisecond 0
+				locMoment.second 0
+				locMoment.hour time.hour
+				locMoment.minute time.minute
 
-				option = moment
+				option = locMoment
 				@hideDatePicker()
 			else
 				option = target.attr "data-option"
 				if longPress? and longPress
 					switch option
 						when "later today", "this evening", "tomorrow", "day after tomorrow", "this weekend", "next week"
-							@showTimePicker()
+							@showTimePicker(option)
 							@didLongPress = true
 							return
-			console.log option
 			Backbone.trigger( "pick-schedule-option", option )
+		getDayWithoutTime: (day) ->
+			fullStr = day.calendar()
+			timeIndex = fullStr.indexOf( " at " )
+
+			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm",
+			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
+			if timeIndex isnt -1
+				return fullStr.slice( 0, timeIndex )
+			else
+				return fullStr
+		getTitleStringForDate:(schedule) ->
+			now = moment()
+			parsedDate = moment schedule
+			dayDiff =  Math.abs parsedDate.diff( now, "days" )
+
+			# If difference is more than 1 week, we want different formatting
+			if dayDiff >= 6
+				# If it's next year, add year suffix
+				if parsedDate.year() > now.year() then result = parsedDate.format "MMM Do 'YY"
+				else result = parsedDate.format "MMM Do"
+			else
+				result = @getDayWithoutTime parsedDate
+
+			result
+		selectedOptionFromTimePicker: (e) ->
+			target = $ e.currentTarget
+			@selectOptionFromTarget(target, false)
 		selectOption: (e) ->
 			return if @didLongPress? and @didLongPress
 #			if $(e.currentTarget).attr("data-option") is "pick a date"
@@ -114,7 +153,7 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 		changedTimeOnPicker: (model, value) ->
 			amPm = true
 			@$el.find(".time-label").html(@timeUtil.getFormattedTime(value.hour, value.minute, amPm))
-		showTimePicker: () ->
+		showTimePicker: (option) ->
 			if not @timePickerSlider?
 				model = new Backbone.Model()
 				model.on("change:time", @changedTimeOnPicker, @)
@@ -123,6 +162,8 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 				@timePickerSlider.render()
 
 			@timePickerSlider.model.set("time", { hour: 9, minute: 0})
+			@activeDate = @model.getDateFromScheduleOption(option)
+			@$el.find( ".overlay-content .snooze-options .time-picker .day-label" ).html @getTitleStringForDate(@activeDate)
 			@setActiveMenu("time-picker")
 		hideDatePicker: ->
 			@didLongPress = false

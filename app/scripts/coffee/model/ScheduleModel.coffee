@@ -71,7 +71,9 @@ define ["underscore", "momentjs", "js/utility/TimeUtility"], (_, Moment, TimeUti
 
 				when "next week"
 					weekStartDay = swipy.settings.get "SettingWeekStart"
+					console.log newDate.day() + " " + weekStartDay
 					numberOfDaysToNextWeek = @timeUtil.daysToNextDayFromDay( newDate.day(), weekStartDay )
+					console.log numberOfDaysToNextWeekend
 					if numberOfDaysToNextWeek
 						newDate.add( "days", numberOfDaysToNextWeekend )
 					else if currentSecondsInDay > weekStartTime
