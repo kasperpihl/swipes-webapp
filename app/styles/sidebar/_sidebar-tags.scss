@@ -4,45 +4,53 @@
 			cursor: pointer;
 			background: transparent;
 			margin: 0 0.4em 0.4em 0;
-			color: white;
-			border: thin solid rgba(white, 0.8);
+			color: $brand-dakrcolor;
+			border: thin solid rgba($brand-dakrcolor, 0.8);
 			font-family: $font-normal;
 
 			@include transition(color 0.15s ease-out);
 
-			&:hover { color: rgba(white, 0.5); }
-			&.selected {
-				font-family: $font-bold;
-				background: white;
-				color: $gray;
-				border-color: $gray;
-			}
-
-			&.tag-input {
-				background: $yellow !important;
+			&.selected,
+			&:hover {
+				background: $brand-dakrcolor;
 				color: white;
 			}
 		}
 
-		li.delete {
-			$h: 2.42em;
-			background: $lobster;
-			border-color: transparent;
-			height: $h;
-
-			&:hover {
-				color: white;
-			}
+		li.delete {	
+			background: none;
+			border: none;
+			$h: 2.25em;
+			padding: 0;
+			text-align: center;
 
 			a {
-				color: inherit;
-				font-size: 1.2em;
-				padding: 0 1.1em;
+				background: transparent;
+				display: inline-block;
+				border: thin solid $brand-dakrcolor;
+				padding: 0;
 
-				text-shadow: 0 0 0px white;
+				font-size: 1.1em;
+				text-align: center;
+				line-height: ( $h + 0.1em );
+				color: $brand-dakrcolor;
 
-				&:hover { text-decoration: none; }
+				@extend .basic-transition;
+
+				@include square($h);
+				@include border-radius(50%);
+
+				&:hover {
+					text-decoration: none;
+					background-color: $brand-dakrcolor;
+					color: white;
+				}
 			}
 		}
 	}
+}
+
+// Temporary ---
+.delete-mode .rounded-tags li:not(.delete):before {
+	content: "x " !important;
 }

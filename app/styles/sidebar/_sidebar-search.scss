@@ -1,19 +1,19 @@
 .sidebar input[type=search] {
 	position: relative;
 	
+	font-style: italic;
 	font-family: $font-light;
-	font-size: 28px;
-	@include breakpoint(tablet) { font-size: 40px; }
-	@include input-placeholder { color: white; }
-	color: white;
+	font-size: 34px;
+	@include input-placeholder { color: #999; }
+	color: $brand-dakrcolor;
 	text-indent: 0.35em;
 
-	border-left: thin solid white;
+	border-left: thin solid $gray-lighter;
 
-	@include transition(text-indent 0.2s ease-out);
+	@include transition(text-indent 0.2s ease-out, border 0.2s ease-out);
 
 	&:focus {
 		text-indent: 0;
-		border-left: none;
+		border-left: 0 solid transparent;
 	}
 }

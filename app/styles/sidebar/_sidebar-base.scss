@@ -20,12 +20,14 @@
 			text-align: center;
 			background-color: $sidebar-bg;
 			border-right: 2px solid #e0e0e0;
-			z-index: 1;
+			z-index: 2;
 			@include centerBlock(0, auto, 0, 0, 0, absolute);
 		}
 
 		&-sub {
-			display: none;
+			display: block;
+			@include transition(all $sidebar-animation ease-in-out);
+			@include translate3d( -($sidebar-sub-width), 0, 0);
 			width: $sidebar-sub-width;
 			background-color: $sidebar-bg;
 			height: 100%;
@@ -33,6 +35,16 @@
 			border-right: 1px solid #e0e0e0;
 			padding: 5em 2em .5em;
 			@include centerBlock(0, auto, 0, $sidebar-width, 0, absolute);
+			z-index: 1;
+		}
+		
+		// if the sidebar sub child is opened
+		&.sub-open {
+			
+			.sidebar-sub {
+				@include translate3d( 0, 0, 0);
+			}
+
 		}
 }
 

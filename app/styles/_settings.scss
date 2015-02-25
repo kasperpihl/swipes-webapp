@@ -21,6 +21,7 @@ $priority-big-size: 16px;
 $gray:            		#24282E;
 $nav-gray:				#9E9E9E;
 $gray-light:            #ededee !default;
+$gray-titles:           #505966;
 
 // Brand colors
 // -------------------------
@@ -29,6 +30,7 @@ $brand-success:         #5cb85c !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
 $brand-info:            #5bc0de !default;
+$brand-dakrcolor:       #1b1e23;
 
 // Scaffolding
 // -------------------------
@@ -635,3 +637,4 @@ $sidebar-width: 125px;
 $sidebar-width-big: 160px;
 $sidebar-sub-width: 400px;
 $sidebar-bg: #fff;
+$sidebar-animation: 230ms;

@@ -76,6 +76,22 @@
 			}
 	}
 
+
+	.sub-close {
+		line-height: 1;
+		font-size: 25px;
+		text-decoration: none;
+		color: #1b1e23;
+		@extend .icon;
+		@extend .icon-cross;
+		@include centerBlock(1em, 1em, auto, auto, 0, absolute);
+		@include transition(transform 120ms ease);
+
+			&:hover {
+				@include scale(1.1);
+			}
+	}
+
 	
 	// Control menus
 	.sidebar-controls {
@@ -133,12 +149,23 @@
 	}
 
 
-	&:hover .sidebar-controls {
+	.sidebar_content:hover .sidebar-controls {
 		> li {
 			> a {
 				@include opacity(1);
 			}
 		}
+	}
+
+
+	.sub-title {
+		font-size: 13.5px;
+		font-family: $font-normal;
+		color: $gray-titles;
+		margin: 0 0 3.5em;
+		line-height: 1;
+		text-align: center;
+		letter-spacing: 2px;
 	}
 
 	
@@ -160,6 +187,11 @@
 	.tooltip-inner {
 		white-space: nowrap;
 		font-size: 14px;
+	}
+
+
+	.search-filter {
+		
 	}
 
 

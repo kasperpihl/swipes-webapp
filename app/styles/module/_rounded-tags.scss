@@ -10,12 +10,12 @@
 		display: block;
 		float: left;
 
-		margin: 0 0.7em 0.7em 0;
+		margin: 0 emCalc(15px) 0.7em 0;
 
-		padding: emCalc(9px) emCalc(12px);
+		padding: emCalc(9px) emCalc(20px);
 		background: transparent;
 		@include transition(background 0.15s ease-out);
-		border-radius: 0.5em;
+		@include border-radius(25px);
 
 		color: $gray;
 		font-size: 0.8em;

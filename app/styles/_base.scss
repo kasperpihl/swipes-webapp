@@ -35,7 +35,8 @@ html.touch body {
 			width:100%;
 			overflow-y:scroll;
 			padding-left: $sidebar-width;
-			
+			@include transition(padding $sidebar-animation ease);
+
 				.sidebar-open & {
 					padding-left: $sidebar-width + $sidebar-sub-width;
 				}

@@ -59,10 +59,25 @@ body.scheduler-open {
 			}
 
 			.time-label {
-				font-size: 85px;
+				font-size: 4.6em;
 				color: $gray-dark;
 				margin: 0 0 4rem;
+				position: relative;
+				display: block;
 				font-family: $font-light;
+
+					small {
+						color: #888;
+						font-size: 3rem;
+						line-height: 1;
+						vertical-align: middle;
+						position: absolute;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						margin: auto 0;
+						height: 3rem;
+					}
 			}
 
 			.time-slider {

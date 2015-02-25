@@ -101,6 +101,9 @@
 	margin: $margin;
 }
 
+.basic-transition {
+	@include transition(all 200ms ease);
+}
 
 .no-select {
 	cursor: default;
