@@ -17,7 +17,6 @@
     "grunt-contrib-copy": "*",
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-htmlmin": "*",
-    "grunt-contrib-imagemin": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-requirejs": "*",
     "grunt-contrib-uglify": "*",

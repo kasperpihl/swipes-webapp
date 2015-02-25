@@ -204,37 +204,37 @@
           todos = views = null;
           return describe("To Do View: Hovering", function() {
             beforeEach(function() {
-              var model, view, _i, _len, _results;
+              var j, len, model, results, view;
               list.empty();
               todos = new ToDoCollection(helpers.getDummyModels());
               views = (function() {
-                var _i, _len, _ref, _results;
-                _ref = todos.models;
-                _results = [];
-                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                  model = _ref[_i];
-                  _results.push(new View({
+                var j, len, ref, results;
+                ref = todos.models;
+                results = [];
+                for (j = 0, len = ref.length; j < len; j++) {
+                  model = ref[j];
+                  results.push(new View({
                     model: model
                   }));
                 }
-                return _results;
+                return results;
               })();
-              _results = [];
-              for (_i = 0, _len = views.length; _i < _len; _i++) {
-                view = views[_i];
-                _results.push(list.append(view.el));
+              results = [];
+              for (j = 0, len = views.length; j < len; j++) {
+                view = views[j];
+                results.push(list.append(view.el));
               }
-              return _results;
+              return results;
             });
             after(function() {
               return contentHolder.empty();
             });
             it("Should be unresponsive to 'hover-complete' event when not selected", function() {
-              var count, view, _i, _len;
+              var count, j, len, view;
               Backbone.trigger("hover-complete");
               count = 0;
-              for (_i = 0, _len = views.length; _i < _len; _i++) {
-                view = views[_i];
+              for (j = 0, len = views.length; j < len; j++) {
+                view = views[j];
                 if (view.$el.hasClass("hover-complete")) {
                   count++;
                 }
@@ -242,11 +242,11 @@
               return expect(count).to.equal(0);
             });
             it("Should be unresponsive to 'hover-schedule' event when not selected", function() {
-              var count, view, _i, _len;
+              var count, j, len, view;
               Backbone.trigger("hover-schedule");
               count = 0;
-              for (_i = 0, _len = views.length; _i < _len; _i++) {
-                view = views[_i];
+              for (j = 0, len = views.length; j < len; j++) {
+                view = views[j];
                 if (view.$el.hasClass("hover-schedule")) {
                   count++;
                 }
@@ -254,13 +254,13 @@
               return expect(count).to.equal(0);
             });
             it("Should get the 'hover-left' CSS class when 'hover-complete' event is triggered when selected", function() {
-              var count, view, _i, _len;
+              var count, j, len, view;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
               Backbone.trigger("hover-complete");
               count = 0;
-              for (_i = 0, _len = views.length; _i < _len; _i++) {
-                view = views[_i];
+              for (j = 0, len = views.length; j < len; j++) {
+                view = views[j];
                 if (view.$el.hasClass("hover-left")) {
                   count++;
                 }
@@ -268,15 +268,15 @@
               return expect(count).to.equal(2);
             });
             it("Should remove the 'hover-left' CSS class when 'unhover-complete' event is triggered when selected", function() {
-              var count, view, _i, _len;
+              var count, j, len, view;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
               views[0].$el.addClass("hover-complete");
               views[1].$el.addClass("hover-complete");
               Backbone.trigger("unhover-complete");
               count = 0;
-              for (_i = 0, _len = views.length; _i < _len; _i++) {
-                view = views[_i];
+              for (j = 0, len = views.length; j < len; j++) {
+                view = views[j];
                 if (view.$el.hasClass("hover-left")) {
                   count++;
                 }
@@ -284,13 +284,13 @@
               return expect(count).to.equal(0);
             });
             it("Should get the 'hover-right' CSS class when 'hover-schedule' event is triggered when selected", function() {
-              var count, view, _i, _len;
+              var count, j, len, view;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
               Backbone.trigger("hover-schedule");
               count = 0;
-              for (_i = 0, _len = views.length; _i < _len; _i++) {
-                view = views[_i];
+              for (j = 0, len = views.length; j < len; j++) {
+                view = views[j];
                 if (view.$el.hasClass("hover-right")) {
                   count++;
                 }
@@ -298,15 +298,15 @@
               return expect(count).to.equal(2);
             });
             return it("Should remove the 'hover-right' CSS class when 'unhover-schedule' event is triggered when selected", function() {
-              var count, view, _i, _len;
+              var count, j, len, view;
               views[0].model.set("selected", true);
               views[1].model.set("selected", true);
               views[0].$el.addClass("hover-right");
               views[1].$el.addClass("hover-right");
               Backbone.trigger("unhover-schedule");
               count = 0;
-              for (_i = 0, _len = views.length; _i < _len; _i++) {
-                view = views[_i];
+              for (j = 0, len = views.length; j < len; j++) {
+                view = views[j];
                 if (view.$el.hasClass("hover-right")) {
                   count++;
                 }
@@ -640,10 +640,10 @@
         return it("Should always put new tasks at the top", function(done) {
           Backbone.trigger("create-task", "number 1 for order testing");
           return setTimeout(function() {
-            var m, newFirstModel, _i, _len, _ref;
-            _ref = _.pluck(view.subviews, "model");
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              m = _ref[_i];
+            var j, len, m, newFirstModel, ref;
+            ref = _.pluck(view.subviews, "model");
+            for (j = 0, len = ref.length; j < len; j++) {
+              m = ref[j];
               if (m.get("order") === 0) {
                 newFirstModel = m;
               }
@@ -690,11 +690,11 @@
           return setTimeout(done, 50);
         });
         it("Should always put the tasks changed from scheduled to active at the top", function(done) {
-          var future, lastModel, m, models, _i, _len;
+          var future, j, lastModel, len, m, models;
           console.clear();
           models = _.pluck(view.subviews, "model");
-          for (_i = 0, _len = models.length; _i < _len; _i++) {
-            m = models[_i];
+          for (j = 0, len = models.length; j < len; j++) {
+            m = models[j];
             if (m.get("order") === (models.length - 1)) {
               lastModel = m;
             }
@@ -771,10 +771,10 @@
           });
           Backbone.trigger("clockwork/update");
           return setTimeout(function() {
-            var firstNewModel, m, newModels, _i, _len;
+            var firstNewModel, j, len, m, newModels;
             newModels = _.pluck(view.subviews, "model");
-            for (_i = 0, _len = newModels.length; _i < _len; _i++) {
-              m = newModels[_i];
+            for (j = 0, len = newModels.length; j < len; j++) {
+              m = newModels[j];
               if (m.get("order") === 0) {
                 firstNewModel = m;
               }
@@ -1239,6 +1239,7 @@
           return expect(task.get("repeatDate")).to.be.falsy;
         });
       });
+
       /*
       		describe "Duplicating tasks", ->
       			task = duplicate = null
@@ -1319,8 +1320,7 @@
       
       			it "Should update repeatCount++ every time a the same task is duplicated/repeated", ->
       				expect( duplicate.get "repeatCount" ).to.equal ( task.get( "repeatCount" ) + 1 )
-      */
-
+       */
       describe("Duplicating a task based on repeatDate and repeatOption", function() {
         var task;
         task = null;
@@ -1617,6 +1617,7 @@
         });
         return it("Should delete duplicated (repeated) tasks when repeatOption is set to 'never'");
       });
+
       /*
       		describe "Completing a task with repeat set and automatically spawning a new task", ->
       			it "TodoCollection should listen for tasks that are completed and spawn a duplicate if repeatOption is anything but 'never'", (done) ->
@@ -1635,7 +1636,7 @@
       					expect( spawnSpy ).to.have.been.calledOnce
       					expect( todoCollection.models ).to.have.length 2
       
-      					# Clean up this mess
+      					 * Clean up this mess
       					ToDoCollection::spawnRepeatTask.restore()
       					todoCollection.off()
       					todoCollection = null
@@ -1653,15 +1654,15 @@
       					expect( spawnSpy ).to.have.been.calledOnce
       					expect( todoCollection.models ).to.have.length 1
       
-      					# Clean up this mess
+      					 * Clean up this mess
       					ToDoCollection::spawnRepeatTask.restore()
       					todoCollection.off()
       					todoCollection = null
       
       					done()
-      */
-
+       */
     });
+
     /*
     	describe "Tag Filter", ->
     		beforeEach ->
@@ -1683,17 +1684,17 @@
     				renderSpy = sinon.spy( TagFilter.prototype, "render" )
     				filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
     
-    				# Filter renders automatically upon instantiation
+    				 * Filter renders automatically upon instantiation
     				expect( renderSpy ).to.have.been.calledOnce
     
-    				# Set up unique dummy title
+    				 * Set up unique dummy title
     				dummyTitle = "dummy-" + new Date().getTime()
     
-    				# Render should be called after a new tag was added
+    				 * Render should be called after a new tag was added
     				swipy.tags.add { title: dummyTitle }
     				expect( renderSpy ).to.have.been.calledTwice
     
-    				# Render should be called after a tag was removed
+    				 * Render should be called after a tag was removed
     				swipy.tags.remove swipy.tags.findWhere { title: dummyTitle }
     				expect( renderSpy ).to.have.been.calledThrice
     
@@ -1703,20 +1704,20 @@
     
     		it "Should show all tags again if the last tag is de-selected", (done) ->
     			require ["view/sidebar/TagFilter"], (TagFilter) ->
-    				# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
+    				 * We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
     				savedRender = swipy.sidebar.tagFilter.__proto__.render
     				swipy.sidebar.tagFilter.render = ->
     
     				renderSpy = sinon.spy( TagFilter.prototype, "render" )
     				filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
     
-    				# Filter renders automatically upon instantiation
+    				 * Filter renders automatically upon instantiation
     				expect( renderSpy ).to.have.been.calledOnce
     
-    				# Get original tag count
+    				 * Get original tag count
     				origTagCount = filter.$el.find("li:not(.tag-input)").length
     
-    				# Do a top level filter. Only 1 tag selected.
+    				 * Do a top level filter. Only 1 tag selected.
     				Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
     				Backbone.trigger( "remove-filter", "tag", "Santa-Maria" )
     				_.defer ->
@@ -1725,42 +1726,42 @@
     					tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
     					expect( tags ).to.have.length origTagCount
     
-    					# Remove spy
+    					 * Remove spy
     					TagFilter.prototype.render.restore()
     
-    					# Reset HTML
+    					 * Reset HTML
     					filter.remove()
     					$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
     
-    					# Re-enable render method on swipys tagFilter
+    					 * Re-enable render method on swipys tagFilter
     					swipy.sidebar.tagFilter.render = savedRender
     					done()
     
     		describe "Filtering tasks", ->
     			it "If one or more tags are selected, it should only show the tasks that has all of those filters", ->
     
-    				# Make sure we have our 3 tasks all set up
+    				 * Make sure we have our 3 tasks all set up
     				taskTitles = swipy.todos.pluck "title"
     				expect( taskTitles ).to.include "TagTester1"
     				expect( taskTitles ).to.include "TagTester2"
     				expect( taskTitles ).to.include "TagTester3"
     
-    				# Make sure we have our 3 tags all set up
+    				 * Make sure we have our 3 tags all set up
     				tagTitles = swipy.tags.pluck "title"
     				expect( tagTitles ).to.include "Nina"
     				expect( tagTitles ).to.include "Pinta"
     				expect( tagTitles ).to.include "Santa-Maria"
     
-    				# Filter for first tag. None of the 3 tasks should be rejected.
+    				 * Filter for first tag. None of the 3 tasks should be rejected.
     				Backbone.trigger( "apply-filter", "tag", "Nina" )
     				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 3
     
-    				# Filter for second tag. TagTester1 should be rejected
+    				 * Filter for second tag. TagTester1 should be rejected
     				Backbone.trigger( "apply-filter", "tag", "Pinta" )
     				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 2
     				expect( swipy.todos.findWhere( { title: "TagTester1" } ).get "rejectedByTag" ).to.be.true
     
-    				# Filter for second tag. TagTester1 and TagTester2 should be rejected
+    				 * Filter for second tag. TagTester1 and TagTester2 should be rejected
     				Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
     				expect( swipy.todos.where { rejectedByTag: no } ).to.have.length 1
     				expect( swipy.todos.findWhere( { title: "TagTester2" } ).get "rejectedByTag" ).to.be.true
@@ -1768,23 +1769,23 @@
     		describe "Narrowing down available tags after filtering", ->
     			it "If one or more tags are selected, it should only show those remaining tags that will allow you to do a deeper filter. No tag should ever leed to 0 results when selected.", (done) ->
     				require ["view/sidebar/TagFilter"], (TagFilter) ->
-    					# We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
+    					 * We disable the render method on swipys tagFilter, as it will react to our events and mess up the call counts
     					savedRender = swipy.sidebar.tagFilter.__proto__.render
     					swipy.sidebar.tagFilter.render = ->
     
     					renderSpy = sinon.spy( TagFilter.prototype, "render" )
     					filter = new TagFilter { el: $( ".sidebar .tags-filter" ) }
     
-    					# Filter renders automatically upon instantiation
+    					 * Filter renders automatically upon instantiation
     					expect( renderSpy ).to.have.been.calledOnce
     
-    					# Do a top level filter. Only 1 tag selected.
+    					 * Do a top level filter. Only 1 tag selected.
     					Backbone.trigger( "apply-filter", "tag", "Nina" )
     					_.defer ->
     						expect( renderSpy ).to.have.been.calledTwice
     
-    						# tags is an array of the text content found inside every <li> in the HTML for the filter. This represents real DOM elements,
-    						# but in a way that's easier to work with.
+    						 * tags is an array of the text content found inside every <li> in the HTML for the filter. This represents real DOM elements,
+    						 * but in a way that's easier to work with.
     						tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
     
     						expect( tags ).to.have.length 3
@@ -1792,8 +1793,8 @@
     						expect( tags ).to.contain "Pinta"
     						expect( tags ).to.contain "Santa-Maria"
     
-    						# Do a deeper filter — Both #Nina & #Pinta are now selected.
-    						# It should render the same result as above ...
+    						 * Do a deeper filter — Both #Nina & #Pinta are now selected.
+    						 * It should render the same result as above ...
     						Backbone.trigger( "apply-filter", "tag", "Pinta" )
     						_.defer ->
     							tags = ( $(tag).text() for tag in filter.$el.find("li:not(.tag-input)") )
@@ -1803,7 +1804,7 @@
     							expect( tags ).to.contain "Pinta"
     							expect( tags ).to.contain "Santa-Maria"
     
-    							# Do another deep filter — #Pinta & #Santa-Maria are now selected.
+    							 * Do another deep filter — #Pinta & #Santa-Maria are now selected.
     							Backbone.trigger( "remove-filter", "tag", "Nina" )
     							Backbone.trigger( "apply-filter", "tag", "Santa-Maria" )
     							_.defer ->
@@ -1818,7 +1819,7 @@
     								expect( tags ).to.contain "Pinta"
     								expect( tags ).to.contain "Santa-Maria"
     
-    								# Do another deep filter — #Nina, #Pinta & #Santa-Maria are now selected.
+    								 * Do another deep filter — #Nina, #Pinta & #Santa-Maria are now selected.
     								Backbone.trigger( "apply-filter", "tag", "Nina" )
     								_.defer ->
     									expect( swipy.filter.tagsFilter ).to.have.length 3
@@ -1833,14 +1834,14 @@
     									expect( tags ).to.contain "Pinta"
     									expect( tags ).to.contain "Santa-Maria"
     
-    									# Remove spy
+    									 * Remove spy
     									TagFilter.prototype.render.restore()
     
-    									# Reset HTML
+    									 * Reset HTML
     									filter.remove()
     									$(".sidebar").append "<section class='tags-filter'><ul class='rounded-tags'></ul></section>"
     
-    									# Re-enable render method on swipys tagFilter
+    									 * Re-enable render method on swipys tagFilter
     									swipy.sidebar.tagFilter.render = savedRender
     									done()
     
@@ -1875,8 +1876,7 @@
     				it "Should remove clicked tag from all tasks if clicked tag is marked selected"
     				it "Should add clicked tag to all tasks unless tag is marked selected"
     				it "Should add new tag to all selected tasks if a new tag is created"
-    */
-
+     */
     return describe("Router", function() {
       before(function() {
         location.hash = "";
@@ -1897,12 +1897,13 @@
         return expect(swipy.settings.view).to.be.undefined;
       });
       it("Should trigger appropiate logic when navigating to 'settings'", function(done) {
-        var eventTriggered,
-          _this = this;
+        var eventTriggered;
         eventTriggered = false;
-        Backbone.once("show-settings", function() {
-          return eventTriggered = true;
-        });
+        Backbone.once("show-settings", (function(_this) {
+          return function() {
+            return eventTriggered = true;
+          };
+        })(this));
         location.hash = "settings";
         return _.defer(function() {
           expect(eventTriggered).to.be["true"];
@@ -1916,12 +1917,13 @@
         return expect(swipy.settings.view.subview).to.not.exist;
       });
       it("Should trigger appropiate logic when navigating to 'settings/:-id'", function(done) {
-        var eventTriggered,
-          _this = this;
+        var eventTriggered;
         eventTriggered = false;
-        Backbone.once("show-settings", function() {
-          return eventTriggered = true;
-        });
+        Backbone.once("show-settings", (function(_this) {
+          return function() {
+            return eventTriggered = true;
+          };
+        })(this));
         location.hash = "settings/faq";
         _.defer(function() {
           expect(eventTriggered).to.be["true"];
@@ -1934,14 +1936,15 @@
         }, 150);
       });
       it("Should trigger appropiate logic when navigating to 'list/:id'", function(done) {
-        var eventTriggered,
-          _this = this;
+        var eventTriggered;
         eventTriggered = false;
-        Backbone.once("navigate/view", function(id) {
-          if (id === "scheduled") {
-            return eventTriggered = true;
-          }
-        });
+        Backbone.once("navigate/view", (function(_this) {
+          return function(id) {
+            if (id === "scheduled") {
+              return eventTriggered = true;
+            }
+          };
+        })(this));
         location.hash = "list/scheduled";
         _.defer(function() {
           return expect(eventTriggered).to.be["true"];
@@ -1955,17 +1958,18 @@
         });
       });
       it("Should trigger appropiate logic when navigating to 'edit/:id'", function(done) {
-        var eventTriggered, testTask, testTaskId,
-          _this = this;
+        var eventTriggered, testTask, testTaskId;
         testTask = swipy.todos.at(0);
         testTaskId = "router-edit-test-id" + new Date().getTime();
         testTask.id = testTaskId;
         eventTriggered = false;
-        Backbone.once("edit/task", function(id) {
-          if (id === testTaskId) {
-            return eventTriggered = true;
-          }
-        });
+        Backbone.once("edit/task", (function(_this) {
+          return function(id) {
+            if (id === testTaskId) {
+              return eventTriggered = true;
+            }
+          };
+        })(this));
         location.hash = "edit/" + testTaskId;
         _.defer(function() {
           return expect(eventTriggered).to.be["true"];
@@ -2010,21 +2014,22 @@
         });
       });
       it("Should have a catch-all which results in 'list/todo'", function() {
-        var eventTriggered,
-          _this = this;
+        var eventTriggered;
         eventTriggered = false;
-        Backbone.once("navigate/view", function(id) {
-          if (id === "todo") {
-            return eventTriggered = true;
-          }
-        });
+        Backbone.once("navigate/view", (function(_this) {
+          return function(id) {
+            if (id === "todo") {
+              return eventTriggered = true;
+            }
+          };
+        })(this));
         location.hash = "random/jibberish";
         return _.defer(function() {
           return expect(eventTriggered).to.be["true"];
         });
       });
       return it("The router should have a custom history lookup, so we can call swipy.router.back() and make sure not to go outside our current domain, unlike history.back in the browser", function(done) {
-        var i, lastRouteDfd, route, routerTriggeredTimes, taskTestId, testRoutes, _fn, _i, _len;
+        var fn, i, j, lastRouteDfd, len, route, routerTriggeredTimes, taskTestId, testRoutes;
         expect(swipy.router).to.respondTo("back");
         expect(swipy.router).to.have.property("history");
         lastRouteDfd = new $.Deferred();
@@ -2035,7 +2040,7 @@
         taskTestId = swipy.todos.at(0).get("title") + "testroute" + new Date().getTime();
         swipy.todos.at(0).id = taskTestId;
         testRoutes = ["", "list/scheduled", "edit/" + taskTestId, "list/scheduled", "list/completed", "", "settings"];
-        _fn = function() {
+        fn = function() {
           var count, path;
           count = i;
           path = route;
@@ -2049,9 +2054,9 @@
             }
           }, i * 200);
         };
-        for (i = _i = 0, _len = testRoutes.length; _i < _len; i = ++_i) {
+        for (i = j = 0, len = testRoutes.length; j < len; i = ++j) {
           route = testRoutes[i];
-          _fn();
+          fn();
         }
         return lastRouteDfd.promise().done(function() {
           var fixRoute;
