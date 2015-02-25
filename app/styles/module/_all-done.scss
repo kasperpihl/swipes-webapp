@@ -1,0 +1,104 @@
+
+// All done blocks structures
+
+// Base holder
+// ..........
+.all-done {
+	
+	position: relative;
+	text-align: center;
+	padding-top: 20%;
+
+	@include clearfix();
+
+}
+
+
+
+// Elements
+// ............................................
+.all-done {
+
+
+	// Images
+	// ..........
+	.done-image {
+		display: none;
+		text-align: center;
+		margin-bottom: emCalc(25px);
+
+			img {
+				@include square(212px);
+				@include img-responsive(inline-block);
+			}
+	}
+
+
+	// Content
+	// ..........
+	.done-content {
+		margin: 0 auto emCalc(25px);
+		width: 50%;
+		max-width: 280px;
+		text-align: center;
+		color: $gray-titles;
+		font-size: 15.5px;
+		font-family: $font-normal;
+	}
+
+
+	// Social links
+	// ..........
+	.done-socials {
+
+		a {
+			display: inline-block;
+			@include square(40px);
+			margin: 0 emCalc(10px);
+			@include transition(transform 120ms ease);
+
+				svg {
+					@include square(inherit);
+					fill: $gray-titles;
+				}
+
+				&:hover {
+					@include scale(1.1);
+				}
+
+				&:hover svg {
+					fill: $brand-dakrcolor;
+				}
+		}
+
+	}
+
+}
+
+
+
+// Base and elements states
+// ............................................
+.all-done {
+	
+	// When we don't have any task for now
+	// ..........
+	&.for-now {
+		
+		.done-image.now {
+			display: block;
+		}
+
+	}
+
+	// When we don't have any task for today
+	// ..........
+	&.for-today {
+		
+		.done-image.today {
+			display: block;
+		}
+
+	}
+
+}
