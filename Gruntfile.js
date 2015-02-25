@@ -39,6 +39,10 @@ module.exports = function (grunt) {
                 files: ['<%= yeoman.app %>/styles/**/*.scss'],
                 tasks: ['compass:server']
             },
+            html:{
+                files: ['<%= yeoman.app %>/base.html'],
+                tasks: ['bake:build']
+            },
             styles: {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
                 tasks: ['copy:styles']
