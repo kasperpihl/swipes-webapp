@@ -1,28 +1,34 @@
-define ["underscore"], (_) ->
+define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl) ->
 	Backbone.View.extend
-		el: "#add-task"
+		className: "add-sidemenu"
 		events:
 			"submit": "triggerAddTask"
 			"focus input": "focusInput"
 			"blur input": "blurInput"
 			"keyup input": "resizeText"
+			"click .priority": "togglePriority"
 		initialize: ->
-			@input = @$el.find "input"
+			@template = _.template AddTmpl
 			_.bindAll( @, "resizeText" )
 			$(window).on( "resize.taskinput", @resizeText )
+			@render()
+		render: ->
+			@$el.html @template {}
+		togglePriority: (e) ->
+			$('.add-new').toggleClass("is-priority")
 		focusInput: (e) ->
 			swipy.shortcuts.pushDelegate(@)
 		blurInput: (e) ->
 			swipy.shortcuts.popDelegate()
 		keyUpHandling: (e) ->
 			if e.keyCode is 27
-				@input.blur()
+				@$el.find("input").blur()
 		triggerAddTask: (e) ->
 			e.preventDefault()
-			return if @input.val() is ""
+			return if @$el.find("input").val() is ""
 
-			Backbone.trigger( "create-task", @input.val() )
-			@input.val ""
+			Backbone.trigger( "create-task", @$el.find("input").val() )
+			@$el.find("input").val ""
 		getFontSizeRange: ->
 			if window.innerHeight < 768 and window.innerWidth < 450
 				{ min: 20, max: 40, charLimit: 20, minChars: 8 }
@@ -33,7 +39,7 @@ define ["underscore"], (_) ->
 			else
 				{ min: 35, max: 100, charLimit: 20, minChars: 15 }
 		getFontSize: ->
-			numChars = @input.val().length
+			numChars = @$el.find("input").val().length
 			range = @getFontSizeRange()
 
 			# Only aply font-size if we have a certain amount of text
@@ -44,7 +50,7 @@ define ["underscore"], (_) ->
 
 			return Math.max( range.max - ( diff * shrinkage ), range.min )
 		resizeText: ->
-			@input.css( "font-size", @getFontSize() )
+			@$el.find("input").css( "font-size", @getFontSize() )
 		remove: ->
 			@undelegateEvents()
 			@$el.remove()
