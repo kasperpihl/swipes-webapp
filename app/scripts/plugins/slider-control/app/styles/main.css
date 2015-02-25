@@ -1,0 +1,136 @@
+body {
+	background: #55bc75;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 18px;
+	color: white;
+}
+
+.container, footer .wrap {
+	width: 85%;
+	margin: 3em auto 0;
+	max-width: 30em;
+}
+
+/**
+ * Header
+ */
+
+header {
+	margin-bottom: 4em;
+}
+
+header p {
+	font: bold italic 1.5em/1.15  Noteworthy, serif;
+}
+
+h1 {
+	font-size: 2.5em;
+	line-height: 1;
+	letter-spacing: -1px;
+}
+
+header a:hover {
+	text-decoration: none;
+}
+
+/**
+ * Base styles
+ */
+h1, h2, h3, h4, h5, h6 {
+	margin-bottom: 0.25em;
+	-webkit-font-smoothing: antialiased;
+}
+
+p {
+	margin: 0 0 1em;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: #307b47;
+	text-decoration: none;
+	transition: color 0.2s ease-out;
+}
+
+a:hover {
+	color: #225632;
+	text-decoration: underline;
+}
+
+ol {
+	list-style: none;
+	padding: 0;
+}
+
+li {
+	margin-bottom: 5em;
+}
+
+button {
+	padding: 0.8em 3em;
+	
+	color: white;
+
+	background: transparent;
+	border-radius: 0.2em;
+	border: 2px solid white;
+
+	transition: 0.15s ease-out;
+}
+
+button:hover {
+	color: #55bc75;
+	background: white;
+}
+
+/**
+ * Footer
+ */
+
+footer {
+	position: relative;
+	margin-top: 6.5em;
+	padding: 3em 0 4.5em;
+	
+	border-top: thin dashed #666;
+	background: white;
+
+	text-align: center;
+}
+
+.scissors {
+	position: absolute;
+	left: 7%;
+	top: -26px;
+
+	width: 39px;
+	height: 26px;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNzMuODAxcHgiIGhlaWdodD0iNTIuODczcHgiIHZpZXdCb3g9IjAgMCA3My44MDEgNTIuODczIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA3My44MDEgNTIuODczIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwb2x5Z29uIHBvaW50cz0iMzguNTQyLDUyLjg3MyAzMi40NTMsMzguNTU5IDM5LjQ5MywzOC4wMzUgNDUuNDkzLDUyLjg3MyAiLz4NCjxwYXRoIGQ9Ik0yOS4wMDEsMjMuMjM1YzAuNjI1LDEuNjQsMS4xMDIsMy40OTIsMS4zMjgsNS42MzJsMC4zMzcsMy4wOTJsNS44NjctMS4yMjVsLTAuMDc2LTAuMTg4DQoJYy0xLjQ5Ni0zLjYyMy0zLjA3NS02LjQ2MS00LjM0Mi04LjYzOUwyOS4wMDEsMjMuMjM1eiIvPg0KPGc+DQoJPHBhdGggZD0iTTM0LjcyLDEzLjMzM2MyLjc5LTIuNzg5LDIuMTYtNy44MS0wLjY4LTEwLjU0Yy0yLjYyLTIuOTEtNy41OC0zLjkzLTEwLjY1LTEuMmMtMy4yNywyLjU1LTMuNzcsNy43Mi0xLjE3LDEwLjk3DQoJCWMxLjk5LDIuOTYsNC44OSw1Ljg4LDYuNjcsMTAuMzdsMy4wNC0xLjM2Yy0xLjc5LTMuMDgtMi44Ny00LjgtMi4wMS01LjU4QzMxLjA5LDE0LjkzNCwzMS44MiwxNi4yNDQsMzQuNzIsMTMuMzMzeiBNMjYuMDgsMTMuMDk0DQoJCWMtMy42Mi0xLjk3OS00LjE4LTguMTctMC4yMy0xMC4wNGMzLjAzLTEuNzYsNy4wNCwwLjc3LDcuNzksMy45MUMzNC43MiwxMS41NTQsMjkuODcsMTUuNDY0LDI2LjA4LDEzLjA5NHoiLz4NCjwvZz4NCjxnPg0KCTxwYXRoIGQ9Ik02My43NzksMjkuNjY0TDM2LjgzLDMxLjA1NWwtNi4yMywxLjI5OWwtMi44MSwxLjAyMWMtMi4xNCwwLjc3LTQuMTEsMS4xNDgtNS45NCwxLjI4OWwwLjE4LDMuMzQNCgkJYzIuNTYsMC4xODksNS44OSwwLjM5MSw5Ljk1LDAuMTMxbDcuNTMtMC41MmwzNC4yODktMi4zNjFDNzEuNzA5LDMwLjk4NCw2Ny41LDI5LjcyNSw2My43NzksMjkuNjY0eiBNMzUuNjQsMzUuMTQ1DQoJCWMtMC4zNCwwLjU0OS0xLjA1LDAuNzA5LTEuNTksMC4zNjljLTAuNTUtMC4zMy0wLjcxLTEuMDUxLTAuMzctMS41OWMwLjM0LTAuNTUxLDEuMDUtMC43MTEsMS41OS0wLjM2OQ0KCQlDMzUuODIsMzMuODk1LDM1Ljk4LDM0LjYwNCwzNS42NCwzNS4xNDV6Ii8+DQo8L2c+DQo8Zz4NCgk8cGF0aCBkPSJNMjEuNjYsMzcuOTc1bC0wLjEyLTMuMjgxYy00LjY5LDAuMzAzLTguNS0wLjk4OC0xMS45Ni0xLjQ2OWMtNC4wNi0wLjkxLTguNDksMS43OTktOS4zNiw1Ljg1Mg0KCQljLTEuMDksMy45NzEsMS45OSw3Ljk3OSw1Ljc2LDkuMDYxYzMuNywxLjM1LDguNDktMC4yODEsOS43Ny00LjAxYzEuMzQtMy44ODEtMC4xNS0zLjk3MSwwLjI4LTUuNDgNCgkJQzE2LjM1LDM3LjU0MywxOC4yNywzNy43MjUsMjEuNjYsMzcuOTc1eiBNOS41NSw0NS45MzRjLTMuMTUsMC43MTEtNy4xOC0xLjc4OS02LjkzLTUuMjg5Yy0wLjA0LTQuMzU5LDUuNzYtNi41NjgsOS4xMy00LjE4Mg0KCQlDMTUuNTUsMzguODM0LDE0LjE2LDQ0LjkwNiw5LjU1LDQ1LjkzNHoiLz4NCjwvZz4NCjxyZWN0IHg9IjM0LjQ3NiIgeT0iMzMuNzAyIiB0cmFuc2Zvcm09Im1hdHJpeCgtMC45OTk5IDAuMDE2NSAtMC4wMTY1IC0wLjk5OTkgNjkuODczNSA2OC41MDM4KSIgd2lkdGg9IjAuMzU0IiBoZWlnaHQ9IjEuNjc4Ii8+DQo8L3N2Zz4NCg==) center center no-repeat;
+	background-size: contain;
+}
+
+footer p, footer small {
+	color: #888;
+	font-size: 0.85em;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+footer .wrap {
+	margin-top: 0;
+}
+
+footer a {
+	color: #333;
+	text-decoration: none;
+}
+
+footer a:hover {
+	text-decoration: none;
+}
+
+small {
+	display: block;
+	font-size: 100%;
+	margin-bottom: 0.25em;
+}

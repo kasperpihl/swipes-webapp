@@ -1,0 +1,39 @@
+.slider-control {
+	position: relative;
+	height: 2.2em;
+	margin: 1em 0;
+}
+
+.slider-control .track,
+.slider-control .handle {
+	position: absolute;
+	top: 50%;
+	background: white;
+
+}
+
+.slider-control .track {
+	margin-top: -1px;
+	
+	width: 100%;
+	height: 2px;
+}
+
+.slider-control .handle {
+	cursor: pointer;
+	margin-top: -1.1em;
+	margin-left: -1.1em;
+	
+	width: 2.2em;
+	height: 2.2em;
+	
+	border-radius: 2.2em;
+	border: 7px solid #55bc75;
+	box-sizing: border-box;
+
+	transition: background 0.15s ease-in-out;
+}
+
+.slider-control .handle:hover {
+	background: #d5eedd;
+}

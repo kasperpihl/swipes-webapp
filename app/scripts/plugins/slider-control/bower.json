@@ -1,0 +1,10 @@
+{
+  "name": "slider-control",
+  "version": "0.0.0",
+  "dependencies": {
+    "modernizr": "~2.6.2",
+    "jquery": "~1.10.2",
+    "greensock-js": "~1.10.2"
+  },
+  "devDependencies": {}
+}

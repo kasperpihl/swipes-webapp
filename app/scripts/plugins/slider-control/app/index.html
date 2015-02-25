@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Slider Control</title>
+	<meta name="description" content="A buttery smooooth range slider control for touch &amp; desktop">
+	<meta name="viewport" content="width=device-width">
+	
+	<!-- build:css(.tmp) styles/main.css -->
+	<link rel="stylesheet" href="styles/normalize.css">
+	<link rel="stylesheet" href="styles/main.css">
+	<link rel="stylesheet" href="styles/slider-control.css">
+	<!-- endbuild -->
+</head>
+<body>
+		<!--[if lt IE 10]>
+			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+
+
+		<div class="container">
+			<header>
+				<h1>Simple Range Slider</h1>
+				<p>A buttery smooooth range slider control for touch &amp; desktop &mdash; <a href="#">Download it here!</a></p>
+			</header>
+
+			<section>
+				<ol class="examples">
+					<li id="basic">
+						<h3>Basic</h3>
+						<p>This is just a basic slider control. It'll serve most purposes.</p>
+						<div class="slider-control">
+							<div class="track"></div>
+							<div class="handle"></div>
+						</div>
+						<button>Show code</button>
+						<!--
+						<pre class="example-code">
+							<code>
+								var el = document.querySelector("#basic .slider-control");
+								var basicSlider = new SliderControl(el);
+							</code>
+						</pre>
+						-->
+					</li>
+					<li id="steps">
+						<h3>Using steps</h3>
+						<p>Steps are defined with the <code>steps</code> property. View the code for more info.</p>
+						<div class="slider-control">
+							<div class="track"></div>
+							<div class="handle"></div>
+						</div>
+						<button>Show code</button>
+						<!--
+						<pre class="example-code">
+							<code>
+								var el = document.querySelector("#basic .slider-control");
+								var basicSlider = new SliderControl(el, { steps: 3 });
+							</code>
+						</pre>
+						-->
+					</li>
+					<li id="throw">
+						<h3>Using throw physics</h3>
+						<p>The slider is build on top of <a href="#">Draggable</a> and supports <a href="#">ThrowProps</a></p>
+						<div class="slider-control">
+							<div class="track"></div>
+							<div class="handle"></div>
+						</div>
+						<button>Show code</button>
+					</li>
+				</ol>
+			</section>
+
+		</div>
+		
+		<footer>
+			<div class="scissors"></div>
+			<div class="wrap">
+				<small>Based on the amazing <a href="http://www.greensock.com/draggable/">Draggable</a> utility by GreenSock.</small>
+				<p><em>Created by <a href="http://ahrengot.com/">Jens Ahrengot Boddum</a> &mdash;&nbsp;A&nbsp;freelance web designer and developer.</em></p>
+			</div>
+		</footer>
+
+
+		<!-- build:js scripts/vendor.js -->
+		<!-- bower:js -->
+		<script src="bower_components/jquery/jquery.js"></script>
+		<script src="bower_components/greensock-js/src/uncompressed/utils/Draggable.js"></script>
+		<script src="bower_components/greensock-js/src/uncompressed/plugins/ThrowPropsPlugin.js"></script>
+		<script src="bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin.js"></script>
+		<script src="bower_components/greensock-js/src/uncompressed/TweenLite.js"></script>
+		<!-- endbower -->
+		<!-- endbuild -->
+
+		<!-- build:js(.tmp) scripts/SliderControl.js -->
+		<script src="scripts/SliderControl.js"></script>
+		<!-- endbuild -->
+
+		<script>
+			var basicSlider, stepsSlider, throwSlider;
+			
+			basicSlider = new SliderControl(document.querySelector("#basic .slider-control"));
+			
+			stepsSlider = new SliderControl(document.querySelector("#steps .slider-control"), {
+				throwProps: true,
+				steps: 2
+			});
+
+			throwSlider = new SliderControl(document.querySelector("#throw .slider-control"), {
+				throwProps: true,
+				resistance: 500,
+				edgeResistance: 0.75
+			});
+			
+		</script>
+	</body>
+	</html>

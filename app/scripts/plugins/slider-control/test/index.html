@@ -1,0 +1,77 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Mocha Spec Runner</title>
+	<link rel="stylesheet" href="lib/mocha/mocha.css">
+
+	<style>
+		.slider-control {
+			position: relative;
+			height: 2.2em;
+			margin: 1em 0;
+		}
+
+		.slider-control .track,
+		.slider-control .handle {
+			position: absolute;
+			top: 50%;
+			background: black;
+		}
+
+		.slider-control .track {
+			margin-top: -1px;
+			
+			width: 100%;
+			height: 2px;
+		}
+
+		.slider-control .handle {
+			cursor: pointer;
+			margin-top: -1.1em;
+			margin-left: -1.1em;
+			
+			width: 2.2em;
+			height: 2.2em;
+			
+			border-radius: 2.2em;
+			border: 7px solid white;
+			box-sizing: border-box;
+
+			transition: background 0.15s ease-in-out;
+		}
+
+		.slider-control .handle:hover {
+			background: #333;
+		}
+	</style>
+</head>
+<body>
+	<div id="mocha"></div>
+
+	<div id="test">
+		<div class="slider-control">
+			<div class="track"></div>
+			<div class="handle"></div>
+		</div>
+	</div>
+
+	<script src="lib/mocha/mocha.js"></script>
+	<script>mocha.setup('bdd')</script>
+	<!-- assertion framework -->
+	<script src="lib/chai.js"></script>
+	<script>var expect = chai.expect</script>
+
+	<!-- include source files here... -->
+	<script src="http://localhost:9000/bower_components/jquery/jquery.js"></script>
+	<script src="http://localhost:9000/bower_components/greensock-js/src/uncompressed/utils/Draggable.js"></script>
+	<script src="http://localhost:9000/bower_components/greensock-js/src/uncompressed/plugins/CSSPlugin.js"></script>
+	<script src="http://localhost:9000/bower_components/greensock-js/src/uncompressed/TweenLite.js"></script>		
+	<script src="http://localhost:9000/scripts/SliderControl.js"></script>
+
+	<!-- include spec files here... -->
+	<script src="spec/test.js"></script>
+
+	<script>mocha.globals(["*"]).run();</script>
+</body>
+</html>
