@@ -13,7 +13,7 @@ define ["underscore"], (_) ->
 		handleAction: (e) ->
 			trigger = $ e.currentTarget
 			if trigger.hasClass "addtask"
-				return Backbone.trigger("show-add")
+				swipy.sidebar.loadAdd()
 			else if trigger.hasClass "search"
 				swipy.sidebar.loadSearchFilter()
 			else if trigger.hasClass "workspaces"

@@ -1,4 +1,4 @@
-define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar/SearchFilter"], (SidebarView, TagFilter, SearchFilter) ->
+define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar/SearchFilter", "js/view/sidebar/TaskInput"], (SidebarView, TagFilter, SearchFilter, TaskInputView) ->
 	class SidebarController
 		constructor: ->
 			@view = new SidebarView( el: $(".sidebar") )
@@ -7,11 +7,15 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 				@searchFilter.destroy()
 			@searchFilter = new SearchFilter()
 			@loadSubmenu @searchFilter.el
+		loadAdd: ->
+			if @addMenu?
+				@addMenu.destroy()
+			@addMenu = new TaskInputView()
+			@loadSubmenu @addMenu.el
 		loadTagFilter: ->
 			if @tagFilter?
 				@tagFilter.destroy()
 			@tagFilter = new TagFilter()
-			@tagFilter.render()
 			@loadSubmenu @tagFilter.el
 		loadSettings: ->
 			if @settingsMenu?
@@ -25,5 +29,6 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 			$(".sidebar").removeClass("sub-open")
 		destroy: ->
 			@view.destroy()
-			#@tagFilter.destroy()
-			#@searchFilter.destroy()
+			@tagFilter?.destroy()
+			@searchFilter?.destroy()
+			@addMenu?.destroy()
