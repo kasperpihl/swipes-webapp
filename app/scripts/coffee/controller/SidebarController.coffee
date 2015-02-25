@@ -6,7 +6,6 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 			if @searchFilter?
 				@searchFilter.destroy()
 			@searchFilter = new SearchFilter()
-			@searchFilter.render()
 			@loadSubmenu @searchFilter.el
 		loadTagFilter: ->
 			if @tagFilter?
@@ -18,8 +17,12 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 			if @settingsMenu?
 				@settingsMenu.destroy()
 		loadSubmenu: (el, level) ->
-			$(".sidebar .sidebar-sub").addClass("sub-open").css({"display":"block","backgroundColor":"black"})
-			$(".sidebar .sidebar-sub").html el
+			$("body").addClass("sidebar-open")
+			$(".sidebar").addClass("sub-open")
+			$(".sidebar .sidebar-sub .sub-content").html el
+		removeSubmenu: ->
+			$("body").removeClass("sidebar-open")
+			$(".sidebar").removeClass("sub-open")
 		destroy: ->
 			@view.destroy()
 			#@tagFilter.destroy()

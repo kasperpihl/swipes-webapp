@@ -83,7 +83,7 @@ define ["underscore", "js/model/ScheduleModel", "momentjs"], (_, ScheduleModel) 
 
 			return diff
 		selectDate: ->
-			#@view.showDatePicker()
+			@view.showDatePicker()
 		destroy: ->
 			@view?.remove()
 			Backbone.off( null, null, @ )

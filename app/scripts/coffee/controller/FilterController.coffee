@@ -75,9 +75,9 @@ define ["underscore"], (_) ->
 
 		applySearchFilter: (filter) ->
 			@searchFilter = filter
-
 			swipy.todos.each (model) =>
 				isRejected = model.get( "title" ).toLowerCase().indexOf( @searchFilter ) is -1
+				model.unset("rejectedBySearch", {silent:true})
 				model.set( "rejectedBySearch", isRejected )
 
 		removeTagsFilter: (tag) ->

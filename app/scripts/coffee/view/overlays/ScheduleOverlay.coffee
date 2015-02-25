@@ -80,7 +80,7 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 							@showTimePicker()
 							@didLongPress = true
 							return
-
+			console.log option
 			Backbone.trigger( "pick-schedule-option", option )
 		selectOption: (e) ->
 			return if @didLongPress? and @didLongPress
@@ -134,9 +134,14 @@ define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html",
 			return unless @shown
 
 			content = @$el.find ".overlay-content"
-			offset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
-			content.css( "margin", offset + "px auto 0" )
-			content.css( "width", content.height() )
+			scrollLeftPadding = parseInt($(".scroll-container").css("paddingLeft"),10)
+			content.css("paddingLeft",scrollLeftPadding+"px")
+
+			content.css( "width", content.height() + scrollLeftPadding)
+			yOffset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
+			xOffset = scrollLeftPadding + (window.innerWidth - scrollLeftPadding ) / 2 - ( content.width() / 2 )
+			content.css( "margin", yOffset + "px auto 0" )
+			
 		cleanUp: ->
 			$(window).off( "resize", @handleResize )
 			@datePicker.remove()

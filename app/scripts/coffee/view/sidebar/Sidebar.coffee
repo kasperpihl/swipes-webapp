@@ -1,7 +1,7 @@
 define ["underscore"], (_) ->
 	Backbone.View.extend
 		events:
-			"click .close-sidebar": "handleAction"
+			"click .sub-close": "handleAction"
 			"click .log-out": "handleAction"
 			"click .addtask.btn-icon": "handleAction"
 			"click .search.btn-icon": "handleAction"
@@ -18,6 +18,8 @@ define ["underscore"], (_) ->
 				swipy.sidebar.loadSearchFilter()
 			else if trigger.hasClass "workspaces"
 				swipy.sidebar.loadTagFilter()
+			else if trigger.hasClass "sub-close"
+				swipy.sidebar.removeSubmenu()
 			else if trigger.hasClass "settings"
 			else if trigger.hasClass "log-out"
 				e.preventDefault()

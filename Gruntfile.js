@@ -113,6 +113,17 @@ module.exports = function (grunt) {
             },
             server: '.tmp'
         },
+        bake: {
+            build: {
+                options: {
+                    // Task-specific options go here.
+                },
+                files: {
+                    // files go here, like so:
+                    "<%= yeoman.app %>/index.html": "<%= yeoman.app %>/base.html"
+                }
+            },
+        },
         jshint: {
             options: {
                 jshintrc: '../.jshintrc'
@@ -363,7 +374,6 @@ module.exports = function (grunt) {
             }
         }
     });
-
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
@@ -371,6 +381,7 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',
+            'bake:build',
             'concurrent:server',
             //'autoprefixer',
             'connect:livereload',
@@ -389,9 +400,11 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'bake:build',
         'useminPrepare',
         'concurrent:dist',
         //'autoprefixer',
+        
         'requirejs',
         'concat',
         'cssmin',
