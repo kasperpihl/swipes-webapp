@@ -20,7 +20,7 @@ define ["momentjs"], (Moment)->
 			deltaDay = fromDay
 			for number in [1...6]
 				deltaDay++
-				deltaDay is 0 if deltaDay > 6
+				deltaDay = 0 if deltaDay > 6
 				return number if deltaDay is toDay
 		nextDayFromDay: (day) ->
 			nextDay = day + 1
