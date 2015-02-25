@@ -8,6 +8,7 @@
 	position: relative;
 	text-align: center;
 	padding-top: 20%;
+	display: none;
 
 	@include clearfix();
 
@@ -99,6 +100,13 @@
 			display: block;
 		}
 
+	}
+
+	&.for-now,
+	&.for-today {
+		display: block;
+		@extend .animated;
+		@extend .fadeIn;
 	}
 
 }
