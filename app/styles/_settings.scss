@@ -2,9 +2,10 @@
 // Custom Variables
 // --------------------------------------------------
 $yellow: #FFC85E; //#E4CA5C;
-$lobster: #F55A53;
+// $lobster: #F55A53;
 $green: #86D36E; //#45DB86;
 $red: #FF5637; //#d31e2b;
+$lobster: $red;
 $brand-swipes: $red;
 
 
@@ -19,6 +20,7 @@ $priority-big-size: 16px;
 // Grays
 // -------------------------
 $gray:            		#24282E;
+$gray-labels:           #606060;
 $nav-gray:				#9E9E9E;
 $gray-light:            #ededee !default;
 $gray-titles:           #505966;

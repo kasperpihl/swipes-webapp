@@ -1,9 +1,11 @@
 .clndr {
 	@extend .no-select;
+	padding: emCalc(40px) 0 0;
+	$topHeight: 30px;
 
 	nav {
 		@extend .clearfix;
-		margin: 0 auto 3px;
+		margin: 0 auto emCalc(40px);
 		width: 94%;
 	}
 
@@ -11,13 +13,29 @@
 		@extend .no-select;
 		float: left;
 		width: 10%;
+		height: $topHeight;
+		line-height: $topHeight;
 		cursor: pointer;
+		margin-top: -2px;
 		@include transition(color 0.2s ease-out);
-		&:hover { color: $gray; }
+
+			svg {
+				vertical-align: middle;
+				@include square(25px);
+			}
+
+			&:hover {
+				color: $gray;
+			}
+	}
+	
+	// temp
+	.next svg {
+		@include rotate(180deg);
 	}
 
 	.displaying-curr-month & .previous {
-		opacity: 0.5;
+		@include opacity(0.3);
 		pointer-events: none;
 	}
 
@@ -27,19 +45,17 @@
 
 		text-align: center;
 		text-transform: uppercase;
-		font-family: $font-bold;
+		font-family: $font-light;
 
 		.selected-date, time {
 			display: inline-block;
-			height: 0.85em;
-			font-size: 1em;
-			line-height: 1em;
+			font-size: 26px;
+			line-height: $topHeight;
 		}
 
 		.selected-date + time {
-			border-left: 2px solid lighten( $gray, 35% );
-			padding-left: 0.7em;
-			margin-left: 0.7em;
+			padding-left: 0.2em;
+			// margin-left: 0.7em;
 		}
 	}
 
@@ -58,18 +74,20 @@
 	.header-day, .day {
 		float: left;
 
-		width: 14.285%;
+		width: (100% / 7);
 		height: 0;
-		padding-top: 7.143%;
-		padding-bottom: 7.143%;
+		padding-top: ((100% / 7) / 2);
+		padding-bottom: ((100% / 7) / 2);
 		line-height: 0;
 	}
 
 	.header-day {
-		// color: $gray;
+		color: $gray-labels;
 		font-size: 80%;
 		text-transform: lowercase;
 		font-family: $font-bold;
+		padding-top: 1%;
+		padding-bottom: 5%;
 	}
 
 	.day {
@@ -108,7 +126,7 @@
 		}
 
 		&.event:before { background-color: $green; }
-		&.selected:before { background-color: $lobster; }
+		&.selected:before { background-color: $red; }
 	}
 
 	.empty, .adjacent-month {

@@ -23,6 +23,8 @@
 .overlay-content {
 	position: relative;
 	z-index: 1;
+	text-align: center;
+	@include transition(margin 0.2s ease-out);
 
 	> a.back {
 		position: fixed;

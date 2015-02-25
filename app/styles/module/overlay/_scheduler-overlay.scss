@@ -30,17 +30,25 @@ body.scheduler-open {
 	.date-picker {
 		display: none;
 		margin: 0 auto;
-		width: 96%;
+		padding-bottom: emCalc(80px);
+
 		@include breakpoint(min-width, emCalc(425px)) {
 			max-width: emCalc(405px);
 			.content {
 				padding: emCalc(58px) emCalc(20px) emCalc(33px);
 			}
 
+			.calendar-wrap,
+			.range-slider {
+				margin: 0 emCalc(26px);
+			}
+
 			.calendar-wrap {
-				padding: 0 emCalc(24px);
+				margin-bottom: emCalc(35px);
 			}
 		}
+
+
 	}
 
 	.time-picker {
@@ -142,23 +150,23 @@ body.scheduler-open {
 
 
 .snooze-options {
+	display: inline-block;
+	text-align: left;
 	position: relative;
 	background-color: #fff;
 	max-width: 100%;
-	min-height: 400px;
+	min-height: 413px;
+	width: 413px;
+	height: auto;
 	border-radius: $border-radius-base;
 	border-bottom: 2px solid rgba(#000, 0.23);
 	@include drop-shadow(0, 0, 7px, rgba(#000, 0.20));
 	overflow: hidden;
 
-	@include breakpoint(mobile-horizontal) {
-		@include square(413px);
-	}
-
 	> nav {
-		@include square(inherit);
+		@include size(inherit, inherit);
 		display: none;
-		background-color: #fff;
+		background-color: transparent;
 
 			&.active {
 				display: block;
