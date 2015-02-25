@@ -297,7 +297,10 @@ define [
 
 			# Deselect any selected items
 			_.invoke( todos, "set", { selected: no } )
-
+			if Backbone.history.fragment is "list/todo" and todos.length is 0
+				$(".all-done").addClass("for-today")
+			else
+				$(".all-done").removeClass("for-today")
 			@beforeRenderList todos
 
 			for group in @groupTasks todos
@@ -312,6 +315,7 @@ define [
 				@$el.append $html
 
 			@afterRenderList todos
+
 			if swipy.filter.hasFilters()
 				$('.search-result').removeClass("hidden")
 			else
