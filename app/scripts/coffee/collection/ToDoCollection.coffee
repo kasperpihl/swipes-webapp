@@ -1,4 +1,4 @@
-define ["js/model/ToDoModel", "localStorage"], ( ToDoModel ) ->
+define ["js/model/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 	Backbone.Collection.extend
 		model: ToDoModel
 		localStorage: new Backbone.LocalStorage("ToDoCollection")
@@ -30,7 +30,13 @@ define ["js/model/ToDoModel", "localStorage"], ( ToDoModel ) ->
 		getScheduled: ->
 			@filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
 		getScheduledLaterToday: ->
-			@filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
+			nowMoment = moment(new Date())
+			@filter (m) -> 
+				if m.getState() is "scheduled" and !m.isSubtask()
+					return false if !m.get("schedule")? or !m.get("schedule")
+					return nowMoment.isSame(m.get("schedule"), "day")
+					#if nowMoment.isSame(m.get("scheduled"))
+				return false
 		getCompleted: ->
 			@filter (m) -> m.getState() is "completed" and !m.isSubtask()
 		getSelected: (model) ->
