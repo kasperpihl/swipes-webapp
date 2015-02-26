@@ -298,9 +298,14 @@ define [
 			# Deselect any selected items
 			_.invoke( todos, "set", { selected: no } )
 			if Backbone.history.fragment is "list/todo" and todos.length is 0
-				$(".all-done").addClass("for-today")
+				upcomingTasksToday = swipy.todos.getScheduledLaterToday()
+				if upcomingTasksToday.length
+					$(".all-done").addClass("for-now")
+				else
+					$('.all-done').addClass("for-today")
 			else
 				$(".all-done").removeClass("for-today")
+				$(".all-done").removeClass("for-now")
 			@beforeRenderList todos
 
 			for group in @groupTasks todos

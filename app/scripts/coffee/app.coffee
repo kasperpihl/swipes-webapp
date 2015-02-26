@@ -29,7 +29,7 @@ define [
 			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
-
+			
 			# Base app data
 			@todos = new ToDoCollection()
 			@tags = new TagCollection()

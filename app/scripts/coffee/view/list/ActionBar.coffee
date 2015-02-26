@@ -49,14 +49,11 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 				swipy.analytics.sendEventToIntercom( "Deleted Tasks", { "Number of Tasks": selectedTasks.length })
 		shareTasks: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			console.log selectedTasks
 			return unless selectedTasks.length
 
 			# Set up email subject and start body
-			emailString = "
-				mailto:
-				?subject=Tasks to complete
-				&body=
-			"
+			emailString = "mailto:?subject="+ encodeURIComponent("Tasks to complete") + "&body="
 			# Add title
 			emailString += encodeURIComponent "Tasks: \r\n"
 
@@ -65,7 +62,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 
 			# Add footer
 			emailString += encodeURIComponent "\r\nSent from Swipes — http://swipesapp.com"
-
+			console.log emailString
 			location.href = emailString
 
 			swipy.analytics.sendEvent( "Share Task", "Opened", "", selectedTasks.length )

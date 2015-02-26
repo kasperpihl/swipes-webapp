@@ -692,12 +692,12 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 							</div>
 						</div><!-- content -->
 						<div class="done-socials">
-							<a href="#">
+							<a target="_blank" class="facebook" href="https://www.facebook.com/dialog/share?app_id=531435630236702&display=popup&href=http%3A%2F%2Fswipesapp.com&redirect_uri=http%3A%2F%2Fweb.swipesapp.com">
 								<svg class="icon icon-facebook">
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-facebook"></use>
 								</svg>
 							</a>
-							<a href="#">
+							<a href="https://twitter.com/intent/tweet?text=Kickin%E2%80%99%20my%20shoes%20off%20because%20today%E2%80%99s%20to-do%20list%20is%20complete!&via=swipesapp&hashtags=ProductiveDay">
 								<svg class="icon icon-facebook">
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-twitter"></use>
 								</svg>
@@ -719,9 +719,27 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 		</section><!-- .scroll-container -->
  
 	</div>
- 
+ 	<script type="text/javascript" async src="//platform.twitter.com/widgets.js"></script>
+	
 	<!-- build:js scripts/main.js -->
 	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
 	<!-- endbuild -->
+	<script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '531435630236702',
+          xfbml      : true,
+          version    : 'v2.1'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
 </body>
 </html>
