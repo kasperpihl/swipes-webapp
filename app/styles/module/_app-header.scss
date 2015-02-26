@@ -1,0 +1,47 @@
+
+// App header
+
+// Structure
+.app-header {
+
+	height: 18px;
+	width: auto;
+	position: relative;
+
+}
+
+
+// Inner elements
+.app-header {
+
+
+	h1 {
+		display: none;
+		font-size: 15.5px;
+		font-family: $font-normal;
+		color: $gray-titles;
+	}
+
+
+	.progress {
+		height: 8px;
+		background-color: transparent;
+		border: 2px solid #ffc107;
+		border-right: none;
+		margin: 0;
+
+		@include border-left-radius(7em);
+		@include box-shadow(none);
+
+
+			.progress-bar {
+				height: 8px;
+				background-color: #ffc107;
+
+				@include border-right-radius(7em);
+				@include box-shadow(none);
+			}
+	}
+
+
+}
