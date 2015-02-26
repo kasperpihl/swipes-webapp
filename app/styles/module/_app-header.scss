@@ -29,22 +29,27 @@
 		right: 0;
 		top: 0;
 		width: 18.5%;
-		border-bottom: 2px solid #ffc107;
 		margin: 0;
 		line-height: 1;
 		text-align: center;
-		background-color: #fff;
 
-			&:before {
+			span {
+				position: relative;
+				z-index: 2;
+				top: -1px;
+			}
+
+			&:after {
 				display: block;
 				content: '';
-				@include size(15px, 13px);
-				@include border-radius(20px);
-				@include rotate(-25deg);
-				position: absolute;
-				left: -8px;
-				bottom: 0;
+				border-bottom: 2px solid #ffc107;
 				background-color: #fff;
+				position: absolute;
+				z-index: 1;
+				bottom: 1px;
+				top: 0;
+				left: emCalc(12.5px);
+				right: 0;
 			}
 	}
 
@@ -81,8 +86,12 @@
 		right: 20.5%;
 		top: 0;
 		line-height: 1;
-		margin-right: -17px;
+		margin-right: -15px;
 		z-index: 2;
+
+			svg {
+				background-color: transparent;
+			}
 	}
 
 
@@ -102,7 +111,7 @@
 			display: none;
 		}
 
-		.shapeline svg .the-line {
+		.shapeline svg #LINE {
 			display: none;
 		}
 
@@ -113,12 +122,12 @@
 			background-color: $red;
 		}
 
-		h1 {
+		h1:after {
 			border-bottom-color: $red;
 		}
 
-		svg path, svg line {
-			stroke: $red;
+		svg #CURVE path {
+			fill: $red;
 		}
 	}
 
@@ -127,12 +136,12 @@
 			background-color: $green;
 		}
 
-		h1 {
+		h1:after {
 			border-bottom-color: $green;
 		}
 
-		svg path, svg line {
-			stroke: $green;
+		svg #CURVE path {
+			fill: $green;
 		}
 	}
 
