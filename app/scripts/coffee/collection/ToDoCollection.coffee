@@ -39,6 +39,14 @@ define ["js/model/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 				return false
 		getCompleted: ->
 			@filter (m) -> m.getState() is "completed" and !m.isSubtask()
+		getCompletedToday: ->
+			nowMoment = moment(new Date())
+			@filter (m) -> 
+				if m.getState() is "completed" and !m.isSubtask()
+					return false if !m.get("completionDate")? or !m.get("completionDate")
+					return nowMoment.isSame(m.get("completionDate"), "day")
+					#if nowMoment.isSame(m.get("scheduled"))
+				return false
 		getSelected: (model) ->
 			@filter (m) -> m.get("selected") or model? and m.cid is model.cid
 		getSubtasksForModel: ( model ) ->

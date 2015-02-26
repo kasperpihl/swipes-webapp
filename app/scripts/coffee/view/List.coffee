@@ -295,10 +295,14 @@ define [
 
 			# Deselect any selected items
 			_.invoke( todos, "set", { selected: no } )
-
+			totalNumberOfTasks = 0
 			# Handle all done for today background
-			if Backbone.history.fragment is "list/todo" and todos.length is 0 and !swipy.filter.hasFilters()
+			if @state is "tasks"
 				upcomingTasksToday = swipy.todos.getScheduledLaterToday()
+				totalNumberOfTasks += upcomingTasksToday.length
+				completedTasksForToday = swipy.todos.getCompletedToday()
+				totalNumberOfTasks += completedTasksForToday.length
+			if @state is "tasks" and todos.length is 0 and !swipy.filter.hasFilters()
 				if upcomingTasksToday.length
 					$(".all-done").addClass("for-now")
 				else
@@ -313,8 +317,24 @@ define [
 			for group in @groupTasks todos
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
 				progress = ""
-				progress = "no-progress" if @state isnt "today"
-				$html = $( @template { title: group.deadline, tasks: tasksJSON, state: @state, progress: progress, jQuery: $ } )
+				progress = "no-progress" if @state isnt "tasks"
+				lastPercentage = 0
+				title = group.deadline
+
+				if @lastPercentage?
+					lastPercentage = @lastPercentage
+
+				if @state is "tasks"
+					totalNumberOfTasks += group.tasks.length
+					if !totalNumberOfTasks
+						percentage = 100
+					else
+						percentage = parseInt(completedTasksForToday.length / totalNumberOfTasks*100)
+					@lastPercentage = percentage
+					if totalNumberOfTasks
+						title = completedTasksForToday.length + " / " + totalNumberOfTasks + " Tasks"
+				
+				$html = $( @template { title: title, tasks: tasksJSON, state: @state, progress: progress, jQuery: $, percentage: lastPercentage} )
 				
 				list = $html.find "ol"
 				for model in group.tasks
@@ -326,12 +346,12 @@ define [
 				widthOfText = $html.find('h1 > span').innerWidth()
 
 				actualWidth = widthOfText + 50
-				console.log "width " + widthOfText
 				$html.find('.progress').parent().css("paddingRight",actualWidth+"px")
 				$html.find('h1').css("width",actualWidth+"px")
 				shapePadding = actualWidth*1.025
 				$html.find('.shapeline').css("right",shapePadding+"px")
-
+				if @state is "tasks"
+					$html.find('.progress-bar').css("width",percentage+"%")
 			@afterRenderList todos
 
 			if swipy.filter.hasFilters()
