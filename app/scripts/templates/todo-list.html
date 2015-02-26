@@ -1,5 +1,5 @@
 <header class="app-header <%= progress %> <%= state %>">
-	<h1><%= title %></h1>
+	<h1><span><%= title %></span></h1>
 	<div class="progress">
 		<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">
 			<span class="sr-only">60% Complete</span>
@@ -15,7 +15,7 @@
 	</svg>
 	</span>
 </header>
-<li class="" style="margin-top: -15px; position: relative; z-index: 1;">
+<li class="" style="margin-top: <% if(state == "tasks"){ print("-15px"); } else print("-20px"); %>; position: relative; z-index: 1;">
 	<ol>
 		
 	</ol>
