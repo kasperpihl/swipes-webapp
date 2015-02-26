@@ -409,7 +409,6 @@ define [
 			tasks = swipy.todos.getSelected( model )
 			return if tasks.length is 0
 			deferredArr = []
-
 			for task in tasks
 				view = @getViewForModel task
 

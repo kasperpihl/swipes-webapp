@@ -29,7 +29,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "module/priority-indicator";
 @import "module/divider";
 @import "module/buttons";
-@import "module/faq";
+@import "module/grid";
 @import "module/rounded-tags";
 @import "module/repeat-picker";
 @import "module/day-picker";
@@ -45,14 +45,12 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "module/overlay/overlay";
 @import "module/overlay/scheduler-overlay";
 @import "module/overlay/tags-editor-overlay";
-@import "module/overlay/settings-overlay";
 
 @import "module/calendar";
 @import "module/datepicker";
 
 // Sidebar
 @import "sidebar/sidebar-base";
-@import "sidebar/sidebar-toggler";
 @import "sidebar/sidebar-actions";
 @import "sidebar/sidebar-search";
 @import "sidebar/sidebar-tags";
@@ -60,11 +58,8 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 // Views
 @import "view/login";
 @import "view/settings/base";
-@import "view/settings/subscription";
 @import "view/settings/policies";
-@import "view/settings/support";
 @import "view/settings/snoozes";
-@import "view/settings/faq";
 
 
 // Other modules

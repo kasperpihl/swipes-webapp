@@ -1,4 +1,4 @@
-define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar/SearchFilter", "js/view/sidebar/TaskInput"], (SidebarView, TagFilter, SearchFilter, TaskInputView) ->
+define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar/SearchFilter", "js/view/sidebar/TaskInput", "js/view/sidebar/SidemenuSettings"], (SidebarView, TagFilter, SearchFilter, TaskInputView, SidemenuSettings) ->
 	class SidebarController
 		constructor: ->
 			@view = new SidebarView( el: $(".sidebar") )
@@ -6,25 +6,33 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 			if @searchFilter?
 				@searchFilter.destroy()
 			@searchFilter = new SearchFilter()
-			@loadSubmenu @searchFilter.el
+			@loadSubmenu @searchFilter
 		loadAdd: ->
 			if @addMenu?
 				@addMenu.destroy()
 			@addMenu = new TaskInputView()
-			@loadSubmenu @addMenu.el
+			@loadSubmenu @addMenu
 		loadTagFilter: ->
 			if @tagFilter?
 				@tagFilter.destroy()
 			@tagFilter = new TagFilter()
-			@loadSubmenu @tagFilter.el
+			@loadSubmenu @tagFilter
 		loadSettings: ->
 			if @settingsMenu?
 				@settingsMenu.destroy()
-		loadSubmenu: (el, level) ->
+			@settingsMenu = new SidemenuSettings()
+			@loadSubmenu( @settingsMenu )
+		loadSubmenu: (menu, level) ->
+			if @currentMenu?
+				@currentMenu.destroy()
+			@currentMenu = menu
+			el = menu.el
 			$("body").addClass("sidebar-open")
 			$(".sidebar").addClass("sub-open")
 			$(".sidebar .sidebar-sub .sub-content").html el
 		removeSubmenu: ->
+			if @currentMenu?
+				@currentMenu.destroy()
 			$("body").removeClass("sidebar-open")
 			$(".sidebar").removeClass("sub-open")
 		destroy: ->

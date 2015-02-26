@@ -18,9 +18,10 @@ define ["underscore"], (_) ->
 				swipy.sidebar.loadSearchFilter()
 			else if trigger.hasClass "workspaces"
 				swipy.sidebar.loadTagFilter()
+			else if trigger.hasClass "settings"
+				swipy.sidebar.loadSettings()
 			else if trigger.hasClass "sub-close"
 				swipy.sidebar.removeSubmenu()
-			else if trigger.hasClass "settings"
 			else if trigger.hasClass "log-out"
 				e.preventDefault()
 				if confirm "Are you sure you want to log out?"

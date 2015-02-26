@@ -1,0 +1,122 @@
+
+// Grid
+// Grid styles
+.grid {
+	@extend .clearfix;
+
+	margin: 0 auto;
+	width: 96%;
+
+	@include breakpoint(min-width, 427px) {
+		width: emCalc(410px);
+	}
+
+		.option {
+			padding: 21% 0 0;
+			@include breakpoint(min-width, 410px) { padding: 10% 0 0; }
+
+			p {
+				font-family: $font-bold;
+				margin: 0;
+				font-size: 0.7em;
+
+				@include breakpoint(min-width, 410px) {
+					// font-size: 0.9em;
+					@include transition(all 0.17s ease-out);
+				}
+			}
+		}
+
+		a {
+			display: block;
+			width: 33.3%;
+			float: left;
+			overflow: hidden;
+
+			// Proportional height
+			height: 0;
+			padding-bottom: 33.3%;
+
+			color: #1b1e23;
+			text-align: center;
+			text-decoration: none;
+
+			@include transition(all 0.2s ease-out);
+
+			&:hover {
+
+				&:not(.disabled) {
+					background: rgba(black, 0.03);
+				}
+				
+				// Hover effect
+				@include breakpoint(min-width, 410px) {
+
+					div[class^="icon-"],
+					p {
+						color: $brand-swipes;
+					}
+
+				}
+			}
+		}
+}
+
+// Grid lines
+.grid a {
+	&:nth-child(3n-1) {
+		border-left: thin solid #ececec;
+		border-right: thin solid #ececec;
+	}
+
+	&:nth-child(4), &:nth-child(5), &:nth-child(6) {
+		border-top: thin solid #ececec;
+		border-bottom: thin solid #ececec;
+	}
+}
+
+// Icons
+.grid div[class^="icon-"] {
+	font-size: 2em;
+	// margin-bottom: 0;
+
+	@include breakpoint(min-width, 410px) {
+		@include transition(all 0.17s ease-in-out);
+		font-size: 2.8em;
+		min-height: 1.7em;
+		line-height: 1.7em;
+
+			&:before {
+				display: inline;
+				vertical-align: middle;
+			}
+	}
+}
+
+// Rounded corners
+.grid {
+	// border-radius: 1em;
+	overflow: hidden;
+}
+
+.has-active-subview .grid {
+	display: none !important;
+}
+
+// Disabled grid items
+.grid a.disabled {
+	cursor: default;
+}
+.settings .grid {
+	display: none;
+
+	body.settings-open & {
+		display: block;
+
+		@extend .animated;
+		@extend .fadeIn;
+
+		@include experimental(animation-delay, 0.1s);
+		@include experimental(animation-duration, 0.35s);
+	}
+}
