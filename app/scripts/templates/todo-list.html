@@ -6,13 +6,19 @@
 		</div>
 	</div>
 	<span class="shapeline">
-		<svg version="1.1" baseProfile="tiny" id="progressbar-shape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="18px" viewBox="0 0 20 18" xml:space="preserve">
-		<g>
-			<path fill="none" stroke="#FFC107" stroke-width="2" stroke-miterlimit="10" d="M0,1h1.08c2.177,0,4.224,1.147,5.503,3.086
-				l6.247,9.464c1.28,1.938,3.326,3.086,5.504,3.086h1"></path>
-			<line class="the-line" fill="none" stroke="#FFC107" stroke-width="2" stroke-miterlimit="10" x1="0" y1="7" x2="8" y2="7"></line>
-		</g>
-	</svg>
+		<svg version="1.1" id="progressbar-shape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+		 viewBox="0 0 20 18" enable-background="new 0 0 20 18" xml:space="preserve">
+			<g id="WHITE">
+				<path fill="#FFFFFF" d="M1.039,0c2.605,0,5.066,1.349,6.584,3.608l6.489,9.659c1.131,1.685,2.944,2.731,4.849,2.731H20V0H1.039z"/>
+			</g>
+			<g id="CURVE">
+				<path fill="#FFC107" d="M18.961,15.999c-1.905,0-3.718-1.046-4.849-2.731L7.623,3.608C6.104,1.349,3.644,0,1.039,0H0v2.001h1.039
+					c1.905,0,3.718,1.046,4.85,2.731l1.21,1.802l1.372,2.041l3.907,5.816C13.895,16.651,16.356,18,18.961,18H20v-2.001H18.961z"/>
+			</g>
+			<g id="LINE" class="the-line">
+				<polygon fill="#FFC107" points="7.091,6.555 0.015,6.555 0.015,8.555 8.458,8.555 9.015,8.555 9.015,6.555 	"/>
+			</g>
+		</svg>
 	</span>
 </header>
 <li class="" style="margin-top: <% if(state == "tasks"){ print("-15px"); } else print("-20px"); %>; position: relative; z-index: 1;">
