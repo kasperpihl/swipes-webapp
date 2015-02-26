@@ -2,6 +2,10 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 	class SidebarController
 		constructor: ->
 			@view = new SidebarView( el: $(".sidebar") )
+			Backbone.on( "show-add", @loadAdd, @)
+			Backbone.on( "show-search", @loadSearchFilter, @)
+			Backbone.on( "show-workspaces", @loadTagFilter, @)
+			Backbone.on( "show-settings", @loadSettings, @)
 		loadSearchFilter: ->
 			if @searchFilter?
 				@searchFilter.destroy()
@@ -33,10 +37,13 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 		removeSubmenu: ->
 			if @currentMenu?
 				@currentMenu.destroy()
+				@currentMenu = null
 			$("body").removeClass("sidebar-open")
 			$(".sidebar").removeClass("sub-open")
 		destroy: ->
+			Backbone.off( null, null, @ )
 			@view.destroy()
 			@tagFilter?.destroy()
 			@searchFilter?.destroy()
 			@addMenu?.destroy()
+			@settings?.destroy()

@@ -2,7 +2,7 @@
 // Structure holder
 .sidebar {
 	width: $sidebar-width;
-	z-index: 5;
+	z-index: 5000;
 	@include centerBlock(0, auto, 0, 0, 0, fixed);
 	@include user-select(none);
 		
@@ -20,7 +20,7 @@
 			text-align: center;
 			background-color: $sidebar-bg;
 			border-right: 2px solid #e0e0e0;
-			z-index: 2;
+			z-index: 4999;
 			@include centerBlock(0, auto, 0, 0, 0, absolute);
 		}
 
@@ -35,12 +35,22 @@
 			border-right: 1px solid #e0e0e0;
 			padding: 5em 2em .5em;
 			@include centerBlock(0, auto, 0, $sidebar-width, 0, absolute);
-			z-index: 1;
+			z-index: 4998;
 		}
-		
+		.clickable-overlay{
+			display:none;
+			z-index:4997;
+			height:100%;
+			position:fixed;
+			width:100%;
+			background:#000;
+			opacity:0.3;
+		}
 		// if the sidebar sub child is opened
 		&.sub-open {
-			
+			.clickable-overlay{
+				display:block;
+			}
 			.sidebar-sub {
 				@include translate3d( 0, 0, 0);
 			}
