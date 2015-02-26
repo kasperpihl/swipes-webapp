@@ -297,7 +297,9 @@ define [
 
 			# Deselect any selected items
 			_.invoke( todos, "set", { selected: no } )
-			if Backbone.history.fragment is "list/todo" and todos.length is 0
+
+			# Handle all done for today background
+			if Backbone.history.fragment is "list/todo" and todos.length is 0 and !swipy.filter.hasFilters()
 				upcomingTasksToday = swipy.todos.getScheduledLaterToday()
 				if upcomingTasksToday.length
 					$(".all-done").addClass("for-now")
@@ -306,6 +308,8 @@ define [
 			else
 				$(".all-done").removeClass("for-today")
 				$(".all-done").removeClass("for-now")
+
+
 			@beforeRenderList todos
 
 			for group in @groupTasks todos
@@ -409,7 +413,6 @@ define [
 			tasks = swipy.todos.getSelected( model )
 			return if tasks.length is 0
 			deferredArr = []
-
 			for task in tasks
 				view = @getViewForModel task
 

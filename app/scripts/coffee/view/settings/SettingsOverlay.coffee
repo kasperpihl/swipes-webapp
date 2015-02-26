@@ -4,11 +4,8 @@ define [
 	"text!templates/settings-overlay.html"
 	# Pre-load subviews
 	"js/view/settings/BaseSubview"
-	"js/view/settings/Faq"
 	"js/view/settings/Policies"
 	"js/view/settings/Snoozes"
-	"js/view/settings/Subscription"
-	"js/view/settings/Support"
 	], (_, Overlay, SettingsOverlayTmpl) ->
 	Overlay.extend
 		className: 'overlay settings'

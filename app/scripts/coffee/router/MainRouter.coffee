@@ -1,6 +1,9 @@
 define [], () ->
 	MainRouter = Backbone.Router.extend
 		routes:
+			"add": "add"
+			"search": "search"
+			"workspaces": "workspaces"
 			"settings/:id": "settings"
 			"settings": "settings"
 			"edit/:id": "edit"
@@ -8,12 +11,21 @@ define [], () ->
 			"*all": "root"
 		initialize: ->
 			@history = []
+			@lastMainRoute = "list/todo"
 			Backbone.history.on( "route", @updateHistory, @ )
+			Backbone.trigger( "navigate/view", "todo" )
 		root: ->
 			@navigate( "list/todo", { trigger: yes, replace: yes } )
+		add: ->
+			Backbone.trigger( "show-add")
+		search: ->
+			Backbone.trigger( "show-search" )
+		workspaces: ->
+			Backbone.trigger( "show-workspaces" )
 		list: (id = "todo") ->
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
+			@setLastMainView()
 
 			eventName = switch id
 				when "todo" then "Today Tab"
@@ -22,9 +34,18 @@ define [], () ->
 
 			swipy.analytics.pushScreen eventName
 		on_keypress: (e) ->
+		openLastMainView: (trigger)->
+			if @lastMainRoute is ""
+				trigger = true
+			@navigate(@lastMainRoute,trigger)
+		setLastMainView: ->
+			console.log Backbone.history.fragment
+			@lastMainRoute = Backbone.history.fragment
 		edit: (taskId) ->
+
 			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
+			@setLastMainView()
 			swipy.analytics.pushScreen "Edit Task"
 		settings: (subview) ->
 			Backbone.trigger "show-settings"
