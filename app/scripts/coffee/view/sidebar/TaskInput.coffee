@@ -51,6 +51,8 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 			return Math.max( range.max - ( diff * shrinkage ), range.min )
 		resizeText: ->
 			@$el.find("input").css( "font-size", @getFontSize() )
+		destroy: ->
+			@remove()
 		remove: ->
 			@undelegateEvents()
 			@$el.remove()
