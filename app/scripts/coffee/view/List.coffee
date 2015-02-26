@@ -318,11 +318,9 @@ define [
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
 				progress = ""
 				progress = "no-progress" if @state isnt "tasks"
-				lastPercentage = 0
+			
 				title = group.deadline
 
-				if @lastPercentage?
-					lastPercentage = @lastPercentage
 
 				if @state is "tasks"
 					totalNumberOfTasks += group.tasks.length
@@ -330,12 +328,14 @@ define [
 						percentage = 100
 					else
 						percentage = parseInt(completedTasksForToday.length / totalNumberOfTasks*100)
-					@lastPercentage = percentage
+					
 					if totalNumberOfTasks
 						title = completedTasksForToday.length + " / " + totalNumberOfTasks + " Tasks"
-				
+				lastPercentage = percentage
+				if @lastPercentage?
+					lastPercentage = @lastPercentage
 				$html = $( @template { title: title, tasks: tasksJSON, state: @state, progress: progress, jQuery: $, percentage: lastPercentage} )
-				
+				@lastPercentage = percentage
 				list = $html.find "ol"
 				for model in group.tasks
 					view = if Modernizr.touch then new TouchTaskView( { model } ) else new DesktopTaskView( { model } )
