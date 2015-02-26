@@ -1,5 +1,8 @@
 define ["js/view/List"], (ListView) ->
 	ListView.extend
+		initialize: ->
+			@state = "done"
+			ListView::initialize.apply( @, arguments )
 		sortTasks: (tasks) ->
 			result = _.sortBy tasks, (model) ->
 				model.get( "completionDate" ).getTime?()

@@ -10,27 +10,32 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 			if @searchFilter?
 				@searchFilter.destroy()
 			@searchFilter = new SearchFilter()
-			@loadSubmenu @searchFilter
+			@loadSubmenu @searchFilter, "search"
+			@searchFilter.$el.find('input').focus()
 		loadAdd: ->
 			if @addMenu?
 				@addMenu.destroy()
 			@addMenu = new TaskInputView()
-			@loadSubmenu @addMenu
+			@loadSubmenu @addMenu, "addtask"
+			@addMenu.$el.find("input").focus()
 		loadTagFilter: ->
 			if @tagFilter?
 				@tagFilter.destroy()
 			@tagFilter = new TagFilter()
-			@loadSubmenu @tagFilter
+			@loadSubmenu @tagFilter, "workspaces"
 		loadSettings: ->
 			if @settingsMenu?
 				@settingsMenu.destroy()
 			@settingsMenu = new SidemenuSettings()
-			@loadSubmenu( @settingsMenu )
-		loadSubmenu: (menu, level) ->
+			@loadSubmenu( @settingsMenu, "settings" )
+		loadSubmenu: (menu, activeEl) ->
 			if @currentMenu?
 				@currentMenu.destroy()
 			@currentMenu = menu
 			el = menu.el
+			$('.sidebar a.btn-icon').removeClass("active")
+			$('.sidebar a.btn-icon.'+activeEl).addClass("active")
+			$('.sidebar .sidebar-controls').addClass( "hasActiveEl")
 			$("body").addClass("sidebar-open")
 			$(".sidebar").addClass("sub-open")
 			$(".sidebar .sidebar-sub .sub-content").html el
@@ -38,6 +43,8 @@ define ["js/view/sidebar/Sidebar", "js/view/sidebar/TagFilter", "js/view/sidebar
 			if @currentMenu?
 				@currentMenu.destroy()
 				@currentMenu = null
+			$('.sidebar a.btn-icon').removeClass("active")
+			$('.sidebar .sidebar-controls').removeClass( "hasActiveEl")
 			$("body").removeClass("sidebar-open")
 			$(".sidebar").removeClass("sub-open")
 		destroy: ->

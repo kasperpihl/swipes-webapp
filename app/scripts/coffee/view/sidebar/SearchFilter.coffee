@@ -13,7 +13,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-search.html"], (_, Searc
 		search: (e) ->
 
 			e.preventDefault()
-			value = $('.search-filter input').val()
+			value = @$el.find('input').val()
 			eventName = if value.length then "apply-filter" else "remove-filter"
 			Backbone.trigger( eventName, "search", value.toLowerCase() )
 		handleFilterChange: (type) ->
@@ -25,7 +25,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-search.html"], (_, Searc
 			@$el.html @template {}
 			searchString = ""
 			searchString = swipy.filter.searchFilter if swipy.filter.searchFilter.length
-			$('.search-filter input').val(searchString)
+			@$el.find('input').val(searchString)
 		destroy: ->
 			@stopListening()
 			@undelegateEvents()

@@ -1,6 +1,7 @@
 
 // Structure holder
 .sidebar {
+
 	width: $sidebar-width;
 	z-index: 5000;
 	@include centerBlock(0, auto, 0, 0, 0, fixed);
@@ -15,10 +16,10 @@
 
 		// Base content wrapper
 		&_content {
-			padding: 60px 10px 0;
+			padding: 35px 10px 0;
 			width: inherit;
 			text-align: center;
-			background-color: $sidebar-bg;
+			background-color: #F9F9F9;
 			border-right: 2px solid #e0e0e0;
 			z-index: 4999;
 			@include centerBlock(0, auto, 0, 0, 0, absolute);
@@ -43,8 +44,8 @@
 			height:100%;
 			position:fixed;
 			width:100%;
-			background:#000;
-			opacity:0.3;
+			background:#fff;
+			opacity:0.6;
 		}
 		// if the sidebar sub child is opened
 		&.sub-open {

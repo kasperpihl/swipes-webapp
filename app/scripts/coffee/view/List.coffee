@@ -163,16 +163,14 @@ define [
 				@deselectAllTasksButTasks([])
 				
 			if e.keyCode is 32
-				Backbone.trigger( "show-add" )
-				#$("#add-task input").focus()
-				#TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
+				swipy.router.navigate("add",true )
 			if e.keyCode is 13
 				@openSelectedTask()
-			if e.keyCode is 49 and Backbone.history.fragment isnt "list/scheduled"
+			if e.keyCode is 49 and @state isnt "schedule"
 				swipy.router.navigate("list/scheduled",true)
-			if e.keyCode is 50 and Backbone.history.fragment isnt "list/todo"
+			if e.keyCode is 50 and @state isnt "tasks"
 				swipy.router.navigate("list/todo",true )
-			if e.keyCode is 51 and Backbone.history.fragment isnt "list/completed"
+			if e.keyCode is 51 and @state isnt "done"
 				swipy.router.navigate("list/completed",true )
 
 			# shift / ctrl / cmd
@@ -314,7 +312,9 @@ define [
 
 			for group in @groupTasks todos
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
-				$html = $( @template { title: group.deadline, tasks: tasksJSON } )
+				progress = ""
+				progress = "no-progress" if @state isnt "today"
+				$html = $( @template { title: group.deadline, tasks: tasksJSON, state: @state, progress: progress } )
 				list = $html.find "ol"
 				for model in group.tasks
 					view = if Modernizr.touch then new TouchTaskView( { model } ) else new DesktopTaskView( { model } )

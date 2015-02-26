@@ -8,6 +8,7 @@ define ["underscore"], (_) ->
 			"click .workspaces.btn-icon": "handleAction"
 			"click .settings.btn-icon": "handleAction"
 			"click .clickable-overlay": "handleAction"
+			"click .swipes-logo": "handleAction"
 		initialize: ->
 			_.bindAll( @, "handleAction" )
 
@@ -24,6 +25,9 @@ define ["underscore"], (_) ->
 			else if trigger.hasClass("clickable-overlay") or trigger.hasClass("sub-close")
 				swipy.sidebar.removeSubmenu()
 				swipy.router.openLastMainView(false)
+			else if trigger.hasClass("swipes-logo")
+				swipy.sidebar.removeSubmenu()
+				swipy.router.navigate("list/todo", true)
 			else if trigger.hasClass "log-out"
 				e.preventDefault()
 				if confirm "Are you sure you want to log out?"

@@ -2,6 +2,7 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 	ListView.extend
 		initialize: ->
 			@sorter = new TaskSortModel()
+			@state = "tasks"
 			ListView::initialize.apply( @, arguments )
 		sortTasks: (tasks) ->
 			return _.sortBy tasks, (model) -> model.get "order" 
