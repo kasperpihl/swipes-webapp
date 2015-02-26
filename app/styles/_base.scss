@@ -50,35 +50,37 @@ div[role=main] {
 	max-width: emCalc(685px);
 	position: relative;
 	height:100%;
-	@include breakpoint(desktop) {
-		@include transition(max-width 0.5s ease-in-out);
-	}
+	padding-top: 2.2em;
 
-	@include breakpoint(desktop-wide) {
-		max-width: emCalc(850px);
-	}
-
-	header.add-new {
-		margin: emCalc(18px) 0 emCalc(10px);
-
-		@include breakpoint(max-width, emCalc(400px)) {
-			margin-top: emCalc(5px);
+		@include breakpoint(desktop) {
+			@include transition(max-width 0.5s ease-in-out);
 		}
 
-		@include transition(margin 0.4s ease-in-out);
-		@include breakpoint(min-height, emCalc(1024px)) { margin: emCalc(26px) 0 emCalc(26px); }
-
-		body.edit-mode & {
-			margin: emCalc(5px) 0 emCalc(10px);
+		@include breakpoint(desktop-wide) {
+			max-width: emCalc(850px);
 		}
-	}
 
-	> nav {
-		margin-bottom: emCalc(10px);
-		@include transition(margin-bottom 0.4s ease-in-out);
+		header.add-new {
+			margin: emCalc(18px) 0 emCalc(10px);
 
-		@include breakpoint(min-height, emCalc(1024px)) { margin-bottom: emCalc(20px); }
-	}
+			@include breakpoint(max-width, emCalc(400px)) {
+				margin-top: emCalc(5px);
+			}
+
+			@include transition(margin 0.4s ease-in-out);
+			@include breakpoint(min-height, emCalc(1024px)) { margin: emCalc(26px) 0 emCalc(26px); }
+
+			body.edit-mode & {
+				margin: emCalc(5px) 0 emCalc(10px);
+			}
+		}
+
+		> nav {
+			margin-bottom: emCalc(10px);
+			@include transition(margin-bottom 0.4s ease-in-out);
+
+			@include breakpoint(min-height, emCalc(1024px)) { margin-bottom: emCalc(20px); }
+		}
 
 	//padding-bottom: 3em;
 }
