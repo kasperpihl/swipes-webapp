@@ -108,7 +108,7 @@
 
 	}
 
-	&.red {
+	&.schedule {
 		&:before {
 			background-color: $red;
 		}
@@ -117,6 +117,23 @@
 			border-bottom-color: $red;
 		}
 
+		svg path, svg line {
+			stroke: $red;
+		}
+	}
+
+	&.done {
+		&:before {
+			background-color: $green;
+		}
+
+		h1 {
+			border-bottom-color: $green;
+		}
+
+		svg path, svg line {
+			stroke: $green;
+		}
 	}
 
 }
