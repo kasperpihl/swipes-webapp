@@ -325,10 +325,12 @@ define [
 				@$el.append $html
 				widthOfText = $html.find('h1 > span').innerWidth()
 
-				actualWidth = widthOfText + 70
-
-				
+				actualWidth = widthOfText + 50
+				console.log "width " + widthOfText
+				$html.find('.progress').parent().css("paddingRight",actualWidth+"px")
 				$html.find('h1').css("width",actualWidth+"px")
+				shapePadding = actualWidth*1.025
+				$html.find('.shapeline').css("right",shapePadding+"px")
 
 			@afterRenderList todos
 
