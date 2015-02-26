@@ -314,7 +314,8 @@ define [
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
 				progress = ""
 				progress = "no-progress" if @state isnt "today"
-				$html = $( @template { title: group.deadline, tasks: tasksJSON, state: @state, progress: progress } )
+				$html = $( @template { title: group.deadline, tasks: tasksJSON, state: @state, progress: progress, jQuery: $ } )
+				
 				list = $html.find "ol"
 				for model in group.tasks
 					view = if Modernizr.touch then new TouchTaskView( { model } ) else new DesktopTaskView( { model } )
@@ -322,6 +323,12 @@ define [
 					list.append view.el
 
 				@$el.append $html
+				widthOfText = $html.find('h1 > span').innerWidth()
+
+				actualWidth = widthOfText + 70
+
+				
+				$html.find('h1').css("width",actualWidth+"px")
 
 			@afterRenderList todos
 
