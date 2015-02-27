@@ -302,6 +302,8 @@ define [
 				totalNumberOfTasks += upcomingTasksToday.length
 				completedTasksForToday = swipy.todos.getCompletedToday()
 				totalNumberOfTasks += completedTasksForToday.length
+				currentTasks = swipy.todos.getActive()
+				totalNumberOfTasks += currentTasks.length
 			if @state is "tasks" and todos.length is 0 and !swipy.filter.hasFilters()
 				if upcomingTasksToday.length
 					$(".all-done").addClass("for-now")
@@ -323,7 +325,6 @@ define [
 
 
 				if @state is "tasks"
-					totalNumberOfTasks += group.tasks.length
 					if !totalNumberOfTasks
 						percentage = 100
 					else
