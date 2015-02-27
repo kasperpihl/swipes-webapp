@@ -3,40 +3,35 @@
 	list-style: none;
 	padding: 0;
 
-	margin-top: 1.1em;
-	@include breakpoint(tablet) {
-		margin-top: emCalc(35px);
-	}
-
 	li {
-		$height: emCalc(47px);
+		$height: emCalc(40px);
 
 		cursor: pointer;
 
 		float: left;
 		display: block;
 
-		width: 14.28%;
+		width: ( 100% / 7);
 		height: $height;
+		line-height: $height;
+		white-space: nowrap;
 
-		font-size: 0.85em;
-		@include breakpoint(min-width, emCalc(480px)) {
-			font-size: 1em;
-		}
+		font-size: 13px;
 
 		line-height: $height;
 		text-align: center;
-		color: white;
-		text-transform: uppercase;
+		color: $brand-dakrcolor;
+		text-transform: lowercase;
 
-		border-left: thin solid lighten($gray-light, 10%);
+		border-left: thin solid #e0e0e0;
 
 		&:hover {
 			text-decoration: none;
+			background-color: rgba($brand-dakrcolor, 0.2);
 		}
 
 		&.selected {
-			background: $green;
+			background: $brand-dakrcolor;
 			color: white;
 		}
 
@@ -44,20 +39,4 @@
 
 	li:first-child, li.selected { border-left: none; }
 
-	@include breakpoint(max-width, 624px) {
-		li a {
-			border-bottom: thin solid lighten($gray-light, 10%);
-		}
-
-		// li:nth-child(3n + 1) a {
-		// 	border-left: none;
-		// }
-
-		// li:nth-last-child(1) a,
-		// li:nth-last-child(2) a,
-		// li:nth-last-child(3) a {
-		// 	border-bottom: none;
-		// }
-
-	}
 }
