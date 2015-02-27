@@ -11,7 +11,6 @@
 		}
 
 		svg {
-			@include transition(transform $transitionDuration-base ease-in-out);
 			display: inline-block;
 			@include square(40px);
 			margin-bottom: 10px;
@@ -25,8 +24,7 @@
 			font-size: 14px;
 			text-align: center;
 			text-decoration: none;
-			@include border-radius(10px);
-			border: 1px solid transparent;
+			@include transition(background-color $transitionDuration-base ease);
 
 
 				p {
@@ -35,13 +33,7 @@
 
 
 				&:hover {
-					background-color: #f9f9f9;
-					border-color: #e0e0e0;
-
-						svg {
-							@include scale(1.1);
-						}
-
+					background-color: #fafafa;
 				}
 
 		}
