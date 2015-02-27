@@ -8,12 +8,19 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 			@render()
 		clickedGridButton: (e) ->
 			identifier = e.currentTarget.id
-			if identifier is "support-button"
+			if $(e.currentTarget).attr("href") isnt "#"
 				return true
 			else if identifier is "snoozes-button"
 				swipy.router.navigate("settings/snoozes", true)
 			else if identifier is "tweaks-button"
 				swipy.router.navigate("settings/tweaks", true)
+			else if identifier is "sync-button"
+				swipy.sync.sync()
+			else if identifier is "logout-button"
+				if confirm "Are you sure you want to log out?"
+					localStorage.clear()
+					Parse.User.logOut()
+					location.href = "/login/"
 			false
 		render: ->
 			@$el.html @template {}
