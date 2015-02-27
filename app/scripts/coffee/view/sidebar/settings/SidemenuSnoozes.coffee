@@ -146,9 +146,10 @@ define ["gsap-draggable", "slider-control", "text!templates/sidemenu/settings/si
 			@$el.find( ".week-start-day button" ).text dayName
 
 			swipy.settings.set( "SettingWeekStart", parseInt(dayNum, 10) )
+		destroy: ->
+			@cleanUp()
 		cleanUp: ->
 			@startDaySlider?.destroy()
 			@startEveSlider?.destroy()
 			@startWeekendSlider?.destroy()
 			@delaySlider?.destroy()
-			BaseView::cleanUp.apply( @, arguments )
