@@ -11,7 +11,7 @@
 	// 	overflow: hidden;
 	// 	visibility: hidden;
 	// }
-	
+
 		.add-task-field {
 			opacity:0.6;
 			text-indent: 0;
@@ -27,6 +27,8 @@
 			outline: none;
 			padding-left: emCalc(15px);
 			resize: none;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
 		}
 
 		.priority {

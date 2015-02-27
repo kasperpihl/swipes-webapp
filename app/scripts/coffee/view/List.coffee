@@ -461,6 +461,7 @@ define [
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar()
 			@transitionDeferred.resolve()
+			console.log "setting from list"
 			swipy.shortcuts.setDelegate( @ )
 		killSubViews: ->
 			view.remove() for view in @subviews
