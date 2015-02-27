@@ -29,10 +29,11 @@
 		line-height: 1;
 		//@include breakpoint(min-width, emCalc(700px)) { font-size: 1.9em; }
 		@include transition(color 0.15s ease-out);
-
-		&:focus, &:hover {
+		&:hover, &:focus{
 			text-decoration: none;
 			outline: none;
+		}
+		&:hover, &.active {
 			&.schedule { color: $lobster; }
 			&.todo { color: $yellow; }
 			&.checkmark { color: $green; }
