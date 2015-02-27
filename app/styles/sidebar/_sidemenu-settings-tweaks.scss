@@ -16,7 +16,7 @@
 				letter-spacing: 1px;
 				line-height: 1;
 				padding: 0 0 3px;
-				margin: 0 0 0;
+				margin: 0 0 3px;
 				font-family: $font-bold;
 			}
 	}
@@ -29,7 +29,7 @@
 		font-size: 13px;
 		color: $brand-dakrcolor;
 		line-height: 1;
-		padding: emCalc(18px) 0;
+		padding: emCalc(22px) 0;
 		position: relative;
 
 			&:after {
