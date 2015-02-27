@@ -1,7 +1,7 @@
 define ["underscore"], (_) ->
 	Backbone.View.extend
 		events:
-			"click .sub-close": "handleAction"
+			"click .sub-back": "handleAction"
 			"click .log-out": "handleAction"
 			"click .addtask.btn-icon": "handleAction"
 			"click .search.btn-icon": "handleAction"
@@ -22,9 +22,8 @@ define ["underscore"], (_) ->
 				swipy.router.navigate("workspaces",true )
 			else if trigger.hasClass "settings"
 				swipy.router.navigate("settings",true )
-			else if trigger.hasClass("clickable-overlay") or trigger.hasClass("sub-close")
-				swipy.sidebar.removeSubmenu()
-				swipy.router.openLastMainView(false)
+			else if trigger.hasClass("clickable-overlay") or trigger.hasClass( "sub-back" )
+				swipy.sidebar.popView()
 			else if trigger.hasClass("swipes-logo")
 				swipy.router.navigate("list/todo", true)
 			else if trigger.hasClass "log-out"

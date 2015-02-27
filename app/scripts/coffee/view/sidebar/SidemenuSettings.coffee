@@ -12,6 +12,8 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 				return true
 			else if identifier is "snoozes-button"
 				swipy.router.navigate("settings/snoozes", true)
+			else if identifier is "tweaks-button"
+				swipy.router.navigate("settings/tweaks", true)
 			false
 		render: ->
 			@$el.html @template {}

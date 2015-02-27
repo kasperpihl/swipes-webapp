@@ -18,7 +18,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "base";
 
 // Modules
-@import "module/_app-header.scss";
+@import "module/app-header";
 @import "module/forms";
 @import "module/todo-list";
 @import "module/list/task";
@@ -53,15 +53,11 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "sidebar/sidebar-actions";
 @import "sidebar/sidebar-search";
 @import "sidebar/sidebar-tags";
-@import "sidebar/_sidemenu-settings.scss";
-@import "sidebar/_sidemenu-settings-snoozes.scss";
+@import "sidebar/sidemenu-settings";
+@import "sidebar/sidemenu-settings-snoozes";
 
 // Views
 @import "view/login";
-@import "view/settings/base";
-@import "view/settings/policies";
-@import "view/settings/snoozes";
-
 
 // Other modules
 @import "module/browsehappy";
