@@ -26,7 +26,7 @@ define ["js/view/sidebar/Sidebar",
 				@addMenu.destroy()
 			@addMenu = new TaskInputView()
 			@loadSubmenu @addMenu, "Add a task", "icon-materialAdd", 0, "addtask"
-			@addMenu.$el.find("input").focus()
+			@addMenu.$el.find("textarea").focus()
 		loadTagFilter: ->
 			if @tagFilter?
 				@tagFilter.destroy()

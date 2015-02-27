@@ -1,27 +1,36 @@
 .add-new {
-	$placeholderColor: #e1e1e1;
-	body.edit-mode & {
-		opacity: 0;
-		height: 0;
-		overflow: hidden;
-		visibility: hidden;
-	}
+	position: relative;
+
+	// legacy code -----
+	// $placeholderColor: #e1e1e1;
 	
-	input {
-		opacity:0.6;
-		text-indent: 5%;
-		width: 100%;
-		font-family: $font-light;
-		text-align:center;
-		font-size: emCalc(35px);
-		line-height: 1;
-
-		@include breakpoint(min-width, emCalc(415px)) { font-size: emCalc(45px); }
-
-		@include breakpoint(tablet) {
+	// legacy code -----
+	// body.edit-mode & {
+	// 	opacity: 0;
+	// 	height: 0;
+	// 	overflow: hidden;
+	// 	visibility: hidden;
+	// }
+	
+		.add-task-field {
+			opacity:0.6;
 			text-indent: 0;
+			width: 100%;
+			font-family: $font-light;
+			text-align: left;
+			font-size: emCalc(22px);
+			line-height: 1;
+			@include placeholder($brand-dakrcolor);
+			color: $brand-dakrcolor;
+			border: none;
+			background-color: transparent;
+			outline: none;
+			padding-left: emCalc(15px);
+			resize: none;
 		}
-		//@include breakpoint(min-height, emCalc(768px)) { font-size: emCalc(75px); }
-		@include breakpoint(min-height, $breakheight) { font-size: emCalc(75px); }
-	}
+
+		.priority {
+			@include centerBlock(5px, auto, auto, -15px, auto, absolute);
+		}
+
 }
