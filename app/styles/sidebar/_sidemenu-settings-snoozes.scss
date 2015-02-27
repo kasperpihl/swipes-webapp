@@ -44,11 +44,11 @@ ul.snoozes {
 	}
 
 
-	li { margin-bottom: emCalc(28px); }
+	> li { margin-bottom: emCalc(28px); }
 	
 	li > section { display: none; }
 	
-	li.toggled {
+	> li.toggled {
 		> section {
 			@extend .animated;
 			@extend .fadeIn;
