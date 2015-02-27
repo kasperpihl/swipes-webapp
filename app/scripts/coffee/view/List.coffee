@@ -467,7 +467,7 @@ define [
 
 		transitionInComplete: ->
 			@lastSelectedIndex = -1
-			@actionbar = new ActionBar()
+			@actionbar = new ActionBar({state: @state})
 			@transitionDeferred.resolve()
 			swipy.shortcuts.setDelegate( @ )
 		killSubViews: ->

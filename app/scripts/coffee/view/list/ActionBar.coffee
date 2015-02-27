@@ -5,9 +5,32 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			"click .tags": "editTags"
 			"click .delete": "deleteTasks"
 			"click .share": "shareTasks"
-		initialize: ->
+			"click .action-snooze": "snoozeTasks"
+			"click .action-today": "todayTasks"
+			"click .action-complete": "completeTasks"
+
+		initialize: (obj)->
+			
 			@hide()
+			self = @
+			setTimeout(
+				->
+					self.handleButtonsFromState(obj.state)
+			, 500)
+			#@handleButtonsFromState(obj.state)
+			
+			
 			@listenTo( swipy.todos, "change:selected", @toggle )
+		handleButtonsFromState:(state) ->
+			showComplete = true if state isnt "done"
+			showSchedule = true if state isnt "schedule"
+			showTasks = true if state isnt "tasks"
+			$('.action-bar .snooze, .action-bar .today, .action-bar .complete').hide()
+			$('.action-bar .snooze').show() if showSchedule
+			$('.action-bar .today').show() if showTasks
+			$('.action-bar .complete').show() if showComplete
+
+
 		toggle: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
 			if @shown
@@ -28,6 +51,12 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			@undelegateEvents()
 			@stopListening()
 			@hide()
+		snoozeTasks: ->
+			Backbone.trigger( "schedule-task" )
+		todayTasks: ->
+			Backbone.trigger( "todo-task" )
+		completeTasks: ->
+			Backbone.trigger( "complete-task" )
 		editTags: ->
 			@tagEditor = new TagEditorOverlay( models: swipy.todos.filter (m) -> m.get "selected" )
 		deleteTasks: ->
