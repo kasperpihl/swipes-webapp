@@ -85,10 +85,10 @@ define ["js/view/sidebar/Sidebar",
 			$('.sidebar .sidebar-controls').removeClass( "hasActiveEl")
 			$("body").removeClass("sidebar-open")
 			$(".sidebar").removeClass("sub-open")
-		popView: ->
-			if @level is 0
+		popView: (force) ->
+			if @level is 0 or force
 				@removeSubmenu()
-				swipy.router.openLastMainView(false)
+				swipy.router.openLastMainView(true)
 			else 
 				currentPath = Backbone.history.fragment
 				lastSeperator = currentPath.lastIndexOf("/");

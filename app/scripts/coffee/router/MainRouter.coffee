@@ -13,7 +13,6 @@ define [], () ->
 			@history = []
 			@lastMainRoute = "list/todo"
 			Backbone.history.on( "route", @updateHistory, @ )
-			Backbone.trigger( "navigate/view", "todo" )
 		root: ->
 			@navigate( "list/todo", { trigger: yes, replace: yes } )
 		add: ->
@@ -50,6 +49,9 @@ define [], () ->
 			if subview then Backbone.trigger( "settings/view", subview )
 			else swipy.analytics.pushScreen "Settings menu"
 		updateHistory: (me, page, subpage) ->
+			if history.length is 0 and page isnt "edit" and page isnt "list"
+				console.log page
+				Backbone.trigger( "navigate/view", "todo" )
 			# We skip root, because it's just a redirect to another route.
 			return false if page is "" or page is "root"
 

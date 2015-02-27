@@ -134,7 +134,7 @@ define [
 
 					contentY = mainContentView.position().top
 					itemY = foundView.$el.position().top
-					sectionY = foundView.$el.closest(".divider").position().top
+					sectionY = foundView.$el.closest(".task-header").position().top
 					totalItemY = contentY+sectionY+itemY
 					itemHeight = foundView.$el.height()
 					height = scrollableView.height()

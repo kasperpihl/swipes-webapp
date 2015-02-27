@@ -23,7 +23,7 @@ define ["underscore"], (_) ->
 			else if trigger.hasClass "settings"
 				swipy.router.navigate("settings",true )
 			else if trigger.hasClass("clickable-overlay") or trigger.hasClass( "sub-back" )
-				swipy.sidebar.popView()
+				swipy.sidebar.popView(trigger.hasClass("clickable"))
 			else if trigger.hasClass("swipes-logo")
 				swipy.router.navigate("list/todo", true)
 			return false
