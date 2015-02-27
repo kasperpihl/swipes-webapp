@@ -1,123 +1,61 @@
-// .action-bar {
-// 	@extend .clearfix;
-// 	@extend .animated;
-// 	@extend .fadeInUp;
 
-// 	@include experimental(animation-duration, 0.3s);
-
-// 	&.fadeout {
-// 		@extend .fadeOutDown;
-// 		pointer-events: none;
-// 	}
-
-// 	z-index: 10000;
-// 	position: fixed;
-// 	bottom: 1.5em;
-
-// 	padding: 0;
-// 	text-align: center;
-
-// 	width: 100%;
-// 	max-width: emCalc(350px);
-
-// 	@include breakpoint(min-width, emCalc(350px)) {
-// 		left: 50%;
-// 		margin-left: 0 - emCalc(175px);
-
-// 		.sidebar-open & {
-// 			margin-left: 0 - emCalc(350px - $sidebar-width);
-// 		}
-// 	}
-
-// 	@include breakpoint(desktop-wide) {
-// 		@include transition(max-width 0.5s ease-out);
-// 		max-width: emCalc(600px);
-// 		margin-left: 0 - emCalc(300px);
-// 	}
-
-// 	li { list-style: none; }
-
-// 	a {
-// 		display: block;
-// 		width: 25%;
-// 		float: left;
-
-// 		color: inherit;
-// 		text-decoration: none;
-// 		text-align: center;
-
-// 		@include transition(all 0.2s ease-out);
-
-// 		&:hover {
-// 			color: inherit;
-// 			@include scale(1.2);
-// 		}
-// 	}
-
-// 	span {
-// 		font-size: 1.5em;
-// 	}
-// }
-
+// Action bar
+// ---------------------------------------------
 
 .action-bar {
 	@extend .clearfix;
 	@extend .animated;
-	@extend .fadeInUp;
+	@extend .fadeIn;
 
 	@include experimental(animation-duration, 0.12s);
 
 	&.fadeout {
-		@extend .fadeOutDown;
+		@extend .fadeOut;
 		pointer-events: none;
 	}
 
 	z-index: 4991;
 	position: fixed;
 	bottom: 0;
-	top: 0;
-	left: 20%;
-	margin: auto 0;
-
-	padding: emCalc(210px) 0 0;
+	top: -100px;
+	left: 0;
+	margin: auto;
+	padding: emCalc(25px) 0;
 	text-align: center;
-
-	width: 40px;
-	// max-width: emCalc(350px);
+	width: 80px;
+	height: 350px;
+	background-color: transparent;
 
 	@include breakpoint(min-width, emCalc(350px)) {
-		left: 50%;
-		margin-left: 0 - emCalc(310px);
+		right: -810px;
 
 		.sidebar-open & {
-			margin-left: 0 - emCalc(360px - $sidebar-width);
+			margin-right: 0 - emCalc(360px - $sidebar-width);
 		}
 	}
 
 	@include breakpoint(desktop-wide) {
-		@include transition(max-width 0.5s ease-out);
-		max-width: emCalc(600px);
-		margin-left: 0 - emCalc(480px);
+		right: -1040px;
 	}
 
 	li {
+		display: inline-block;
 		list-style: none;
-		margin-bottom: emCalc(30px);
+		margin-bottom: emCalc(22px);
 	}
 
 	a {
 		display: block;
 		@include square(40px);
 		line-height: 40px;
+		background-color: #fff;
 		text-align: center;
 		border: 1px solid $brand-dakrcolor;
-		// float: left;
-
 		text-decoration: none;
 		text-align: center;
 		
 		@include border-radius(50%);
-		@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);
+		@include transition(all 100ms ease-in-out);
 
 			svg {
 				display: inline-block;
@@ -127,13 +65,91 @@
 				vertical-align: middle;
 				@include square(22px);
 				fill: $brand-dakrcolor;
+				@include transition(all 100ms ease-in-out);
 			}
 
 			&:hover {
-				color: inherit;
-				@include scale(1.1);
+				background-color: $brand-dakrcolor;
+
+					svg {fill: #fff;}
 			}
 	}
+
+
+	// Coloring SVG icons
+	.complete {
+
+		svg {
+			fill: $green;
+		}
+
+		a {
+			border-color: $green;
+
+				&:hover {
+					background-color: $green;
+
+						svg {fill: #fff;}
+				}
+		}
+		
+	}
+
+	.today {
+
+		svg {
+			fill: $orange;
+		}
+
+		a {
+			border-color: $orange;
+
+				&:hover {
+					background-color: $orange;
+
+						svg {fill: #fff;}
+				}
+		}
+	}
+
+	.snooze {
+
+		svg {
+			fill: $red;
+		}
+
+		a {
+			border-color: $red;
+
+				&:hover {
+					background-color: $red;
+
+						svg {fill: #fff;}
+				}
+		}
+	}
+
+	li.spacer {
+		display: block;
+		margin-bottom: 20px;
+	}
+
+	.counting-selected {
+
+			span {
+				display: inline-block;
+				@include square(40px);
+				line-height: 40px;
+				background-color: $brand-dakrcolor;
+				text-align: center;
+				text-decoration: none;
+				text-align: center;
+				color: #fff;
+				font-size: 21.5px;
+				@include border-radius(50%);
+			}
+	}
+
 
 	span {
 		font-size: 1.5em;

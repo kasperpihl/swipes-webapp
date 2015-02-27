@@ -16,6 +16,16 @@
 			margin-bottom: 10px;
 		}
 
+		.syncing & {
+
+			#sync-button .icon {
+				@include rotate(360deg);
+				@include transition(transform 1s linear 0);
+				@include animation-iteration-count(infinite);
+			}
+
+		}
+
 		a {
 			display: table;
 			float: left;
