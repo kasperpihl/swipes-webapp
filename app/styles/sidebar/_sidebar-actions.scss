@@ -24,7 +24,7 @@
 		line-height: 1;
 		color: #1b1e23;
 		@include square(35px);
-		@include centerBlock(4em, auto, auto, 2em, 0, absolute);
+		@include centerBlock(2em, auto, auto, 2em, 0, absolute);
 		margin-top: -8px;
 
 			svg {

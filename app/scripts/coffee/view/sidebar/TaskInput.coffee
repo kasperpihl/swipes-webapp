@@ -11,8 +11,10 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 			@oldTaskText = localStorage.getItem("addText") if localStorage.getItem("addText")
 			@template = _.template AddTmpl
 			@render()
+			_.bindAll(@, "keyUpHandling", "focusTextArea")
+			self = @
 			setTimeout( ->
-				swipy.shortcuts.pushDelegate(@)
+				swipy.shortcuts.setDelegate(self)
 			, 500)
 			
 		render: ->
@@ -22,6 +24,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 		saveText: (e) ->
 			localStorage.setItem("addText",$(e.currentTarget).val())
 		focusTextArea: (e) ->
+			swipy.shortcuts.setDelegate(@)
 			val = $(e.currentTarget).val();
 			$(e.currentTarget).val("").val(val);
 		keyDownHandling: (e) ->

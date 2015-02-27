@@ -323,7 +323,7 @@ define [
 			
 				title = group.deadline
 
-
+				# Find the current progress
 				if @state is "tasks"
 					if !totalNumberOfTasks
 						percentage = 100
@@ -461,7 +461,6 @@ define [
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar()
 			@transitionDeferred.resolve()
-			console.log "setting from list"
 			swipy.shortcuts.setDelegate( @ )
 		killSubViews: ->
 			view.remove() for view in @subviews

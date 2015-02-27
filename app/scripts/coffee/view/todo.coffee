@@ -10,7 +10,8 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 			tasksArr = @sortTasks tasksArr
 			return [ { deadline: "Tasks", tasks: tasksArr } ]
 		setTodoOrder: (todos) ->
-			@sorter.setTodoOrder( todos, true )
+			setting = swipy.settings.get("SettingAddToBottom")
+			@sorter.setTodoOrder( todos, !setting )
 		afterMovedItems: ->
 			if @getTasks().length is 0
 				todayOrNow = "For Today"
