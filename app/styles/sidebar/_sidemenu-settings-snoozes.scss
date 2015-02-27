@@ -16,22 +16,26 @@ ul.snoozes {
 			text-align: left;
 			margin: 0;
 			line-height: $row-height;
+			color: $gray-titles;
 		}
 
 		button {
 			position: absolute;
 			top: 0; right: 0;
 
-			width: emCalc(110px);
+			width: emCalc(125px);
 			height: 100%;
 
 			background: transparent;
 			
 			outline: none;
-			border: thin solid white;
+			border: thin solid #E0E0E0;
+			@include border-radius(25em);
 			
-			color: white;
+			color: $brand-dakrcolor;
 			line-height: $row-height * 0.9;
+
+			font-size: emCalc(14px);
 
 			&:hover {
 				background: rgba(white, 0.1);
@@ -51,11 +55,13 @@ ul.snoozes {
 			@include experimental(animation-duration, 0.3s);
 
 			display: block;
-			padding: 3.25em 0 1.7em;
+			padding: 1.9em 0 1.3em;
 		}
 
 		button {
-			background: $green;
+			background: $brand-dakrcolor;
+			color: white;
+			border-color: $brand-dakrcolor;
 		}
 	}
 }
