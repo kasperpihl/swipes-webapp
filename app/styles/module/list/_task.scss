@@ -213,7 +213,14 @@ $border-width: 1px;
 		}
 	}
 }
-
+.todo-list.selecting{
+	.task-row:hover{
+		.actions{
+			display:none;
+			@include transition(opacity 0.2s ease-out);
+		}
+	}
+}
 // Various states for tasks
 .todo-list {
 	.selected .todo-content {
@@ -224,12 +231,15 @@ $border-width: 1px;
 		@include transition(all 0.2s ease-out);
 		@include box-shadow(0 0 30px #ddd);
 	}
-	.hover {
-		
+	.task-row:hover{
 		.actions{
 			opacity: 1.0;
 			@include transition(opacity 0.2s ease-out);
 		}
+	}
+	.hover {
+		
+		
 		.todo-content {
 			//left: $list-item-height;
 			//@include breakpoint(min-height, $breakheight) { left: 95px; }

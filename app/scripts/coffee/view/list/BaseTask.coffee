@@ -20,7 +20,6 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			# events hash freely
 			@$el.on( "click", ".todo-content", @toggleSelected )
 			@$el.on( "click", ".priority", @togglePriority )
-			@$el.on( "dblclick", ".todo-content", @edit )
 			@$el.on( "click", ".actions a", @handleAction )
 		setTemplate: ->
 			@template = _.template TaskTmpl
@@ -28,10 +27,8 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			@bounds = @el.getClientRects()[0]
 		init: -> # Hook for views extending me
 		toggleSelected: ->
-			currentlySelected = @model.get( "selected" ) or false
-			@model.set( "selected", !currentlySelected )
-			Backbone.trigger( "did-press-task", [@model])
-			
+			if @delegate? and _.isFunction(@delegate.pressedTask)
+				@delegate.pressedTask(@model)
 		togglePriority: (e) ->
 			e.stopPropagation()
 			@model.togglePriority()
@@ -66,6 +63,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 
 			@$el.html @template renderJSON
 			@$el.attr( "data-id", @model.id )
+			@$el.addClass("task-row")
 			@afterRender()
 			return @
 		afterRender: ->

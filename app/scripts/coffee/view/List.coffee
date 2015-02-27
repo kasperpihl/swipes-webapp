@@ -86,7 +86,7 @@ define [
 			return if $("input").is(":focus")
 
 			if e.keyCode is 32
-				e.preventDefault()	
+				e.preventDefault()
 			# shift key
 
 			if e.keyCode is 16
@@ -340,6 +340,7 @@ define [
 				list = $html.find "ol"
 				for model in group.tasks
 					view = if Modernizr.touch then new TouchTaskView( { model } ) else new DesktopTaskView( { model } )
+					view.delegate = @
 					@subviews.push view
 					list.append view.el
 
@@ -360,7 +361,14 @@ define [
 			else
 				$('.search-result').addClass("hidden")
 			swipy.filter.updateFilterString(todos.length)
-
+		pressedTask:(model) ->
+			if !@holdModifier and !@$el.hasClass("selecting")
+				identifier = model.id
+				swipy.router.navigate( "edit/#{ identifier }", yes )
+			else
+				currentlySelected = model.get( "selected" ) or false
+				model.set( "selected", !currentlySelected )
+				Backbone.trigger( "did-press-task", [model])
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
 			newSelectIndex = -1

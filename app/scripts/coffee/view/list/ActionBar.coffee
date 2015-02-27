@@ -2,7 +2,6 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 	Backbone.View.extend
 		el: ".action-bar"
 		events:
-			"click .edit": "editTask"
 			"click .tags": "editTags"
 			"click .delete": "deleteTasks"
 			"click .share": "shareTasks"
@@ -19,18 +18,16 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 					@show()
 		show: ->
 			@$el.toggleClass( "fadeout", no )
+			$('.todo-list:not(.hidden)').addClass("selecting")
 			@shown = yes
-
 		hide: ->
+			$('.todo-list').removeClass("selecting")
 			@$el.toggleClass( "fadeout", yes )
 			@shown = no
 		kill: ->
 			@undelegateEvents()
 			@stopListening()
 			@hide()
-		editTask: ->
-			target = swipy.todos.filter( (m) -> m.get "selected" )[0].id
-			swipy.router.navigate( "edit/#{ target }", yes )
 		editTags: ->
 			@tagEditor = new TagEditorOverlay( models: swipy.todos.filter (m) -> m.get "selected" )
 		deleteTasks: ->

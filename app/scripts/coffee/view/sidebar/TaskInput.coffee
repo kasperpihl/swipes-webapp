@@ -25,8 +25,8 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 			localStorage.setItem("addText",$(e.currentTarget).val())
 		focusTextArea: (e) ->
 			swipy.shortcuts.setDelegate(@)
-			val = $(e.currentTarget).val();
-			$(e.currentTarget).val("").val(val);
+			val = $(e.currentTarget).val()
+			$(e.currentTarget).val("").val(val)
 		keyDownHandling: (e) ->
 			if e.keyCode is 13
 				e.preventDefault()
@@ -46,4 +46,3 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 			@remove()
 		remove: ->
 			@$el.remove()
-			swipy.shortcuts.popDelegate()
