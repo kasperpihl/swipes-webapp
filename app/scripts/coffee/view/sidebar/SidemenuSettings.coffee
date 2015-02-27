@@ -2,7 +2,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 	Backbone.View.extend
 		className: "add-sidemenu"
 		events:
-			"click .grid > a": "clickedGridButton"
+			"click .settings-links > a": "clickedGridButton"
 		initialize: ->
 			@template = _.template SettingsTmpl
 			@render()
@@ -10,6 +10,8 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 			identifier = e.currentTarget.id
 			if identifier is "support-button"
 				return true
+			else if identifier is "snoozes-button"
+				swipy.router.navigate("settings/snoozes", true)
 			false
 		render: ->
 			@$el.html @template {}

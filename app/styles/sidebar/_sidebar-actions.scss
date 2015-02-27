@@ -52,8 +52,9 @@
 			> li {
 				margin-bottom: 1em;
 					> a {
+						opacity:0.8;
 						&:hover{
-							opacity:0.7;
+							opacity:1.0;
 						}
 						//@include opacity(0.3);
 						@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);

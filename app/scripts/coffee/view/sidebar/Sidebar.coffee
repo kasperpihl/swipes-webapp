@@ -26,7 +26,6 @@ define ["underscore"], (_) ->
 				swipy.sidebar.removeSubmenu()
 				swipy.router.openLastMainView(false)
 			else if trigger.hasClass("swipes-logo")
-				swipy.sidebar.removeSubmenu()
 				swipy.router.navigate("list/todo", true)
 			else if trigger.hasClass "log-out"
 				e.preventDefault()

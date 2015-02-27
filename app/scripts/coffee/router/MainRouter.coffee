@@ -23,7 +23,6 @@ define [], () ->
 		workspaces: ->
 			Backbone.trigger( "show-workspaces" )
 		list: (id = "todo") ->
-			Backbone.trigger "hide-settings"
 			Backbone.trigger( "navigate/view", id )
 			@setLastMainView()
 
@@ -39,11 +38,10 @@ define [], () ->
 				trigger = true
 			@navigate(@lastMainRoute,trigger)
 		setLastMainView: ->
-			console.log Backbone.history.fragment
+			Backbone.trigger "hide-sidemenu"
 			@lastMainRoute = Backbone.history.fragment
 		edit: (taskId) ->
 
-			Backbone.trigger "hide-settings"
 			Backbone.trigger( "edit/task", taskId )
 			@setLastMainView()
 			swipy.analytics.pushScreen "Edit Task"
