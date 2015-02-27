@@ -55,6 +55,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "sidebar/sidebar-tags";
 @import "sidebar/sidemenu-settings";
 @import "sidebar/sidemenu-settings-snoozes";
+@import "sidebar/_sidemenu-settings-tweaks.scss";
 
 // Views
 @import "view/login";
