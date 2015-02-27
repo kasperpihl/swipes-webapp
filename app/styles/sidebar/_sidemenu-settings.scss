@@ -1,0 +1,49 @@
+
+// Settings menu links
+.settings-links {
+	@include clearfix();
+
+		.option {
+			display: table-cell;
+			vertical-align: middle;
+			width: 100%;
+			height: inherit;
+		}
+
+		svg {
+			@include transition(transform $transitionDuration-base ease-in-out);
+			display: inline-block;
+			@include square(40px);
+			margin-bottom: 10px;
+		}
+
+		a {
+			display: table;
+			float: left;
+			@include size(100% / 3, 130px);
+			color: $brand-dakrcolor;
+			font-size: 14px;
+			text-align: center;
+			text-decoration: none;
+			@include border-radius(10px);
+			border: 1px solid transparent;
+
+
+				p {
+					margin-bottom: 0;
+				}
+
+
+				&:hover {
+					background-color: #f9f9f9;
+					border-color: #e0e0e0;
+
+						svg {
+							@include scale(1.1);
+						}
+
+				}
+
+		}
+
+}
