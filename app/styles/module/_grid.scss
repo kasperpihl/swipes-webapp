@@ -41,23 +41,22 @@
 			text-align: center;
 			text-decoration: none;
 
-			@include transition(all 0.2s ease-out);
+			&,
+			& svg {
+				@include transition(all 0.2s ease-out);
+			}
 
 			&:hover {
 
 				&:not(.disabled) {
 					background: rgba(black, 0.03);
 				}
-				
-				// Hover effect
-				@include breakpoint(min-width, 410px) {
 
-					div[class^="icon-"],
-					p {
-						color: $brand-swipes;
-					}
-
+				svg,
+				p {
+					color: $brand-swipes;
 				}
+
 			}
 		}
 }

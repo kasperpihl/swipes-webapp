@@ -149,39 +149,40 @@ $border-width: 1px;
 			float:left;
 			margin-right:5px;
 			@include breakpoint(tablet) { margin-right: 10px; }
-			height:$button-size;
-			width: $button-size;
-			border-radius: $button-size/2;
+			@include square($button-size);
+			@include border-radius(50%);
 			border: $border-width solid $gray;
-			padding-top:($button-size - $icon-size)/2-$border-width;
+			padding:0;
+			position: relative;
+
+			svg {
+				@include square(16px);
+				@include centerBlock(0, 0, 0, 0, auto, absolute);
+			}
+
 			&.schedule-button{
-				color: $red;
 				border-color: $red;
-				font-size: $icon-size+4;
-				padding-top:($button-size - ($icon-size+4))/2-$border-width;
-				padding-left:1px;
+					svg { fill: $red; }
 			}
 			&.todo-button{
-				color: $yellow;
 				border-color: $yellow;
-				font-size: $icon-size+2;
-				padding-top:($button-size - ($icon-size+2))/2-$border-width;
+					svg { fill: $yellow; }
 			}
 			&.complete-button{
-				color: $green;
 				border-color: $green;
+					svg { fill: $green; }
 			}
 			&.schedule-button:hover{
 				background-color:$red;
-				color:white;
+					svg { fill: white; }
 			}
 			&.todo-button:hover{
 				background-color:$yellow;
-				color:white;
+					svg { fill: white; }
 			}
 			&.complete-button:hover{
 				background-color:$green;
-				color:white;
+					svg { fill: white; }
 			}
 		}
 	}

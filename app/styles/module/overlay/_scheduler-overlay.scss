@@ -168,6 +168,17 @@ body.scheduler-open {
 		display: none;
 		background-color: transparent;
 
+			svg {
+				display: inline-block;
+				@include square(55px);
+				fill: $brand-dakrcolor;
+				margin: 15px 0 10px;
+			}
+
+			a:hover svg {
+				fill: $red;
+			}
+
 			&.active {
 				display: block;
 				@extend .animated;

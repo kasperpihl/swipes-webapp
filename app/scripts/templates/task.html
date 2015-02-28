@@ -88,15 +88,15 @@
 	<div>
 	<% if (state === "completed" || state === "active"){ %>
 		<a href="JavaScript:void(0);" class="schedule-button" title="Schedule todo">
-			<span class="icon-clock-bold"></span>
+			<svg class="icon icon-widgetSchedule"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-widgetSchedule"></use></svg>
 		</a>
 	<% } if (state === "completed" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="todo-button" title="Move task to todo list">
-			<span class="icon-todo-bold"></span>
+			<svg class="icon icon-widgetAll"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-widgetAll"></use></svg>
 		</a>
 	<% } if (state === "active" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="complete-button" title="Mark todo as completed">
-			<span class="icon-checkmark-bold"></span>
+			<svg class="icon icon-widgetDone"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-widgetDone"></use></svg>
 		</a>
 	<% } %>
 	</div>
