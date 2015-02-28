@@ -43,11 +43,17 @@ $border-width: 1px;
 			margin: 0 0 0 -0.3em;
 			padding: 0;
 
+				.icon,
+				.icon svg {
+					display: inline-block;
+					@include square(11px);
+				}
 
-			&:first-child {
-				margin-left: 0;
-				&:before { content: none; }
-			}
+
+				&:first-child {
+					margin-left: 0;
+					&:before { content: none; }
+				}
 		}
 
 		> li {
