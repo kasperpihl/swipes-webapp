@@ -125,6 +125,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				if $(".add-step input").is(":focus")
 					if $(".add-step input").val().length is 0
 						$(".add-step input").blur()
+						$(".add-step input").focus()
 				else if $('.input-title').is(':focus')
 					$('.input-title').blur()
 					e.preventDefault()
