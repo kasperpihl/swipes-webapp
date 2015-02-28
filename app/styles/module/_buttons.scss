@@ -66,26 +66,3 @@ nav.centered-buttons {
 		a { margin-left: 8em; }
 	}
 }
-
-@include breakpoint(max-height, 40em) {
-	.sticky-if-small {
-		position: fixed;
-		bottom: 1em;
-
-		left: 50%;
-		margin-left: 0 - emCalc(30px);
-
-		&:before {
-			content: "";
-			@include background-image( linear-gradient( rgba(white, 0), white 35% ) );
-			position: absolute;
-			bottom: 0; left: 0; right: 0;
-			height: emCalc(90px);
-		}
-
-		.round-btn {
-			z-index: 1;
-			position: relative;
-		}
-	}
-}
