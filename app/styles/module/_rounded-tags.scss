@@ -3,6 +3,16 @@
 	padding: 0;
 	margin-bottom: 0;
 
+	.icon-tag-container & {
+		position: relative;
+		top: -7px;
+
+			& + .tag-pool {
+				position: relative;
+				top: -7px;
+			}
+	}
+
 	li {
 		@extend .no-select;
 
@@ -44,31 +54,33 @@
 
 	.add-new-tag {
 		position: relative;
-		background: $yellow;
 		border: none;
 		padding: 0;
+		background: none !important;
+		@include border-radius();
 
-		.icon-plus {
-			position: relative;
-			top: 0.1em;
-		}
+			a {
+				background-color: $yellow;
+				display: block;
+				@include square(35px);
+				line-height: 35px;
+				text-align: center;
+				text-decoration: none;
+				position: relative;
+				overflow: hidden;
+				@include transition(background 0.15s ease-out);
+				@include border-radius(50%);
 
-		.icon-minus {
-			position: relative;
-			top: 0.2em;
-		}
+					svg {
+						fill: #fff;
+						@include square(17px);
+						@include centerBlock(0, 0, 0, 0, auto, absolute);
+					}
 
-		a {
-			display: block;
-			color: white;
-			padding: emCalc(9px) emCalc(12px);
-
-		}
-
-		&:hover {
-			background: $yellow;
-			a { color: white; text-decoration: none; }
-		}
+					&:hover {
+						background: darken($yellow, 13%);
+					}
+			}
 	}
 }
 

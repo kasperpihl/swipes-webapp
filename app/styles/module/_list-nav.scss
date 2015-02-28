@@ -28,23 +28,25 @@
 		font-size: 1.4em;
 		line-height: 1;
 		//@include breakpoint(min-width, emCalc(700px)) { font-size: 1.9em; }
-		@include transition(color 0.15s ease-out);
-		&:hover, &:focus{
-			text-decoration: none;
-			outline: none;
-		}
-		&:hover, &.active {
-			&.schedule { color: $lobster; }
-			&.todo { color: $yellow; }
-			&.checkmark { color: $green; }
-		}
+
+			svg {
+				@include square(30px);
+				display: inline-block;
+				fill: #9e9e9e;
+			}
+
+			@include transition(color 0.15s ease-out);
+
+			&:hover, &:focus{
+				text-decoration: none;
+				outline: none;
+			}
+			&:hover, &.active {
+				&.schedule svg { fill: $lobster; }
+				&.todo svg { fill: $yellow; }
+				&.checkmark svg { fill: $green; }
+			}
 	}
-
-	.schedule, .todo, .active { @extend .icon; }
-
-	.schedule { @extend .icon-clock; }
-	.todo { @extend .icon-todo; }
-	.checkmark { @extend .icon-checkmark; }
 
 
 	.schedule.active {
