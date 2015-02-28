@@ -5,10 +5,11 @@
 		<div class="step <%= state %>" data-cid="<%= task.cid %>">
 
 			<a href="JavaScript:void(0);" class="action <%= action %>" title="Mark todo as completed">
-				<span class="<% print(task.completionDate ? 'icon-todo' : 'icon-checkmark'); %>"></span>
+				<!-- <span class="<% print(task.completionDate ? 'icon-todo' : 'icon-checkmark'); %>"></span> -->
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#<% print(task.completionDate ? 'icon-widgetAll' : 'icon-widgetDone'); %>"></use></svg>
 			</a>
 			<a href="JavaScript:void(0);" class="action delete" title="Delete action step">
-				<span class="icon-trashcan-act"></span>
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialClose"></use></svg>
 			</a>
 			<span class="dot"></span>
 			<input class="borderless" type="text" placeholder="Edit the action step" value="<%= task.title %>">
