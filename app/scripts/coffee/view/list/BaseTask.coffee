@@ -26,7 +26,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
 		init: -> # Hook for views extending me
-		toggleSelected: ->
+		toggleSelected: (e) ->
 			if @delegate? and _.isFunction(@delegate.pressedTask)
 				@delegate.pressedTask(@model)
 		togglePriority: (e) ->
