@@ -67,6 +67,19 @@ $border-width: 1px;
 		.action{
 			display:block;
 		}
+		
+		.action.delete{
+			display:none;
+		}
+
+		&.delete-hover{
+			.action.delete{
+				display:block;
+			}
+			.dot{
+				display:none;
+			}
+		}
 
 		.action:hover{
 

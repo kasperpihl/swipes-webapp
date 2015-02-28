@@ -12,11 +12,31 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			"change .step input": "updateActionStep"
 			"click .step .action": "clickedAction"
 			"click .repeat-button": "clickedRepeat"
+
+			"mouseenter .step": "trackMouse"
+			"mouseleave .step": "stopTrackingMouse"
+		trackMouse: (e) ->
+			@isHovering = true
+			@bouncedHover($(e.currentTarget))
+		stopTrackingMouse: (e) ->
+			@isHovering = false
+			@onUnhoverTask( $(e.currentTarget) )
+		onHoverTask: (target) ->
+			if @isHovering
+				target.addClass "delete-hover"
+			#if @model.get( "selected" ) or target is @cid
+				
+
+		onUnhoverTask: (target) ->
+			target.removeClass "delete-hover"
+			#if @model.get( "selected" ) or target is @cid
+				
 		initialize: ->
 			$("body").addClass "edit-mode"
 			@setTemplate()
+			@bouncedHover = _.debounce(@onHoverTask, 1500)
 			@sorter = new TaskSortModel()
-			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling" )
+			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title", @render )
 			@backRoute = "list/todo"
