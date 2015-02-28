@@ -1,9 +1,10 @@
-$action-step-dot-size: 12px;
+$action-step-dot-size: 20px;
 $action-step-height: 40px;
 $action-step-cell-x: 26px;
 $unselected-color: #ccc;
-$padding: 66px;
+$padding: 100px;
 $closure-size: 30px;
+
 .action-steps{
 	position:relative;
 	.step{

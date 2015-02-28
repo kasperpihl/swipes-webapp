@@ -11,7 +11,7 @@
 	// ............................
 	.go-back {
 		display: inline-block;
-		@include centerBlock(5px, auto, auto, -(emCalc(150px)), auto, absolute);
+		@include centerBlock(3px, auto, auto, -(emCalc(150px)), auto, absolute);
 		@include iconButoon(#9e9e9e, 40px, true);
 
 			&:hover {
@@ -29,6 +29,7 @@
 		position: relative;
 		font-size: emCalc(40px);
 		padding-left: $padding;
+		font-family: $font-light;
 
 		margin-bottom: emCalc(12px);
 		margin-top: 0.8em;
@@ -38,9 +39,14 @@
 				margin-top: emCalc(25px);
 			}
 
-			input{
-				font-family: $font-light;
+			.priority {
+				top: 20px;
 			}
+			
+			// legacy code
+			// input{
+			// 	font-family: $font-light;
+			// }
 	}
 
 
