@@ -70,7 +70,7 @@
 		}
 	}
 
-	textarea, input, .input-note {
+	textarea, input, .content-editable {
 		color: inherit;
 		text-indent: 0;
 		width: 100%;
@@ -87,7 +87,7 @@
 		}
 	}
 
-	textarea, .input-note {
+	textarea, .content-editable {
 		@include input-placeholder() {
 			color: lighten($gray, 30%);
 		}

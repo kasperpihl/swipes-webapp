@@ -6,7 +6,8 @@
 
 	<h1 class="h2 title">
 		<span class="priority bigger"></span>
-		<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">
+		<div class="input-title content-editable" contenteditable="true"><%= title %></div>
+		<!--<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">-->
 	</h1>
 	<section class="action-steps">
 		<div id="current-steps-container">
@@ -64,7 +65,7 @@
 
 	<section>
 		<div class="notes icon-note has-icon">
-			<div class="input-note" contenteditable><%= notes %></div>
+			<div class="input-note content-editable" contenteditable="true"><%= notes %></div>
 		</div>
 	</section>
 

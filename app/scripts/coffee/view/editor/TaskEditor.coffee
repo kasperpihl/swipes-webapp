@@ -3,11 +3,11 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		tagName: "article"
 		className: "task-editor"
 		events:
-			"click .save": "save"
+			"click .go-back": "back"
 			"click .priority": "togglePriority"
 			"click time": "reschedule"
 			"click .repeat-picker a": "setRepeat"
-			"blur .title input": "updateTitle"
+			"blur .input-title": "updateTitle"
 			"blur .notes .input-note": "updateNotes"
 			"change .step input": "updateActionStep"
 			"click .step .action": "clickedAction"
@@ -89,7 +89,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				titleString = "" + completedCounter + " / " + jsonedSubtasks.length + " Steps"
 				$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
 			$( @el ).find( ".divider h2" ).html( titleString )
-		save: ->
+		back: ->
 			if @backRoute?
 				swipy.router.navigate(@backRoute, true)
 			else 
@@ -99,17 +99,21 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		transitionInComplete: ->
 			swipy.shortcuts.setDelegate( @ )
 		keyDownHandling: (e) ->
-			if e.keyCode is 32 and !$("input").is(":focus") and !$('.input-note').is(':focus') 
+			if e.keyCode is 32 and !$("input").is(":focus") and !$("div.content-editable").is(':focus') 
+				e.preventDefault()
+			if e.keyCode is 13 and $('.input-title').is(':focus')
 				e.preventDefault()
 		keyUpHandling: (e) ->
 			if e.keyCode is 13
 				if $(".add-step input").is(":focus")
 					if $(".add-step input").val().length is 0
 						$(".add-step input").blur()
-				else if $('.title input').is(':focus')
-					$('.title input').blur()
+				else if $('.input-title').is(':focus')
+					$('.input-title').blur()
+					e.preventDefault()
+
 				
-			if e.keyCode is 32 and !$("input").is(":focus") and !$('.input-note').is(':focus') 
+			if e.keyCode is 32 and !$("input").is(":focus") and !$("div.content-editable").is(':focus') 
 				$(".add-step input").focus()
 				TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
 				e.preventDefault()
@@ -173,7 +177,8 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				model.scheduleTask( null )
 			@renderSubtasks()
 		getTitle: ->
-			@$el.find( ".title input" ).val()
+			console.log @$el.find( ".input-title" ).html()
+			@$el.find( ".input-title" ).html()
 		getNotes: ->
 			$noteField = @$el.find('.notes .input-note')
 			replacedBrs = $noteField.html().replace(/<br>/g , "\r\n")
