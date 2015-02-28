@@ -139,8 +139,12 @@ $border-width: 1px;
 		}
 
 	}
-
-
+	.add-step input:focus{
+		& + .dot{
+			@include transition(border 200ms ease);
+			border: 2px solid $yellow;
+		}
+	}
 	.step.complete{
 
 		.dot{
@@ -170,13 +174,13 @@ $border-width: 1px;
 		height:$action-step-dot-size;
 		border: 2px solid $yellow;
 		border-radius: $action-step-dot-size/2;
-		
 	}
 
 
 	.add-step {
 
 		.dot{
+			@include transition(border 200ms ease);
 			border: 2px solid $gray;
 		}
 

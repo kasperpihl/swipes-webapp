@@ -9,10 +9,11 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			"click .repeat-picker a": "setRepeat"
 			"blur .input-title": "updateTitle"
 			"blur .notes .input-note": "updateNotes"
-			"change .step input": "updateActionStep"
-			"click .step .action": "clickedAction"
 			"click .repeat-button": "clickedRepeat"
 
+
+			"click .step .action": "clickedAction"
+			"change .step input": "updateActionStep"
 			"mouseenter .step": "trackMouse"
 			"mouseleave .step": "stopTrackingMouse"
 		trackMouse: (e) ->
