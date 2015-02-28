@@ -144,7 +144,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 					$(".task-editor input").blur()
 				else if $('.input-note').is(':focus')
 					$('.input-note').blur()
-				else @save()
+				else @back()
 		clickedRepeat: ->
 			$(".repeat-picker > ul").toggleClass("active")
 		togglePriority: ->

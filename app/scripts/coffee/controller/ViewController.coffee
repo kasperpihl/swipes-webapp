@@ -11,16 +11,16 @@ define [
 			Backbone.on( 'navigate/view', @goto, @ )
 			Backbone.on( 'edit/task', @editTask, @ )
 
-		goto: (slug) ->
+		goto: (slug, options) ->
 			@loadView(slug).then (View) =>
 				newView = new View( el: "ol.todo-list.#{ slug }" )
 
 				if @currView? then @transitionOut( @currView ).then =>
 					@transitionIn( newView ).then ->
-						newView.transitionInComplete.call newView
+						newView.transitionInComplete.call newView, options
 
 				else @transitionIn( newView ).then ->
-					newView.transitionInComplete.call newView
+					newView.transitionInComplete.call newView, options
 
 		editTask: (taskId) ->
 			model = m for m in swipy.todos.models when m.id is taskId or m.get("tempId") is taskId

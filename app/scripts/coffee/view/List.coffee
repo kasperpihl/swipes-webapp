@@ -465,10 +465,11 @@ define [
 				view = @getViewForModel task
 				if view? then view.reset()
 
-		transitionInComplete: ->
+		transitionInComplete:(options) ->
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar({state: @state})
 			@transitionDeferred.resolve()
+			return if options? and options.onlyInstantiate
 			swipy.shortcuts.setDelegate( @ )
 		killSubViews: ->
 			view.remove() for view in @subviews
