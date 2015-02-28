@@ -85,7 +85,16 @@ $border-width: 1px;
 		fill: $green;
 	}
 
-
+	.step.add-step:hover{
+		&.delete-hover{
+			.action.delete{
+				display:none;
+			}
+			.dot{
+				display:block;
+			}
+		}
+	}
 	.step:hover{
 
 		.action{
