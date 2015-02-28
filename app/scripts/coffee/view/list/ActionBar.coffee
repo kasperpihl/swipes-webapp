@@ -33,6 +33,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 
 		toggle: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			$('.action-bar .counting-selected .selected-labe').html(""+selectedTasks.length)
 			if @shown
 				if selectedTasks.length is 0
 					@hide()

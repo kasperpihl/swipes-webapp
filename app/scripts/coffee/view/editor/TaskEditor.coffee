@@ -18,6 +18,11 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title", @render )
+			@backRoute = "list/todo"
+			if @model.get("state") is "scheduled"
+				@backRoute = "list/scheduled"
+			else if @model.get("state") is "completed"
+				@backRoute = "list/completed"
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
 		killTagEditor: ->
@@ -85,7 +90,10 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
 			$( @el ).find( ".divider h2" ).html( titleString )
 		save: ->
-			swipy.router.back()
+			if @backRoute?
+				swipy.router.navigate(@backRoute, true)
+			else 
+				swipy.router.back()
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
