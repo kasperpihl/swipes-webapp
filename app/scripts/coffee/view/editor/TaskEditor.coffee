@@ -11,6 +11,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			"blur .notes .input-note": "updateNotes"
 			"change .step input": "updateActionStep"
 			"click .step .action": "clickedAction"
+			"click .repeat-button": "clickedRepeat"
 		initialize: ->
 			$("body").addClass "edit-mode"
 			@setTemplate()
@@ -126,6 +127,8 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				else if $('.input-note').is(':focus')
 					$('.input-note').blur()
 				else @save()
+		clickedRepeat: ->
+			$(".repeat-picker > ul").toggleClass("active")
 		togglePriority: ->
 			@model.togglePriority()
 		setRepeat: (e) ->

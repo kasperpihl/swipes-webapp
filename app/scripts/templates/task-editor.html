@@ -35,7 +35,7 @@
 	<% if ( schedule !== null ) { %>
 		<section>
 			<div class="repeat-picker icon-repeat has-icon">
-				<p>Repeat every &hellip;</p>
+				<a href="#" class="repeat-button"><p>Repeat every &hellip;</p></a>
 				<ul>
 					<li><a <% if (repeatOption === "never") print("class='selected'") %> href="JavaScript:void(0);" data-option="never">never</a></li>
 					<li><a <% if (repeatOption === "every day") print("class='selected'") %> href="JavaScript:void(0);" data-option="every day">day</a></li>
