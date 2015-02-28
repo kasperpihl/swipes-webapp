@@ -25,6 +25,16 @@ module.exports = function (grunt) {
     };
 
     grunt.initConfig({
+        requirejs: {
+            dist: {
+                options: {
+                    baseUrl: '<%= yeoman.app %>/scripts/',
+                    name : 'main',
+                    mainConfigFile: "<%= yeoman.app %>/scripts/main.js",
+                    out: '.tmp/concat/scripts/main.js'
+                }
+            }
+        },
         yeoman: yeomanConfig,
         watch: {
             coffee: {
@@ -210,19 +220,7 @@ module.exports = function (grunt) {
         /*concat: {
             dist: {}
         },*/
-        requirejs: {
-            dist: {
-                // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
-                options: {
-                    baseUrl: '.tmp/scripts',
-                    optimize: 'none',
-                    preserveLicenseComments: false,
-                    useStrict: true,
-                    wrap: true
-                    // `name` and `out` is set by grunt-usemin
-                }
-            }
-        },
+        
         rev: {
             dist: {
                 files: {
@@ -389,12 +387,11 @@ module.exports = function (grunt) {
         'useminPrepare',
         'concurrent:dist',
         //'autoprefixer',
-        
-        'requirejs:dist',
         'concat',
+        'requirejs:dist',
+        
         'cssmin',
         'uglify',
-        // 'modernizr',
         'copy:dist',
         'rev',
         'usemin'
