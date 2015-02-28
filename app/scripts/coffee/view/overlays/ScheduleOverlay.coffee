@@ -1,4 +1,10 @@
-define ["underscore", "js/view/Overlay", "text!templates/schedule-overlay.html", "js/view/modules/TimeSlider", "js/utility/TimeUtility", "jquery-hammerjs", "momentjs"], (_, Overlay, ScheduleOverlayTmpl, TimeSliderView, TimeUtility) ->
+define ["underscore", 
+		"js/view/Overlay", 
+		"text!templates/schedule-overlay.html", 
+		"js/view/modules/TimeSlider", 
+		"js/utility/TimeUtility", 
+		"jquery-hammerjs", 
+		"momentjs"], (_, Overlay, ScheduleOverlayTmpl, TimeSliderView, TimeUtility) ->
 	Overlay.extend
 		className: 'overlay scheduler'
 		events:
