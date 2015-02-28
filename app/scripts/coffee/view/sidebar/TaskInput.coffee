@@ -11,10 +11,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 			@oldTaskText = localStorage.getItem("addText") if localStorage.getItem("addText")
 			@template = _.template AddTmpl
 			@render()
-			@didRemove = false
 			_.bindAll(@, "keyUpHandling", "focusTextArea")
-			self = @
-			swipy.shortcuts.setDelegate(self)
 			
 		render: ->
 			@$el.html @template {oldTaskText: @oldTaskText}
@@ -33,10 +30,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 				@triggerAddTask(e)
 				localStorage.setItem("addText", "")
 			if e.keyCode is 27
-				if @$el.find(".add-task-field").is(":focus")
-					@$el.find(".add-task-field").blur()
-				else
-					swipy.sidebar.popView()
+				swipy.sidebar.popView()
 		triggerAddTask: (e) ->
 			e.preventDefault()
 			return if @$el.find(".add-task-field").val() is ""
@@ -46,5 +40,4 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 		destroy: ->
 			@remove()
 		remove: ->
-			@didRemove = true
 			@$el.remove()

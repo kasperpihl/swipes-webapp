@@ -13,6 +13,9 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 			@listenTo( Backbone, "navigate/view", => _.defer => @render() )
 			@listenTo( swipy.todos, "change:tags", @render )
 			@render()
+		keyUpHandling: (e) ->
+			if e.keyCode is 27
+				swipy.sidebar.popView()
 		handleFilterChange: (type) ->
 			# We defer 'till next event loop, because we need to make sure
 			# FilterController has done its thing first.

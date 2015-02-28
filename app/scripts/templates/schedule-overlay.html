@@ -1,10 +1,33 @@
+<% 
+function classNameForId( id ){
+		switch(id){
+			case "later today":
+				return "icon-scheduleCoffee";
+			case "this evening":
+				return "Monday";
+			case "tomorrow":
+				return "Tuesday";
+			case "day after tomorrow":
+				return "Wednesday";
+			case "this weekend":
+				return "Thursday";
+			case "next week":
+				return "Friday";
+			case "unspecified":
+				return "Saturday";
+			case "pick a date":
+				return ""
+
+		}
+	}
+%>
 <div class="overlay-bg"></div>
 <div class="overlay-content">
 	<div class="snooze-options">
 		<nav class="grid active">
 			<% _.each(options, function(option) { %>
 				<a href="JavaScript:void(0);" data-option="<%= option.id %>" <% if (option.disabled) print( "class='disabled'" ) %>>
-					<% if (!option.disabled) { %>
+					<% if (!option.disabled) { console.log(option); %>
 						<div class="option">
 							<div class="icon-snooze-<%= option.id.replace(/\s/g, "-") %>"></div>
 							<p><%= option.title %></p>

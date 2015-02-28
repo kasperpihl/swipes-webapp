@@ -41,7 +41,6 @@ define ["js/view/sidebar/Sidebar",
 			if @currentMenu?
 				@removeSubmenu()
 		loadSubSettings: (view) ->
-			console.log view
 			if view is "snoozes"
 				menu = new SidemenuSnoozes()
 				title = "Snoozes"
@@ -58,6 +57,7 @@ define ["js/view/sidebar/Sidebar",
 			if @currentMenu?
 				@currentMenu.destroy()
 			@currentMenu = menu
+			swipy.shortcuts.setDelegate(menu)
 			el = menu.el
 			@level = level
 			# Remove and set selected icon

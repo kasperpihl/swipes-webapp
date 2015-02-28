@@ -22,6 +22,9 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 					Parse.User.logOut()
 					location.href = "/login/"
 			false
+		keyUpHandling: (e) ->
+			if e.keyCode is 27
+				swipy.sidebar.popView()
 		render: ->
 			@$el.html @template {}
 		destroy: ->

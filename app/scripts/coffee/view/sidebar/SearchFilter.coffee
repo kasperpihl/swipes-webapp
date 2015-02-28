@@ -10,6 +10,9 @@ define ["underscore", "text!templates/sidemenu/sidemenu-search.html"], (_, Searc
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 			@render()
 			@delegateEvents(@eventsJson)
+		keyUpHandling: (e) ->
+			if e.keyCode is 27
+				swipy.sidebar.popView()
 		search: (e) ->
 
 			e.preventDefault()
