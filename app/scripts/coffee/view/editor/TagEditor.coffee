@@ -91,7 +91,9 @@ define ["underscore", "js/model/TagModel"], (_, TagModel) ->
 				tags = _.sortBy( tags, (tag) -> tag.toLowerCase() )
 				@renderTag( tag, list, "selected" ) for tag in tags
 
-			icon = "<span class='" + ( if @toggled then "icon-minus" else "icon-plus" ) + "'></span>"
+			#icon = "<span class='" + ( if @toggled then "icon-minus" else "icon-plus" ) + "'></span>"
+			icon = "<svg class='icon icon-plusThick'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#icon-plusThick'></use></svg>"
+
 			poolToggler = "
 				<li class='add-new-tag'>
 					<a href='JavaScript:void(0);' title='Add a new tag'>" + icon + "</a>
