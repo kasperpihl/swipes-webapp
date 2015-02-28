@@ -14,17 +14,17 @@ $border-width: 1px;
 		min-height:$action-step-height;
 		position:relative;
 		padding-left:$padding;
-		margin-bottom: 10px;
+		// margin-bottom: 10px;
 
 
 			&:before {
 				display: inline-block;
 				content: '';
-				height: 30px;
+				height: 20px;
 				border-left: 2px dashed #e0e0e0;
 				position: absolute;
 				left: 89px;
-				top: -20px;
+				top: -10px;
 			}
 
 
@@ -45,17 +45,6 @@ $border-width: 1px;
 				line-height: 1;
 				text-decoration: none;
 				@include iconButoon($unselected-color, $closure-size, true);
-
-					// svg {
-					// 	text-align:center;
-					// 	display:block;
-					// 	margin-top:($closure-size/2 - $icon-size/2 - $border-width);
-					// }
-
-					// &:hover{
-					// 	text-decoration:none;
-					// }
-
 			}
 
 
@@ -78,7 +67,6 @@ $border-width: 1px;
 
 
 			input{
-				// margin-top: 11px;
 				font-size: 18.5px;
 				height: $action-step-height;
 				line-height: $action-step-height / 2;
@@ -138,7 +126,6 @@ $border-width: 1px;
 			&.delete{
 				$col: #ff0000;
 				color: $col;
-				//border: 1px solid $col;
 			}
 		}
 
@@ -165,7 +152,7 @@ $border-width: 1px;
 	}
 
 
-	.dot{
+	.dot {
 		position:absolute;
 		left: ($padding - 50px);
 		margin-top: -($action-step-dot-size/2);
@@ -178,7 +165,7 @@ $border-width: 1px;
 	}
 
 
-	.add-step{
+	.add-step {
 
 		.dot{
 			border: 2px solid $gray;

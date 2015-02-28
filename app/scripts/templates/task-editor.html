@@ -25,7 +25,10 @@
 	</section>
 	<% if (scheduleStr) { %>
 		<section>
-			<time class="icon-clock has-icon no-select">
+			<time class="has-icon no-select">
+				<span class="icon-hold">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
+				</span>
 				<%= scheduleStr %>
 				<% if (timeStr && schedule !== null) print(", " + timeStr); %>
 			</time>
@@ -34,7 +37,10 @@
 
 	<% if ( schedule !== null ) { %>
 		<section>
-			<div class="repeat-picker icon-repeat has-icon">
+			<div class="repeat-picker has-icon">
+				<span class="icon-hold">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editRepeat"></use></svg>
+				</span>
 				<p class="repeat-button">Repeat every &hellip;</p>
 				<ul>
 					<li><a <% if (repeatOption === "never") print("class='selected'") %> href="JavaScript:void(0);" data-option="never">never</a></li>
@@ -58,8 +64,10 @@
 	<% } %>
 
 	<section>
-		<div class="icon-tag-bold has-icon">
-
+		<div class="icon-tag-container has-icon">
+			<span class="icon-hold">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTags"></use></svg>
+			</span>
 			<ul class="rounded-tags applied-tags">
 			</ul>
 			<aside class="tag-pool">
@@ -70,7 +78,10 @@
 	</section>
 
 	<section>
-		<div class="notes icon-note has-icon">
+		<div class="notes has-icon">
+			<span class="icon-hold">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
+			</span>
 			<div class="input-note content-editable" contenteditable="true"><%= notes %></div>
 		</div>
 	</section>

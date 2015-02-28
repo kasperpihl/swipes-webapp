@@ -1,5 +1,6 @@
 
 // Task editor - Task description page
+$iconsColor: #212121;
 
 .task-editor {
 	$padding: 66px;
@@ -53,21 +54,28 @@
 	.editor-content {
 		width: 84%;
 		margin: auto;
+
 		.has-icon {
 			// Can't use em, because font-size might vary
 			padding-left: $padding;
 			position: relative;
 
-			&:before {
+			p {
+				line-height: 1;
+			}
+
+			.icon-hold {
+				display: inline-block;
 				position: absolute;
-				left: 0; top: 0;
-				font-size: 1.3em;
-				color: $gray;
+				left: 0;
+				top: -10px;
+				@include iconButoon($iconsColor, 40px, false);
 			}
 		}
 
 		> section {
 			margin-bottom: 0.8em;
+			min-height: 40px;
 
 			@include breakpoint(tablet) {
 				margin-bottom: emCalc(36px);
