@@ -29,8 +29,8 @@
 				<span class="icon-hold">
 					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
 				</span>
-				<%= scheduleStr %>
-				<% if (timeStr && schedule !== null) print(", " + timeStr); %>
+				<span class="link-style"><%= scheduleStr %>
+				<% if (timeStr && schedule !== null) print(", " + timeStr); %></span>
 			</time>
 		</section>
 	<% } %>

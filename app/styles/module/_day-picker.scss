@@ -4,7 +4,7 @@
 	padding: 0;
 
 	li {
-		$height: emCalc(40px);
+		$height: 37px;
 
 		cursor: pointer;
 
@@ -27,7 +27,7 @@
 
 		&:hover {
 			text-decoration: none;
-			background-color: rgba($brand-dakrcolor, 0.2);
+			background-color: rgba($brand-dakrcolor, 0.1);
 		}
 
 		&.selected {
