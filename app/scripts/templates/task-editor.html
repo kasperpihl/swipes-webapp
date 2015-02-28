@@ -4,6 +4,12 @@
 
 <div class="editor-content <% if (priority === 1) print(" is-priority") %>">
 
+	<a href="#" class="go-back">
+		<svg class="icon">
+			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-back"></use>
+		</svg>
+	</a>
+
 	<h1 class="h2 title">
 		<span class="priority bigger"></span>
 		<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">

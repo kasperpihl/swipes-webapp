@@ -101,9 +101,35 @@
 	margin: $margin;
 }
 
+
+@mixin iconButoon($color, $size, $animate, $animateDuration: 200ms) {
+	border: 1px solid $color;
+	@include border-radius(50%);
+	@include square($size);
+	line-height: $size;
+	text-align: center;
+
+		svg {
+			display: inline;
+			fill: $color;
+			line-height: 1;
+			vertical-align: baseline;
+			@include square( $size - 20 );
+			@include centerBlock(0, 0, 0, 0, auto, absolute);
+		}
+
+		@if $animate == true {
+			&, & svg {
+				@include transition(all $animateDuration ease-in-out);
+			}
+		}
+}
+
+
 .basic-transition {
 	@include transition(all 200ms ease);
 }
+
 
 .no-select {
 	cursor: default;

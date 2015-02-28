@@ -1,26 +1,31 @@
+
+// Task editor - Task description page
+
 .task-editor {
 	$padding: 66px;
-	$placeholder-color: #333;
-	
 	color: $gray;
-	::-webkit-input-placeholder { /* WebKit browsers */
-	    color:    $placeholder-color;
+	position: relative;
+
+
+	// back button
+	// ............................
+	.go-back {
+		display: inline-block;
+		@include centerBlock(5px, auto, auto, -(emCalc(150px)), auto, absolute);
+		@include iconButoon(#9e9e9e, 40px, true);
+
+			&:hover {
+				background-color: $nav-gray;
+				border-color: $nav-gray;
+
+					svg {
+						fill: #fff;
+					}
+			}
 	}
-	:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-	    color:    $placeholder-color;
-	    opacity:  1;
-	}
-	::-moz-placeholder { /* Mozilla Firefox 19+ */
-	    color:    $placeholder-color;
-	    opacity:  1;
-	}
-	:-ms-input-placeholder { /* Internet Explorer 10+ */
-	    color:    $placeholder-color;
-	}
+
+
 	.title {
-		input{
-			font-family: $font-light;
-		}
 		position: relative;
 		font-size: emCalc(40px);
 		padding-left: $padding;
@@ -28,11 +33,16 @@
 		margin-bottom: emCalc(12px);
 		margin-top: 0.8em;
 
-		@include breakpoint(tablet) {
-			margin-bottom: emCalc(20px);
-			margin-top: emCalc(25px);
-		}
+			@include breakpoint(tablet) {
+				margin-bottom: emCalc(20px);
+				margin-top: emCalc(25px);
+			}
+
+			input{
+				font-family: $font-light;
+			}
 	}
+
 
 	.editor-content {
 		width: 84%;
@@ -59,6 +69,7 @@
 		}
 	}
 
+
 	> nav {
 		text-align: center;
 
@@ -69,6 +80,7 @@
 			a { margin-left: 8em; }
 		}
 	}
+
 
 	textarea, input, .input-note {
 		color: inherit;
@@ -86,6 +98,7 @@
 			outline:none;
 		}
 	}
+
 
 	textarea, .input-note {
 		@include input-placeholder() {
