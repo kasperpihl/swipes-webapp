@@ -1,60 +1,77 @@
 $action-step-dot-size: 20px;
-$action-step-height: 40px;
+$action-step-height: 60px;
 $action-step-cell-x: 26px;
 $unselected-color: #ccc;
-$padding: 100px;
+$padding: 120px;
 $closure-size: 30px;
+$icon-size: 15px;
+$border-width: 1px;
 
 .action-steps{
 	position:relative;
+
 	.step{
-		height:$action-step-height;
+		min-height:$action-step-height;
 		position:relative;
-		.action{
-			display:none;
-			$icon-size: 15px;
-			
-			$border-width: 1px;
-			
-			color: $unselected-color;
-			position:absolute;
-			top: $action-step-height/2 - $closure-size/2;
-			left:-$closure-size/2 + $priority-size/2;
-			width:$closure-size;
-			height:$closure-size;
-			border-radius: 5px;
-			border: $border-width solid $unselected-color;
-			font-size: $icon-size;
-			line-height: 1;
-			span{
-				text-align:center;
-				display:block;
-				margin-top:($closure-size/2 - $icon-size/2 - $border-width);
-			}
-			&:hover{
-				text-decoration:none;
+		padding-left:$padding;
+
+
+			.action{
+				display: block;
+				color: $unselected-color;
+				position:absolute;
+				top: $action-step-height/2 - $closure-size/2;
+				left:-$closure-size/2 + $priority-size/2;
+				width:$closure-size;
+				height:$closure-size;
+				border-radius: 5px;
+				border: $border-width solid $unselected-color;
+				font-size: $icon-size;
+				line-height: 1;
+				text-decoration: none;
+
+					span{
+						text-align:center;
+						display:block;
+						margin-top:($closure-size/2 - $icon-size/2 - $border-width);
+					}
+
+					&:hover{
+						text-decoration:none;
+					}
+
 			}
 
-		}
-		.action.delete{
-			left:$padding - $action-step-cell-x;
-			margin-left: -$closure-size / 2 + $action-step-dot-size / 2;
-			border:none;
-		}
 
-		input{
-			margin-top:11px;
-			font: 1em/1 $font-light;
-			margin-left:$padding;
-		}
+			.action.delete{
+				left:$padding - $action-step-cell-x;
+				margin-left: -$closure-size / 2 + $action-step-dot-size / 2;
+				border:none;
+			}
+
+
+			input{
+				// margin-top: 11px;
+				font-size: 18px;
+				height: $action-step-height;
+				line-height: $action-step-height / 2;
+				font-family: $font-normal;
+			}
+
 	}
+
+
+
 	.step:hover{
+
 		.action{
 			display:block;
 		}
+		
 		.action.delete{
 			display:none;
 		}
+
 		&.delete-hover{
 			.action.delete{
 				display:block;
@@ -63,39 +80,52 @@ $closure-size: 30px;
 				display:none;
 			}
 		}
+
 		.action:hover{
+
 			&.complete{
 				color:$green;
 				border: 1px solid $green;
 			}
+
 			&.todo{
 				color: $yellow;
 				border: 1px solid $yellow;
 			}
+
 			&.delete{
 				$col: #ff0000;
 				color: $col;
 				//border: 1px solid $col;
 			}
 		}
+
 	}
+
+
 	.step.complete{
+
 		.dot{
 			border: 2px solid $green;
 		}
+
 		input{
 			color: $unselected-color;
 			opacity:0.6;
 		}
 	}
+
+
 	.step.complete:hover{
 		.dot{
 			//display:none;
 		}
 	}
+
+
 	.dot{
 		position:absolute;
-		left:$padding - $action-step-cell-x;//$action-step-cell-x/2;
+		left: ($padding - 40px);
 		margin-top: -($action-step-dot-size/2);
 		top:50%;
 		width:$action-step-dot-size;
@@ -104,7 +134,10 @@ $closure-size: 30px;
 		border-radius: $action-step-dot-size/2;
 		
 	}
+
+
 	.add-step{
+
 		.dot{
 			border: 2px solid $gray;
 		}
