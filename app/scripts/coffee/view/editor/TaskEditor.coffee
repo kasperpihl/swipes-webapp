@@ -24,12 +24,8 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		onHoverTask: (target) ->
 			if @isHovering
 				target.addClass "delete-hover"
-			#if @model.get( "selected" ) or target is @cid
-				
-
 		onUnhoverTask: (target) ->
 			target.removeClass "delete-hover"
-			#if @model.get( "selected" ) or target is @cid
 				
 		initialize: ->
 			$("body").addClass "edit-mode"
@@ -38,7 +34,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			@sorter = new TaskSortModel()
 			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse" )
 			@render()
-			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title", @render )
+			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
 			@backRoute = "list/todo"
 			if @model.get("state") is "scheduled"
 				@backRoute = "list/scheduled"
@@ -192,10 +188,14 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			model = @getModelFromEl( target )
 			action = "complete"
 			action = "todo" if target.hasClass("todo")
+			action = "delete" if target.hasClass("delete")
 			if action is "complete"
 				model.completeTask()
 				swipy.analytics.sendEvent( "Action Steps", "Completed" )
 				swipy.analytics.sendEventToIntercom( "Completed Action Step" )
+			else if action is "delete"
+				if confirm "Delete action step?"
+					@model.deleteSubtask( model )
 			else
 				model.scheduleTask( null )
 			@renderSubtasks()
