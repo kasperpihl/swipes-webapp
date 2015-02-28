@@ -27,9 +27,9 @@ function classNameForId( id ){
 		<nav class="grid active">
 			<% _.each(options, function(option) { %>
 				<a href="JavaScript:void(0);" data-option="<%= option.id %>" <% if (option.disabled) print( "class='disabled'" ) %>>
-					<% if (!option.disabled) { console.log(option); %>
+					<% if (!option.disabled) { %>
 						<div class="option">
-							<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#<%= option.id.replace(/\s/g, "-") %>"></use></svg>
+							<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#<%= classNameForId(option.id) %>"></use></svg>
 							<p><%= option.title %></p>
 						</div>
 					<% } %>
