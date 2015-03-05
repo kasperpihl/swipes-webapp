@@ -82,13 +82,15 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			if @model?
 				view.model.off(null, null, @) for view in @model?.views
 		onDragStart: (view, allViews) =>
+			view.startY = view.model.get("order") * view.$el.height()
 			view.$el.off( "click", ".todo-content", view.toggleSelected )
 			view.$el.addClass "dragging"
 		onDrag: (view, model) ->
-			model.reorderRows( view, @y )
+			yPos = parseInt(@y, 10) + parseInt(view.startY, 10)
+			model.reorderRows( view, yPos )
 		onDragEnd: (view, model, self) ->
+			view.startY = 0
 			model.reorderRows( view, @endY )
-			model.oldTaskY = null
 			view.$el.removeClass( "dragging" )
 			setTimeout ->
 					self.deactivate()
@@ -100,7 +102,6 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			TweenLite.to( @$el, dur, { y: newY } )
 		killDraggable: (removeCSS) ->
 			if @draggable?
-				$('#scrollcont').off("scroll.sortcontrol")
 				@draggable.disable()
 				@draggable = null
 				@removeInlineStyles() if removeCSS
