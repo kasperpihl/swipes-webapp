@@ -81,7 +81,8 @@ define [
 					@completeTasks(null, true)
 				else if type is "scheduled" and !longSwipe
 					@markTasksAsTodo(null, true)
-				
+		handleClick: (e) ->
+			@deselectAllTasksButTasks([])
 		keyDownHandling: (e) ->
 			return if $("input").is(":focus")
 
