@@ -18,7 +18,7 @@
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-htmlmin": "*",
     "grunt-contrib-jshint": "*",
-    "grunt-requirejs": "*",
+    "grunt-contrib-requirejs": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
     "grunt-include-replace": "*",
@@ -27,7 +27,7 @@
     "grunt-open": "*",
     "grunt-rev": "*",
     "grunt-svgmin": "*",
-    "grunt-usemin": "*",
+    "grunt-usemin": "^0.1.13",
     "load-grunt-tasks": "*",
     "time-grunt": "*"
   },

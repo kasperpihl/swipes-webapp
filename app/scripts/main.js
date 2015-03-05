@@ -17,7 +17,7 @@ require.config({
         'sass-bootstrap': '../bower_components/sass-bootstrap/dist/js/bootstrap',
         underscore: '../bower_components/underscore/underscore',
         localStorage: '../bower_components/Backbone.localStorage/backbone.localStorage',
-        'greensock-js': 'plugins/greensock-js/src/minified/TweenMax.min',
+        'TweenLite': 'plugins/greensock-js/src/minified/TweenLite.min',
         gsap: 'plugins/greensock-js/src/uncompressed/TweenMax',
         timelinelite: 'plugins/greensock-js/src/uncompressed/TimelineLite',
         'gsap-scroll': 'plugins/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
@@ -119,7 +119,6 @@ require.config({
         },
         'gsap-draggable': {
             deps: [
-                'gsap',
                 'gsap-throwprops'
             ],
             exports: 'Draggable'
