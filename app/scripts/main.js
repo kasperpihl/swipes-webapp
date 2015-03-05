@@ -17,15 +17,14 @@ require.config({
         'sass-bootstrap': '../bower_components/sass-bootstrap/dist/js/bootstrap',
         underscore: '../bower_components/underscore/underscore',
         localStorage: '../bower_components/Backbone.localStorage/backbone.localStorage',
-        'greensock-js': 'plugins/greensock-js/src/minified/TweenMax.min',
-        gsap: 'plugins/greensock-js/src/uncompressed/TweenMax',
-        timelinelite: 'plugins/greensock-js/src/uncompressed/TimelineLite',
-        'gsap-scroll': 'plugins/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
-        'gsap-text': 'plugins/greensock-js/src/uncompressed/plugins/TextPlugin',
-        'gsap-easing': 'plugins/greensock-js/src/uncompressed/easing/EasePack',
-        'gsap-css': 'plugins/greensock-js/src/uncompressed/plugins/CSSPlugin',
-        'gsap-throwprops': 'plugins/greensock-js/src/uncompressed/plugins/ThrowPropsPlugin',
-        'gsap-draggable': 'plugins/greensock-js/src/uncompressed/utils/Draggable',
+        gsapLite: '../bower_components/gsap/src/uncompressed/TweenLite',
+        gsap: '../bower_components/gsap/src/uncompressed/TweenMax',
+        timelinelite: '../bower_components/gsap/src/uncompressed/TimelineLite',
+        'gsap-scroll': '../bower_components/gsap/src/uncompressed/plugins/ScrollToPlugin',
+        'gsap-text': '../bower_components/gsap/src/uncompressed/plugins/TextPlugin',
+        'gsap-easing': '../bower_components/gsap/src/uncompressed/easing/EasePack',
+        'gsap-css': '../bower_components/gsap/src/uncompressed/plugins/CSSPlugin',
+        'gsap-draggable': '../bower_components/gsap/src/uncompressed/utils/Draggable',
         text: '../bower_components/requirejs-text/text',
         momentjs: '../bower_components/momentjs/moment',
         'requirejs-text': '../bower_components/requirejs-text/text',
@@ -106,18 +105,21 @@ require.config({
         },
         gsap: {
             deps: [
+                'gsapLite',
                 'gsap-easing',
                 'gsap-css'
             ],
             exports: 'TweenMax'
+        },
+        gsapLite: {
+            exports: 'TweenLite'
         },
         timelinelite: {
             exports: 'TimelineLite'
         },
         'gsap-draggable': {
             deps: [
-                'gsap',
-                'gsap-throwprops'
+                'gsap'
             ],
             exports: 'Draggable'
         },
