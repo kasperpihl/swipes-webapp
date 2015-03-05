@@ -3,7 +3,6 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )
 			@enableTouchListners()
-			_.bindAll( @, "scrolled" )
 		getHammerOpts: ->
 			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
 			{
@@ -49,7 +48,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			dragOpts =
 				type: "top"
 				bounds: @model.container
-
+				autoScroll:1
 				# Throwing / Dragging
 				throwProps: yes
 				edgeResistance: 0.8
@@ -71,10 +70,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 					@onDragCompleteCallback?.call @
 
 			dragOpts.trigger = view.$el.find ".todo-content"
-			$('#scrollcont').on('scroll.sortcontrol', @scrolled )
 			@draggable = new Draggable( view.el, dragOpts )
-		scrolled: ->
-			@draggable?.update()
 		redraw: ->
 			@killDraggable()
 			@model.rows = @model.getRows()
@@ -89,9 +85,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			view.$el.off( "click", ".todo-content", view.toggleSelected )
 			view.$el.addClass "dragging"
 		onDrag: (view, model) ->
-			model.reorderRows( view, @y+$("#scrollcont").scrollTop() )
-			#console.log @minY + "-" + @maxY + " : " + @y + " : " + @pointerY
-			#model.scrollWindow( @minY, @maxY, @y, @pointerY )
+			model.reorderRows( view, @y )
 		onDragEnd: (view, model, self) ->
 			model.reorderRows( view, @endY )
 			model.oldTaskY = null

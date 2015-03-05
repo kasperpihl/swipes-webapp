@@ -75,46 +75,6 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 			# Silently set order for this view, because we don't want to trigger the handler that tweens the position for it.
 			view.model.updateOrder newOrder, { silent: true } 
 
-		scrollWindow: (minY, maxY, y, pointerY) ->
-			amount = minAmount = 20
-			maxAmount = 100
-			$scrollEl = $('#scrollcont')
-			extraHeight = $("#main-content").position().top
-			viewHeight = $scrollEl.height()
-			trigger = viewHeight * 0.3
-
-			if @oldTaskY
-				delta = Math.abs @oldTaskY - y
-				amount = delta
-				# If user dragged thingy to the bottom/top of the screen and just want to auto-scroll fast.
-				if delta < minAmount
-					distToTop = pointerY - @bounds.top
-					distToBottom = @bounds.bottom - y
-
-					# scrolling up
-					if distToTop < distToBottom
-						if distToTop < ( trigger * 0.8 )
-							amount = ( trigger - distToTop ) * 0.05
-					# scrolling down
-					else
-						if distToBottom < ( trigger * 0.8 )
-							amount = ( trigger - distToBottom ) * 0.05
-
-
-				amount = Math.max( 5, Math.min( maxAmount, amount ) )
-				#console.log amount
-			if pointerY - trigger < @bounds.top
-				newScroll = $scrollEl.scrollTop() - amount
-
-			else if pointerY + trigger > @bounds.bottom
-				newScroll = $scrollEl.scrollTop() + amount
-			#console.log( "oldY: " + @oldTaskY + " new: " + y) 
-			#console.log("c: " + $scrollEl.scrollTop() + " n: " + newScroll)
-			TweenLite.set( $scrollEl, { scrollTo: newScroll } )
-			#TweenLite.set( window, { scrollTo: newScroll } )
-
-			@oldTaskY = y
-			@setBounds()
 		destroy: ->
 			$('#scrollcont').off(".sortmodel")
 			$(window).off(".sortmodel")

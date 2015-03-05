@@ -112,6 +112,9 @@ require.config({
             exports: 'TweenMax'
         },
         timelinelite: {
+            deps: [
+                'gsap'
+            ],
             exports: 'TimelineLite'
         },
         'gsap-draggable': {
