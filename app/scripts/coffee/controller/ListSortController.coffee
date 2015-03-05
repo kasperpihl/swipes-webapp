@@ -88,9 +88,9 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		onDrag: (view, model) ->
 			yPos = parseInt(@y, 10) + parseInt(view.startY, 10)
 			model.reorderRows( view, yPos )
-		onDragEnd: (view, model, self) ->
+		onDragEnd: (view, model, self) ->		
+			model.reorderRows( view, @endY + view.startY )
 			view.startY = 0
-			model.reorderRows( view, @endY )
 			view.$el.removeClass( "dragging" )
 			setTimeout ->
 					self.deactivate()
