@@ -92,6 +92,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			model.reorderRows( view, @endY + view.startY )
 			view.startY = 0
 			view.$el.removeClass( "dragging" )
+			self.model.container.height ""
 			setTimeout ->
 					self.deactivate()
 					view.$el.on( "click", ".todo-content", view.toggleSelected )

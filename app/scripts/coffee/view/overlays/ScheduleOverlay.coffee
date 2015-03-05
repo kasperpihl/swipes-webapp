@@ -183,11 +183,8 @@ define ["underscore",
 
 			content = @$el.find ".overlay-content"
 			scrollLeftPadding = parseInt($(".scroll-container").css("paddingLeft"),10)
-			content.css("paddingLeft",scrollLeftPadding+"px")
-
-			content.css( "width", content.height() + scrollLeftPadding)
+			$(".overlay.scheduler").css("paddingLeft",scrollLeftPadding+"px")
 			yOffset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
-			xOffset = scrollLeftPadding + (window.innerWidth - scrollLeftPadding ) / 2 - ( content.width() / 2 )
 			content.css( "margin", yOffset + "px auto 0" )
 			
 		cleanUp: ->
