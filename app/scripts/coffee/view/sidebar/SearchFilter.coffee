@@ -12,6 +12,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-search.html"], (_, Searc
 			@delegateEvents(@eventsJson)
 		keyUpHandling: (e) ->
 			if e.keyCode is 27
+				@$el.find('input').blur()
 				swipy.sidebar.popView()
 		search: (e) ->
 
