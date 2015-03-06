@@ -76,9 +76,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			return false if !currentSubtasks
 			for subtask, index in currentSubtasks
 				if subtask.id is model.id
-					newModels = currentSubtasks.splice(index, 1)
+					currentSubtasks.splice(index, 1)
 					model.deleteObj()
-					@set("subtasksLocal", newModels)
+					return
 					
 		hasSubtask: ( model ) ->
 			currentSubtasks = @get "subtasksLocal"
