@@ -419,6 +419,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 		updateFromServerObj: ( obj, recentChanges ) ->
 			BaseModel.prototype.updateFromServerObj.apply @, arguments
+			return if @get "deleted"
 			dateKeys = [ "schedule", "completionDate", "repeatDate" ]
 			for attribute in @attrWhitelist
 				continue if !obj[ attribute ]?

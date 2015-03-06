@@ -5,7 +5,7 @@ define ["js/model/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 		initialize: ->
 			_.bindAll( @ , "changedSchedule", "addChangeListenerForBridge" )
 			@on( "change:deleted", (model, deleted) => 
-				if !deleted 
+				if !deleted
 					@add model
 			)
 			@on "reset", ->
