@@ -33,7 +33,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			@setTemplate()
 			@bouncedHover = _.debounce(@onHoverTask, 1500)
 			@sorter = new TaskSortModel()
-			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse" )
+			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse", "back" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
 			@listenTo( @model, "change:subtasksLocal", @testing )
@@ -117,6 +117,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				swipy.router.navigate(@backRoute, true)
 			else 
 				swipy.router.back()
+			return false
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->
