@@ -29,7 +29,6 @@ define ["underscore",
 		longPress:(e) ->
 			target = $ e.currentTarget
 			@selectOptionFromTarget(target, true)
-			console.log e
 		getHammerOpts: ->
 			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
 			{

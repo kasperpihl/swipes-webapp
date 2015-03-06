@@ -32,7 +32,6 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 				bottom: $('#scrollcont').height() + $('#scrollcont').scrollTop()
 
 		getViewAtPos: (order) ->
-			console.log @views
 			return view for view in @views when view.model.get( "order" ) is order
 
 		getViewFromId: (id) ->
@@ -62,7 +61,6 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 
 		reorderRows: (view, yPos) ->
 			newOrder = @getViewAtPos(@getOrderFromPos(yPos)).model.get("order")
-			console.log newOrder
 			oldOrder = view.model.get "order"
 			return if newOrder is oldOrder
 
