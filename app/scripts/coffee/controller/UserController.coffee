@@ -37,6 +37,6 @@ define ["underscore"], (_) ->
 			@user.set("settings",currentSettings, {silent: true})
 			@user.save(null, {
 				success: (object) ->
-					console.log "synced user settings"
+					
 				error: (object, error) ->
 			})

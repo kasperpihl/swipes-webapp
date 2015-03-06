@@ -153,8 +153,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if @has "completionDate"
 				@setCompletionStr()
 				@setCompletionTimeStr()
-			#if @has "attachments"
-			#	console.log(@get("attachments")
 
 		reviveDate: (prop) ->
 			value = @handleDateFromServer @get( prop )

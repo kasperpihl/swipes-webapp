@@ -42,7 +42,8 @@ define ["underscore"], (_) ->
 						@set key, value, {silent: true}
 		set: (key, val, options)->
 			Backbone.Model.prototype.set.apply @ , arguments
-			localStorage.setItem("SettingModel", JSON.stringify(@toJSON()))
+			try localStorage.setItem("SettingModel", JSON.stringify(@toJSON()))
+			catch e then console.log e
 			if @debouncedSync?
 				attrs = {}
 				if key is null or typeof key is 'object'

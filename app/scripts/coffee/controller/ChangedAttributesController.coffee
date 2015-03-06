@@ -18,7 +18,9 @@ define ["underscore", "jquery"], (_, $) ->
 			@saveCollectionForKey(key, collection)
 			collection
 		saveCollectionForKey: (key, collection) ->
-			localStorage.setItem(key, JSON.stringify(collection))
+			try localStorage.setItem(key, JSON.stringify(collection))
+			catch e then console.log e
+			
 		newCollection: () ->
 			"ToDo" : {}
 			"Tag" : {}

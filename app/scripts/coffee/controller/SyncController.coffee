@@ -48,6 +48,14 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if !model
 					continue if obj.deleted
 					model = new collection.model obj
+					if model.has("completionDate")
+						completionDate = model.get("completionDate")
+						if completionDate? and completionDate
+							nowNumber = new Date().getTime()/1000
+							compNumber = completionDate.getTime()/1000
+							difference = nowNumber - compNumber
+							if difference > (3600*24*30)
+								continue
 					@changedAttributes.moveTempChangesForModel model
 					collection.add model
 					newModels.push model

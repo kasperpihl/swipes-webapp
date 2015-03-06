@@ -55,7 +55,6 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->
-			console.log "rendering"
 			renderedContent = @model.toJSON()
 			if renderedContent.notes and renderedContent.notes.length > 0
 				renderedContent.notes = renderedContent.notes.replace(/(?:\r\n|\r|\n)/g, '<br>')
@@ -209,7 +208,6 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				model.scheduleTask( null )
 			@renderSubtasks()
 		getTitle: ->
-			console.log @$el.find( ".input-title" ).html()
 			@$el.find( ".input-title" ).html()
 		getNotes: ->
 			$noteField = @$el.find('.notes .input-note')

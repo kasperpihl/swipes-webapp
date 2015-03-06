@@ -159,7 +159,6 @@ define [
 			@currentLongPressCount = 0
 		keyUpHandling: (e) ->
 			return if $("input").is(":focus")
-			#console.log e.keyCode
 			if e.keyCode is 27
 				@deselectAllTasksButTasks([])
 				

@@ -70,6 +70,7 @@ $iconsColor: #212121;
 				left: 0;
 				top: -10px;
 				@include iconButoon($iconsColor, 40px, false);
+				border:0;
 			}
 		}
 

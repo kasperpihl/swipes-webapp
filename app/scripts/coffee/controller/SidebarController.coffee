@@ -94,7 +94,6 @@ define ["js/view/sidebar/Sidebar",
 				lastSeperator = currentPath.lastIndexOf("/");
 				newPath = currentPath.substring 0, lastSeperator
 				swipy.router.navigate(newPath, true)
-				console.log newPath
 		destroy: ->
 			Backbone.off( null, null, @ )
 			@view.destroy()
