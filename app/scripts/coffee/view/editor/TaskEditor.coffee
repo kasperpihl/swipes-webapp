@@ -197,7 +197,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				swipy.analytics.sendEventToIntercom( "Completed Action Step" )
 			else if action is "delete"
 				if confirm "Delete action step?"
-					@model.deleteSubtask( model )
+					model.deleteObj()
 			else
 				model.scheduleTask( null )
 			@renderSubtasks()

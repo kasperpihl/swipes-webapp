@@ -27,7 +27,7 @@ define [
 			@longBounceRenderList = _.debounce( @renderList, 500 )
 			@listenTo( Backbone, "opened-window", @clearForOpening )
 
-			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch", @renderList )
+			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
 			#@listenTo( swipy.todos, "change:order", @changedOrder )
 
 			# Handle task actions

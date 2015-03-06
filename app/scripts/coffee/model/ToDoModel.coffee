@@ -77,7 +77,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			for subtask, index in currentSubtasks
 				if subtask.id is model.id
 					currentSubtasks.splice(index, 1)
-					model.deleteObj()
 					return
 					
 		hasSubtask: ( model ) ->
@@ -107,6 +106,10 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		deleteObj: ->
 			for subtask in @getOrderedSubtasks()
 				subtask.deleteObj()
+			if @get "parentLocalId"
+				parent = swipy.todos.get(@get("parentLocalId"))
+				if parent
+					parent.deleteSubtask( @ )
 			BaseModel.prototype.deleteObj.apply @ , arguments
 		initialize: ->
 			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
