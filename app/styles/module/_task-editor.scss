@@ -12,7 +12,7 @@ $iconsColor: #212121;
 	// ............................
 	.go-back {
 		display: inline-block;
-		@include centerBlock(3px, auto, auto, -(emCalc(150px)), auto, absolute);
+		@include centerBlock(3px, auto, auto, -1.33em, auto, absolute);
 		@include iconButoon(#9e9e9e, 40px, true);
 
 			&:hover {
@@ -25,7 +25,9 @@ $iconsColor: #212121;
 			}
 	}
 
-
+	.input-title{
+		padding-top:7px;
+	}
 	.title {
 		position: relative;
 		font-size: emCalc(28px);
