@@ -77,6 +77,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			for subtask, index in currentSubtasks
 				if subtask.id is model.id
 					currentSubtasks.splice(index, 1)
+					@set "subtasksLocal", currentSubtasks, {localSync: true}
 					return
 					
 		hasSubtask: ( model ) ->

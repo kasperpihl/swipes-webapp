@@ -168,8 +168,10 @@ define ["underscore",
 				@$el.find( ".overlay-content .snooze-options .time-picker .time-slider" ).html @timePickerSlider.el
 				@timePickerSlider.render()
 
-			@timePickerSlider.model.set("time", { hour: 9, minute: 0})
 			@activeDate = @model.getDateFromScheduleOption(option)
+			momentDate = moment @activeDate
+
+			@timePickerSlider.model.set("time", { hour: momentDate.hour(), minute: momentDate.minute()})
 			@$el.find( ".overlay-content .snooze-options .time-picker .day-label" ).html @getTitleStringForDate(@activeDate)
 			@setActiveMenu("time-picker")
 		hideDatePicker: ->

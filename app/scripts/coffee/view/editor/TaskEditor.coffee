@@ -36,11 +36,14 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
+			@listenTo( @model, "change:subtasksLocal", @testing )
 			@backRoute = "list/todo"
 			if @model.get("state") is "scheduled"
 				@backRoute = "list/scheduled"
 			else if @model.get("state") is "completed"
 				@backRoute = "list/completed"
+		testing: ->
+			console.log "updated subtaskslocal"
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
 		killTagEditor: ->
@@ -52,6 +55,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: ->
+			console.log "rendering"
 			renderedContent = @model.toJSON()
 			if renderedContent.notes and renderedContent.notes.length > 0
 				renderedContent.notes = renderedContent.notes.replace(/(?:\r\n|\r|\n)/g, '<br>')
@@ -106,6 +110,8 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				tmplData.subtasks = jsonedSubtasks
 				titleString = "" + completedCounter + " / " + jsonedSubtasks.length + " Steps"
 				$( @el ).find( "#current-steps-container" ).html _.template(ActionStepsTmpl) tmplData
+			else 
+				$( @el ).find( "#current-steps-container" ).html("")
 			$( @el ).find( ".divider h2" ).html( titleString )
 		back: ->
 			if @backRoute?
@@ -198,6 +204,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			else if action is "delete"
 				if confirm "Delete action step?"
 					model.deleteObj()
+					@renderSubtasks()
 			else
 				model.scheduleTask( null )
 			@renderSubtasks()

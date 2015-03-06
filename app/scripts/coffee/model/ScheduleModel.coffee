@@ -35,6 +35,7 @@ define ["underscore", "momentjs", "js/utility/TimeUtility"], (_, Moment, TimeUti
 				when "later today"
 					setting = swipy.settings.get("SettingLaterToday")
 					newDate.add( setting , "seconds" )
+					newDate.minute(5 * Math.round( newDate.minute() / 5 ))
 				when "this evening"
 					setting = swipy.settings.get("SettingEveningStartTime")
 					if currentSecondsInDay > setting then newDate.add("days", 1 )
