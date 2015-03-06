@@ -6,14 +6,4 @@
 	font-size: 34px;
 	@include input-placeholder { color: #999; }
 	color: $brand-dakrcolor;
-	text-indent: 0.35em;
-
-	border-left: thin solid $gray-lighter;
-
-	@include transition(text-indent 0.2s ease-out, border 0.2s ease-out);
-
-	&:focus {
-		text-indent: 0;
-		border-left: 0 solid transparent;
-	}
 }
