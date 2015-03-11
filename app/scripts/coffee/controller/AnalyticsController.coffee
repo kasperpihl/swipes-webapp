@@ -93,6 +93,14 @@ define ["underscore"], (_) ->
 					gaSendIdentity['dimension5'] = numberOfTags
 					intercomIdentity["number_of_tags"] = numberOfTags
 
+			platform = "Web"
+			if @isMac?
+				platform = "Mac"
+			currentPlatform = @customDimensions['platform']
+			if currentPlatform isnt platform
+				gaSendIdentity["dimension7"] = platform
+
+
 			if _.size( gaSendIdentity ) > 0
 				ga('set', gaSendIdentity)
 				@sendEvent("Session", "Updated Identity")
