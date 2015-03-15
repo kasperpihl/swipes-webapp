@@ -6,19 +6,19 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		getHammerOpts: ->
 			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
 			{
-				drag: off
+				drag: true
 				swipe: off
 				tap: off
 				transform: off
 				# hold_threshold: 50
 				prevent_default: yes
-				hold_timeout: if Modernizr.touch then 400 else 400
+				hold_timeout: if Modernizr.touch then 400 else 30
 				domEvents:true
 			}
 		enableTouchListners: ->
-			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "press", "ol > li", @activate )
+			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "swipe", "ol > li", @activate )
 		disableTouchListeners: ->
-			$( @model.container[0] ).hammer().off( "press", @activate )
+			$( @model.container[0] ).hammer().off( "swipe", @activate )
 		activate: (e) =>
 			@disableTouchListeners()
 			@model.init()

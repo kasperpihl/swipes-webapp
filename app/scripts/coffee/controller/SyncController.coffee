@@ -48,7 +48,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if !model
 					continue if obj.deleted
 					model = new collection.model obj
-					if model.has("completionDate")
+					if !obj.parentLocalId? and model.has("completionDate")
 						completionDate = model.get("completionDate")
 						if completionDate? and completionDate
 							nowNumber = new Date().getTime()/1000

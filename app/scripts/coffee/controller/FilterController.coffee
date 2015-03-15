@@ -76,9 +76,24 @@ define ["underscore"], (_) ->
 		applySearchFilter: (filter) ->
 			@searchFilter = filter
 			swipy.todos.each (model) =>
-				isRejected = model.get( "title" ).toLowerCase().indexOf( @searchFilter ) is -1
+				didFind = false
+				return if model.get "parentLocalId"
+
+				if model.get( "title" ).toLowerCase().indexOf( @searchFilter ) isnt -1
+					didFind = true
+				if model.get("subtasksLocal")? and model.get("subtasksLocal")
+					for subtask in model.get("subtasksLocal") 
+						if subtask.get( "title" ).toLowerCase().indexOf( @searchFilter ) isnt -1
+							didFind = true
+				if model.get("notes")? and model.get("notes").toLowerCase().indexOf( @searchFilter ) isnt -1
+					didFind = true
+				if model.get("tags") and model.get("tags")
+					for tag in model.get("tags")
+						if tag.get("title").toLowerCase().indexOf(@searchFilter) isnt -1
+							didFind = true
+
 				model.unset("rejectedBySearch", {silent:true})
-				model.set( "rejectedBySearch", isRejected )
+				model.set( "rejectedBySearch", !didFind )
 
 		removeTagsFilter: (tag) ->
 			@tagsFilter = _.without( @tagsFilter, tag )
