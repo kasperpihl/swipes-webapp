@@ -10,8 +10,10 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 			@today = moment()
 			@timeUtil = new TimeUtility()
 		getCalendarOpts: ->
+			weekOffset = swipy.settings.get("SettingCalendarStartMonday") ? 1 : 0
 			return {
 				template: CalendarTmpl
+				weekOffset: weekOffset
 				targets:
 					nextButton: "next"
 					previousButton: "previous"

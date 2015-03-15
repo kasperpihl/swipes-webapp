@@ -16,6 +16,10 @@ define ["text!templates/sidemenu/settings/sidemenu-settings-tweaks.html"], (Tmpl
 			isOn = target.hasClass("on")
 			if target.hasClass "add-to-bottom"
 				setting = "SettingAddToBottom"
+			if target.hasClass "calendar-start-monday"
+				setting = "SettingCalendarStartMonday"
+			if target.hasClass "twenty-four-clock"
+				setting = "Setting24HourClock"
 			swipy.settings.set setting, !isOn
 			@render()
 			false

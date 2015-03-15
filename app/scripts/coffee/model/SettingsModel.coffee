@@ -22,6 +22,11 @@ define ["underscore"], (_) ->
 				false
 			SettingFilter:
 				""
+
+			SettingCalendarStartMonday:
+				false
+			Setting24HourClock:
+				false
 		syncedSettings: [
 			"SettingLaterToday"
 			"SettingEveningStartTime"
