@@ -154,7 +154,7 @@ define [
 
 			return "shift" if e.shiftKey
 			return "cmd" if e.ctrlKey or e.metaKey
-			console.log e
+			return null
 		clearLongPress: ->
 			@didHitALongPress = false
 			@currentLongPressKey = null
@@ -228,7 +228,6 @@ define [
 				else
 					task.set("selected", true)
 		handleDidPressTask: ( tasks, e ) ->
-			console.log e
 			@selectedModels(tasks, e)
 			model = tasks[0]
 			newIndex = 0

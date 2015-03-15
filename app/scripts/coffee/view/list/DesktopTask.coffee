@@ -21,7 +21,7 @@ define ["underscore", "js/view/list/BaseTask"], (_, BaseTaskView) ->
 			@screenY = e.screenY
 			$(window).mousemove( @onMouseMove )
 		onMouseMove: (e) ->
-			threshold = 1
+			threshold = 10
 			return if @isDragging
 			if Math.abs(e.screenY - @screenY) > threshold
 				@isDragging = true

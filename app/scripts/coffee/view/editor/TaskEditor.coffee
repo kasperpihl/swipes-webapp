@@ -36,14 +36,11 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse", "back" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
-			@listenTo( @model, "change:subtasksLocal", @testing )
 			@backRoute = "list/todo"
 			if @model.get("state") is "scheduled"
 				@backRoute = "list/scheduled"
 			else if @model.get("state") is "completed"
 				@backRoute = "list/completed"
-		testing: ->
-			console.log "updated subtaskslocal"
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
 		killTagEditor: ->
@@ -85,7 +82,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 					if foundURLs.indexOf(url) is -1
 						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\""+ url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "</a></div>")
 						foundURLs.push url
-
+			renderedContent.title = renderedContent.title.replace(/ /g , "&nbsp;")
 			@$el.html @template renderedContent
 			@renderSubtasks()
 			@setStateClass()
@@ -209,10 +206,11 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				model.scheduleTask( null )
 			@renderSubtasks()
 		getTitle: ->
-			@$el.find( ".input-title" ).html()
+			@$el.find( ".input-title" ).html().replace(/&nbsp;/g , " ")
 		getNotes: ->
 			$noteField = @$el.find('.notes .input-note')
 			replacedBrs = $noteField.html().replace(/<br>/g , "\r\n")
+			replacedBrs = replacedBrs.replace(/&nbsp;/g , " ")
 			replacedBrs = replacedBrs.replace(/<(?:.|\n)*?>/gm, '')
 			replacedBrs
 		remove: ->

@@ -5,6 +5,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			if Modernizr.touch
 				@enableTouchListners()
 			Backbone.on( "drag-model", @dragModel, @)
+			_.bindAll( @, "dragModel" )
 		getHammerOpts: ->
 			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
 			{

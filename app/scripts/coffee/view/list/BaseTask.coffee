@@ -53,6 +53,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
 			renderJSON = @model.toJSON()
+			renderJSON.title = renderJSON.title.replace(/ /g, "&nbsp;")
 			numberOfActionStepsLeft = 0
 			if @model.get "subtasksLocal" 
 				numberOfActionStepsLeft = @model.get("subtasksLocal").length
