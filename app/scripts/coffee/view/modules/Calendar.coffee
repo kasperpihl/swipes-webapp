@@ -3,11 +3,13 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 		tagName: "div"
 		className: "calendar-wrap"
 		initialize: ->
-			_.bindAll( @, "handleClickDay", "handleMonthChanged" )
+			
 
 			@listenTo( @model, "change:date", @renderDate )
 			@listenTo( @model, "change:time", @renderTime )
 			@today = moment()
+			@bouncedMonthChange = _.debounce(@handleMonthChanged, 30)
+			_.bindAll( @, "handleClickDay", "handleMonthChanged", "bouncedMonthChange" )
 			@timeUtil = new TimeUtility()
 		getCalendarOpts: ->
 			weekOffset = swipy.settings.get("SettingCalendarStartMonday") ? 1 : 0
@@ -20,7 +22,7 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 					day: "day"
 				clickEvents:
 					click: @handleClickDay
-					onMonthChange: @handleMonthChanged
+					onMonthChange: @bouncedMonthChange
 				doneRendering: @afterRender
 				adjacentDaysChangeMonth: on
 				constraints:
