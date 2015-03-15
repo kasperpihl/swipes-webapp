@@ -7,7 +7,6 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 
 			@listenTo( @model, "change:date", @renderDate )
 			@listenTo( @model, "change:time", @renderTime )
-
 			@today = moment()
 			@timeUtil = new TimeUtility()
 		getCalendarOpts: ->
@@ -20,7 +19,6 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 				clickEvents:
 					click: @handleClickDay
 					onMonthChange: @handleMonthChanged
-				weekOffset: swipy.settings.get( "SettingWeekStart" )
 				doneRendering: @afterRender
 				adjacentDaysChangeMonth: on
 				constraints:
@@ -54,7 +52,6 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 				@selectedDay.format("MMM Do 'YY")
 		selectDay: (moment, element) ->
 			@days = @$el.find ".day"
-
 			@days.removeClass "selected"
 			if not element? then element = @getElementFromMoment moment
 			$( element ).addClass "selected"
@@ -88,16 +85,15 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 
 			# Also check that we don't select a date prior to today
 			if newDate.isBefore @today then newDate = @today
-
 			@selectDay newDate
 		render: ->
 			@createCalendar()
 			return @
 		renderDate: ->
-			@$el.find(".month .selected-date").text @getSelectedDateText()
+			@$el.find(".month .selected-date").html @getSelectedDateText()
 		renderTime: ->
 			time = @model.get "time"
-			@$el.find(".month time").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
+			@$el.find(".month time").html @timeUtil.getFormattedTime( time.hour, time.minute, true )
 		remove: ->
 			@undelegateEvents()
 			@stopListening()
