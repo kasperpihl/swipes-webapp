@@ -35,6 +35,7 @@ define [
 			@tags = new TagCollection()
 
 			# Synchronization
+			@settings = new SettingsController()
 			@sync = new SyncController()
 			@updateTimer = new ClockWork()
 
@@ -76,7 +77,6 @@ define [
 			return no
 		init: ->
 			@cleanUp()
-			@settings = new SettingsController()
 			@viewController = new ViewController()
 			@nav = new ListNavigation()
 			@router = new MainRouter()

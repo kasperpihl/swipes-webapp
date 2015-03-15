@@ -255,7 +255,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if !schedule then return @set( "timeStr", undefined )
 
 			# We have a schedule set, update timeStr prop
-			@set( "timeStr", moment( schedule ).format "h:mmA" )
+			format = if swipy.settings?.get("Setting24HourClock") then "H:mm" else "h:mmA"
+
+			@set( "timeStr", moment( schedule ).format format )
 
 		setCompletionStr: ->
 			completionDate = @get "completionDate"

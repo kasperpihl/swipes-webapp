@@ -57,7 +57,7 @@
 		<li class="day">
 			<header>
 				<h3 class="h5">Start my day at</h3>
-				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingWeekStartTime), numberOfMinutesFromSetting(settings.SettingWeekStartTime) ) %></button>
+				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingWeekStartTime), numberOfMinutesFromSetting(settings.SettingWeekStartTime), !settings.Setting24HourClock ) %></button>
 			</header>
 			<section>
 				<div class="range-slider lobster">
@@ -69,7 +69,7 @@
 		<li class="evening">
 			<header>
 				<h3 class="h5">Start my evening at</h3>
-				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingEveningStartTime), numberOfMinutesFromSetting(settings.SettingEveningStartTime) ) %></button>
+				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingEveningStartTime), numberOfMinutesFromSetting(settings.SettingEveningStartTime), !settings.Setting24HourClock  ) %></button>
 			</header>
 			<section>
 				<div class="range-slider lobster">
@@ -81,7 +81,7 @@
 		<li class="weekends">
 			<header>
 				<h3 class="h5">Start my weekend at</h3>
-				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingWeekendStartTime), numberOfMinutesFromSetting(settings.SettingWeekendStartTime) ) %></button>
+				<button><%= formatTime( numberOfHoursFromSetting(settings.SettingWeekendStartTime), numberOfMinutesFromSetting(settings.SettingWeekendStartTime), !settings.Setting24HourClock  ) %></button>
 			</header>
 			<section>
 				<div class="range-slider lobster">

@@ -24,17 +24,6 @@ define ["gsap-draggable", "slider-control", "text!templates/sidemenu/settings/si
 				{ hour: 23, minute: 45 }
 			else
 				{ hour: Math.floor( minutesTotal / 60 ), minute: Math.round( minutesTotal ) % 60 }
-		getFormattedTime: (hour, minute, addAmPm = yes) ->
-			if minute < 10 then minute = "0" + minute
-
-			if addAmPm
-				if hour is 0 or hour is 24 then return "12:" + minute + " AM"
-				else if hour <= 11 then return hour + ":" + minute + " AM"
-				else if hour is 12 then return "12:" + minute + " PM"
-				else return hour - 12 + ":" + minute + " PM"
-
-			else
-				return hour + ":" + minute
 		getSliderVal: (sliderId) ->
 			###
 			NSInteger hours = eveningStartTime.integerValue/D_HOUR;
@@ -55,19 +44,20 @@ define ["gsap-draggable", "slider-control", "text!templates/sidemenu/settings/si
 			@getFloatFromTime( hours, minutes )
 			
 		updateValue: (sliderId, updateModel = no) ->
+			amPm = @timeUtil.isAmPm()
 			switch sliderId
 				when "start-day"
 					setting = "SettingWeekStartTime"
 					time = @getTimeFromFloat @startDaySlider.value
-					@$el.find(".day button").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
+					@$el.find(".day button").text @timeUtil.getFormattedTime( time.hour, time.minute, amPm )
 				when "start-evening"
 					setting = "SettingEveningStartTime"
 					time = @getTimeFromFloat @startEveSlider.value
-					@$el.find(".evening button").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
+					@$el.find(".evening button").text @timeUtil.getFormattedTime( time.hour, time.minute, amPm )
 				when "start-weekend"
 					setting = "SettingWeekendStartTime"
 					time = @getTimeFromFloat @startWeekendSlider.value
-					@$el.find(".weekends button").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
+					@$el.find(".weekends button").text @timeUtil.getFormattedTime( time.hour, time.minute, amPm )
 				when "delay"
 					setting = "SettingLaterToday"
 					time = @getTimeFromFloat @delaySlider.value
