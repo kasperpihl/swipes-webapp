@@ -51,10 +51,12 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			@tagEditor = new TagEditor { el: @$el.find(".icon-tag-container"), model: @model }
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
+
 		render: ->
 			renderedContent = @model.toJSON()
 			if renderedContent.notes and renderedContent.notes.length > 0
 				renderedContent.notes = renderedContent.notes.replace(/(?:\r\n|\r|\n)/g, '<br>')
+				renderedContent.notes = renderedContent.notes.replace(/ /g,"&nbsp;")
 				expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
 				regex = new RegExp(expression)
 				tempNoteString = renderedContent.notes
@@ -158,10 +160,11 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			@model.updateTitle @getTitle()
 
 		updateNotes: ->
-			if @getNotes() != @model.get "notes"
-				@model.updateNotes @getNotes()
-				swipy.analytics.sendEvent("Tasks", "Notes", "", @getNotes().length )
-				swipy.analytics.sendEventToIntercom("Update Note", { "Length": @getNotes().length })
+			notes = @getNotes()
+			if notes != @model.get "notes"
+				@model.updateNotes notes
+				swipy.analytics.sendEvent("Tasks", "Notes", "", notes.length )
+				swipy.analytics.sendEventToIntercom("Update Note", { "Length": notes.length })
 				@render()
 		updateActionStep: (e) ->
 			target = $(e.currentTarget)
@@ -209,9 +212,37 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			@$el.find( ".input-title" ).html().replace(/&nbsp;/g , " ")
 		getNotes: ->
 			$noteField = @$el.find('.notes .input-note')
-			replacedBrs = $noteField.html().replace(/<br>/g , "\r\n")
+			replacedBrs = $noteField.html()
+			#console.log "1"+replacedBrs
+
+			expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+			regex = new RegExp(expression)
+
+			while m = regex.exec(replacedBrs)
+				console.log index
+				index = m.index
+				url = m[0]
+				input = m.input
+				brStartIndex = index + url.length
+				nextText = input.substring( brStartIndex )
+				if nextText? and nextText.length > 3
+						if nextText.indexOf("<br>") is 0
+							continue
+				replacedBrs = [replacedBrs.slice(0, brStartIndex), "<br>", replacedBrs.slice(brStartIndex)].join('');
+			#console.log "2"+replacedBrs
+
+			replacedBrs = replacedBrs.replace(/<div><br>/g , "<div1>\r\n")
+			#console.log "3"+replacedBrs
+			replacedBrs = replacedBrs.replace(/<br>/g , "\r\n")
+			#console.log "4"+replacedBrs
+			replacedBrs = replacedBrs.replace(/<div>/g, "\r\n")
+			#console.log "5"+replacedBrs
 			replacedBrs = replacedBrs.replace(/&nbsp;/g , " ")
+			#console.log "6"+replacedBrs
 			replacedBrs = replacedBrs.replace(/<(?:.|\n)*?>/gm, '')
+			#console.log "7"+replacedBrs
+			#replacedBrs = replacedBrs.replace(/INS/g, "\r\n")
+			
 			replacedBrs
 		remove: ->
 			$("body").removeClass "edit-mode"
