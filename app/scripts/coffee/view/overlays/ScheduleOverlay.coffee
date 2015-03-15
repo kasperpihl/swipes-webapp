@@ -158,7 +158,7 @@ define ["underscore",
 			@setActiveMenu("date-picker")
 		changedTimeOnPicker: (model, value) ->
 			amPm = true
-			@$el.find(".time-label").html(@timeUtil.getFormattedTime(value.hour, value.minute, amPm))
+			@$el.find(".time-label").html(@timeUtil.getFormattedTime(value.hour, value.minute, amPm, true))
 		showTimePicker: (option) ->
 			if not @timePickerSlider?
 				model = new Backbone.Model()

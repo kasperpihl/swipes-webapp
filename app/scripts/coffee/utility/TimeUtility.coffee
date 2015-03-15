@@ -3,13 +3,26 @@ define ["momentjs"], (Moment)->
 		###
 			Time based Helpers
 		###
-		getFormattedTime: (hour, minute, amPm) ->
+		getFormattedTime: (hour, minute, amPm, html) ->
 			if minute < 10 then minute = "0" + minute
-			return hour + ":" + minute if !amPm?
-			if hour is 0 or hour is 24 then return "12:" + minute + " <small>AM</small>"
-			else if hour <= 11 then return hour + ":" + minute + " <small>AM</small>"
-			else if hour is 12 then return "12:" + minute + " <small>PM</small>"
-			else return hour - 12 + ":" + minute + " <small>PM</small>"
+			return hour + ":" + minute if !amPm? or !amPm
+			amPmString = "AM"
+
+			if hour is 0 or hour is 24
+				timeString =  "12:" + minute
+			else if hour <= 11
+				timeString = hour + ":" + minute
+			else if hour is 12
+				timeString = "12:" + minute
+				amPmString = "PM"
+			else 
+				timeString = hour - 12 + ":" + minute
+				amPmString = "PM"
+
+			if html
+				amPmString = "<small>" + amPmString + "</small>"
+
+			return timeString + " " + amPmString
 
 		hourForSeconds: ( seconds ) ->
 			return seconds / 3600

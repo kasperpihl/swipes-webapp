@@ -97,7 +97,7 @@ define ["underscore", "text!templates/calendar.html", "js/utility/TimeUtility", 
 			@$el.find(".month .selected-date").text @getSelectedDateText()
 		renderTime: ->
 			time = @model.get "time"
-			@$el.find(".month time").text @timeUtil.getFormattedTime( time.hour, time.minute )
+			@$el.find(".month time").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
 		remove: ->
 			@undelegateEvents()
 			@stopListening()

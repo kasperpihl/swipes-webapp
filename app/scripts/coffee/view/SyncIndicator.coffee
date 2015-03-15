@@ -5,7 +5,7 @@ define ["gsap", "timelinelite"], () ->
 		initialize: ->
 			_.bindAll @, "checkStatus"
 			@render()
-			@buildAnimationTimeline()
+			#@buildAnimationTimeline()
 			# setInterval @checkStatus, 500
 		checkStatus: ->
 			if $.active > 0 then @show() else @hide()
@@ -18,19 +18,20 @@ define ["gsap", "timelinelite"], () ->
 
 			@tl.fromTo( @$('.spinner'), 0.3, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1 } )
 			@tl.fromTo( @$('.sync-text'), 0.2, { opacity: 0 }, { opacity: 1 } )
+			console.log "animation"
 		show: ->
 			return unless not @shown
 			$("body").addClass "syncing"
 
-			@tl.play()
+			#@tl.play()
 
 			@shown = yes
 		hide: ->
 			return unless @shown
 			$("body").removeClass "syncing"
 
-			TweenMax.from( @$('.icon'), 0.5, { rotation: 360, overwrite: "all" } )
-			@tl.reverse()
+			#TweenMax.from( @$('.icon'), 0.5, { rotation: 360, overwrite: "all" } )
+			#@tl.reverse()
 
 			@shown = no
 		getHTML: ->
@@ -46,4 +47,4 @@ define ["gsap", "timelinelite"], () ->
 			"""
 		render: ->
 			@$el.html @getHTML()
-			TweenLite.set( @el, { display: "none" } )
+			#TweenLite.set( @el, { display: "none" } )

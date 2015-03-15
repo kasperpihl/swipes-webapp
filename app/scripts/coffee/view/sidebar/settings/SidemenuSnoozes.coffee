@@ -59,19 +59,19 @@ define ["gsap-draggable", "slider-control", "text!templates/sidemenu/settings/si
 				when "start-day"
 					setting = "SettingWeekStartTime"
 					time = @getTimeFromFloat @startDaySlider.value
-					@$el.find(".day button").text @getFormattedTime( time.hour, time.minute )
+					@$el.find(".day button").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
 				when "start-evening"
 					setting = "SettingEveningStartTime"
 					time = @getTimeFromFloat @startEveSlider.value
-					@$el.find(".evening button").text @getFormattedTime( time.hour, time.minute )
+					@$el.find(".evening button").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
 				when "start-weekend"
 					setting = "SettingWeekendStartTime"
 					time = @getTimeFromFloat @startWeekendSlider.value
-					@$el.find(".weekends button").text @getFormattedTime( time.hour, time.minute )
+					@$el.find(".weekends button").text @timeUtil.getFormattedTime( time.hour, time.minute, true )
 				when "delay"
 					setting = "SettingLaterToday"
 					time = @getTimeFromFloat @delaySlider.value
-					@$el.find(".later-today button").text "+#{ @getFormattedTime( time.hour, time.minute, no ) }h"
+					@$el.find(".later-today button").text "+#{ @timeUtil.getFormattedTime( time.hour, time.minute, no ) }h"
 
 			if updateModel and setting?
 				newVal = @timeUtil.secondsSinceStartOfDay time

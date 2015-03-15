@@ -1,6 +1,8 @@
 .sync-indicator {
-	position: fixed;
+	position: absolute;
 	top: 16px;
+	width:100px;
+	height:100px;
 	right: 14px;
 
 	text-align: center;
@@ -8,7 +10,7 @@
 	color: #c0c0be;
 
 	display: none;
-	body.syncing & { display: block; }
+	body.syncing & { display: inline-block; }
 
 	.icon {
 		$size: 13px;
@@ -25,5 +27,15 @@
 	.spinner > div {
 		width: 9px;
 		height: 9px;
+	}
+}
+@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0) { 
+    .sync-indicator{
+	    .spinner > div { 
+	    	display:none;
+	        -webkit-animation: none;
+			animation: none;
+
+	    }
 	}
 }
