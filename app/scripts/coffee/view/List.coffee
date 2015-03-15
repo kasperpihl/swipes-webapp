@@ -88,19 +88,13 @@ define [
 
 			if e.keyCode is 32
 				e.preventDefault()
+			
 			# shift key
-
 			if e.keyCode is 16
-				if !@holdModifier?
-					@holdModifier = "shift";
-					if !@currentToStartFromInShift? or @currentToStartFromInShift is -1
-						@setLastIndex( 0, true )
-					else 
-						@setLastIndex(@currentToStartFromInShift, true )
+				@holdModifier = "shift";
 			# cmd / ctrl
 			if e.keyCode is 91 or e.keyCode is 17
-				if !@holdModifier?
-					@holdModifier = "cmd";
+				@holdModifier = "cmd";
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if !@currentLongPressKey?
@@ -125,9 +119,9 @@ define [
 				if foundView?
 					task = foundView.model
 					task.set( "selected", true )
-					saveToShift = @holdModifier isnt "shift"
+					saveToShift = !e.shiftKey
 					@setLastIndex( index, saveToShift )
-					@selectedModels([task])
+					@selectedModels([task], e)
 					
 					# Handle auto scroll
 					scrollableView = $("#scrollcont")
@@ -153,6 +147,14 @@ define [
 						targetY = 0
 					if doScroll
 						TweenLite.to( scrollableView, 0.05, { scrollTo: targetY } )
+		holdModifierForEvent: (e) ->
+			return null if !e? or !e
+			return "shift" if @holdModifier is "shift" and e.shiftKey
+			return "cmd" if @holdModifier is "cmd" and e.ctrlKey or e.metaKey
+
+			return "shift" if e.shiftKey
+			return "cmd" if e.ctrlKey or e.metaKey
+			console.log e
 		clearLongPress: ->
 			@didHitALongPress = false
 			@currentLongPressKey = null
@@ -173,12 +175,6 @@ define [
 			if e.keyCode is 51 and @state isnt "done"
 				swipy.router.navigate("list/completed",true )
 
-			# shift / ctrl / cmd
-			if e.keyCode is 16 or e.keyCode is 17 or e.keyCode is 91
-				@holdModifier = null
-			# shift
-			###if e.keyCode is 16
-				@currentToStartFromInShift = null###
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if @currentLongPressKey?
@@ -192,16 +188,19 @@ define [
 			lastTask = view.model for view, i in @subviews when i is @lastSelectedIndex
 			if lastTask and swipy.todos.getSelected().length > 0
 				swipy.router.navigate( "edit/#{ lastTask.id }", yes ) 
-		selectedModels: (tasks, shouldScroll) ->
-			if !@holdModifier?
+		selectedModels: (tasks, e) ->
+			holdModifier = @holdModifierForEvent(e)
+			if !holdModifier?
 				@deselectAllTasksButTasks( tasks, true )
-			else if @holdModifier is "shift"
+			else if holdModifier is "shift"
 				@selectTasksForTasksWithShift( tasks )
 		selectTasksForTasksWithShift: ( tasks ) ->
 			selectedTask = tasks[0]
 			selectTheFollowingTasks = []
 			isRunningSelection = false
 			shouldTurnOffSelection = false
+			if @currentToStartFromInShift is -1
+				@currentToStartFromInShift = 0
 			for view, i in @subviews
 				model = view.model
 				if i is @currentToStartFromInShift and model.cid is selectedTask.cid
@@ -228,13 +227,14 @@ define [
 					task.set("selected", false)
 				else
 					task.set("selected", true)
-		handleDidPressTask: ( tasks ) ->
-			@selectedModels(tasks)
+		handleDidPressTask: ( tasks, e ) ->
+			console.log e
+			@selectedModels(tasks, e)
 			model = tasks[0]
 			newIndex = 0
 			newIndex = i for view, i in @subviews when view.model.cid is model.cid
 			if model.get "selected"
-				saveToShift = @holdModifier isnt "shift"
+				saveToShift = @holdModifierForEvent(e) isnt "shift"
 				@setLastIndex( newIndex, saveToShift )
 					
 		render: ->
@@ -361,14 +361,15 @@ define [
 			else
 				$('.search-result').addClass("hidden")
 			swipy.filter.updateFilterString(todos.length)
-		pressedTask:(model) ->
-			if !@holdModifier and !@$el.hasClass("selecting")
+		pressedTask:(model, e) ->
+			holdModifier = @holdModifierForEvent(e)
+			if !holdModifier and !@$el.hasClass("selecting")
 				identifier = model.id
 				swipy.router.navigate( "edit/#{ identifier }", yes )
 			else
 				currentlySelected = model.get( "selected" ) or false
 				model.set( "selected", !currentlySelected )
-				Backbone.trigger( "did-press-task", [model])
+				Backbone.trigger( "did-press-task", [model], e)
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
 			newSelectIndex = -1

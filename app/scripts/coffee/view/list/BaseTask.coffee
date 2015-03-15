@@ -28,7 +28,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 		init: -> # Hook for views extending me
 		toggleSelected: (e) ->
 			if @delegate? and _.isFunction(@delegate.pressedTask)
-				@delegate.pressedTask(@model)
+				@delegate.pressedTask(@model, e)
 		togglePriority: (e) ->
 			e.stopPropagation()
 			@model.togglePriority()

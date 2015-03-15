@@ -123,5 +123,6 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		destroy: ->
 			@deactivate yes
 			Backbone.off( "drag-model", @dragModel)
-			@disableTouchListeners()
+			if Modernizr.touch
+				@disableTouchListeners()
 			@model = null
