@@ -3,14 +3,34 @@ define ["underscore", "js/view/list/BaseTask"], (_, BaseTaskView) ->
 		events:
 			"mouseenter": "trackMouse"
 			"mouseleave": "stopTrackingMouse"
+			"drag": "onDrag"
 		init: ->
 			@throttledOnMouseMove = _.throttle( @onMouseMove, 250 )
 			@bouncedHover = _.debounce(@onHoverTask, 150)
-			_.bindAll( @, "setBounds", "onHoverTask", "onUnhoverTask", "bouncedHover" )
+			@bouncedTrigger = _.debounce(@triggerDrag, 5)
+			_.bindAll( @, "setBounds", "onHoverTask", "onUnhoverTask", "bouncedHover", "onMouseDown", "onMouseUp", "onMouseMove" )
 
 			@listenTo( Backbone, "hover-task", @onHoverTask )
 			@listenTo( Backbone, "unhover-task", @onUnhoverTask )
-
+			@$el.mousedown( @onMouseDown )
+			@$el.mouseup( @onMouseUp )
+		triggerDrag: (e) ->
+			Backbone.trigger("drag-model", @model, e )
+			@isDragging = false
+		onMouseDown: (e) ->
+			@screenY = e.screenY
+			$(window).mousemove( @onMouseMove )
+		onMouseMove: (e) ->
+			threshold = 1
+			return if @isDragging
+			if Math.abs(e.screenY - @screenY) > threshold
+				@isDragging = true
+				@triggerDrag(e)
+				$(window).unbind("mousemove")
+		onMouseUp: (e) ->
+			@screenY = 0
+			@isDragging = false
+			$(window).unbind("mousemove")
 		getMousePos: (mouseX) ->
 			if !@bounds then @setBounds()
 			Math.round ( ( mouseX - @bounds.left ) / @bounds.width ) * 100

@@ -2,7 +2,9 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 	class ListSortController
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )
-			@enableTouchListners()
+			if Modernizr.touch
+				@enableTouchListners()
+			Backbone.on( "drag-model", @dragModel, @)
 		getHammerOpts: ->
 			# Options at: https://github.com/EightMedia/hammer.js/wiki/Getting-Started
 			{
@@ -12,21 +14,31 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 				transform: off
 				# hold_threshold: 50
 				prevent_default: yes
-				hold_timeout: if Modernizr.touch then 400 else 30
+				hold_timeout: 400
 				domEvents:true
 			}
+		dragModel: (model, e) ->
+			return if @draggable?
+			@activate(e, model)
+
 		enableTouchListners: ->
-			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "swipe", "ol > li", @activate )
+			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "press", "ol > li", @activate )
 		disableTouchListeners: ->
-			$( @model.container[0] ).hammer().off( "swipe", @activate )
-		activate: (e) =>
-			@disableTouchListeners()
+			$( @model.container[0] ).hammer().off( "press", @activate )
+		activate: (e, model) =>
+			if Modernizr.touch
+				@disableTouchListeners()
+			
 			@model.init()
 			Backbone.on( "redraw-sortable-list", @redraw, @ )
 			@listenForOrderChanges()
 			@setInitialOrder()
-			@createDraggable @model.getViewFromId e.currentTarget.getAttribute "data-id"
-			if e then @draggable.startDrag e.originalEvent.gesture.srcEvent
+			if model
+				identifier = model.id
+			else
+				identifier = e.currentTarget.getAttribute "data-id"
+			@createDraggable @model.getViewFromId identifier
+			if e and e.originalEvent.gesture then @draggable.startDrag e.originalEvent.gesture.srcEvent else @draggable.startDrag e.originalEvent
 		deactivate: (removeCSS = no) =>
 			@stopListenForOrderChanges()
 			@killDraggable removeCSS
@@ -110,5 +122,6 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			view.$el.removeAttr "style" for view in @model.views
 		destroy: ->
 			@deactivate yes
+			Backbone.off( "drag-model", @dragModel)
 			@disableTouchListeners()
 			@model = null
