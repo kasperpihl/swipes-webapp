@@ -253,7 +253,7 @@ define [
 		
 		selectAllTasks: (e) ->
 			# Prevent default (select all text on page || select all text in input), unless input is focused AND have text input.
-			taskInput = swipy.input.view.$el.find "input"
+			taskInput = $("#add-task textarea")
 			unless taskInput.val() and taskInput.is ":focus"
 				e.preventDefault()
 				tasks = @getTasks()
