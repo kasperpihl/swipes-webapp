@@ -40,6 +40,10 @@ define ["underscore"], (_) ->
 			regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 			regex.test email
 		sendEvent: (category, action, label, value) ->
+			platform = "Web"
+			if @isMac?
+				platform = "Mac"
+			ga('set', {"dimension7": platform})
 			ga('send', 'event', category, action, label, value)
 		sendEventToIntercom: (eventName, metadata) ->
 			Intercom('trackEvent', eventName, metadata )
@@ -92,13 +96,6 @@ define ["underscore"], (_) ->
 				if currentNumberOfTags isnt numberOfTags
 					gaSendIdentity['dimension5'] = numberOfTags
 					intercomIdentity["number_of_tags"] = numberOfTags
-
-			platform = "Web"
-			if @isMac?
-				platform = "Mac"
-			currentPlatform = @customDimensions['platform']
-			if currentPlatform isnt platform
-				gaSendIdentity["dimension7"] = platform
 
 
 			if _.size( gaSendIdentity ) > 0
