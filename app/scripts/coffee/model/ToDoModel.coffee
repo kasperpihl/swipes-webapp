@@ -428,7 +428,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			keys = _.keys(obj)
 			for attribute in @attrWhitelist
 				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1
-				continue if _.indexOf keys, attribute is -1
+				continue if _.indexOf(keys, attribute) is -1
+
 				val = obj[ attribute ]
 				if attribute is "tags"
 					val = @handleTagsFromServer val
