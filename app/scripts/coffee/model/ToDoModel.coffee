@@ -425,8 +425,10 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			BaseModel.prototype.updateFromServerObj.apply @, arguments
 			return if @get "deleted"
 			dateKeys = [ "schedule", "completionDate", "repeatDate" ]
+			keys = _.keys(obj)
 			for attribute in @attrWhitelist
-				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1  
+				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1
+				continue if _.indexOf keys, attribute is -1
 				val = obj[ attribute ]
 				if attribute is "tags"
 					val = @handleTagsFromServer val
@@ -438,7 +440,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 		handleTagsFromServer: ( tags ) ->
 			modelTags = []
-			return if !tags?
+			return modelTags if !tags? or !tags or tags.length is 0
 			for tag in tags
 				if !tag.objectId
 					continue
