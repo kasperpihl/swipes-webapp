@@ -426,7 +426,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			return if @get "deleted"
 			dateKeys = [ "schedule", "completionDate", "repeatDate" ]
 			for attribute in @attrWhitelist
-				continue if !obj[ attribute ]?
 				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1  
 				val = obj[ attribute ]
 				if attribute is "tags"
@@ -439,6 +438,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 
 		handleTagsFromServer: ( tags ) ->
 			modelTags = []
+			return if !tags?
 			for tag in tags
 				if !tag.objectId
 					continue
