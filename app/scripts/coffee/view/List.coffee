@@ -27,6 +27,7 @@ define [
 			@longBounceRenderList = _.debounce( @renderList, 500 )
 			@listenTo( Backbone, "opened-window", @clearForOpening )
 
+			@listenTo( Backbone, "sync-complete", @syncCompleted )
 			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
 			#@listenTo( swipy.todos, "change:order", @changedOrder )
 
@@ -42,10 +43,17 @@ define [
 			@listenTo( Backbone, "clockwork/update", @moveTasksToActive )
 
 			Mousetrap.bindGlobal( "mod+a", $.proxy( @selectAllTasks, @ ) )
-			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening", "longPressHandling", "snoozedATask", "changedOrder" )
+			_.bindAll( @, "keyDownHandling", "keyUpHandling", "selectTasksForTasksWithShift", "clearForOpening", "longPressHandling", "snoozedATask", "changedOrder", "syncCompleted" )
 			@setLastIndex( -1, true )
 			@shouldResetLast = false
 			@render()
+		syncCompleted: (todos) ->
+			if todos and todos.length > 0
+				tasks = @getTasks()
+				for task in tasks
+					if _.indexOf( todos, task.id ) isnt -1
+						@renderList()
+						return
 		changedOrder: ->
 			@longBounceRenderList()
 		snoozedATask: ->

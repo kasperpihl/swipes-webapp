@@ -34,6 +34,8 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 		handleObjectsFromSync: ( objects, className ) ->
 			collection = if className is "ToDo" then swipy.todos else swipy.tags
+			if className is "ToDo"
+				@updatedTodos = []
 			newModels = []
 			for obj in objects
 				if obj.parentLocalId? and newModels.length > 0
@@ -61,6 +63,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					newModels.push model
 					model.doSync()
 				else
+					@updatedTodos.push( model.id )
 					recentChanges = @changedAttributes.getChangesForModel model
 					model.updateFromServerObj obj, recentChanges
 			if newModels.length > 0
@@ -136,7 +139,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				sessionToken : token
 				platform : "web"
 				version: 1
-				sendLogs : true
+				sendLogs : false
 				changesOnly : true
 
 			data.lastUpdate = @lastUpdate if @lastUpdate
@@ -158,6 +161,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				context: @
 				data : serData
 				processData : false
+			#console.log serData
 			$.ajax( settings )
 		finalizeSync: ( error ) ->
 			@syncIndicator.hide()
@@ -166,10 +170,12 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			if @needSync
 				@needSync = false
 				@sync( true )
-			Backbone.trigger( "sync-complete", @ )
+			Backbone.trigger( "sync-complete", @updatedTodos )
+			@updatedTodos = null
 		errorFromSync: ( data, textStatus, error ) ->
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
+			#console.log data
 			if data and data.serverTime
 				@currentSyncing = null
 				@changedAttributes.resetChanges()
@@ -185,6 +191,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					swipy.analytics.updateIdentity()
 				##swipy.todos.handleObjects data.ToDo
 			else
-				console.log data
-				console.log "sync"
+				#console.log data
+				#console.log "sync"
 			@finalizeSync()
