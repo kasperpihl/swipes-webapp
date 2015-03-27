@@ -2,8 +2,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 	class ListSortController
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )
-			if Modernizr.touch
-				@enableTouchListners()
+			@enableTouchListners()
 			Backbone.on( "drag-model", @dragModel, @)
 			_.bindAll( @, "dragModel" )
 		getHammerOpts: ->
@@ -27,8 +26,8 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		disableTouchListeners: ->
 			$( @model.container[0] ).hammer().off( "press", @activate )
 		activate: (e, model) =>
-			if Modernizr.touch
-				@disableTouchListeners()
+			return if @draggable
+			@disableTouchListeners()
 			@model.init()
 			Backbone.on( "redraw-sortable-list", @redraw, @ )
 			@listenForOrderChanges()
@@ -44,8 +43,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			@killDraggable removeCSS
 			Backbone.off( "redraw-sortable-list", @redraw )
 			@model.destroy()
-			if Modernizr.touch
-				@enableTouchListners()
+			@enableTouchListners()
 		setInitialOrder: ->
 			@model.container.height ""
 			@model.container.height( @model.container.height() )
@@ -124,6 +122,5 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		destroy: ->
 			@deactivate yes
 			Backbone.off( "drag-model", @dragModel)
-			if Modernizr.touch
-				@disableTouchListeners()
+			@disableTouchListeners()
 			@model = null
