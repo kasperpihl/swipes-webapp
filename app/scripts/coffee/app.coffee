@@ -48,6 +48,7 @@ define [
 			if @sync.lastUpdate?
 				@tags.fetch()
 				@todos.fetch()
+				_.invoke(@todos.models, "set", { selected: no } )
 				@todos.repairActionStepsRelations()
 				@init()
 				@todos.prepareScheduledForNotifications()

@@ -20,7 +20,7 @@ define ["underscore", "js/view/List", "js/controller/ListSortController", "js/mo
 			ListView::afterMovedItems.apply( @, arguments )
 		beforeRenderList: (todos) ->
 			# Make sure all todos are unselected before rendering the list
-			swipy.todos.invoke( "set", "selected", no )
+			#swipy.todos.invoke( "set", "selected", no )
 			@setTodoOrder todos
 			ListView::beforeRenderList.apply( @, arguments )
 		afterRenderList: (todos) ->

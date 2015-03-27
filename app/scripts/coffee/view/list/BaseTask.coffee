@@ -64,6 +64,8 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 
 			@$el.html @template renderJSON
 			@$el.attr( "data-id", @model.id )
+			if @model.get("selected")
+				@$el.addClass("selected")
 			@$el.addClass("task-row")
 			@afterRender()
 			return @

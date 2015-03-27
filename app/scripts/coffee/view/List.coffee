@@ -301,7 +301,7 @@ define [
 			todos = _.reject( todos, (m) -> m.get( "rejectedByTag" ) or m.get "rejectedBySearch" )
 
 			# Deselect any selected items
-			_.invoke( todos, "set", { selected: no } )
+			#_.invoke( todos, "set", { selected: no } )
 			totalNumberOfTasks = 0
 			# Handle all done for today background
 			if @state is "tasks"

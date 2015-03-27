@@ -8,6 +8,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		className: "ToDo"
 		idAttribute: "objectId"
 		attrWhitelist: [
+			"attachments"
 			"title"
 			"order"
 			"schedule"
@@ -32,6 +33,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			repeatDate: null
 			repeatCount: 0
 			tags: null
+			attachments:null
 			notes: ""
 			location: undefined
 			parentLocalId: null
