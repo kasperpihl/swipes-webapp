@@ -17,7 +17,12 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			@isSyncing = false
 			@needSync = false
 			@lastUpdate = null
+			@currentSyncVersion = 1
 			if typeof(Storage) isnt "undefined"
+				syncVersion = parseInt(localStorage.getItem("currentSyncVersion"))
+				if !syncVersion? or syncVersion isnt @currentSyncVersion
+					localStorage.removeItem("syncLastUpdate")
+					localStorage.setItem("currentSyncVersion", @currentSyncVersion)
 				if localStorage.getItem("syncLastUpdate")?
 					@lastUpdate = localStorage.getItem("syncLastUpdate")
 			@bouncedSync = _.debounce( @sync, 3000 )
