@@ -60,7 +60,11 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 			return obj.index for obj in distancesWithIndex when obj.dist is minDist
 
 		reorderRows: (view, yPos) ->
-			newOrder = @getViewAtPos(@getOrderFromPos(yPos)).model.get("order")
+
+			targetView = @getViewAtPos(@getOrderFromPos(yPos))
+			if !targetView
+				return
+			newOrder = targetView.model.get("order")
 			oldOrder = view.model.get "order"
 			return if newOrder is oldOrder
 

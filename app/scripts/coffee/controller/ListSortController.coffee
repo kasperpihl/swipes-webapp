@@ -29,7 +29,6 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		activate: (e, model) =>
 			if Modernizr.touch
 				@disableTouchListeners()
-			
 			@model.init()
 			Backbone.on( "redraw-sortable-list", @redraw, @ )
 			@listenForOrderChanges()
@@ -45,7 +44,8 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			@killDraggable removeCSS
 			Backbone.off( "redraw-sortable-list", @redraw )
 			@model.destroy()
-			@enableTouchListners()
+			if Modernizr.touch
+				@enableTouchListners()
 		setInitialOrder: ->
 			@model.container.height ""
 			@model.container.height( @model.container.height() )
@@ -101,7 +101,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 		onDrag: (view, model) ->
 			yPos = parseInt(@y, 10) + parseInt(view.startY, 10)
 			model.reorderRows( view, yPos )
-		onDragEnd: (view, model, self) ->		
+		onDragEnd: (view, model, self) ->
 			model.reorderRows( view, @endY + view.startY )
 			view.startY = 0
 			view.$el.removeClass( "dragging" )
