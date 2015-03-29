@@ -68,7 +68,8 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					newModels.push model
 					model.doSync()
 				else
-					@updatedTodos.push( model.id )
+					if className is "ToDo"
+						@updatedTodos?.push( model.id )
 					recentChanges = @changedAttributes.getChangesForModel model
 					model.updateFromServerObj obj, recentChanges
 			if newModels.length > 0
