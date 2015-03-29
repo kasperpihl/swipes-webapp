@@ -69,11 +69,6 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			return unless selectedTasks.length
 			if confirm "Delete #{selectedTasks.length} tasks?"
 				for model in selectedTasks
-					if model.has "order"
-						order = model.get "order"
-						model.unset "order"
-						swipy.todos.bumpOrder( "up", order )
-
 					model.deleteObj()
 				@hide()
 				swipy.analytics.sendEvent( "Tasks", "Deleted", "", selectedTasks.length )

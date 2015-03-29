@@ -270,22 +270,19 @@ define [
 			now = new Date().getTime()
 			# Get all tasks that are scheduled within the current 1001ms
 			# (Includes stuff moved from completed, which is defaulting to 1000ms in the past)
-			return unless @state is "tasks"
+			return if @state is "done"
+			
+			self = @
 			movedFromScheduled = _.filter @getTasks(), (m) ->
 				return false unless m.has "schedule"
-				return now - m.get( "schedule" ).getTime() < 1001
+				if self.state is "tasks"
+					return m.get("state") isnt "active"
+				else return m.get( "schedule" ).getTime() < now
 			# If we have tasks then bump all tasks +1 and
 			# set order: 0 and animateIn: yes for all of them
 			if movedFromScheduled.length
-
-				# If we only moved 1 item, and it's order was already 0, no need to bump
-				if movedFromScheduled.length is 1 and movedFromScheduled[0].get("order") is 0
-					# ... Do nothing — This is only the case when we have multiple instances of
-					# a list at the same time. Like in our testing environment.
-					movedFromScheduled[0].set( "animateIn", yes )
-				else
-					swipy.todos.bumpOrder( "down", 0, movedFromScheduled.length )
-					_.invoke( movedFromScheduled, "set", { order: 0, animateIn: yes } )
+				if @state is "tasks"
+					_.invoke( movedFromScheduled, "set", { order: -1, animateIn: yes } )
 
 				# After changes, re-render the list
 				@renderList()
@@ -407,10 +404,10 @@ define [
 
 			tasks = swipy.todos.getSelected( model )
 			return if tasks.length is 0
-			minOrder = Math.min _.invoke( tasks, "get", "order" )...
+			#minOrder = Math.min _.invoke( tasks, "get", "order" )...
 
 			# Bump order for tasks
-			swipy.todos.bumpOrder( "up", minOrder, tasks.length )
+			#swipy.todos.bumpOrder( "up", minOrder, tasks.length )
 			for task in tasks
 				view = @getViewForModel task
 				self = @
