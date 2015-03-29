@@ -270,10 +270,10 @@ define [
 			now = new Date().getTime()
 			# Get all tasks that are scheduled within the current 1001ms
 			# (Includes stuff moved from completed, which is defaulting to 1000ms in the past)
+			return unless @state is "tasks"
 			movedFromScheduled = _.filter @getTasks(), (m) ->
 				return false unless m.has "schedule"
 				return now - m.get( "schedule" ).getTime() < 1001
-
 			# If we have tasks then bump all tasks +1 and
 			# set order: 0 and animateIn: yes for all of them
 			if movedFromScheduled.length
