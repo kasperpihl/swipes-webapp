@@ -27,7 +27,7 @@ $border-width: 1px;
 	}
 
 	.priority {
-		margin-left: 10%;
+		margin-left: 6%;
 		@include breakpoint(tablet) { margin-left: 19.5%; }
 	}
 
@@ -93,8 +93,8 @@ $border-width: 1px;
 // List item content
 .todo-content {
 	position: relative;
-	padding: 1.4em 3em 0 20%;
-	@include breakpoint(tablet) { padding-left: 28% }
+	padding: 1.4em 1em 0 14%;
+	@include breakpoint(tablet) { padding-left: 28%; padding-right: 3em;}
 	height: $list-item-height;
 
 	background: white;
@@ -112,28 +112,29 @@ $border-width: 1px;
 .sidebar-open{
 	.todo-list{
 		.actions{
-			a:first-child{
-				margin-left:0px;
-				@include breakpoint(tablet) { margin-left: 0px; }
-			}
 		}
 	}
 }
 .todo-list {
 	.actions{
 		$button-size: 30px;
+		$padding: 5px;
 		display:block;
 		opacity:0;
 		//@include transition(opacity 0.1s ease-in);
 		position:absolute;
-		height:$button-size;
+		background-color: #F9F9F9;
+		border: 1px solid #e0e0e0;
+		padding: $padding - 1px 5px 0 5px;
+		
+		height:$button-size+2*$padding;
+		@include border-radius(($button-size + 2*$padding) / 2);
 		top: 50%;
-		left:0;
-		margin-top:-$button-size/2;
-		a:first-child{
-			margin-left:0px;
-			@include breakpoint(tablet) { margin-left: 30px; }
+		right:5px;
+		@include breakpoint(tablet) {
+			right:20px;
 		}
+		margin-top:-$button-size/2;
 		a{
 			&:hover{
 				text-decoration:none;
@@ -144,7 +145,7 @@ $border-width: 1px;
 			line-height: 1;
 			float:left;
 			margin-right:5px;
-			@include breakpoint(tablet) { margin-right: 10px; }
+			margin-left: 5px;
 			@include square($button-size);
 			@include border-radius(50%);
 			border: $border-width solid $gray;

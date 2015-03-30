@@ -36,12 +36,16 @@ html.touch body {
 			overflow-y:scroll;
 			position: relative;
 			z-index: 4;
-			padding-left: $sidebar-width;
-			@include transition(padding $sidebar-animation ease);
+			padding-left: $sidebar-slide-width;
 
+			@include transition(padding $sidebar-animation ease);
+			@include breakpoint(tablet){
+				padding-left: $sidebar-width;
 				.sidebar-open & {
 					padding-left: $sidebar-width + $sidebar-sub-width;
 				}
+			}
+			
 		}
 
 		

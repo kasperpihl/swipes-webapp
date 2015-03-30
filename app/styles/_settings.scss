@@ -13,6 +13,18 @@ $orange: #ffc107;
 $breakpointSmallHeight: 500px;
 
 
+
+// Sidebar varialbes
+// -------------------------
+$sidebar-width: 100px;
+$sidebar-sub-width: 400px;
+$sidebar-slide-width: 25px;
+$sidebar-bg: #fff;
+$sidebar-animation: 230ms;
+$sidebar-buttons-size: 40px;
+
+
+
 // Global values
 // --------------------------------------------------
 $blue: #56606a;
@@ -639,14 +651,3 @@ $container-desktop:           ((940px + $grid-gutter-width)) !default;
 $container-lg-desktop:        ((1140px + $grid-gutter-width)) !default;
 
 
-
-
-
-// Sidebar varialbes
-// -------------------------
-$sidebar-width: 100px;
-$sidebar-width-big: 160px;
-$sidebar-sub-width: 400px;
-$sidebar-bg: #fff;
-$sidebar-animation: 230ms;
-$sidebar-buttons-size: 40px;
