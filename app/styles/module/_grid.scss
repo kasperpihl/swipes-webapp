@@ -18,10 +18,10 @@
 			p {
 				font-family: $font-bold;
 				margin: 0;
-				font-size: 0.7em;
+				font-size: 0.6em;
 
-				@include breakpoint(min-width, 410px) {
-					// font-size: 0.9em;
+				@include breakpoint(mobile, width) {
+					//font-size: 0.7em;
 					@include transition(all 0.17s ease-out);
 				}
 			}

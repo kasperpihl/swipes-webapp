@@ -1,26 +1,33 @@
-@mixin breakpoint($point, $size: 0) {
-	@if $point == mobile {
-		@media (min-width: 0) { @content; }
-	}
+@mixin breakWidthHeight($widthVar, $heightVar) {
+	@media (min-width: $widthVar) and (min-height: $heightVar) { @content; }
+}
 
+@mixin breakpoint($point, $size: 0) {
+	$targetPoint: min-width;
+	@if $size == height {
+		$targetPoint: min-height
+	}
+	@if $point == mobile {
+		@media ($targetPoint: 480px) { @content; }
+	}
 	@else if $point == mobile-horizontal {
-		@media (min-width: 480px) and (orientation: landscape) { @content; }
+		@media ($targetPoint: 480px) and (orientation: landscape) { @content; }
 	}
 
 	@else if $point == tablet {
-		@media (min-width: 768px) { @content; }
+		@media ($targetPoint: 768px) { @content; }
 	}
 
 	@else if $point == tablet-horizontal {
-		@media (min-width: 768px) and (orientation: landscape) { @content; }
+		@media ($targetPoint: 768px) and (orientation: landscape) { @content; }
 	}
 
 	@else if $point == desktop {
-		@media (min-width: 1170px) { @content; }
+		@media ($targetPoint: 1170px) { @content; }
 	}
 
 	@else if $point == desktop-wide {
-		@media (min-width: 1500px) { @content; }
+		@media ($targetPoint: 1500px) { @content; }
 	}
 
 	@else {

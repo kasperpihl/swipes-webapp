@@ -23,7 +23,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			@listenTo( swipy.todos, "change:selected", @toggle )
 		handleButtonsFromState:(state) ->
 			showComplete = true if state isnt "done"
-			showSchedule = true if state isnt "schedule"
+			showSchedule = true #if state isnt "schedule"
 			showTasks = true if state isnt "tasks"
 			$('.action-bar .snooze, .action-bar .today, .action-bar .complete').hide()
 			$('.action-bar .snooze').show() if showSchedule
@@ -33,7 +33,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 
 		toggle: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
-			if selectedTasks.length < 2
+			if selectedTasks.length < 1
 				$('.action-bar .counting-selected').hide()
 			else
 				$('.action-bar .counting-selected').show()

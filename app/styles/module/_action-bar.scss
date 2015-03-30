@@ -17,38 +17,46 @@
 	z-index: 4991;
 	position: fixed;
 	bottom: 0;
-	top: -100px;
+	//top: -100px;
+	right:0;
 	left: 0;
 	margin: auto;
-	padding: emCalc(25px) 0;
+	//padding: emCalc(25px) 0;
+	
 	text-align: center;
-	width: 80px;
-	height: 350px;
-	background-color: transparent;
+	width: 100%;
+	padding-top: 9px;
+	height: 60px;
+	@include breakpoint(mobile, height){
+		padding-top: 28px;
+		height: 100px;
+	}
+	background-color: #F9F9F9;
+	border-top: 2px solid #e0e0e0;
 
 	@include breakpoint(min-width, emCalc(350px)) {
-		right: -810px;
 
 		.sidebar-open & {
-			margin-right: 0 - emCalc(360px - $sidebar-width);
+			@include transition(margin-left 300ms ease-in-out);
+			margin-left: emCalc( 250px );
 		}
 	}
 
-	@include breakpoint(desktop-wide) {
-		right: -1040px;
-	}
 
 	li {
 		display: inline-block;
 		list-style: none;
 		margin-bottom: emCalc(22px);
+		@include breakpoint(tablet){
+			margin-left:5px;
+		}
 	}
 
 	a {
 		display: block;
 		@include square(40px);
 		line-height: 40px;
-		background-color: #fff;
+		background-color: transparent;
 		text-align: center;
 		border: 1px solid $brand-dakrcolor;
 		text-decoration: none;
@@ -130,8 +138,8 @@
 	}
 
 	li.spacer {
-		display: block;
-		margin-bottom: 20px;
+		//display: block;
+		margin-right: 20px;
 	}
 
 	.counting-selected {

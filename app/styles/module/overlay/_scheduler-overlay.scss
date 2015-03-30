@@ -1,3 +1,5 @@
+$breakWidthSnoozer: 500px;
+$breakHeightSnoozer: 500px;
 body.scheduler-open {
 
 	.overlay.scheduler {
@@ -17,7 +19,10 @@ body.scheduler-open {
 
 .overlay.scheduler {
 	.overlay-content{
-		width: 424px;
+		width: 250px;
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			width:350px;
+		}
 	}
 	
 	// color: white;
@@ -159,8 +164,13 @@ body.scheduler-open {
 	position: relative;
 	background-color: #fff;
 	max-width: 100%;
-	min-height: 413px;
-	width: 413px;
+	min-height: 250px;
+	width: 250px;
+	@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+		min-height: 350px;
+		width: 350px;
+	}
+	
 	height: auto;
 	border-radius: $border-radius-base;
 	border-bottom: 2px solid rgba(#000, 0.23);
@@ -174,9 +184,15 @@ body.scheduler-open {
 
 			svg {
 				display: inline-block;
-				@include square(55px);
+				margin: 5px 0 2px;
+
+				@include square(40px);
+				@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+					@include square(45px);
+					margin: 8px 0 6px;
+				}
 				fill: $brand-dakrcolor;
-				margin: 15px 0 10px;
+				
 			}
 
 			a:hover svg {
@@ -189,6 +205,17 @@ body.scheduler-open {
 				@extend .fadeIn;
 				@include experimental(animation-duration, 0.35s);
 			}
+	}
+	.grid{
+		.option{
+			p{
+				font-size: 0.6em;
+				@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+					font-size: 0.7em;
+				}
+			}
+			padding: 10% 0 0;
+		}
 	}
 
 }

@@ -16,7 +16,13 @@
 
 		// Base content wrapper
 		&_content {
-			padding: 35px 10px 0;
+			padding: 0 10px 0;
+			@include breakpoint(min-height, 320px){
+				padding-top: 10px;
+			}
+			@include breakpoint(mobile, height){
+				padding: 35px 10px 0;
+			}
 			width: inherit;
 			text-align: center;
 			background-color: #F9F9F9;

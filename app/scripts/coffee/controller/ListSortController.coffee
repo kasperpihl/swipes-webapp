@@ -39,7 +39,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			else
 				identifier = e.currentTarget.getAttribute "data-id"
 			@createDraggable @model.getViewFromId identifier
-			if e and e.originalEvent.gesture then @draggable.startDrag e.originalEvent.gesture.srcEvent else @draggable.startDrag e.originalEvent
+			if e and e.originalEvent and e.originalEvent.gesture then @draggable.startDrag e.originalEvent.gesture.srcEvent else @draggable.startDrag e.originalEvent
 		deactivate: (removeCSS = no) =>
 			@stopListenForOrderChanges()
 			@killDraggable removeCSS
