@@ -28,7 +28,7 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			return if !@model?
 			$( @model.container[0] ).hammer().off( "press", @activate )
 		activate: (e, model) =>
-			return if @draggable
+			return if @draggable or !@model?
 			@disableTouchListeners()
 			@model.init()
 			Backbone.on( "redraw-sortable-list", @redraw, @ )
