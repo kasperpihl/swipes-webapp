@@ -44,7 +44,8 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			@stopListenForOrderChanges()
 			@killDraggable removeCSS
 			Backbone.off( "redraw-sortable-list", @redraw )
-			@model.destroy()
+			if @model?
+				@model.destroy()
 			@enableTouchListners()
 		setInitialOrder: ->
 			@model.container.height ""
