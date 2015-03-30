@@ -289,6 +289,7 @@ define [
 		renderList: ->
 			# Remove any old HTML before appending new stuff.
 			return if !@$el
+			oldScroll = $("#scrollcont").scrollTop()
 			@$el.empty()
 			@killSubViews()
 
@@ -297,10 +298,10 @@ define [
 			# Rejects models filtered out by tag or search
 			todos = _.reject( todos, (m) -> m.get( "rejectedByTag" ) or m.get "rejectedBySearch" )
 
-			# Deselect any selected items
-			#_.invoke( todos, "set", { selected: no } )
-			totalNumberOfTasks = 0
+			
+
 			# Handle all done for today background
+			totalNumberOfTasks = 0
 			if @state is "tasks"
 				upcomingTasksToday = swipy.todos.getScheduledLaterToday()
 				totalNumberOfTasks += upcomingTasksToday.length
@@ -316,6 +317,7 @@ define [
 			else
 				$(".all-done").removeClass("for-today")
 				$(".all-done").removeClass("for-now")
+
 
 
 			@beforeRenderList todos
@@ -360,6 +362,8 @@ define [
 					$html.find('.progress-bar').css("width",percentage+"%")
 			@afterRenderList todos
 
+			$("#scrollcont").scrollTop(oldScroll)
+			
 			if swipy.filter.hasFilters()
 				$('.search-result').removeClass("hidden")
 			else
