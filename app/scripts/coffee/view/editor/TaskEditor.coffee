@@ -145,10 +145,10 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				else if($('.action-steps .step input:focus').length is 1)
 					$('.action-steps .step input:focus').val("")
 					@updateActionStep(null, $('.action-steps .step input:focus'))
-				else if $(".task-editor input").is(":focus")
-					$(".task-editor input").blur()
 				else if $('.input-note').is(':focus')
 					$('.input-note').blur()
+				else if $('.input-title').is(':focus')
+					$('.input-title').blur()
 				else @back()
 		clickedRepeat: ->
 			$(".repeat-picker > ul").toggleClass("active")
@@ -157,8 +157,18 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		setRepeat: (e) ->
 			@model.setRepeatOption $(e.currentTarget).data "option"
 		updateTitle: ->
-			@model.updateTitle @getTitle()
-
+			title = @validateTitle(@getTitle())
+			if !title
+				@$el.find( ".input-title" ).html(@model.get("title"))
+				return
+			@model.updateTitle title
+		validateTitle: (title) ->
+			title = title.trim()
+			if title.length is 0
+				return false
+			else if title.length > 255
+				title = title.substr(0,255)
+			return title
 		updateNotes: ->
 			notes = @getNotes()
 			if notes != @model.get "notes"
@@ -169,17 +179,14 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		updateActionStep: (e, target) ->
 			if e and !target
 				target = $(e.currentTarget)
-			title = target.val()
-			title = title.trim()
 			model = @getModelFromEl(target)
-			if title.length is 0
+			title = @validateTitle(target.val())
+
+			if !title
 				if model?
 					target.val(model.get("title"))
 				target.blur()
 				return false
-			if title.length > 255
-				title = title.substr(0,255)
-			
 			if model?
 				model.updateTitle title
 				target.blur()

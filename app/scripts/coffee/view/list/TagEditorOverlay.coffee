@@ -1,4 +1,4 @@
-define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/tags-editor-overlay.html"], (_, Overlay, TagModel, TagsEditorOverlayTmpl) ->
+define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/tags-editor-overlay.html", "text!templates/tags-cloud.html"], (_, Overlay, TagModel, TagsEditorOverlayTmpl, TagsCloudTmpl) ->
 	Overlay.extend
 		className: 'overlay tags-editor'
 		events:
@@ -19,6 +19,7 @@ define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/ta
 			$(window).on( "resize", @handleResize )
 		setTemplate: ->
 			@template = _.template TagsEditorOverlayTmpl
+			@tagsTemplate = _.template TagsCloudTmpl
 		getTagsAppliedToAll: ->
 			# First check that all currently selected tasks have tags applied
 			tagLists = _.invoke( @options.models, "get", "tags" )
@@ -35,14 +36,16 @@ define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/ta
 			# First see if tag exists
 			tag = swipy.tags.findWhere { title: tagName }
 			if tag then return tag
+		renderTags: () ->
+			@$el.find(".wrap").html @tagsTemplate( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
 		render: () ->
-			@$el.html @template( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
+			@$el.html @template()
+			@renderTags()
 			if not $("body").find(".overlay.tags-editor").length
 				$("body").append @$el
-
 			@show()
-			@handleResize()
 			@$el.find( ".tag-input input" ).focus()
+			@handleResize()
 			return @
 		afterShow: ->
 			swipy.shortcuts.lock()
@@ -80,7 +83,7 @@ define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/ta
 					tag.save({}, {sync:true})
 				@addTagToModel( tag, model ) for model in @options.models
 
-				@render()
+				@renderTags()
 		modelHasTag: (model, tag) ->
 			tagName = tag.get "title"
 			return !!_.filter( model.get( "tags" ), (t) -> t.get( "title" ) is tagName ).length
@@ -98,7 +101,7 @@ define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/ta
 				newTags = _.reject( tags, (tagModel) -> tagModel.get( "title" ) is tagName )
 				model.updateTags newTags
 
-			@render()
+			@renderTags()
 		handleResize: ->
 			return unless @shown
 
