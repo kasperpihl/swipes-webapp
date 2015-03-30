@@ -11,9 +11,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			"blur .notes .input-note": "updateNotes"
 			"click .repeat-button": "clickedRepeat"
 
-
 			"click .step .action": "clickedAction"
-			"change .step input": "updateActionStep"
 			"mouseenter .step": "trackMouse"
 			"mouseleave .step": "stopTrackingMouse"
 		trackMouse: (e) ->
@@ -128,10 +126,9 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				e.preventDefault()
 		keyUpHandling: (e) ->
 			if e.keyCode is 13
-				if $(".add-step input").is(":focus")
-					if $(".add-step input").val().length is 0
-						$(".add-step input").blur()
-						$(".add-step input").focus()
+				if($('.action-steps .step input:focus').length is 1)
+					@updateActionStep(null, $('.action-steps .step input:focus'))
+					e.preventDefault()
 				else if $('.input-title').is(':focus')
 					$('.input-title').blur()
 					e.preventDefault()
@@ -145,6 +142,9 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				if $(".add-step input").is(":focus")
 					$(".add-step input").val("")
 					$(".add-step input").blur()
+				else if($('.action-steps .step input:focus').length is 1)
+					$('.action-steps .step input:focus').val("")
+					@updateActionStep(null, $('.action-steps .step input:focus'))
 				else if $(".task-editor input").is(":focus")
 					$(".task-editor input").blur()
 				else if $('.input-note').is(':focus')
@@ -166,23 +166,27 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				swipy.analytics.sendEvent("Tasks", "Notes", "", notes.length )
 				swipy.analytics.sendEventToIntercom("Update Note", { "Length": notes.length })
 				@render()
-		updateActionStep: (e) ->
-			target = $(e.currentTarget)
+		updateActionStep: (e, target) ->
+			if e and !target
+				target = $(e.currentTarget)
 			title = target.val()
 			title = title.trim()
-			model = @getModelFromEl($(e.currentTarget))
+			model = @getModelFromEl(target)
 			if title.length is 0
 				if model?
 					target.val(model.get("title"))
+				target.blur()
 				return false
 			if title.length > 255
 				title = title.substr(0,255)
 			
 			if model?
 				model.updateTitle title
+				target.blur()
 			else
 				@model.addNewSubtask( title, "Input" )
 				target.val("")
+				target.focus()
 			@renderSubtasks()
 		getModelFromEl: ( el ) ->
 			step = el.closest( ".step" )
@@ -219,7 +223,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			regex = new RegExp(expression)
 
 			while m = regex.exec(replacedBrs)
-				console.log index
+				#console.log index
 				index = m.index
 				url = m[0]
 				input = m.input

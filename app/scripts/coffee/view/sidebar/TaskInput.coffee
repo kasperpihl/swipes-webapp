@@ -34,7 +34,6 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 		triggerAddTask: (e) ->
 			e.preventDefault()
 			return if @$el.find(".add-task-field").val() is ""
-			console.log @$el.find(".add-task-field").val()
 			Backbone.trigger( "create-task", @$el.find(".add-task-field").val() )
 			@$el.find(".add-task-field").val ""
 		destroy: ->
