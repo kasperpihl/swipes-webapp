@@ -22,8 +22,10 @@ define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable
 			@activate(e, model)
 
 		enableTouchListners: ->
+			return if !@model?
 			$( @model.container[0] ).hammer( @getHammerOpts() ).on( "press", "ol > li", @activate )
 		disableTouchListeners: ->
+			return if !@model?
 			$( @model.container[0] ).hammer().off( "press", @activate )
 		activate: (e, model) =>
 			return if @draggable
