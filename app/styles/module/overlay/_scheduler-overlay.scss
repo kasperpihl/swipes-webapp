@@ -63,55 +63,78 @@ body.scheduler-open {
 
 	.time-picker {
 		text-align: center;
-		padding: 4em 3em 0;
+		padding: 2em 0.5em 0;
+
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			padding: 4em 2em 0;
+		}
 		line-height: 1;
 
-			h1, h2, h3, h4, h5 {
-				line-height: 1;
+		h1, h2, h3, h4, h5 {
+			line-height: 1;
+		}
+		
+		.day-label {
+			margin: 0 0 .3em;
+			color: #505966;
+
+			font-size: 16.5px;
+		}
+
+		.time-label {
+			font-size: 2.6em;
+			margin: 0 0 2rem;
+			@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+				font-size: 3.6em;
+				margin: 0 0 3rem;
 			}
 			
-			.day-label {
-				margin: 0 0 .3em;
-				color: #505966;
-				font-size: 16.5px;
+			color: $gray-dark;
+			
+			position: relative;
+			display: block;
+			font-family: $font-light;
+
+				small {
+					color: #888;
+					font-size: 3rem;
+					line-height: 1;
+					vertical-align: middle;
+					position: absolute;
+					right: 0;
+					top: 0;
+					bottom: 0;
+					margin: auto 0;
+					height: 3rem;
+				}
+		}
+
+		.time-slider {
+			margin: 0;
+			line-height: 1;
+			font-weight: normal;
+
+				.range-slider {
+					margin: 0 0 1.2em;
+				}
+		}
+
+		.am-button,
+		.pm-button {
+			display: none;
+		}
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			.done-button,
+			.back-button {
+				bottom: 2.3em;
 			}
-
-			.time-label {
-				font-size: 4.6em;
-				color: $gray-dark;
-				margin: 0 0 4rem;
-				position: relative;
-				display: block;
-				font-family: $font-light;
-
-					small {
-						color: #888;
-						font-size: 3rem;
-						line-height: 1;
-						vertical-align: middle;
-						position: absolute;
-						right: 0;
-						top: 0;
-						bottom: 0;
-						margin: auto 0;
-						height: 3rem;
-					}
+			.back-button {
+				left:2em;
 			}
-
-			.time-slider {
-				margin: 0;
-				line-height: 1;
-				font-weight: normal;
-
-					.range-slider {
-						margin: 0 0 1.2em;
-					}
+			.done-button{
+				right: 2em;
 			}
-
-			.am-button,
-			.pm-button {
-				display: none;
-			}
+		}
 
 	}
 
