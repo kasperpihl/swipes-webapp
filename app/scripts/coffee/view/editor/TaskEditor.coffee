@@ -44,7 +44,6 @@ define ["underscore"
 			
 			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse", "back" )
 			@render()
-			console.log "initializing"
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
 			@listenTo( @model, "change:deleted",@back)
 			@listenTo( @model, "change:tags", @renderTags)

@@ -70,7 +70,6 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			@$el.toggleClass( "fadeout", yes )
 			@shown = no
 		kill: ->
-			console.log "undelegating"
 			@undelegateEvents()
 			@stopListening()
 			@hide()

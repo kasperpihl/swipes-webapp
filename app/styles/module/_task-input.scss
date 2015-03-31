@@ -29,6 +29,7 @@
 	.priority {
 		@include centerBlock(2px, auto, auto, 0px, auto, absolute);
 		@include breakpoint(tablet){
+			top: 4px;
 			left: -15px;
 		}
 	}
@@ -39,7 +40,7 @@
 
 }
 .add-new.is-priority .priority{
-	margin-top:-3px;
+	margin-top:-5px;
 	@include breakpoint(tablet){
 		left: -20px;
 	}

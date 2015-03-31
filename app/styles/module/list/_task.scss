@@ -132,7 +132,7 @@ $border-width: 1px;
 		@include breakpoint(tablet) {
 			right:20px;
 		}
-		margin-top:-$button-size/2;
+		margin-top:-($button-size + 2*$padding )/2;
 		a{
 			&:hover{
 				text-decoration:none;
