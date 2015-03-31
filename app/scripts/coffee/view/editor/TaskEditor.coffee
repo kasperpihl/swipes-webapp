@@ -3,19 +3,19 @@ define ["underscore"
 		"text!templates/task-editor-content.html" 
 		"text!templates/action-steps-template.html" 
 		"js/model/TaskSortModel"
-		"js/view/editor/TagEditor"
 		"js/view/list/ActionBar"
 		"gsap-scroll"
 		"gsap"
-	], (_, TaskEditorTmpl, TaskEditorContentTmpl, ActionStepsTmpl, TaskSortModel, TagEditor, ActionBar) ->
+	], (_, TaskEditorTmpl, TaskEditorContentTmpl, ActionStepsTmpl, TaskSortModel, ActionBar) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
 		events:
 			"click .go-back": "back"
 			"click .priority": "togglePriority"
-			"click time": "reschedule"
+			"click .schedule-label": "reschedule"
 			"click .repeat-picker a": "setRepeat"
+			"click .icon-tag-container" : "clickTags"
 			"blur .input-title": "updateTitle"
 			"blur .notes .input-note": "updateNotes"
 			"click .repeat-button": "clickedRepeat"
@@ -47,6 +47,7 @@ define ["underscore"
 			console.log "initializing"
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
 			@listenTo( @model, "change:deleted",@back)
+			@listenTo( @model, "change:tags", @renderTags)
 			@listenTo( Backbone, "complete-task", @completeTask )
 			@listenTo( Backbone, "todo-task", @markTaskAsTodo )
 			@listenTo( Backbone, "schedule-task", @scheduleTask )
@@ -70,12 +71,6 @@ define ["underscore"
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
 			@contentTemplate = _.template TaskEditorContentTmpl
-		killTagEditor: ->
-			if @tagEditor?
-				@tagEditor.cleanUp()
-				@tagEditor.remove()
-		createTagEditor: ->
-			@tagEditor = new TagEditor { el: @$el.find(".icon-tag-container"), model: @model }
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
 		render: (first) ->
@@ -118,11 +113,15 @@ define ["underscore"
 			renderedContent.title = renderedContent.title.replace(/ /g , "&nbsp;")
 			@$el.find(".editor-content").html @contentTemplate renderedContent
 			@renderSubtasks()
+			@renderTags()
 			@setStateClass()
-			@killTagEditor()
-			@createTagEditor()
 			return @el
-
+		renderTags: ->
+			tagString = "Add tags"
+			tags = @model.get "tags"
+			if tags and tags.length > 0
+				tagString = _.invoke(tags, "get", "title").join(", ")
+			@$el.find('.icon-tag-container .tag-string').html(tagString)
 		renderSubtasks: ->
 			@subtasks = @sorter.setTodoOrder( @model.getOrderedSubtasks(), false )
 			titleString = "Tasks"
@@ -150,6 +149,8 @@ define ["underscore"
 			else 
 				swipy.router.back()
 			return false
+		clickTags: ->
+			@actionbar.editTags()
 		reschedule: ->
 			Backbone.trigger( "show-scheduler", [@model] )
 		transitionInComplete: ->

@@ -28,7 +28,7 @@ $iconsColor: #212121;
 		margin-left: 35px;
 		@include breakpoint(tablet) {
 			font-size: emCalc(28px);
-			margin-bottom: emCalc(20px);
+			margin-bottom: emCalc(10px);
 			margin-top: emCalc(25px);
 			margin-left: $padding;
 		}
@@ -40,12 +40,27 @@ $iconsColor: #212121;
 		// 	font-family: $font-light;
 		// }
 	}
+	.info-label, .input-note{
+		font-size:16px;
+		padding-top:12px;
+		@include breakpoint(tablet){
+			font-size:18px;
+		}
+	}
 	.priority {
 		top: 15px;
+
 		left: 15px;
+		@include breakpoint(tablet){
+			left: 68px;
+			top:17px;
+		}
 	}
 	.is-priority .priority{
 		left:10px;
+		@include breakpoint(tablet){
+			left: 63px;
+		}
 	}
 
 	.editor-content {
@@ -72,7 +87,7 @@ $iconsColor: #212121;
 				display: inline-block;
 				position: absolute;
 				left: 0;
-				top: -10px;
+				top: 0px;
 				@include iconButoon($iconsColor, 40px, false);
 				border:0;
 			}
@@ -81,10 +96,6 @@ $iconsColor: #212121;
 		> section {
 			margin-bottom: 0.8em;
 			min-height: 40px;
-
-			@include breakpoint(tablet) {
-				margin-bottom: emCalc(36px);
-			}
 		}
 	}
 

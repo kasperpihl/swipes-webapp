@@ -14,13 +14,13 @@
 </section>
 <% if (scheduleStr) { %>
 	<section>
-		<time class="has-icon no-select">
+		<div class="schedule-label has-icon no-select">
 			<span class="icon-hold">
 				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
 			</span>
-			<span class="link-style"><%= scheduleStr %>
-			<% if (timeStr && schedule !== null) print(", " + timeStr); %></span>
-		</time>
+			<p class="link-style info-label"><%= scheduleStr %>
+			<% if (timeStr && schedule !== null) print(", " + timeStr); %></p>
+		</div>
 	</section>
 <% } %>
 
@@ -30,7 +30,7 @@
 			<span class="icon-hold">
 				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editRepeat"></use></svg>
 			</span>
-			<p class="repeat-button">Repeat every &hellip;</p>
+			<p class="repeat-button info-label">Repeat every &hellip;</p>
 			<ul>
 				<li><a <% if (repeatOption === "never") print("class='selected'") %> href="JavaScript:void(0);" data-option="never">never</a></li>
 				<li><a <% if (repeatOption === "every day") print("class='selected'") %> href="JavaScript:void(0);" data-option="every day">day</a></li>
@@ -59,12 +59,7 @@
 		<span class="icon-hold">
 			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTags"></use></svg>
 		</span>
-		<ul class="rounded-tags applied-tags">
-		</ul>
-		<aside class="tag-pool">
-			<ul class="rounded-tags">
-			</ul>
-		</aside>
+		<p class="tag-string info-label"></p>
 	</div>
 </section>
 

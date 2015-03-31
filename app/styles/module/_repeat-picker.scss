@@ -1,8 +1,8 @@
 .repeat-picker {
-	margin-bottom: 2.2em;
+	//margin-bottom: 2.2em;
 	max-width:400px;
 	@include breakpoint(tablet) {
-		margin-bottom: emCalc(50px);
+		//margin-bottom: emCalc(50px);
 	}
 
 	.repeat-button {
@@ -14,7 +14,8 @@
 		display: none;
 		padding: 0;
 
-		margin-top: 0.6em;
+		margin-top: 1.6em;
+		margin-bottom: 0.6em;
 		@extend .animated;
 		@extend .fadeOut;
 		@include animation-duration(400ms);
