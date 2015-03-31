@@ -27,7 +27,9 @@
 	width: 100%;
 	padding-top: 9px;
 	height: 60px;
+	padding-left: 0px;
 	@include breakpoint(mobile, height){
+		
 		padding-top: 28px;
 		height: 100px;
 	}
@@ -35,7 +37,6 @@
 	border-top: 2px solid #e0e0e0;
 
 	@include breakpoint(min-width, emCalc(350px)) {
-
 		.sidebar-open & {
 			@include transition(margin-left 300ms ease-in-out);
 			margin-left: emCalc( 250px );
@@ -139,7 +140,12 @@
 
 	li.spacer {
 		//display: block;
-		margin-right: 20px;
+		margin-right:0;
+		@include breakpoint(mobile){
+			margin-right: 20px;
+			
+		}
+		
 	}
 
 	.counting-selected {
