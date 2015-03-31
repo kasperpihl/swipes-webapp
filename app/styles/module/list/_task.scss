@@ -17,13 +17,11 @@ $border-width: 1px;
 
 		font-family: $font-light;
 		font-size: 1.6em;
-		//@include breakpoint(min-height, $breakheight) { font-size: 1.85em; }
 		margin: 0 0 .2em;
 	}
 
 	.center-title h2 {
 		margin-top: 0.6em;
-		@include breakpoint(min-height, $breakheight) { margin-top: 0.5em; }
 	}
 
 	.priority {
@@ -238,14 +236,8 @@ $border-width: 1px;
 		}
 	}
 	.hover {
-		
-		
 		.todo-content {
-			//left: $list-item-height;
-			//@include breakpoint(min-height, $breakheight) { left: 95px; }
 		}
-		//.action.complete { background: $green; }
-		//.action.todo { background: $yellow; }
 	}
 }
 
