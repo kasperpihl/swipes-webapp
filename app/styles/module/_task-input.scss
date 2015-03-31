@@ -1,38 +1,46 @@
 .add-new {
 	position: relative;
 
-	// legacy code -----
-	// $placeholderColor: #e1e1e1;
-	
-	// legacy code -----
-	// body.edit-mode & {
-	// 	opacity: 0;
-	// 	height: 0;
-	// 	overflow: hidden;
-	// 	visibility: hidden;
-	// }
-
-		.add-task-field {
-			opacity:0.6;
-			text-indent: 0;
-			width: 100%;
-			font-family: $font-light;
-			text-align: left;
+	.add-task-field {
+		opacity:0.6;
+		text-indent: 0;
+		width: 90%;
+		font-family: $font-light;
+		text-align: left;
+		
+		line-height: 1;
+		@include placeholder($brand-dakrcolor);
+		color: $brand-dakrcolor;
+		border: none;
+		background-color: transparent;
+		outline: none;
+		font-size: emCalc(18px);
+		margin-left: emCalc(30px);
+		@include breakpoint(tablet){
+			margin-left: emCalc(15px);
 			font-size: emCalc(22px);
-			line-height: 1;
-			@include placeholder($brand-dakrcolor);
-			color: $brand-dakrcolor;
-			border: none;
-			background-color: transparent;
-			outline: none;
-			padding-left: emCalc(15px);
-			resize: none;
-			-moz-box-sizing: border-box;
-			box-sizing: border-box;
 		}
+		
+		resize: none;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
 
-		.priority {
-			@include centerBlock(5px, auto, auto, -15px, auto, absolute);
+	.priority {
+		@include centerBlock(2px, auto, auto, 0px, auto, absolute);
+		@include breakpoint(tablet){
+			left: -15px;
 		}
+	}
+	.priority.bigger{
 
+	}
+
+
+}
+.add-new.is-priority .priority{
+	margin-top:-3px;
+	@include breakpoint(tablet){
+		left: -20px;
+	}
 }

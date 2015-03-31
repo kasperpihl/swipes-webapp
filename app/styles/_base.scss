@@ -42,7 +42,7 @@ html.touch body {
 			@include breakpoint(tablet){
 				padding-left: $sidebar-width;
 				.sidebar-open & {
-					padding-left: $sidebar-width + $sidebar-sub-width;
+					padding-left: $sidebar-width + $sidebar-sub-width-large;
 				}
 			}
 			

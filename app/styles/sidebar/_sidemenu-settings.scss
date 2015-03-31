@@ -29,7 +29,10 @@
 		a {
 			display: table;
 			float: left;
-			@include size(100% / 3, 130px);
+			@include size(100% / 3, 100px);
+			@include breakpoint(tablet){
+				@include size(100% / 3, 130px);
+			}
 			color: $brand-dakrcolor;
 			font-size: 14px;
 			text-align: center;

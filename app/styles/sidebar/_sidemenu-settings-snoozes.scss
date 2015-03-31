@@ -17,6 +17,10 @@ ul.snoozes {
 			margin: 0;
 			line-height: $row-height;
 			color: $gray-titles;
+			font-size: 15px;
+			@include breakpoint(tablet){
+				font-size:18px;
+			}
 		}
 
 		button {
