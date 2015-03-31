@@ -101,12 +101,18 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			emailString = "mailto:?subject="+ encodeURIComponent("Tasks to complete") + "&body="
 			# Add title
 			emailString += encodeURIComponent "Tasks: \r\n"
-
-			# Add tasks
-			emailString += encodeURIComponent "◯ " + task.get( "title" ) + "\r\n" for task in selectedTasks
+			for task in selectedTasks
+				emailString += encodeURIComponent "◯ " + task.get( "title" ) + "\r\n"
+				for subtask in task.uncompletedSubtasks()
+					addedSubtask = true
+					emailString += encodeURIComponent "   ◯ " + subtask.get( "title" ) + "\r\n"
+				if addedSubtask
+					emailString += "\r\n"
+					addedSubtask = false
+			
 
 			# Add footer
-			emailString += encodeURIComponent "\r\nSent from Swipes — http://swipesapp.com"
+			emailString += encodeURIComponent "\r\nCreated with Swipes – Task list made for High Achievers\r\nhttp://swipesapp.com"
 
 			location.href = emailString
 

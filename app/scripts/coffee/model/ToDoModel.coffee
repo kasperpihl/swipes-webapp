@@ -81,7 +81,14 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					currentSubtasks.splice(index, 1)
 					@set "subtasksLocal", currentSubtasks, {localSync: true}
 					return
-					
+		uncompletedSubtasks: ->
+			uncompletedSubtasks = []
+			currentSubtasks = @get "subtasksLocal"
+			return uncompletedSubtasks if !currentSubtasks
+			for subtask in currentSubtasks
+				if !subtask.get("completionDate")
+					uncompletedSubtasks.push(subtask)
+			uncompletedSubtasks
 		hasSubtask: ( model ) ->
 			currentSubtasks = @get "subtasksLocal"
 			return false if !currentSubtasks
