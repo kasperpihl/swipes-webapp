@@ -8,7 +8,11 @@
 	}
 
 	.range-slider {
-		margin-top: emCalc(33px);
+		margin-top: emCalc(5px);
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			margin-top: emCalc(33px);
+		}
+		
 	}
 
 	nav.centered-buttons {

@@ -39,9 +39,10 @@ body.scheduler-open {
 	.date-picker {
 		display: none;
 		margin: 0 auto;
-		padding-bottom: emCalc(80px);
+		padding-bottom: emCalc(60px);
 
-		@include breakpoint(min-width, emCalc(425px)) {
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer) {
+			padding-bottom: emCalc(80px);
 			max-width: emCalc(405px);
 			.content {
 				padding: emCalc(58px) emCalc(20px) emCalc(33px);
@@ -49,11 +50,11 @@ body.scheduler-open {
 
 			.calendar-wrap,
 			.range-slider {
-				margin: 0 emCalc(26px);
+				margin: 0 emCalc(16px);
 			}
 
 			.calendar-wrap {
-				margin-bottom: emCalc(35px);
+				margin-bottom: emCalc(25px);
 			}
 		}
 
@@ -119,7 +120,11 @@ body.scheduler-open {
 	.save-button {
 		display: inline-block;
 		@extend .ca-button;
-		@include centerBlock(auto, 1em, 1.3em, auto, auto, absolute);
+		@include centerBlock(auto, 1em, 1.0em, auto, auto, absolute);
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			bottom: 1.3em;
+		}
+
 	}
 
 
@@ -131,7 +136,10 @@ body.scheduler-open {
 		outline: none;
 		@extend .icon;
 		@extend .icon-arr-left;
-		@include centerBlock(auto, auto, 1.3em, 1em, auto, absolute);
+		@include centerBlock(auto, auto, 1.0em, 1em, auto, absolute);
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			bottom: 1.3em;
+		}
 	}
 
 }

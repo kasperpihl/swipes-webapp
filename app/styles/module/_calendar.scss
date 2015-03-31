@@ -1,11 +1,17 @@
 .clndr {
 	@extend .no-select;
-	padding: emCalc(40px) 0 0;
-	$topHeight: 30px;
+	padding: emCalc(15px) 0 0;
+	@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+		padding: emCalc(25px) 0 0;
+	}
+	$topHeight: 24px;
 
 	nav {
 		@extend .clearfix;
-		margin: 0 auto emCalc(40px);
+		margin: 0 auto emCalc(15px);
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			margin: 0 auto emCalc(25px);
+		}
 		width: 94%;
 	}
 
@@ -15,6 +21,10 @@
 		width: 10%;
 		height: $topHeight;
 		line-height: $topHeight;
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			height: 30px;
+			line-height: 30px;
+		}
 		cursor: pointer;
 		margin-top: -2px;
 		@include transition(color 0.2s ease-out);
@@ -42,14 +52,20 @@
 	.month {
 		float: left;
 		width: 80%;
-
+		margin-top:5px;
+		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+			margin-top:8px;
+		}
 		text-align: center;
 		text-transform: uppercase;
 		font-family: $font-light;
 
 		.selected-date, time {
 			display: inline-block;
-			font-size: 26px;
+			font-size: 16px;
+			@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
+				font-size: 20px;
+			}
 			line-height: $topHeight;
 		}
 
