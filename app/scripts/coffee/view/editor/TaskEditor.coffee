@@ -161,7 +161,7 @@ define ["underscore"
 				e.preventDefault()
 		keyUpHandling: (e) ->
 			if e.keyCode is 13
-				if($('.action-steps .step input:focus').length is 1)
+				if $('.action-steps .step input:focus').length is 1
 					@updateActionStep(null, $('.action-steps .step input:focus'))
 					e.preventDefault()
 				else if $('.input-title').is(':focus')
