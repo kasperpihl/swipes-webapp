@@ -88,7 +88,10 @@ define ["js/model/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 			else if direction is "up"
 				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
 					model.updateOrder (model.get( "order" ) - bumps)
-
+		deselectAllTasks: ->
+			selectedTasks = @getSelected()
+			for task in selectedTasks
+				task.set("selected",false)
 
 		# Bridge for Mac App notifications + badge
 		addChangeListenerForBridge: ->

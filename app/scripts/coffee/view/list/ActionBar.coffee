@@ -1,6 +1,7 @@
 define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 	Backbone.View.extend
 		el: ".action-bar"
+		tagName: ".action-bar"
 		events:
 			"click .tags": "editTags"
 			"click .delete": "deleteTasks"
@@ -8,36 +9,52 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			"click .action-snooze": "snoozeTasks"
 			"click .action-today": "todayTasks"
 			"click .action-complete": "completeTasks"
-
+		constructor: ( obj ) ->
+			if obj && obj.el
+				@el = obj.el
+				@tagName = obj.el
+			Backbone.View.apply @, arguments
 		initialize: (obj)->
-			
+			if obj.state
+				@state = obj.state
+			if obj.noCounter
+				@noCounter = true
+			if obj.noTags
+				@noTags = true
+			if obj.delegate
+				@delegate = obj.delegate
+
 			@hide()
 			self = @
 			setTimeout(
 				->
-					self.handleButtonsFromState(obj.state)
+					self.handleButtonsFromState()
 			, 500)
-			#@handleButtonsFromState(obj.state)
-			
-			
+			@handleButtonsFromState(obj.state)
 			@listenTo( swipy.todos, "change:selected", @toggle )
 		handleButtonsFromState:(state) ->
-			showComplete = true if state isnt "done"
+			if state
+				@state = state
+			showComplete = true if @state isnt "done"
 			showSchedule = true #if state isnt "schedule"
-			showTasks = true if state isnt "tasks"
-			$('.action-bar .snooze, .action-bar .today, .action-bar .complete').hide()
-			$('.action-bar .snooze').show() if showSchedule
-			$('.action-bar .today').show() if showTasks
-			$('.action-bar .complete').show() if showComplete
+			showTasks = true if @state isnt "tasks"
+			$(@tagName + ' .snooze, ' + @tagName + ' .today, ' + @tagName + ' .complete').hide()
+			$(@tagName + ' .snooze').show() if showSchedule
+			$(@tagName + ' .today').show() if showTasks
+			$(@tagName + ' .complete').show() if showComplete
+
+			$(@tagName + ' .tags').hide()
+			$(@tagName + ' .tags').show() unless @noTags?
 
 
 		toggle: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
-			if selectedTasks.length < 1
-				$('.action-bar .counting-selected').hide()
-			else
-				$('.action-bar .counting-selected').show()
-				$('.action-bar .counting-selected .selected-labe').html(""+selectedTasks.length)
+			if !@noCounter? and !@noCounter
+				if selectedTasks.length < 1
+					$(@tagName  + ' .counting-selected').hide()
+				else
+					$(@tagName  + ' .counting-selected').show()
+					$(@tagName  + ' .counting-selected .selected-labe').html(""+selectedTasks.length)
 			if @shown
 				if selectedTasks.length is 0
 					@hide()
@@ -53,6 +70,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 			@$el.toggleClass( "fadeout", yes )
 			@shown = no
 		kill: ->
+			console.log "undelegating"
 			@undelegateEvents()
 			@stopListening()
 			@hide()
@@ -73,6 +91,9 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 				@hide()
 				swipy.analytics.sendEvent( "Tasks", "Deleted", "", selectedTasks.length )
 				swipy.analytics.sendEventToIntercom( "Deleted Tasks", { "Number of Tasks": selectedTasks.length })
+				return if !@delegate?
+				if _.isFunction(@delegate.didDeleteTasks)
+					@delegate.didDeleteTasks(selectedTasks.length)
 		shareTasks: ->
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
 			return unless selectedTasks.length

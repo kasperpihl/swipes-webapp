@@ -138,13 +138,13 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			@on "change:schedule", =>
 				@setScheduleStr()
 				@setTimeStr()
-				@save( "selected", no )
+				#@save( "selected", no )
 				@reviveDate "schedule"
 
 			@on "change:completionDate", =>
 				@setCompletionStr()
 				@setCompletionTimeStr()
-				@save( "selected", no )
+				#@save( "selected", no )
 				@reviveDate "completionDate"
 
 			@on "change:repeatDate", => @reviveDate "repeatDate"

@@ -2,7 +2,7 @@
 // Action bar
 // ---------------------------------------------
 
-.action-bar {
+.action-bar, .edit-action-bar {
 	@extend .clearfix;
 	@extend .animated;
 	@extend .fadeIn;
@@ -16,25 +16,41 @@
 
 	z-index: 4991;
 	position: fixed;
-	bottom: 0;
-	//top: -100px;
+	&.bottom{
+		bottom: 0;
+		border-top: 2px solid #e0e0e0;
+	}
+	
+	&.top{
+		top: 0;
+		border-bottom: 2px solid #e0e0e0;
+	}
+	//
 	right:0;
 	left: 0;
 	margin: auto;
-	//padding: emCalc(25px) 0;
+	//padding: emCalc (25px) 0;
 	
 	text-align: center;
+	&.top{
+		text-align:right;
+		padding-right:35px;
+		@include breakpoint(tablet){
+			padding-right:60px;
+		}
+	}
 	width: 100%;
 	padding-top: 9px;
 	height: 60px;
 	padding-left: 0px;
-	@include breakpoint(mobile, height){
-		
-		padding-top: 28px;
-		height: 100px;
+	@include breakWidthHeight(768px, 768px){
+		&.action-bar{
+			padding-top: 28px;
+			height: 100px;
+		}
 	}
-	background-color: #F9F9F9;
-	border-top: 2px solid #e0e0e0;
+	background-color: #fff; //#F9F9F9;
+	
 
 	@include breakpoint(min-width, emCalc(350px)) {
 		.sidebar-open & {

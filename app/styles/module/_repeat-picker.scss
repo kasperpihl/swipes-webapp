@@ -1,5 +1,6 @@
 .repeat-picker {
 	margin-bottom: 2.2em;
+	max-width:400px;
 	@include breakpoint(tablet) {
 		margin-bottom: emCalc(50px);
 	}
@@ -13,7 +14,7 @@
 		display: none;
 		padding: 0;
 
-		margin-top: 1.1em;
+		margin-top: 0.6em;
 		@extend .animated;
 		@extend .fadeOut;
 		@include animation-duration(400ms);
@@ -42,8 +43,11 @@
 		float: left;
 		display: block;
 
-		width: ( 100% / 7 );
+		width: 26.3%;
 
+		@include breakpoint(tablet){
+			//width: (100% / 7);
+		}
 		// @include breakpoint(min-width, emCalc(650px)) {
 		// 	width: 16.6667%;
 		// }
@@ -73,22 +77,22 @@
 
 	}
 
-	li:first-child a, a.selected { border-left: none; }
+	//li:first-child a, a.selected { border-left: none; }
+	li a {
+		border-bottom: thin solid rgba($gray, 0.3);
+	}
 
-	@include breakpoint(max-width, emCalc(650px)) {
-		li a {
-			border-bottom: thin solid rgba($gray, 0.3);
-		}
+	li:nth-child(3n + 1) a {
+		border-left: none;
+	}
 
-		li:nth-child(3n + 1) a {
-			border-left: none;
-		}
-
-		li:nth-child(4) a,
-		li:nth-child(5) a,
-		li:nth-child(6) a {
-			border-bottom: none;
-		}
+	li:nth-child(4) a,
+	li:nth-child(5) a,
+	li:nth-child(6) a {
+		border-bottom: none;
+	}
+	@include breakpoint(max-width, emCalc(768px)) {
+		
 
 	}
 }

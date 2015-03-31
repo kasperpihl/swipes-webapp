@@ -2,10 +2,10 @@
 // Structure holder
 .sidebar {
 
-	width:100px;
+	width:$sidebar-width;
 	z-index: 5000;
 	@include transition(left $sidebar-animation ease-in-out);
-	@include centerBlock(0, auto, 0, -100px+$sidebar-slide-width, 0, fixed);
+	@include centerBlock(0, auto, 0, -$sidebar-width+$sidebar-slide-width, 0, fixed);
 	
 	@include user-select(none);
 	@include breakpoint(tablet) {

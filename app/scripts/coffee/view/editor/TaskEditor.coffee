@@ -1,4 +1,13 @@
-define ["underscore", "text!templates/task-editor.html", "text!templates/action-steps-template.html" , "js/model/TaskSortModel" ,  "js/view/editor/TagEditor", "gsap-scroll", "gsap"], (_, TaskEditorTmpl, ActionStepsTmpl, TaskSortModel, TagEditor) ->
+define ["underscore"
+		"text!templates/task-editor.html"
+		"text!templates/task-editor-content.html" 
+		"text!templates/action-steps-template.html" 
+		"js/model/TaskSortModel"
+		"js/view/editor/TagEditor"
+		"js/view/list/ActionBar"
+		"gsap-scroll"
+		"gsap"
+	], (_, TaskEditorTmpl, TaskEditorContentTmpl, ActionStepsTmpl, TaskSortModel, TagEditor, ActionBar) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
@@ -29,18 +38,38 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 		initialize: ->
 			$("body").addClass "edit-mode"
 			@setTemplate()
+			@$el.html @template( { priority: @model.get("priority") } )
 			@bouncedHover = _.debounce(@onHoverTask, 1500)
 			@sorter = new TaskSortModel()
+			
 			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse", "back" )
 			@render()
+			console.log "initializing"
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
+			@listenTo( @model, "change:deleted",@back)
+			@listenTo( Backbone, "complete-task", @completeTask )
+			@listenTo( Backbone, "todo-task", @markTaskAsTodo )
+			@listenTo( Backbone, "schedule-task", @scheduleTask )
 			@backRoute = "list/todo"
 			if @model.get("state") is "scheduled"
 				@backRoute = "list/scheduled"
 			else if @model.get("state") is "completed"
 				@backRoute = "list/completed"
+
+			state = "tasks"
+			state = "done" if @model.get("state") is "completed"
+			state = "schedule" if @model.get("state") is "scheduled"
+			self = @
+			setTimeout(
+				->
+					self.actionbar = new ActionBar({el: '.edit-action-bar', state: state, noCounter:true, noTags: true, delegate: self})
+					self.model.set("selected",true)
+					self.actionbar.show()
+			, 3)
+			
 		setTemplate: ->
 			@template = _.template TaskEditorTmpl
+			@contentTemplate = _.template TaskEditorContentTmpl
 		killTagEditor: ->
 			if @tagEditor?
 				@tagEditor.cleanUp()
@@ -49,8 +78,12 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			@tagEditor = new TagEditor { el: @$el.find(".icon-tag-container"), model: @model }
 		setStateClass: ->
 			@$el.removeClass("active scheduled completed").addClass @model.getState()
-
-		render: ->
+		render: (first) ->
+			
+			state = "tasks"
+			state = "done" if @model.get("state") is "completed"
+			state = "schedule" if @model.get("state") is "scheduled"
+			@actionbar?.handleButtonsFromState(state)
 			renderedContent = @model.toJSON()
 			if renderedContent.notes and renderedContent.notes.length > 0
 				renderedContent.notes = renderedContent.notes.replace(/(?:\r\n|\r|\n)/g, '<br>')
@@ -83,7 +116,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\""+ url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "</a></div>")
 						foundURLs.push url
 			renderedContent.title = renderedContent.title.replace(/ /g , "&nbsp;")
-			@$el.html @template renderedContent
+			@$el.find(".editor-content").html @contentTemplate renderedContent
 			@renderSubtasks()
 			@setStateClass()
 			@killTagEditor()
@@ -109,6 +142,8 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			else 
 				$( @el ).find( "#current-steps-container" ).html("")
 			$( @el ).find( ".divider h2" ).html( titleString )
+		didDeleteTasks: (i) ->
+			@back()
 		back: ->
 			if @backRoute?
 				swipy.router.navigate(@backRoute, true)
@@ -150,10 +185,29 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 				else if $('.input-title').is(':focus')
 					$('.input-title').blur()
 				else @back()
+
+		completeTask: (model) ->
+			tasks = swipy.todos.getSelected( model )
+			return if tasks.length is 0
+			for task in tasks
+				task.completeTask()
+			@render()
+		markTaskAsTodo: (model) ->
+			tasks = swipy.todos.getSelected( model )
+			return if tasks.length is 0
+			for task in tasks
+				task.scheduleTask task.getDefaultSchedule()
+			@render()
+		scheduleTask: (model) ->
+			tasks = swipy.todos.getSelected( model )
+			return if tasks.length is 0
+			Backbone.trigger( "show-scheduler", tasks )
+
 		clickedRepeat: ->
 			$(".repeat-picker > ul").toggleClass("active")
 		togglePriority: ->
 			@model.togglePriority()
+			$(".editor-content").toggleClass("is-priority")
 		setRepeat: (e) ->
 			@model.setRepeatOption $(e.currentTarget).data "option"
 		updateTitle: ->
@@ -256,6 +310,7 @@ define ["underscore", "text!templates/task-editor.html", "text!templates/action-
 			
 			replacedBrs
 		remove: ->
+			@model.set("selected",false)
 			$("body").removeClass "edit-mode"
 			@undelegateEvents()
 			@stopListening()

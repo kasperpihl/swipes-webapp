@@ -397,7 +397,8 @@ define [
 				
 			
 		afterMovedItems: ->
-			
+			swipy.todos.deselectAllTasks()
+
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
 

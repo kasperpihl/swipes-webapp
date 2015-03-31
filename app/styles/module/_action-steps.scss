@@ -1,11 +1,14 @@
 $action-step-dot-size: 20px;
-$action-step-height: 60px;
+$action-step-height: 40px;
 $action-step-cell-x: 26px;
 $unselected-color: #9E9E9E;
-$padding: 130px;
+$padding: 80px;
 $closure-size: 30px;
 $icon-size: 15px;
 $border-width: 1px;
+
+$space-to-dot: 30px;
+$space-to-action: 40px;
 
 .action-steps{
 	position:relative;
@@ -17,61 +20,61 @@ $border-width: 1px;
 		// margin-bottom: 10px;
 
 
-			&:before {
-				display: inline-block;
-				content: '';
-				height: 20px;
-				border-left: 2px dashed #e0e0e0;
-				position: absolute;
-				left: 89px;
-				top: -10px;
-			}
+		&:before {
+			display: inline-block;
+			content: '';
+			height: 20px;
+			border-left: 2px dashed #e0e0e0;
+			position: absolute;
+			left: $padding - $space-to-dot + 9px;
+			top: -10px;
+		}
 
 
-			&:first-of-type,
-			&:only-of-type {
-				&:before { display: none; }
-			}
+		&:first-of-type,
+		&:only-of-type {
+			&:before { display: none; }
+		}
 
 
-			.action{
-				display: none;
-				position:absolute;
-				top: $action-step-height/2 - $closure-size/2;
-				left: 30px;
-				@include border-radius(50%);
-				border: $border-width solid $unselected-color;
-				font-size: $icon-size;
-				line-height: 1;
-				text-decoration: none;
-				@include iconButoon($unselected-color, $closure-size, true);
-			}
+		.action{
+			display: none;
+			position:absolute;
+			top: $action-step-height/2 - $closure-size/2;
+			left: $padding - $space-to-dot - $space-to-action;
+			@include border-radius(50%);
+			border: $border-width solid $unselected-color;
+			font-size: $icon-size;
+			line-height: 1;
+			text-decoration: none;
+			@include iconButoon($unselected-color, $closure-size, true);
+		}
 
 
-			.action.delete{
-				left: 76px;
-				margin-left: 0;
-				border:none;
+		.action.delete{
+			left: $padding - $space-to-dot - 5px;
+			margin-left: 0;
+			border:none;
 
-					svg {
-						@include square(24px);
-						@include transition-duration(120ms);
-						fill: lighten($red, 3%)
-					}
+				svg {
+					@include square(24px);
+					@include transition-duration(120ms);
+					fill: lighten($red, 3%)
+				}
 
-					&:hover svg {
-						fill: darken($red, 15%)
-					}
+				&:hover svg {
+					fill: darken($red, 15%)
+				}
 
-			}
+		}
 
 
-			input{
-				font-size: 18.5px;
-				height: $action-step-height;
-				line-height: $action-step-height / 2;
-				font-family: $font-normal;
-			}
+		input{
+			font-size: 15px;
+			height: $action-step-height;
+			line-height: $action-step-height / 2;
+			font-family: $font-normal;
+		}
 
 	}
 
@@ -167,7 +170,7 @@ $border-width: 1px;
 
 	.dot {
 		position:absolute;
-		left: ($padding - 50px);
+		left: ($padding - $space-to-dot);
 		margin-top: -($action-step-dot-size/2);
 		top:50%;
 		width:$action-step-dot-size;

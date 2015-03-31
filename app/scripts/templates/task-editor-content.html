@@ -1,0 +1,78 @@
+<span class="priority bigger"></span>
+<h1 class="h2 title">
+	
+	<div class="input-title content-editable" contenteditable="true"><%= title %></div>
+	<!--<input class="borderless" type="text" placeholder="Add a title" value="<%= title %>">-->
+</h1>
+<section class="action-steps">
+	<div id="current-steps-container">
+	</div>
+	<div class="step add-step">
+		<input class="borderless" type="text" placeholder="Add action step" value="">
+		<span class="dot"></span>
+	</div>
+</section>
+<% if (scheduleStr) { %>
+	<section>
+		<time class="has-icon no-select">
+			<span class="icon-hold">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
+			</span>
+			<span class="link-style"><%= scheduleStr %>
+			<% if (timeStr && schedule !== null) print(", " + timeStr); %></span>
+		</time>
+	</section>
+<% } %>
+
+<% if ( schedule !== null ) { %>
+	<section>
+		<div class="repeat-picker has-icon">
+			<span class="icon-hold">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editRepeat"></use></svg>
+			</span>
+			<p class="repeat-button">Repeat every &hellip;</p>
+			<ul>
+				<li><a <% if (repeatOption === "never") print("class='selected'") %> href="JavaScript:void(0);" data-option="never">never</a></li>
+				<li><a <% if (repeatOption === "every day") print("class='selected'") %> href="JavaScript:void(0);" data-option="every day">day</a></li>
+				<li><a <% if (repeatOption === "mon-fri or sat+sun") print("class='selected'") %> href="JavaScript:void(0);" data-option="mon-fri or sat+sun">
+					<%
+						date = schedule
+						if ( repeatDate && repeatOption === "mon-fri or sat+sun" ) {
+							date = repeatDate
+						}
+						if ( typeof date === "string" ) date = new Date( date )
+						if( date ){
+							print( ( date.getDay() === 0 || date.getDay() === 6 ) ? "sat+sun" : "mon-fri" )
+						}
+					%>
+				</a></li>
+				<li><a <% if (repeatOption === "every week") print("class='selected'") %> href="JavaScript:void(0);" data-option="every week">week</a></li>
+				<li><a <% if (repeatOption === "every month") print("class='selected'") %> href="JavaScript:void(0);" data-option="every month">month</a></li>
+				<li><a <% if (repeatOption === "every year") print("class='selected'") %> href="JavaScript:void(0);" data-option="every year">year</a></li>
+			</ul>
+		</div>
+	</section>
+<% } %>
+
+<section>
+	<div class="icon-tag-container has-icon">
+		<span class="icon-hold">
+			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTags"></use></svg>
+		</span>
+		<ul class="rounded-tags applied-tags">
+		</ul>
+		<aside class="tag-pool">
+			<ul class="rounded-tags">
+			</ul>
+		</aside>
+	</div>
+</section>
+
+<section>
+	<div class="notes has-icon">
+		<span class="icon-hold">
+			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
+		</span>
+		<div class="input-note content-editable" contenteditable="true"><%= notes %></div>
+	</div>
+</section>

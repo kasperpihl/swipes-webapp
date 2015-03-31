@@ -6,60 +6,62 @@ $iconsColor: #212121;
 	$padding: 66px;
 	color: $gray;
 	position: relative;
-
-
-	// back button
-	// ............................
-	.go-back {
-		display: inline-block;
-		@include centerBlock(3px, auto, auto, -1.33em, auto, absolute);
-		@include iconButoon(#9e9e9e, 40px, true);
-
-			&:hover {
-				background-color: $nav-gray;
-				border-color: $nav-gray;
-
-					svg {
-						fill: #fff;
-					}
-			}
+	.back-button{
+		position:absolute;
+		left:38px;
+		@include breakpoint(tablet) {
+			left: 110px;
+		}
 	}
-
 	.input-title{
 		padding-top:7px;
 	}
 	.title {
 		position: relative;
-		font-size: emCalc(28px);
-		padding-left: $padding;
+		font-size: emCalc(21px);
+
+		
 		font-family: $font-light;
 
 		margin-bottom: emCalc(12px);
 		margin-top: 0.8em;
+		margin-left: 35px;
+		@include breakpoint(tablet) {
+			font-size: emCalc(28px);
+			margin-bottom: emCalc(20px);
+			margin-top: emCalc(25px);
+			margin-left: $padding;
+		}
 
-			@include breakpoint(tablet) {
-				margin-bottom: emCalc(20px);
-				margin-top: emCalc(25px);
-			}
 
-			.priority {
-				top: 20px;
-			}
-			
-			// legacy code
-			// input{
-			// 	font-family: $font-light;
-			// }
+		
+		// legacy code
+		// input{
+		// 	font-family: $font-light;
+		// }
+	}
+	.priority {
+		top: 15px;
+		left: 15px;
+	}
+	.is-priority .priority{
+		left:10px;
 	}
 
-
 	.editor-content {
-		width: 84%;
-		margin: auto;
+		width: 94%;
+		@include breakpoint(tablet){
+			width: 84%;
+		}
+		
+		margin: 60px auto;
 
 		.has-icon {
 			// Can't use em, because font-size might vary
-			padding-left: $padding;
+			padding-left: 50px;
+			@include breakpoint(tablet) {
+				padding-left: $padding;
+			}
 			position: relative;
 
 			p {
