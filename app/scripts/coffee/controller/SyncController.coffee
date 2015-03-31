@@ -64,6 +64,9 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 							if difference > (3600*24*30)
 								continue
 					@changedAttributes.moveTempChangesForModel model
+					if className is "Tag" and collection.getTagByName(model.get("title"))
+						model.destroy()
+						continue
 					collection.add model
 					newModels.push model
 					model.doSync()
