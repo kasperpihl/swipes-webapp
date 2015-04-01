@@ -12,6 +12,9 @@ define ["underscore"], () ->
             @bridge.registerHandler('refresh', (data, responseCallback) ->
                 swipy.sync.sync()
             )
+            @bridge.registerHandler('navigate', (data, responseCallback) ->
+                swipy.router.navigate(data, true)
+            )
             @bridge.registerHandler('register-notifications', (data, responseCallback) ->
                 swipy.todos.addChangeListenerForBridge()
             )
