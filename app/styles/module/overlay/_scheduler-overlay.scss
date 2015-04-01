@@ -180,10 +180,10 @@ body.scheduler-open {
 	}
 
 	.handle {
-		@include square(1.9em);
+		@include square(1.6em);
 		border-width: 1px;
-		margin-left: -( 1.9em / 2);
-		margin-top: -( 1.9em / 2);
+		margin-left: -( 1.6em / 2);
+		margin-top: -( 1.6em / 2);
 	}
 
 }
