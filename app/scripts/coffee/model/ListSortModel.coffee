@@ -14,7 +14,7 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 			_.bindAll( @, "scrolled")
 			@debouncedSetBounds = _.debounce( @setBounds, 300 )
 			$('#scrollcont').on('scroll.sortmodel', @scrolled )
-			$(window).on( "resize.sortmodel", => debouncedSetBounds() )
+			$(window).on( "resize.sortmodel", => @debouncedSetBounds() )
 			@active = yes
 		scrolled: (e) ->
 			@debouncedSetBounds()
