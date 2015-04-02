@@ -20,7 +20,7 @@ define ["underscore"], (_) ->
 					swipy.router.navigate("search", true)
 				e.preventDefault()
 				return
-			if e.keyCode is 83 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+			if e.keyCode is 68 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
 				if Backbone.history.fragment isnt "workspaces"
 					swipy.router.navigate("workspaces", true)
 				e.preventDefault()
