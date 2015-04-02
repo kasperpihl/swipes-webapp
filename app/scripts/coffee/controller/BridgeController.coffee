@@ -18,6 +18,9 @@ define ["underscore"], () ->
             @bridge.registerHandler('register-notifications', (data, responseCallback) ->
                 swipy.todos.addChangeListenerForBridge()
             )
+            @bridge.registerHandler('intercom', (data, responseCallback) ->
+                Intercom('show')
+            )
             sessionToken = Parse.User.current()?.getSessionToken()
             @bridge.send({  sessionToken})
         connectWebViewJavascriptBridge: (callback) ->
