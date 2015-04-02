@@ -40,6 +40,8 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 				Backbone.trigger( "complete-task", @model )
 			else if $( e.currentTarget ).hasClass "todo-button"
 				Backbone.trigger( "todo-task", @model )
+			else if $( e.currentTarget ).hasClass "work-button"
+				Backbone.trigger( "request-work-task", @model )
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
 		edit: (e) ->

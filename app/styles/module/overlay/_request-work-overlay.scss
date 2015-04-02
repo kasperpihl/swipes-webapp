@@ -1,0 +1,46 @@
+body.request-work-open {
+
+	.overlay.request-work {
+		visibility: visible;
+		.overlay-bg { opacity: 1; background: rgba(200, 200, 200, 0.7); }
+		.overlay-content{
+			background:white;
+			padding:20px;
+			width:300px;
+			height: 300px;
+			margin: 20% auto;
+		}
+	}
+	h1{
+		font-size: 16px;
+	}
+	&.hide-request-work .overlay.request-work {
+		.overlay-bg {
+			opacity: 0;
+			@include transition(opacity 0.35s ease-out 0.1s);
+		}
+
+		.overlay-content { display: none; }
+	}
+}
+
+// customizing slider structure
+.overlay .range-slider {
+
+	.track {
+		margin-top: -6px;
+		background-color: transparent;
+		border: 2px solid #e0e0e0;
+		height: 15px;
+		@include border-radius(25px);
+	}
+
+	.handle {
+		@include square(1.6em);
+		border-width: 1px;
+		margin-left: -( 1.6em / 2);
+		margin-top: -( 1.6em / 2);
+	}
+
+}
+

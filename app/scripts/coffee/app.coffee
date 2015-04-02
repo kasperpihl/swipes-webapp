@@ -19,8 +19,9 @@ define [
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
 	"js/controller/UserController"
+	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController, UserController) ->
+	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -38,6 +39,7 @@ define [
 			@settings = new SettingsController()
 			@sync = new SyncController()
 			@updateTimer = new ClockWork()
+			@workmode = new WorkController()
 
 			# Keyboard/Shortcut handler
 			@shortcuts = new KeyboardController()

@@ -99,5 +99,11 @@
 			<svg class="icon icon-widgetDone"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-widgetDone"></use></svg>
 		</a>
 	<% } %>
+	<% if (state === "active"){ %>
+		<a href="JavaScript:void(0);" class="work-button" title="Start workmode with this task">
+			<svg class="icon icon-materialWorkspaces"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialWorkspaces"></use></svg>
+		</a>
+	<% } %>
+
 	</div>
 </div>
