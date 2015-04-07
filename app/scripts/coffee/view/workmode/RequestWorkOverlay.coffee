@@ -8,6 +8,8 @@ define ["underscore"
 		className: 'overlay request-work'
 		events:
 			"click .overlay-bg": "destroy"
+			"click .back-button": "destroy"
+			"click .done-button": "confirm"
 		initialize: ->
 			_.bindAll( @, "updateValue" )
 			if arguments[ 0 ]
@@ -16,17 +18,21 @@ define ["underscore"
 			@showClassName = "request-work-open"
 			@hideClassName = "hide-request-work"
 			@render()
-
+		confirm: ->
+			console.log "confirmed"
 		bindEvents: ->
 			_.bindAll( @, "handleResize" )
 			$(window).on( "resize", @handleResize )
 		setTemplate: ->
 			@template = _.template RequestWorkOverlayTmpl
 		getOpts: ->
-			{ onDrag: @updateValue, onDragEnd: @updateValue, steps: (2 * 12) + 1  }
+			{ onDrag: @updateValue, onDragEnd: @updateValue, steps: (2 * 12) + 1 }
+		numberOfMinutesFromSlider: ->
+			numberOfMinutes = Math.ceil(@slider.value * ( 2 * 60) )
+			numberOfMinutes = Math.max(5, numberOfMinutes)
+			numberOfMinutes
 		updateValue: ->
-			numberOfMinutes = Math.ceil(@slider.value * ( 2 * 60 ))
-
+			numberOfMinutes = @numberOfMinutesFromSlider()
 			hours = Math.floor(numberOfMinutes/60)
 			if hours < 10
 				hours = "0" + hours
@@ -36,11 +42,9 @@ define ["underscore"
 			string = "" + hours + ":" + minutes
 			@$el.find(".time-label").html string
 		render: () ->
-			@$el.html @template()
+			@$el.html @template( { title: @model.get("title") } )
 			if not $("body").find(".overlay.request-work").length
 				$("body").append @$el
-			console.log @$el.find(".range-slider").get(0)
-			
 
 			@show()
 			@handleResize()
