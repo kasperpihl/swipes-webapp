@@ -17,6 +17,7 @@ define ["underscore"], (_) ->
 		keyDownHandling: (e) ->
 			if e.keyCode is 70 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
 				if Backbone.history.fragment isnt "search"
+					console.log "searcg"
 					swipy.router.navigate("search", true)
 				e.preventDefault()
 				return

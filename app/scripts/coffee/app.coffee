@@ -8,6 +8,7 @@ define [
 	"js/router/MainRouter"
 	"js/collection/ToDoCollection"
 	"js/collection/TagCollection"
+	"js/collection/WorkCollection"
 	"js/view/nav/ListNavigation"
 	"js/controller/TaskInputController"
 	"js/controller/SidebarController"
@@ -21,7 +22,7 @@ define [
 	"js/controller/UserController"
 	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController, UserController, WorkController) ->
+	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, WorkCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -34,6 +35,7 @@ define [
 			# Base app data
 			@todos = new ToDoCollection()
 			@tags = new TagCollection()
+			@workSessions = new WorkCollection()
 
 			# Synchronization
 			@settings = new SettingsController()

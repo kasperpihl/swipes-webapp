@@ -321,7 +321,7 @@ define [
 
 
 			@beforeRenderList todos
-
+			
 			for group in @groupTasks todos
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
 				progress = ""
@@ -352,8 +352,9 @@ define [
 
 				@$el.append $html
 				widthOfText = $html.find('h1 > span').innerWidth()
-
+				#console.log $html.find('h1 > span').html() + " " + widthOfText
 				actualWidth = widthOfText + 50
+
 				$html.find('.progress').parent().css("paddingRight",actualWidth+"px")
 				$html.find('h1').css("width",actualWidth+"px")
 				shapePadding = actualWidth*1.025

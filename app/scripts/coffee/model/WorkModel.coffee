@@ -1,0 +1,15 @@
+define ["js/model/BaseModel"], (BaseModel) ->
+	BaseModel.extend
+		className: "Work"
+		idAttribute: "objectId"
+		attrWhitelist: [ "startTime", "endTime", "taskId" ]
+		defaults: { finished: no }
+		save: ->
+			shouldSync = BaseModel.prototype.handleForSync.apply @ , arguments
+			Backbone.Model.prototype.save.apply @ , arguments
+			if shouldSync
+				BaseModel.prototype.doSync.apply @ , []
+		updateFromServerObj: ( obj ) ->
+			BaseModel.prototype.updateFromServerObj.apply @, arguments
+			#@save "title", obj.title if obj.title?
+			BaseModel.prototype.doSync.apply( @ )

@@ -1,0 +1,29 @@
+body.work-mode-open {
+
+	.overlay.work-mode {
+		visibility: visible;
+		.overlay-bg { opacity: 1; background: rgba(255, 255, 255, 1); }
+		.overlay-content{
+			background:white;
+			padding:20px;
+			width:300px;
+			height: 300px;
+			margin: 20% auto;
+			h1{
+				font-size: 18px;
+				font-family: $font-normal;
+			}
+			h1.time-label{
+				font-size:30px;
+			}
+		}
+	}
+	&.hide-work-mode .overlay.work-mode {
+		.overlay-bg {
+			opacity: 0;
+			@include transition(opacity 0.35s ease-out 0.1s);
+		}
+
+		.overlay-content { display: none; }
+	}
+}

@@ -32,14 +32,14 @@ body.request-work-open {
 						text-transform: uppercase;
 					}
 			}
+			h1{
+				font-size: 18px;
+				font-family: $font-normal;
+			}
+			h1.time-label{
+				font-size:30px;
+			}
 		}
-	}
-	h1{
-		font-size: 18px;
-		font-family: $font-normal;
-	}
-	h1.time-label{
-		font-size:30px;
 	}
 	&.hide-request-work .overlay.request-work {
 		.overlay-bg {

@@ -19,7 +19,9 @@ define ["underscore"
 			@hideClassName = "hide-request-work"
 			@render()
 		confirm: ->
-			console.log "confirmed"
+			numberOfMinutes = @numberOfMinutesFromSlider()
+			Backbone.trigger( "new-work-mode", @model, numberOfMinutes )
+			@destroy()
 		bindEvents: ->
 			_.bindAll( @, "handleResize" )
 			$(window).on( "resize", @handleResize )
