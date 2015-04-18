@@ -162,10 +162,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if @has "completionDate"
 				@setCompletionStr()
 				@setCompletionTimeStr()
-
-		reviveDate: (prop) ->
-			value = @handleDateFromServer @get( prop )
-			@set prop, value, { silent: true }
 		
 		isSubtask: ->
 			if @get "parentLocalId"
@@ -459,9 +455,4 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					modelTags.push model
 			modelTags
 
-		handleDateFromServer: ( date ) ->
-			if typeof date is "string"
-				date = new Date date
-			else if _.isObject( date ) and date.__type is "Date"
-				date = new Date date.iso
-			date
+		

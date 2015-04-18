@@ -41,7 +41,6 @@ define [
 			@settings = new SettingsController()
 			@sync = new SyncController()
 			@updateTimer = new ClockWork()
-			@workmode = new WorkController()
 
 			# Keyboard/Shortcut handler
 			@shortcuts = new KeyboardController()
@@ -52,34 +51,13 @@ define [
 			if @sync.lastUpdate?
 				@tags.fetch()
 				@todos.fetch()
+				@workSessions.fetch()
 				_.invoke(@todos.models, "set", { selected: no } )
 				@todos.repairActionStepsRelations()
 				@init()
-				@todos.prepareScheduledForNotifications()
 			else
 				Backbone.once( "sync-complete", @init, @ )
 			@sync.sync()
-		isBusy: ->
-			# Are any todos being saved right now?
-			if @todos.length?
-				for task in @todos.models when task._saving
-					return yes
-
-			# Are any tags being saved right now?
-			if @tags.length?
-				for tag in @tags.models when tag._saving
-					return yes
-
-			# Are any tasks being edited right now
-			if location.href.indexOf( "edit/" ) isnt -1
-				return yes
-
-			# Are any tasks selected right now?
-			if @todos.length
-				if @todos.where( selected:yes ).length
-					return yes
-
-			return no
 		init: ->
 			@cleanUp()
 			@viewController = new ViewController()
@@ -91,9 +69,10 @@ define [
 			@filter = new FilterController()
 			@userController = new UserController()
 
-			Backbone.history.start( pushState: no )
 
+			Backbone.history.start( pushState: no )
 			$("body").removeClass "loading"
+			@workmode = new WorkController()
 
 			$('.search-result a').click( (e) ->
 				swipy.filter.clearFilters()
@@ -101,22 +80,7 @@ define [
 				return false
 			)
 
-			# $("")
 
-			#@startAutoUpdate()
-
-		###update: ->
-			if not @isBusy()
-				@fetchTodos()
-				@UPDATE_COUNT++
-
-			@lastUpdate = new Date()
-			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ )
-		startAutoUpdate: ->
-			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ )
-		stopAutoUpdate: ->
-			TweenLite.killDelayedCallsTo @update###
-			
 		cleanUp: ->
 			#@stopAutoUpdate()
 			##@tags?.destroy()

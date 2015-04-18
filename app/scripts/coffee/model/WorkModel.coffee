@@ -2,14 +2,24 @@ define ["js/model/BaseModel"], (BaseModel) ->
 	BaseModel.extend
 		className: "Work"
 		idAttribute: "objectId"
-		attrWhitelist: [ "startTime", "endTime", "taskId" ]
-		defaults: { finished: no }
+		attrWhitelist: [ "startTime", "endTime", "taskLocalId", "completionTime", "cancelTime", "hasChosenCompleted" ]
+		defaults: { "hasChosenCompleted": no }
+		initialize: ->
+			@reviveDate "startTime"
+			@reviveDate "endTime"
+			@reviveDate "completionTime"
+			@reviveDate "cancelTime"
+		secondsLeft: ->
+			endTime = Math.floor(@get("endTime").getTime()/1000)
+			nowTime = Math.floor(new Date().getTime()/1000)
+			secondsLeft = endTime - nowTime
+			secondsLeft
+		isRunning: ->
+			now = new Date()
+			return no if @get("endTime").getTime() < now.getTime() and @get("hasChosenCompleted")
+			return no if @get("cancelTime")
+			return no if @get("completionTime")
+			yes
 		save: ->
-			shouldSync = BaseModel.prototype.handleForSync.apply @ , arguments
 			Backbone.Model.prototype.save.apply @ , arguments
-			if shouldSync
-				BaseModel.prototype.doSync.apply @ , []
-		updateFromServerObj: ( obj ) ->
-			BaseModel.prototype.updateFromServerObj.apply @, arguments
-			#@save "title", obj.title if obj.title?
-			BaseModel.prototype.doSync.apply( @ )
+			BaseModel.prototype.doSync.apply @ , []

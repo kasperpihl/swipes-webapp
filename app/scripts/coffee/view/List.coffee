@@ -413,7 +413,6 @@ define [
 			#minOrder = Math.min _.invoke( tasks, "get", "order" )...
 
 			# Bump order for tasks
-			#swipy.todos.bumpOrder( "up", minOrder, tasks.length )
 			for task in tasks
 				view = @getViewForModel task
 				self = @

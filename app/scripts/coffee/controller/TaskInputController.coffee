@@ -45,7 +45,6 @@ define ["underscore"], (_ ) ->
 				Backbone.trigger( "throw-error", msg )
 				return
 
-			swipy.todos.bumpOrder()
 			newTodo = swipy.todos.create { title, order, animateIn }
 			newTodo.set( "tags", tags )
 			newTodo.save({}, {sync:true})

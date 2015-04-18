@@ -81,13 +81,6 @@ define ["js/model/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 				# This multi-dimensional loop returns true if
 				# the model has all of the provided tags in it's tags property
 				return _.all( tags, (tag) -> _.contains( m.getTagStrList(), tag )  )
-		bumpOrder: (direction = "down", startFrom = 0, bumps = 1) ->
-			if direction is "down"
-				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) >= startFrom
-					model.updateOrder (model.get( "order" ) + bumps)
-			else if direction is "up"
-				for model in swipy.todos.getActive() when model.has( "order" ) and model.get( "order" ) > startFrom
-					model.updateOrder (model.get( "order" ) - bumps)
 		deselectAllTasks: ->
 			selectedTasks = @getSelected()
 			for task in selectedTasks

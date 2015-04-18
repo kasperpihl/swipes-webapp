@@ -11,23 +11,23 @@ define ["underscore", "js/view/Overlay", "text!templates/work-mode-overlay.html"
 			@showClassName = "work-mode-open"
 			@hideClassName = "hide-work-mode"
 
-			
+			@model = @options.workModel
+
 			@render()
 			@startTimer()
 		startTimer: ->
 			@timeUtil = new TimeUtility()
+
 			@endTime = @options.workModel.get("endTime")
 			@runTimer()
     		
 		runTimer: ->
 			@calculateTimeToEnd()
 			milli = 1000 - new Date().getMilliseconds()
-			console.log milli
 			setTimeout(@runTimer, Math.max(milli, 1))
 		calculateTimeToEnd: ->
-			diff = Math.ceil((@endTime.getTime() - new Date().getTime())/1000,10)
+			diff = @model.secondsLeft()
 			timeString = @timeUtil.getFormattedTimeFromSeconds(diff)
-			console.log timeString
 			@renderTime timeString 
 		setTemplate: ->
 			@template = _.template WorkModeTmpl
