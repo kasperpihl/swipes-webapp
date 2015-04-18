@@ -14,7 +14,7 @@ define ["underscore", "js/view/workmode/WorkModeOverlay", "js/model/WorkModel"],
 			else if @isWorking and !currentWork
 				@workMode?.destroy()
 				@isWorking = false
-				swipy.router.navigate("list/todo", true)
+				swipy.router.openLastMainView(false)
 		openWorkFromRouter: ->
 			currentWork = swipy.workSessions.currentWorkTask()
 			if currentWork
@@ -35,5 +35,4 @@ define ["underscore", "js/view/workmode/WorkModeOverlay", "js/model/WorkModel"],
 			workModel.save()
 			#@openWorkMode( model, workModel )
 		openWorkMode: (taskModel, workModel) ->
-			console.log @isWorking
 			@workMode = new WorkModeOverlay( { taskModel: taskModel, workModel: workModel })

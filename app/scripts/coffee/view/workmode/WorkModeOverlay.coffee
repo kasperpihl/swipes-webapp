@@ -46,6 +46,9 @@ define ["underscore", "js/view/Overlay", "text!templates/work-mode-overlay.html"
 			@$el.html @template( { title: @options.taskModel.get("title") } )
 			if not $("body").find(".overlay.work-mode").length
 				$("body").append @$el
+			self = @
+			require ["bootstrapTooltip"],() ->
+				self.$el.find('[data-toggle="tooltip"]').tooltip({delay:{show:300,hide:0}})
 
 			@show()
 			return @
