@@ -8,6 +8,7 @@ define [], () ->
 			"settings": "settings"
 			"edit/:id": "edit"
 			"list/:id": "list"
+			"work": "work"
 			"*all": "root"
 		initialize: ->
 			@history = []
@@ -21,6 +22,8 @@ define [], () ->
 			Backbone.trigger( "show-search" )
 		workspaces: ->
 			Backbone.trigger( "show-workspaces" )
+		work: ->
+			Backbone.trigger( "work-mode" )
 		list: (id = "todo") ->
 			Backbone.trigger( "navigate/view", id )
 			@setLastMainView()
@@ -31,6 +34,7 @@ define [], () ->
 				when "completed" then "Done Tab"
 
 			swipy.analytics.pushScreen eventName
+		
 		on_keypress: (e) ->
 		openLastMainView: (trigger)->
 			if @lastMainRoute is ""

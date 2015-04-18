@@ -13,6 +13,7 @@ define ["underscore"], () ->
                 swipy.sync.sync()
             )
             @bridge.registerHandler('navigate', (data, responseCallback) ->
+                return if swipy.shortcuts.globalLock
                 swipy.router.navigate(data, true)
             )
             @bridge.registerHandler('register-notifications', (data, responseCallback) ->

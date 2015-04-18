@@ -68,18 +68,18 @@ define [
 			@sidebar = new SidebarController()
 			@filter = new FilterController()
 			@userController = new UserController()
-
+			@workmode = new WorkController()
 
 			Backbone.history.start( pushState: no )
 			$("body").removeClass "loading"
-			@workmode = new WorkController()
+			
 
 			$('.search-result a').click( (e) ->
 				swipy.filter.clearFilters()
 				Backbone.trigger( "remove-filter", "all" )
 				return false
 			)
-
+			@workmode.checkForWork()
 
 		cleanUp: ->
 			#@stopAutoUpdate()

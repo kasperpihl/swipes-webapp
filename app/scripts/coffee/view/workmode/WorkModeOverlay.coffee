@@ -2,7 +2,8 @@ define ["underscore", "js/view/Overlay", "text!templates/work-mode-overlay.html"
 	Overlay.extend
 		className: 'overlay work-mode'
 		events:
-			"click .done" : "render"
+			"click .back-button" : "back"
+			"click .action-complete": "complete"
 		initialize: ->
 			_.bindAll( @ , "runTimer" )
 			if arguments[ 0 ]
@@ -12,9 +13,17 @@ define ["underscore", "js/view/Overlay", "text!templates/work-mode-overlay.html"
 			@hideClassName = "hide-work-mode"
 
 			@model = @options.workModel
+			@taskModel = @options.taskModel
 
 			@render()
 			@startTimer()
+		complete: ->
+			@taskModel.completeTask()
+			@model.save("completionTime", new Date())
+		back: ->
+			shouldGoBack = confirm "Are you sure you want to cancel the work session?"
+			if shouldGoBack
+				@model.save("cancelTime",new Date())
 		startTimer: ->
 			@timeUtil = new TimeUtility()
 

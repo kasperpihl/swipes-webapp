@@ -5,6 +5,7 @@ define ["underscore"], (_) ->
 			@delegate = null
 			@lockDelegate = null
 			@isLocked = false
+			@globalLock = false
 			_.bindAll( @, "keyDownHandling", "keyUpHandling", "lock", "unlock", "handleClick" )
 			$(document).on('keydown', @keyDownHandling )
 			$(document).on('keyup', @keyUpHandling )
@@ -15,22 +16,23 @@ define ["underscore"], (_) ->
 			$(document).off('keyup', @keyUpHandling )
 			$('#scrollcont').off("click.keycontroller")
 		keyDownHandling: (e) ->
-			if e.keyCode is 70 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-				if Backbone.history.fragment isnt "search"
-					console.log "searcg"
-					swipy.router.navigate("search", true)
-				e.preventDefault()
-				return
-			if e.keyCode is 68 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-				if Backbone.history.fragment isnt "workspaces"
-					swipy.router.navigate("workspaces", true)
-				e.preventDefault()
-				return
-			if e.keyCode is 188 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-				if Backbone.history.fragment isnt "settings"
-					swipy.router.navigate("settings", true)
-				e.preventDefault()
-				return
+			if !@globalLock
+				if e.keyCode is 70 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "search"
+						console.log "searcg"
+						swipy.router.navigate("search", true)
+					e.preventDefault()
+					return
+				if e.keyCode is 68 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "workspaces"
+						swipy.router.navigate("workspaces", true)
+					e.preventDefault()
+					return
+				if e.keyCode is 188 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "settings"
+						swipy.router.navigate("settings", true)
+					e.preventDefault()
+					return
 			return if @isLocked or !@delegate?
 			if _.isFunction(@delegate.keyDownHandling)
 				@delegate.keyDownHandling(e)
@@ -52,7 +54,10 @@ define ["underscore"], (_) ->
 			@delegate = delegate
 		popDelegate: ->
 			@delegate = @pushedDelegates.pop()
-		lock: ->
+		lock: (globalLock) ->
 			@isLocked = true
+			if globalLock
+				@globalLock = true
 		unlock: ->
 			@isLocked = false
+			@globalLock = false
