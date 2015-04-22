@@ -53,7 +53,35 @@
 		</div>
 	</section>
 <% } %>
-
+<% if (attachments !== null) { 
+	for( var i = 0 ; i < attachments.length ; i++){
+		var attachment = attachments[i];
+		var iconString;
+		var title = attachment.title;
+		if( attachment.service == "evernote" ){
+			iconString = "editEvernote";
+		}
+		if( attachment.service == "gmail" ){
+			iconString = "editMail";
+		}
+		if( attachment.service == "url" ){
+			iconString = "editURL";
+		}
+		if(!iconString)
+			continue;
+		%>
+		<section>
+			<div class="attachment <%= attachment.service %> has-icon">
+				<span class="icon-hold">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-<%= iconString %>"></use></svg>
+				</span>
+				<% if(attachment.service == "url"){ %><a target="_blank" href="<%= attachment.identifier %>"><% } %>
+				<p class="attachment-string info-label"><%= title %></p>
+				<% if(attachment.service == "url"){ %></a><% } %>
+			</div>
+		</section>
+	<% }  
+}  %>
 <section>
 	<div class="icon-tag-container has-icon">
 		<span class="icon-hold">

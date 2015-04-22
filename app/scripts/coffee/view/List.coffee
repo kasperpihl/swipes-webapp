@@ -324,6 +324,7 @@ define [
 			
 			for group in @groupTasks todos
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
+
 				progress = ""
 				progress = "no-progress" if @state isnt "tasks"
 			

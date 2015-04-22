@@ -318,14 +318,26 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				throw new Error "You're trying to repeat a task that doesn't have a repeat date"
 				return
+		toRenderJSON: ->
+			clonedAttributes = @toJSON()
+
+			clonedAttributes
 		toJSON: ->
 			@set( "state", @getState() )
 			clonedAttributes = _.clone @attributes
+			
 			###if clonedAttributes.title and clonedAttributes.title.length > 0
 				clonedAttributes.title = _.escape(clonedAttributes.title)
 			if clonedAttributes.notes and clonedAttributes.notes.length > 0
 				clonedAttributes.notes = _.escape(clonedAttributes.notes)###
 			clonedAttributes
+		attachmentsForService:(service) ->
+			foundAttachments = []
+			for attachment in @get("attachments")
+				if attachment.service is service
+					foundAttachments.push(attachment)
+			return no if foundAttachments.length is 0
+			return foundAttachments
 		cleanUp: ->
 			@off()
 
@@ -434,8 +446,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			for attribute in @attrWhitelist
 				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1
 				continue if _.indexOf(keys, attribute) is -1
-
 				val = obj[ attribute ]
+
 				if attribute is "tags"
 					val = @handleTagsFromServer val
 				else if _.indexOf(dateKeys, attribute) isnt -1
