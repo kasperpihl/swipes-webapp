@@ -2,7 +2,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
-			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "edit", "handleAction" )
+			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "handleAction" )
 
 			# Bind events that should re-render the view
 			@listenTo( @model, "change:tags change:timeStr", @render, @ )
@@ -44,13 +44,6 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 				Backbone.trigger( "request-work-task", @model )
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
-		edit: (e) ->
-			# Ignore doubleclicks on priority dot
-			return false if e.target.className is "priority"
-
-			# Else navigator to editor.
-			identifier = @model.id
-			swipy.router.navigate( "edit/#{ identifier }", yes )
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?

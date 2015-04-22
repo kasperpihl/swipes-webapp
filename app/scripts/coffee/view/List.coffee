@@ -195,7 +195,7 @@ define [
 		openSelectedTask: ->
 			lastTask = view.model for view, i in @subviews when i is @lastSelectedIndex
 			if lastTask and swipy.todos.getSelected().length > 0
-				swipy.router.navigate( "edit/#{ lastTask.id }", yes ) 
+				@openTask(lastTask)
 		selectedModels: (tasks, e) ->
 			holdModifier = @holdModifierForEvent(e)
 			if !holdModifier?
@@ -290,6 +290,10 @@ define [
 			# Remove any old HTML before appending new stuff.
 			return if !@$el
 			oldScroll = $("#scrollcont").scrollTop()
+			if typeof(Storage) isnt "undefined" and localStorage.getItem("saved-offset-list-" + @state)
+				oldScroll = localStorage.getItem("saved-offset-list-" + @state)
+				localStorage.removeItem("saved-offset-list-" + @state)
+
 			@$el.empty()
 			@killSubViews()
 
@@ -371,11 +375,18 @@ define [
 			else
 				$('.search-result').addClass("hidden")
 			swipy.filter.updateFilterString(todos.length)
+		saveOffset: ->
+			@savedOffset = $("#scrollcont").scrollTop()
+			if typeof(Storage) isnt "undefined"
+				localStorage.setItem("saved-offset-list-" + @state, @savedOffset)
+		openTask:(model) ->
+			@saveOffset()
+			identifier = model.id
+			swipy.router.navigate( "edit/#{ identifier }", yes )
 		pressedTask:(model, e) ->
 			holdModifier = @holdModifierForEvent(e)
 			if !holdModifier and !@$el.hasClass("selecting")
-				identifier = model.id
-				swipy.router.navigate( "edit/#{ identifier }", yes )
+				@openTask(model)
 			else
 				currentlySelected = model.get( "selected" ) or false
 				model.set( "selected", !currentlySelected )
