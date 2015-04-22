@@ -51,6 +51,9 @@ html.touch body {
 
 		
 }
+svg {
+	pointer-events: none;
+}
 a:focus { 
     outline: none; 
 }
