@@ -72,7 +72,8 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			# Hook for views extending me
 		swipeRight: (className, fadeOut = yes) ->
 			dfd = new $.Deferred()
-
+			@$el.find(".action").hide()
+			@$el.find(".action."+className).show()
 			content = @$el.find ".todo-content"
 			if className then @$el.addClass className
 
