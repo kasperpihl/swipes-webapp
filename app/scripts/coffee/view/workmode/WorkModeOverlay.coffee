@@ -31,6 +31,8 @@ define ["underscore", "js/view/Overlay", "text!templates/work-mode-overlay.html"
 			@runTimer()
     		
 		runTimer: ->
+			#snd = new Audio("file.wav")
+			#snd.play()
 			@calculateTimeToEnd()
 			milli = 1000 - new Date().getMilliseconds()
 			setTimeout(@runTimer, Math.max(milli, 1))
