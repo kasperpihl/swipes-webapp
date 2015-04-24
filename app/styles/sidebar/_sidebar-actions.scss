@@ -6,13 +6,10 @@
 		position: relative;
 		width: 50px;
 		height: 50px;
-		margin-bottom:0;
+		margin-bottom:1em;
 		
 		@include breakpoint(min-height, 320px){
 			display: inline-block;
-		}
-		@include breakpoint(mobile, height){
-			margin-bottom: 2.5em;
 		}
 		background-color: #fff;
 		@include border-radius(50%);
@@ -64,9 +61,9 @@
 		@extend .list-unstyled;
 
 			> li {
-				margin-bottom:0;
+				margin-top:1em;
 				@include breakpoint(mobile, height){
-					margin-bottom: 1em;
+					margin-top: 1.5em;
 				}
 					> a {
 						width:40px;
@@ -95,11 +92,15 @@
 						}
 						left:0;
 						right:0;
+
 						margin: auto;
+						> a {
+							margin-left:24px;
+						}
+						
 					}
 
 			}
-
 	}
 
 
