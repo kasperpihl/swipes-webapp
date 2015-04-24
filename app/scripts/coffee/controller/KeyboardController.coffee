@@ -16,10 +16,24 @@ define ["underscore"], (_) ->
 			$(document).off('keyup', @keyUpHandling )
 			$('#scrollcont').off("click.keycontroller")
 		keyDownHandling: (e) ->
-			if !@globalLock
+			if !@globalLock and !$("input").is(":focus") and !$("div.content-editable").is(':focus')
+				if e.keyCode is 49 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "list/scheduled"
+						swipy.router.navigate("list/scheduled",true)
+						e.preventDefault()
+					return
+				if e.keyCode is 50 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "list/todo"
+						swipy.router.navigate("list/todo",true )
+						e.preventDefault()
+					return
+				if e.keyCode is 51 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "list/completed"
+						swipy.router.navigate("list/completed",true )
+						e.preventDefault()
+					return
 				if e.keyCode is 70 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
 					if Backbone.history.fragment isnt "search"
-						console.log "searcg"
 						swipy.router.navigate("search", true)
 					e.preventDefault()
 					return
