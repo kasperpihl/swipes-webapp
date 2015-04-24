@@ -21,9 +21,9 @@ define ["underscore",
 
 			return @
 		afterShow: ->
-			swipy.shortcuts.pushDelegate( @ )
+			swipy.shortcuts.lock( true )
 		afterHide: ->
-			swipy.shortcuts.popDelegate()
+			swipy.shortcuts.unlock()
 			@destroy()
 		cleanUp: ->
 			# Same as super() in real OOP programming

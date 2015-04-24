@@ -13,48 +13,10 @@ function cmdOrCtrl(isMac){
 <div class="overlay-content">
 	<h1>Keyboard Shortcuts</h1>
 	<div class="section col-md-6">
-		<h1>Handle task list</h1>
+		<h1>Navigation</h1>
 		<div class="shortcuts">
 			<div class="shortcut">
-				<div class="description">Navigate between tasks</div>
-				<div class="keys">
-					<span class="key">&#8593;</span>
-					<span class="key">&#8595;</span>
-				</div>
-			</div>
-			<div class="shortcut">
-				<div class="description">Swipe tasks</div>
-				<div class="keys">
-					<span class="key">&#8592;</span>
-					<span class="sign">or</span>
-					<span class="key">&#8594;</span>
-				</div>
-			</div>
-			<div class="shortcut">
-				<div class="description">Long swipe</div>
-				<div class="keys">
-					<span class="sign no-left">Hold</span>
-					<span class="key">&#8592;</span>
-					<span class="sign">or</span>
-					<span class="key">&#8594;</span>
-				</div>
-			</div>
-			<div class="shortcut">
-				<div class="description">Select multiple tasks</div>
-				<div class="keys">
-					<span class="sign no-left">Hold</span>
-					<span class="key"><%= cmdOrCtrl(isMac) %></span>
-					<span class="sign">or</span>
-					<span class="key">&#8679;</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="section col-md-6">
-		<h1>Menus</h1>
-		<div class="shortcuts">
-			<div class="shortcut">
-				<div class="description">Add new task or action step</div>
+				<div class="description">Add Task / Action step</div>
 				<div class="keys">
 					<span class="key">SPACE</span>
 				</div>
@@ -91,12 +53,16 @@ function cmdOrCtrl(isMac){
 					<span class="key">,</span>
 				</div>
 			</div>
+			<div class="shortcut">
+				<div class="description">Close / Go back</div>
+				<div class="keys">
+					<span class="key">ESC</span>
+				</div>
+			</div>
 		</div>
 	</div>
-	
-	<div style='clear:both;'>&nbsp;</div>
 	<div class="section col-md-6">
-		<h1>Snoozing & completion</h1>
+		<h1>Handle task list</h1>
 		<div class="shortcuts">
 			<div class="shortcut">
 				<div class="description">Navigate between tasks</div>
@@ -105,12 +71,62 @@ function cmdOrCtrl(isMac){
 					<span class="key">&#8595;</span>
 				</div>
 			</div>
+			<div class="shortcut">
+				<div class="description">Swipe tasks</div>
+				<div class="keys">
+					<span class="key">&#8592;</span>
+					<span class="sign">or</span>
+					<span class="key">&#8594;</span>
+				</div>
+			</div>
+			<div class="shortcut">
+				<div class="description">Long swipe</div>
+				<div class="keys">
+					<span class="sign no-left">Hold</span>
+					<span class="key">&#8592;</span>
+					<span class="sign">or</span>
+					<span class="key">&#8594;</span>
+				</div>
+			</div>
+			<div class="shortcut">
+				<div class="description">Select multiple tasks</div>
+				<div class="keys">
+					<span class="sign no-left">Hold</span>
+					<span class="key"><%= cmdOrCtrl(isMac) %></span>
+					<span class="sign">or</span>
+					<span class="key">&#8679;</span>
+				</div>
+			</div>
+			<div class="shortcut">
+				<div class="description">Open task</div>
+				<div class="keys">
+					<span class="key">ENTER</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!--<div style='clear:both; height:0;'>&nbsp;</div>-->
+	<div class="section col-md-6">
+		<h1>Snoozing</h1>
+		<div class="shortcuts">
+			<div class="shortcut">
+				<div class="description">Quick select</div>
+				<div class="keys">
+					<span class="key">1</span>
+					<span class="sign">..</span>
+					<span class="key">9</span>
+				</div>
+			</div>
 
 			<div class="shortcut">
-				<div class="description">Navigate between tasks</div>
+				<div class="description">Time Picker</div>
 				<div class="keys">
-					<span class="key">&#8593;</span>
-					<span class="key">&#8595;</span>
+					<span class="sign no-left">Hold</span>
+					<span class="key">1</span>
+					<span class="sign">..</span>
+					<span class="key">9</span>
 				</div>
 			</div>
 			
