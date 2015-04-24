@@ -14,8 +14,12 @@ define ["js/view/sidebar/Sidebar",
 			Backbone.on( "show-search", @loadSearchFilter, @)
 			Backbone.on( "show-workspaces", @loadTagFilter, @)
 			Backbone.on( "show-settings", @loadSettings, @)
+			Backbone.on( "show-keyboard-shortcuts", @showKeyboardShortcuts, @)
 			Backbone.on( "hide-sidemenu", @hideSideMenu, @)
 			Backbone.on("settings/view", @loadSubSettings, @)
+
+		showKeyboardShortcuts: ->
+			@keyboard?.destroy()
 			@keyboard = new KeyboardOverlay()
 			$('.overlay.keyboard').remove()
 			$("body").append @keyboard.render().el

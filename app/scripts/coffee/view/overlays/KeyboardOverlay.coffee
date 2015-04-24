@@ -28,4 +28,3 @@ define ["underscore",
 		cleanUp: ->
 			# Same as super() in real OOP programming
 			Overlay::cleanUp.apply( @, arguments )
-

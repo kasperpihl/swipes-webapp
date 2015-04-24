@@ -16,6 +16,9 @@ define ["underscore"], () ->
                 return if swipy.shortcuts.globalLock
                 swipy.router.navigate(data, true)
             )
+            @bridge.registerHandler('trigger', (data, responseCallback) ->
+                Backbone.trigger(data)
+            )
             @bridge.registerHandler('register-notifications', (data, responseCallback) ->
                 swipy.todos.addChangeListenerForBridge()
             )
