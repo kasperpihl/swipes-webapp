@@ -74,28 +74,19 @@
 		@include square(40px);
 		line-height: 40px;
 		background-color: transparent;
-		text-align: center;
-		border: 1px solid $brand-dakrcolor;
+		//border: 1px solid $brand-dakrcolor;
 		text-decoration: none;
 		text-align: center;
 		
 		@include border-radius(50%);
 		@include transition(all 100ms ease-in-out);
 
-			svg {
-				display: inline-block;
-				line-height: 1;
-				position: relative;
-				top: -3px;
-				vertical-align: middle;
-				@include square(22px);
-				fill: $brand-dakrcolor;
-				@include transition(all 100ms ease-in-out);
-			}
-
+		svg{
+			width:40px;
+			height:40px;
+		}
 			&:hover {
 				background-color: $brand-dakrcolor;
-
 					svg {fill: #fff;}
 			}
 	}
