@@ -69,13 +69,22 @@
 					margin-bottom: 1em;
 				}
 					> a {
+						width:40px;
+						height:40px;
+						display:block;
+						@include border-radius(50%);
+						line-height: 40px;
 						opacity:0.8;
+						margin-left:14px;
 						&:hover{
 							opacity:1.0;
 						}
 						//@include opacity(0.3);
 						@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);
-
+						> svg{
+							width:40px;
+							height:40px;
+						}
 					}
 
 					&:nth-child(4) {
@@ -91,30 +100,6 @@
 
 			}
 
-			.btn-icon {
-				display: inline-block;
-				width: 40px;
-				height: 41px;
-				background: url(../styles/img/sprites/sidebar-buttons.svg) no-repeat 0 0;
-				@include text-hide();
-
-					&.addtask {
-						background-position: 0 0;
-					}
-
-					&.search {
-						background-position: 0 -55px;
-					}
-
-					&.workspaces {
-						background-position: 0 -110px;
-					}
-
-					&.settings {
-						background-position: 0 -165px;
-					}
-
-			}
 	}
 
 
