@@ -3,22 +3,26 @@ $action-step-height: 40px;
 $action-step-cell-x: 26px;
 $unselected-color: #9E9E9E;
 $padding: 80px;
+$padding-big: 110px;
+
 $closure-size: 30px;
 $icon-size: 15px;
 $border-width: 1px;
 
-$space-to-dot: 30px;
+$space-to-dot: 43px;
 $space-to-action: 40px;
 
 .action-steps{
 	position:relative;
-
+	margin-bottom: 2.0em;
 	.step{
 		min-height:$action-step-height;
 		position:relative;
 		padding-left:$padding;
 		// margin-bottom: 10px;
-
+		@include breakpoint(tablet) {
+			padding-left: $padding-big;
+		}
 
 		&:before {
 			display: inline-block;
@@ -27,6 +31,9 @@ $space-to-action: 40px;
 			border-left: 2px dashed #e0e0e0;
 			position: absolute;
 			left: $padding - $space-to-dot + 9px;
+			@include breakpoint(tablet) {
+				left: $padding-big - $space-to-dot + 9px;
+			}
 			top: -10px;
 		}
 
@@ -42,6 +49,9 @@ $space-to-action: 40px;
 			position:absolute;
 			top: $action-step-height/2 - $closure-size/2;
 			left: $padding - $space-to-dot - $space-to-action;
+			@include breakpoint(tablet) {
+				left: $padding-big - $space-to-dot - $space-to-action;
+			}
 			@include border-radius(50%);
 			border: $border-width solid $unselected-color;
 			font-size: $icon-size;
@@ -53,6 +63,9 @@ $space-to-action: 40px;
 
 		.action.delete{
 			left: $padding - $space-to-dot - 5px;
+			@include breakpoint(tablet) {
+				left: $padding-big - $space-to-dot - 5px;
+			}
 			margin-left: 0;
 			border:none;
 
@@ -171,6 +184,9 @@ $space-to-action: 40px;
 	.dot {
 		position:absolute;
 		left: ($padding - $space-to-dot);
+		@include breakpoint(tablet) {
+			left: ($padding-big - $space-to-dot);
+		}
 		margin-top: -($action-step-dot-size/2);
 		top:50%;
 		width:$action-step-dot-size;

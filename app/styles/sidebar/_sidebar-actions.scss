@@ -52,7 +52,10 @@
 				}
 				opacity:0.3;
 				&.active{
-					opacity: 1.0;
+					opacity: 0.8;
+					svg {
+						fill: $brand-dakrcolor;
+					}
 				}
 			}
 		}
@@ -66,21 +69,22 @@
 					margin-top: 1.5em;
 				}
 					> a {
-						width:40px;
-						height:40px;
+						width:36px;
+						height:36px;
 						display:block;
 						@include border-radius(50%);
-						line-height: 40px;
+						line-height: 36px;
 						opacity:0.8;
-						margin-left:14px;
+						margin-left:16px;
 						&:hover{
 							opacity:1.0;
 						}
 						//@include opacity(0.3);
 						@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);
 						> svg{
-							width:40px;
-							height:40px;
+							width:36px;
+							height:36px;
+							fill: #9E9E9E;
 						}
 					}
 

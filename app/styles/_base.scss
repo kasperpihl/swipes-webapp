@@ -71,11 +71,6 @@ div[role=main] {
 		@include transition(max-width 0.5s ease-in-out);
 	}
 
-	@include breakpoint(desktop-wide) {
-		max-width: emCalc(850px);
-	}
-
-
 
 	padding-top: 1.0em;
 	@include transition(padding-top 0.4s ease-in-out);

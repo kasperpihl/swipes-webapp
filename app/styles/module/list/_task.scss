@@ -141,20 +141,18 @@ $border-width: 1px;
 				text-decoration:none;
 			}
 			text-align:center;
-			$icon-size: 12px;
-			font-size: $icon-size;
 			line-height: 1;
 			float:left;
 			margin-right:5px;
 			margin-left: 5px;
 			@include square($button-size);
 			@include border-radius(50%);
-			border: $border-width solid $gray;
+			
 			padding:0;
 			position: relative;
 
 			svg {
-				@include square(16px);
+				@include square($button-size);
 				@include centerBlock(0, 0, 0, 0, auto, absolute);
 			}
 
