@@ -136,19 +136,19 @@
 	<% if (state === "completed" || state === "active" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="schedule-button" title="Schedule todo">
 			<svg class="icon icon-snooze">
-				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSnooze"></use>
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-later"></use>
 			</svg>
 		</a>
 	<% } if (state === "completed" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="todo-button" title="Move task to todo list">
 			<svg class="icon icon-today">
-				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarNow"></use>
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarNow"></use>
 			</svg>
 		</a>
 	<% } if (state === "active" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="complete-button" title="Mark todo as completed">
 			<svg class="icon icon-done">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarComplete"></use>
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
 					</svg>
 		</a>
 	<% } %>

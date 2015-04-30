@@ -12,7 +12,7 @@ body.request-work-open {
 			.sub-title {
 				font-size: 13.5px;
 				font-family: $font-normal;
-				color: #9e9e9e;
+				color: $gray-labels;
 				margin: 0;
 				line-height: 1;
 				text-align: center;
@@ -21,7 +21,7 @@ body.request-work-open {
 					svg {
 						display: inline-block;
 						@include square(20px);
-						fill: #9e9e9e;
+						fill: $gray-labels;
 						vertical-align: middle;
 					}
 

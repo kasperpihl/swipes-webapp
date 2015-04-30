@@ -35,6 +35,7 @@
 			}
 			color: $brand-dakrcolor;
 			font-size: 14px;
+			opacity: 0.8;
 			text-align: center;
 			text-decoration: none;
 			@include transition(background-color $transitionDuration-base ease);

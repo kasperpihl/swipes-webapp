@@ -40,7 +40,7 @@
 		}
 	}
 	width: 100%;
-	padding-top: 9px;
+	padding-top: 12px;
 	height: 60px;
 	padding-left: 0px;
 	@include breakWidthHeight(768px, 768px){
@@ -65,14 +65,14 @@
 		list-style: none;
 		margin-bottom: emCalc(22px);
 		@include breakpoint(tablet){
-			margin-left:5px;
+			margin-left:15px;
 		}
 	}
 
 	a {
 		display: block;
-		@include square(40px);
-		line-height: 40px;
+		@include square(35px);
+		line-height: 35px;
 		background-color: transparent;
 		//border: 1px solid $brand-dakrcolor;
 		text-decoration: none;
@@ -82,12 +82,12 @@
 		@include transition(all 100ms ease-in-out);
 
 		svg{
-			width:40px;
-			height:40px;
+			width:35px;
+			height:35px;
+			fill: $gray-labels;
 		}
 			&:hover {
-				background-color: $brand-dakrcolor;
-					svg {fill: #fff;}
+				opacity: 0.6;
 			}
 	}
 
@@ -102,11 +102,6 @@
 		a {
 			border-color: $green;
 
-				&:hover {
-					background-color: $green;
-
-						svg {fill: #fff;}
-				}
 		}
 		
 	}
@@ -119,12 +114,6 @@
 
 		a {
 			border-color: $orange;
-
-				&:hover {
-					background-color: $orange;
-
-						svg {fill: #fff;}
-				}
 		}
 	}
 
@@ -137,11 +126,6 @@
 		a {
 			border-color: $red;
 
-				&:hover {
-					background-color: $red;
-
-						svg {fill: #fff;}
-				}
 		}
 	}
 

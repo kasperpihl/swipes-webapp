@@ -1,4 +1,4 @@
-$list-item-height: 65px;
+$list-item-height: 67px;
 $list-item-height-lg: 85px;
 $border-width: 1px;
 // General task styling
@@ -15,18 +15,18 @@ $border-width: 1px;
 	h2 {
 		@include ellipsis();
 
-		font-family: $font-light;
-		font-size: 1.6em;
-		margin: 0 0 .2em;
+		font-family: $font-normal;
+		font-size: 1.5em;
+		margin: 0 0 .6em;
 	}
 
 	.center-title h2 {
-		margin-top: 0.6em;
+		margin-top: 0.8em;
 	}
 
 	.priority {
 		margin-left: 6%;
-		@include breakpoint(tablet) { margin-left: 19.5%; }
+		@include breakpoint(tablet) { margin-left: 21.5%; }
 	}
 
 	time, .meta, .tags { display: inline-block; }
@@ -34,10 +34,10 @@ $border-width: 1px;
 	.meta {
 		margin: 0;
 		padding: 0;
-
+		color: $nav-gray;
 		li {
 			display: inline-block;
-			font-size: 1em;
+			font-size: 1.1em;
 			margin: 0 0 0 -0.3em;
 			padding: 0;
 			> svg{
@@ -49,6 +49,7 @@ $border-width: 1px;
 				svg.icon {
 					display: inline-block;
 					@include square(11px);
+					fill:$nav-gray;
 				}
 
 				&:first-child {
@@ -63,7 +64,7 @@ $border-width: 1px;
 
 		li.seperator {
 			margin-right: 0.2em;
-			color: $gray;
+			color: $nav-gray;
 			font-family: $font-bold;
 
 			&:before { content: "//"; }
@@ -94,7 +95,7 @@ $border-width: 1px;
 // List item content
 .todo-content {
 	position: relative;
-	padding: 1.4em 1em 0 14%;
+	padding: 1.25em 1em 0 14%;
 	@include breakpoint(tablet) { padding-left: 28%; padding-right: 3em;}
 	height: $list-item-height;
 
@@ -139,6 +140,7 @@ $border-width: 1px;
 		a{
 			&:hover{
 				text-decoration:none;
+				opacity: 0.8;
 			}
 			text-align:center;
 			line-height: 1;
@@ -167,18 +169,6 @@ $border-width: 1px;
 			&.complete-button{
 				border-color: $green;
 					svg { fill: $green; }
-			}
-			&.schedule-button:hover{
-				background-color:$red;
-					svg { fill: white; }
-			}
-			&.todo-button:hover{
-				background-color:$yellow;
-					svg { fill: white; }
-			}
-			&.complete-button:hover{
-				background-color:$green;
-					svg { fill: white; }
 			}
 		}
 	}
