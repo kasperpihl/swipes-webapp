@@ -2,6 +2,20 @@
 
 isInt = (n) ->
 		typeof n is 'number' and n % 1 is 0
+QueryString = =>
+	query_string = {}
+	query = window.location.search.substring(1)
+	vars = query.split("&")
+	for attSet in vars
+		pair = attSet.split("=")
+		if typeof query_string[pair[0]] is "undefined"
+			query_string[pair[0]] = pair[1]
+		else if typeof query_string[pair[0]] is "string"
+			arr = [ query_string[pair[0]], pair[1] ]
+			query_string[pair[0]] = arr
+		else
+			query_string[pair[0]].push(pair[1])
+	query_string
 
 LoginView = Parse.View.extend
 	el: "#login"
@@ -75,7 +89,14 @@ LoginView = Parse.View.extend
 		user = Parse.User.current()
 		level = user.get "userLevel"
 
-		location.pathname = "/"
+		pathName = location.origin
+
+		if(queryString && queryString.href)
+			pathName += "?href=" + queryString.href
+		if(location.hash)
+			pathName += location.hash
+		
+		location.href = pathName
 		return
 	resetPassword: ->
 		email = prompt "Which email did you register with?"
@@ -146,17 +167,17 @@ LoginView = Parse.View.extend
 appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3"
 jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg"
 Parse.initialize(appId, jsId)
+queryString = QueryString()
 
 # Handle Fabebook Login
 window.fbAsyncInit = ->
-	fbKey = if liveEnvironment then '531435630236702' else "312199845588337"
+	fbKey = '531435630236702'
 	Parse.FacebookUtils.init
 		appId: fbKey	        	                # App ID from the app dashboard
 		channelUrl : 'http://swipesapp.com/channel.php' 		# Channel file for x-domain comms
 		status: no                		                 		# Check Facebook Login status
 		cookie: yes                           		      		# enable cookies to allow Parse to access the session
 		xfbml: yes                                				# Look for social plugins on the page
-
 # Load Fabebook JS SDK
 do ->
 	if document.getElementById 'facebook-jssdk' then return

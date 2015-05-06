@@ -26,15 +26,31 @@ define [
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
+		handleQueryString:(queryString) ->
+			clean = false
+			if queryString and queryString.href
+				@href = queryString.href
+				if history.pushState
+					newurl = window.location.protocol + "//" + window.location.host + window.location.pathname
+					if window.location.hash
+						newurl += window.location.hash
+					window.history.pushState({path:newurl},'',newurl)
+				
 		constructor: ->
+			##@tags.fetch()
+			$(window).focus @openedWindow
+
+		manualInit: ->
 			#@hackParseAPI()
+			# Base app data
+			@todos = new ToDoCollection()
+			@tags = new TagCollection()
+
 			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
 			
-			# Base app data
-			@todos = new ToDoCollection()
-			@tags = new TagCollection()
+			
 			@workSessions = new WorkCollection()
 
 			# Synchronization
@@ -45,8 +61,7 @@ define [
 			# Keyboard/Shortcut handler
 			@shortcuts = new KeyboardController()
 			
-			##@tags.fetch()
-			$(window).focus @openedWindow
+			
 		start: ->
 			if @sync.lastUpdate?
 				@tags.fetch()
@@ -80,6 +95,11 @@ define [
 				return false
 			)
 			@workmode.checkForWork()
+			if @href
+				switch @href
+					when "keyboard" then @sidebar.showKeyboardShortcuts()
+					
+				@href = false
 
 		cleanUp: ->
 			#@stopAutoUpdate()
