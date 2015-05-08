@@ -22,6 +22,7 @@
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
     "grunt-include-replace": "*",
+    "grunt-manifest": "^0.4.0",
     "grunt-mocha": "*",
     "grunt-modernizr": "*",
     "grunt-open": "*",
