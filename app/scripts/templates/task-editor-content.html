@@ -18,8 +18,7 @@
 			<span class="icon-hold">
 				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
 			</span>
-			<p class="link-style info-label">Completed <%= completionStr %>
-			<% if (completionTimeStr) print(", " + completionTimeStr); %></p>
+			<p class="link-style info-label">Completed <%= completionStr %><% if (completionTimeStr) print(", " + completionTimeStr); %></p>
 		</div>
 	</section>
 <% } %>
@@ -29,8 +28,7 @@
 			<span class="icon-hold">
 				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
 			</span>
-			<p class="link-style info-label"><%= scheduleStr %>
-			<% if (timeStr && schedule !== null) print(", " + timeStr); %></p>
+			<p class="link-style info-label"><%= scheduleStr %><% if (timeStr && schedule !== null) print(", " + timeStr); %></p>
 		</div>
 	</section>
 <% } %>
