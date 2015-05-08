@@ -3,10 +3,12 @@ define ["underscore", "momentjs", "js/utility/TimeUtility"], (_, Moment, TimeUti
 		constructor: (@settings) ->
 			@timeUtil = new TimeUtility()
 			@validateSettings()
-			@data = @getData()
+			@updateData()
 			_.bindAll( @, "getDynamicTime" )
 		validateSettings: ->
 
+		updateData: ->
+			@data = @getData()
 		getData: ->
 			return [
 				{ id: "later today", title: @getDynamicTime( "Later Today" ), disabled: no }
