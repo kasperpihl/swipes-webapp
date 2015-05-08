@@ -18,8 +18,8 @@ define ["underscore"
 			"click .icon-tag-container" : "clickTags"
 			"blur .input-title": "updateTitle"
 			"blur .notes .input-note": "updateNotes"
+			"focus .notes .input-note": "focusNotes"
 			"click .repeat-button": "clickedRepeat"
-
 			"click .step .action": "clickedAction"
 			"mouseenter .step": "trackMouse"
 			"mouseleave .step": "stopTrackingMouse"
@@ -29,6 +29,7 @@ define ["underscore"
 		stopTrackingMouse: (e) ->
 			@isHovering = false
 			@onUnhoverTask( $(e.currentTarget) )
+		
 		onHoverTask: (target) ->
 			if @isHovering
 				target.addClass "delete-hover"
@@ -79,42 +80,106 @@ define ["underscore"
 			state = "schedule" if @model.get("state") is "scheduled"
 			@actionbar?.handleButtonsFromState(state)
 			renderedContent = @model.toJSON()
-			if renderedContent.notes and renderedContent.notes.length > 0
-				renderedContent.notes = renderedContent.notes.replace(/(?:\r\n|\r|\n)/g, '<br>')
-				renderedContent.notes = renderedContent.notes.replace(/ /g,"&nbsp;")
+			renderedContent.title = renderedContent.title.replace(/ /g , "&nbsp;")
+			#renderedContent.title = @replaceURLsWithHTML(renderedContent.title)
+			@$el.find(".editor-content").html @contentTemplate renderedContent
+			@renderSubtasks()
+			@renderTags()
+			@renderNotes()
+			@setStateClass()
+			return @el
+
+
+# Handling Notes
+		focusNotes: (e) ->
+			return if e.target.className is "link-reference"
+			@$el.find('.link').each( (i, e) ->
+				obj = $(e)
+				linkVal = obj.find("a").html() + "<br>"
+				obj.before(linkVal)
+				obj.remove()
+			)
+		renderNotes: ->
+			notes = @model.get("notes")
+			if notes and notes.length > 0
+				notes = notes.replace(/(?:\r\n|\r|\n)/g, '<br>')
+				notes = notes.replace(/ /g," &nbsp;")
+				notes = @replaceURLsWithHTML(notes, "addDiv", "addBr")
+				notes = notes.replace(/ &nbsp;/g,"&nbsp;")
+			@$el.find(".editor-content .input-note").html(notes)
+		updateNotes: ->
+			notes = @getNotesFromHtml()
+			if notes != @model.get "notes"
+				@model.updateNotes notes
+				swipy.analytics.sendEvent("Tasks", "Notes", "", notes.length )
+				swipy.analytics.sendEventToIntercom("Update Note", { "Length": notes.length })
+			@renderNotes()
+		replaceURLsWithHTML: (text, addDiv, addBr)->
+			finalString = text
+			if text and text.length > 0
 				expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
 				regex = new RegExp(expression)
-				tempNoteString = renderedContent.notes
+				tempString = text
 				foundURLs = []
 				counter = 0
-				while m = regex.exec(tempNoteString)
+				while m = regex.exec(tempString)
 					counter++
 					index = m.index
 					url = m[0]
 					input = m.input
+					#console.log "before:" + finalString
+					finalString = finalString.replace(url+" &nbsp;", url)
+					finalString = finalString.replace(url+"<br>", url)
+					#console.log "after: " + finalString
+					# Check whether next line is new line / if so remove it as it will be rendered like that automatically
 					brStartIndex = index + url.length
 					nextText = input.substring( brStartIndex )
-					addedNewline = false
-					if nextText? and nextText.length > 3
-						if nextText.indexOf("<br>") is 0
-							url += "<br>"
-							addedNewline = true
-							tempNoteString = tempNoteString.slice(0, brStartIndex) + tempNoteString.substr(brStartIndex+4)
-					if !nextText? or nextText.length < 5
-						addExtraPoint = false
-						addExtraPoint = true if nextText.length is 0
-						addExtraPoint = true if addedNewline
-						if addExtraPoint
-							renderedContent.notes += "<div><br></div>"
+
 					if foundURLs.indexOf(url) is -1
-						renderedContent.notes = renderedContent.notes.replace(url, "<div contentEditable><a href=\""+ url + "\" target=\"_blank\" contentEditable=\"false\">" + url + "</a></div>")
+						replacement = "<a href=\""+ url + "\" target=\"_blank\" class=\"link-reference\" contentEditable=\"false\">" + url + "</a>"
+						if addDiv
+							replacement = "<div contentEditable=\"false\" class=\"link\">" + replacement + "</div>"
+						finalString = finalString.replace(url, replacement)
 						foundURLs.push url
-			renderedContent.title = renderedContent.title.replace(/ /g , "&nbsp;")
-			@$el.find(".editor-content").html @contentTemplate renderedContent
-			@renderSubtasks()
-			@renderTags()
-			@setStateClass()
-			return @el
+			finalString
+		getNotesFromHtml: ->
+			$noteField = @$el.find('.notes .input-note')
+			replacedBrs = $noteField.html()
+			counter = 0
+			#console.log(++counter + replacedBrs)
+			replacedBrs = replacedBrs.replace(/<div><br><\/div>/g , "<div1>\r\n")
+			#console.log(++counter + replacedBrs)
+
+			replacedBrs = replacedBrs.replace(/<div>/g, "\r\n")
+			#console.log(++counter + replacedBrs)
+			replacedBrs = replacedBrs.replace(/<br>/g , "\r\n")
+			#console.log(++counter + replacedBrs)
+
+			replacedBrs = replacedBrs.replace(/&nbsp;/g , " ")
+			#console.log(++counter + replacedBrs)
+			replacedBrs = replacedBrs.replace(/<(?:.|\n)*?>/gm, '')
+			#console.log(++counter + replacedBrs)
+
+			###expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+			regex = new RegExp(expression)
+
+			while m = regex.exec(replacedBrs)
+				#console.log index
+				index = m.index
+				url = m[0]
+				input = m.input
+				brStartIndex = index + url.length
+				nextText = input.substring( brStartIndex )
+				if nextText? and nextText.length > 3
+						if nextText.indexOf("\r\n") is 0
+							continue
+				replacedBrs = [replacedBrs.slice(0, brStartIndex), "\r\n", replacedBrs.slice(brStartIndex)].join('');
+			#console.log "7"+replacedBrs
+			###
+			replacedBrs
+
+
+
 		renderTags: ->
 			tagString = "Add tags"
 			tags = @model.get "tags"
@@ -223,13 +288,8 @@ define ["underscore"
 			else if title.length > 255
 				title = title.substr(0,255)
 			return title
-		updateNotes: ->
-			notes = @getNotes()
-			if notes != @model.get "notes"
-				@model.updateNotes notes
-				swipy.analytics.sendEvent("Tasks", "Notes", "", notes.length )
-				swipy.analytics.sendEventToIntercom("Update Note", { "Length": notes.length })
-				@render()
+
+		
 		updateActionStep: (e, target) ->
 			if e and !target
 				target = $(e.currentTarget)
@@ -275,40 +335,7 @@ define ["underscore"
 			@renderSubtasks()
 		getTitle: ->
 			@$el.find( ".input-title" ).html().replace(/&nbsp;/g , " ")
-		getNotes: ->
-			$noteField = @$el.find('.notes .input-note')
-			replacedBrs = $noteField.html()
-			#console.log "1"+replacedBrs
-
-			expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
-			regex = new RegExp(expression)
-
-			while m = regex.exec(replacedBrs)
-				#console.log index
-				index = m.index
-				url = m[0]
-				input = m.input
-				brStartIndex = index + url.length
-				nextText = input.substring( brStartIndex )
-				if nextText? and nextText.length > 3
-						if nextText.indexOf("<br>") is 0
-							continue
-				replacedBrs = [replacedBrs.slice(0, brStartIndex), "<br>", replacedBrs.slice(brStartIndex)].join('');
-			#console.log "2"+replacedBrs
-
-			replacedBrs = replacedBrs.replace(/<div><br>/g , "<div1>\r\n")
-			#console.log "3"+replacedBrs
-			replacedBrs = replacedBrs.replace(/<br>/g , "\r\n")
-			#console.log "4"+replacedBrs
-			replacedBrs = replacedBrs.replace(/<div>/g, "\r\n")
-			#console.log "5"+replacedBrs
-			replacedBrs = replacedBrs.replace(/&nbsp;/g , " ")
-			#console.log "6"+replacedBrs
-			replacedBrs = replacedBrs.replace(/<(?:.|\n)*?>/gm, '')
-			#console.log "7"+replacedBrs
-			#replacedBrs = replacedBrs.replace(/INS/g, "\r\n")
-			
-			replacedBrs
+		
 		remove: ->
 			@model.set("selected",false)
 			$("body").removeClass "edit-mode"
