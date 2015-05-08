@@ -93,6 +93,8 @@ define ["underscore"
 # Handling Notes
 		focusNotes: (e) ->
 			return if e.target.className is "link-reference"
+			if @emptyNotes? and @emptyNotes
+				@$el.find(".editor-content .input-note").html("")
 			@$el.find('.link').each( (i, e) ->
 				obj = $(e)
 				linkVal = obj.find("a").html() + "<br>"
@@ -106,6 +108,10 @@ define ["underscore"
 				notes = notes.replace(/ /g," &nbsp;")
 				notes = @replaceURLsWithHTML(notes, "addDiv", "addBr")
 				notes = notes.replace(/ &nbsp;/g,"&nbsp;")
+				@emptyNotes = false
+			else
+				notes = "Add Notes"
+				@emptyNotes = true
 			@$el.find(".editor-content .input-note").html(notes)
 		updateNotes: ->
 			notes = @getNotesFromHtml()
@@ -146,6 +152,8 @@ define ["underscore"
 			$noteField = @$el.find('.notes .input-note')
 			replacedBrs = $noteField.html()
 			counter = 0
+			if replacedBrs is "<br>"
+				return ""
 			#console.log(++counter + replacedBrs)
 			replacedBrs = replacedBrs.replace(/<div><br><\/div>/g , "<div1>\r\n")
 			#console.log(++counter + replacedBrs)
@@ -176,6 +184,7 @@ define ["underscore"
 				replacedBrs = [replacedBrs.slice(0, brStartIndex), "\r\n", replacedBrs.slice(brStartIndex)].join('');
 			#console.log "7"+replacedBrs
 			###
+
 			replacedBrs
 
 
