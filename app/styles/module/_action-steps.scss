@@ -45,7 +45,9 @@ $space-to-action: 40px;
 
 
 		.action{
-			display: none;
+			display: block;
+			@include transition(opacity 1ms ease-in-out);
+			opacity: 0;
 			position:absolute;
 			top: $action-step-height/2 - $closure-size/2;
 			left: $padding - $space-to-dot - $space-to-action;
@@ -53,11 +55,19 @@ $space-to-action: 40px;
 				left: $padding-big - $space-to-dot - $space-to-action;
 			}
 			@include border-radius(50%);
-			border: $border-width solid $unselected-color;
-			font-size: $icon-size;
-			line-height: 1;
 			text-decoration: none;
-			@include iconButoon($unselected-color, $closure-size, true);
+			@include square($closure-size);
+			svg {
+				display: inline;
+
+				line-height: 1;
+				vertical-align: baseline;
+				@include square( $closure-size );
+				@include centerBlock(0, 0, 0, 0, auto, absolute);
+			}
+			&, & svg {
+				@include transition(all 200ms ease-in-out);
+			}
 		}
 
 
@@ -92,12 +102,10 @@ $space-to-action: 40px;
 	}
 
 	.action.todo, .action.todo svg {
-		border-color: $yellow;
 		fill: $yellow;
 	}
 
 	.action.complete, .action.complete svg {
-		border-color: $green;
 		fill: $green;
 	}
 
@@ -114,7 +122,9 @@ $space-to-action: 40px;
 	.step:hover{
 
 		.action{
-			display:block;
+			
+			@include transition(opacity 100ms ease-in-out);
+			opacity: 1;
 		}
 
 		.action.delete{
