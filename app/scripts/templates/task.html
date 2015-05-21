@@ -113,17 +113,17 @@
 			<ul class="tags">
 				<%
 					tagStrings = _.invoke(tags, "get", "title")
-					tagStrings = _.sortBy( tagStrings, function(tag) {
-						return tag.toLowerCase()
+					tags = _.sortBy( tags, function(tag) {
+						return tag.get("title").toLowerCase()
 					})
 
-					_.each(tagStrings, function(tag) {
+					_.each(tags, function(tag) {
 				%>
 
-				<% if ( _.contains(swipy.filter.tagsFilter, tag) ) { %>
-					<li><strong><%= tag %></strong></li>
+				<% if ( _.contains(swipy.filter.tagsFilter, tag.get("title") ) ) { %>
+					<li><strong><a href="#" data-href="<%= tag.id %>" class="clickable-tag"><%= tag.get("title") %></a></strong></li>
 				<% } else { %>
-					<li><%= tag %></li>
+					<li><a href="#" data-href="<%= tag.id %>" class="clickable-tag"><%= tag.get("title") %></a></li>
 				<% } %>
 
 				<% }); %>

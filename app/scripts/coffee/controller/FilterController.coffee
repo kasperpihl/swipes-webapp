@@ -72,7 +72,11 @@ define ["underscore"], (_) ->
 					reject = no
 
 				task.set( "rejectedByTag", reject )
-
+		hasTagAsFilter: (tag) ->
+			for filterTag in @tagsFilter
+				if tag is filterTag
+					return true
+			return false
 		applySearchFilter: (filter) ->
 			@searchFilter = filter
 			swipy.todos.each (model) =>

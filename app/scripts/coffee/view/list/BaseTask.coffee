@@ -2,7 +2,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
-			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "handleAction" )
+			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "handleAction", "toggleTag" )
 
 			# Bind events that should re-render the view
 			@listenTo( @model, "change:tags change:timeStr", @render, @ )
@@ -18,15 +18,29 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 		bindEvents: ->
 			# Bind all events manually, so events extending me can use the
 			# events hash freely
+			@$el.on( 'click', ".clickable-tag", @toggleTag )
 			@$el.on( "click", ".todo-content", @toggleSelected )
+			
 			@$el.on( "click", ".priority", @togglePriority )
 			@$el.on( "click", ".actions a", @handleAction )
 		setTemplate: ->
 			@template = _.template TaskTmpl
+
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
 		init: -> # Hook for views extending me
+		toggleTag: (e) ->
+			console.log $(e.currentTarget).attr("data-href")
+			tag = swipy.tags.get( $(e.currentTarget).attr("data-href") )
+			if tag? and tag
+				hasFilter = swipy.filter.hasTagAsFilter tag.get("title")
+				if hasFilter then Backbone.trigger( "remove-filter", "tag", tag.get("title") )
+				else Backbone.trigger( "apply-filter", "tag", tag.get("title") )
+			return false
+				
 		toggleSelected: (e) ->
+			return if e.target.className is "clickable-tag"
+
 			if @delegate? and _.isFunction(@delegate.pressedTask)
 				@delegate.pressedTask(@model, e)
 		togglePriority: (e) ->

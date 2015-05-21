@@ -76,10 +76,22 @@ $border-width: 1px;
 			font-family: $font-normal;
 
 			li {
-				strong {
-					color: black;
-					text-shadow: 0 0 0px black;
+				a{
+					color: $nav-gray;
 				}
+				strong {
+					
+					
+					a{
+						color:$gray;
+						text-decoration:underline;
+					}
+					a:hover{
+						text-decoration: none;
+					}
+					//text-shadow: 0 0 0px black;
+				}
+				
 
 				&:before { content: ', '; }
 
