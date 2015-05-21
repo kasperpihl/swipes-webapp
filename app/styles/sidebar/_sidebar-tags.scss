@@ -1,3 +1,13 @@
+.sidebar.cmd-down {
+	.rounded-tags{
+		li{
+			&:hover{
+				color: $red;
+				text-decoration: line-through;
+			}
+		}
+	}
+}
 .sidebar {
 	.rounded-tags {
 		li {
@@ -10,10 +20,26 @@
 
 			@include transition(color 0.15s ease-out);
 
-			&.selected,
+
 			&:hover {
-				background: $brand-dakrcolor;
-				color: white;
+				background: rgba($brand-dakrcolor, 0.1);
+				//color: white;
+			}
+			&.selected{
+				background: rgba($brand-dakrcolor, 0.8);
+				color:white;
+			}
+			&.selected:hover{
+				background: rgba($brand-dakrcolor, 0.6);
+				border: thin solid rgba($brand-dakrcolor, 0.6);
+				//text-decoration: underline;
+			}
+			&.hideTag{
+				text-decoration:line-through;
+				color: $red;
+			}
+			&.hideTag:hover{
+				text-decoration:line-through;
 			}
 		}
 

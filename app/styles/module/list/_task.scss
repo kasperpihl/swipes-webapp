@@ -37,12 +37,13 @@ $border-width: 1px;
 					a:hover{
 						text-decoration:line-through;
 					}
-				}
-				strong {
-					a:hover{
-						text-decoration: none;
+					strong {
+						a:hover{
+							text-decoration: line-through;
+						}
 					}
 				}
+				
 			}
 		}
 	}
@@ -100,10 +101,10 @@ $border-width: 1px;
 					
 					a{
 						color:$gray;
-						text-decoration:underline;
+						//text-decoration:underline;
 					}
 					a:hover{
-						text-decoration: none;
+						text-decoration: underline;
 					}
 
 					
