@@ -25,17 +25,21 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 		keyDownHandling: (e) ->
 			if e.keyCode is 13
 				e.preventDefault()
+				if (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					@triggerAddTask(e, true)
 		keyUpHandling: (e) ->
 			if e.keyCode is 13
 				@triggerAddTask(e)
-				localStorage.setItem("addText", "")
 			if e.keyCode is 27
 				swipy.sidebar.popView()
-		triggerAddTask: (e) ->
+		triggerAddTask: (e, openTask) ->
 			e.preventDefault()
+			console.log "trigger"
 			return if @$el.find(".add-task-field").val() is ""
-			Backbone.trigger( "create-task", @$el.find(".add-task-field").val() )
+			Backbone.trigger( "create-task", @$el.find(".add-task-field").val(), openTask )
 			@$el.find(".add-task-field").val ""
+			localStorage.setItem("addText", "")
+			
 		destroy: ->
 			@remove()
 		remove: ->

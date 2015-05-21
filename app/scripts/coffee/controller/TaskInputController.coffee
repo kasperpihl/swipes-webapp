@@ -31,7 +31,7 @@ define ["underscore"], (_ ) ->
 			result = str.match(/[^#]+/)?[0]
 			if result then result = $.trim result
 			return result
-		createTask: (str) ->
+		createTask: (str, open) ->
 			return unless swipy.todos?
 
 			tags = @parseTags str
@@ -48,8 +48,11 @@ define ["underscore"], (_ ) ->
 			newTodo = swipy.todos.create { title, order, animateIn }
 			newTodo.set( "tags", tags )
 			newTodo.save({}, {sync:true})
-			
+
 			swipy.analytics.sendEvent("Tasks", "Added", "Input", title.length )
 			swipy.analytics.sendEventToIntercom( "Added Task", { "From": "Input", "Length": title.length } )
+
+			if( open )
+				swipy.router.navigate( "edit/#{ newTodo.id }", yes )
 		destroy: ->
 			Backbone.off( null, null, @ )
