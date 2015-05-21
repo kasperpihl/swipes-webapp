@@ -60,6 +60,7 @@ define [
 			@afterMovedItems()
 		clearForOpening: ->
 			@holdModifier = null
+			$('.todo-list').removeClass("cmd-down")
 			#@clearLongPress()
 		setLastIndex: (index, saveToShift) ->
 			@lastSelectedIndex = index
@@ -103,6 +104,7 @@ define [
 			# cmd / ctrl
 			if e.keyCode is 91 or e.keyCode is 17
 				@holdModifier = "cmd";
+				$('.todo-list').addClass("cmd-down")
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if !@currentLongPressKey?
@@ -171,7 +173,8 @@ define [
 			return if $("input").is(":focus")
 			if e.keyCode is 27
 				@deselectAllTasksButTasks([])
-				
+			if e.keyCode is 91 or e.keyCode is 17
+				$('.todo-list').removeClass("cmd-down")
 			if e.keyCode is 32
 				swipy.router.navigate("add",true )
 			if e.keyCode is 13
@@ -491,6 +494,7 @@ define [
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar({state: @state})
 			@transitionDeferred.resolve()
+			$('.todo-list').removeClass("cmd-down")
 			return if options? and options.onlyInstantiate
 			swipy.shortcuts.setDelegate( @ )
 		killSubViews: ->

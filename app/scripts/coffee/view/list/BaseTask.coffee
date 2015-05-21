@@ -30,9 +30,14 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			@bounds = @el.getClientRects()[0]
 		init: -> # Hook for views extending me
 		toggleTag: (e) ->
-			console.log $(e.currentTarget).attr("data-href")
+			e.stopPropagation()
+			e.preventDefault()
+			hide = $('.todo-list').hasClass('cmd-down')
 			tag = swipy.tags.get( $(e.currentTarget).attr("data-href") )
 			if tag? and tag
+				if hide
+					Backbone.trigger( "apply-filter", "hide-tag", tag.get("title") )
+					return false
 				hasFilter = swipy.filter.hasTagAsFilter tag.get("title")
 				if hasFilter then Backbone.trigger( "remove-filter", "tag", tag.get("title") )
 				else Backbone.trigger( "apply-filter", "tag", tag.get("title") )

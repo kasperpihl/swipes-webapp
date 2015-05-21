@@ -30,7 +30,22 @@ $border-width: 1px;
 	}
 
 	time, .meta, .tags { display: inline-block; }
-
+	&.cmd-down {
+		.meta{
+			.tags{
+				li {
+					a:hover{
+						text-decoration:line-through;
+					}
+				}
+				strong {
+					a:hover{
+						text-decoration: none;
+					}
+				}
+			}
+		}
+	}
 	.meta {
 		margin: 0;
 		padding: 0;
@@ -78,9 +93,10 @@ $border-width: 1px;
 			li {
 				a{
 					color: $nav-gray;
+
 				}
+				
 				strong {
-					
 					
 					a{
 						color:$gray;
@@ -89,6 +105,8 @@ $border-width: 1px;
 					a:hover{
 						text-decoration: none;
 					}
+
+					
 					//text-shadow: 0 0 0px black;
 				}
 				
