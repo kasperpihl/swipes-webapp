@@ -1,4 +1,4 @@
-$list-item-height: 65px;
+$list-item-height: 67px;
 $list-item-height-lg: 85px;
 $border-width: 1px;
 // General task styling
@@ -15,41 +15,61 @@ $border-width: 1px;
 	h2 {
 		@include ellipsis();
 
-		font-family: $font-light;
-		font-size: 1.6em;
-		margin: 0 0 .2em;
+		font-family: $font-normal;
+		font-size: 1.5em;
+		margin: 0 0 .4em;
 	}
 
 	.center-title h2 {
-		margin-top: 0.6em;
+		margin-top: 0.8em;
 	}
 
 	.priority {
 		margin-left: 6%;
-		@include breakpoint(tablet) { margin-left: 19.5%; }
+		@include breakpoint(tablet) { margin-left: 21.5%; }
 	}
 
 	time, .meta, .tags { display: inline-block; }
-
+	&.cmd-down {
+		.meta{
+			.tags{
+				li {
+					a:hover{
+						text-decoration:line-through;
+					}
+					strong {
+						a:hover{
+							text-decoration: line-through;
+						}
+					}
+				}
+				
+			}
+		}
+	}
 	.meta {
 		margin: 0;
 		padding: 0;
-
+		color: $nav-gray;
 		li {
 			display: inline-block;
-			font-size: 1em;
+			font-size: 1.1em;
 			margin: 0 0 0 -0.3em;
 			padding: 0;
-
+			> svg{
+				display: inline-block;
+				@include square(11px);
+			}
 				.icon,
-				.icon svg {
+				.icon svg, 
+				svg.icon {
 					display: inline-block;
 					@include square(11px);
+					fill:$nav-gray;
 				}
 
-
 				&:first-child {
-					margin-left: 0;
+					margin-left: -0.2em;
 					&:before { content: none; }
 				}
 		}
@@ -60,7 +80,7 @@ $border-width: 1px;
 
 		li.seperator {
 			margin-right: 0.2em;
-			color: $gray;
+			color: $nav-gray;
 			font-family: $font-bold;
 
 			&:before { content: "//"; }
@@ -72,10 +92,25 @@ $border-width: 1px;
 			font-family: $font-normal;
 
 			li {
-				strong {
-					color: black;
-					text-shadow: 0 0 0px black;
+				a{
+					color: $nav-gray;
+
 				}
+				
+				strong {
+					
+					a{
+						color:$gray;
+						//text-decoration:underline;
+					}
+					a:hover{
+						text-decoration: underline;
+					}
+
+					
+					//text-shadow: 0 0 0px black;
+				}
+				
 
 				&:before { content: ', '; }
 
@@ -91,7 +126,7 @@ $border-width: 1px;
 // List item content
 .todo-content {
 	position: relative;
-	padding: 1.4em 1em 0 14%;
+	padding: 1.3em 1em 0 14%;
 	@include breakpoint(tablet) { padding-left: 28%; padding-right: 3em;}
 	height: $list-item-height;
 
@@ -136,22 +171,21 @@ $border-width: 1px;
 		a{
 			&:hover{
 				text-decoration:none;
+				opacity: 0.8;
 			}
 			text-align:center;
-			$icon-size: 12px;
-			font-size: $icon-size;
 			line-height: 1;
 			float:left;
 			margin-right:5px;
 			margin-left: 5px;
 			@include square($button-size);
 			@include border-radius(50%);
-			border: $border-width solid $gray;
+			
 			padding:0;
 			position: relative;
 
 			svg {
-				@include square(16px);
+				@include square($button-size);
 				@include centerBlock(0, 0, 0, 0, auto, absolute);
 			}
 
@@ -166,18 +200,6 @@ $border-width: 1px;
 			&.complete-button{
 				border-color: $green;
 					svg { fill: $green; }
-			}
-			&.schedule-button:hover{
-				background-color:$red;
-					svg { fill: white; }
-			}
-			&.todo-button:hover{
-				background-color:$yellow;
-					svg { fill: white; }
-			}
-			&.complete-button:hover{
-				background-color:$green;
-					svg { fill: white; }
 			}
 		}
 	}

@@ -1,0 +1,73 @@
+body.request-work-open {
+
+	.overlay.request-work {
+		visibility: visible;
+		.overlay-bg { opacity: 1; background: rgba(200, 200, 200, 0.7); }
+		.overlay-content{
+			background:white;
+			padding:20px;
+			width:300px;
+			height: 300px;
+			margin: 20% auto;
+			.sub-title {
+				font-size: 13.5px;
+				font-family: $font-normal;
+				color: $gray-labels;
+				margin: 0;
+				line-height: 1;
+				text-align: center;
+				letter-spacing: 2px;
+
+					svg {
+						display: inline-block;
+						@include square(20px);
+						fill: $gray-labels;
+						vertical-align: middle;
+					}
+
+					span {
+						display: inline-block;
+						vertical-align: middle;
+						line-height: 20px;
+						text-transform: uppercase;
+					}
+			}
+			h1{
+				font-size: 18px;
+				font-family: $font-normal;
+			}
+			h1.time-label{
+				font-size:30px;
+			}
+		}
+	}
+	&.hide-request-work .overlay.request-work {
+		.overlay-bg {
+			opacity: 0;
+			@include transition(opacity 0.35s ease-out 0.1s);
+		}
+
+		.overlay-content { display: none; }
+	}
+}
+
+// customizing slider structure
+.overlay .range-slider {
+
+	.track {
+		margin-top: -6px;
+		background-color: transparent;
+		border: 2px solid #e0e0e0;
+		height: 15px;
+		@include border-radius(25px);
+	}
+
+	.handle {
+		@include square(1.6em);
+		border-width: 1px;
+		margin-left: -( 1.6em / 2);
+		margin-top: -( 1.6em / 2);
+	}
+
+}
+

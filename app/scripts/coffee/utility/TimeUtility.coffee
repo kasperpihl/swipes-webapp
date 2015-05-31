@@ -5,6 +5,7 @@ define ["momentjs"], (Moment)->
 		###
 		isAmPm: ->
 			return if swipy.settings.get("Setting24HourClock") then false else true
+		
 		getFormattedTime: (hour, minute, amPm, html) ->
 			if minute < 10 then minute = "0" + minute
 			return hour + ":" + minute if !amPm? or !amPm
@@ -25,7 +26,26 @@ define ["momentjs"], (Moment)->
 				amPmString = "<small>" + amPmString + "</small>"
 
 			return timeString + " " + amPmString
+		getFormattedTimeFromSeconds: ( seconds, html ) ->
+			hours = Math.floor(@hourForSeconds(seconds))
+			minutes = Math.floor(@minutesForSeconds(seconds))
+			seconds = seconds % 60
 
+			timeString = ""
+			if hours > 0
+				if hours < 10
+					timeString += "0"
+				timeString += hours + ":"
+
+			if minutes < 10
+				timeString += "0"
+			timeString += minutes + ":"
+
+			if seconds < 10
+				timeString += "0"
+			timeString += seconds
+
+			timeString
 		hourForSeconds: ( seconds ) ->
 			return seconds / 3600
 		minutesForSeconds: ( seconds ) ->

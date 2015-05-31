@@ -12,15 +12,22 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 			@listenTo( Backbone, "navigate/view", => _.defer => @render() )
 			@listenTo( swipy.todos, "change:tags", @render )
+			@listenTo( Backbone, "opened-window", @clearForOpening )
 			@render()
+		keyDownHandling: (e) ->
+			if e.keyCode is 91 or e.keyCode is 17
+				$('.sidebar').addClass("cmd-down")
 		keyUpHandling: (e) ->
+			if e.keyCode is 91 or e.keyCode is 17
+				$('.sidebar').removeClass("cmd-down")
 			if e.keyCode is 27
 				swipy.sidebar.popView()
+
 		handleFilterChange: (type) ->
 			# We defer 'till next event loop, because we need to make sure
 			# FilterController has done its thing first.
 			_.defer =>
-				if type is "tag" or type is "all" then @render()
+				if type is "tag" or type is "hide-tag" or type is "all" then @render()
 		handleClickTag: (e) ->
 			if @deleteMode
 				@removeTag e
@@ -35,7 +42,9 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 			el = $( e.currentTarget )
 
 			unless el.hasClass "selected"
-				Backbone.trigger( "apply-filter", "tag", tag )
+				command = "tag"
+				command = "hide-tag" if $(".sidebar").hasClass("cmd-down")
+				Backbone.trigger( "apply-filter", command, tag )
 			else
 				Backbone.trigger( "remove-filter", "tag", tag )
 		removeTag: (e) ->
@@ -88,8 +97,13 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 		renderTag: (tagName, list) ->
 			if swipy.filter? and _.contains( swipy.filter.tagsFilter, tagName )
 				list.append "<li class='selected'>#{ tagName }</li>"
+			else if swipy.filter? and _.contains( swipy.filter.hideTagsFilter, tagName )
+				list.append "<li class='selected hideTag'>#{ tagName }</li>"
 			else
 				list.append "<li>#{ tagName }</li>"
+		clearForOpening: ->
+			$('.sidebar').removeClass("cmd-down")
+			#@clearLongPress()
 		renderDeleteButton: (list) ->
 			list.append "<li class='delete'><a href='JavaScript:void(0);' title='Delete tags'><span class='icon-trashcan'></span></a></li>"
 		destroy: ->

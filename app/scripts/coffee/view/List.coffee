@@ -60,6 +60,7 @@ define [
 			@afterMovedItems()
 		clearForOpening: ->
 			@holdModifier = null
+			$('.todo-list').removeClass("cmd-down")
 			#@clearLongPress()
 		setLastIndex: (index, saveToShift) ->
 			@lastSelectedIndex = index
@@ -103,6 +104,7 @@ define [
 			# cmd / ctrl
 			if e.keyCode is 91 or e.keyCode is 17
 				@holdModifier = "cmd";
+				$('.todo-list').addClass("cmd-down")
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if !@currentLongPressKey?
@@ -171,18 +173,19 @@ define [
 			return if $("input").is(":focus")
 			if e.keyCode is 27
 				@deselectAllTasksButTasks([])
-				
+			if e.keyCode is 91 or e.keyCode is 17
+				$('.todo-list').removeClass("cmd-down")
 			if e.keyCode is 32
 				swipy.router.navigate("add",true )
 			if e.keyCode is 13
 				@openSelectedTask()
-			if e.keyCode is 49 and @state isnt "schedule"
+			###if e.keyCode is 49 and @state isnt "schedule"
 				swipy.router.navigate("list/scheduled",true)
 			if e.keyCode is 50 and @state isnt "tasks"
 				swipy.router.navigate("list/todo",true )
 			if e.keyCode is 51 and @state isnt "done"
 				swipy.router.navigate("list/completed",true )
-
+###
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if @currentLongPressKey?
@@ -195,7 +198,7 @@ define [
 		openSelectedTask: ->
 			lastTask = view.model for view, i in @subviews when i is @lastSelectedIndex
 			if lastTask and swipy.todos.getSelected().length > 0
-				swipy.router.navigate( "edit/#{ lastTask.id }", yes ) 
+				@openTask(lastTask)
 		selectedModels: (tasks, e) ->
 			holdModifier = @holdModifierForEvent(e)
 			if !holdModifier?
@@ -290,6 +293,10 @@ define [
 			# Remove any old HTML before appending new stuff.
 			return if !@$el
 			oldScroll = $("#scrollcont").scrollTop()
+			if typeof(Storage) isnt "undefined" and localStorage.getItem("saved-offset-list-" + @state)
+				oldScroll = localStorage.getItem("saved-offset-list-" + @state)
+				localStorage.removeItem("saved-offset-list-" + @state)
+
 			@$el.empty()
 			@killSubViews()
 
@@ -321,9 +328,10 @@ define [
 
 
 			@beforeRenderList todos
-
+			
 			for group in @groupTasks todos
 				tasksJSON = _.invoke( group.tasks, "toJSON" )
+
 				progress = ""
 				progress = "no-progress" if @state isnt "tasks"
 			
@@ -352,8 +360,9 @@ define [
 
 				@$el.append $html
 				widthOfText = $html.find('h1 > span').innerWidth()
-
+				#console.log $html.find('h1 > span').html() + " " + widthOfText
 				actualWidth = widthOfText + 50
+
 				$html.find('.progress').parent().css("paddingRight",actualWidth+"px")
 				$html.find('h1').css("width",actualWidth+"px")
 				shapePadding = actualWidth*1.025
@@ -369,11 +378,18 @@ define [
 			else
 				$('.search-result').addClass("hidden")
 			swipy.filter.updateFilterString(todos.length)
+		saveOffset: ->
+			@savedOffset = $("#scrollcont").scrollTop()
+			if typeof(Storage) isnt "undefined"
+				localStorage.setItem("saved-offset-list-" + @state, @savedOffset)
+		openTask:(model) ->
+			@saveOffset()
+			identifier = model.id
+			swipy.router.navigate( "edit/#{ identifier }", yes )
 		pressedTask:(model, e) ->
 			holdModifier = @holdModifierForEvent(e)
 			if !holdModifier and !@$el.hasClass("selecting")
-				identifier = model.id
-				swipy.router.navigate( "edit/#{ identifier }", yes )
+				@openTask(model)
 			else
 				currentlySelected = model.get( "selected" ) or false
 				model.set( "selected", !currentlySelected )
@@ -412,7 +428,6 @@ define [
 			#minOrder = Math.min _.invoke( tasks, "get", "order" )...
 
 			# Bump order for tasks
-			#swipy.todos.bumpOrder( "up", minOrder, tasks.length )
 			for task in tasks
 				view = @getViewForModel task
 				self = @
@@ -479,6 +494,7 @@ define [
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar({state: @state})
 			@transitionDeferred.resolve()
+			$('.todo-list').removeClass("cmd-down")
 			return if options? and options.onlyInstantiate
 			swipy.shortcuts.setDelegate( @ )
 		killSubViews: ->

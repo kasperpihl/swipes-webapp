@@ -18,6 +18,7 @@ define ["underscore", "js/model/ScheduleModel", "momentjs"], (_, ScheduleModel) 
 				loadViewDfd.resolve()
 
 			loadViewDfd.promise().done =>
+				@model.updateData()
 				@view = new @scheduleTemplate( model: @model )
 				$('.overlay.scheduler').remove()
 				$("body").append @view.render().el

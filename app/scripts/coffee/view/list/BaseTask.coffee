@@ -2,7 +2,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 	Backbone.View.extend
 		tagName: "li"
 		initialize: ->
-			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "edit", "handleAction" )
+			_.bindAll( @, "onSelected", "setBounds", "toggleSelected", "togglePriority", "handleAction", "toggleTag" )
 
 			# Bind events that should re-render the view
 			@listenTo( @model, "change:tags change:timeStr", @render, @ )
@@ -18,15 +18,34 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 		bindEvents: ->
 			# Bind all events manually, so events extending me can use the
 			# events hash freely
+			@$el.on( 'click', ".clickable-tag", @toggleTag )
 			@$el.on( "click", ".todo-content", @toggleSelected )
+			
 			@$el.on( "click", ".priority", @togglePriority )
 			@$el.on( "click", ".actions a", @handleAction )
 		setTemplate: ->
 			@template = _.template TaskTmpl
+
 		setBounds: ->
 			@bounds = @el.getClientRects()[0]
 		init: -> # Hook for views extending me
+		toggleTag: (e) ->
+			e.stopPropagation()
+			e.preventDefault()
+			hide = $('.todo-list').hasClass('cmd-down')
+			tag = swipy.tags.get( $(e.currentTarget).attr("data-href") )
+			if tag? and tag
+				if hide
+					Backbone.trigger( "apply-filter", "hide-tag", tag.get("title") )
+					return false
+				hasFilter = swipy.filter.hasTagAsFilter tag.get("title")
+				if hasFilter then Backbone.trigger( "remove-filter", "tag", tag.get("title") )
+				else Backbone.trigger( "apply-filter", "tag", tag.get("title") )
+			return false
+				
 		toggleSelected: (e) ->
+			return if e.target.className is "clickable-tag"
+
 			if @delegate? and _.isFunction(@delegate.pressedTask)
 				@delegate.pressedTask(@model, e)
 		togglePriority: (e) ->
@@ -40,15 +59,10 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 				Backbone.trigger( "complete-task", @model )
 			else if $( e.currentTarget ).hasClass "todo-button"
 				Backbone.trigger( "todo-task", @model )
+			else if $( e.currentTarget ).hasClass "work-button"
+				Backbone.trigger( "request-work-task", @model )
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
-		edit: (e) ->
-			# Ignore doubleclicks on priority dot
-			return false if e.target.className is "priority"
-
-			# Else navigator to editor.
-			identifier = @model.id
-			swipy.router.navigate( "edit/#{ identifier }", yes )
 		render: ->
 			# If template isnt set yet, just return the empty element
 			return @ unless @template?
@@ -77,7 +91,8 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			# Hook for views extending me
 		swipeRight: (className, fadeOut = yes) ->
 			dfd = new $.Deferred()
-
+			@$el.find(".action").hide()
+			@$el.find(".action."+className).show()
 			content = @$el.find ".todo-content"
 			if className then @$el.addClass className
 

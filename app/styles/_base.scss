@@ -51,7 +51,15 @@ html.touch body {
 
 		
 }
-
+svg {
+	pointer-events: none;
+}
+a:focus { 
+    outline: none; 
+}
+button::-moz-focus-inner {
+  border: 0;
+}
 div[role=main] {
 	margin: auto;
 	max-width: emCalc(685px);
@@ -62,11 +70,6 @@ div[role=main] {
 		
 		@include transition(max-width 0.5s ease-in-out);
 	}
-
-	@include breakpoint(desktop-wide) {
-		max-width: emCalc(850px);
-	}
-
 
 
 	padding-top: 1.0em;

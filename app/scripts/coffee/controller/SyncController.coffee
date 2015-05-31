@@ -7,7 +7,7 @@
 
 ###
 
-define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js/view/SyncIndicator"], (_, $, ChangedAttributesController, SyncIndicator) ->
+define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js/view/SyncIndicator", "js/utility/Utility"], (_, $, ChangedAttributesController, SyncIndicator, Utility) ->
 	class SyncController
 
 		constructor: ->
@@ -25,10 +25,10 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					localStorage.setItem("currentSyncVersion", @currentSyncVersion)
 				if localStorage.getItem("syncLastUpdate")?
 					@lastUpdate = localStorage.getItem("syncLastUpdate")
-			@bouncedSync = _.debounce( @sync, 3000 )
+			@bouncedSync = _.debounce( @sync, 1500 )
 			@currentSyncing = null
 			@firstSync = false
-
+			@util = new Utility()
 
 		handleModelForSync: (model, attributes) ->
 			if !model.get("needSaveToServer")
@@ -141,13 +141,14 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			return @needSync = true if @isSyncing
 			return if !Parse.User.current()
 			@isSyncing = true
-			url = "http://api.swipesapp.com/v1/sync" #http://localhost:5000/v1/sync" #
+			url = "http://api.swipesapp.com/v1/sync" #"http://localhost:5000/v1/sync" #
 			user = Parse.User.current()
 			token = user.getSessionToken()
 			data =
 				sessionToken : token
 				platform : "web"
 				version: 1
+				syncId: @util.generateId(6)
 				sendLogs : false
 				changesOnly : true
 

@@ -38,7 +38,6 @@ define [
 				$("#main-content").prepend editView.el
 				@transitionIn( editView ).then ->
 					editView.transitionInComplete?.call editView
-
 		loadView: (slug) ->
 			dfd = new $.Deferred()
 			if slug is "scheduled" then require ["js/view/Scheduled"], (View) -> dfd.resolve View

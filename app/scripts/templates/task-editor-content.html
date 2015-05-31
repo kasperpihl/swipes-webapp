@@ -12,14 +12,23 @@
 		<span class="dot"></span>
 	</div>
 </section>
-<% if (scheduleStr) { %>
+<% if (typeof completionStr !== "undefined") { %>
 	<section>
 		<div class="schedule-label has-icon no-select">
 			<span class="icon-hold">
 				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
 			</span>
-			<p class="link-style info-label"><%= scheduleStr %>
-			<% if (timeStr && schedule !== null) print(", " + timeStr); %></p>
+			<p class="link-style info-label">Completed <%= completionStr %><% if (completionTimeStr) print(", " + completionTimeStr); %></p>
+		</div>
+	</section>
+<% } %>
+<% if (typeof completionStr == "undefined" && scheduleStr) { %>
+	<section>
+		<div class="schedule-label has-icon no-select">
+			<span class="icon-hold">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use></svg>
+			</span>
+			<p class="link-style info-label"><%= scheduleStr %><% if (timeStr && schedule !== null) print(", " + timeStr); %></p>
 		</div>
 	</section>
 <% } %>
@@ -53,7 +62,35 @@
 		</div>
 	</section>
 <% } %>
-
+<% if (attachments !== null) { 
+	for( var i = 0 ; i < attachments.length ; i++){
+		var attachment = attachments[i];
+		var iconString;
+		var title = attachment.title;
+		if( attachment.service == "evernote" ){
+			iconString = "editEvernote";
+		}
+		if( attachment.service == "gmail" ){
+			iconString = "editMail";
+		}
+		if( attachment.service == "url" ){
+			iconString = "editURL";
+		}
+		if(!iconString)
+			continue;
+		%>
+		<section>
+			<div class="attachment <%= attachment.service %> has-icon">
+				<span class="icon-hold">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-<%= iconString %>"></use></svg>
+				</span>
+				<% if(attachment.service == "url"){ %><a target="_blank" href="<%= attachment.identifier %>"><% } %>
+				<p class="attachment-string info-label"><%= title %></p>
+				<% if(attachment.service == "url"){ %></a><% } %>
+			</div>
+		</section>
+	<% }  
+}  %>
 <section>
 	<div class="icon-tag-container has-icon">
 		<span class="icon-hold">
@@ -68,6 +105,6 @@
 		<span class="icon-hold">
 			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
 		</span>
-		<div class="input-note content-editable" contenteditable="true"><%= notes %></div>
+		<div class="input-note content-editable" contenteditable="true"></div>
 	</div>
 </section>

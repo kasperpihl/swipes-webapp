@@ -3,7 +3,8 @@
 $iconsColor: #212121;
 
 .task-editor {
-	$padding: 66px;
+	$padding: 82px;
+	$padding-big: 112px;
 	color: $gray;
 	position: relative;
 	.back-button{
@@ -30,7 +31,7 @@ $iconsColor: #212121;
 			font-size: emCalc(28px);
 			margin-bottom: emCalc(10px);
 			margin-top: emCalc(25px);
-			margin-left: $padding;
+			margin-left: 66px;
 		}
 
 
@@ -65,17 +66,22 @@ $iconsColor: #212121;
 
 	.editor-content {
 		width: 94%;
+		margin: 60px auto;
 		@include breakpoint(tablet){
 			width: 84%;
+			margin: 80px auto;
+		}
+		@include breakpoint(desktop-wide){
+			margin: 100px auto;
 		}
 		
-		margin: 60px auto;
+		
 
 		.has-icon {
 			// Can't use em, because font-size might vary
-			padding-left: 50px;
+			padding-left: $padding;
 			@include breakpoint(tablet) {
-				padding-left: $padding;
+				padding-left: $padding-big;
 			}
 			position: relative;
 
@@ -86,7 +92,10 @@ $iconsColor: #212121;
 			.icon-hold {
 				display: inline-block;
 				position: absolute;
-				left: 0;
+				left: 27px;
+				@include breakpoint(tablet) {
+					left: 57px;
+				}
 				top: 0px;
 				@include iconButoon($iconsColor, 40px, false);
 				border:0;
@@ -94,8 +103,11 @@ $iconsColor: #212121;
 		}
 
 		> section {
-			margin-bottom: 0.8em;
+			margin-bottom: 1.0em;
 			min-height: 40px;
+		}
+		> section.action-steps{
+			margin-bottom: 2.0em;
 		}
 	}
 

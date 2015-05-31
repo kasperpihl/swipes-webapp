@@ -5,6 +5,7 @@ define ["underscore"], (_) ->
 			@delegate = null
 			@lockDelegate = null
 			@isLocked = false
+			@globalLock = false
 			_.bindAll( @, "keyDownHandling", "keyUpHandling", "lock", "unlock", "handleClick" )
 			$(document).on('keydown', @keyDownHandling )
 			$(document).on('keyup', @keyUpHandling )
@@ -15,21 +16,37 @@ define ["underscore"], (_) ->
 			$(document).off('keyup', @keyUpHandling )
 			$('#scrollcont').off("click.keycontroller")
 		keyDownHandling: (e) ->
-			if e.keyCode is 70 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-				if Backbone.history.fragment isnt "search"
-					swipy.router.navigate("search", true)
-				e.preventDefault()
-				return
-			if e.keyCode is 68 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-				if Backbone.history.fragment isnt "workspaces"
-					swipy.router.navigate("workspaces", true)
-				e.preventDefault()
-				return
-			if e.keyCode is 188 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-				if Backbone.history.fragment isnt "settings"
-					swipy.router.navigate("settings", true)
-				e.preventDefault()
-				return
+			if !@globalLock and !$("input").is(":focus") and !$("div.content-editable").is(':focus')
+				if e.keyCode is 49 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "list/scheduled"
+						swipy.router.navigate("list/scheduled",true)
+						e.preventDefault()
+					return
+				if e.keyCode is 50 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "list/todo"
+						swipy.router.navigate("list/todo",true )
+						e.preventDefault()
+					return
+				if e.keyCode is 51 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "list/completed"
+						swipy.router.navigate("list/completed",true )
+						e.preventDefault()
+					return
+				if e.keyCode is 70 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "search"
+						swipy.router.navigate("search", true)
+					e.preventDefault()
+					return
+				if e.keyCode is 68 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "workspaces"
+						swipy.router.navigate("workspaces", true)
+					e.preventDefault()
+					return
+				if e.keyCode is 188 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if Backbone.history.fragment isnt "settings"
+						swipy.router.navigate("settings", true)
+					e.preventDefault()
+					return
 			return if @isLocked or !@delegate?
 			if _.isFunction(@delegate.keyDownHandling)
 				@delegate.keyDownHandling(e)
@@ -51,7 +68,10 @@ define ["underscore"], (_) ->
 			@delegate = delegate
 		popDelegate: ->
 			@delegate = @pushedDelegates.pop()
-		lock: ->
+		lock: (globalLock) ->
 			@isLocked = true
+			if globalLock
+				@globalLock = true
 		unlock: ->
 			@isLocked = false
+			@globalLock = false

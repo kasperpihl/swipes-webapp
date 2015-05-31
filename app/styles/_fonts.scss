@@ -8,7 +8,7 @@ $fonts-url: 'fonts/';
 $font_name: 'GothamRounded-Medium';
 @font-face {
 	font-family: $font-name;
-	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.woff');
 	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
 		 url($fonts-url + $font-name + '.woff') format('woff'),
 		 url($fonts-url + $font-name + '.ttf') format('truetype'),
@@ -20,7 +20,7 @@ $font_name: 'GothamRounded-Medium';
 $font_name: 'GothamRounded-Book';
 @font-face {
 	font-family: $font-name;
-	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.woff');
 	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
 		 url($fonts-url + $font-name + '.woff') format('woff'),
 		 url($fonts-url + $font-name + '.ttf') format('truetype'),
@@ -32,7 +32,7 @@ $font_name: 'GothamRounded-Book';
 $font_name: 'GothamRounded-Light';
 @font-face {
 	font-family: $font-name;
-	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.woff');
 	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
 		 url($fonts-url + $font-name + '.woff') format('woff'),
 		 url($fonts-url + $font-name + '.ttf') format('truetype'),
@@ -53,7 +53,7 @@ $font-light: "GothamRounded-Light", sans-serif;
 $font_name: 'swipes';
 @font-face {
 	font-family: $font-name;
-	src: url($fonts-url + $font-name + '.eot');
+	src: url($fonts-url + $font-name + '.woff');
 	src: url($fonts-url + $font-name + '.eot?#iefix') format('embedded-opentype'),
 		 url($fonts-url + $font-name + '.woff') format('woff'),
 		 url($fonts-url + $font-name + '.ttf') format('truetype'),

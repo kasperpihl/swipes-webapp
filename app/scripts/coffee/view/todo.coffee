@@ -1,9 +1,12 @@
-define ["underscore", "js/view/List", "js/controller/ListSortController", "js/model/TaskSortModel"], (_, ListView, ListSortController, TaskSortModel) ->
+define ["underscore", "js/view/List", "js/controller/ListSortController", "js/model/TaskSortModel", "js/view/workmode/RequestWorkOverlay"], (_, ListView, ListSortController, TaskSortModel, RequestWorkOverlay) ->
 	ListView.extend
 		initialize: ->
 			@sorter = new TaskSortModel()
 			@state = "tasks"
 			ListView::initialize.apply( @, arguments )
+			Backbone.on( "request-work-task", @requestWorkTask, @ )
+		requestWorkTask: ( task ) ->
+			@workEditor = new RequestWorkOverlay( model: task )
 		sortTasks: (tasks) ->
 			return _.sortBy tasks, (model) -> model.get "order" 
 		groupTasks: (tasksArr) ->

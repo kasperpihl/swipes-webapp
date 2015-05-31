@@ -45,6 +45,43 @@ module.exports = function (grunt) {
                 }
             }
         },
+        manifest: {
+            generate: {
+                options: {
+                    basePath: '<%= yeoman.dist %>/',
+                    cache: [],
+                    network: ['*'],
+                    //fallback: ['/ /offline.html'],
+                    exclude: [
+                        'styles/img/touch-icon-ipad-retina.png',
+                        'styles/img/touch-icon-ipad.png',
+                        'styles/img/touch-icon-iphone-retina.png',
+                        'styles/img/touch-icon-iphone.png'
+                    ],
+                    preferOnline: true,
+                    verbose: true,
+                    timestamp: true,
+                    hash: true,
+                    master: ['index.html'],
+                    process: function(path) {
+                        return path.substring('<%= yeoman.dist %>/'.length);
+                    }
+                },
+                src: [
+                    '*.html',
+                    '*/*.html',
+                    'bower_components/*/*.js',
+                    'scripts/*.js',
+                    'scripts/*/*.js',
+                    'styles/*.css',
+                    'styles/img/*.svg',
+                    'styles/img/*.png',
+                    'styles/fonts/*.woff'
+
+                ],
+                dest: '<%= yeoman.dist %>/manifest.appcache'
+            }
+        },
         yeoman: yeomanConfig,
         watch: {
             coffee: {
@@ -402,10 +439,13 @@ module.exports = function (grunt) {
         'concat',
         'cssmin',
         'uglify',
+        
         // 'modernizr',
         'copy:dist',
+
         'rev',
-        'usemin'
+        'usemin',
+        'manifest'
     ]);
 
     grunt.registerTask('default', [

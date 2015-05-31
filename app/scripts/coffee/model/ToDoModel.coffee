@@ -162,10 +162,6 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if @has "completionDate"
 				@setCompletionStr()
 				@setCompletionTimeStr()
-
-		reviveDate: (prop) ->
-			value = @handleDateFromServer @get( prop )
-			@set prop, value, { silent: true }
 		
 		isSubtask: ->
 			if @get "parentLocalId"
@@ -294,8 +290,9 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			completionDate = @get "completionDate"
 			if !completionDate then return @unset "completionTimeStr"
 
+			format = if swipy.settings?.get("Setting24HourClock") then "H:mm" else "h:mmA"
 			# We have a completionDate set, update timeStr prop
-			@set( "completionTimeStr", moment( completionDate ).format "h:mmA" )
+			@set( "completionTimeStr", moment( completionDate ).format format )
 
 		
 
@@ -322,14 +319,26 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else
 				throw new Error "You're trying to repeat a task that doesn't have a repeat date"
 				return
+		toRenderJSON: ->
+			clonedAttributes = @toJSON()
+
+			clonedAttributes
 		toJSON: ->
 			@set( "state", @getState() )
 			clonedAttributes = _.clone @attributes
+			
 			###if clonedAttributes.title and clonedAttributes.title.length > 0
 				clonedAttributes.title = _.escape(clonedAttributes.title)
 			if clonedAttributes.notes and clonedAttributes.notes.length > 0
 				clonedAttributes.notes = _.escape(clonedAttributes.notes)###
 			clonedAttributes
+		attachmentsForService:(service) ->
+			foundAttachments = []
+			for attachment in @get("attachments")
+				if attachment.service is service
+					foundAttachments.push(attachment)
+			return no if foundAttachments.length is 0
+			return foundAttachments
 		cleanUp: ->
 			@off()
 
@@ -438,8 +447,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			for attribute in @attrWhitelist
 				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1
 				continue if _.indexOf(keys, attribute) is -1
-
 				val = obj[ attribute ]
+
 				if attribute is "tags"
 					val = @handleTagsFromServer val
 				else if _.indexOf(dateKeys, attribute) isnt -1
@@ -459,9 +468,4 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					modelTags.push model
 			modelTags
 
-		handleDateFromServer: ( date ) ->
-			if typeof date is "string"
-				date = new Date date
-			else if _.isObject( date ) and date.__type is "Date"
-				date = new Date date.iso
-			date
+		

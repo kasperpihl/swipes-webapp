@@ -16,6 +16,8 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 				swipy.router.navigate("settings/tweaks", true)
 			else if identifier is "sync-button"
 				swipy.sync.sync()
+			else if identifier is "shortcut-button"
+				Backbone.trigger("show-keyboard-shortcuts")
 			else if identifier is "logout-button"
 				if confirm "Are you sure you want to log out?"
 					localStorage.clear()

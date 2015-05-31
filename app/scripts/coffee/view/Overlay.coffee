@@ -46,6 +46,7 @@ define [], () ->
 			$("body").addClass @hideClassName
 			@hideTimer = setTimeout =>
 					$("body").toggleClass( @showClassName, no )
+					$("body").toggleClass( @hideClassName, no )
 					@afterHide()
 					dfd.resolve()
 				, 400

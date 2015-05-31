@@ -8,6 +8,7 @@ define [
 	"js/router/MainRouter"
 	"js/collection/ToDoCollection"
 	"js/collection/TagCollection"
+	"js/collection/WorkCollection"
 	"js/view/nav/ListNavigation"
 	"js/controller/TaskInputController"
 	"js/controller/SidebarController"
@@ -19,20 +20,38 @@ define [
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
 	"js/controller/UserController"
+	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController, UserController) ->
+	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, WorkCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
+		handleQueryString:(queryString) ->
+			clean = false
+			if queryString and queryString.href
+				@href = queryString.href
+				if history.pushState
+					newurl = window.location.protocol + "//" + window.location.host + window.location.pathname
+					if window.location.hash
+						newurl += window.location.hash
+					window.history.pushState({path:newurl},'',newurl)
+				
 		constructor: ->
+			##@tags.fetch()
+			$(window).focus @openedWindow
+
+		manualInit: ->
 			#@hackParseAPI()
+			# Base app data
+			@todos = new ToDoCollection()
+			@tags = new TagCollection()
+
 			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
 			
-			# Base app data
-			@todos = new ToDoCollection()
-			@tags = new TagCollection()
+			
+			@workSessions = new WorkCollection()
 
 			# Synchronization
 			@settings = new SettingsController()
@@ -42,40 +61,18 @@ define [
 			# Keyboard/Shortcut handler
 			@shortcuts = new KeyboardController()
 			
-			##@tags.fetch()
-			$(window).focus @openedWindow
+			
 		start: ->
 			if @sync.lastUpdate?
 				@tags.fetch()
 				@todos.fetch()
+				@workSessions.fetch()
 				_.invoke(@todos.models, "set", { selected: no } )
 				@todos.repairActionStepsRelations()
 				@init()
-				@todos.prepareScheduledForNotifications()
 			else
 				Backbone.once( "sync-complete", @init, @ )
 			@sync.sync()
-		isBusy: ->
-			# Are any todos being saved right now?
-			if @todos.length?
-				for task in @todos.models when task._saving
-					return yes
-
-			# Are any tags being saved right now?
-			if @tags.length?
-				for tag in @tags.models when tag._saving
-					return yes
-
-			# Are any tasks being edited right now
-			if location.href.indexOf( "edit/" ) isnt -1
-				return yes
-
-			# Are any tasks selected right now?
-			if @todos.length
-				if @todos.where( selected:yes ).length
-					return yes
-
-			return no
 		init: ->
 			@cleanUp()
 			@viewController = new ViewController()
@@ -86,33 +83,24 @@ define [
 			@sidebar = new SidebarController()
 			@filter = new FilterController()
 			@userController = new UserController()
+			@workmode = new WorkController()
 
 			Backbone.history.start( pushState: no )
-
 			$("body").removeClass "loading"
+			
 
 			$('.search-result a').click( (e) ->
 				swipy.filter.clearFilters()
 				Backbone.trigger( "remove-filter", "all" )
 				return false
 			)
+			@workmode.checkForWork()
+			if @href
+				switch @href
+					when "keyboard" then @sidebar.showKeyboardShortcuts()
+					
+				@href = false
 
-			# $("")
-
-			#@startAutoUpdate()
-
-		###update: ->
-			if not @isBusy()
-				@fetchTodos()
-				@UPDATE_COUNT++
-
-			@lastUpdate = new Date()
-			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ )
-		startAutoUpdate: ->
-			TweenLite.delayedCall( @UPDATE_INTERVAL, @update, null, @ )
-		stopAutoUpdate: ->
-			TweenLite.killDelayedCallsTo @update###
-			
 		cleanUp: ->
 			#@stopAutoUpdate()
 			##@tags?.destroy()

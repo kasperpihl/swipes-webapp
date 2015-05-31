@@ -10,6 +10,15 @@ define ["js/utility/Utility"], ( Utility ) ->
 				attributes.objectId = attributes.tempId
 				attributes.needSaveToServer = true
 			Backbone.Model.apply @, arguments
+		reviveDate: (prop) ->
+			value = @handleDateFromServer @get( prop )
+			@set prop, value, { silent: true }
+		handleDateFromServer: ( date ) ->
+			if typeof date is "string"
+				date = new Date date
+			else if _.isObject( date ) and date.__type is "Date"
+				date = new Date date.iso
+			date
 		deleteObj: ->
 			@save "deleted", yes, { silent:true, sync: true }
 		handleForSync: ( key, val, options ) ->

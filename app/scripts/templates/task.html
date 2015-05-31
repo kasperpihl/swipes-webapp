@@ -8,12 +8,30 @@
 <a href="JavaScript:void(0);" class="action schedule right" title="Schedule todo">
 </a>
 <%
+ if (attachments) {
+		var evernote = false;
+		var gmail = false;
+		var url = false;
+		var hasAttachment = (attachments.length > 0);
+		for( var i = 0 ; i < attachments.length ; i++){
+			attachment = attachments[i];
+			if( attachment.service == "evernote" ){
+				evernote = true;
+			}
+			if( attachment.service == "gmail" ){
+				gmail = true;
+			}
+			if( attachment.service == "url" ){
+				url = true;
+			}
+		}
+	}
 	var centerTitle, isPriority, classList
 
 	isPriority = (priority === 1)
 	classList = "todo-content"
 
-	if ( !( tags && tags.length || repeatDate || notes || completionDate ) ) {
+	if ( !( tags && tags.length || repeatDate || notes || completionDate || hasAttachment ) ) {
 		if ( state !== "completed" && state !== "scheduled" ) {
 			classList += " center-title"
 		} else if ( scheduleStr && scheduleStr === "unspecified" ) {
@@ -24,14 +42,43 @@
 	if (priority === 1) {
 		classList += " is-priority"
 	}
+	var entityMap = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		'"': '&quot;',
+		"'": '&#39;',
+		"/": '&#x2F;'
+	};
+
+	function escapeHtml(string) {
+		return String(string).replace(/[&<>"'\/]/g, function (s) {
+			return entityMap[s];
+		});
+	}
 %>
 
 <div class="<%= classList %>">
 	<h2><span class="priority"></span><%= title %> <% if(numberOfActionStepsLeft && numberOfActionStepsLeft > 0) print( " ( " + numberOfActionStepsLeft + " )" ); %></h2>
 
 	<ul class="meta">
+		<% if (evernote) { %>
+			<li title="This task came from Evernote">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editEvernote"></use></svg>
+			</li>
+		<% } %>
+		<% if (gmail) { %>
+			<li title="This task came from Gmail">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editMail"></use></svg>
+			</li>
+		<% } %>
+		<% if (url) { %>
+			<li title="This task has a URL attached">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editURL"></use></svg>
+			</li>
+		<% } %>
 		<% if (notes) { %>
-			<li title="<%= notes %>">
+			<li title="<%= escapeHtml(notes) %>">
 				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
 			</li>
 		<% } %>
@@ -42,7 +89,7 @@
 			</li>
 		<% } %>
 
-		<% if (notes || repeatDate) { %>
+		<% if (evernote || gmail || url || notes || repeatDate) { %>
 			<% if (tags && tags.length) { %>
 				<li class="seperator"></li>
 			<% } %>
@@ -66,17 +113,17 @@
 			<ul class="tags">
 				<%
 					tagStrings = _.invoke(tags, "get", "title")
-					tagStrings = _.sortBy( tagStrings, function(tag) {
-						return tag.toLowerCase()
+					tags = _.sortBy( tags, function(tag) {
+						return tag.get("title").toLowerCase()
 					})
 
-					_.each(tagStrings, function(tag) {
+					_.each(tags, function(tag) {
 				%>
 
-				<% if ( _.contains(swipy.filter.tagsFilter, tag) ) { %>
-					<li><strong><%= tag %></strong></li>
+				<% if ( _.contains(swipy.filter.tagsFilter, tag.get("title") ) ) { %>
+					<li><strong><a href="#" data-href="<%= tag.id %>" class="clickable-tag"><%= tag.get("title") %></a></strong></li>
 				<% } else { %>
-					<li><%= tag %></li>
+					<li><a href="#" data-href="<%= tag.id %>" class="clickable-tag"><%= tag.get("title") %></a></li>
 				<% } %>
 
 				<% }); %>
@@ -88,16 +135,28 @@
 	<div>
 	<% if (state === "completed" || state === "active" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="schedule-button" title="Schedule todo">
-			<svg class="icon icon-widgetSchedule"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-widgetSchedule"></use></svg>
+			<svg class="icon icon-snooze">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
+			</svg>
 		</a>
 	<% } if (state === "completed" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="todo-button" title="Move task to todo list">
-			<svg class="icon icon-widgetAll"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-widgetAll"></use></svg>
+			<svg class="icon icon-today">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarNow"></use>
+			</svg>
 		</a>
 	<% } if (state === "active" || state === "scheduled"){ %>
 		<a href="JavaScript:void(0);" class="complete-button" title="Mark todo as completed">
-			<svg class="icon icon-widgetDone"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-widgetDone"></use></svg>
+			<svg class="icon icon-done">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
+					</svg>
 		</a>
 	<% } %>
+	<% if (state === "active"){ %>
+		<!--<a href="JavaScript:void(0);" class="work-button" title="Start workmode with this task">
+			<svg class="icon icon-materialWorkspaces"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialWorkspaces"></use></svg>
+		</a>-->
+	<% } %>
+
 	</div>
 </div>
