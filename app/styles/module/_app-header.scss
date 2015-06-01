@@ -68,14 +68,13 @@
 		@include border-right-radius(7em);
 		@include box-shadow(none);
 
+		.progress-bar {
+			height: 8px;
+			background-color: #ffc107;
 
-			.progress-bar {
-				height: 8px;
-				background-color: #ffc107;
-
-				@include border-right-radius(7em);
-				@include box-shadow(none);
-			}
+			@include border-right-radius(7em);
+			@include box-shadow(none);
+		}
 	}
 
 

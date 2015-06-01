@@ -17,6 +17,12 @@
 		height: 0;
 		overflow: hidden;
 	}
+	body.organise & {
+		visibility: hidden;
+		opacity: 0;
+		//height: 140px;
+		overflow: hidden;
+	}
 
 	li {
 		text-align: center;

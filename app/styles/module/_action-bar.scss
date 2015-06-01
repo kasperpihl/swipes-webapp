@@ -1,8 +1,14 @@
 
 // Action bar
 // ---------------------------------------------
-
-.action-bar, .edit-action-bar {
+.edit-action-bar, .action-bar{
+	&.fadeout {
+		@extend .fadeOut;
+		pointer-events: none;
+	
+	}
+}
+.action-bar, .edit-action-bar, .organise-bar {
 	@extend .clearfix;
 	@extend .animated;
 	@extend .fadeIn;
@@ -10,10 +16,19 @@
 	@include experimental(animation-duration, 0.12s);
 
 	&.fadeout {
-		@extend .fadeOut;
-		pointer-events: none;
+		body:not(.organise) &{
+			@extend .fadeOut;
+			pointer-events: none;
+		}
+		
 	}
-
+	.back-button{
+		position:absolute;
+		left:38px;
+		@include breakpoint(tablet) {
+			left: 110px;
+		}
+	}
 	z-index: 4991;
 	position: fixed;
 	&.bottom{

@@ -47,6 +47,7 @@ $border-width: 1px;
 			}
 		}
 	}
+
 	.meta {
 		margin: 0;
 		padding: 0;
@@ -255,10 +256,29 @@ $border-width: 1px;
 		.actions{
 			opacity: 1.0;
 			@include transition(opacity 0.2s ease-out);
+			body.organise & {
+				display:none;
+			}
 		}
 	}
 	.hover {
 		.todo-content {
+		}
+	}
+}
+body.organise{
+	.todo-list{
+		.selected .todo-content {
+			background: white;
+		}
+		li.task-row:not(.selected) .todo-content{
+			background: white;
+			h2{
+				color: $unselected-color;
+				.priority{
+					background-color: $unselected-color;
+				}
+			}
 		}
 	}
 }

@@ -48,6 +48,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 
 
 		toggle: ->
+			return @hide() if $("body").hasClass("organise")
 			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
 			if !@noCounter? and !@noCounter
 				if selectedTasks.length < 1

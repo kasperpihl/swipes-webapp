@@ -7,7 +7,9 @@ define [], () ->
 			"settings/:id": "settings"
 			"settings": "settings"
 			"edit/:id": "edit"
+			"edit/:id/:action": "edit"
 			"list/:id": "list"
+			"list/:id/:action": "list"
 			"work": "work"
 			"*all": "root"
 		initialize: ->
@@ -24,10 +26,9 @@ define [], () ->
 			Backbone.trigger( "show-workspaces" )
 		work: ->
 			Backbone.trigger( "work-mode" )
-		list: (id = "todo") ->
+		list: (id = "todo", action ) ->
 			Backbone.trigger( "navigate/view", id )
 			@setLastMainView()
-
 			eventName = switch id
 				when "todo" then "Today Tab"
 				when "scheduled" then "Later Tab"
@@ -43,7 +44,7 @@ define [], () ->
 		setLastMainView: ->
 			Backbone.trigger "hide-sidemenu"
 			@lastMainRoute = Backbone.history.fragment
-		edit: (taskId) ->
+		edit: (taskId, action) ->
 
 			Backbone.trigger( "edit/task", taskId )
 			@setLastMainView()

@@ -1,0 +1,45 @@
+.organise-bar{
+	display:none;
+	body.organise & {
+		display:block;
+	}
+	&.top{
+		border-bottom: 0;
+	}
+	.title{
+		position:absolute;
+		left:50%;
+		margin:7px 0 0 -200px;
+		width:400px;
+		text-align: center;
+		font-size:17px;
+
+	}
+	.start-day-section{
+		margin-right: -20px;
+		.start-day-button{
+			width:110px;
+			background: $red;
+			color:white;
+			height:30px;
+			line-height:30px;
+			font-size:12px;
+			margin-top:3px;
+			@include border-radius(15px);
+		}
+	}
+	.counting-selected{
+		position:absolute;
+		left:95px;
+		@include breakpoint(tablet) {
+			left:167px;
+		}
+		margin-top: 2px;
+		.selected-label{
+			width:30px;
+			height:30px;
+			line-height: 30px;
+			font-size:18.5px;
+		}
+	}
+}

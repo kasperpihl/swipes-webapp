@@ -47,6 +47,8 @@ define [
 			@setLastIndex( -1, true )
 			@shouldResetLast = false
 			@render()
+
+
 		syncCompleted: (todos) ->
 			if todos and todos.length > 0
 				tasks = @getTasks()
@@ -387,13 +389,15 @@ define [
 			identifier = model.id
 			swipy.router.navigate( "edit/#{ identifier }", yes )
 		pressedTask:(model, e) ->
+			isOrganising = $("body").hasClass("organise")
+
 			holdModifier = @holdModifierForEvent(e)
-			if !holdModifier and !@$el.hasClass("selecting")
+			if !isOrganising and !holdModifier and !@$el.hasClass("selecting")
 				@openTask(model)
 			else
 				currentlySelected = model.get( "selected" ) or false
 				model.set( "selected", !currentlySelected )
-				Backbone.trigger( "did-press-task", [model], e)
+				Backbone.trigger( "did-press-task", [model], e) if !isOrganising
 		beforeRenderList: (todos) ->
 		afterRenderList: (todos) ->
 			newSelectIndex = -1
