@@ -1,13 +1,15 @@
 define [
 	"underscore"
 	"js/view/list/ActionBar"
+	"js/view/list/OrganiseBar"
 	"js/view/list/DesktopTask"
 	"js/view/list/TouchTask"
 	"text!templates/todo-list.html"
+	"js/model/ScheduleModel"
 	"mousetrapGlobal"
 	"gsap-scroll" 
 	"gsap"
-	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl) ->
+	], (_, ActionBar, OrganiseBar, DesktopTaskView, TouchTaskView, ToDoListTmpl, ScheduleModel) ->
 	Backbone.View.extend
 		initialize: ->
 			@longPressThreshold = 2
@@ -36,6 +38,7 @@ define [
 			@listenTo( Backbone, "todo-task", @markTasksAsTodo )
 			@listenTo( Backbone, "schedule-task", @scheduleTasks )
 			@listenTo( Backbone, "scheduler-cancelled", @handleSchedulerCancelled )
+			@listenTo( Backbone, "schedule-all-but-selected", @scheduleAllTasksButSelected )
 
 			@listenTo( Backbone, "did-press-task", @handleDidPressTask )
 			@listenTo( Backbone, "pick-schedule-option", @snoozedATask )
@@ -473,6 +476,26 @@ define [
 							m.scheduleTask m.getDefaultSchedule()
 							compFunc()
 
+		scheduleAllTasksButSelected: ->
+			tasksToSchedule = _.filter @getTasks(), (m) ->
+				return !m.get("selected")
+			model = new ScheduleModel()
+			dateToSchedule = model.getDateFromScheduleOption("tomorrow")
+			for task in tasksToSchedule
+				view = @getViewForModel task
+				self = @
+				# Wrap in do, so reference to model isn't changed next time the loop iterates
+				compFunc = _.debounce(->
+					self.afterMovedItems()
+					self.closeOrganiser()
+					self.organisebar.goBack(false)
+				, 10)
+				if view? then do =>
+					m = task
+					view.swipeLeft( "scheduled" ).then =>
+						m.scheduleTask(dateToSchedule)
+						compFunc()
+
 		scheduleTasks: (model, shouldSelectNext) ->
 			@shouldResetLast = true
 			if shouldSelectNext
@@ -493,14 +516,25 @@ define [
 			for task in tasks
 				view = @getViewForModel task
 				if view? then view.reset()
-
+		openOrganiser: ->
+			@organisebar?.kill()
+			@organisebar = new OrganiseBar()
+			$('body').addClass("organise")
+		closeOrganiser: ->
+			@organisebar?.kill()
+			$('body').removeClass("organise")
 		transitionInComplete:(options) ->
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar({state: @state})
+			
 			@transitionDeferred.resolve()
 			$('.todo-list').removeClass("cmd-down")
 			return if options? and options.onlyInstantiate
 			swipy.shortcuts.setDelegate( @ )
+			if options and options.action is "organise"
+				@openOrganiser()
+			else
+				@closeOrganiser()
 		killSubViews: ->
 			view.remove() for view in @subviews
 			@subviews = []

@@ -19,7 +19,8 @@ define [], () ->
 		root: ->
 			@navigate( "list/todo", { trigger: yes, replace: yes } )
 		add: ->
-			Backbone.trigger( "show-add")
+			#Backbone.trigger( "show-add")
+			@navigate( "list/todo/organise", {trigger: yes})	
 		search: ->
 			Backbone.trigger( "show-search" )
 		workspaces: ->
@@ -27,7 +28,10 @@ define [], () ->
 		work: ->
 			Backbone.trigger( "work-mode" )
 		list: (id = "todo", action ) ->
-			Backbone.trigger( "navigate/view", id )
+			options = {}
+			if action
+				options["action"] = action
+			Backbone.trigger( "navigate/view", id, options )
 			@setLastMainView()
 			eventName = switch id
 				when "todo" then "Today Tab"
