@@ -92,6 +92,8 @@ define ["underscore"], (_) ->
 					reject = no
 
 				task.set( "rejectedByTag", reject )
+				if reject is yes and task.get("selected")
+					task.set("selected",no)
 		hasTagAsFilter: (tag) ->
 			for filterTag in @tagsFilter
 				if tag is filterTag
@@ -121,6 +123,8 @@ define ["underscore"], (_) ->
 
 				model.unset("rejectedBySearch", {silent:true})
 				model.set( "rejectedBySearch", !didFind )
+				if !didFind and model.get("selected")
+					model.set("selected",no)
 
 		removeTagsFilter: (tag) ->
 			@tagsFilter = _.without( @tagsFilter, tag )
