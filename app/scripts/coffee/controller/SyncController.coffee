@@ -183,9 +183,9 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			Backbone.trigger( "sync-complete", @updatedTodos )
 			@updatedTodos = null
 		errorFromSync: ( data, textStatus, error ) ->
+			@util.sendError( data, "Sync Server Error")
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
-			#console.log data
 			if data and data.serverTime
 				@currentSyncing = null
 				@changedAttributes.resetChanges()
@@ -201,6 +201,5 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					swipy.analytics.updateIdentity()
 				##swipy.todos.handleObjects data.ToDo
 			else
-				#console.log data
-				#console.log "sync"
+				@util.sendError( data, "Sync Error")
 			@finalizeSync()
