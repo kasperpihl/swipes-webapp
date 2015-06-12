@@ -87,7 +87,7 @@
 						fill: $gray-labels;
 					}
 				}
-				&:nth-child(3){
+				&:nth-child(2){
 					margin-top: 2em;
 					@include breakpoint(mobile, height){
 						margin-top: 3.0em;

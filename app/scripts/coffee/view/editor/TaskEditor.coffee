@@ -229,7 +229,7 @@ define ["underscore"
 		transitionInComplete: ->
 			swipy.shortcuts.setDelegate( @ )
 		keyDownHandling: (e) ->
-			if e.keyCode is 32 and !$("input").is(":focus") and !$("div.content-editable").is(':focus') 
+			if e.keyCode is 32 and !$(document.activeElement).is("input") and !$(document.activeElement).is("div.content-editable") #and !$("input").is(":focus") and !$("div.content-editable").is(':focus') 
 				e.preventDefault()
 			if e.keyCode is 13 and $('.input-title').is(':focus')
 				e.preventDefault()
@@ -243,7 +243,7 @@ define ["underscore"
 					e.preventDefault()
 
 				
-			if e.keyCode is 32 and !$("input").is(":focus") and !$("div.content-editable").is(':focus') 
+			if e.keyCode is 32 and !$(document.activeElement).is("input") and !$(document.activeElement).is("div.content-editable")
 				$(".add-step input").focus()
 				TweenLite.set( $("#scrollcont"), { scrollTo: 0 } )
 				e.preventDefault()
