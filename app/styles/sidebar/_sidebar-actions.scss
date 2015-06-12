@@ -66,43 +66,48 @@
 			> li {
 				margin-top:1em;
 				@include breakpoint(mobile, height){
-					margin-top: 2.0em;
+					margin-top: 1.5em;
 				}
-					> a {
+				> a {
+					width:36px;
+					height:36px;
+					display:block;
+					@include border-radius(50%);
+					line-height: 36px;
+					opacity:0.8;
+					margin-left:16px;
+					&:hover{
+						opacity:1.0;
+					}
+					//@include opacity(0.3);
+					@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);
+					> svg{
 						width:36px;
 						height:36px;
-						display:block;
-						@include border-radius(50%);
-						line-height: 36px;
-						opacity:0.8;
-						margin-left:16px;
-						&:hover{
-							opacity:1.0;
-						}
-						//@include opacity(0.3);
-						@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);
-						> svg{
-							width:36px;
-							height:36px;
-							fill: $gray-labels;
-						}
+						fill: $gray-labels;
 					}
-
-					&:nth-child(4) {
-						position:absolute;
-						bottom: 10px;
-						@include breakpoint(mobile, height){
-							bottom: 35px;
-						}
-						left:0;
-						right:0;
-
-						margin: auto;
-						> a {
-							margin-left:24px;
-						}
-						
+				}
+				&:nth-child(3){
+					margin-top: 2em;
+					@include breakpoint(mobile, height){
+						margin-top: 3.0em;
 					}
+				}
+				/*&:nth-child(4) {
+					position:absolute;
+					bottom: 10px;
+					@include breakpoint(mobile, height){
+						bottom: 35px;
+					}
+					left:0;
+					right:0;
+
+					margin: auto;
+					> a {
+						margin-left:24px;
+					}
+					
+				}*/
 
 			}
 	}

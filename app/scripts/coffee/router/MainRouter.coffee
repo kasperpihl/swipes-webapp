@@ -19,8 +19,7 @@ define [], () ->
 		root: ->
 			@navigate( "list/todo", { trigger: yes, replace: yes } )
 		add: ->
-			#Backbone.trigger( "show-add")
-			@navigate( "list/todo/organise", {trigger: yes})	
+			Backbone.trigger( "show-add")	
 		search: ->
 			Backbone.trigger( "show-search" )
 		workspaces: ->

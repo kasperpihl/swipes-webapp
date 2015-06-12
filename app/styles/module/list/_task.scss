@@ -95,7 +95,9 @@ $border-width: 1px;
 			li {
 				a{
 					color: $nav-gray;
-
+					body.organise & {
+						pointer-events: none;
+					}
 				}
 				
 				strong {

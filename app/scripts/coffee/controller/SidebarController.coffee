@@ -1,12 +1,13 @@
-define ["js/view/sidebar/Sidebar", 
-		"js/view/sidebar/TagFilter", 
-		"js/view/sidebar/SearchFilter", 
-		"js/view/sidebar/TaskInput", 
-		"js/view/sidebar/SidemenuSettings", 
+define ["js/view/sidebar/Sidebar"
+		"js/view/sidebar/TagFilter"
+		"js/view/sidebar/SearchFilter" 
+		"js/view/sidebar/TaskInput"
+		"js/view/sidebar/SidemenuSettings"
+		"js/view/list/OrganiseBar"
 		"js/view/sidebar/settings/SidemenuSnoozes"
 		"js/view/sidebar/settings/SidemenuTweaks"
 		"js/view/overlays/KeyboardOverlay"
-	], (SidebarView, TagFilter, SearchFilter, TaskInputView, SidemenuSettings, SidemenuSnoozes, SidemenuTweaks, KeyboardOverlay ) ->
+	], (SidebarView, TagFilter, SearchFilter, TaskInputView, SidemenuSettings, OrganiseBar, SidemenuSnoozes, SidemenuTweaks, KeyboardOverlay ) ->
 	class SidebarController
 		constructor: ->
 			@view = new SidebarView( el: $(".sidebar") )
@@ -14,6 +15,7 @@ define ["js/view/sidebar/Sidebar",
 			Backbone.on( "show-search", @loadSearchFilter, @)
 			Backbone.on( "show-workspaces", @loadTagFilter, @)
 			Backbone.on( "show-settings", @loadSettings, @)
+			Backbone.on( "show-organise", @loadOrganise, @)
 			Backbone.on( "show-keyboard-shortcuts", @showKeyboardShortcuts, @)
 			Backbone.on( "hide-sidemenu", @hideSideMenu, @)
 			Backbone.on("settings/view", @loadSubSettings, @)
@@ -46,6 +48,10 @@ define ["js/view/sidebar/Sidebar",
 				@settingsMenu.destroy()
 			@settingsMenu = new SidemenuSettings()
 			@loadSubmenu( @settingsMenu, "Settings", "icon-materialSettings", 0, "settings" )
+		loadOrganise: ->
+			@organisebar?.destroy()
+			@organisebar = new OrganiseBar()
+			@loadSubmenu( @organisebar , null, null, 0, "organise" )
 		hideSideMenu: ->
 			if @currentMenu?
 				@removeSubmenu()
@@ -67,25 +73,25 @@ define ["js/view/sidebar/Sidebar",
 				@currentMenu.destroy()
 			@currentMenu = menu
 			swipy.shortcuts.setDelegate(menu)
-			el = menu.el
+			
 			@level = level
+
 			# Remove and set selected icon
 			if activeEl? and activeEl
 				$('.sidebar a.btn-icon').removeClass("active")
 				$('.sidebar a.btn-icon.'+activeEl).addClass("active")
+				$('.sidebar .sidebar-controls').addClass( "hasActiveEl")
 
-
+			# Tell application that sidebar is open and load contents
+			if menu and menu.el and title
+				el = menu.el
+				$('.sidebar .sidebar-sub .sub-title > span').html title # title
+				$("body").addClass("sidebar-open")
+				$(".sidebar").addClass("sub-open")
+				$(".sidebar .sidebar-sub .sub-content").html el # content
+			if iconString
+				$('.sidebar .sidebar-sub .sub-title > svg > use').attr("xlink:href","#"+iconString)
 			
-			# Tell application that sidebar is open
-			$("body").addClass("sidebar-open")
-			$('.sidebar .sidebar-controls').addClass( "hasActiveEl")
-
-			$(".sidebar").addClass("sub-open")
-
-			# Load the actual content
-			$('.sidebar .sidebar-sub .sub-title > span').html title # title
-			$('.sidebar .sidebar-sub .sub-title > svg > use').attr("xlink:href","#"+iconString)
-			$(".sidebar .sidebar-sub .sub-content").html el # content
 		removeSubmenu: ->
 			if @currentMenu?
 				@currentMenu.destroy()

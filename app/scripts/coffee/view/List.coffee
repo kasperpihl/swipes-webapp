@@ -1,7 +1,6 @@
 define [
 	"underscore"
 	"js/view/list/ActionBar"
-	"js/view/list/OrganiseBar"
 	"js/view/list/DesktopTask"
 	"js/view/list/TouchTask"
 	"text!templates/todo-list.html"
@@ -9,7 +8,7 @@ define [
 	"mousetrapGlobal"
 	"gsap-scroll" 
 	"gsap"
-	], (_, ActionBar, OrganiseBar, DesktopTaskView, TouchTaskView, ToDoListTmpl, ScheduleModel) ->
+	], (_, ActionBar, DesktopTaskView, TouchTaskView, ToDoListTmpl, ScheduleModel) ->
 	Backbone.View.extend
 		initialize: ->
 			@longPressThreshold = 2
@@ -341,6 +340,7 @@ define [
 				progress = "no-progress" if @state isnt "tasks"
 			
 				title = group.deadline
+				title = title.charAt(0).toUpperCase() + title.slice(1);
 
 				# Find the current progress
 				if @state is "tasks"
@@ -350,7 +350,7 @@ define [
 						percentage = parseInt(completedTasksForToday.length / totalNumberOfTasks*100)
 					
 					if totalNumberOfTasks
-						title = completedTasksForToday.length + " / " + totalNumberOfTasks + " Tasks"
+						title = completedTasksForToday.length + " / " + totalNumberOfTasks + " Done Today"
 				lastPercentage = percentage
 				if @lastPercentage?
 					lastPercentage = @lastPercentage
@@ -364,16 +364,18 @@ define [
 					list.append view.el
 
 				@$el.append $html
-				widthOfText = $html.find('h1 > span').innerWidth()
-				#console.log $html.find('h1 > span').html() + " " + widthOfText
-				actualWidth = widthOfText + 50
 
-				$html.find('.progress').parent().css("paddingRight",actualWidth+"px")
-				$html.find('h1').css("width",actualWidth+"px")
-				shapePadding = actualWidth*1.025
-				$html.find('.shapeline').css("right",shapePadding+"px")
-				if @state is "tasks"
-					$html.find('.progress-bar').css("width",percentage+"%")
+				if !@organisebar? or !@organisebar
+					widthOfText = $html.find('h1 > span').text().length * 9
+					#console.log $html.find('h1 > span').html() + " " + widthOfText
+					actualWidth = widthOfText + 50
+
+					$html.find('.progress').parent().css("paddingRight",actualWidth+"px")
+					$html.find('h1').css("width",actualWidth+"px")
+					shapePadding = actualWidth*1.025
+					$html.find('.shapeline').css("right",shapePadding+"px")
+					if @state is "tasks"
+						$html.find('.progress-bar').css("width",percentage+"%")
 			@afterRenderList todos
 
 			$("#scrollcont").scrollTop(oldScroll)
@@ -417,7 +419,7 @@ define [
 			if @shouldResetLast? and @shouldResetLast
 				@shouldResetLast = false
 				@setLastIndex(newSelectIndex,true)
-				
+			swipy.sidebar.organisebar?.toggle()
 			
 		afterMovedItems: ->
 			swipy.todos.deselectAllTasks()
@@ -487,8 +489,7 @@ define [
 				# Wrap in do, so reference to model isn't changed next time the loop iterates
 				compFunc = _.debounce(->
 					self.afterMovedItems()
-					self.closeOrganiser()
-					self.organisebar.goBack(false)
+					swipy.sidebar.organisebar.success()
 				, 10)
 				if view? then do =>
 					m = task
@@ -516,13 +517,6 @@ define [
 			for task in tasks
 				view = @getViewForModel task
 				if view? then view.reset()
-		openOrganiser: ->
-			@organisebar?.kill()
-			@organisebar = new OrganiseBar()
-			$('body').addClass("organise")
-		closeOrganiser: ->
-			@organisebar?.kill()
-			$('body').removeClass("organise")
 		transitionInComplete:(options) ->
 			@lastSelectedIndex = -1
 			@actionbar = new ActionBar({state: @state})
@@ -532,9 +526,8 @@ define [
 			return if options? and options.onlyInstantiate
 			swipy.shortcuts.setDelegate( @ )
 			if options and options.action is "organise"
-				@openOrganiser()
-			else
-				@closeOrganiser()
+				Backbone.trigger("show-organise")
+				@organisebar = true
 		killSubViews: ->
 			view.remove() for view in @subviews
 			@subviews = []

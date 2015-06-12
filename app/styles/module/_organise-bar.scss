@@ -1,31 +1,49 @@
 .organise-bar{
 	display:none;
+
+	@include breakpoint(tablet, height){
+		padding-top: 21px;
+	}
+	&.bottom{
+		height:70px;
+	}
 	body.organise & {
 		display:block;
 	}
 	&.top{
+		padding-top:14px;
 		border-bottom: 0;
 	}
 	.title{
 		position:absolute;
-		left:50%;
-		margin:7px 0 0 -200px;
+		margin-top: 7px;
+		left: 86px;
+		text-align: left; 
+		@include breakpoint(mobile){
+			left:50%;
+			margin-left:-200px;
+			text-align: center;
+		}
 		width:400px;
-		text-align: center;
 		font-size:17px;
 
 	}
 	.start-day-section{
 		margin-right: -20px;
+		&.active{
+			.start-day-button{
+				background: $red;
+			}
+		}
 		.start-day-button{
-			width:110px;
-			background: $red;
+			width:140px;
+			background: $unselected-color;
+			
 			color:white;
-			height:30px;
-			line-height:30px;
-			font-size:12px;
-			margin-top:3px;
-			@include border-radius(15px);
+			height:40px;
+			line-height:40px;
+			font-size:14px;
+			@include border-radius(20px);
 		}
 	}
 	.counting-selected{
