@@ -12,17 +12,27 @@ define ["underscore"
 		className: "task-editor"
 		events:
 			"click .go-back": "back"
-			"click .priority": "togglePriority"
-			"click .schedule-label": "reschedule"
-			"click .repeat-picker a": "setRepeat"
-			"click .icon-tag-container" : "clickTags"
+
 			"blur .input-title": "updateTitle"
-			"blur .notes .input-note": "updateNotes"
+			"click .priority": "togglePriority"
+			"click .icon-tag-container" : "clickTags"
+			"click .schedule-label": "reschedule"
+			
+			"click .link-reference": "clickedLink"
 			"focus .notes .input-note": "focusNotes"
+			"blur .notes .input-note": "updateNotes"
+			"mousedown .link-reference": "mouseDownLink"
+			"mouseup .link-reference": "mouseUpLink"
+
+
+			"click .repeat-picker a": "setRepeat"
 			"click .repeat-button": "clickedRepeat"
+
 			"click .step .action": "clickedAction"
 			"mouseenter .step": "trackMouse"
 			"mouseleave .step": "stopTrackingMouse"
+		mouseDownLink: (e) ->
+			@isURLClick = true 
 		trackMouse: (e) ->
 			@isHovering = true
 			@bouncedHover($(e.currentTarget))
@@ -43,7 +53,7 @@ define ["underscore"
 			@bouncedHover = _.debounce(@onHoverTask, 1500)
 			@sorter = new TaskSortModel()
 			
-			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse", "back" )
+			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse", "back", "focusNotes", "updateNotes", "mouseDownLink" )
 			@render()
 			@listenTo( @model, "change:schedule change:repeatOption change:priority change:title change:subtasksLocal", @render )
 			@listenTo( @model, "change:deleted",@back)
@@ -92,7 +102,11 @@ define ["underscore"
 
 # Handling Notes
 		focusNotes: (e) ->
-			return if e.target.className is "link-reference"
+			if @isURLClick or e.target.className is "link-reference" or $(e.currentTarget).hasClass("link-reference")
+				@isURLClick = true
+				$( @el ).find( ".link-reference" ).blur()
+				return
+
 			if @emptyNotes? and @emptyNotes
 				@$el.find(".editor-content .input-note").html("")
 			@$el.find('.link').each( (i, e) ->
@@ -114,6 +128,10 @@ define ["underscore"
 				@emptyNotes = true
 			@$el.find(".editor-content .input-note").html(notes)
 		updateNotes: ->
+			if @isURLClick
+				@isURLClick = false
+				return 
+
 			notes = @getNotesFromHtml()
 			if notes != @model.get "notes"
 				@model.updateNotes notes
