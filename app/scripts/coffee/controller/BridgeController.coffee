@@ -25,6 +25,9 @@ define ["underscore"], () ->
             @bridge.registerHandler('intercom', (data, responseCallback) ->
                 Intercom('show')
             )
+            @bridge.registerHandler('add-task', (data, responseCallback) ->
+                Backbone.trigger("create-task", data.title)
+            )
             sessionToken = Parse.User.current()?.getSessionToken()
             @bridge.send({  sessionToken})
         connectWebViewJavascriptBridge: (callback) ->

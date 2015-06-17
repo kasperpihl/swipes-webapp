@@ -15,10 +15,10 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 			@listenTo( Backbone, "opened-window", @clearForOpening )
 			@render()
 		keyDownHandling: (e) ->
-			if e.keyCode is 91 or e.keyCode is 17
+			if e.metaKey or e.ctrlKey
 				$('.sidebar').addClass("cmd-down")
 		keyUpHandling: (e) ->
-			if e.keyCode is 91 or e.keyCode is 17
+			if !e.metaKey and !e.ctrlKey
 				$('.sidebar').removeClass("cmd-down")
 			if e.keyCode is 27
 				swipy.sidebar.popView()
@@ -29,10 +29,12 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 			_.defer =>
 				if type is "tag" or type is "hide-tag" or type is "all" then @render()
 		handleClickTag: (e) ->
+			e.preventDefault()
 			if @deleteMode
 				@removeTag e
 			else
 				@toggleFilter e
+			false
 		toggleDeleteMode: (e) ->
 			e.stopPropagation()
 			if @deleteMode then @deleteMode = off else @deleteMode = on

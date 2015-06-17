@@ -102,13 +102,16 @@ define [
 			if e.keyCode is 32
 				e.preventDefault()
 			
-			# shift key
-			if e.keyCode is 16
-				@holdModifier = "shift";
+			
 			# cmd / ctrl
-			if e.keyCode is 91 or e.keyCode is 17
-				@holdModifier = "cmd";
+			if(e.metaKey or e.ctrlKey)
 				$('.todo-list').addClass("cmd-down")
+				@holdModifier = "cmd"
+
+			# shift key
+			if e.shiftKey
+				@holdModifier = "shift";
+				
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if !@currentLongPressKey?
@@ -177,8 +180,9 @@ define [
 			return if $("input").is(":focus")
 			if e.keyCode is 27
 				@deselectAllTasksButTasks([])
-			if e.keyCode is 91 or e.keyCode is 17
+			if !e.metaKey and !e.ctrlKey
 				$('.todo-list').removeClass("cmd-down")
+				
 			if e.keyCode is 32
 				swipy.router.navigate("add",true )
 			if e.keyCode is 13

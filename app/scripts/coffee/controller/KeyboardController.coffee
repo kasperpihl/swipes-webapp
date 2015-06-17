@@ -17,36 +17,37 @@ define ["underscore"], (_) ->
 			$('#scrollcont').off("click.keycontroller")
 		keyDownHandling: (e) ->
 			if !@globalLock and !$("input").is(":focus") and !$("div.content-editable").is(':focus')
-				if e.keyCode is 49 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-					if Backbone.history.fragment isnt "list/scheduled"
-						swipy.router.navigate("list/scheduled",true)
+				if (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
+					if e.keyCode is 49
+						if Backbone.history.fragment isnt "list/scheduled"
+							swipy.router.navigate("list/scheduled",true)
+							e.preventDefault()
+						return
+					if e.keyCode is 50
+						if Backbone.history.fragment isnt "list/todo"
+							swipy.router.navigate("list/todo",true )
+							e.preventDefault()
+						return
+					if e.keyCode is 51
+						if Backbone.history.fragment isnt "list/completed"
+							swipy.router.navigate("list/completed",true )
+							e.preventDefault()
+						return
+					if e.keyCode is 70
+						if Backbone.history.fragment isnt "search"
+							swipy.router.navigate("search", true)
 						e.preventDefault()
-					return
-				if e.keyCode is 50 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-					if Backbone.history.fragment isnt "list/todo"
-						swipy.router.navigate("list/todo",true )
+						return
+					if e.keyCode is 68
+						if Backbone.history.fragment isnt "workspaces"
+							swipy.router.navigate("workspaces", true)
 						e.preventDefault()
-					return
-				if e.keyCode is 51 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-					if Backbone.history.fragment isnt "list/completed"
-						swipy.router.navigate("list/completed",true )
+						return
+					if e.keyCode is 188
+						if Backbone.history.fragment isnt "settings"
+							swipy.router.navigate("settings", true)
 						e.preventDefault()
-					return
-				if e.keyCode is 70 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-					if Backbone.history.fragment isnt "search"
-						swipy.router.navigate("search", true)
-					e.preventDefault()
-					return
-				if e.keyCode is 68 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-					if Backbone.history.fragment isnt "workspaces"
-						swipy.router.navigate("workspaces", true)
-					e.preventDefault()
-					return
-				if e.keyCode is 188 and (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
-					if Backbone.history.fragment isnt "settings"
-						swipy.router.navigate("settings", true)
-					e.preventDefault()
-					return
+						return
 			return if @isLocked or !@delegate?
 			if _.isFunction(@delegate.keyDownHandling)
 				@delegate.keyDownHandling(e)

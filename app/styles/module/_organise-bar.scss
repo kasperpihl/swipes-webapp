@@ -2,7 +2,7 @@
 	display:none;
 
 	@include breakpoint(tablet, height){
-		padding-top: 21px;
+		padding-top: 14px;
 	}
 	&.bottom{
 		height:70px;
