@@ -6,8 +6,9 @@ define ["js/view/sidebar/Sidebar"
 		"js/view/list/OrganiseBar"
 		"js/view/sidebar/settings/SidemenuSnoozes"
 		"js/view/sidebar/settings/SidemenuTweaks"
+		"js/view/sidebar/settings/SidemenuIntegrations"
 		"js/view/overlays/KeyboardOverlay"
-	], (SidebarView, TagFilter, SearchFilter, TaskInputView, SidemenuSettings, OrganiseBar, SidemenuSnoozes, SidemenuTweaks, KeyboardOverlay ) ->
+	], (SidebarView, TagFilter, SearchFilter, TaskInputView, SidemenuSettings, OrganiseBar, SidemenuSnoozes, SidemenuTweaks, SidemenuIntegrations, KeyboardOverlay ) ->
 	class SidebarController
 		constructor: ->
 			@view = new SidebarView( el: $(".sidebar") )
@@ -64,6 +65,11 @@ define ["js/view/sidebar/Sidebar"
 			if view is "tweaks"
 				menu = new SidemenuTweaks()
 				title = "Tweaks"
+				iconString = "icon-materialSettings"
+				level = 1
+			if view is "integrations"
+				menu = new SidemenuIntegrations()
+				title = "Integrations"
 				iconString = "icon-materialSettings"
 				level = 1
 			if menu?

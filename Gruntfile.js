@@ -69,7 +69,6 @@ module.exports = function (grunt) {
                 },
                 src: [
                     '*.html',
-                    '*/*.html',
                     'bower_components/*/*.js',
                     'scripts/*.js',
                     'scripts/*/*.js',

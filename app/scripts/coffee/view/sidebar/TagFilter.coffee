@@ -45,7 +45,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 
 			unless el.hasClass "selected"
 				command = "tag"
-				command = "hide-tag" if $(".sidebar").hasClass("cmd-down")
+				command = "hide-tag" if e.metaKey or e.ctrlKey
 				Backbone.trigger( "apply-filter", command, tag )
 			else
 				Backbone.trigger( "remove-filter", "tag", tag )

@@ -14,6 +14,8 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 				swipy.router.navigate("settings/snoozes", true)
 			else if identifier is "tweaks-button"
 				swipy.router.navigate("settings/tweaks", true)
+			else if identifier is "integrations-button"
+				swipy.router.navigate("settings/integrations", true)
 			else if identifier is "sync-button"
 				swipy.sync.sync()
 			else if identifier is "shortcut-button"
