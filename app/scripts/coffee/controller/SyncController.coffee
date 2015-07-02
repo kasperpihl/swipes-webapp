@@ -7,7 +7,7 @@
 
 ###
 
-define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js/view/SyncIndicator", "js/utility/Utility"], (_, $, ChangedAttributesController, SyncIndicator, Utility) ->
+define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js/view/modules/SyncIndicator", "js/utility/Utility"], (_, $, ChangedAttributesController, SyncIndicator, Utility) ->
 	class SyncController
 
 		constructor: ->
