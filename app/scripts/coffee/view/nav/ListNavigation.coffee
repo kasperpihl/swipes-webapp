@@ -16,11 +16,8 @@ define ["jquery"], ($) ->
 				link.toggleClass( "active", isCurrLink )
 		handleShare: (e) =>
 			FB.ui({
-				method: 'share_open_graph'
-				action_type: 'og.likes'
-				action_properties: JSON.stringify(
-					object:'http://swipesapp.com/'
-				)
+				method: 'share'
+				href: 'http://swipesapp.com/'
 			}, (response) ->
 				console.log response
 			)
