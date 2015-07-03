@@ -23,7 +23,7 @@ define ["underscore", "js/view/workmode/WorkModeOverlay", "js/model/WorkModel"],
 					@isWorking = true
 					return @openWorkMode( task, currentWork )
 			@isWorking = false
-			swipy.router.navigate("list/todo", true)
+			swipy.router.navigate("tasks/now", true)
 		setWorkModel: (model, minutes) ->
 			startTime = new Date()
 			endTime = new Date(startTime.getTime() + minutes * 60000);

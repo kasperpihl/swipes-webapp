@@ -1,4 +1,4 @@
-define ["underscore", "js/model/SettingsModel"], (_, SettingsModel) ->
+define ["underscore", "js/model/extra/SettingsModel"], (_, SettingsModel) ->
 	class SettingsController
 		constructor: (opts) ->
 			@init()

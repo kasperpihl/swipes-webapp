@@ -21,6 +21,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			"location"
 			"parentLocalId"
 			"priority"
+			"projectId"
+			"projectOrder"
 			"origin"
 			"originIdentifier"
 		]
@@ -38,6 +40,8 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			location: undefined
 			parentLocalId: null
 			priority: 0
+			projectId: null
+			projectOrder: undefined
 			deleted: no
 			origin: null
 			originIdentifier: null

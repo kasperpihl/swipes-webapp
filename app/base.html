@@ -55,11 +55,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
  
 				<ul class="sidebar-controls ">
 					<li>
-						<a href="#add" class="btn-icon addtask" data-toggle="tooltip" data-placement="right" title="Add a task">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarAdd"></use>
-							</svg>
-						</a>
+						<a href="#tasks/now">My tasks</a>
 					</li>
 					<!--<li>
 						<a href="#list/todo/organise" class="btn-icon organise" data-toggle="tooltip" data-placement="right" title="Swipes Flow">
@@ -68,26 +64,9 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 							</svg>
 						</a>
 					</li>-->
-					<li>
-						<a href="#search" class="btn-icon search" data-toggle="tooltip" data-placement="right" title="Search">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSearch"></use>
-							</svg>
-						</a>
+					<li id="sidebar-project-list">
 					</li>
-					<li>
-						<a href="#workspaces" class="btn-icon workspaces" data-toggle="tooltip" data-placement="right" title="Workspaces">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarWorkspace"></use>
-							</svg>
-						</a>
-					</li>
-					<li>
-						<a href="#settings" class="btn-icon settings" data-toggle="tooltip" data-placement="right" title="Settings">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSetting"></use>
-							</svg>
-						</a>
+					<li id="sidebar-members-list">
 					</li>
 				</ul>
  
@@ -107,7 +86,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 				</h1>
 				<a href="#" class="sub-clear"></a>
 				<div class="sub-content">
-					[sub content]
+					This is where the submenu content gets loaded
 				</div>
 			</div><!-- sub structures come here -->
  			<div class="clickable-overlay"></div>
@@ -179,73 +158,29 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
  
 		<section class="scroll-container" id="scrollcont">
 			<div id="main" role="main">
- 
 				<nav class="row">
 					<ul class="list-nav">
 						<li>
-							<a tabindex="2" class="schedule" href="#list/scheduled">
+							<a tabindex="2" class="schedule" href="#tasks/later">
 								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-later"></use></svg>
-								<span class="sr-only">Schedule</span>
+								<span class="sr-only">Later</span>
 							</a>
 						</li>
 						<li>
-							<a tabindex="3" class="todo" href="#list/todo">
+							<a tabindex="3" class="todo" href="#tasks/now">
 								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-today"></use></svg>
-								<span class="sr-only">Todo</span>
+								<span class="sr-only">Now</span>
 							</a>
 						</li>
 						<li>
-							<a tabindex="4" class="checkmark" href="#list/completed">
+							<a tabindex="4" class="checkmark" href="#tasks/done">
 								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-done"></use></svg>
-								<span class="sr-only">Completed</span>
+								<span class="sr-only">Done</span>
 							</a>
 						</li>
 					</ul>
 				</nav>
- 
-				<section id="main-content" class="row">
-					
-					<ol class="todo-list hidden scheduled"></ol>
-					<ol class="todo-list hidden todo"></ol>
-					<ol class="todo-list hidden completed"></ol>
-					<div class="search-result hidden">
-						<span id="search-result-string"></span>
-						<a href="#">Clear workspace</a>
-					</div>
- 
- 
-					<div class="list-fade hidden-xs"></div>
 
-					<section class="all-done">
-						<div class="done-image now">
-							<img src="styles/img/alldonefornow@2x.png">
-						</div><!-- image -->
-						<div class="done-image today">
-							<img src="styles/img/alldonefortoday@2x.png">
-						</div><!-- image -->
-						<div class="done-content">
-							<div class="text-block">
-								<p>Kickin’ my shoes off because
-								today’s to-do list is complete! </p>
-								<p>#ProductiveDay</p>
-							</div>
-						</div><!-- content -->
-						<div class="done-socials">
-							<a target="_blank" class="facebook" href="https://www.facebook.com/dialog/share?app_id=531435630236702&display=popup&href=http%3A%2F%2Fswipesapp.com&redirect_uri=http%3A%2F%2Fweb.swipesapp.com">
-								<svg class="icon icon-facebook">
-									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-facebook"></use>
-								</svg>
-							</a>
-							<a href="https://twitter.com/intent/tweet?text=Kickin%E2%80%99%20my%20shoes%20off%20because%20today%E2%80%99s%20to-do%20list%20is%20complete!&via=swipesapp&hashtags=ProductiveDay">
-								<svg class="icon icon-facebook">
-									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-twitter"></use>
-								</svg>
-							</a>
-						</div>
-					</section><!-- all done container -->
- 
-				</section>
- 
 				<div class="load-indicator">
 					<div class="spinner">
 						<div class="bounce1"></div>

@@ -1,4 +1,4 @@
-define ["underscore","jquery", "js/model/ListSortModel", "gsap", "gsap-draggable", "jquery-hammerjs"], (_, $, ListSortModel, TweenLite, Draggable) ->
+define ["underscore","jquery", "js/model/extra/ListSortModel", "gsap", "gsap-draggable", "jquery-hammerjs"], (_, $, ListSortModel, TweenLite, Draggable) ->
 	class ListSortController
 		constructor: (container, views, @onDragCompleteCallback) ->
 			@model = new ListSortModel( container, views )

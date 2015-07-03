@@ -31,9 +31,9 @@ define ["underscore"], (_) ->
 			
 
 			category = "current"
-			if Backbone.history.fragment is "list/scheduled"
+			if Backbone.history.fragment is "tasks/later"
 				category = "scheduled"
-			if Backbone.history.fragment is "list/completed"
+			if Backbone.history.fragment is "tasks/done"
 				category = "completed"
 			
 

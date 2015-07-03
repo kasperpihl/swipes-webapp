@@ -2,16 +2,16 @@ define [
 	"jquery"
 	"backbone"
 	"localStorage"
-	"js/model/ClockWork"
-	"js/controller/ViewController"
+	"js/model/extra/ClockWork"
+	"js/viewcontroller/MainViewController"
 	"js/controller/AnalyticsController"
 	"js/router/MainRouter"
 	"js/collection/ToDoCollection"
 	"js/collection/TagCollection"
 	"js/collection/WorkCollection"
-	"js/view/nav/ListNavigation"
 	"js/controller/TaskInputController"
 	"js/controller/SidebarController"
+	"js/viewcontroller/SidebarViewController"
 	"js/controller/ScheduleController"
 	"js/controller/FilterController"
 	"js/controller/SettingsController"
@@ -23,7 +23,7 @@ define [
 	"js/controller/UserController"
 	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, ViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, WorkCollection, ListNavigation, TaskInputController, SidebarController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
+	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, WorkCollection, TaskInputController, SidebarController, SidebarViewController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -77,18 +77,22 @@ define [
 			@sync.sync()
 		init: ->
 			@cleanUp()
-			@viewController = new ViewController()
-			@nav = new ListNavigation()
+
+			@sidebarVC = new SidebarViewController()
+			@mainViewController = new MainViewController()
 			@router = new MainRouter()
+			
+			
 			@scheduler = new ScheduleController()
 			@input = new TaskInputController()
 			@sidebar = new SidebarController()
+
 			@filter = new FilterController()
 			@userController = new UserController()
 			@workmode = new WorkController()
 
 			Backbone.history.start( pushState: no )
-			$("body").removeClass "loading"
+			$(".load-indicator").remove()
 			
 
 			$('.search-result a').click( (e) ->
@@ -106,8 +110,7 @@ define [
 		cleanUp: ->
 			#@stopAutoUpdate()
 			##@tags?.destroy()
-			@viewController?.destroy()
-			@nav?.destroy()
+			@mainViewController?.destroy()
 			@router?.destroy()
 			@scheduler?.destroy()
 			@input?.destroy()

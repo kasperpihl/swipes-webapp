@@ -58,11 +58,13 @@ define ["js/model/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 		getActiveList: ->
 			route = swipy.router.getCurrRoute()
 			switch route
-				when "", "list/todo", "list/scheduled", "list/completed"
-					if route is "" or route is "list/todo"
+				when "", "tasks/now", "tasks/later", "tasks/done"
+					if route is "" or route is "tasks/now"
 						return "todo"
-					else
-						return route.replace( "list/", "" )
+					else if route is "tasks/later"
+						return "scheduled"
+					else if route is "tasks/done"
+						return "completed"
 				else return "todo"
 		getTasksTaggedWith: (tags, filterOnlyCurrentTasks) ->
 			activeList = @getActiveList()

@@ -1,4 +1,4 @@
-define ["underscore", "js/view/List", "js/controller/ListSortController", "js/model/TaskSortModel", "js/view/workmode/RequestWorkOverlay"], (_, ListView, ListSortController, TaskSortModel, RequestWorkOverlay) ->
+define ["underscore", "js/view/List", "js/controller/ListSortController", "js/model/extra/TaskSortModel", "js/view/workmode/RequestWorkOverlay"], (_, ListView, ListSortController, TaskSortModel, RequestWorkOverlay) ->
 	ListView.extend
 		initialize: ->
 			@sorter = new TaskSortModel()

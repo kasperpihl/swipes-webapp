@@ -5,14 +5,13 @@ define ["jquery"], ($) ->
 			@navLinks.on( "click", @handleClick )
 			@facebookShare = $ ".done-socials a.facebook"
 			@facebookShare.on( "click", @handleShare )
-			Backbone.on( "navigate/view", @updateNavigation, @ )
 		handleClick: (e) =>
 			e.preventDefault()
 			swipy.router.navigate( e.currentTarget.hash[1...], yes )
 		updateNavigation: (slug) =>
 			@navLinks.each ->
 				link = $ @
-				isCurrLink = if link.attr( "href" )[1...] is "list/#{slug}" then yes else no
+				isCurrLink = if link.attr( "href" )[1...] is "tasks/#{slug}" then yes else no
 				link.toggleClass( "active", isCurrLink )
 		handleShare: (e) =>
 			FB.ui({
@@ -23,5 +22,3 @@ define ["jquery"], ($) ->
 			)
 			false
 		destroy: ->
-			Backbone.off( null, null, @ )
-

@@ -2,22 +2,22 @@ define [], () ->
 	MainRouter = Backbone.Router.extend
 		routes:
 			"add": "add"
-			"search": "search"
-			"workspaces": "workspaces"
 			"settings/:id": "settings"
 			"settings": "settings"
 			"edit/:id": "edit"
 			"edit/:id/:action": "edit"
-			"list/:id": "list"
-			"list/:id/:action": "list"
+			"tasks/:id": "tasks"
+			"project/:id": "project"
+			"member/:id": "member"
+			"list/:id/:action": "tasks"
 			"work": "work"
 			"*all": "root"
 		initialize: ->
 			@history = []
-			@lastMainRoute = "list/todo"
+			@lastMainRoute = "now"
 			Backbone.history.on( "route", @updateHistory, @ )
 		root: ->
-			@navigate( "list/todo", { trigger: yes, replace: yes } )
+			@navigate( "tasks/now", { trigger: yes, replace: yes } )
 		add: ->
 			Backbone.trigger( "show-add")	
 		search: ->
@@ -26,20 +26,25 @@ define [], () ->
 			Backbone.trigger( "show-workspaces" )
 		work: ->
 			Backbone.trigger( "work-mode" )
-		list: (id = "todo", action ) ->
-			options = {}
+
+		tasks: (id = "now", action ) ->
+			options = { id: id }
 			if action
 				options["action"] = action
-			Backbone.trigger( "navigate/view", id, options )
+			Backbone.trigger( "open/viewcontroller", "tasks", options )
 			@setLastMainView()
 			eventName = switch id
-				when "todo" then "Today Tab"
-				when "scheduled" then "Later Tab"
-				when "completed" then "Done Tab"
+				when "now" then "Now Tab"
+				when "later" then "Later Tab"
+				when "done" then "Done Tab"
 
 			swipy.analytics.pushScreen eventName
-		
-		on_keypress: (e) ->
+		project: ( id ) ->
+			options = { id: id }
+			Backbone.trigger( "open/viewcontroller", "project", options )
+		member: ( id ) ->
+			options = { id: id }
+			Backbone.trigger( "open/viewcontroller", "member", options )
 		openLastMainView: (trigger)->
 			if @lastMainRoute is ""
 				trigger = true
@@ -58,7 +63,7 @@ define [], () ->
 			else swipy.analytics.pushScreen "Settings menu"
 		updateHistory: (me, page, subpage) ->
 			if @history.length is 0 and page isnt "edit" and page isnt "list"
-				Backbone.trigger( "navigate/view", "todo", {onlyInstantiate: true} )
+				Backbone.trigger( "open/viewcontroller", "tasks", {id:"now", onlyInstantiate: true} )
 			# We skip root, because it's just a redirect to another route.
 			return false if page is "" or page is "root"
 

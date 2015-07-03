@@ -25,7 +25,7 @@ define ["underscore"], (_) ->
 			else if trigger.hasClass("clickable-overlay") or trigger.hasClass( "sub-back" )
 				swipy.sidebar.popView(trigger.hasClass("clickable-overlay"))
 			else if trigger.hasClass("swipes-logo")
-				swipy.router.navigate("list/todo", true)
+				swipy.router.navigate("tasks/now", true)
 			return false
 		destroy: ->
 			@stopListening()

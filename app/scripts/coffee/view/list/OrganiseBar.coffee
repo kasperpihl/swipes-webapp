@@ -20,7 +20,7 @@ define ["underscore"], (_) ->
 			@goBack(true)
 			return false
 		goBack: (trigger) ->
-			newPath = "list/todo"
+			newPath = "tasks/now"
 			if Backbone.history.fragment.indexOf("/organise") isnt -1
 				newPath = Backbone.history.fragment.replace("/organise","")
 			swipy.router.navigate(newPath, trigger)
@@ -60,6 +60,6 @@ define ["underscore"], (_) ->
 			@kill()
 		kill: ->
 			$('body').removeClass("organise")
-			swipy.router.lastMainRoute = "list/todo"
+			swipy.router.lastMainRoute = "tasks/now"
 			@undelegateEvents()
 			@stopListening()

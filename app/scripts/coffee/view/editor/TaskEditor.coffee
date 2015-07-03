@@ -61,11 +61,11 @@ define ["underscore"
 			@listenTo( Backbone, "complete-task", @completeTask )
 			@listenTo( Backbone, "todo-task", @markTaskAsTodo )
 			@listenTo( Backbone, "schedule-task", @scheduleTask )
-			@backRoute = "list/todo"
+			@backRoute = "tasks/now"
 			if @model.get("state") is "scheduled"
-				@backRoute = "list/scheduled"
+				@backRoute = "tasks/later"
 			else if @model.get("state") is "completed"
-				@backRoute = "list/completed"
+				@backRoute = "tasks/done"
 
 			state = "tasks"
 			state = "done" if @model.get("state") is "completed"

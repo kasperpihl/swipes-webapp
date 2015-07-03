@@ -1,0 +1,6 @@
+<h1>Team</h1>
+<ul class="team-members">
+	<% _.each(members, function(member) { %>
+			<li class="member"><a href="#member/<%= member.id %>"><%= member.name %></a></li>
+	<% }); %>
+</ul>

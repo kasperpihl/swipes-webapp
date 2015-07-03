@@ -19,18 +19,18 @@ define ["underscore"], (_) ->
 			if !@globalLock and !$("input").is(":focus") and !$("div.content-editable").is(':focus')
 				if (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
 					if e.keyCode is 49
-						if Backbone.history.fragment isnt "list/scheduled"
-							swipy.router.navigate("list/scheduled",true)
+						if Backbone.history.fragment isnt "tasks/later"
+							swipy.router.navigate("tasks/later",true)
 							e.preventDefault()
 						return
 					if e.keyCode is 50
-						if Backbone.history.fragment isnt "list/todo"
-							swipy.router.navigate("list/todo",true )
+						if Backbone.history.fragment isnt "tasks/now"
+							swipy.router.navigate("tasks/now",true )
 							e.preventDefault()
 						return
 					if e.keyCode is 51
-						if Backbone.history.fragment isnt "list/completed"
-							swipy.router.navigate("list/completed",true )
+						if Backbone.history.fragment isnt "tasks/done"
+							swipy.router.navigate("tasks/done",true )
 							e.preventDefault()
 						return
 					if e.keyCode is 70

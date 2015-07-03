@@ -4,7 +4,7 @@ define [
 	"js/view/list/DesktopTask"
 	"js/view/list/TouchTask"
 	"text!templates/todo-list.html"
-	"js/model/ScheduleModel"
+	"js/model/extra/ScheduleModel"
 	"mousetrapGlobal"
 	"gsap-scroll" 
 	"gsap"
@@ -187,13 +187,7 @@ define [
 				swipy.router.navigate("add",true )
 			if e.keyCode is 13
 				@openSelectedTask()
-			###if e.keyCode is 49 and @state isnt "schedule"
-				swipy.router.navigate("list/scheduled",true)
-			if e.keyCode is 50 and @state isnt "tasks"
-				swipy.router.navigate("list/todo",true )
-			if e.keyCode is 51 and @state isnt "done"
-				swipy.router.navigate("list/completed",true )
-###
+				
 			# left arrow / right arrow
 			if e.keyCode is 37 or e.keyCode is 39
 				if @currentLongPressKey?
