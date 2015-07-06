@@ -1,4 +1,4 @@
-define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
+define ["underscore", "js/view/overlay/TagEditorOverlay"], (_, TagEditorOverlay) ->
 	Backbone.View.extend
 		el: ".action-bar"
 		tagName: ".action-bar"
@@ -31,7 +31,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 					self.handleButtonsFromState()
 			, 500)
 			@handleButtonsFromState(obj.state)
-			@listenTo( swipy.todos, "change:selected", @toggle )
+			@listenTo( swipy.collections.todos, "change:selected", @toggle )
 		handleButtonsFromState:(state) ->
 			if state
 				@state = state
@@ -49,7 +49,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 
 		toggle: ->
 			return @hide() if $("body").hasClass("organise")
-			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			selectedTasks = swipy.collections.todos.filter (m) -> m.get "selected"
 			if !@noCounter? and !@noCounter
 				if selectedTasks.length < 1
 					$(@tagName  + ' .counting-selected').hide()
@@ -81,9 +81,9 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 		completeTasks: ->
 			Backbone.trigger( "complete-task" )
 		editTags: ->
-			@tagEditor = new TagEditorOverlay( models: swipy.todos.filter (m) -> m.get "selected" )
+			@tagEditor = new TagEditorOverlay( models: swipy.collections.todos.filter (m) -> m.get "selected" )
 		deleteTasks: ->
-			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			selectedTasks = swipy.collections.todos.filter (m) -> m.get "selected"
 			return unless selectedTasks.length
 			if confirm "Delete #{selectedTasks.length} tasks?"
 				for model in selectedTasks
@@ -95,7 +95,7 @@ define ["underscore", "js/view/list/TagEditorOverlay"], (_, TagEditorOverlay) ->
 				if _.isFunction(@delegate.didDeleteTasks)
 					@delegate.didDeleteTasks(selectedTasks.length)
 		shareTasks: ->
-			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			selectedTasks = swipy.collections.todos.filter (m) -> m.get "selected"
 			return unless selectedTasks.length
 
 			# Set up email subject and start body

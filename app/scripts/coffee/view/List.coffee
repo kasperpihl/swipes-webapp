@@ -29,8 +29,8 @@ define [
 			@listenTo( Backbone, "opened-window", @clearForOpening )
 
 			@listenTo( Backbone, "sync-complete", @syncCompleted )
-			@listenTo( swipy.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
-			#@listenTo( swipy.todos, "change:order", @changedOrder )
+			@listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
+			#@listenTo( swipy.collections.todos, "change:order", @changedOrder )
 
 			# Handle task actions
 			@listenTo( Backbone, "complete-task", @completeTasks )
@@ -199,7 +199,7 @@ define [
 					
 		openSelectedTask: ->
 			lastTask = view.model for view, i in @subviews when i is @lastSelectedIndex
-			if lastTask and swipy.todos.getSelected().length > 0
+			if lastTask and swipy.collections.todos.getSelected().length > 0
 				@openTask(lastTask)
 		selectedModels: (tasks, e) ->
 			holdModifier = @holdModifierForEvent(e)
@@ -230,7 +230,7 @@ define [
 					isRunningSelection = false
 			@deselectAllTasksButTasks(selectTheFollowingTasks)
 		deselectAllTasksButTasks: (selectedTasks, filter) ->
-			if swipy.todos.getSelected().length <= 1 and filter?
+			if swipy.collections.todos.getSelected().length <= 1 and filter?
 				selectedTasks = _.reject( selectedTasks, (m) -> !m.get "selected" )
 			if selectedTasks.length is 0
 				@setLastIndex(-1, true)
@@ -261,7 +261,7 @@ define [
 			return ( { deadline, tasks } for deadline, tasks of tasksByDate )
 		getTasks: ->
 			# Fetch todos that are active
-			return swipy.todos.getActive()
+			return swipy.collections.todos.getActive()
 		
 		selectAllTasks: (e) ->
 			# Prevent default (select all text on page || select all text in input), unless input is focused AND have text input.
@@ -312,11 +312,11 @@ define [
 			# Handle all done for today background
 			totalNumberOfTasks = 0
 			if @state is "tasks"
-				upcomingTasksToday = swipy.todos.getScheduledLaterToday()
+				upcomingTasksToday = swipy.collections.todos.getScheduledLaterToday()
 				totalNumberOfTasks += upcomingTasksToday.length
-				completedTasksForToday = swipy.todos.getCompletedToday()
+				completedTasksForToday = swipy.collections.todos.getCompletedToday()
 				totalNumberOfTasks += completedTasksForToday.length
-				currentTasks = swipy.todos.getActive()
+				currentTasks = swipy.collections.todos.getActive()
 				totalNumberOfTasks += currentTasks.length
 			if @state is "tasks" and todos.length is 0 and !swipy.filter.hasFilters()
 				if upcomingTasksToday.length
@@ -420,7 +420,7 @@ define [
 			swipy.sidebar.organisebar?.toggle()
 			
 		afterMovedItems: ->
-			swipy.todos.deselectAllTasks()
+			swipy.collections.todos.deselectAllTasks()
 
 		getViewForModel: (model) ->
 			return view for view in @subviews when view.model.cid is model.cid
@@ -430,7 +430,7 @@ define [
 			if shouldSelectNext
 				@shouldSelectNext = true
 
-			tasks = swipy.todos.getSelected( model )
+			tasks = swipy.collections.todos.getSelected( model )
 			return if tasks.length is 0
 			#minOrder = Math.min _.invoke( tasks, "get", "order" )...
 
@@ -455,7 +455,7 @@ define [
 			@shouldResetLast = true
 			if shouldSelectNext
 				@shouldSelectNext = true
-			tasks = swipy.todos.getSelected( model )
+			tasks = swipy.collections.todos.getSelected( model )
 			return if tasks.length is 0
 			for task in tasks
 				view = @getViewForModel task
@@ -499,7 +499,7 @@ define [
 			@shouldResetLast = true
 			if shouldSelectNext
 				@shouldSelectNext = true
-			tasks = swipy.todos.getSelected( model )
+			tasks = swipy.collections.todos.getSelected( model )
 			return if tasks.length is 0
 			deferredArr = []
 			for task in tasks
@@ -551,7 +551,7 @@ define [
 			@actionbar?.kill()
 
 			# Deselect all todos, so selection isnt messed up in new view
-			swipy.todos.invoke( "set", { selected: no } )
+			swipy.collections.todos.invoke( "set", { selected: no } )
 
 			# Run clean-up routine on sub views
 			@killSubViews()

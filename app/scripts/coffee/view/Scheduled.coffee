@@ -1,7 +1,7 @@
 define ["js/view/List"], (ListView) ->
 	ListView.extend
 		getTasks: ->
-			return swipy.todos.getScheduled()
+			return swipy.collections.todos.getScheduled()
 		initialize: ->
 			@state = "schedule"
 			ListView::initialize.apply( @, arguments )

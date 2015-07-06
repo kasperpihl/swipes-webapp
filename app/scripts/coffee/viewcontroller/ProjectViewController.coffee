@@ -2,7 +2,8 @@ define [
 	"underscore"
 	"gsap"
 	"text!templates/viewcontroller/project-view-controller.html"
-	], (_, TweenLite, Template) ->
+	"js/view/tasklist/TaskList"
+	], (_, TweenLite, Template, TaskList) ->
 	Backbone.View.extend
 		initialize: ->
 			@setTemplate()
@@ -10,7 +11,8 @@ define [
 		setTemplate: ->
 			@template = _.template Template
 		render: ->
-			$("#main").html(@template({}))
+			@taskList = new TaskList()
+			#$("#main").html(@template({}))
 		
 		open: (options) ->
 			projectId = options.id

@@ -34,10 +34,10 @@ define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/ta
 			return _.intersection stringLists...
 		getTagFromName: (tagName) ->
 			# First see if tag exists
-			tag = swipy.tags.findWhere { title: tagName }
+			tag = swipy.collections.tags.findWhere { title: tagName }
 			if tag then return tag
 		renderTags: () ->
-			@$el.find(".wrap").html @tagsTemplate( { allTags: swipy.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
+			@$el.find(".wrap").html @tagsTemplate( { allTags: swipy.collections.tags.toJSON(), tagsAppliedToAll: @getTagsAppliedToAll() } )
 		render: () ->
 			@$el.html @template()
 			@renderTags()
@@ -72,12 +72,12 @@ define ["underscore", "js/view/Overlay", "js/model/TagModel", "text!templates/ta
 
 			@addTagToModels tagName
 		addTagToModels: (tagName, addToCollection = yes) ->
-			if addToCollection and _.contains( swipy.tags.pluck( "title" ), tagName )
+			if addToCollection and _.contains( swipy.collections.tags.pluck( "title" ), tagName )
 				return alert "That tag already exists"
 			else
 				tag = @getTagFromName tagName
 				if not tag and addToCollection 
-					tag = swipy.tags.create { title: tagName }
+					tag = swipy.collections.tags.create { title: tagName }
 					swipy.analytics.sendEvent("Tags", "Added", "Select Tasks", tagName.length)
 					swipy.analytics.sendEventToIntercom( "Added Tag", { "From": "Select Tasks", "Length": tagName.length })
 					tag.save({}, {sync:true})

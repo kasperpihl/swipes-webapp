@@ -52,6 +52,9 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "module/calendar";
 @import "module/datepicker";
 
+// Task List
+@import "tasklist/task-list";
+
 // Sidebar
 @import "sidebar/sidebar-base";
 @import "sidebar/sidebar-actions";

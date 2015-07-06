@@ -33,7 +33,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			e.stopPropagation()
 			e.preventDefault()
 			hide = $('.todo-list').hasClass('cmd-down')
-			tag = swipy.tags.get( $(e.currentTarget).attr("data-href") )
+			tag = swipy.collections.tags.get( $(e.currentTarget).attr("data-href") )
 			if tag? and tag
 				if hide
 					Backbone.trigger( "apply-filter", "hide-tag", tag.get("title") )

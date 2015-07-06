@@ -8,10 +8,10 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 			@template = _.template WorkspacesTmpl
 			@render = _.throttle( @render, 500 )
 
-			@listenTo( swipy.tags, "add remove reset", @render )
+			@listenTo( swipy.collections.tags, "add remove reset", @render )
 			@listenTo( Backbone, "apply-filter remove-filter", @handleFilterChange )
 			@listenTo( Backbone, "open/viewcontroller", => _.defer => @render() )
-			@listenTo( swipy.todos, "change:tags", @render )
+			@listenTo( swipy.collections.todos, "change:tags", @render )
 			@listenTo( Backbone, "opened-window", @clearForOpening )
 			@render()
 		keyDownHandling: (e) ->
@@ -52,7 +52,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 		removeTag: (e) ->
 			e.stopPropagation()
 			tagName = $.trim $( e.currentTarget ).text()
-			tag = swipy.tags.findWhere { title: tagName }
+			tag = swipy.collections.tags.findWhere { title: tagName }
 
 
 			wasSelected = $(e.currentTarget).hasClass "selected"
@@ -63,21 +63,21 @@ define ["underscore", "text!templates/sidemenu/sidemenu-workspaces.html"], (_, W
 		getTagsForCurrentTasks: ->
 			tags = []
 
-			activeList = swipy.todos.getActiveList()
+			activeList = swipy.collections.todos.getActiveList()
 			switch activeList
-				when "todo" then models = swipy.todos.getActive()
-				when "scheduled" then models = swipy.todos.getScheduled()
-				else models = swipy.todos.getCompleted()
+				when "todo" then models = swipy.collections.todos.getActive()
+				when "scheduled" then models = swipy.collections.todos.getScheduled()
+				else models = swipy.collections.todos.getCompleted()
 
 			for model in models when model.has "tags"
 				tags.push tagName for tagName in model.getTagStrList()
 
 			return _.unique tags
 		getValidatedTags: ->
-			return swipy.tags.pluck "title"
+			return swipy.collections.tags.pluck "title"
 
 			if swipy.filter? and swipy.filter.tagsFilter.length
-				swipy.tags.getSiblings( swipy.filter.tagsFilter, no )
+				swipy.collections.tags.getSiblings( swipy.filter.tagsFilter, no )
 			else
 				@getTagsForCurrentTasks()
 		render: ->

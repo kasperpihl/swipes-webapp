@@ -41,9 +41,11 @@ define ["js/utility/Utility"], ( Utility ) ->
 			Backbone.sync(command, @)
 			if command is "delete"
 				if @className is "ToDo"
-					swipy.todos.remove(@)
+					swipy.collections.todos.remove(@)
 				else if @className is "Tag"
-					swipy.tags.remove(@)
+					swipy.collections.tags.remove(@)
+				else if @className is "Project"
+					swipy.collections.projects.remove(@)
 		toServerJSON: ( attrList ) ->
 			if !@attrWhitelist
 				return console.log "please add attrWhiteList in model for sync support"

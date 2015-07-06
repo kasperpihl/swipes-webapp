@@ -279,19 +279,19 @@ define ["underscore"
 				else @back()
 
 		completeTask: (model) ->
-			tasks = swipy.todos.getSelected( model )
+			tasks = swipy.collections.todos.getSelected( model )
 			return if tasks.length is 0
 			for task in tasks
 				task.completeTask()
 			@render()
 		markTaskAsTodo: (model) ->
-			tasks = swipy.todos.getSelected( model )
+			tasks = swipy.collections.todos.getSelected( model )
 			return if tasks.length is 0
 			for task in tasks
 				task.scheduleTask task.getDefaultSchedule()
 			@render()
 		scheduleTask: (model) ->
-			tasks = swipy.todos.getSelected( model )
+			tasks = swipy.collections.todos.getSelected( model )
 			return if tasks.length is 0
 			Backbone.trigger( "show-scheduler", tasks )
 

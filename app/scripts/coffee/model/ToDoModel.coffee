@@ -68,7 +68,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			BaseModel.apply @, arguments
 			if attributes.parentLocalId
 				identifier = attributes.parentLocalId
-				parentModel = swipy.todos.find( 
+				parentModel = swipy.collections.todos.find( 
 					( model ) ->
 						return true if identifier? and model.id is identifier
 						false
@@ -114,14 +114,14 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			if from
 				swipy.analytics.sendEvent( "Action Steps", "Added", from, title.length )
 				swipy.analytics.sendEventToIntercom( "Added Action Step", { "From": "Input", "Length": title.length })
-			swipy.todos.create { title, parentLocalId, order }
+			swipy.collections.todos.create { title, parentLocalId, order }
 
 			#@addSubtask newSubtask
 		deleteObj: ->
 			for subtask in @getOrderedSubtasks()
 				subtask.deleteObj()
 			if @get "parentLocalId"
-				parent = swipy.todos.get(@get("parentLocalId"))
+				parent = swipy.collections.todos.get(@get("parentLocalId"))
 				if parent
 					parent.deleteSubtask( @ )
 			BaseModel.prototype.deleteObj.apply @ , arguments
@@ -173,7 +173,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			else 
 				return false
 		getOrderedSubtasks: ->
-			swipy.todos.getSubtasksForModel @
+			swipy.collections.todos.getSubtasksForModel @
 		getState: ->
 			schedule = @getValidatedSchedule()
 			# Check if completed
@@ -230,7 +230,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		getTagsFromPointers: (pointers) ->
 			result = []
 			for tagid in pointers
-				tag = _.findWhere( swipy.tags.models, { id: tagid } )
+				tag = _.findWhere( swipy.collections.tags.models, { id: tagid } )
 				if tag then result.push tag
 
 			return result
@@ -379,7 +379,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			# Make sure we can actually duplicate the task...
 			return false unless duplicate
 
-			swipy.todos.add duplicate
+			swipy.collections.todos.add duplicate
 			duplicate.completeTask()
 
 			@copyActionStepsToDuplicate duplicate
@@ -402,7 +402,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 					completionDate: subtask.get "completionDate"
 					schedule: subtask.get "schedule"
 
-				swipy.todos.create attributes
+				swipy.collections.todos.create attributes
 
 				if subtask.get "completionDate"
 					subtask.scheduleTask()
@@ -467,7 +467,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			for tag in tags
 				if !tag.objectId
 					continue
-				model = swipy.tags.get tag.objectId
+				model = swipy.collections.tags.get tag.objectId
 				if model
 					modelTags.push model
 			modelTags

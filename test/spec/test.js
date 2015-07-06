@@ -135,9 +135,9 @@
         return it("Should make sure the models tags all exist in the global tags collection — And add them if they don't", function() {
           var dummyTagName;
           dummyTagName = "wtf123-" + new Date().getTime();
-          expect(swipy.tags.pluck("title")).to.not.contain(dummyTagName);
+          expect(swipy.collections.tags.pluck("title")).to.not.contain(dummyTagName);
           Backbone.trigger("create-task", "Test that we add tags properly #" + dummyTagName);
-          return expect(swipy.tags.pluck("title")).to.contain(dummyTagName);
+          return expect(swipy.collections.tags.pluck("title")).to.contain(dummyTagName);
         });
       });
     });
@@ -1677,7 +1677,7 @@
     
     		it "Should add new tags to the global tags collection", ->
     			swipy.sidebar.tagFilter.addTag "My Test Tag zyxvy"
-    			expect( swipy.tags.pluck "title" ).to.include "My Test Tag zyxvy"
+    			expect( swipy.collections.tags.pluck "title" ).to.include "My Test Tag zyxvy"
     
     		it "Should re-render whenever tags in the global collection are added or removed", ->
     			require ["view/sidebar/TagFilter"], (TagFilter) ->
@@ -1691,11 +1691,11 @@
     				dummyTitle = "dummy-" + new Date().getTime()
     
     				 * Render should be called after a new tag was added
-    				swipy.tags.add { title: dummyTitle }
+    				swipy.collections.tags.add { title: dummyTitle }
     				expect( renderSpy ).to.have.been.calledTwice
     
     				 * Render should be called after a tag was removed
-    				swipy.tags.remove swipy.tags.findWhere { title: dummyTitle }
+    				swipy.collections.tags.remove swipy.collections.tags.findWhere { title: dummyTitle }
     				expect( renderSpy ).to.have.been.calledThrice
     
     				TagFilter.prototype.render.restore()
@@ -1747,7 +1747,7 @@
     				expect( taskTitles ).to.include "TagTester3"
     
     				 * Make sure we have our 3 tags all set up
-    				tagTitles = swipy.tags.pluck "title"
+    				tagTitles = swipy.collections.tags.pluck "title"
     				expect( tagTitles ).to.include "Nina"
     				expect( tagTitles ).to.include "Pinta"
     				expect( tagTitles ).to.include "Santa-Maria"

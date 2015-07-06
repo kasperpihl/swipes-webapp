@@ -1,0 +1,7 @@
+<div class="task-section-header">
+</div>
+<ul class="task-list">
+	<% _.each(tasks, function(task) {
+		print(taskTmpl( { task: task } ));
+	}) %>
+</ul>

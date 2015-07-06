@@ -11,7 +11,7 @@ define ["underscore", "js/model/extra/ScheduleModel", "momentjs"], (_, ScheduleM
 		showScheduleView: (tasks) ->
 			loadViewDfd = new $.Deferred()
 
-			if not @scheduleTemplate? then require ["js/view/overlays/ScheduleOverlay"], (ScheduleOverlayView) =>
+			if not @scheduleTemplate? then require ["js/view/overlay/ScheduleOverlay"], (ScheduleOverlayView) =>
 				@scheduleTemplate = ScheduleOverlayView
 				loadViewDfd.resolve()
 			else

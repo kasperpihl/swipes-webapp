@@ -7,7 +7,7 @@ define ["js/view/sidebar/Sidebar"
 		"js/view/sidebar/settings/SidemenuSnoozes"
 		"js/view/sidebar/settings/SidemenuTweaks"
 		"js/view/sidebar/settings/SidemenuIntegrations"
-		"js/view/overlays/KeyboardOverlay"
+		"js/view/overlay/KeyboardOverlay"
 	], (SidebarView, TagFilter, SearchFilter, TaskInputView, SidemenuSettings, OrganiseBar, SidemenuSnoozes, SidemenuTweaks, SidemenuIntegrations, KeyboardOverlay ) ->
 	class SidebarController
 		constructor: ->

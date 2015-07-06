@@ -20,7 +20,7 @@ define ["underscore"], () ->
                 Backbone.trigger(data)
             )
             @bridge.registerHandler('register-notifications', (data, responseCallback) ->
-                swipy.todos.addChangeListenerForBridge()
+                swipy.collections.todos.addChangeListenerForBridge()
             )
             @bridge.registerHandler('intercom', (data, responseCallback) ->
                 Intercom('show')

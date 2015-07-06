@@ -84,14 +84,14 @@ define ["underscore"], (_) ->
 				intercomIdentity['active_theme'] = theme
 
 			if swipy?
-				recurringTasks = swipy.todos.filter (m) -> m.get("repeatOption") isnt "never"
+				recurringTasks = swipy.collections.todos.filter (m) -> m.get("repeatOption") isnt "never"
 				recurringCount = recurringTasks.length
 				currentRecurringCount = @customDimensions['recurring_tasks']
 				if currentRecurringCount isnt recurringCount
 					gaSendIdentity['dimension4'] = recurringCount
 					intercomIdentity["recurring_tasks"] = recurringCount
 
-				numberOfTags = swipy.tags.length
+				numberOfTags = swipy.collections.tags.length
 				currentNumberOfTags = @customDimensions['number_of_tags']
 				if currentNumberOfTags isnt numberOfTags
 					gaSendIdentity['dimension5'] = numberOfTags

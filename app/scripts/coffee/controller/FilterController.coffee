@@ -85,7 +85,7 @@ define ["underscore"], (_) ->
 				else @hideTagsFilter = _.without( @hideTagsFilter, tagName )
 
 
-			for task in swipy.todos.models
+			for task in swipy.collections.todos.models
 				reject = yes
 
 				if task.has( "tags" ) and _.intersection( task.getTagStrList(), @tagsFilter ).length is @tagsFilter.length and _.intersection( task.getTagStrList(), @hideTagsFilter ).length is 0
@@ -104,7 +104,7 @@ define ["underscore"], (_) ->
 			return false
 		applySearchFilter: (filter) ->
 			@searchFilter = filter
-			swipy.todos.each (model) =>
+			swipy.collections.todos.each (model) =>
 				didFind = false
 				return if model.get "parentLocalId"
 
@@ -130,13 +130,13 @@ define ["underscore"], (_) ->
 			@tagsFilter = _.without( @tagsFilter, tag )
 			@hideTagsFilter = _.without( @hideTagsFilter, tag )
 			if @tagsFilter.length is 0 and @hideTagsFilter.length is 0
-				swipy.todos.invoke( "set", "rejectedByTag", no )
+				swipy.collections.todos.invoke( "set", "rejectedByTag", no )
 			else
 				@applyTagsFilter()
 
 		removeSearchFilter: (filter) ->
 			@searchFilter = ""
-			swipy.todos.invoke( "set", "rejectedBySearch", no )
+			swipy.collections.todos.invoke( "set", "rejectedBySearch", no )
 
 		destroy: ->
 			Backbone.off( null, null, @ )

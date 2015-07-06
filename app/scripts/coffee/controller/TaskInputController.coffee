@@ -14,9 +14,9 @@ define ["underscore"], (_ ) ->
 				tags = []
 
 				for tagName in tagNameList
-					tag = swipy.tags.getTagByName tagName
+					tag = swipy.collections.tags.getTagByName tagName
 					if !tag?
-						tag = swipy.tags.create( title: tagName )
+						tag = swipy.collections.tags.create( title: tagName )
 						tag.save({}, {sync:true})
 
 					tags.push tag
@@ -32,7 +32,7 @@ define ["underscore"], (_ ) ->
 			if result then result = $.trim result
 			return result
 		createTask: (str, open) ->
-			return unless swipy.todos?
+			return unless swipy.collections.todos?
 
 			tags = @parseTags str
 			title = @parseTitle str
@@ -45,7 +45,7 @@ define ["underscore"], (_ ) ->
 				Backbone.trigger( "throw-error", msg )
 				return
 
-			newTodo = swipy.todos.create { title, order, animateIn }
+			newTodo = swipy.collections.todos.create { title, order, animateIn }
 			newTodo.set( "tags", tags )
 			newTodo.save({}, {sync:true})
 

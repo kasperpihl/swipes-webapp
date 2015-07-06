@@ -16,7 +16,7 @@ define [ "underscore", "js/model/TagModel", "localStorage"], ( _, TagModel) ->
 				model = new @model obj
 		getTagsFromTasks: ->
 			tags = []
-			for m in swipy.todos.models when m.has "tags"
+			for m in swipy.collections.todos.models when m.has "tags"
 				for tag in m.get "tags" when @validateTag tag
 					# Make sure we don't get duplicates
 					unless _.findWhere( tags, { cid: tag.cid } )
@@ -70,7 +70,7 @@ define [ "underscore", "js/model/TagModel", "localStorage"], ( _, TagModel) ->
 			if typeof tags isnt "object" then tags = [tags]
 
 			result = []
-			for task in swipy.todos.getTasksTaggedWith tags
+			for task in swipy.collections.todos.getTasksTaggedWith tags
 				result.push _.invoke( task.get("tags"), "get", "title" )
 
 			# Make sure only to include the tags that are applied to ALL of the tasks
@@ -87,7 +87,7 @@ define [ "underscore", "js/model/TagModel", "localStorage"], ( _, TagModel) ->
 		handleTagDeleted: (model) ->
 			tagName = model.get "title"
 
-			affectedTasks = swipy.todos.filter (m) ->
+			affectedTasks = swipy.collections.todos.filter (m) ->
 				m.has( "tags" ) and _.contains( m.getTagStrList(), tagName )
 
 			for task in affectedTasks

@@ -34,12 +34,9 @@
 		}
 		width: inherit;
 		text-align: center;
-		background-color: #fff;
-
-		@include breakpoint(tablet){
-			background-color: #F9F9F9;
-		}
-		border-right: 2px solid #e0e0e0;
+		background-color: $sidebar-dark-color;
+		
+		//border-right: 2px solid #e0e0e0;
 		z-index: 4999;
 		@include centerBlock(0, auto, 0, 0, 0, absolute);
 	}

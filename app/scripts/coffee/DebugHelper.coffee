@@ -4,7 +4,7 @@ define ->
 			# @setDummyTodos()
 		setDummyTodos: ->
 			# Reset collection with dummy data
-			swipy.todos.reset @getDummyData()
+			swipy.collections.todos.reset @getDummyData()
 		getDummyData: ->
 			[
 					title: "Follow up on Martin"

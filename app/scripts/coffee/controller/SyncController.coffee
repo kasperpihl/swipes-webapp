@@ -38,7 +38,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			@bouncedSync()
 
 		handleObjectsFromSync: ( objects, className ) ->
-			collection = if className is "ToDo" then swipy.todos else swipy.tags
+			collection = if className is "ToDo" then swipy.collections.todos else swipy.collections.tags
 			if className is "ToDo"
 				@updatedTodos = []
 			newModels = []
@@ -125,11 +125,11 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			newAttributes = @changedAttributes.getIdentifiersAndAttributesForSyncing( "reset" )
 			@combineAttributes newAttributes
 
-			newTags = @prepareNewObjectsForCollection swipy.tags
-			newTodos = @prepareNewObjectsForCollection swipy.todos
+			newTags = @prepareNewObjectsForCollection swipy.collections.tags
+			newTodos = @prepareNewObjectsForCollection swipy.collections.todos
 
-			updateTags = @prepareUpdatesForCollection swipy.tags, "Tag"
-			updateTodos = @prepareUpdatesForCollection swipy.todos, "ToDo"
+			updateTags = @prepareUpdatesForCollection swipy.collections.tags, "Tag"
+			updateTodos = @prepareUpdatesForCollection swipy.collections.todos, "ToDo"
 			serverJSON =
 				Tag : newTags.concat( updateTags )
 				ToDo : newTodos.concat( updateTodos )
@@ -199,7 +199,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if not @firstSync
 					@firstSync = true
 					swipy.analytics.updateIdentity()
-				##swipy.todos.handleObjects data.ToDo
+				##swipy.collections.todos.handleObjects data.ToDo
 			else
 				@util.sendError( data, "Sync Error")
 			@finalizeSync()

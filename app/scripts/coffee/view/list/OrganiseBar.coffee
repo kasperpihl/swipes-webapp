@@ -13,7 +13,7 @@ define ["underscore"], (_) ->
 				@goal = obj.goal
 			Backbone.View.apply @, arguments
 		initialize: (obj)->
-			@listenTo( swipy.todos, "change:selected", @toggle )
+			@listenTo( swipy.collections.todos, "change:selected", @toggle )
 			$("body").addClass("organise")
 			@toggle()
 		back: ->
@@ -34,7 +34,7 @@ define ["underscore"], (_) ->
 				Backbone.trigger("schedule-all-but-selected")
 			return false
 		toggle: ->
-			selectedTasks = swipy.todos.filter (m) -> m.get "selected"
+			selectedTasks = swipy.collections.todos.filter (m) -> m.get "selected"
 			@currentSelectedTasks = selectedTasks.length
 			if @currentSelectedTasks >= @goal
 				@$el.find('.start-day-section').addClass("active")

@@ -5,7 +5,7 @@ define ["underscore"], (_) ->
 			@debouncedSync = _.debounce(@syncSettings, 500)
 			_.bindAll( @, "syncSettings" )
 			@on( "change:Setting24HourClock", ->
-				swipy.todos.invoke( "setTimeStr" )
+				swipy.collections.todos.invoke( "setTimeStr" )
 			)
 			@initialized = true
 		defaults:

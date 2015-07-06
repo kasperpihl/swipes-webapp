@@ -23,7 +23,7 @@ define [
 					newView.transitionInComplete.call newView, options
 
 		editTask: (taskId) ->
-			model = m for m in swipy.todos.models when m.id is taskId or m.get("tempId") is taskId
+			model = m for m in swipy.collections.todos.models when m.id is taskId or m.get("tempId") is taskId
 			if not model?
 				swipy.router.navigate( "", yes )
 				return console.warn "Model with id #{taskId} couldn't be found — Returning to root"

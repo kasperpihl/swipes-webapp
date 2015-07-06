@@ -6,9 +6,7 @@ define [
 	"js/viewcontroller/MainViewController"
 	"js/controller/AnalyticsController"
 	"js/router/MainRouter"
-	"js/collection/ToDoCollection"
-	"js/collection/TagCollection"
-	"js/collection/WorkCollection"
+	"js/collection/Collections"
 	"js/controller/TaskInputController"
 	"js/controller/SidebarController"
 	"js/viewcontroller/SidebarViewController"
@@ -23,7 +21,7 @@ define [
 	"js/controller/UserController"
 	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, ToDoCollection, TagCollection, WorkCollection, TaskInputController, SidebarController, SidebarViewController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
+	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, TaskInputController, SidebarController, SidebarViewController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -44,15 +42,13 @@ define [
 		manualInit: ->
 			#@hackParseAPI()
 			# Base app data
-			@todos = new ToDoCollection()
-			@tags = new TagCollection()
+			@collections = new Collections()
 
 			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
 			@errors = new ErrorController()
 			
 			
-			@workSessions = new WorkCollection()
 
 			# Synchronization
 			@settings = new SettingsController()
@@ -66,11 +62,9 @@ define [
 			
 		start: ->
 			if @sync.lastUpdate?
-				@tags.fetch()
-				@todos.fetch()
-				@workSessions.fetch()
-				_.invoke(@todos.models, "set", { selected: no } )
-				@todos.repairActionStepsRelations()
+				@collections.fetchAll()
+				_.invoke(@collections.todos.models, "set", { selected: no } )
+				@collections.todos.repairActionStepsRelations()
 				@init()
 			else
 				Backbone.once( "sync-complete", @init, @ )
