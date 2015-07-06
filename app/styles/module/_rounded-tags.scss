@@ -14,7 +14,7 @@
 	}
 
 	li {
-		@extend .no-select;
+		@include no-select;
 
 		list-style: none;
 		display: block;

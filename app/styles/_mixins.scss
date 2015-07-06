@@ -35,6 +35,15 @@
 	}
 }
 
+@mixin no-select{
+	cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 @mixin input-placeholder {
 	&.placeholder { @content; }
 	&:-moz-placeholder { @content; }
@@ -140,17 +149,4 @@
 
 .basic-transition {
 	@include transition(all 200ms ease);
-}
-
-
-.no-select {
-	cursor: default;
-
-	-webkit-user-select: none;  /* Chrome all / Safari all */
-	-moz-user-select: none;     /* Firefox all */
-	-ms-user-select: none;      /* IE 10+ */
-
-	  /* No support for these yet, use at own risk */
-	-o-user-select: none;
-	user-select: none;
 }

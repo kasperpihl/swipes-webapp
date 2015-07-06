@@ -1,5 +1,5 @@
 .clndr {
-	@extend .no-select;
+	@include no-select;
 	padding: emCalc(15px) 0 0;
 	@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
 		padding: emCalc(25px) 0 0;
@@ -16,7 +16,7 @@
 	}
 
 	.previous, .next {
-		@extend .no-select;
+		@include no-select;
 		float: left;
 		width: 10%;
 		height: $topHeight;

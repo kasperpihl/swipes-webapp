@@ -2,20 +2,27 @@
 	list-style:none;
 	padding-left:0;
 	$spacingBetweenTasks:7px;
+	.add-task{
+		
+	}
 	.task-item{
+
 		padding-top:$spacingBetweenTasks;
 		padding-bottom:$spacingBetweenTasks;
 		.card-container{
+			@include no-select;
+			cursor: pointer;
 			padding:5px;
 			@include card-shadow(0px);
 			@include border-radius(10px);
+			h2{
+				margin-top:10px;
+				margin-bottom:10px;
+				font: 0.8em/1 $font-normal;
+			}
 		}
 		
 		
-		h2{
-			margin-top:10px;
-			margin-bottom:10px;
-			font: 1.0em/1 $font-normal;
-		}
+		
 	}
 }

@@ -16,6 +16,10 @@ define [
 			tempTasks = [
 				{ title: "Design mockup" }
 				{ title: "Test Android version" }
+				{ title: "Prepare pitchdeck" }
+				{ title: "Pack luggage for vacation" }
+				{ title: "Check non-fiction books for reading" }
+				{ title: "Develop smart drag-n-drop" }
 			]
 			$("#main").html( @taskSectionTemplate( tasks: tempTasks, taskTmpl: @taskTemplate ))
 		customCleanUp: ->
