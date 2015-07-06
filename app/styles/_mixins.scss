@@ -100,10 +100,10 @@
 	@include rotate($deg);
 }
 
-@mixin card-shadow($x-axis: 0, $y-axis: 0px, $blur: 6px, $spread: 1px, $color: rgba(27,30,35,0.1)){
-	-webkit-box-shadow: $x-axis $y-axis $blur $spread $color;
-	-moz-box-shadow: $x-axis $y-axis $blur $spread $color;
-	box-shadow: $x-axis $y-axis $blur $spread $color;
+@mixin card-shadow($blur: 6px, $spread: 1px, $color: rgba(27,30,35,0.1)){
+	-webkit-box-shadow: 0px 0px $blur $spread $color;
+	-moz-box-shadow: 0px 0px $blur $spread $color;
+	box-shadow: 0px 0px $blur $spread $color;
 }
 
 @mixin drop-shadow($x-axis: 0, $y-axis: 1px, $blur: 2px, $alpha: 0) {

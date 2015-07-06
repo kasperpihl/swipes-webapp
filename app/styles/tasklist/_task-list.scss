@@ -1,28 +1,47 @@
 .task-list{
 	list-style:none;
+	max-width:400px;
 	padding-left:0;
 	$spacingBetweenTasks:7px;
 	.add-task{
-		
+
+	}
+	.insert-seperator{
+		height:1px;
+		background: $sidebar-dark-color;
 	}
 	.task-item{
+		@include no-select;
+		cursor: pointer;
+		&.drag-hover-entering{
+			.card-container{
+				@include card-shadow(6px, 6px);
+				@include transition(all 0.3s ease-out);
+				padding-top:7px;
+				padding-bottom:7px;
 
+			}
+		}
 		padding-top:$spacingBetweenTasks;
 		padding-bottom:$spacingBetweenTasks;
 		.card-container{
-			@include no-select;
-			cursor: pointer;
 			padding:5px;
 			@include card-shadow(0px);
+			@include transition(all 0.1s ease-out);
 			@include border-radius(10px);
+			background:#fff;
 			h2{
 				margin-top:10px;
 				margin-bottom:10px;
 				font: 0.8em/1 $font-normal;
 			}
 		}
-		
-		
-		
+	}
+	.task-item.moving{
+		.card-container{
+			//@include card-shadow(0px, 0px, 6px, 1px, rgba(27,30,35,0.5));
+			opacity: 0.5;
+			@include transition(opacity 0.3s ease-out);
+		}
 	}
 }

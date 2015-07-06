@@ -20,6 +20,7 @@ html.touch body {
 
 #main-content {
 	padding-bottom:5em;
+	@include no-select;
 }
 
 .container {
@@ -31,6 +32,7 @@ html.touch body {
 	width:100%;
 
 		.scroll-container{
+			@include no-select;
 			height:100%;
 			width:100%;
 			overflow-y:scroll;
@@ -61,6 +63,7 @@ button::-moz-focus-inner {
   border: 0;
 }
 div[role=main] {
+	@include no-select;
 	margin: auto;
 	max-width: emCalc(685px);
 	position: relative;
