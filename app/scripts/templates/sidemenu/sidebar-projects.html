@@ -1,7 +1,6 @@
-<h1>Projects</h1>
-<ul class="projects">
-	<% _.each(projects, function(project) { %>
-			<li class="project"><a href="#project/<%= project.objectId %>"><%= project.name %></a></li>
-	<% }); %>
-</ul>
+<% _.each(projects, function(project) { %>
+	<li class="project" id="sidebar-project-<%= project.objectId %>">
+		<a href="#project/<%= project.objectId %>"><%= project.name %></a>
+	</li>
+<% }); %>
 <!--<input type="text" placeholder="Add project">-->

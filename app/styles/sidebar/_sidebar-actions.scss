@@ -1,29 +1,5 @@
 .sidebar {
 	
-	// Logo
-	.swipes-logo {
-		display:none;
-		position: relative;
-		width: 50px;
-		height: 50px;
-		margin-bottom:1em;
-		
-		@include breakpoint(min-height, 320px){
-			display: inline-block;
-		}
-		background-color: #fff;
-		@include border-radius(50%);
-		border-top: 1px solid #f3f4f4;
-		border-bottom: 1px solid #c6c7c8;
-		overflow: hidden;
-
-			> img {
-				@include centerBlock(0, 0, 0, 0, auto, absolute);
-			}
-
-	}
-
-
 	.sub-back {
 		line-height: 1;
 		color: #1b1e23;
@@ -42,74 +18,54 @@
 			}
 	}
 
-	
-	// Control menus
-	.sidebar-controls.hasActiveEl {
-		> li {
-			> a {
-				&:hover{
-					opacity:1.0;
-				}
-				opacity:0.3;
-				&.active{
-					opacity: 0.8;
-					svg {
-						fill: $brand-dakrcolor;
-					}
-				}
-			}
-		}
-	}
+
 	.sidebar-controls {
 		@extend .list-unstyled;
-
-			> li {
-				margin-top:1em;
-				@include breakpoint(mobile, height){
-					margin-top: 1.5em;
-				}
-				> a {
-					width:36px;
-					height:36px;
+		color: #fff;
+		padding-top: 30px;
+		text-align: left;
+		h1{
+			padding-top: 10px;
+			font: 0.8em/1 $font-normal;
+			letter-spacing: 2px;
+			padding-left: 32px;
+		}
+		ul{
+			list-style: none;
+			padding-left:0px;
+			li {
+				@include transition(padding 0.1s ease-out);
+				padding-left:0px;
+				a{
+					padding-left:43px;
+					padding-top:8px;
+					padding-bottom:6px;
+					font: 0.75em/1 $font-normal;
+					letter-spacing: 1px;
+					width:100%;
+					text-align: left;
+					color: $sidebar-button-gray;
 					display:block;
-					@include border-radius(50%);
-					line-height: 36px;
-					opacity:0.8;
-					margin-left:16px;
-					&:hover{
-						opacity:1.0;
+					text-decoration: none;
+					&:hover, &:active, &:visited{
+						text-decoration: none;
 					}
-					//@include opacity(0.3);
-					@include transition(opacity 120ms ease-in-out, transform 100ms ease-in-out);
-					> svg{
-						width:36px;
-						height:36px;
-						fill: $gray-labels;
-					}
-				}
-				&:nth-child(2){
-					margin-top: 2em;
-					@include breakpoint(mobile, height){
-						margin-top: 3.0em;
-					}
-				}
-				/*&:nth-child(4) {
-					position:absolute;
-					bottom: 10px;
-					@include breakpoint(mobile, height){
-						bottom: 35px;
-					}
-					left:0;
-					right:0;
 
-					margin: auto;
-					> a {
-						margin-left:24px;
-					}
-					
-				}*/
+				}
 
 			}
+			li:hover, li.active, li.drag-hover-entering{
+				background: $sidebar-button-active-background-gray;
+				a{
+					color: $sidebar-button-active-gray;
+				}
+			}
+			li.drag-hover-entering{
+				@include transition(padding 0.3s ease-out);
+				@include transition-delay(200ms);
+				padding-left:10px;
+			}
+		}
 	}
 
 
@@ -125,25 +81,19 @@
 		text-align: center;
 		letter-spacing: 2px;
 
-			svg {
-				display: inline-block;
-				@include square(20px);
-				fill: $gray-labels;
-				vertical-align: middle;
-			}
+		svg {
+			display: inline-block;
+			@include square(20px);
+			fill: $gray-labels;
+			vertical-align: middle;
+		}
 
-			span {
-				display: inline-block;
-				vertical-align: middle;
-				line-height: 20px;
-				text-transform: uppercase;
-			}
+		span {
+			display: inline-block;
+			vertical-align: middle;
+			line-height: 20px;
+			text-transform: uppercase;
+		}
 	}
-
-
-	.search-filter {
-		
-	}
-
 
 }

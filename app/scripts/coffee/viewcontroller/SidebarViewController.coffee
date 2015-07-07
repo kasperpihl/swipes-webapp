@@ -11,12 +11,12 @@ define [
 			@listenTo( swipy.collections.projects, "add remove reset change:name", @renderSidebar )
 			#@listenTo( swipy.collections.members, "add remove reset change:name change:status", @renderSidebar )
 			_.bindAll( @, "renderSidebar")
-
+			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 		setTemplates: ->
 			@projectsTpl = _.template ProjectsTemplate
 			@membersTpl = _.template TeamMembersTemplate
 		renderSidebar: ->
-			@$el.find("#sidebar-project-list").html(@projectsTpl({projects: swipy.collections.projects.toJSON()}))
+			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({projects: swipy.collections.projects.toJSON()}))
 			
 			tempMembers = [
 					id: 123
@@ -26,4 +26,8 @@ define [
 					name: "stefan"
 
 			]
-			@$el.find("#sidebar-members-list").html(@membersTpl({members: tempMembers}))
+			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({members: tempMembers}))
+			
+		setActiveMenu: (activeClass) ->
+			$(".sidebar-controls .active").removeClass("active")
+			$(".sidebar-controls #"+activeClass).addClass("active")

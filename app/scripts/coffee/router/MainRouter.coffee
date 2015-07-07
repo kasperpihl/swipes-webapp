@@ -62,7 +62,7 @@ define [], () ->
 			if subview then Backbone.trigger( "settings/view", subview )
 			else swipy.analytics.pushScreen "Settings menu"
 		updateHistory: (me, page, subpage) ->
-			if @history.length is 0 and page isnt "edit" and page isnt "list"
+			if @history.length is 0 and page isnt "edit" and page isnt "tasks" and page isnt "project" and page isnt "member"
 				Backbone.trigger( "open/viewcontroller", "tasks", {id:"now", onlyInstantiate: true} )
 			# We skip root, because it's just a redirect to another route.
 			return false if page is "" or page is "root"

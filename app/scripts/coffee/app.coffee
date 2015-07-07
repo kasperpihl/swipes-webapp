@@ -38,6 +38,7 @@ define [
 		constructor: ->
 			##@tags.fetch()
 			$(window).focus @openedWindow
+			$(window).blur @closedWindow
 
 		manualInit: ->
 			#@hackParseAPI()
@@ -114,6 +115,8 @@ define [
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
+		closedWindow: ->
+			Backbone.trigger("closed-window")
 		openedWindow: ->
 			Backbone.trigger("opened-window")
 			if swipy?

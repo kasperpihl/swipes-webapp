@@ -48,15 +48,28 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
  
 		<aside class="sidebar sub-opened">
 			<div class="sidebar_content">
-				<ul class="sidebar-controls ">
-					<li>
-						<a href="#tasks/now">My tasks</a>
-					</li>
-					<li id="sidebar-project-list">
-					</li>
-					<li id="sidebar-members-list">
-					</li>
-				</ul>
+				<div class="sidebar-controls ">
+					<div id="sidebar-my-tasks">
+						<h1>MY TASKS</h1>
+						<ul class="tasks">
+							<li id="sidebar-tasks-now"><a href="#tasks/now">Now</a></li>
+							<li id="sidebar-tasks-later"><a href="#tasks/later">Later</a></li>
+							<li id="sidebar-tasks-done"><a href="#tasks/done">Done</a></li>
+						</ul>
+					</div>
+					<div id="sidebar-project-list">
+						<h1>PROJECTS</h1>
+						<ul class="projects">
+							<li><a>Loading...</a></li>
+						</ul>
+					</div>
+					<div id="sidebar-members-list">
+						<h1>TEAM</h1>
+						<ul class="team-members">
+							<li><a>Loading...</a></li>
+						</ul>
+					</div>
+				</div>
  
 			</div><!-- content -->
  
@@ -180,6 +193,10 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 			</div>
 		</section><!-- .scroll-container -->
  	
+	</div>
+
+	<div class="drag-mouse-pointer">
+		<div class="counter">1</div>
 	</div>
 	<div id="fb-root"></div>
  	<script type="text/javascript" async src="//platform.twitter.com/widgets.js"></script>

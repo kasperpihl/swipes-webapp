@@ -20,7 +20,7 @@ define [
 					viewController.open( options )
 					@currentControllerName = viewcontroller
 					@currentViewController = viewController
-
+			Backbone.trigger("set-active-menu", "sidebar-"+viewcontroller + "-" + options.id)
 		loadViewController: (viewcontroller) ->
 			dfd = new $.Deferred()
 			if viewcontroller is "member" then require ["js/viewcontroller/TeamMemberViewController"], (VC) -> dfd.resolve VC
