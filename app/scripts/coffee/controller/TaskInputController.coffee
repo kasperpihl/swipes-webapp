@@ -31,12 +31,11 @@ define ["underscore"], (_ ) ->
 			result = str.match(/[^#]+/)?[0]
 			if result then result = $.trim result
 			return result
-		createTask: (str, open) ->
+		createTask: (str, options) ->
 			return unless swipy.collections.todos?
 
 			tags = @parseTags str
 			title = @parseTitle str
-			order = -1
 			animateIn = yes
 
 			# If user is trying to add
@@ -45,14 +44,17 @@ define ["underscore"], (_ ) ->
 				Backbone.trigger( "throw-error", msg )
 				return
 
-			newTodo = swipy.collections.todos.create { title, order, animateIn }
+			newTodo = swipy.collections.todos.create { title, animateIn }
+			if options
+				if options.projectId
+					newTodo.set( "projectId", options.projectId )
 			newTodo.set( "tags", tags )
 			newTodo.save({}, {sync:true})
 
 			swipy.analytics.sendEvent("Tasks", "Added", "Input", title.length )
 			swipy.analytics.sendEventToIntercom( "Added Task", { "From": "Input", "Length": title.length } )
 
-			if( open )
+			if( options && options.open )
 				swipy.router.navigate( "edit/#{ newTodo.id }", yes )
 		destroy: ->
 			Backbone.off( null, null, @ )

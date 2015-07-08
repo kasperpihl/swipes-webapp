@@ -19,11 +19,21 @@ define [
 			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({projects: swipy.collections.projects.toJSON()}))
 			
 			tempMembers = [
-					id: 123
-					name: "yana"
+					id: 842
+					name: "mitko"
+					status: "online"
 				,
 					id: 234
+					name: "stanimir"
+					status: "offline"
+				,
+					id: 324
 					name: "stefan"
+					status: "busy"
+				,
+					id: 123
+					name: "yana"
+					status: "online"
 
 			]
 			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({members: tempMembers}))

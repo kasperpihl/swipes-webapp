@@ -28,7 +28,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 		]
 		defaults:
 			title: ""
-			order: undefined
+			order: -1
 			schedule: "default"
 			completionDate: null
 			repeatOption: "never"
@@ -41,7 +41,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 			parentLocalId: null
 			priority: 0
 			projectId: null
-			projectOrder: undefined
+			projectOrder: -1
 			deleted: no
 			origin: null
 			originIdentifier: null
@@ -168,10 +168,7 @@ define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel,
 				@setCompletionTimeStr()
 		
 		isSubtask: ->
-			if @get "parentLocalId"
-				return true
-			else 
-				return false
+			if @get("parentLocalId") then return true else false
 		getOrderedSubtasks: ->
 			swipy.collections.todos.getSubtasksForModel @
 		getState: ->

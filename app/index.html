@@ -438,21 +438,33 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 					<div id="sidebar-my-tasks">
 						<h1>MY TASKS</h1>
 						<ul class="tasks">
-							<li id="sidebar-tasks-now"><a href="#tasks/now">Now</a></li>
-							<li id="sidebar-tasks-later"><a href="#tasks/later">Later</a></li>
-							<li id="sidebar-tasks-done"><a href="#tasks/done">Done</a></li>
+							<li id="sidebar-tasks-now">
+								<a href="#tasks/now">
+									<span class="text">Now</span>
+								</a>
+							</li>
+							<li id="sidebar-tasks-later">
+								<a href="#tasks/later">
+									<span class="text">Later</span>
+								</a>
+							</li>
+							<li id="sidebar-tasks-done">
+								<a href="#tasks/done">
+									<span class="text">Done</span>
+								</a>
+							</li>
 						</ul>
 					</div>
 					<div id="sidebar-project-list">
 						<h1>PROJECTS</h1>
 						<ul class="projects">
-							<li><a>Loading...</a></li>
+							<li><a><span class="text">Loading...</span></a></li>
 						</ul>
 					</div>
 					<div id="sidebar-members-list">
 						<h1>TEAM</h1>
 						<ul class="team-members">
-							<li><a>Loading...</a></li>
+							<li><a><span class="text">Loading...</span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -542,32 +554,8 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 				</a>
 			</li>
 		</ul>
- 
 		<section class="scroll-container" id="scrollcont">
 			<div id="main" role="main">
-				<nav class="row">
-					<ul class="list-nav">
-						<li>
-							<a tabindex="2" class="schedule" href="#tasks/later">
-								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-later"></use></svg>
-								<span class="sr-only">Later</span>
-							</a>
-						</li>
-						<li>
-							<a tabindex="3" class="todo" href="#tasks/now">
-								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-today"></use></svg>
-								<span class="sr-only">Now</span>
-							</a>
-						</li>
-						<li>
-							<a tabindex="4" class="checkmark" href="#tasks/done">
-								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-done"></use></svg>
-								<span class="sr-only">Done</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
-
 				<div class="load-indicator">
 					<div class="spinner">
 						<div class="bounce1"></div>

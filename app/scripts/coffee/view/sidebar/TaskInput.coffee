@@ -36,7 +36,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-add.html"], (_, AddTmpl)
 			e.preventDefault()
 			console.log "trigger"
 			return if @$el.find(".add-task-field").val() is ""
-			Backbone.trigger( "create-task", @$el.find(".add-task-field").val(), openTask )
+			Backbone.trigger( "create-task", @$el.find(".add-task-field").val(), {open: openTask} )
 			@$el.find(".add-task-field").val ""
 			localStorage.setItem("addText", "")
 			

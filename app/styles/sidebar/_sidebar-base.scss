@@ -13,9 +13,6 @@
 		@include centerBlock(0, auto, 0, 0, 0, fixed);
 	}
 	.sidebar-open & {
-		&_content {
-			background-color: #F9F9F9;
-		}
 		@include centerBlock(0, auto, 0, 0, 0, fixed);
 	}
 	&:hover{
@@ -25,6 +22,7 @@
 	
 	// Base content wrapper
 	&_content {
+		overflow-y:scroll;
 		/*padding: 0 10px 0;
 		@include breakpoint(min-height, 320px){
 			padding-top: 10px;

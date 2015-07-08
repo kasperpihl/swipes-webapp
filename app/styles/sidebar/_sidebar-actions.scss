@@ -34,26 +34,59 @@
 			list-style: none;
 			padding-left:0px;
 			li {
-				@include transition(padding 0.1s ease-out);
-				padding-left:0px;
 				a{
+					$block-height: 34px;
+					$dot-size: 10px;
 					padding-left:43px;
-					padding-top:8px;
-					padding-bottom:6px;
-					font: 0.75em/1 $font-normal;
-					letter-spacing: 1px;
-					width:100%;
-					text-align: left;
-					color: $sidebar-button-gray;
-					display:block;
 					text-decoration: none;
+					display:block;
+					color: $sidebar-button-gray;
+					width:100%;
+					height: $block-height;
 					&:hover, &:active, &:visited{
 						text-decoration: none;
+					}
+
+					// Status icon for team members
+					.status-container{
+						height:$block-height;
+						float:left;
+						position: relative;
+						display: inline-block;
+						width:$dot-size*2;
+						.status{
+							@include border-radius(50%);
+							display:inline-block;
+							position: absolute;
+
+							left: 0;
+							top: 50%;
+							margin-top: -$dot-size/2;
+							width: $dot-size;
+							height: $dot-size;
+							background-color: $unselected-color;
+							&.online{
+								background-color: $online-green;
+							}
+							&.busy{
+								background-color: $busy-yellow;
+							}
+						}
+					}
+					.text{
+						float:left;
+						padding-top: 10px;
+						font: 0.75em/1 $font-normal;
+						letter-spacing: 1px;
+						text-align: left;
+						@include transition(padding 0.1s ease-out);
+						padding-left:0px;
 					}
 
 				}
 
 			}
+			
 			li:hover, li.active, li.drag-hover-entering{
 				background: $sidebar-button-active-background-gray;
 				a{
@@ -61,9 +94,11 @@
 				}
 			}
 			li.drag-hover-entering{
-				@include transition(padding 0.3s ease-out);
-				@include transition-delay(200ms);
-				padding-left:10px;
+				.text{
+					@include transition(padding 0.3s ease-out);
+					@include transition-delay(200ms);
+					padding-left:10px;
+				}
 			}
 		}
 	}

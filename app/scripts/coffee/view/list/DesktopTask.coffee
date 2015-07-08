@@ -42,35 +42,7 @@ define ["underscore", "js/view/list/BaseTask"], (_, BaseTaskView) ->
 		stopTrackingMouse: ->
 			@isHovering = false
 			@onUnhoverTask( @cid )
-			###@$el.off "mousemove"
-			@isHoveringComplete = @isHoveringSchedule = false
-
-			# Because mouse-move is throttled, we need to catch that throttled function
-			@allowThrottledMoveHandler = no
-
-			Backbone.trigger( "unhover-complete", @.cid )
-			Backbone.trigger( "unhover-schedule", @.cid )###
-		###onMouseMove: (e) ->
-			return unless @allowThrottledMoveHandler
-			@determineUserIntent @getMousePos e.pageX
-		determineUserIntent: (mousePos) ->
-			console.log mousePos
-			if mousePos <= 15 and not @isHoveringComplete
-				Backbone.trigger( "hover-complete", @.cid )
-				@isHoveringComplete = true
-
-			else if mousePos > 15 and @isHoveringComplete
-				Backbone.trigger( "unhover-complete", @.cid )
-				@isHoveringComplete = false
-
-			if mousePos >= 85 and not @isHoveringSchedule
-				Backbone.trigger( "hover-schedule", @.cid )
-				@isHoveringSchedule = true
-
-			else if mousePos < 85 and @isHoveringSchedule
-				Backbone.trigger( "unhover-schedule", @.cid )
-				@isHoveringSchedule = false
-		###
+			
 		onHoverTask: (target) ->
 			if @isHovering
 				@$el.addClass "hover"

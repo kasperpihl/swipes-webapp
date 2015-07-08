@@ -1,5 +1,13 @@
 <% _.each(members, function(member) { %>
 	<li class="member" id="sidebar-member-<%= member.id %>">
-		<a href="#member/<%= member.id %>"><%= member.name %></a>
+		<a href="#member/<%= member.id %>">
+			<div class="status-container">
+				<span class="status <%= member.status %>">
+				</span>
+			</div>
+			<div class="text">
+				<%= member.name %>
+			</div>
+		</a>
 	</li>
 <% }); %>

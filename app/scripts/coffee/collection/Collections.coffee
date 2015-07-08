@@ -4,6 +4,7 @@ define [
 	"js/collection/TagCollection"
 	"js/collection/ProjectCollection"
 	"js/collection/WorkCollection"
+	"plugins/backbone.collectionsubset"
 	], (_, ToDoCollection, TagCollection, ProjectCollection, WorkCollection) ->
 	class Collections
 		constructor: ->
