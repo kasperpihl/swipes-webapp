@@ -134,21 +134,24 @@ define [
 
 				ids = $.map( $(".task-list .task-item"), (o) -> o["id"] ) #_.pluck(@tempTasks, "id")
 				for i, id of ids
+					targetIdentifier = "#"+id
+					if Draggable.hitTest(e, targetIdentifier, 0)
+						return hit if targetIdentifier is @draggingId
 
-					if Draggable.hitTest(e, "#" + id, 0)
-						return hit if "#"+id is @draggingId
-						hit.target = "#" + id
-						hit.type = "task"
 						
-						$hit = $(hit.target)
+						$hit = $(targetIdentifier)
 						sensitivityThreshold = 15 #$("#task-" + id).height()/2
 
-						if e.y <= ($hit.offset().top + sensitivityThreshold)
+						if e.y <= ($hit.offset().top + sensitivityThreshold) and "#"+$hit.prev(".task-item").attr("id") isnt @draggingId
+							#console.log $hit.prev(".task-item").find(".title").html() 
 							hit.position = "top"
-						else if e.y >= ($hit.offset().top + $hit.height() - sensitivityThreshold)
+						else if e.y >= ($hit.offset().top + $hit.outerHeight() - sensitivityThreshold) and "#"+$hit.next(".task-item").attr("id") isnt @draggingId
 							hit.position = "bottom"
-						else if e.y > $hit.offset().top and e.y < ($hit.offset().top + $hit.height())
+						else if e.y >= $hit.offset().top and e.y <= ($hit.offset().top + $hit.outerHeight())
 							hit.position = "middle"
+
+						hit.target = "#" + id
+						hit.type = "task"
 			@lastY = e.y
 			return hit
 	
