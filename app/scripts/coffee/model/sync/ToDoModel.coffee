@@ -3,7 +3,7 @@
  http://stackoverflow.com/questions/15912222/how-do-i-save-just-a-subset-of-a-backbone-models-attributes-to-the-server-witho
 ###
 
-define ["js/model/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel, TimeUtility ) ->
+define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel, TimeUtility ) ->
 	BaseModel.extend
 		className: "ToDo"
 		idAttribute: "objectId"

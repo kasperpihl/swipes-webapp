@@ -1,0 +1,25 @@
+.top-bar-container{
+	height:$top-bar-height;
+	position:absolute;
+	width:100%;
+	top:0;
+	.topbar-header{
+		position:absolute;
+		left:0;
+		top:0;
+		width:200px;
+		h1{
+			margin: 0;
+			margin-top: 13px;
+			margin-left: 20px;
+			font: 1.1em/1 $font-normal;
+		}
+	}
+	.progress-header{
+		margin-top:$top-bar-height;
+		z-index: 2000; // To be on top of tasks that have 1000+
+	}
+	.progress-header.no-progress{
+		margin-top:$top-bar-height - 1;
+	}
+}

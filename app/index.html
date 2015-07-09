@@ -428,10 +428,8 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 	<!--[if lt IE 10]>
 	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
+	<div class="total-container">
 
-	<div class="container">
- 
- 
 		<aside class="sidebar sub-opened">
 			<div class="sidebar_content">
 				<div class="sidebar-controls ">
@@ -468,9 +466,9 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 						</ul>
 					</div>
 				</div>
- 
+
 			</div><!-- content -->
- 
+
 			<div class="sidebar-sub">
 				<a href="#" class="sub-back">
 					<svg class="icon">
@@ -488,87 +486,96 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 					This is where the submenu content gets loaded
 				</div>
 			</div><!-- sub structures come here -->
- 			<div class="clickable-overlay"></div>
+				<div class="clickable-overlay"></div>
 		</aside><!-- sidebar -->
-		<ul class="organise-bar top">
-			<li class="back-button">
-				<a href="#" class="go-back">
-					<svg class="icon">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarBack"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="title">Choose 3 tasks to work on today</li>
-		</ul>
-		<ul class="organise-bar bottom">
-			<li class="start-day-section">
-				<a href="#" class="start-day-button">START DAY</a>
-			</li>
-		</ul>
- 		<ul class="action-bar fadeout bottom">
-			<li class="counting-selected">
-				<span style="display:none;" class="selected-label">4</span>
-			</li>
-			<li class="spacer"></li>
-			<li class="snooze">
-				<a class="action-snooze" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Snooze for later">
-					<svg class="icon icon-snooze">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSnooze"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="today">
-				<a class="action-today" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Send to now">
-					<svg class="icon icon-today">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarNow"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="complete">
-				<a class="action-complete" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Complete">
-					<svg class="icon icon-done">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarComplete"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="spacer"></li>
-			<li class="tags">
-				<a href="JavaScript:void(0);" class="tags" data-toggle="tooltip" data-placement="top" title="Set tags">
-					<svg class="icon icon-navbarTag">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarTag"></use>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="JavaScript:void(0);" class="delete" data-toggle="tooltip" data-placement="top" title="Delete">
-					<svg class="icon icon-navbarDelete">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarDelete"></use>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="JavaScript:void(0);" class="share" data-toggle="tooltip" data-placement="top" title="Share">
-					<svg class="icon icon-navbarShare">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarShare"></use>
-					</svg>
-				</a>
-			</li>
-		</ul>
-		<section class="scroll-container" id="scrollcont">
-			<div id="main" role="main">
-				<div class="load-indicator">
-					<div class="spinner">
-						<div class="bounce1"></div>
-						<div class="bounce2"></div>
-						<div class="bounce3"></div>
-					</div>
-				</div>
- 
-			</div>
-		</section><!-- .scroll-container -->
- 	
-	</div>
+		<div class="right-side-container">
+			<ul class="organise-bar top">
+				<li class="back-button">
+					<a href="#" class="go-back">
+						<svg class="icon">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarBack"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="title">Choose 3 tasks to work on today</li>
+			</ul>
+			<ul class="organise-bar bottom">
+				<li class="start-day-section">
+					<a href="#" class="start-day-button">START DAY</a>
+				</li>
+			</ul>
+	 		<ul class="action-bar fadeout bottom">
+				<li class="counting-selected">
+					<span style="display:none;" class="selected-label">4</span>
+				</li>
+				<li class="spacer"></li>
+				<li class="snooze">
+					<a class="action-snooze" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Snooze for later">
+						<svg class="icon icon-snooze">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSnooze"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="today">
+					<a class="action-today" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Send to now">
+						<svg class="icon icon-today">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarNow"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="complete">
+					<a class="action-complete" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Complete">
+						<svg class="icon icon-done">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarComplete"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="spacer"></li>
+				<li class="tags">
+					<a href="JavaScript:void(0);" class="tags" data-toggle="tooltip" data-placement="top" title="Set tags">
+						<svg class="icon icon-navbarTag">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarTag"></use>
+						</svg>
+					</a>
+				</li>
+				<li>
+					<a href="JavaScript:void(0);" class="delete" data-toggle="tooltip" data-placement="top" title="Delete">
+						<svg class="icon icon-navbarDelete">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarDelete"></use>
+						</svg>
+					</a>
+				</li>
+				<li>
+					<a href="JavaScript:void(0);" class="share" data-toggle="tooltip" data-placement="top" title="Share">
+						<svg class="icon icon-navbarShare">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarShare"></use>
+						</svg>
+					</a>
+				</li>
+			</ul>
 
+			<div class="right-side-inner-container">
+				<div class="content-container">
+					<section class="scroll-container" id="scrollcont">
+						<div id="main" role="main">
+							<div class="load-indicator">
+								<div class="spinner">
+									<div class="bounce1"></div>
+									<div class="bounce2"></div>
+									<div class="bounce3"></div>
+								</div>
+							</div>
+			 
+						</div>
+					</section><!-- .scroll-container -->
+				</div>
+				<div class="top-bar-container">
+				</div>
+			</div>
+
+	 	
+		</div><!-- .content-container -->
+	</div><!-- .total-container -->
 	<div class="drag-mouse-pointer">
 		<div class="counter">1</div>
 	</div>

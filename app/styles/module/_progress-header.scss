@@ -1,0 +1,147 @@
+
+// App header
+
+// Structure
+.progress-header {
+
+	height: 22px;
+	width: auto;
+	position: relative;
+	z-index: 2;
+	padding-right: 140px;
+
+}
+
+
+// Inner elements
+.progress-header {
+	
+	// Title label
+	h1 {
+		display: block;
+		height: 18px;
+		line-height: 18px;
+		font-size: 15px;
+		font-family: $font-normal;
+		color: $gray-titles;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 140px;
+		margin: 0;
+		line-height: 1;
+		text-align: center;
+
+			span {
+				position: relative;
+				z-index: 2;
+				top: -1px;
+				font-size: 15px;
+			}
+
+			&:after {
+				display: block;
+				content: '';
+				border-bottom: 2px solid #ffc107;
+				background-color: #fff;
+				position: absolute;
+				z-index: 1;
+				bottom: 1px;
+				top: 0;
+				left: emCalc(12.5px);
+				right: 0;
+			}
+	}
+
+	
+	// Progress bar
+	.progress {
+		height: 8px;
+		background-color: $sidebar-bg;
+		border: 2px solid #ffc107;
+		border-right: none;
+		margin: 0;
+		position: relative;
+		z-index: 1;
+
+		@include border-right-radius(7em);
+		@include box-shadow(none);
+
+		.progress-bar {
+			height: 8px;
+			background-color: #ffc107;
+
+			@include border-right-radius(7em);
+			@include box-shadow(none);
+		}
+	}
+
+
+	// Divider
+	.shapeline {
+		display: inline-block;
+		@include size(19px, 18px);
+		position: absolute;
+		right: 145px;
+		top: 0;
+		line-height: 1;
+		margin-right: -15px;
+		z-index: 2;
+
+			svg {
+				background-color: transparent;
+			}
+	}
+
+
+
+	// States
+	&.no-progress {
+
+		&:before {
+			display: block;
+			content: '';
+			height: 2px;
+			background-color: #ffc107;
+			width: 99.2%;
+		}
+
+		.progress {
+			display: none;
+		}
+
+		.shapeline svg #LINE {
+			display: none;
+		}
+
+	}
+
+	&.schedule {
+		&:before {
+			background-color: $red;
+		}
+
+		h1:after {
+			border-bottom-color: $red;
+		}
+
+		svg #CURVE path {
+			fill: $red;
+		}
+	}
+
+	&.done {
+		&:before {
+			background-color: $green;
+		}
+
+		h1:after {
+			border-bottom-color: $green;
+		}
+
+		svg #CURVE path {
+			fill: $green;
+		}
+	}
+
+}

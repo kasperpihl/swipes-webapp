@@ -6,7 +6,10 @@ html {
 		overflow: hidden;
 	}
 }
-
+* {
+	cursor:default;
+	@include no-select;
+}
 html.touch body {
 	@include breakpoint(tablet-horizontal) {
 		min-width: 1180px;
@@ -20,38 +23,56 @@ html.touch body {
 
 #main-content {
 	padding-bottom:5em;
-	@include no-select;
+	
 }
-
-.container {
-	margin: auto;
-	padding: 0;
-	max-width: none;
-	overflow:hidden;
+// Whole page
+.total-container{
 	height:100%;
 	width:100%;
-
-		.scroll-container{
-			@include no-select;
-			height:100%;
+	// Sidebar
+	.left-side-container{
+		height:100%;
+	}
+	// Topbar + Content
+	.right-side-container {
+		.right-side-inner-container{
 			width:100%;
-			overflow-y:scroll;
-			position: relative;
-			z-index: 4;
-			padding-left: $sidebar-slide-width + 5px;
-			padding-right: 5px;
-
-			@include transition(padding $sidebar-animation ease);
-			@include breakpoint(tablet){
-				padding-left: $sidebar-width;
-				.sidebar-open & {
-					padding-left: $sidebar-width + $sidebar-sub-width-large;
-				}
-			}
-			
+			height:100%;
+			position:relative;
 		}
+		position:relative;
+		margin: auto;
+		padding: 0;
+		max-width: none;
+		//overflow:hidden;
+		height:100%;
+		width:100%;
 
-		
+		padding-left: $sidebar-slide-width + 5px;
+		@include transition(padding $sidebar-animation ease);
+		@include breakpoint(tablet){
+			padding-left: $sidebar-width;
+			.sidebar-open & {
+				padding-left: $sidebar-width + $sidebar-sub-width-large;
+			}
+		}
+		.content-container{
+			// padding to make topbar work
+			padding-top:$top-bar-height;
+			height:100%;
+			
+			.scroll-container{
+				height:100%;
+				width:100%;
+				overflow-y:scroll;
+				position: relative;
+				z-index: 4;
+				padding-right: 5px;
+
+			}
+		}
+	
+	}
 }
 svg {
 	pointer-events: none;
@@ -63,7 +84,6 @@ button::-moz-focus-inner {
   border: 0;
 }
 div[role=main] {
-	@include no-select;
 	margin: auto;
 	max-width: emCalc(685px);
 	position: relative;

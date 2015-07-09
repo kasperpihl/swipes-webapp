@@ -1,4 +1,4 @@
-define [ "underscore", "js/model/WorkModel", "localStorage"], ( _, WorkModel) ->
+define [ "underscore", "js/model/sync/WorkModel", "localStorage"], ( _, WorkModel) ->
 	Backbone.Collection.extend
 		model: WorkModel
 		localStorage: new Backbone.LocalStorage("WorkCollection")

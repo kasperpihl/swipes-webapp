@@ -1,10 +1,12 @@
+.task-list{
+	max-width:400px;
+}
 .task-section{
 	list-style:none;
-	max-width:400px;
 	padding-left:0;
+	max-width:400px;
 	$spacingBetweenTasks:7px;
 	.task-item{
-		@include no-select;
 		cursor: pointer;
 
 		padding-top:$spacingBetweenTasks;

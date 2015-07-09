@@ -1,4 +1,4 @@
-define ["underscore", "js/view/workmode/WorkModeOverlay", "js/model/WorkModel"], (_, WorkModeOverlay, WorkModel) ->
+define ["underscore", "js/view/workmode/WorkModeOverlay", "js/model/sync/WorkModel"], (_, WorkModeOverlay, WorkModel) ->
 	class WorkController
 		constructor: (collection) ->
 			Backbone.on( "new-work-mode", @setWorkModel, @)

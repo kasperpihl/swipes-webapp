@@ -183,7 +183,7 @@ define ["underscore",
 			return unless @shown
 
 			content = @$el.find ".overlay-content"
-			scrollLeftPadding = parseInt($(".scroll-container").css("paddingLeft"),10)
+			scrollLeftPadding = parseInt($(".right-side-container").css("paddingLeft"),10)
 			$(".overlay.scheduler").css("paddingLeft",scrollLeftPadding+"px")
 			yOffset = ( window.innerHeight / 2 ) - ( content.height() / 2 )
 			content.css( "margin", yOffset + "px auto 0" )

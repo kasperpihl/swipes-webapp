@@ -1,4 +1,4 @@
-define [ "underscore", "js/model/TagModel", "localStorage"], ( _, TagModel) ->
+define [ "underscore", "js/model/sync/TagModel", "localStorage"], ( _, TagModel) ->
 	Backbone.Collection.extend
 		model: TagModel
 		localStorage: new Backbone.LocalStorage("TagCollection")

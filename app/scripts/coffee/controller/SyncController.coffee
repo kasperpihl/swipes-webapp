@@ -13,7 +13,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 		constructor: ->
 			@changedAttributes = new ChangedAttributesController()
 			@syncIndicator = new SyncIndicator()
-			$(".container").append @syncIndicator.el
+			$(".content-container").append @syncIndicator.el
 			@isSyncing = false
 			@needSync = false
 			@lastUpdate = null

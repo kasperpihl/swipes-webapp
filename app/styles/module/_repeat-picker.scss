@@ -34,10 +34,6 @@
 		list-style: none;
 	}
 
-	> p {
-		@include no-select;
-	}
-
 	a {
 		$height: emCalc(45px);
 

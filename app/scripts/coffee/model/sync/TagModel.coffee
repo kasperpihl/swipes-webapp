@@ -1,4 +1,4 @@
-define ["js/model/BaseModel"], (BaseModel) ->
+define ["js/model/sync/BaseModel"], (BaseModel) ->
 	BaseModel.extend
 		className: "Tag"
 		idAttribute: "objectId"

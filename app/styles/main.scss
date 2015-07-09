@@ -28,6 +28,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "module/task-input";
 @import "module/list-nav";
 @import "module/priority-indicator";
+@import "module/progress-header";
 @import "module/buttons";
 @import "module/grid";
 @import "module/rounded-tags";
@@ -66,6 +67,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 // Views
 @import "view/login";
+@import "view/topbar";
 
 // Other modules
 @import "module/browsehappy";

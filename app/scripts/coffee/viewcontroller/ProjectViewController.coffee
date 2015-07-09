@@ -4,16 +4,20 @@ define [
 	"text!templates/viewcontroller/project-view-controller.html"
 	"js/view/tasklist/TaskList"
 	"js/view/tasklist/AddTaskCard"
-	], (_, TweenLite, Template, TaskList, AddTaskCard) ->
+	"js/handler/TaskHandler"
+	], (_, TweenLite, Template, TaskList, AddTaskCard, TaskHandler) ->
 	Backbone.View.extend
 		initialize: ->
 			@setTemplate()
 
 			@taskList = new TaskList()
-			@taskList.dataSource = @
 			@taskList.targetSelector = ".project-view-controller .task-list"
 			@taskList.enableDragAndDrop = true
 			@taskList.delegate = @
+
+			@taskHandler = new TaskHandler()
+			@taskList.dragDropDelegate = @taskHandler
+
 
 			@addTask = new AddTaskCard()
 			@addTask.targetSelector = ".project-view-controller .add-task"
@@ -29,11 +33,15 @@ define [
 			@render()
 			@loadProject(@projectId)
 		loadProject: (projectId) ->
-			@projectCollection = swipy.collections.todos.subcollection(
-				filter: (task) ->
+			@taskList.dataSource = @taskHandler
+			@currentProject = swipy.collections.projects.get(projectId)
+			console.log @currentProject.get("name")
+			swipy.topbarVC.setMainTitle(@currentProject.get("name"))
+			@taskHandler.loadSubcollection(
+				(task) ->
 					return task.get("projectId") is projectId and !task.isSubtask()
 			)
-			console.log @projectCollection
+			
 			@taskList.reload()
 		destroy: ->
 
@@ -45,15 +53,3 @@ define [
 			options.projectId = @projectId
 			Backbone.trigger("create-task", title, options)
 			@taskList.reload()
-		### 
-			TaskList Delegate
-		###
-		taskListDidHitFromDrag: ( taskList, draggedId, hit ) ->
-			console.log draggedId, hit
-			
-		### 
-			TaskList Datasource
-		###
-		tasksForTaskList: ( taskList ) ->
-			console.log @projectCollection.toJSON()
-			return @projectCollection.toJSON()
