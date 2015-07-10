@@ -12,7 +12,7 @@ define [
 			@tags = new TagCollection()
 			@projects = new ProjectCollection()
 			@workSessions = new WorkCollection()
-			@all = [@todos, @tags, @projects, @workSessions]
+			@all = [@tags, @todos, @projects, @workSessions]
 		fetchAll: ->
 			for collection in @all
 				collection.fetch()

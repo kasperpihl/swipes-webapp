@@ -12,6 +12,7 @@ define [
 			#@listenTo( swipy.collections.members, "add remove reset change:name change:status", @renderSidebar )
 			_.bindAll( @, "renderSidebar")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
+			$(window).on "resize.sidebar", @checkAndEnableScrollBars
 		setTemplates: ->
 			@projectsTpl = _.template ProjectsTemplate
 			@membersTpl = _.template TeamMembersTemplate
@@ -37,7 +38,14 @@ define [
 
 			]
 			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({members: tempMembers}))
-			
+			@checkAndEnableScrollBars()
+		checkAndEnableScrollBars: ->
+			overflow = "hidden"
+			if $(".sidebar-controls").outerHeight(true) > $("body").height()
+				overflow = "scroll"
+			$('.sidebar_content').css("overflowY",overflow)
 		setActiveMenu: (activeClass) ->
 			$(".sidebar-controls .active").removeClass("active")
 			$(".sidebar-controls #"+activeClass).addClass("active")
+		destroy: ->
+			$(window).off "resize.sidebar"

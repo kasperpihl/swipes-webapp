@@ -1,6 +1,61 @@
-<li class="task-item" id="task-<%= task.objectId %>">
-	<div class="card-container">
-		<h2 class="title"><%= task.title %></h2>
-		<div class="progress-bar"><div class="progress"></div></div>
+<div class="card-container">
+	<h2 class="title"><span class="priority"></span><%= data.task.get('title') %></h2>
+	<!--<span class="progress-label">50%</span>-->
+		<!--<div class="meta-text with-icon" title="This task has been assigned to 3 people">
+			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialSearch"></use></svg>3
+		</div>-->
+		<% if (data.task.get('tags') && data.task.get('tags').length) { %>
+			<div class="meta">
+				<div class="meta-text tags">
+					<%
+					numberOfTags = data.task.get('tags').length;
+					tagStrings = _.invoke(data.task.get('tags'), "get", "title")
+					tags = _.sortBy( data.task.get('tags'), function(tag) {
+						return tag.get("title").toLowerCase()
+					})
+
+					_.each(data.task.get('tags'), function(tag, i) {
+						isInFilter = _.contains(swipy.filter.tagsFilter, tag.get("title") )
+						
+						if ( isInFilter ) { %><strong> <% } %>
+							
+							<a href="#" data-href="<%= tag.id %>" class="clickable-tag"><%= tag.get("title") %></a><% if ( i+1 < numberOfTags ) print(",&nbsp;"); %>
+						
+						<% if ( isInFilter ) { %></strong> <% }
+						 
+							
+					}); %>
+				</div><!-- .meta-text -->
+			</div><!-- .meta -->
+		<% } %>
+	
+</div><!-- .card-container -->
+<% numberOfButtons = 4 %>
+<div class="hover-container buttons-<%= numberOfButtons %>">
+	<div class="hover-inner-container">
+		<div class="actions">
+			<div>
+
+			<% state = data.task.get("state") %>
+				<a href="JavaScript:void(0);" class="schedule-button" title="Schedule todo">
+					<svg class="icon">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
+					</svg>
+				</a>
+			<% if (state !== "completed"){ %>
+				<a href="JavaScript:void(0);" class="complete-button" title="Mark task as completed">
+					<svg class="icon">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
+					</svg>
+				</a>
+			<% } %>
+				<a href="JavaScript:void(0);" class="work-button" title="Start workmode with this task">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarOrganise"></use></svg>
+				</a>
+				<a href="JavaScript:void(0);" class="more-button" title="Start workmode with this task">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarWorkspace"></use></svg>
+				</a>
+			</div>
+		</div>
 	</div>
-</li>
+</div>

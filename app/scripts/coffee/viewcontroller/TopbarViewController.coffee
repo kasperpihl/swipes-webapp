@@ -14,12 +14,16 @@ define [
 			@$el.html(@template({}))
 			$(".top-bar-container").html(@$el)
 
-		setMainTitle: (title) ->
+		setMainTitleAndEnableProgress: (title, progress) ->
 			@$el.find(".title").html(title)
+			@$el.find('.progress-header').toggleClass( "no-progress", !progress)
 		# Progress is percentage number between 0 and 100
 		setSectionTitleAndProgress: (title, progress) ->
-			@currentProgress = parseInt(progress, 10)
 			@$el.find(".section-title > span").html(title)
+
+			@currentProgress = parseInt(progress, 10)
+			@$el.find('.progress-bar').css("width",@currentProgress+"%")
+			
 			@realignProgressBar()
 		realignProgressBar: ->
 			# Trying to make an estimate of the length of the text
@@ -29,8 +33,4 @@ define [
 			actualWidth = widthOfText + 50
 			@$el.find('.progress').parent().css("paddingRight",actualWidth+"px")
 			@$el.find('.section-title').css("width",actualWidth+"px")
-			shapePadding = actualWidth + 5 # Math.ceil(actualWidth*1.030)
-			@$el.find('.shapeline').css("right",shapePadding+"px")
-			@$el.find('.progress-header').toggleClass( "no-progress", !@showProgress)
-			if @showProgress
-				@$el.find('.progress-bar').css("width",@currentProgress+"%")
+			@$el.find('.shapeline').css("right",actualWidth+"px")

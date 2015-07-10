@@ -31,7 +31,7 @@ define ["underscore"], (_) ->
 			orderNumber = 0
 			for m in sortedTodoArray
 				if !m.has("order") or m.get("order") isnt orderNumber
-					m.updateOrder orderNumber
+					m.updateOrder "order", orderNumber
 				orderNumber++
 
 			return sortedTodoArray

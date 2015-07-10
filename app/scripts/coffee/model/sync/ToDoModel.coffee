@@ -100,12 +100,16 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				if subtask.id is model.id
 					return true
 			return false
-		addSubtask: ( model ) ->
+		addSubtask: ( model, save ) ->
 			currentSubtasks = @get "subtasksLocal"
 			if !currentSubtasks
 				currentSubtasks = []
 			currentSubtasks.push( model )
+			if save and (!model.get("parentLocalId") or model.get("parentLocalId") isnt @identifier)
+				model.save "parentLocalId", @id, {sync: true}
 			@set "subtasksLocal", currentSubtasks, {localSync: true}
+			if save
+				@save {}, {sync:true}
 			return @model
 		addNewSubtask: ( title, from ) ->
 			currentSubtasks = @getOrderedSubtasks()
@@ -141,8 +145,8 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 
 			@setScheduleStr()
 			@setTimeStr()
-
 			@on "change:tags", (me, tags) =>
+
 				if !tags then @updateTags []
 				else @syncTags tags
 
@@ -419,13 +423,15 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			swipy.analytics.sendEvent( "Tasks", "Recurring", repeatOption )
 			swipy.analytics.sendEventToIntercom( "Recurring Task", { "Reoccurrence": repeatOption } )
 
-		updateOrder: ( order, opt ) ->
-			if order == @get "order"
+		updateOrder: ( attr, order, opt ) ->
+			if attr isnt "order" and attr isnt "projectOrder"
+				throw new Error("TodoModel updateOrder: invalid order attribute")
+			if order == @get attr
 				return
 			options = { sync: true }
 			for key, value of opt
 				options[key] = value
-			@save "order", order, options
+			@save attr, order, options
 
 		updateTags: ( tags ) ->
 			@unset "tags", { silent: true }

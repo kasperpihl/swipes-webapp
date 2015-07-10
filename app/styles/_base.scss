@@ -10,6 +10,9 @@ html {
 	cursor:default;
 	@include no-select;
 }
+input{
+	cursor: text;
+}
 html.touch body {
 	@include breakpoint(tablet-horizontal) {
 		min-width: 1180px;
@@ -123,6 +126,32 @@ div[role=main] {
 
 	//padding-bottom: 3em;
 }
+
+
+
+// Pointer for drag & drop - added in body element (base.html)
+.drag-mouse-pointer{
+	display:none;
+	&.shown{
+		display:block;
+	}
+	opacity: 0.7;
+	position: fixed;
+	z-index: 10000;
+	top:0;
+	left:0;
+	color: white;
+	background: $red;
+	width: 30px;
+	height:30px;
+	@include border-radius(50%);
+	.counter{
+		font: 0.8em/0.6 $font-normal;
+		padding-top: 12px;
+		text-align:center;
+	}
+}
+
 
 // Tooltips updating animation
 .tooltip.right {

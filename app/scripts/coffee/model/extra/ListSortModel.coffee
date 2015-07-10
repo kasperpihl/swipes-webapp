@@ -70,14 +70,14 @@ define ["underscore", "gsap-scroll", "gsap"], (_) ->
 
 			if newOrder < oldOrder
 				for affectedView in @getViewsBetween( newOrder, oldOrder, view.model.cid )
-					affectedView.model.updateOrder (affectedView.model.get( "order" ) + 1)
+					affectedView.model.updateOrder "order", (affectedView.model.get( "order" ) + 1)
 
 			else if newOrder > oldOrder
 				for affectedView in @getViewsBetween( oldOrder, newOrder, view.model.cid )
-					affectedView.model.updateOrder (affectedView.model.get( "order" ) - 1 )
+					affectedView.model.updateOrder "order", (affectedView.model.get( "order" ) - 1 )
 
 			# Silently set order for this view, because we don't want to trigger the handler that tweens the position for it.
-			view.model.updateOrder newOrder, { silent: true } 
+			view.model.updateOrder "order", newOrder, { silent: true } 
 
 		destroy: ->
 			$('#scrollcont').off(".sortmodel")

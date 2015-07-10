@@ -2,16 +2,16 @@ define ["underscore"
 		"text!templates/tasklist/add-task-card.html"
 	], (_, Tmpl) ->
 	Backbone.View.extend
-		className: "add-task-card-container"
+		className: "add-task-card-container task-item"
 		initialize: ->
 			@template = _.template Tmpl
+			@render()
 		events:
 			"keyup input": "saveTask"
 		render: ->
-			if !@targetSelector?
-				throw new Error("TaskList must have targetSelector to render")
 			@$el.html @template({})
-			$(@targetSelector).html(@$el)
+			@delegateEvents()
+			return @
 		saveTask: (e) ->
 			if e.keyCode is 13
 				@triggerAddTask(e)
@@ -20,8 +20,13 @@ define ["underscore"
 			return if @$el.find("input").val() is ""
 			options = {}
 			options.open = openTask if openTask
-			if @delegate? and _.isFunction(@delegate.taskCardDidCreateTask)
-				@delegate.taskCardDidCreateTask( @, @$el.find("input").val(), options)
+			if @addDelegate? and _.isFunction(@addDelegate.taskCardDidCreateTask)
+				@addDelegate.taskCardDidCreateTask( @, @$el.find("input").val(), options)
 			else
-				throw new Error("AddTaskCard must have a delegate that implements taskCardDidCreateTask")
+				throw new Error("AddTaskCard must have an addDelegate that implements taskCardDidCreateTask")
 			@$el.find("input").val ""
+		remove: ->
+			console.log "remove"
+		destroy: ->
+			console.log "destroyed"
+			@undelegateEvents()

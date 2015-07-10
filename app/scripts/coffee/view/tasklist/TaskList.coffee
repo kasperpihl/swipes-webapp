@@ -5,16 +5,15 @@
 ###
 define [
 	"underscore"
-	"text!templates/tasklist/task-section.html"
-	"text!templates/tasklist/task.html"
+	"js/view/tasklist/TaskSection"
+	"js/view/tasklist/TaskCard"
 	"js/handler/DragHandler"
-	], (_, TaskSectionTmpl, TaskTmpl, DragHandler) ->
+	], (_, TaskSection, TaskCard, DragHandler) ->
 	Backbone.View.extend
+		className: "task-list"
 		initialize: ->
 			# Set HTML tempalte for our list
-			@taskSectionTemplate = _.template TaskSectionTmpl
-			@taskTemplate = _.template TaskTmpl
-			@listenTo( Backbone, "closed-window", @handleHitFinish )
+			@listenTo( Backbone, "reload/handler", @reload )
 		remove: ->
 			@cleanUp()
 			@$el.empty()
@@ -33,15 +32,27 @@ define [
 		render: ->
 			if !@targetSelector?
 				throw new Error("TaskList must have targetSelector to render")
-
-			@$el.html @taskSectionTemplate( tasks: @tasks, taskTmpl: @taskTemplate )
+			@$el.html ""
 			$(@targetSelector).html( @$el )
-			if @enableDragAndDrop
-				if !@dragDropDelegate?
-					throw new Error("TaskList must have dragDropDelegate to enable Drag & Drop")
+
+			taskSection = new TaskSection()
+			#taskSection.setTitles("Left", "Right")
+			taskSectionEl = taskSection.$el.find('.task-section-list')
+			for task in @tasks
+				taskCard = new TaskCard({model: task})
+				if @taskDelegate?
+					taskCard.taskDelegate = @taskDelegate
+				taskCard.render()
+				taskSectionEl.append( taskCard.el )
+			@$el.append taskSection.el
+			
+
+			if @enableDragAndDrop and @tasks.length > 0
+				if !@dragDelegate?
+					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
 				if !@dragHandler?
 					@dragHandler = new DragHandler()
-					@dragHandler.delegate = @dragDropDelegate
+					@dragHandler.delegate = @dragDelegate
 				@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card)")
 
 		

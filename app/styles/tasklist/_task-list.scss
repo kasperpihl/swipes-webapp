@@ -1,76 +1,237 @@
-.task-list{
+.task-column{
+	margin-top:20px;
 	max-width:400px;
 }
-.task-section{
-	list-style:none;
-	padding-left:0;
-	max-width:400px;
-	$spacingBetweenTasks:7px;
-	.task-item{
-		cursor: pointer;
+.task-list{
+	.animate-in {
+		@extend .animated;
+		@extend .fadeInDown;
+		@include experimental(animation-duration, 0.3s);
+	}
+}
+$spacingBetweenTasks:7px;
+$left-padding: 40px;
+$margin-to-card: 6px;
+// Design for cards
+.card-container{
+	padding:5px;
+	padding-left: $left-padding;
+	@include card-shadow(6px, 1px);
+	@include transition(all 0.1s ease-out);
+	@include border-radius(10px);
+	background:#fff;
+	
+	h2{
+		// + 2 because of the font
+		margin-top:$margin-to-card + 2;
+		margin-bottom:$margin-to-card;
+		font: 0.8em/1 $font-normal;
+	}
+	.selected & {
+		background: #EFEFEF;
+		@include card-shadow(6px, 1px, 0.4);
+	}
+	.priority{
+		left:$left-padding/2;
+	}
+}
+// Add task card
+.add-task-card-container {
+	margin-bottom:20px;
+	.card-container{
+		input {
+			$height: 32px;
+			$font-size: 14px;
+			border:0;
+			font-family: $font-normal;
+			font-size: $font-size;
+			width: 100%;
+			height:$height;
+			padding-top: ($height - $font-size)/2;
+			padding-bottom: ($height - $font-size)/2;
+		}
+		input:focus{
+			border:0;
+			outline: 0;
+			outline-offset: 0;
+		}
+	}
+}
 
+
+// Items inside - tasks
+.task-section{
+	.task-section-list{
+		list-style:none;
+		padding-left:0;
+	}
+	
+	
+	.task-item{
+		//max-height: 100px;
+		cursor: pointer;
 		padding-top:$spacingBetweenTasks;
 		padding-bottom:$spacingBetweenTasks;
-		.card-container{
-			padding:5px;
-			@include card-shadow(6px, 1px);
-			@include transition(all 0.1s ease-out);
-			@include border-radius(10px);
-			background:#fff;
-			h2{
-				margin-top:10px;
-				margin-bottom:10px;
-				font: 0.8em/1 $font-normal;
+		
+		.progress-label{
+			position:absolute;
+			font: 12px $font-normal;
+			right: 10px;
+			top: 50%;
+			margin-top: -7px;
+			color: $unselected-color;
+		}
+		.meta{
+			height:16px;
+			// - 2 
+			margin-bottom: $margin-to-card - 2;
+			$icon-size: 15px;
+			> div{
+				height:15px;
+				float:left;
+				margin-right:10px;
+			}
+			.meta-text{
+				color: $unselected-color;
+				font-size:12px;
+				&.tags{
+					margin-top: -1px;
+					a{
+						color: $unselected-color;
+					}
+				}
+			}
+			.meta-text.with-icon{
+				position:relative;
+				padding-left:$icon-size;
+				svg{
+					position:absolute;
+					left:0;
+					width:$icon-size;
+					height:$icon-size;
+					fill: $unselected-color;
+				}
 			}
 		}
-		.progress-bar{
 
+		
+		// Show action buttons on hover
+		&:hover{
+			.hover-container{
+				opacity: 1.0;
+				@include transition(opacity 0.2s ease-out);
+			}
+		}
+		// Action buttons that appear on hover
+		.hover-container{
+			$button-size: 24px;
+			$padding: 5px;
+			$spacing-from-card:10px;
+			$spacing-between-buttons: 10px;
+			$border-width: 1px;
+			@function width-with-buttons($buttons: 2){
+				@return 2 * $border-width + 2 * $spacing-from-card + $buttons * $button-size + $buttons * $spacing-between-buttons + 2 * $padding;
+			}
+			position:absolute;
+			opacity:0;
+			left:100%;
+			height:100%;
+			top:0;
+			width:200px;
+			&.buttons-2{
+				width: width-with-buttons(2);
+			}
+			&.buttons-3{
+				width: width-with-buttons(3);
+			}
+			&.buttons-4{
+				width: width-with-buttons(4);
+			}
+
+			.hover-inner-container{
+				position:relative;
+				width:100%;
+				height:100%;
+			}
+			.actions{
+				
+				display:block;
+				
+				position:absolute;
+				//@include transition(opacity 0.1s ease-in);
+				
+				background-color: #F9F9F9;
+				border: $border-width solid #e0e0e0;
+				padding: $padding - 1px $padding 0 $padding;
+				
+				height:$button-size+2*$padding;
+				@include border-radius(($button-size + 2*$padding) / 2);
+				top: 50%;
+				left: $spacing-from-card;
+				margin-top:-($button-size + 2*$padding )/2;
+				a{
+					&:hover{
+						text-decoration:none;
+						opacity: 0.8;
+					}
+					text-align:center;
+					line-height: 1;
+					float:left;
+					margin-right: $spacing-between-buttons / 2;
+					margin-left: $spacing-between-buttons / 2;
+					@include square($button-size);
+					@include border-radius(50%);
+					
+					padding:0;
+					position: relative;
+
+					svg {
+						@include square($button-size);
+						@include centerBlock(0, 0, 0, 0, auto, absolute);
+					}
+
+					&.schedule-button{
+						border-color: $red;
+							svg { fill: $red; }
+					}
+					&.complete-button{
+						border-color: $green;
+							svg { fill: $green; }
+					}
+				}
+			}
 		}
 	}
 }
-
-
-// Add task card
-.task-section .task-item .card-container{
-	input {
-		$height: 32px;
-		$font-size: 14px;
-		border:0;
-		font-family: $font-normal;
-		font-size: $font-size;
-		width: 100%;
-		height:$height;
-		padding-top: ($height - $font-size)/2;
-		padding-bottom: ($height - $font-size)/2;
+.task-section-header{
+	height:14px;
+	opacity: 0.8;
+	margin-bottom: 4px;
+	h2{
+		&.left{
+			float:left;
+		}
+		&.right{
+			float:right;
+		}
+		
+		margin:0;
+		font: 12px $font-bold;
+		color: $unselected-color;
+		background-color: white;
+		padding-right: 8px;
+		padding-left: 8px;
 	}
-	input:focus{
-		border:0;
-		outline: 0;
-		outline-offset: 0;
-	}
-}
+	.seperator-container{
+		width:100%;
+		height:100%;
+		padding-top: 6px;
+		padding-right: 5px;
+		.seperator{
+			background-color: rgba(158, 158, 158, 0.4);
+			height: 2px;
+		}
 
-
-// Pointer for drag & drop - added in body element (base.html)
-.drag-mouse-pointer{
-	display:none;
-	&.shown{
-		display:block;
-	}
-	opacity: 0.7;
-	position: fixed;
-	z-index: 10000;
-	top:0;
-	left:0;
-	color: white;
-	background: $red;
-	width: 30px;
-	height:30px;
-	@include border-radius(50%);
-	.counter{
-		font: 0.8em/0.6 $font-normal;
-		padding-top: 12px;
-		text-align:center;
 	}
 }
 
@@ -105,10 +266,14 @@
 	}
 	// The original selected element that's being dragged
 	.task-item.drag-hover-moving-item{
-		.card-container{
+		max-height: 0;
+		padding: 0;
+		overflow: hidden;
+		@include transition(max-height 2.3s ease-out);
+		/*.card-container{
 			opacity: 0.5;
 			@include card-shadow(6px, 2px, 0.1);
 			@include transition(opacity 0.3s ease-out);
-		}
+		}*/
 	}
 }

@@ -1,7 +1,14 @@
-<div class="task-section-header">
-</div>
-<ul class="task-section">
-	<% _.each(tasks, function(task) {
-		print(taskTmpl( { task: task } ));
-	}) %>
+<% if( data.leftTitle || data.rightTitle ) { %>
+	<div class="task-section-header">
+		<% if( data.leftTitle ) { %>
+			<h2 class="left"><%= data.leftTitle %></h2>
+		<% } if( data.rightTitle ) { %>
+			<h2 class="right"><%= data.rightTitle %></h2>
+		<% } %>
+		<div class="seperator-container"><div class="seperator"></div></div>
+
+	</div>
+<% } %>
+<ul class="task-section-list">
+	<!-- All task will be loaded in here on render (TaskList.coffee) -->
 </ul>

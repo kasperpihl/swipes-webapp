@@ -7,27 +7,38 @@ define [
 	"js/handler/TaskHandler"
 	], (_, TweenLite, Template, TaskList, AddTaskCard, TaskHandler) ->
 	Backbone.View.extend
+		className: "project-view-controller"
 		initialize: ->
 			@setTemplate()
 
+			@addTaskCard = new AddTaskCard()
+			@addTaskCard.addDelegate = @
+
+
 			@taskList = new TaskList()
-			@taskList.targetSelector = ".project-view-controller .task-list"
+			@taskList.targetSelector = ".project-view-controller .task-list-container"
 			@taskList.enableDragAndDrop = true
+			@taskList.addTaskDelegate = @
 			@taskList.delegate = @
 
 			@taskHandler = new TaskHandler()
-			@taskList.dragDropDelegate = @taskHandler
+			@taskHandler.listSortAttribute = "projectOrder"
 
+			# Settings the Task Handler to receive actions from the task list
+			@taskList.taskDelegate = @taskHandler
+			@taskList.dragDelegate = @taskHandler
 
-			@addTask = new AddTaskCard()
-			@addTask.targetSelector = ".project-view-controller .add-task"
-			@addTask.delegate = @
 
 		setTemplate: ->
 			@template = _.template Template
 		render: ->
-			$("#main").html(@template({}))
-			@addTask.render()
+			@$el.html @template({})
+			$("#main").html(@$el)
+
+			@addTaskCard.render()
+			@$el.find('.task-column').prepend( @addTaskCard.el )
+
+			
 		open: (options) ->
 			@projectId = options.id
 			@render()
@@ -35,13 +46,11 @@ define [
 		loadProject: (projectId) ->
 			@taskList.dataSource = @taskHandler
 			@currentProject = swipy.collections.projects.get(projectId)
-			console.log @currentProject.get("name")
-			swipy.topbarVC.setMainTitle(@currentProject.get("name"))
+			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),true)
 			@taskHandler.loadSubcollection(
 				(task) ->
 					return task.get("projectId") is projectId and !task.isSubtask()
 			)
-			
 			@taskList.reload()
 		destroy: ->
 

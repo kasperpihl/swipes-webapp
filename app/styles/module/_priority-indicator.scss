@@ -1,11 +1,9 @@
 .priority {
-	$size: $priority-size;
-	$big-size: $priority-big-size;
-	$biggerSize: $size + 4;
-	$biggerBig-size: $big-size + 4;
-
+	$size: 10px;
+	
+	$inner-size: 16px;
 	$border-size: 4px;
-
+	$big-size: $inner-size+$border-size;
 	// Normalize size independent of container
 	font-size: 18px;
 
@@ -14,29 +12,17 @@
 	width: $size;
 	height: $size;
 	border-radius: $size;
-	&.bigger{
-		width: $biggerSize;
-		height: $biggerSize;
-		border-radius: $biggerSize;
-	}
 	left: 0; top: 50%;
+	margin-top: -$size/2;
+	margin-left: -$size/2;
 	cursor: pointer;
 
 	background: $yellow;
-	&.bigger{
-		&:after{
-			$bigger-inner-size: 22px;
-			margin-top: 0 - ($bigger-inner-size / 2);
-			margin-left: 0 - ($bigger-inner-size / 2);
-			width: $bigger-inner-size;
-			height: $bigger-inner-size;
-			border-radius: $bigger-inner-size;
-		}
-	}	
-	&:after {
-		$inner-size: 18px;
-		
+	
 
+	// This is the priority dot
+	&:after {
+		
 		position: absolute;
 		display: none;
 		left: 50%; top: 50%;
@@ -52,6 +38,22 @@
 		content: "";
 	}
 
+	.is-priority & {
+		// Display priority dot!
+		width: $big-size;
+		height: $big-size;
+		border-radius: $big-size;
+		margin-left: -$big-size/2;
+		margin-top: -$big-size/2;
+
+		&:after { 
+			display: block; 
+		}
+	}
+
+	
+
+
 	.scheduled & {
 		background: $lobster;
 		&:after { background: $lobster; }
@@ -60,27 +62,6 @@
 		background: $green;
 		&:after { background: $green; }
 	}
-	$big-size: 22px;
-	.is-priority & {
-
-		width: $big-size;
-		height: $big-size;
-		left: -5px;
-		margin-top: -11px;
-		border-radius: $big-size;
-		$big-size:26px;
-		&.bigger{
-			width: $big-size;
-			height: $big-size;
-			border-radius: $big-size;
-		}
-		&:after { display: block; 
-
-		}
-	}
-
 	@include box-sizing(content-box);
-
-	margin-top: -0.28em;
 }
 

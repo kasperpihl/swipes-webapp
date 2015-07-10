@@ -39,12 +39,12 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					
 					#console.log e.x
 				onDragEnd: (self) ->
-					
 					hit = self.hitTest(@pointerEvent)
 					self.handleHitFinish(hit)
 					self.draggingId = false
 
 			Draggable.create(selector, dragOpts)
+		# Used to update the position of the mouse pointer that follows the mouse when dragging
 		updateMousePointer: (e) ->
 			$(".drag-mouse-pointer").css({top: (e.pageY-20)+"px", left: (e.pageX + 15)+"px"})
 		cleanDragAndDropElements: ->
@@ -97,9 +97,9 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 						$hit = $(targetIdentifier)
 						sensitivityThreshold = 15 #$("#task-" + id).height()/2
 
-						if e.y <= ($hit.offset().top + sensitivityThreshold) and "#"+$hit.prev(".task-item").attr("id") isnt @draggingId
+						if e.y <= ($hit.offset().top + sensitivityThreshold)
 							hit.position = "top"
-						else if e.y >= ($hit.offset().top + $hit.outerHeight() - sensitivityThreshold) and "#"+$hit.next(".task-item").attr("id") isnt @draggingId
+						else if e.y >= ($hit.offset().top + $hit.outerHeight() - sensitivityThreshold)
 							hit.position = "bottom"
 						else if e.y >= $hit.offset().top and e.y <= ($hit.offset().top + $hit.outerHeight())
 							hit.position = "middle"
@@ -145,9 +145,15 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 			@lastHit = hit
 		handleHitFinish: (hit) ->
 			# Notify delegate about final hit
-			if hit? and @delegate? _.isFunction(@delegate.dragHandlerDidHit)
-				@delegate.dragHandlerDidHit( @ , @draggingId, hit)
-
-			@cleanDragAndDropElements()
-			$(".drag-mouse-pointer").removeClass("shown")
-			$(".drag-hover-moving-item").removeClass("drag-hover-moving-item")
+			self = @
+			callback = () ->
+				self.cleanDragAndDropElements()
+				console.log "calling back"
+				$(".drag-mouse-pointer").removeClass("shown")
+				$(".drag-hover-moving-item").removeClass("drag-hover-moving-item")
+			if hit? and @delegate? and _.isFunction(@delegate.dragHandlerDidHit)
+				willCallback = @delegate.dragHandlerDidHit( @ , @draggingId, hit, callback)
+				if !willCallback
+					callback()
+			else
+				callback()
