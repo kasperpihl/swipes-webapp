@@ -4,7 +4,7 @@ define ["underscore"
 	Backbone.View.extend
 		className: "add-task-card-container task-item"
 		initialize: ->
-			@template = _.template Tmpl
+			@template = _.template Tmpl, { variable: "data" }
 			@render()
 		events:
 			"keyup input": "saveTask"

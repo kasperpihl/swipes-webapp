@@ -19,19 +19,32 @@ define ["underscore"], (_) ->
 			@collection = swipy.collections.todos.subcollection(
 				filter: filter
 			)
-
 		collectionIdFromTaskHtmlId: (taskHtmlId) ->
 			return if !taskHtmlId or !_.isString(taskHtmlId)
 			taskHtmlId.substring(6)
 		### 
 			DragHandler Delegate
 		###
-		idsForDragging:( dragHandler, draggedId ) ->
+		extraIdsForDragging:( dragHandler, draggedId ) ->
+			draggedTask = @collection.get( @collectionIdFromTaskHtmlId(draggedId) )
+			return [] if !draggedTask?
+			selectedTasks = @collection.getSelected(draggedTask)
 
+			titles = _.invoke(selectedTasks, "get", "title")
+			$('.drag-mouse-pointer ul').html ""
+			for title in titles
+				$('.drag-mouse-pointer ul').append("<li>"+title+"</li>")
+			idsToReturn = []
+			for task in selectedTasks
+				idsToReturn.push("#task-"+task.id)
+			idsToReturn
 		# Deal with dropped items from DragHandler if true is returned, callback must be called!
 		dragHandlerDidHit: ( dragHandler, draggedId, hit, callback ) ->
 			draggedTask = @collection.get( @collectionIdFromTaskHtmlId(draggedId) )
 			return if !draggedTask?
+
+			selectedTasks = @collection.getSelected( draggedTask )
+			
 			if hit? and hit.type is "task"
 				hitTask = @collection.get( @collectionIdFromTaskHtmlId(hit.target) )
 				return if !hitTask?
@@ -67,8 +80,11 @@ define ["underscore"], (_) ->
 							m.updateOrder(self.listSortAttribute, order + addition )
 					)
 
-					# up the dragged task to the wanted position
-					draggedTask.updateOrder @listSortAttribute, targetOrder
+					# and update selected tasks as well
+					if selectedTasks and selectedTasks.length
+						for selectedTask in selectedTasks
+							selectedTask.updateOrder @listSortAttribute, targetOrder
+
 					Backbone.trigger("reload/handler")
 			false
 
@@ -76,9 +92,7 @@ define ["underscore"], (_) ->
 			TaskCard Delegate
 		###
 		taskDidClickAction: (model, e) ->
-			console.log model.id, e
 		taskDidClick: (model) ->
-			console.log "select", model
 			model.set("selected", !model.get("selected"))
 		### 
 			TaskList Datasource

@@ -24,7 +24,8 @@ define [
 			if @taskDelegate? and _.isFunction(@taskDelegate.taskDidClickAction)
 				@taskDelegate.taskDidClickAction(@model, e)
 		render: ->
-			
+			if @model.get("selected")
+				@$el.addClass('selected')
 			@$el.attr('id', "task-"+@model.id )
 			@$el.html @template( task: @model )
 
