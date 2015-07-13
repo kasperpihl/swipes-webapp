@@ -32,12 +32,12 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 							self.updateMousePointer(@pointerEvent)
 							$(".drag-mouse-pointer").addClass("shown")
 							self.draggingId = "#" + $el.attr("id")
-							$el.addClass("drag-hover-moving-item")
+							#$el.addClass("drag-hover-moving-item")
 					if self.delegate? and _.isFunction(self.delegate.extraIdsForDragging)
 						extraClasses = self.delegate.extraIdsForDragging( self, self.draggingId )
 						console.log extraClasses
-						for identifier in extraClasses
-							$(identifier).addClass("drag-hover-moving-item")
+						#for identifier in extraClasses
+						#$(identifier).addClass("drag-hover-moving-item")
 				onDrag: (self) ->
 					hit = self.hitTest( @pointerEvent )
 					self.updateMousePointer(@pointerEvent)
@@ -151,11 +151,10 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 			@lastHit = hit
 		handleHitFinish: (hit) ->
 			# Notify delegate about final hit
-			self = @
 			callback = () ->
-				self.cleanDragAndDropElements()
-				$(".drag-mouse-pointer").removeClass("shown")
 				$(".drag-hover-moving-item").removeClass("drag-hover-moving-item")
+			@cleanDragAndDropElements()
+			$(".drag-mouse-pointer").removeClass("shown")
 			if hit? and @delegate? and _.isFunction(@delegate.dragHandlerDidHit)
 				willCallback = @delegate.dragHandlerDidHit( @ , @draggingId, hit, callback)
 				if !willCallback

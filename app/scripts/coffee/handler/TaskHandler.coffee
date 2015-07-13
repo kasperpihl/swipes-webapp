@@ -27,7 +27,9 @@ define ["underscore"], (_) ->
 		###
 		extraIdsForDragging:( dragHandler, draggedId ) ->
 			draggedTask = @collection.get( @collectionIdFromTaskHtmlId(draggedId) )
+
 			return [] if !draggedTask?
+			draggedTask.set("selected",true)
 			selectedTasks = @collection.getSelected(draggedTask)
 
 			titles = _.invoke(selectedTasks, "get", "title")
