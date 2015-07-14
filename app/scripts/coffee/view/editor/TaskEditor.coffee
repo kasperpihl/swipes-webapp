@@ -2,11 +2,10 @@ define ["underscore"
 		"text!templates/task-editor.html"
 		"text!templates/task-editor-content.html" 
 		"text!templates/action-steps-template.html" 
-		"js/model/extra/TaskSortModel"
 		"js/view/list/ActionBar"
 		"gsap-scroll"
 		"gsap"
-	], (_, TaskEditorTmpl, TaskEditorContentTmpl, ActionStepsTmpl, TaskSortModel, ActionBar) ->
+	], (_, TaskEditorTmpl, TaskEditorContentTmpl, ActionStepsTmpl, ActionBar) ->
 	Backbone.View.extend
 		tagName: "article"
 		className: "task-editor"
@@ -51,7 +50,6 @@ define ["underscore"
 			@setTemplate()
 			@$el.html @template( { priority: @model.get("priority") } )
 			@bouncedHover = _.debounce(@onHoverTask, 1500)
-			@sorter = new TaskSortModel()
 			
 			_.bindAll( @, "clickedAction", 'updateActionStep', "keyUpHandling", "trackMouse", "stopTrackingMouse", "back", "focusNotes", "updateNotes", "mouseDownLink" )
 			@render()
@@ -214,7 +212,8 @@ define ["underscore"
 				tagString = _.invoke(tags, "get", "title").join(", ")
 			@$el.find('.icon-tag-container .tag-string').html(tagString)
 		renderSubtasks: ->
-			@subtasks = @sorter.setTodoOrder( @model.getOrderedSubtasks(), false )
+			# Here it should fix the order of subtasks
+			#@subtasks = @sorter.setTodoOrder( @model.getOrderedSubtasks(), false )
 			titleString = "Tasks"
 			if @subtasks.length > 0
 				tmplData = {}
