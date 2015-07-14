@@ -24,66 +24,91 @@
 		color: #fff;
 		padding-top: 30px;
 		text-align: left;
+		a{
+			text-decoration: none;
+			display:block;
+			color: $sidebar-button-gray;
+			width:100%;
+			&:hover, &:active, &:visited{
+				text-decoration: none;
+			}
+		}
+		.button-container a{
+			&:hover{	
+				color: white;
+				.icon{
+					fill: white;
+				}
+			}
+		}
 		h1{
 			padding-top: 10px;
 			font: 0.8em/1 $font-normal;
 			letter-spacing: 2px;
 			padding-left: 32px;
 		}
+		a{
+			$block-height: 34px;
+			$dot-size: 10px;
+			padding-left:43px;
+			height: $block-height;
+			
+			// Status icon for team members
+			.status-container{
+				height:$block-height;
+				float:left;
+				position: relative;
+				display: inline-block;
+				width:$dot-size*2;
+				.status{
+					@include border-radius(50%);
+					display:inline-block;
+					position: absolute;
+
+					left: 0;
+					top: 50%;
+					margin-top: -$dot-size/2;
+					width: $dot-size;
+					height: $dot-size;
+					background-color: $unselected-color;
+					&.online{
+						background-color: $online-green;
+					}
+					&.busy{
+						background-color: $busy-yellow;
+					}
+				}
+			}
+			.icon-container{
+				float:left;
+				$icon-spacing: 8px;
+				$icon-height: $block-height - 2 * $icon-spacing;
+				height: $block-height;
+				margin-right: $icon-spacing;
+				.icon{
+					margin-top: $icon-spacing - 1;
+					fill: $unselected-color;
+					width: $icon-height;
+					height: $icon-height;
+				}
+			}
+
+			
+			.text{
+				float:left;
+				padding-top: 10px;
+				font: 0.75em/1 $font-normal;
+				letter-spacing: 1px;
+				text-align: left;
+				@include transition(padding 0.1s ease-out);
+				padding-left:0px;
+			}
+
+		}
 		ul{
 			list-style: none;
 			padding-left:0px;
 			li {
-				a{
-					$block-height: 34px;
-					$dot-size: 10px;
-					padding-left:43px;
-					text-decoration: none;
-					display:block;
-					color: $sidebar-button-gray;
-					width:100%;
-					height: $block-height;
-					&:hover, &:active, &:visited{
-						text-decoration: none;
-					}
-
-					// Status icon for team members
-					.status-container{
-						height:$block-height;
-						float:left;
-						position: relative;
-						display: inline-block;
-						width:$dot-size*2;
-						.status{
-							@include border-radius(50%);
-							display:inline-block;
-							position: absolute;
-
-							left: 0;
-							top: 50%;
-							margin-top: -$dot-size/2;
-							width: $dot-size;
-							height: $dot-size;
-							background-color: $unselected-color;
-							&.online{
-								background-color: $online-green;
-							}
-							&.busy{
-								background-color: $busy-yellow;
-							}
-						}
-					}
-					.text{
-						float:left;
-						padding-top: 10px;
-						font: 0.75em/1 $font-normal;
-						letter-spacing: 1px;
-						text-align: left;
-						@include transition(padding 0.1s ease-out);
-						padding-left:0px;
-					}
-
-				}
 
 			}
 			

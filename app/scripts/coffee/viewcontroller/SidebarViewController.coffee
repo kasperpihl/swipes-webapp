@@ -13,6 +13,14 @@ define [
 			_.bindAll( @, "renderSidebar")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			$(window).on "resize.sidebar", @checkAndEnableScrollBars
+		events:
+			"click .add-project.button-container a": "clickedAddProject"
+		clickedAddProject: (e) ->
+			console.log e
+			project = prompt("Please enter project name", "");
+			if project? and project.length > 0
+				swipy.collections.projects.create({name: project})
+			false
 		setTemplates: ->
 			@projectsTpl = _.template ProjectsTemplate
 			@membersTpl = _.template TeamMembersTemplate
@@ -39,6 +47,7 @@ define [
 			]
 			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({members: tempMembers}))
 			@checkAndEnableScrollBars()
+			@delegateEvents()
 		checkAndEnableScrollBars: ->
 			overflow = "hidden"
 			if $(".sidebar-controls").outerHeight(true) > $("body").height()
