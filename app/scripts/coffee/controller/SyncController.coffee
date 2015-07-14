@@ -42,9 +42,12 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			if className is "ToDo"
 				@updatedTodos = []
 			newModels = []
+			didAddMainTasks = false
 			for obj in objects
-				if obj.parentLocalId? and newModels.length > 0
+				if obj.parentLocalId? and newModels.length > 0 and !didAddMainTasks
 					collection.add newModels
+					didAddMainTasks = true
+					console.log "adding new"
 					newModels = []
 				objectId = obj.objectId
 				model = collection.find( 
@@ -55,6 +58,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if !model
 					continue if obj.deleted
 					model = new collection.model obj
+
 					if !obj.parentLocalId? and model.has("completionDate")
 						completionDate = model.get("completionDate")
 						if completionDate? and completionDate
@@ -63,10 +67,16 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 							difference = nowNumber - compNumber
 							if difference > (3600*24*30)
 								continue
+
+					if obj.parentLocalId? and obj.parentLocalId
+						parent = collection.get(obj.parentLocalId)
+						if !parent
+							continue
 					@changedAttributes.moveTempChangesForModel model
 					if className is "Tag" and collection.getTagByName(model.get("title"))
 						model.destroy()
 						continue
+						
 					collection.add model
 					newModels.push model
 					model.doSync()
