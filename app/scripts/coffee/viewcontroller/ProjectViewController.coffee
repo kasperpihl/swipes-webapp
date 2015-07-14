@@ -46,6 +46,7 @@ define [
 		loadProject: (projectId) ->
 			@taskList.dataSource = @taskHandler
 			@currentProject = swipy.collections.projects.get(projectId)
+			
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),true)
 			@taskHandler.loadSubcollection(
 				(task) ->

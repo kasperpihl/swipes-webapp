@@ -16,10 +16,10 @@ define [
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 		clickedAddProject: (e) ->
-			console.log e
 			project = prompt("Please enter project name", "");
 			if project? and project.length > 0
-				swipy.collections.projects.create({name: project})
+				projectObj = swipy.collections.projects.create({name: project})
+				projectObj.save({}, {sync:true})
 			false
 		setTemplates: ->
 			@projectsTpl = _.template ProjectsTemplate

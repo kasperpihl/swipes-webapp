@@ -145,8 +145,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				ToDo : newTodos.concat( updateTodos )
 			return serverJSON
 
-
-
 		sync: ->
 			return @needSync = true if @isSyncing
 			return if !Parse.User.current()
