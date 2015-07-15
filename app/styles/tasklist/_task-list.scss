@@ -9,7 +9,7 @@
 		@include experimental(animation-duration, 0.3s);
 	}
 }
-$spacingBetweenTasks:7px;
+$spacingBetweenTasks:10px;
 $left-padding: 40px;
 $margin-to-card: 6px;
 // Design for cards
@@ -207,6 +207,7 @@ $margin-to-card: 6px;
 	height:14px;
 	opacity: 0.8;
 	margin-bottom: 4px;
+	margin-top: 30px;
 	h2{
 		&.left{
 			float:left;

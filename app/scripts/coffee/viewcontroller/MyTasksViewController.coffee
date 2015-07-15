@@ -1,9 +1,8 @@
 define [
 	"underscore"
 	"gsap"
-	"js/view/nav/ListNavigation"
 	"text!templates/viewcontroller/my-tasks-view-controller.html"
-	], (_, TweenLite, ListNavigation, Template) ->
+	], (_, TweenLite, Template) ->
 	Backbone.View.extend
 		initialize: ->
 			@setTemplate()
@@ -12,13 +11,11 @@ define [
 			@template = _.template Template
 		render: ->
 			$("#main").html(@template({}))
-			@nav = new ListNavigation()
 		
 		
 		open: (options) ->
 			section = options.id
 			@loadView(section).then (View) =>
-				@nav.updateNavigation(section)
 				className = "todo"
 				className = "scheduled" if section is "later"
 				className = "completed" if section is "done"
@@ -66,4 +63,3 @@ define [
 			return dfd.promise()
 		destroy: ->
 			@currView?.remove()
-			@nav?.destroy()

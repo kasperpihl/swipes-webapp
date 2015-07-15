@@ -12,6 +12,8 @@ define ["underscore"
 			@$el.html @template({})
 			@delegateEvents()
 			return @
+		setPlaceHolder: (placeholder) ->
+			@$el.find('input').attr('placeholder',placeholder)
 		saveTask: (e) ->
 			if e.keyCode is 13
 				@triggerAddTask(e)

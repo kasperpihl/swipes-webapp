@@ -18,15 +18,16 @@ define [
 			@taskList = new TaskList()
 			@taskList.targetSelector = ".project-view-controller .task-list-container"
 			@taskList.enableDragAndDrop = true
-			@taskList.addTaskDelegate = @
 			@taskList.delegate = @
 
 			@taskHandler = new TaskHandler()
 			@taskHandler.listSortAttribute = "projectOrder"
 
+			
 			# Settings the Task Handler to receive actions from the task list
 			@taskList.taskDelegate = @taskHandler
 			@taskList.dragDelegate = @taskHandler
+			@taskList.dataSource = @taskHandler
 
 
 		setTemplate: ->
@@ -44,15 +45,20 @@ define [
 			@render()
 			@loadProject(@projectId)
 		loadProject: (projectId) ->
-			@taskList.dataSource = @taskHandler
+			
 			@currentProject = swipy.collections.projects.get(projectId)
 			
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),true)
-			@taskHandler.loadSubcollection(
-				(task) ->
+
+
+			@collectionSubset = new Backbone.CollectionSubset({
+				parent: swipy.collections.todos,
+				filter: (task) ->
 					return task.get("projectId") is projectId and !task.isSubtask()
-			)
-			@taskList.reload()
+			})
+
+			@taskHandler.loadCollection(@collectionSubset.child)
+			@taskList.render()
 		destroy: ->
 
 		###
@@ -62,4 +68,4 @@ define [
 			options = {} if !options
 			options.projectId = @projectId
 			Backbone.trigger("create-task", title, options)
-			@taskList.reload()
+			@taskList.render()

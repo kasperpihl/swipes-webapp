@@ -41,7 +41,7 @@ define ["underscore"], (_ ) ->
 			# If user is trying to add
 			if !title
 				msg = "You cannot create a todo by simply adding a tag. We need a title too. Titles should come before tags when you write out your task."
-				Backbone.trigger( "throw-error", msg )
+				alert( msg )
 				return
 
 			newTodo = swipy.collections.todos.create { title, animateIn }

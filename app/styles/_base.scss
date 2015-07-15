@@ -26,7 +26,6 @@ html.touch body {
 
 #main-content {
 	padding-bottom:5em;
-	
 }
 // Whole page
 .total-container{
@@ -51,7 +50,7 @@ html.touch body {
 		height:100%;
 		width:100%;
 
-		padding-left: $sidebar-slide-width + 5px;
+		padding-left: $sidebar-slide-width;
 		@include transition(padding $sidebar-animation ease);
 		@include breakpoint(tablet){
 			padding-left: $sidebar-width;
@@ -59,11 +58,31 @@ html.touch body {
 				padding-left: $sidebar-width + $sidebar-sub-width-large;
 			}
 		}
+		.right-sidebar-outer-container{
+			width: $right-sidebar-width;
+			position: absolute;
+			right:0;
+			top: 0;
+			padding-top: $top-bar-height;
+			height:100%;
+			.right-sidebar-container{
+				border-left: 1px solid $small-seperator-color;
+				height:100%;
+				width: $right-sidebar-width;
+				position:relative;
+			}
+			
+		}
 		.content-container{
+			@include transition(padding $sidebar-animation ease);
 			// padding to make topbar work
 			padding-top:$top-bar-height;
 			height:100%;
-			
+			padding-right:$right-sidebar-width;
+			@include transition(padding $sidebar-animation ease);
+			.sidebar-right-open & {
+				padding-right: $right-sidebar-width + $sidebar-sub-width-large;
+			}
 			.scroll-container{
 				&::-webkit-scrollbar { 
 				    display: none; 

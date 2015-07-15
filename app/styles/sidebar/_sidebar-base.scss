@@ -4,59 +4,69 @@
 
 	width:$sidebar-width;
 	z-index: 5000;
-	@include transition(left $sidebar-animation ease-in-out);
-	@include centerBlock(0, auto, 0, -$sidebar-width+$sidebar-slide-width, 0, fixed);
+	
 	
 	@include user-select(none);
-	@include breakpoint(tablet) {
-		width: $sidebar-width;
-		@include centerBlock(0, auto, 0, 0, 0, fixed);
-	}
+	
 	.sidebar-open & {
 		@include centerBlock(0, auto, 0, 0, 0, fixed);
 	}
-	&:hover{
+	&.left{
 		@include transition(left $sidebar-animation ease-in-out);
-		left:0;
+		@include transition(opacity $sidebar-animation ease-in-out);
+		@include centerBlock(0, auto, 0, -$sidebar-width+$sidebar-slide-width, 0, fixed);
+		@include breakpoint(tablet) {
+			width: $sidebar-width;
+			@include centerBlock(0, auto, 0, 0, 0, fixed);
+		}
+		&:hover{
+			@include transition(left $sidebar-animation ease-in-out);
+			left:0;
+		}
 	}
+	&_content::-webkit-scrollbar {
+		display: none;
+	}	
 	
 	// Base content wrapper
 	&_content {
-		overflow-y:scroll;
-		/*padding: 0 10px 0;
-		@include breakpoint(min-height, 320px){
-			padding-top: 10px;
+		&::-webkit-scrollbar { 
+		    display: none;
 		}
-		@include breakpoint(mobile, height){
-			padding: 35px 10px 0;
-		}*/
+		overflow-y:scroll;
 		width: inherit;
 		text-align: center;
 		background-color: $sidebar-dark-color;
-		
-		//border-right: 2px solid #e0e0e0;
 		z-index: 4999;
-		@include centerBlock(0, auto, 0, 0, 0, absolute);
+		.left & {
+			@include centerBlock(0, auto, 0, 0, 0, absolute);
+		}
 	}
 
 	&-sub {
 		display: block;
 		@include transition(all $sidebar-animation ease-in-out);
-		@include translate3d( -($sidebar-sub-width), 0, 0);
+		.left & {
+			@include translate3d( -($sidebar-sub-width), 0, 0);
+		}
 		width: $sidebar-sub-width;
 		padding: 1em 1em .5em;
 		@include breakpoint(tablet){
 			padding: 2em 2em .5em;
-			@include translate3d( -($sidebar-sub-width-large), 0, 0);
+			.left & {
+				@include translate3d( -($sidebar-sub-width-large), 0, 0);
+			}
 			width: $sidebar-sub-width-large;
 		}
 		
 		background-color: $sidebar-bg;
 		height: 100%;
 		overflow-y: auto;
-		border-right: 1px solid #e0e0e0;
-		
-		@include centerBlock(0, auto, 0, 0, 0, absolute);
+		.left & {
+			border-right: 1px solid #e0e0e0;
+			@include centerBlock(0, auto, 0, 0, 0, absolute);
+		}
+
 		z-index: 4998;
 	}
 	.clickable-overlay{

@@ -7,22 +7,13 @@
 define ["underscore"], (_) ->
 	class TaskHandler
 		constructor: ->
-		reset: ->
-		loadSubcollection: (filter) ->
-			@reset()
-			if !_.isFunction(filter)
-				throw new Error("TaskHandler loadSubcollection: filter must be a function")
-			###@collection = new Backbone.CollectionSubset({
-				parent: swipy.collections.todos,
-				filter: filter
-			})###
-			@collection = swipy.collections.todos.subcollection(
-				filter: filter
-			)
+		loadCollection: (collection) ->
+			@collection = collection
 		collectionIdFromTaskHtmlId: (taskHtmlId) ->
 			return if !taskHtmlId or !_.isString(taskHtmlId)
 			taskHtmlId.substring(6)
-		### 
+		
+		###
 			DragHandler Delegate
 		###
 		extraIdsForDragging:( dragHandler, draggedId ) ->
@@ -90,6 +81,13 @@ define ["underscore"], (_) ->
 					Backbone.trigger("reload/handler")
 			false
 
+		sortAndGroupCollection: ->
+			@groupedTasks = []
+			if @delegate? and _.isFunction(@delegate.taskHandlerSortAndGroupCollection)
+				@groupedTasks = @delegate.taskHandlerSortAndGroupCollection( @, @collection )
+			else
+				@groupedTasks = [ { "leftTitle": null, "rightTitle": null, "tasks": @collection.models }]
+			return @groupedTasks
 		### 
 			TaskCard Delegate
 		###
@@ -99,16 +97,26 @@ define ["underscore"], (_) ->
 		### 
 			TaskList Datasource
 		###
-		tasksForTaskList: ( taskList ) ->
+
+		# TaskList asking for number of sections
+		taskListNumberOfSections: ( taskList ) ->
+			@sortAndGroupCollection()
+			return @groupedTasks.length
+		taskListLeftTitleForSection: ( taskList, section ) ->
+			return @groupedTasks[ (section-1) ].leftTitle
+		taskListRightTitleForSection: ( taskList, section ) ->
+			return @groupedTasks[ (section-1) ].rightTitle
+		
+		taskListTasksForSection: ( taskList, section ) ->
 			if !@collection?
 				throw new Error("TaskHandler: must loadSubcollection before loading TaskList")
 			#@collection.fetch()
-			models = @collection.models
+			models = @groupedTasks[ (section-1) ].tasks
+
 			if @listSortAttribute? and @listSortAttribute
 				models = @sortTasksAndSetOrder(models, true)
 			# Check filter for limitations
 			return models
-
 
 		# Sort task and fix order of tasks based on the listSortAttribute provided
 		sortTasksAndSetOrder: (todos, newOnTop) ->

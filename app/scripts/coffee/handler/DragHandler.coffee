@@ -34,8 +34,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 							self.draggingId = "#" + $el.attr("id")
 							#$el.addClass("drag-hover-moving-item")
 					if self.delegate? and _.isFunction(self.delegate.extraIdsForDragging)
-						extraClasses = self.delegate.extraIdsForDragging( self, self.draggingId )
-						console.log extraClasses
+						self.extraClasses = self.delegate.extraIdsForDragging( self, self.draggingId )
 						#for identifier in extraClasses
 						#$(identifier).addClass("drag-hover-moving-item")
 				onDrag: (self) ->
