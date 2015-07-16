@@ -1,3 +1,48 @@
+.modal-overlay-container{
+	display: none;
+	&.shown{
+		display: block;
+	}
+	.modal-clickable-background{
+		position: fixed;
+		display: none;
+		top: 0;
+		left:0;
+		width: 100%;
+		height: 100%;
+		background-color: white;
+		z-index: 9000;
+		opacity: 0;
+		&.shown{
+			display: block;
+		}
+		&.opaque{
+			@include transition(opacity 0.2s ease-out);
+			opacity: 0.5;
+		}
+	}
+	.modal-overlay-content{
+		z-index: 9001;
+		opacity: 0;
+		position: absolute;
+		display: inline-block;
+		top: 50%;
+		left: 50%;
+		&.frame{
+			border: 1px solid $sidebar-dark-color;
+			background: white;
+			padding: 10px;
+			@include border-radius(10px);
+
+		}
+		&.shown  {
+			@include transition(opacity 0.2s ease-out);
+			opacity: 1;
+		}
+	}
+}
+
+
 .overlay {
 	// display: none;
 	visibility: hidden;

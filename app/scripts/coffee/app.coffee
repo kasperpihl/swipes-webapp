@@ -9,6 +9,7 @@ define [
 	"js/collection/Collections"
 	"js/controller/TaskInputController"
 	"js/controller/SidebarController"
+	"js/viewcontroller/ModalViewController"
 	"js/viewcontroller/SidebarViewController"
 	"js/viewcontroller/TopbarViewController"
 	"js/viewcontroller/RightSidebarViewController"
@@ -23,7 +24,7 @@ define [
 	"js/controller/UserController"
 	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, TaskInputController, SidebarController, SidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
+	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, TaskInputController, SidebarController, ModalViewController, SidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -78,7 +79,8 @@ define [
 			@sidebarVC = new SidebarViewController()
 			@topbarVC = new TopbarViewController()
 			@rightSidebarVC = new RightSidebarViewController()
-
+			@modalVC = new ModalViewController()
+			
 			@mainViewController = new MainViewController()
 			@router = new MainRouter()
 			
