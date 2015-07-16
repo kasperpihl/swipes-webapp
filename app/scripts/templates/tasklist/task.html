@@ -1,9 +1,19 @@
-<div class="card-container">
+<% 
+	var hasMetaClass = ""
+	var numberOfMetaInfos = 0;
+	if (data.task.get('tags') && data.task.get('tags').length)
+		numberOfMetaInfos++;
+
+	if (numberOfMetaInfos > 0)
+		hasMetaClass = "has-meta"
+%>
+<div class="card-container <%= hasMetaClass %>">
 	<h2 class="title"><span class="priority"></span><%= data.task.get('title') %></h2>
 	<span class="progress-label">50%</span>
-		
+		<% if (numberOfMetaInfos > 0) 
+			print('<div class="meta">') %>
 		<% if (data.task.get('tags') && data.task.get('tags').length) { %>
-			<div class="meta">
+			
 				<div class="meta-text with-icon" title="This task has been assigned to 3 people">
 					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialSearch"></use></svg>3
 				</div>
@@ -27,7 +37,8 @@
 							
 					}); %>
 				</div><!-- .meta-text -->
-			</div><!-- .meta -->
+			<% if (numberOfMetaInfos > 0) 
+			print('</div>') %><!-- .meta -->
 		<% } %>
 	
 </div><!-- .card-container -->

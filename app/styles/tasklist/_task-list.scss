@@ -8,10 +8,21 @@
 		@extend .fadeInDown;
 		@include experimental(animation-duration, 0.3s);
 	}
+		// Animate-in when adding new tasks
+	.animate-out-right {
+		@extend .animated;
+		@extend .fadeOutRight;
+		@include experimental(animation-duration, 0.3s);
+	}
 }
-$spacingBetweenTasks:10px;
+$spacingBetweenTasks:6px;
 $left-padding: 40px;
-$margin-to-card: 6px;
+
+$margin-to-card: 15px;
+
+$meta-bottom-spacing: 6px;
+$meta-margin: 10px;
+
 // Design for cards
 .card-container{
 	padding:5px;
@@ -26,6 +37,18 @@ $margin-to-card: 6px;
 		margin-top:$margin-to-card + 2;
 		margin-bottom:$margin-to-card;
 		font: 0.8em/1 $font-normal;
+	}
+	.meta{
+		margin-bottom: $margin-to-card - 2;
+	}
+	&.has-meta{
+		h2{
+			margin-top:$meta-margin + 2;
+			margin-bottom:$meta-bottom-spacing;
+		}
+		.meta{
+			margin-bottom: $meta-margin - 2;
+		}
 	}
 	.selected & {
 		background: #EFEFEF;
@@ -84,7 +107,6 @@ $margin-to-card: 6px;
 		.meta{
 			height:16px;
 			// - 2 
-			margin-bottom: $margin-to-card - 2;
 			$icon-size: 15px;
 			> div{
 				height:15px;

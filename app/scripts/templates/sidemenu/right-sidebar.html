@@ -1,0 +1,13 @@
+<% if( data.buttons ) {
+	_.each(data.buttons, function(button){ 
+	var isActiveClass = "";
+	if(data.activeClass && data.activeClass == button.iconClass) 
+		isActiveClass = "active";
+%>
+	<li class="rightbar-button <%= button.iconClass %> <%= isActiveClass %>">
+		<svg class="icon">
+			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-<%= button.iconClass %>"></use>
+		</svg>
+	</li>
+<% })
+} %>

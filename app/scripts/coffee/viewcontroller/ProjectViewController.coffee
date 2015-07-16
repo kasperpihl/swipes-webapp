@@ -54,11 +54,13 @@ define [
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
-					return task.get("projectId") is projectId and !task.isSubtask()
+					return task.get("projectId") is projectId and !task.get('completionDate') and !task.isSubtask()
 			})
 
 			@taskHandler.loadCollection(@collectionSubset.child)
 			@taskList.render()
+
+			#swipy.rightSidebarVC.loadWindow(@el)
 		destroy: ->
 
 		###

@@ -91,8 +91,15 @@ define ["underscore"], (_) ->
 		### 
 			TaskCard Delegate
 		###
-		taskDidClickAction: (model, e) ->
-		taskDidClick: (model) ->
+		taskCardDidComplete: (taskCard) ->
+			model = taskCard.model
+			model.completeTask()
+			console.log model.toJSON()
+			Backbone.trigger("reload/handler")
+		taskCardDidClickAction: (taskCard, e) ->
+			
+		taskDidClick: (taskCard) ->
+			model = taskCard.model
 			model.set("selected", !model.get("selected"))
 		### 
 			TaskList Datasource
