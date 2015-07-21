@@ -44,7 +44,7 @@ define ["underscore"], (_ ) ->
 				alert( msg )
 				return
 
-			newTodo = swipy.collections.todos.create { title, animateIn }
+			newTodo = swipy.collections.todos.create { title, animateIn, userId: Parse.User.current().id }
 			if options
 				newTodo.set( "ownerId", options.ownerId) if options.ownerId
 				newTodo.set( "projectLocalId", options.projectLocalId ) if options.projectLocalId
