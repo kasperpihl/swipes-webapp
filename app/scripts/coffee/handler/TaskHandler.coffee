@@ -96,10 +96,10 @@ define ["underscore"], (_) ->
 				actions = []
 				actions.push({name: "Copy to " + targetProject.get("name"), action: "copy"})
 				actions.push({name: "Move to " + targetProject.get("name"), action: "move"})
-				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.x, top: hit.pointerEvent.y, frame:true}, (result) ->
+				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
 					if result is "move"
 						# and update selected tasks as well
-						_.invoke(selectedTasks, "save", {"projectLocalId": targetProject.id}, {sync: true} )
+						_.invoke(selectedTasks, "save", {"toUserId": null, "projectLocalId": targetProject.id}, {sync: true} )
 						Backbone.trigger("reload/handler")
 				)
 			else if hit.type is "member"
@@ -110,7 +110,7 @@ define ["underscore"], (_) ->
 				actions.push({name: "Assign " + name, action: "copy"})
 				actions.push({name: "Copy to " + name, action: "copy"})
 				actions.push({name: "Move to " + name , action: "move"})
-				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.x, top: hit.pointerEvent.y, frame:true}, (result) ->
+				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
 					console.log result
 				)
 			false

@@ -149,7 +149,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				Tag : newTags.concat( updateTags )
 				ToDo : newTodos.concat( updateTodos )
 				Project: newProjects.concat( updateProjects )
-			console.log serverJSON
+				
 			return serverJSON
 
 		sync: ->

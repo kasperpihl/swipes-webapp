@@ -25,13 +25,24 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 				onDragEndParams: [ @ ]
 				# Handlers
 				onDragStart: (self) ->
-
-					for el in @pointerEvent.path
-						$el = $(el)
-						if $el.hasClass("task-item")
-							self.updateMousePointer(@pointerEvent)
-							$(".drag-mouse-pointer").addClass("shown")
-							self.draggingId = "#" + $el.attr("id")
+					console.log @pointerEvent #$(.target).parent(".task-item").attr("id")
+					if @pointerEvent.path?
+						for el in @pointerEvent.path
+							$el = $(el)
+							if $el.hasClass("task-item")
+								self.draggingId = "#" + $el.attr("id")
+					else if @pointerEvent.originalTarget?
+						currentTarget = @pointerEvent.originalTarget
+						for num in [1..10]
+							if currentTarget? and currentTarget
+								if _.indexOf(currentTarget.classList, "task-item") isnt -1
+									self.draggingId = "#" + currentTarget.id
+								else
+									currentTarget = currentTarget.parentNode
+							else
+								break
+					self.updateMousePointer(@pointerEvent)
+					$(".drag-mouse-pointer").addClass("shown")
 							#$el.addClass("drag-hover-moving-item")
 					if self.delegate? and _.isFunction(self.delegate.extraIdsForDragging)
 						self.extraClasses = self.delegate.extraIdsForDragging( self, self.draggingId )
@@ -97,21 +108,21 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					targetIdentifier = "#"+id
 					if Draggable.hitTest(e, targetIdentifier, 0)
 						return hit if targetIdentifier is @draggingId
-
+						console.log e
 						
 						$hit = $(targetIdentifier)
 						sensitivityThreshold = 15 #$("#task-" + id).height()/2
 
-						if e.y <= ($hit.offset().top + sensitivityThreshold)
+						if e.clientY <= ($hit.offset().top + sensitivityThreshold)
 							hit.position = "top"
-						else if e.y >= ($hit.offset().top + $hit.outerHeight() - sensitivityThreshold)
+						else if e.clientY >= ($hit.offset().top + $hit.outerHeight() - sensitivityThreshold)
 							hit.position = "bottom"
-						else if e.y >= $hit.offset().top and e.y <= ($hit.offset().top + $hit.outerHeight())
+						else if e.clientY >= $hit.offset().top and e.clientY <= ($hit.offset().top + $hit.outerHeight())
 							hit.position = "middle"
 
 						hit.target = "#" + id
 						hit.type = "task"
-			@lastY = e.y
+			@lastY = e.clientY
 			return hit
 
 		handleHitHover: (hit) ->
