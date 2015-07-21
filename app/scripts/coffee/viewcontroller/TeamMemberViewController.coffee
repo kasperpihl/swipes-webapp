@@ -53,7 +53,7 @@ define [
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
-					if task.get("toUserId") is memberId or (task.get("userId") is memberId and task.get("toUserId") is Parse.User.current().id)
+					if (task.get("userId") is Parse.User.current().id and task.get("toUserId") is memberId) or (task.get("userId") is memberId and task.get("toUserId") is Parse.User.current().id)
 						return true
 					return false
 			})
