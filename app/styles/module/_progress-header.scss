@@ -48,7 +48,7 @@
 				z-index: 1;
 				bottom: 1px;
 				top: 0;
-				left: emCalc(12.5px);
+				left: 10px;
 				right: 0;
 			}
 	}
@@ -103,7 +103,7 @@
 			content: '';
 			height: 2px;
 			background-color: #ffc107;
-			width: 99.2%;
+			width: 100%;
 		}
 
 		.progress {
