@@ -1,0 +1,7 @@
+<% if(data.actions){
+	_.each(data.actions, function(action){ %>
+	<li class="list-action" data-href="<%= action.action %>">
+		<%= action.name %>
+	</li>
+	<% })
+} %>

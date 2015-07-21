@@ -40,6 +40,10 @@ define [
 		render: ->
 			if @model.get("selected")
 				@$el.addClass('selected')
+			if @model.get "animateIn"
+				@$el.addClass "animate-in"
+				@model.unset "animateIn"
+				@model.save()
 			@$el.attr('id', "task-"+@model.id )
 			@$el.html @template( task: @model )
 

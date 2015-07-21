@@ -1,7 +1,7 @@
 define ["js/utility/Utility"], ( Utility ) ->
 	Backbone.Model.extend
 		className: "BaseModel"
-		defaultAttributes: [ "objectId", "tempId", "deleted" ]
+		defaultAttributes: [ "objectId", "tempId", "deleted", "ownerId", "userId" ]
 		sync: -> true
 		constructor: ( attributes ) ->
 			if attributes && !attributes.objectId

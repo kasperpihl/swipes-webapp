@@ -24,6 +24,10 @@ define ["underscore", "jquery"], (_, $) ->
 		newCollection: () ->
 			"ToDo" : {}
 			"Tag" : {}
+			"Member": {}
+			"Project": {}
+			"Message": {}
+			"Organisation": {}
 
 		getChangesForModel: ( model ) ->
 			if !model.get("needSaveToServer")

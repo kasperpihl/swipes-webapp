@@ -58,7 +58,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 
 		hitTest: (e) ->
 			hit = {}
-
+			hit.pointerEvent = e
 			if Draggable.hitTest(e, "#sidebar-my-tasks", 0)
 				hit.parent = "#sidebar-members-list"
 				ids = $.map( $("#sidebar-my-tasks .tasks > li"), (o) -> o["id"] )

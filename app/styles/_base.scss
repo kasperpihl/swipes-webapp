@@ -18,7 +18,13 @@ html.touch body {
 		min-width: 1180px;
 	}
 }
-
+ul{
+	list-style:none;
+	padding-left:0;
+	li{
+		list-style:none;
+	}
+}
 .row {
 	margin-left:0px;
 	margin-right:0px;
@@ -165,7 +171,6 @@ div[role=main] {
 
 	color: white;
 	ul{
-		//list-style: none;
 		margin:0;
 		padding:7px;
 		li{

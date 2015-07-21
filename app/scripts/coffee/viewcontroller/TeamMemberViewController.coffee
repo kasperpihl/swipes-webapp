@@ -46,32 +46,31 @@ define [
 			@loadMember(memberId)
 		loadMember: (memberId) ->
 			# Load team member view
-			@name = switch memberId
-				when "842" then "mitko"
-				when "234" then "stanimir"
-				when "324" then "stefan"
-				when "123" then "yana"
-				else "no name"
-			swipy.topbarVC.setMainTitleAndEnableProgress(@name, false)
-			@addTaskCard.setPlaceHolder("Send task to " + @name)
+			@currentMember = swipy.collections.members.get(memberId)
+			swipy.topbarVC.setMainTitleAndEnableProgress(@currentMember.get("username"), false)
+			@addTaskCard.setPlaceHolder("Send task to " + @currentMember.get("username"))
 
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
-					return task.get("projectId") is "3vfL9qvLxMNzv" and !task.isSubtask()
+					if task.get("toUserId") is memberId or (task.get("userId") is memberId and task.get("toUserId") is Parse.User.current().id)
+						return true
+					return false
 			})
 
 			@taskHandler.loadCollection(@collectionSubset.child)
 			@taskList.render()
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
+			self = @
 			groups = collection.groupBy((model, i) ->
 				# TODO: Seperate tasks between who it's from
-				if i % 2 is 0
-					return "My Tasks"
+				console.log model.get("toUserId"), self.currentMember.id
+				if model.get("toUserId") is self.currentMember.id
+					return "His Tasks"
 				else 
-					return "Your Tasks"
+					return "My Tasks"
 			)
-			return [{leftTitle: "YOUR TASKS FROM " + @name.toUpperCase() , tasks: groups["Your Tasks"]},{rightTitle: @name.toUpperCase() + "'S TASKS FROM YOU", tasks: groups["My Tasks"]}]
+			return [{leftTitle: "YOUR TASKS FROM " + @currentMember.get("username").toUpperCase() , tasks: groups["My Tasks"]},{rightTitle: @currentMember.get("username").toUpperCase() + "'S TASKS FROM YOU", tasks: groups["His Tasks"]}]
 		destroy: ->
 
 		###
@@ -79,6 +78,7 @@ define [
 		###
 		taskCardDidCreateTask: ( taskCard, title, options) ->
 			options = {} if !options
-			options.projectId = @projectId
+			options.toUserId = @currentMember.id
+			options.ownerId = @currentMember.get("organisationId")
 			Backbone.trigger("create-task", title, options)
 			@taskList.render()

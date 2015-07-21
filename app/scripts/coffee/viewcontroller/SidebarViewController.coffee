@@ -18,34 +18,16 @@ define [
 		clickedAddProject: (e) ->
 			project = prompt("Please enter project name", "");
 			if project? and project.length > 0
-				projectObj = swipy.collections.projects.create({name: project})
+				projectObj = swipy.collections.projects.create({name: project, ownerId: 1})
 				projectObj.save({}, {sync:true})
 			false
 		setTemplates: ->
 			@projectsTpl = _.template ProjectsTemplate
 			@membersTpl = _.template TeamMembersTemplate
 		renderSidebar: ->
-			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({projects: swipy.collections.projects.toJSON()}))
 			
-			tempMembers = [
-					id: 842
-					name: "mitko"
-					status: "online"
-				,
-					id: 234
-					name: "stanimir"
-					status: "offline"
-				,
-					id: 324
-					name: "stefan"
-					status: "busy"
-				,
-					id: 123
-					name: "yana"
-					status: "online"
-
-			]
-			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({members: tempMembers}))
+			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({projects: _.sortBy(swipy.collections.projects.toJSON(), "name")}))
+			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({members: _.sortBy(_.filter(swipy.collections.members.toJSON(), (member) -> return !member.me ), "username")}))
 			@checkAndEnableScrollBars()
 			@delegateEvents()
 		checkAndEnableScrollBars: ->

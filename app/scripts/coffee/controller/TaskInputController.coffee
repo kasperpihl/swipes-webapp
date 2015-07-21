@@ -46,8 +46,10 @@ define ["underscore"], (_ ) ->
 
 			newTodo = swipy.collections.todos.create { title, animateIn }
 			if options
-				if options.projectId
-					newTodo.set( "projectId", options.projectId )
+				newTodo.set( "ownerId", options.ownerId) if options.ownerId
+				newTodo.set( "projectLocalId", options.projectLocalId ) if options.projectLocalId
+				newTodo.set( "toUserId", options.toUserId) if options.toUserId
+
 			newTodo.set( "tags", tags )
 			newTodo.save({}, {sync:true})
 

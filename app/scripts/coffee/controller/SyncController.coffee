@@ -38,7 +38,10 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			@bouncedSync()
 
 		handleObjectsFromSync: ( objects, className ) ->
-			collection = if className is "ToDo" then swipy.collections.todos else swipy.collections.tags
+			collection = swipy.collections.tags if className is "Tag"
+			collection = swipy.collections.todos if className is "ToDo"
+			collection = swipy.collections.members if className is "Member"
+			collection = swipy.collections.projects if className is "Project"
 			if className is "ToDo"
 				@updatedTodos = []
 			newModels = []
@@ -47,7 +50,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if obj.parentLocalId? and newModels.length > 0 and !didAddMainTasks
 					collection.add newModels
 					didAddMainTasks = true
-					console.log "adding new"
 					newModels = []
 				objectId = obj.objectId
 				model = collection.find( 
@@ -137,12 +139,17 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 			newTags = @prepareNewObjectsForCollection swipy.collections.tags
 			newTodos = @prepareNewObjectsForCollection swipy.collections.todos
+			newProjects = @prepareNewObjectsForCollection swipy.collections.projects
 
 			updateTags = @prepareUpdatesForCollection swipy.collections.tags, "Tag"
 			updateTodos = @prepareUpdatesForCollection swipy.collections.todos, "ToDo"
+			updateProjects = @prepareUpdatesForCollection swipy.collections.projects, "Project"
+
 			serverJSON =
 				Tag : newTags.concat( updateTags )
 				ToDo : newTodos.concat( updateTodos )
+				Project: newProjects.concat( updateProjects )
+			console.log serverJSON
 			return serverJSON
 
 		sync: ->
@@ -197,8 +204,10 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			if data and data.serverTime
 				@currentSyncing = null
 				@changedAttributes.resetChanges()
+				@handleObjectsFromSync( data.Project, "Project" ) if data.Project?
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
+				@handleObjectsFromSync( data.Member, "Member" ) if data.Member?
 
 				if data.updateTime
 					@lastUpdate = data.updateTime 

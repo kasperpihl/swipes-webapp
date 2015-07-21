@@ -1,6 +1,7 @@
 define [
 	"underscore"
-	], (_) ->
+	"js/view/modal/ListActionModal"
+	], (_, ListActionModal) ->
 	Backbone.View.extend
 		el: '.modal-overlay-container'
 		events:
@@ -8,7 +9,25 @@ define [
 		initialize: ->
 			_.bindAll( @ , "clickedBackground", "alignContent")
 			@$contentEl = @$el.find('.modal-overlay-content')
-			
+		
+		###
+			API's for showing different Modals
+		###
+		
+		# Present Action List (ListActionModal)
+		presentActionList:( actions, options, callback ) ->
+			@callback = callback
+			self = @
+			modal = new ListActionModal()
+			modal.loadActionsAndCallback( actions, (result) -> 
+				self.callback(result)
+				self.hideContent()
+			)
+			modal.render()
+			@presentView(modal.el, options, callback)
+		###
+			Functionality to show and handle modal	
+		###
 		presentView: (el, options, callback) ->
 			# Default Values
 			clickableBackground = true
@@ -63,13 +82,17 @@ define [
 			width = @$contentEl.outerWidth()
 			height = @$contentEl.outerHeight()
 
-			marginLeft = marginRight = 0
+			marginLeft = marginTop = 0
 			if @centerX
 				marginLeft = -width/2
 			if @centerY
 				marginTop = -height/2
 
-			cssProps = {}
+			cssProps =
+				"bottom": "auto"
+				"right": "auto"
+				"left": "50%"
+				"top": "50%"
 			# Making sure content is inside the screen
 			
 			if @left? or @top?
@@ -92,13 +115,12 @@ define [
 					@top = "auto"
 					cssProps["bottom"] = 0
 					marginTop = 0
-			@left = 50+"%" if !@left?
-			@top = 50+"%" if !@top?
 
 			cssProps["left"] = @left
 			cssProps["top"] = @top
 			cssProps["marginLeft"] = marginLeft
 			cssProps["marginTop"] = marginTop
+			console.log cssProps
 			@$contentEl.css(cssProps)
 
 			
@@ -108,6 +130,6 @@ define [
 			$(window).off( "resize.modalcontroller", @alignContent )
 			@callback?()
 			@callback = null
+
 		clickedBackground: (e) ->
-			console.log "clicked"
 			@hideContent()

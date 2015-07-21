@@ -9,15 +9,24 @@ define ["underscore"], (_) ->
 		constructor: ->
 		loadCollection: (collection) ->
 			@collection = collection
-		collectionIdFromTaskHtmlId: (taskHtmlId) ->
+		taskCollectionIdFromHtmlId: (taskHtmlId) ->
+			# #task-
 			return if !taskHtmlId or !_.isString(taskHtmlId)
 			taskHtmlId.substring(6)
+		projectCollectionIdFromHtmlId: (projectHtmlId) ->
+			# #sidebar-project-
+			return if !projectHtmlId or !_.isString(projectHtmlId)
+			projectHtmlId.substring(17)
+		memberCollectionIdFromHtmlId: (memberHtmlId) ->
+			# #sidebar-member-
+			return if !memberHtmlId or !_.isString(memberHtmlId)
+			memberHtmlId.substring(16)
 		
 		###
 			DragHandler Delegate
 		###
 		extraIdsForDragging:( dragHandler, draggedId ) ->
-			draggedTask = @collection.get( @collectionIdFromTaskHtmlId(draggedId) )
+			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 
 			return [] if !draggedTask?
 			draggedTask.set("selected",true)
@@ -33,16 +42,20 @@ define ["underscore"], (_) ->
 			idsToReturn
 		# Deal with dropped items from DragHandler if true is returned, callback must be called!
 		dragHandlerDidHit: ( dragHandler, draggedId, hit, callback ) ->
-			draggedTask = @collection.get( @collectionIdFromTaskHtmlId(draggedId) )
+			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 			return if !draggedTask?
 
 			selectedTasks = @collection.getSelected( draggedTask )
+			console.log hit
+			return false if !hit?
 			
-			if hit? and hit.type is "task"
-				hitTask = @collection.get( @collectionIdFromTaskHtmlId(hit.target) )
+
+			if hit.type is "task"
+				hitTask = @collection.get( @taskCollectionIdFromHtmlId(hit.target) )
 				return if !hitTask?
+
 				if hit.position is "middle"
-					console.log "add as subtask"
+					
 					setTimeout(()->
 						callback()
 					, 400)
@@ -73,12 +86,33 @@ define ["underscore"], (_) ->
 							m.updateOrder(self.listSortAttribute, order + addition )
 					)
 
-					# and update selected tasks as well
-					if selectedTasks and selectedTasks.length
-						for selectedTask in selectedTasks
-							selectedTask.updateOrder @listSortAttribute, targetOrder
+					# and selected tasks with order
+					_.invoke(selectedTasks, "updateOrder", @listSortAttribute, targetOrder)
 
 					Backbone.trigger("reload/handler")
+			else if hit.type is "project"
+				targetProject = swipy.collections.projects.get( @projectCollectionIdFromHtmlId(hit.target) )
+				return if !targetProject?
+				actions = []
+				actions.push({name: "Copy to " + targetProject.get("name"), action: "copy"})
+				actions.push({name: "Move to " + targetProject.get("name"), action: "move"})
+				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.x, top: hit.pointerEvent.y, frame:true}, (result) ->
+					if result is "move"
+						# and update selected tasks as well
+						_.invoke(selectedTasks, "save", {"projectLocalId": targetProject.id}, {sync: true} )
+						Backbone.trigger("reload/handler")
+				)
+			else if hit.type is "member"
+				memberId = @memberCollectionIdFromHtmlId(hit.target)
+				member = swipy.collections.members.get(memberId)
+				name = member.get "username"
+				actions = []
+				actions.push({name: "Assign " + name, action: "copy"})
+				actions.push({name: "Copy to " + name, action: "copy"})
+				actions.push({name: "Move to " + name , action: "move"})
+				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.x, top: hit.pointerEvent.y, frame:true}, (result) ->
+					console.log result
+				)
 			false
 
 		sortAndGroupCollection: ->

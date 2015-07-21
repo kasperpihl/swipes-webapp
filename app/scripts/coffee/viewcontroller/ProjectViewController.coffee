@@ -48,15 +48,15 @@ define [
 			
 			@currentProject = swipy.collections.projects.get(projectId)
 			
-			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),true)
+			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),false)
 
-
+			# https://github.com/anthonyshort/backbone.collectionsubset
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
-					return task.get("projectId") is projectId and !task.get('completionDate') and !task.isSubtask()
+					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
 			})
-
+			
 			@taskHandler.loadCollection(@collectionSubset.child)
 			@taskList.render()
 
@@ -68,6 +68,7 @@ define [
 		###
 		taskCardDidCreateTask: ( taskCard, title, options) ->
 			options = {} if !options
-			options.projectId = @projectId
+			options.projectLocalId = @projectId
+			options.ownerId = @currentProject.get("ownerId")
 			Backbone.trigger("create-task", title, options)
 			@taskList.render()

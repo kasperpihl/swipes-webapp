@@ -21,10 +21,11 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			"location"
 			"parentLocalId"
 			"priority"
-			"projectId"
+			"projectLocalId"
 			"projectOrder"
 			"origin"
 			"originIdentifier"
+			"toUserId"
 		]
 		defaults:
 			title: ""
@@ -40,11 +41,12 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			location: undefined
 			parentLocalId: null
 			priority: 0
-			projectId: null
+			projectLocalId: null
 			projectOrder: -1
 			deleted: no
 			origin: null
 			originIdentifier: null
+			toUserId: null
 		set: ( key, val, options ) ->
 			Backbone.Model.prototype.set.apply @ , arguments
 			attrs = {}

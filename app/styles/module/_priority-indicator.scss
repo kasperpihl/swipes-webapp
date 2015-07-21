@@ -17,7 +17,7 @@
 	margin-left: -$size/2;
 	cursor: pointer;
 
-	background: $yellow;
+	background: $unselected-color;
 	
 
 	// This is the priority dot
@@ -33,7 +33,7 @@
 		border-radius: $inner-size;
 
 		
-		background: $yellow;
+		background: $unselected-color;
 		border: $border-size solid white;
 		content: "";
 	}
@@ -52,11 +52,13 @@
 	}
 
 	
-
-
-	.scheduled & {
-		background: $lobster;
-		&:after { background: $lobster; }
+	.my-task & {
+		background: $red;
+		&:after { background: $red; }
+	}
+	.assigned & {
+		background: $yellow;
+		&:after { background: $yellow; }
 	}
 	.completed & {
 		background: $green;
