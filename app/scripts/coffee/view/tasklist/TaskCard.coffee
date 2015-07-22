@@ -14,8 +14,10 @@ define [
 		initialize: ->
 			throw new Error("Model must be added when constructing a TaskCard") if !@model?
 			@template = _.template TaskTmpl, {variable: "data" }
+			@bouncedRender = _.debounce(@render, 5)
 			_.bindAll( @, 'clickedTask', 'handleAction' )
 			@listenTo( @model, "change:selected", @onSelected )
+			@listenTo( @model, "change:assignees", @bouncedRender )
 		clickedTask: (e) ->
 			if @taskDelegate? and _.isFunction(@taskDelegate.taskDidClick)
 				@taskDelegate.taskDidClick(@, e)

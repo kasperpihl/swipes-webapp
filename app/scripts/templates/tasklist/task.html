@@ -4,6 +4,11 @@
 	if (data.task.get('tags') && data.task.get('tags').length)
 		numberOfMetaInfos++;
 
+	var numberOfAssignees = 0;
+	if (data.task.get("assignees")){
+		numberOfAssignees = data.task.get("assignees").length
+		numberOfMetaInfos++;
+	}
 	if (numberOfMetaInfos > 0)
 		hasMetaClass = "has-meta";
 
@@ -17,37 +22,40 @@
 %>
 <div class="card-container <%= hasMetaClass %> <%= assignedClass %>">
 	<h2 class="title"><span class="priority"></span><%= data.task.get('title') %></h2>
-	<span class="progress-label">50%</span>
-		<% if (numberOfMetaInfos > 0) 
-			print('<div class="meta">') %>
-		<% if (data.task.get('tags') && data.task.get('tags').length) { %>
+	
+	<!--<span class="progress-label">50%</span>-->
+	
+	<% if (numberOfMetaInfos > 0) 
+		print('<div class="meta">') %>
+	<% if(numberOfAssignees) { %>
+		<div class="meta-text with-icon" title="This task has been assigned to 3 people">
+			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialSearch"></use></svg><%= numberOfAssignees %>
+		</div>
+	<% } if (data.task.get('tags') && data.task.get('tags').length) { %>
 			
-				<div class="meta-text with-icon" title="This task has been assigned to 3 people">
-					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialSearch"></use></svg>3
-				</div>
-				<div class="meta-text tags">
-					<%
-					numberOfTags = data.task.get('tags').length;
-					tagStrings = _.invoke(data.task.get('tags'), "get", "title")
-					tags = _.sortBy( data.task.get('tags'), function(tag) {
-						return tag.get("title").toLowerCase()
-					})
+			<div class="meta-text tags">
+				<%
+				numberOfTags = data.task.get('tags').length;
+				tagStrings = _.invoke(data.task.get('tags'), "get", "title")
+				tags = _.sortBy( data.task.get('tags'), function(tag) {
+					return tag.get("title").toLowerCase()
+				})
 
-					_.each(data.task.get('tags'), function(tag, i) {
-						isInFilter = _.contains(swipy.filter.tagsFilter, tag.get("title") )
+				_.each(data.task.get('tags'), function(tag, i) {
+					isInFilter = _.contains(swipy.filter.tagsFilter, tag.get("title") )
+					
+					if ( isInFilter ) { %><strong> <% } %>
 						
-						if ( isInFilter ) { %><strong> <% } %>
-							
-							<a href="#" data-href="<%= tag.id %>" class="clickable-tag"><%= tag.get("title") %></a><% if ( i+1 < numberOfTags ) print(",&nbsp;"); %>
+						<a href="#" data-href="<%= tag.id %>" class="clickable-tag"><%= tag.get("title") %></a><% if ( i+1 < numberOfTags ) print(",&nbsp;"); %>
+					
+					<% if ( isInFilter ) { %></strong> <% }
+					 
 						
-						<% if ( isInFilter ) { %></strong> <% }
-						 
-							
-					}); %>
-				</div><!-- .meta-text -->
-			<% if (numberOfMetaInfos > 0) 
-			print('</div>') %><!-- .meta -->
-		<% } %>
+				}); %>
+			</div><!-- .meta-text -->
+		<% if (numberOfMetaInfos > 0) 
+		print('</div>') %><!-- .meta -->
+	<% } %>
 	
 </div><!-- .card-container -->
 <% numberOfButtons = 4 %>

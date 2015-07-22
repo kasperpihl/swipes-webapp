@@ -48,9 +48,13 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 @import "module/calendar";
 @import "module/pickers";
+@import "module/section";
 
 // Task List
 @import "tasklist/task-list";
+
+// Chat List
+@import "chatlist/chat-list";
 
 // Sidebar
 @import "sidebar/right-sidebar";

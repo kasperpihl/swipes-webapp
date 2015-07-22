@@ -126,7 +126,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 		combineAttributes: ( newAttributes ) ->
 			return @currentSyncing = newAttributes if !@currentSyncing?
-			for className in ["Tag", "ToDo"]
+			for className in ["Tag", "ToDo", "Project", "Member"]
 				for identifier, newChanges of newAttributes[ className ]
 					existingChanges = @currentSyncing[ className ][ identifier ]
 					newChanges = _.uniq( existingChanges.concat( newChanges ) ) if existingChanges?
@@ -156,7 +156,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			return @needSync = true if @isSyncing
 			return if !Parse.User.current()
 			@isSyncing = true
-			url = "http://localhost:5000/v1/sync" #"https://api.swipesapp.com/v1/sync" #
+			url = "http://192.168.0.123:5000/v1/sync" #"https://api.swipesapp.com/v1/sync" #
 			user = Parse.User.current()
 			token = user.getSessionToken()
 			data =
@@ -201,7 +201,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			@util.sendError( data, "Sync Server Error")
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
-			console.log data
 			if data and data.serverTime
 				@currentSyncing = null
 				@changedAttributes.resetChanges()

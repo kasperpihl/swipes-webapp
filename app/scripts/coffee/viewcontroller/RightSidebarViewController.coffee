@@ -17,7 +17,10 @@ define [
 		clickedRightSideButton: (e) ->
 			console.log e
 			target = $(e.currentTarget).attr("data-href")
-			@loadSidemenu(target)
+			if target is @activeClass
+				@closeWindow()
+			else
+				@loadSidemenu(target)
 			
 		setTemplate: ->
 			@template = _.template( Template, {variable: "data"})
@@ -35,6 +38,7 @@ define [
 				el = "Here will be your files"
 				title = "ATTACHMENTS"
 			else return
+			@activeClass = target
 			@$el.find('.right-window-container').addClass('shown')
 			@$el.find('.right-sidebar-controls').addClass("hasActiveEl")
 			@$el.find('.right-sidebar-controls .active').removeClass("active")
@@ -53,6 +57,7 @@ define [
 			@$el.find('.right-window-container').removeClass('shown')
 			@$el.find('.right-sidebar-controls').removeClass("hasActiveEl")
 			@$el.find('.right-sidebar-controls .active').removeClass("active")
+			@activeClass = null
 			@setWindowWidth(0)
 
 		setWindowWidth: (width) ->

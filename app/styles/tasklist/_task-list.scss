@@ -84,10 +84,7 @@ $meta-margin: 10px;
 
 // Items inside - tasks
 .task-section{
-	.task-section-list{
-		list-style:none;
-		padding-left:0;
-	}
+	
 	
 	
 	.task-item{
@@ -225,38 +222,6 @@ $meta-margin: 10px;
 		}
 	}
 }
-.task-section-header{
-	height:14px;
-	opacity: 0.8;
-	margin-bottom: 4px;
-	margin-top: 30px;
-	h2{
-		&.left{
-			float:left;
-		}
-		&.right{
-			float:right;
-		}
-		
-		margin:0;
-		font: 12px $font-bold;
-		color: $unselected-color;
-		background-color: white;
-		padding-right: 8px;
-		padding-left: 8px;
-	}
-	.seperator-container{
-		width:100%;
-		height:100%;
-		padding-top: 6px;
-		padding-right: 5px;
-		.seperator{
-			background-color: rgba(158, 158, 158, 0.4);
-			height: 2px;
-		}
-
-	}
-}
 
 
 // Drag and drop handling
@@ -286,17 +251,5 @@ $meta-margin: 10px;
 			padding-bottom:7px;
 
 		}
-	}
-	// The original selected element that's being dragged
-	.task-item.drag-hover-moving-item{
-		max-height: 0;
-		padding: 0;
-		overflow: hidden;
-		@include transition(max-height 2.3s ease-out);
-		/*.card-container{
-			opacity: 0.5;
-			@include card-shadow(6px, 2px, 0.1);
-			@include transition(opacity 0.3s ease-out);
-		}*/
 	}
 }

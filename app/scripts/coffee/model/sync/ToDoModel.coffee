@@ -113,6 +113,28 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			if save
 				@save {}, {sync:true}
 			return @model
+		assign: ( userId, save ) ->
+			currentAssignees = @get "assignees"
+			if !currentAssignees
+				currentAssignees = []
+			currentAssignees.push( userId ) if _.indexOf( currentAssignees, userId) is -1
+			@set "assignees", currentAssignees, {localSync: true}
+			if save
+				@save {}, {sync:true}
+		userIsAssigned:(userId) ->
+			currentAssignees = @get "assignees"
+			return false if !currentAssignees
+			return _.indexOf(currentAssignees, userId) isnt -1
+		unassign: ( userId, save ) ->
+			currentAssignees = @get "assignees"
+			return false if !currentAssignees
+			for assignee, index in currentAssignees
+				if assignee is userId
+					currentAssignees.splice(index, 1)
+					@set "assignees", currentAssignees, {localSync: true}
+					break
+			if save
+				@save {}, {sync:true}
 		addNewSubtask: ( title, from ) ->
 			currentSubtasks = @getOrderedSubtasks()
 			parentLocalId = @id
@@ -346,10 +368,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			@set( "state", @getState() )
 			clonedAttributes = _.clone @attributes
 			
-			###if clonedAttributes.title and clonedAttributes.title.length > 0
-				clonedAttributes.title = _.escape(clonedAttributes.title)
-			if clonedAttributes.notes and clonedAttributes.notes.length > 0
-				clonedAttributes.notes = _.escape(clonedAttributes.notes)###
 			clonedAttributes
 		attachmentsForService:(service) ->
 			foundAttachments = []

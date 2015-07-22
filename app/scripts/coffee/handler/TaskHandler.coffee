@@ -49,7 +49,7 @@ define ["underscore"], (_) ->
 		dragHandlerDidHit: ( dragHandler, draggedId, hit, callback ) ->
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 			return if !draggedTask?
-
+			self = @
 			selectedTasks = @collection.getSelected( draggedTask )
 			console.log hit
 			return false if !hit?
@@ -94,7 +94,7 @@ define ["underscore"], (_) ->
 					# and selected tasks with order
 					_.invoke(selectedTasks, "updateOrder", @listSortAttribute, targetOrder)
 
-					Backbone.trigger("reload/handler")
+					@reloadWithEvent()
 			else if hit.type is "project"
 				targetProject = swipy.collections.projects.get( @projectCollectionIdFromHtmlId(hit.target) )
 				return if !targetProject?
@@ -105,18 +105,22 @@ define ["underscore"], (_) ->
 					if result is "move"
 						# and update selected tasks as well
 						_.invoke(selectedTasks, "save", {"toUserId": null, "projectLocalId": targetProject.id}, {sync: true} )
-						Backbone.trigger("reload/handler")
+						self.reloadWithEvent()
 				)
 			else if hit.type is "member"
 				memberId = @memberCollectionIdFromHtmlId(hit.target)
 				member = swipy.collections.members.get(memberId)
+				return if !member?
+
 				name = member.get "username"
 				actions = []
-				actions.push({name: "Assign " + name, action: "copy"})
+				if draggedTask.get("projectLocalId")
+					actions.push({name: "Assign " + name, action: "assign"})
 				actions.push({name: "Copy to " + name, action: "copy"})
 				actions.push({name: "Move to " + name , action: "move"})
 				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
-					console.log result
+					if result is "assign"
+						_.invoke(selectedTasks, "assign", [ member.id ], true )
 				)
 			false
 
@@ -149,15 +153,15 @@ define ["underscore"], (_) ->
 			@sortAndGroupCollection()
 			return @groupedTasks.length
 		taskListLeftTitleForSection: ( taskList, section ) ->
-			return @groupedTasks[ (section-1) ].leftTitle
+			return @groupedTasks[ (section-1) ]?.leftTitle
 		taskListRightTitleForSection: ( taskList, section ) ->
-			return @groupedTasks[ (section-1) ].rightTitle
+			return @groupedTasks[ (section-1) ]?.rightTitle
 		
 		taskListTasksForSection: ( taskList, section ) ->
 			if !@collection?
 				throw new Error("TaskHandler: must loadSubcollection before loading TaskList")
 			#@collection.fetch()
-			models = @groupedTasks[ (section-1) ].tasks
+			models = @groupedTasks[ (section-1) ]?.tasks
 
 			if @listSortAttribute? and @listSortAttribute
 				models = @sortTasksAndSetOrder(models, true)

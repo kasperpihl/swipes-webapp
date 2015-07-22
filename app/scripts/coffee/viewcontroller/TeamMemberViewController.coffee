@@ -48,7 +48,11 @@ define [
 				else 
 					return "My Tasks"
 			)
-			return [{leftTitle: "TASKS FROM " + @currentMember.get("username").toUpperCase() , tasks: groups["My Tasks"]},{rightTitle: "SENT TASKS", tasks: groups["His Tasks"]}]
+			taskGroups = []
+			taskGroups.push({leftTitle: "RECEIVED TASKS" , tasks: groups["My Tasks"]}) if groups["My Tasks"]?.length > 0
+			taskGroups.push({rightTitle: "SENT TASKS", tasks: groups["His Tasks"]}) if groups["His Tasks"]?.length > 0
+			
+			return taskGroups
 		destroy: ->
 
 		###

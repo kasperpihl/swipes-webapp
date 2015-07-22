@@ -55,7 +55,7 @@ define [
 				# Instantiate 
 				taskSection = new TaskSection()
 				taskSection.setTitles(leftTitle, rightTitle)
-				taskSectionEl = taskSection.$el.find('.task-section-list')
+				taskSectionEl = taskSection.$el.find('.section-list')
 
 				for task in tasksInSection
 					numberOfTasks++
