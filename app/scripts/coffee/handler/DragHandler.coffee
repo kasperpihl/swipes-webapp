@@ -25,7 +25,6 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 				onDragEndParams: [ @ ]
 				# Handlers
 				onDragStart: (self) ->
-					console.log @pointerEvent #$(.target).parent(".task-item").attr("id")
 					if @pointerEvent.path?
 						for el in @pointerEvent.path
 							$el = $(el)
@@ -43,17 +42,14 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 								break
 					self.updateMousePointer(@pointerEvent)
 					$(".drag-mouse-pointer").addClass("shown")
-							#$el.addClass("drag-hover-moving-item")
 					if self.delegate? and _.isFunction(self.delegate.extraIdsForDragging)
 						self.extraClasses = self.delegate.extraIdsForDragging( self, self.draggingId )
-						#for identifier in extraClasses
-						#$(identifier).addClass("drag-hover-moving-item")
+
 				onDrag: (self) ->
 					hit = self.hitTest( @pointerEvent )
 					self.updateMousePointer(@pointerEvent)
 					self.handleHitHover(hit)
-					
-					#console.log e.x
+
 				onDragEnd: (self) ->
 					hit = self.hitTest(@pointerEvent)
 					self.handleHitFinish(hit)

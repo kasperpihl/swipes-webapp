@@ -61,3 +61,5 @@ define ["js/utility/Utility"], ( Utility ) ->
 			if @get("needSaveToServer")
 				@set("needSaveToServer", false, {localSync: true})
 			@set "deleted", obj.deleted, {localSync: true} if obj.deleted
+			@set "userId", obj.userId, {localSync: true} if obj.userId?
+			@set "ownerId", obj.ownerId, {localSync: true} if obj.ownerId?

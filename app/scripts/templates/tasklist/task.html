@@ -1,13 +1,21 @@
 <% 
-	var hasMetaClass = ""
+	var hasMetaClass = "";
 	var numberOfMetaInfos = 0;
 	if (data.task.get('tags') && data.task.get('tags').length)
 		numberOfMetaInfos++;
 
 	if (numberOfMetaInfos > 0)
-		hasMetaClass = "has-meta"
+		hasMetaClass = "has-meta";
+
+	var assignedClass = "";
+	if(data.task.get("isAssigned"))
+		assignedClass = "assigned";
+	if(data.task.get("isMyTask"))
+		assignedClass = "my-task";
+	if(data.task.get("completionDate"))
+		assignedClass = "completed";
 %>
-<div class="card-container <%= hasMetaClass %>">
+<div class="card-container <%= hasMetaClass %> <%= assignedClass %>">
 	<h2 class="title"><span class="priority"></span><%= data.task.get('title') %></h2>
 	<span class="progress-label">50%</span>
 		<% if (numberOfMetaInfos > 0) 

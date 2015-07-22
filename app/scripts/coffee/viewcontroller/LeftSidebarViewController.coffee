@@ -30,12 +30,14 @@ define [
 			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({members: _.sortBy(_.filter(swipy.collections.members.toJSON(), (member) -> return !member.me ), "username")}))
 			@checkAndEnableScrollBars()
 			@delegateEvents()
+			@setActiveMenu(@activeClass) if @activeClass?
 		checkAndEnableScrollBars: ->
 			overflow = "hidden"
 			if $(".sidebar-controls").outerHeight(true) > $("body").height()
 				overflow = "scroll"
 			$('.sidebar_content').css("overflowY",overflow)
 		setActiveMenu: (activeClass) ->
+			@activeClass = activeClass
 			$(".sidebar-controls .active").removeClass("active")
 			$(".sidebar-controls #"+activeClass).addClass("active")
 		destroy: ->

@@ -164,6 +164,9 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				#@save( "selected", no )
 				@reviveDate "completionDate"
 
+			@checkAssigned()
+			@on "change:toUserId change:assignees", =>
+				@checkAssigned()
 			@on "change:repeatDate", => @reviveDate "repeatDate"
 
 			##@on( "change:repeatOption", @setRepeatOption )
@@ -172,7 +175,16 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			if @has "completionDate"
 				@setCompletionStr()
 				@setCompletionTimeStr()
-		
+			
+		checkAssigned: ->
+			if @get("toUserId") is Parse.User.current().id
+				@set("isMyTask", true) 
+			else @set("isMyTask", false)
+
+			if @get("toUserId") or @get("assignees") and @get("assignees").length > 0
+				@set("isAssigned", true) 
+			else @set("isAssigned", false)
+
 		isSubtask: ->
 			if @get("parentLocalId") then return true else false
 		getOrderedSubtasks: ->

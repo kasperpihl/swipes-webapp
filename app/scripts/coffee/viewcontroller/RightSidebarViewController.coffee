@@ -1,8 +1,7 @@
 define [
 	"underscore"
 	"text!templates/sidemenu/right-sidebar.html"
-	"js/view/sidebar/TagFilter"
-	], (_, Template, TagFilter) ->
+	], (_, Template) ->
 	Backbone.View.extend
 		el: ".right-sidebar-outer-container"
 		initialize: ->
@@ -17,28 +16,43 @@ define [
 			@renderSidebar
 		clickedRightSideButton: (e) ->
 			console.log e
-			if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarClickedMenuButton)
-				@sidebarDelegate.sidebarClickedMenuButton( @, e )
+			target = $(e.currentTarget).attr("data-href")
+			@loadSidemenu(target)
+			
 		setTemplate: ->
 			@template = _.template( Template, {variable: "data"})
 		renderSidebar: ->
-			@buttons = [{ "iconClass": "navbarWorkspace"}, { "iconClass": "done" }]
-			isActiveClass = null
-			@$el.find(".right-sidebar-controls").html( @template({buttons: @buttons, activeClass: isActiveClass }) )
+			@buttons = [{ "iconClass": "navbarChat"}, { "iconClass": "navbarFiles" }]
+			@$el.find(".right-sidebar-controls").html( @template({buttons: @buttons }) )
 			@delegateEvents()
-			@setActiveMenu(@buttons[1].iconClass)
-		
-		loadWindow:(el) ->
+		loadSidemenu:(target) ->
+			if target is "navbarChat"
+				title = "DISCUSSION"
+				el = "Chat"
+				if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarWillLoadChat)
+					@sidebarDelegate.sidebarWillLoadChat( @, chat )
+			else if target is "navbarFiles"
+				el = "Here will be your files"
+				title = "ATTACHMENTS"
+			else return
+			@$el.find('.right-window-container').addClass('shown')
+			@$el.find('.right-sidebar-controls').addClass("hasActiveEl")
+			@$el.find('.right-sidebar-controls .active').removeClass("active")
+			@$el.find('.right-sidebar-controls .' + target).addClass("active")
+
+			@loadWindow(el, title)
+		loadWindow:(el, title) ->
 			width = 400
-			#el = new TagFilter().el
+			@$el.find('.right-side-title').html(title)
 			@$el.find('.right-window-content').html(el)	
 			
 			@setWindowWidth(width)
 
-			@$el.find('.right-window-container').addClass('shown')
 			
 		closeWindow: ->
 			@$el.find('.right-window-container').removeClass('shown')
+			@$el.find('.right-sidebar-controls').removeClass("hasActiveEl")
+			@$el.find('.right-sidebar-controls .active').removeClass("active")
 			@setWindowWidth(0)
 
 		setWindowWidth: (width) ->

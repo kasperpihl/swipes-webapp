@@ -42,6 +42,7 @@ define [
 			
 		open: (options) ->
 			@projectId = options.id
+			swipy.rightSidebarVC.sidebarDelegate = @
 			@render()
 			@loadProject(@projectId)
 		loadProject: (projectId) ->
@@ -62,6 +63,12 @@ define [
 
 			#swipy.rightSidebarVC.loadWindow(@el)
 		destroy: ->
+
+		###
+			RightSidebarDelegate
+		###
+		sidebarClickedMenuButton: (sidebar, e) ->
+			
 
 		###
 			AddTaskCard Delegate

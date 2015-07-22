@@ -9,6 +9,11 @@ define ["underscore"], (_) ->
 		constructor: ->
 		loadCollection: (collection) ->
 			@collection = collection
+			@reloadWithEvent = _.debounce( @reloadWithEvent, 5 )
+			@collection.on("add remove reset", @reloadWithEvent )
+			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
+		reloadWithEvent: ->
+			Backbone.trigger("reload/handler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
 			return if !taskHtmlId or !_.isString(taskHtmlId)

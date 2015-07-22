@@ -71,7 +71,7 @@ define [
 				else 
 					return "My Tasks"
 			)
-			return [{leftTitle: "YOUR TASKS FROM " + @currentMember.get("username").toUpperCase() , tasks: groups["My Tasks"]},{rightTitle: @currentMember.get("username").toUpperCase() + "'S TASKS FROM YOU", tasks: groups["His Tasks"]}]
+			return [{leftTitle: "TASKS FROM " + @currentMember.get("username").toUpperCase() , tasks: groups["My Tasks"]},{rightTitle: "SENT TASKS", tasks: groups["His Tasks"]}]
 		destroy: ->
 
 		###

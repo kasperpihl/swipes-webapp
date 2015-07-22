@@ -93,14 +93,14 @@ define [
 				"right": "auto"
 				"left": "50%"
 				"top": "50%"
+
 			# Making sure content is inside the screen
-			
 			if @left? or @top?
 				left = parseInt(@left, 10) if @left?
 				top = parseInt(@top, 10) if @top?
 				windowWidth = $(window).width()
 				windowHeight = $(window).height()
-				# Content is to the left of the screen
+
 				if (@left? and left + marginLeft) < 0
 					@left = 0
 					marginLeft = 0
@@ -120,7 +120,7 @@ define [
 			cssProps["top"] = @top
 			cssProps["marginLeft"] = marginLeft
 			cssProps["marginTop"] = marginTop
-			console.log cssProps
+			
 			@$contentEl.css(cssProps)
 
 			
