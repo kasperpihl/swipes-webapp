@@ -1,44 +1,20 @@
 define [
 	"underscore"
 	"gsap"
-	"text!templates/viewcontroller/project-view-controller.html"
-	"js/view/tasklist/TaskList"
-	"js/view/tasklist/AddTaskCard"
-	"js/handler/TaskHandler"
-	], (_, TweenLite, Template, TaskList, AddTaskCard, TaskHandler) ->
+	"js/viewcontroller/TaskListViewController"
+	], (_, TweenLite, TaskListViewController) ->
 	Backbone.View.extend
 		className: "project-view-controller"
 		initialize: ->
-			@setTemplate()
-
-			@addTaskCard = new AddTaskCard()
-			@addTaskCard.addDelegate = @
-
-
-			@taskList = new TaskList()
-			@taskList.targetSelector = ".project-view-controller .task-list-container"
-			@taskList.enableDragAndDrop = true
-			@taskList.delegate = @
-
-			@taskHandler = new TaskHandler()
-			@taskHandler.listSortAttribute = "projectOrder"
-
+			@taskListVC = new TaskListViewController()
+			@taskListVC.addTaskCard.addDelegate = @
+			@taskListVC.taskList.enableDragAndDrop = true
+			@taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			
-			# Settings the Task Handler to receive actions from the task list
-			@taskList.taskDelegate = @taskHandler
-			@taskList.dragDelegate = @taskHandler
-			@taskList.dataSource = @taskHandler
-
-
-		setTemplate: ->
-			@template = _.template Template
 		render: ->
-			@$el.html @template({})
 			$("#main").html(@$el)
-
-			@addTaskCard.render()
-			@$el.find('.task-column').prepend( @addTaskCard.el )
-
+			@$el.html @taskListVC.el
+			@taskListVC.render()
 			
 		open: (options) ->
 			@projectId = options.id
@@ -58,8 +34,8 @@ define [
 					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
 			})
 			
-			@taskHandler.loadCollection(@collectionSubset.child)
-			@taskList.render()
+			@taskListVC.taskHandler.loadCollection(@collectionSubset.child)
+			@taskListVC.taskList.render()
 
 			#swipy.rightSidebarVC.loadWindow(@el)
 		destroy: ->
@@ -68,7 +44,7 @@ define [
 			RightSidebarDelegate
 		###
 		sidebarClickedMenuButton: (sidebar, e) ->
-			
+
 
 		###
 			AddTaskCard Delegate
@@ -78,4 +54,4 @@ define [
 			options.projectLocalId = @projectId
 			options.ownerId = @currentProject.get("ownerId")
 			Backbone.trigger("create-task", title, options)
-			@taskList.render()
+			@taskListVC.taskList.render()

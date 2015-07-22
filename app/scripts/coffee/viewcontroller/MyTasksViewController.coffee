@@ -1,42 +1,21 @@
 define [
 	"underscore"
 	"gsap"
-	"text!templates/viewcontroller/my-tasks-view-controller.html"
-	"js/view/tasklist/TaskList"
-	"js/view/tasklist/AddTaskCard"
-	"js/handler/TaskHandler"
-	], (_, TweenLite, Template, TaskList, AddTaskCard, TaskHandler) ->
+	"js/viewcontroller/TaskListViewController"
+	], (_, TweenLite, TaskListViewController) ->
 	Backbone.View.extend
 		className: "my-tasks-view-controller"
 		initialize: ->
-			@setTemplate()
+			@taskListVC = new TaskListViewController()
+			@taskListVC.addTaskCard.addDelegate = @
+			@taskListVC.taskList.enableDragAndDrop = true
+			@taskListVC.taskHandler.listSortAttribute = "order"
+			@taskListVC.taskHandler.delegate = @
 
-			@addTaskCard = new AddTaskCard()
-			@addTaskCard.addDelegate = @
-
-			@taskList = new TaskList()
-			@taskList.targetSelector = ".my-tasks-view-controller .task-list-container"
-			@taskList.enableDragAndDrop = true
-			@taskList.delegate = @
-
-			@taskHandler = new TaskHandler()
-			@taskHandler.listSortAttribute = "order"
-
-			
-			# Settings the Task Handler to receive actions from the task list
-			@taskList.taskDelegate = @taskHandler
-			@taskList.dragDelegate = @taskHandler
-			@taskList.dataSource = @taskHandler
-
-
-		setTemplate: ->
-			@template = _.template Template
 		render: ->
-			@$el.html @template({})
 			$("#main").html(@$el)
-
-			@addTaskCard.render()
-			@$el.find('.task-column').prepend( @addTaskCard.el )
+			@$el.html @taskListVC.el
+			@taskListVC.render()
 		
 		
 		open: (options) ->
@@ -45,7 +24,7 @@ define [
 		load: ->
 			
 			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
-			@addTaskCard.setPlaceHolder("Add Personal Task")
+			@taskListVC.addTaskCard.setPlaceHolder("Add Personal Task")
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
@@ -55,9 +34,8 @@ define [
 							return true
 					return false
 			})
-			console.log @collectionSubset.child
-			@taskHandler.loadCollection(@collectionSubset.child)
-			@taskList.render()
+			@taskListVC.taskHandler.loadCollection(@collectionSubset.child)
+			@taskListVC.taskList.render()
 		destroy: ->
 
 		###
@@ -67,4 +45,4 @@ define [
 			options = {} if !options
 			options.toUserId = Parse.User.current().id
 			Backbone.trigger("create-task", title, options)
-			@taskList.render()
+			@taskListVC.taskList.render()

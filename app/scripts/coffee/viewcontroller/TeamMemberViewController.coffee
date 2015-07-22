@@ -1,44 +1,21 @@
 define [
 	"underscore"
 	"gsap"
-	"text!templates/viewcontroller/team-member-view-controller.html"
-	"js/view/tasklist/TaskList"
-	"js/view/tasklist/AddTaskCard"
-	"js/handler/TaskHandler"
-	], (_, TweenLite, Template, TaskList, AddTaskCard, TaskHandler) ->
+	"js/viewcontroller/TaskListViewController"
+	], (_, TweenLite, TaskListViewController) ->
 	Backbone.View.extend
 		className: "team-member-view-controller"
 		initialize: ->
-			@setTemplate()
-			
-			@addTaskCard = new AddTaskCard()
-			@addTaskCard.addDelegate = @
+			@taskListVC = new TaskListViewController()
+			@taskListVC.addTaskCard.addDelegate = @
+			@taskListVC.taskList.enableDragAndDrop = true
+			@taskListVC.taskHandler.listSortAttribute = "projectOrder"
+			@taskListVC.taskHandler.delegate = @
 
-
-			@taskList = new TaskList()
-			@taskList.targetSelector = ".team-member-view-controller .task-list-container"
-			@taskList.enableDragAndDrop = true
-			@taskList.delegate = @
-
-
-			@taskHandler = new TaskHandler()
-			@taskHandler.listSortAttribute = "projectOrder"
-			@taskHandler.delegate = @
-
-			
-			# Settings the Task Handler to receive actions from the task list
-			@taskList.taskDelegate = @taskHandler
-			@taskList.dragDelegate = @taskHandler
-			@taskList.dataSource = @taskHandler
-
-		setTemplate: ->
-			@template = _.template Template
 		render: ->
-			@$el.html @template({})
 			$("#main").html(@$el)
-
-			@addTaskCard.render()
-			@$el.find('.task-column').prepend( @addTaskCard.el )
+			@$el.html @taskListVC.el
+			@taskListVC.render()
 		
 		open: (options) ->
 			memberId = options.id
@@ -48,7 +25,7 @@ define [
 			# Load team member view
 			@currentMember = swipy.collections.members.get(memberId)
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentMember.get("username"), false)
-			@addTaskCard.setPlaceHolder("Send task to " + @currentMember.get("username"))
+			@taskListVC.addTaskCard.setPlaceHolder("Send task to " + @currentMember.get("username"))
 
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
@@ -59,8 +36,8 @@ define [
 					return false
 			})
 
-			@taskHandler.loadCollection(@collectionSubset.child)
-			@taskList.render()
+			@taskListVC.taskHandler.loadCollection(@collectionSubset.child)
+			@taskListVC.taskList.render()
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
 			groups = collection.groupBy((model, i) ->
@@ -82,4 +59,4 @@ define [
 			options.toUserId = @currentMember.id
 			options.ownerId = @currentMember.get("organisationId")
 			Backbone.trigger("create-task", title, options)
-			@taskList.render()
+			@taskListVC.taskList.render()
