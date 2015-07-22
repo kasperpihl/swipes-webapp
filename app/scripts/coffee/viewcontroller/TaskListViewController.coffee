@@ -1,11 +1,10 @@
 define [
 	"underscore"
-	"gsap"
 	"text!templates/viewcontroller/task-list-view-controller.html"
 	"js/view/tasklist/TaskList"
 	"js/view/tasklist/AddTaskCard"
 	"js/handler/TaskHandler"
-	], (_, TweenLite, Template, TaskList, AddTaskCard, TaskHandler) ->
+	], (_, Template, TaskList, AddTaskCard, TaskHandler) ->
 	Backbone.View.extend
 		className: "task-list-view-controller"
 		initialize: ->
