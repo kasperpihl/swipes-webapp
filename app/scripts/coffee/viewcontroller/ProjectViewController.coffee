@@ -2,7 +2,8 @@ define [
 	"underscore"
 	"gsap"
 	"js/viewcontroller/TaskListViewController"
-	], (_, TweenLite, TaskListViewController) ->
+	"js/viewcontroller/ChatListViewController"
+	], (_, TweenLite, TaskListViewController, ChatListViewController) ->
 	Backbone.View.extend
 		className: "project-view-controller"
 		initialize: ->
@@ -10,7 +11,7 @@ define [
 			@taskListVC.addTaskCard.addDelegate = @
 			@taskListVC.taskList.enableDragAndDrop = true
 			@taskListVC.taskHandler.listSortAttribute = "projectOrder"
-			
+
 		render: ->
 			$("#main").html(@$el)
 			@$el.html @taskListVC.el
@@ -38,6 +39,10 @@ define [
 			@taskListVC.taskList.render()
 
 			#swipy.rightSidebarVC.loadWindow(@el)
+		sidebarGetChatViewController: (sidebar) ->
+			chatListVC = new ChatListViewController()
+			chatListVC.render()
+			return chatListVC
 		destroy: ->
 
 		###

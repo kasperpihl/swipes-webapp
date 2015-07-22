@@ -83,10 +83,7 @@ $meta-margin: 10px;
 
 
 // Items inside - tasks
-.task-section{
-	
-	
-	
+.task-list{
 	.task-item{
 		//max-height: 100px;
 		cursor: pointer;
@@ -225,7 +222,7 @@ $meta-margin: 10px;
 
 
 // Drag and drop handling
-.task-section{
+.task-list{
 	// Seperator for reordering
 	.insert-seperator{
 		height:0px;

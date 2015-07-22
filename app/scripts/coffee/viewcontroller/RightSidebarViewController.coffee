@@ -31,9 +31,10 @@ define [
 		loadSidemenu:(target) ->
 			if target is "navbarChat"
 				title = "DISCUSSION"
-				el = "Chat"
-				if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarWillLoadChat)
-					@sidebarDelegate.sidebarWillLoadChat( @, chat )
+				if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarGetChatViewController)
+					chatVC = @sidebarDelegate.sidebarGetChatViewController( @ )
+					el = chatVC.el
+				else throw new Error("RightSidebarViewController: Couldn't get chat view controller from delegate")
 			else if target is "navbarFiles"
 				el = "Here will be your files"
 				title = "ATTACHMENTS"

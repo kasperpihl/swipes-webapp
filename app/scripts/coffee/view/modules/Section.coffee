@@ -1,12 +1,14 @@
 define [
 	"underscore"
-	"text!templates/tasklist/task-section.html"
-	], (_, TaskSectionTmpl) ->
+	"text!templates/modules/section.html"
+	], (_, SectionTmpl) ->
 	Backbone.View.extend
-		className: "task-section"
+		className: "section"
 		initialize: ->
-			@template = _.template TaskSectionTmpl, { variable: "data" }
+			@template = _.template SectionTmpl, { variable: "data" }
 			@render()
+		setClass: (className) ->
+			@$el.addClass(className)
 		setTitles: (leftTitle, rightTitle) ->
 			@leftTitle = leftTitle
 			@rightTitle = rightTitle

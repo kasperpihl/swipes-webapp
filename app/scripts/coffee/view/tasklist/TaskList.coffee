@@ -5,10 +5,10 @@
 ###
 define [
 	"underscore"
-	"js/view/tasklist/TaskSection"
+	"js/view/modules/Section"
 	"js/view/tasklist/TaskCard"
 	"js/handler/DragHandler"
-	], (_, TaskSection, TaskCard, DragHandler) ->
+	], (_, Section, TaskCard, DragHandler) ->
 	Backbone.View.extend
 		className: "task-list"
 		initialize: ->
@@ -53,9 +53,9 @@ define [
 				
 
 				# Instantiate 
-				taskSection = new TaskSection()
-				taskSection.setTitles(leftTitle, rightTitle)
-				taskSectionEl = taskSection.$el.find('.section-list')
+				section = new Section()
+				section.setTitles(leftTitle, rightTitle)
+				sectionEl = section.$el.find('.section-list')
 
 				for task in tasksInSection
 					numberOfTasks++
@@ -63,8 +63,8 @@ define [
 					if @taskDelegate?
 						taskCard.taskDelegate = @taskDelegate
 					taskCard.render()
-					taskSectionEl.append( taskCard.el )
-				@$el.append taskSection.el
+					sectionEl.append( taskCard.el )
+				@$el.append section.el
 
 
 			if @enableDragAndDrop and numberOfTasks > 0
