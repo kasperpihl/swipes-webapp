@@ -40,7 +40,8 @@ define [
 			
 			if _.isFunction(@dataSource.chatListNumberOfSections)
 				numberOfSections = @dataSource.chatListNumberOfSections( @ )
-			
+			cachedMembers = _.indexBy(swipy.collections.member.toJSON(), "objectId")
+			console.log cachedMembers
 			for section in [1 .. numberOfSections]
 				
 

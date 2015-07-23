@@ -22,7 +22,7 @@ define ["underscore"], (_) ->
 			else
 				@groupedMessages = [ { "leftTitle": null, "rightTitle": null, "messages": @collection.models }]
 			return @groupedMessages
-		### 
+		###
 			ChatList Datasource
 		###
 		

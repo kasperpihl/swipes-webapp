@@ -1,8 +1,24 @@
 define ["js/utility/Utility"], ( Utility ) ->
 	Backbone.Model.extend
 		className: "BaseModel"
-		defaultAttributes: [ "objectId", "tempId", "deleted", "ownerId", "userId" ]
+		defaultAttributes: [ "objectId", "tempId", "deleted", "ownerId", "userId", "createdAt" ]
+		attrWhitelist: []
 		sync: -> true
+		set: ( key, val, options ) ->
+			Backbone.Model.prototype.set.apply @ , arguments
+			attrs = {}
+			if key is null or typeof key is 'object'
+				attrs = key
+				options = val
+			else 
+				attrs[ key ] = val
+			if options and options.localSync
+				@doSync.apply @ , []
+		save: ->
+			shouldSync = @handleForSync.apply @ , arguments
+			Backbone.Model.prototype.save.apply @ , arguments
+			if shouldSync
+				@doSync.apply @ , []
 		constructor: ( attributes ) ->
 			if attributes && !attributes.objectId
 				util = new Utility()
@@ -57,9 +73,24 @@ define ["js/utility/Utility"], ( Utility ) ->
 					json[ key ] = { "__type": "Date", "iso": value }
 			json
 
-		updateFromServerObj: ( obj ) ->
+		updateFromServerObj: ( obj, recentChanges ) ->
 			if @get("needSaveToServer")
 				@set("needSaveToServer", false, {localSync: true})
+
 			@set "deleted", obj.deleted, {localSync: true} if obj.deleted
-			@set "userId", obj.userId, {localSync: true} if obj.userId?
-			@set "ownerId", obj.ownerId, {localSync: true} if obj.ownerId?
+			return if @get "deleted"
+
+			keys = _.keys(obj)
+			for attribute in @defaultAttributes
+				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1
+				continue if _.indexOf(keys, attribute) is -1
+				val = obj[ attribute ]
+				@set attribute, val, { localSync: true } if val isnt @get(attribute)
+
+			for attribute in @attrWhitelist
+				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1
+				continue if _.indexOf(keys, attribute) is -1
+				val = obj[ attribute ]
+				val = @handleAttributeAndValueFromServer(attribute, val) if _.isFunction(@handleAttributeAndValueFromServer)
+				@set(attribute, val, { localSync: true }) if val isnt @get(attribute)
+			@doSync()

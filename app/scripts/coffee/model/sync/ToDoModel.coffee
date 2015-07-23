@@ -47,21 +47,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			origin: null
 			originIdentifier: null
 			toUserId: null
-		set: ( key, val, options ) ->
-			Backbone.Model.prototype.set.apply @ , arguments
-			attrs = {}
-			if key is null or typeof key is 'object'
-				attrs = key
-				options = val
-			else 
-				attrs[ key ] = val
-			if options and options.localSync
-				BaseModel.prototype.doSync.apply @ , []
-		save: ->
-			shouldSync = BaseModel.prototype.handleForSync.apply @ , arguments
-			Backbone.Model.prototype.save.apply @ , arguments
-			if shouldSync
-				BaseModel.prototype.doSync.apply @ , []
 		constructor: ( attributes ) ->
 			if attributes.tags and attributes.tags.length > 0
 				attributes.tags = @handleTagsFromServer attributes.tags
@@ -113,6 +98,16 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			if save
 				@save {}, {sync:true}
 			return @model
+		addNewSubtask: ( title, from ) ->
+			currentSubtasks = @getOrderedSubtasks()
+			parentLocalId = @id
+			order = currentSubtasks.length
+			if from
+				swipy.analytics.sendEvent( "Action Steps", "Added", from, title.length )
+				swipy.analytics.sendEventToIntercom( "Added Action Step", { "From": "Input", "Length": title.length })
+			swipy.collections.todos.create { title, parentLocalId, order }
+
+			#@addSubtask newSubtask
 		assign: ( userIds, save ) ->
 			if _.isString(userIds)
 				userIds = [userIds]
@@ -157,16 +152,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				else
 					@set "assignees", currentAssignees, {localSync: true}
 
-		addNewSubtask: ( title, from ) ->
-			currentSubtasks = @getOrderedSubtasks()
-			parentLocalId = @id
-			order = currentSubtasks.length
-			if from
-				swipy.analytics.sendEvent( "Action Steps", "Added", from, title.length )
-				swipy.analytics.sendEventToIntercom( "Added Action Step", { "From": "Input", "Length": title.length })
-			swipy.collections.todos.create { title, parentLocalId, order }
 
-			#@addSubtask newSubtask
 		deleteObj: ->
 			for subtask in @getOrderedSubtasks()
 				subtask.deleteObj()
@@ -497,26 +483,16 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		updateNotes: ( notes ) ->
 			@save "notes", notes, { sync: true }
 
+		# Sent when syncing the model every time an attribute in @attrWhiteList is hit
+		# Modify and return val
+		handleAttributeAndValueFromServer: (attribute, val) ->
+			if attribute is "tags"
+				val = @handleTagsFromServer val
 
-
-
-		updateFromServerObj: ( obj, recentChanges ) ->
-			BaseModel.prototype.updateFromServerObj.apply @, arguments
-			return if @get "deleted"
 			dateKeys = [ "schedule", "completionDate", "repeatDate" ]
-			keys = _.keys(obj)
-			for attribute in @attrWhitelist
-				continue if recentChanges? and _.indexOf recentChanges, attribute isnt -1
-				continue if _.indexOf(keys, attribute) is -1
-				val = obj[ attribute ]
-
-				if attribute is "tags"
-					val = @handleTagsFromServer val
-				else if _.indexOf(dateKeys, attribute) isnt -1
-					val = @handleDateFromServer val
-				@set attribute, val, { localSync: true } if val isnt @get(attribute)
-			BaseModel.prototype.doSync.apply( @ )
-			false
+			if _.indexOf(dateKeys, attribute) isnt -1
+				val = @handleDateFromServer val
+			val
 
 		handleTagsFromServer: ( tags ) ->
 			modelTags = []
@@ -528,5 +504,4 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				if model
 					modelTags.push model
 			modelTags
-
 		

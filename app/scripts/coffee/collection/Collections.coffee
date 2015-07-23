@@ -5,8 +5,9 @@ define [
 	"js/collection/TagCollection"
 	"js/collection/ProjectCollection"
 	"js/collection/WorkCollection"
+	"js/collection/MessageCollection"
 	"plugins/backbone.collectionsubset"
-	], (_, ToDoCollection, MemberCollection, TagCollection, ProjectCollection, WorkCollection) ->
+	], (_, ToDoCollection, MemberCollection, TagCollection, ProjectCollection, WorkCollection, MessageCollection) ->
 	class Collections
 		constructor: ->
 			@todos = new ToDoCollection()
@@ -14,7 +15,8 @@ define [
 			@tags = new TagCollection()
 			@projects = new ProjectCollection()
 			@workSessions = new WorkCollection()
-			@all = [@tags, @members, @todos, @projects, @workSessions]
+			@messages = new MessageCollection()
+			@all = [@members, @projects, @tags, @messages, @todos,  @workSessions]
 		fetchAll: ->
 			for collection in @all
 				collection.fetch()

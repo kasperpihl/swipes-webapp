@@ -9,8 +9,8 @@ define ["underscore"], (_) ->
 		constructor: ->
 		loadCollection: (collection) ->
 			@collection = collection
-			@reloadWithEvent = _.debounce( @reloadWithEvent, 5 )
-			@collection.on("add remove reset change:order change:projectOrder", @reloadWithEvent )
+			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
+			@collection.on("add remove reset change:order change:projectOrder", @bouncedReloadWithEvent )
 			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
 		reloadWithEvent: ->
 			console.log "forced reload"
@@ -94,7 +94,9 @@ define ["underscore"], (_) ->
 
 					# and selected tasks with order
 					_.invoke(selectedTasks, "updateOrder", @listSortAttribute, targetOrder)
-
+					setTimeout(
+						=> _.invoke(selectedTasks, "set", "selected", false)
+					, 400)
 					@reloadWithEvent()
 			else if hit.type is "project"
 				targetProject = swipy.collections.projects.get( @projectCollectionIdFromHtmlId(hit.target) )
@@ -106,7 +108,7 @@ define ["underscore"], (_) ->
 					if result is "move"
 						# and update selected tasks as well
 						_.invoke(selectedTasks, "save", {"toUserId": null, "projectLocalId": targetProject.id}, {sync: true} )
-						self.reloadWithEvent()
+						self.bouncedReloadWithEvent()
 				)
 			else if hit.type is "member"
 				memberId = @memberCollectionIdFromHtmlId(hit.target)

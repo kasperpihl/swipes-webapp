@@ -40,6 +40,11 @@ define [
 
 			#swipy.rightSidebarVC.loadWindow(@el)
 		sidebarGetChatViewController: (sidebar) ->
+			@collectionSubset = new Backbone.CollectionSubset({
+				parent: swipy.collections.messages,
+				filter: (task) ->
+					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
+			})
 			chatListVC = new ChatListViewController()
 			chatListVC.render()
 			return chatListVC

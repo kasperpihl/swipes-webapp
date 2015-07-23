@@ -20,6 +20,3 @@ define ["js/model/sync/BaseModel"], (BaseModel) ->
 			return no if @get("cancelTime")
 			return no if @get("completionTime")
 			yes
-		save: ->
-			Backbone.Model.prototype.save.apply @ , arguments
-			BaseModel.prototype.doSync.apply @ , []

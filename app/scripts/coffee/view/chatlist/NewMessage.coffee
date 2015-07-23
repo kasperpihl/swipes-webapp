@@ -19,10 +19,10 @@ define ["underscore"
 			if e.keyCode is 13
 				@sendMessage()
 		sendMessage: ->
-			if @addDelegate? and _.isFunction(@addDelegate.taskCardDidCreateTask)
-				@addDelegate.taskCardDidCreateTask( @, @$el.find("input").val(), options)
+			if @addDelegate? and _.isFunction(@addDelegate.newMessageSent)
+				@addDelegate.newMessageSent( @, @$el.find("input").val() )
 			else
-				throw new Error("AddTaskCard must have an addDelegate that implements taskCardDidCreateTask")
+				throw new Error("NewMessage must have an addDelegate that implements newMessageSent")
 		remove: ->
 		destroy: ->
 			@undelegateEvents()
