@@ -6,7 +6,6 @@
 define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseModel, TimeUtility ) ->
 	BaseModel.extend
 		className: "ToDo"
-		idAttribute: "objectId"
 		attrWhitelist: [
 			"attachments"
 			"title"

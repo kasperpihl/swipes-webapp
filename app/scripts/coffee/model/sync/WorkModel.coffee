@@ -1,7 +1,6 @@
 define ["js/model/sync/BaseModel"], (BaseModel) ->
 	BaseModel.extend
 		className: "Work"
-		idAttribute: "objectId"
 		attrWhitelist: [ "startTime", "endTime", "taskLocalId", "completionTime", "cancelTime", "hasChosenCompleted" ]
 		defaults: { "hasChosenCompleted": no }
 		initialize: ->

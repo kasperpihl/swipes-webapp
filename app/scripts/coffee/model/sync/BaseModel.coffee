@@ -2,6 +2,7 @@ define ["js/utility/Utility"], ( Utility ) ->
 	Backbone.Model.extend
 		className: "BaseModel"
 		defaultAttributes: [ "objectId", "tempId", "deleted", "ownerId", "userId", "createdAt" ]
+		idAttribute: "objectId"
 		attrWhitelist: []
 		sync: -> true
 		set: ( key, val, options ) ->
