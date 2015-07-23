@@ -3,9 +3,39 @@
 	height: 100%;
 }
 $chat-new-message-height: 100px;
+
 .chat-list-container{
 	height:100%;
 	padding-bottom: $chat-new-message-height;
+	.chat-list-container-scroller{
+		overflow-y: scroll;
+		height:100%;
+		vertical-align:bottom;
+	}
+}
+.chat-message{
+	$left-side-width:15px;
+	padding:5px;
+	position:relative;
+	.chat-left-side-container{
+		float:left;
+		width: $left-side-width;
+	}
+	.chat-right-side-container{
+		margin-left: $left-side-width;
+	}
+	.picture-container{
+
+	}
+	.sender-name{
+		font: 14px/1 $font-bold;
+	}
+	.timestamp{
+		font: 11px/1 $font-bold;
+	}
+	.message-container{
+		font: 14px/1 $font-normal;
+	}
 }
 
 .chat-new-message{

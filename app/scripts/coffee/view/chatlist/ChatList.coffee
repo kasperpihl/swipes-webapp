@@ -31,6 +31,7 @@ define [
 			if !@targetSelector?
 				throw new Error("ChatList must have targetSelector to render")
 			
+
 			@$el.html ""
 			$(@targetSelector).html( @$el )
 
@@ -40,8 +41,8 @@ define [
 			
 			if _.isFunction(@dataSource.chatListNumberOfSections)
 				numberOfSections = @dataSource.chatListNumberOfSections( @ )
-			cachedMembers = _.indexBy(swipy.collections.member.toJSON(), "objectId")
-			console.log cachedMembers
+			cachedMembers = _.indexBy(swipy.collections.members.toJSON(), "objectId")
+
 			for section in [1 .. numberOfSections]
 				
 
@@ -50,13 +51,13 @@ define [
 					leftTitle = @dataSource.chatListLeftTitleForSection( @, section )
 				if _.isFunction(@dataSource.chatListRightTitleForSection)
 					rightTitle = @dataSource.chatListRightTitleForSection( @, section )
-				chatsInSection = @dataSource.chatListTasksForSection( @, section )
+				chatsInSection = @dataSource.chatListMessagesForSection( @, section )
 				
 
 				# Instantiate 
 				section = new Section()
 				section.setTitles(leftTitle, rightTitle)
-				sectionEl = section.$el.find('.chat-section-list')
+				sectionEl = section.$el.find('.section-list')
 
 				for chat in chatsInSection
 					numberOfChats++
@@ -65,9 +66,9 @@ define [
 						chatMessage.chatDelegate = @chatDelegate
 					chatMessage.render()
 					sectionEl.append( chatMessage.el )
-				@$el.append section.el
 
-		
+				@$el.append section.el
+				console.log "ChatList el",@el
 		customCleanUp: ->
 		cleanUp: ->
 			# A hook for the subviews to do custom clean ups

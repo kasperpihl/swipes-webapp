@@ -13,7 +13,7 @@ define [
 		className: "task-list"
 		initialize: ->
 			# Set HTML tempalte for our list
-			@listenTo( Backbone, "reload/handler", @render )
+			@listenTo( Backbone, "reload/taskhandler", @render )
 			@numberOfSections = 0
 		remove: ->
 			@cleanUp()

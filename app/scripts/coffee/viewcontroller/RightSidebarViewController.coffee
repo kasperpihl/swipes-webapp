@@ -7,15 +7,14 @@ define [
 		initialize: ->
 			@setTemplate()
 			@renderSidebar()
-			_.bindAll( @, "renderSidebar", "clickedRightSideButton")
+			_.bindAll( @, "renderSidebar", "clickedRightSideButton", "clickedClose")
 		events:
 			"click .rightbar-button" : "clickedRightSideButton"
-			"click .right-side-close": "closeWindow"
+			"click .right-side-close": "clickedClose"
 		setButtonIcons: (buttonIcons) ->
 			@buttons = buttonIcons
 			@renderSidebar
 		clickedRightSideButton: (e) ->
-			console.log e
 			target = $(e.currentTarget).attr("data-href")
 			if target is @activeClass
 				@closeWindow()
@@ -28,16 +27,25 @@ define [
 			@buttons = [{ "iconClass": "navbarChat"}, { "iconClass": "navbarFiles" }]
 			@$el.find(".right-sidebar-controls").html( @template({buttons: @buttons }) )
 			@delegateEvents()
+		setNewDelegate: (delegate) ->
+			@sidebarDelegate = delegate
+			@reload()
+		reload: ->
+			if @activeClass
+				@loadSidemenu(@activeClass)
 		loadSidemenu:(target) ->
 			if target is "navbarChat"
 				title = "DISCUSSION"
 				if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarGetChatViewController)
 					chatVC = @sidebarDelegate.sidebarGetChatViewController( @ )
-					el = chatVC.el
+					@loadWindow(chatVC.el, title)
+					chatVC.render()
+
 				else throw new Error("RightSidebarViewController: Couldn't get chat view controller from delegate")
 			else if target is "navbarFiles"
 				el = "Here will be your files"
 				title = "ATTACHMENTS"
+				@loadWindow(el, title)
 			else return
 			@activeClass = target
 			@$el.find('.right-window-container').addClass('shown')
@@ -45,7 +53,7 @@ define [
 			@$el.find('.right-sidebar-controls .active').removeClass("active")
 			@$el.find('.right-sidebar-controls .' + target).addClass("active")
 
-			@loadWindow(el, title)
+			#@loadWindow(el, title)
 		loadWindow:(el, title) ->
 			width = 400
 			@$el.find('.right-side-title').html(title)
@@ -53,7 +61,10 @@ define [
 			
 			@setWindowWidth(width)
 
-			
+		clickedClose: ->
+			if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarSwitchToView)
+				@sidebarDelegate.sidebarSwitchToView(@, @activeClass )
+			else throw new Error("RightSidebarViewController: delegate must implement sidebarSwitchToView")
 		closeWindow: ->
 			@$el.find('.right-window-container').removeClass('shown')
 			@$el.find('.right-sidebar-controls').removeClass("hasActiveEl")

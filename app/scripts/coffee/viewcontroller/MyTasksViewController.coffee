@@ -15,7 +15,7 @@ define [
 		render: ->
 			$("#main").html(@$el)
 			@$el.html @taskListVC.el
-			@taskListVC.render()
+			
 		
 		
 		open: (options) ->
@@ -35,7 +35,7 @@ define [
 					return false
 			})
 			@taskListVC.taskHandler.loadCollection(@collectionSubset.child)
-			@taskListVC.taskList.render()
+			@taskListVC.render()
 		destroy: ->
 
 		###
@@ -45,4 +45,4 @@ define [
 			options = {} if !options
 			options.toUserId = Parse.User.current().id
 			Backbone.trigger("create-task", title, options)
-			@taskListVC.taskList.render()
+			Backbone.trigger("reload/taskhandler")

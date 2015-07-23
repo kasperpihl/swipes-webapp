@@ -482,6 +482,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		updateNotes: ( notes ) ->
 			@save "notes", notes, { sync: true }
 
+
 		# Sent when syncing the model every time an attribute in @attrWhiteList is hit
 		# Modify and return val
 		handleAttributeAndValueFromServer: (attribute, val) ->
@@ -493,6 +494,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				val = @handleDateFromServer val
 			val
 
+		# Translate server json of tags into the collection and models
 		handleTagsFromServer: ( tags ) ->
 			modelTags = []
 			return modelTags if !tags? or !tags or tags.length is 0

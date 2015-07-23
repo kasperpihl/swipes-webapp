@@ -29,3 +29,4 @@ define [
 			@$el.html @template({})
 			@addTaskCard.render()
 			@$el.find('.task-column').prepend( @addTaskCard.el )
+			@taskList.render()

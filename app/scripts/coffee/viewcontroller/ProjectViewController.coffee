@@ -7,55 +7,86 @@ define [
 	Backbone.View.extend
 		className: "project-view-controller"
 		initialize: ->
-			@taskListVC = new TaskListViewController()
-			@taskListVC.addTaskCard.addDelegate = @
-			@taskListVC.taskList.enableDragAndDrop = true
-			@taskListVC.taskHandler.listSortAttribute = "projectOrder"
+			
 
-		render: ->
+		render: (el) ->
+			@$el.html ""
 			$("#main").html(@$el)
-			@$el.html @taskListVC.el
-			@taskListVC.render()
 			
 		open: (options) ->
 			@projectId = options.id
-			swipy.rightSidebarVC.sidebarDelegate = @
-			@render()
+			swipy.rightSidebarVC.setNewDelegate(@)
 			@loadProject(@projectId)
 		loadProject: (projectId) ->
-			
+			@render()
 			@currentProject = swipy.collections.projects.get(projectId)
-			
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),false)
 
+			
+			@loadMainWindow("task")
+			
+			
+		loadMainWindow: (type) ->
+			if type is "task"
+				vc = @getTaskListVC()
+			else if type is "chat"
+				vc = @getChatListVC()
+			else return
+			@$el.html vc.el
+			vc.render()
+
+		### 
+			Get A TaskListViewController that filtered for this project
+		###
+		getTaskListVC: ->
+			taskListVC = new TaskListViewController()
+			taskListVC.addTaskCard.addDelegate = @
+			taskListVC.taskList.enableDragAndDrop = true
+			taskListVC.taskHandler.listSortAttribute = "projectOrder"
+
 			# https://github.com/anthonyshort/backbone.collectionsubset
+			projectId = @projectId
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
 					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
 			})
+			taskListVC.taskHandler.loadCollection(@collectionSubset.child)
 			
-			@taskListVC.taskHandler.loadCollection(@collectionSubset.child)
-			@taskListVC.taskList.render()
+			return taskListVC
 
-			#swipy.rightSidebarVC.loadWindow(@el)
-		sidebarGetChatViewController: (sidebar) ->
+
+		### 
+			Get A ChatListViewController that filtered for this project
+		###
+		getChatListVC: ->
+			projectId = @projectId
 			@collectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.messages,
-				filter: (task) ->
-					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
+				filter: (message) ->
+					return message.get("projectLocalId") is projectId
 			})
 			chatListVC = new ChatListViewController()
-			chatListVC.render()
+			chatListVC.newMessage.addDelegate = @
+			chatListVC.chatHandler.loadCollection(@collectionSubset.child)
+
 			return chatListVC
-		destroy: ->
+
 
 		###
 			RightSidebarDelegate
 		###
-		sidebarClickedMenuButton: (sidebar, e) ->
-
-
+		sidebarGetChatViewController: (sidebar) ->
+			@getChatListVC()
+		###
+			NewMessage Delegate
+		###
+		newMessageSent: ( newMessage, message ) ->
+			options = {}
+			options.projectLocalId = @projectId
+			options.ownerId = @currentProject.get("ownerId")
+			Backbone.trigger("send-message", message, options)
+			Backbone.trigger("reload/chathandler")
 		###
 			AddTaskCard Delegate
 		###
@@ -64,4 +95,6 @@ define [
 			options.projectLocalId = @projectId
 			options.ownerId = @currentProject.get("ownerId")
 			Backbone.trigger("create-task", title, options)
-			@taskListVC.taskList.render()
+			Backbone.trigger("reload/taskhandler")
+
+		destroy: ->

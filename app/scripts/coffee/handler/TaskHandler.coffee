@@ -14,7 +14,7 @@ define ["underscore"], (_) ->
 			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
 		reloadWithEvent: ->
 			console.log "forced reload"
-			Backbone.trigger("reload/handler")
+			Backbone.trigger("reload/taskhandler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
 			return if !taskHtmlId or !_.isString(taskHtmlId)
@@ -67,7 +67,7 @@ define ["underscore"], (_) ->
 					, 400)
 					return true
 					#hitTask.addSubtask draggedTask, true
-					#Backbone.trigger("reload/handler")
+					#@bouncedReloadWithEvent()
 				else if hit.position is "bottom" or hit.position is "top"
 
 					fromOrder = draggedTask.get(@listSortAttribute)
@@ -94,10 +94,11 @@ define ["underscore"], (_) ->
 
 					# and selected tasks with order
 					_.invoke(selectedTasks, "updateOrder", @listSortAttribute, targetOrder)
+					@reloadWithEvent()
 					setTimeout(
 						=> _.invoke(selectedTasks, "set", "selected", false)
 					, 400)
-					@reloadWithEvent()
+					
 			else if hit.type is "project"
 				targetProject = swipy.collections.projects.get( @projectCollectionIdFromHtmlId(hit.target) )
 				return if !targetProject?
@@ -146,7 +147,7 @@ define ["underscore"], (_) ->
 			model = taskCard.model
 			model.completeTask()
 			console.log model.toJSON()
-			Backbone.trigger("reload/handler")
+			Backbone.trigger("reload/taskhandler")
 		taskCardDidClickAction: (taskCard, e) ->
 			
 		taskDidClick: (taskCard) ->

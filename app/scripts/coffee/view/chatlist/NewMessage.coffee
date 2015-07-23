@@ -19,10 +19,14 @@ define ["underscore"
 			if e.keyCode is 13
 				@sendMessage()
 		sendMessage: ->
+			message = @$el.find("input").val()
+			return if message.length is 0
+
 			if @addDelegate? and _.isFunction(@addDelegate.newMessageSent)
-				@addDelegate.newMessageSent( @, @$el.find("input").val() )
+				@addDelegate.newMessageSent( @, message )
 			else
 				throw new Error("NewMessage must have an addDelegate that implements newMessageSent")
+			@$el.find("input").val ""
 		remove: ->
 		destroy: ->
 			@undelegateEvents()

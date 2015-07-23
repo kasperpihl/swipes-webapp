@@ -42,6 +42,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			collection = swipy.collections.todos if className is "ToDo"
 			collection = swipy.collections.members if className is "Member"
 			collection = swipy.collections.projects if className is "Project"
+			collection = swipy.collections.messages if className is "Message"
 			if className is "ToDo"
 				@updatedTodos = []
 			newModels = []
@@ -126,7 +127,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 		combineAttributes: ( newAttributes ) ->
 			return @currentSyncing = newAttributes if !@currentSyncing?
-			for className in ["Tag", "ToDo", "Project", "Member"]
+			for className in ["Tag", "ToDo", "Project", "Member", "Message"]
 				for identifier, newChanges of newAttributes[ className ]
 					existingChanges = @currentSyncing[ className ][ identifier ]
 					newChanges = _.uniq( existingChanges.concat( newChanges ) ) if existingChanges?
@@ -140,23 +141,26 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			newTags = @prepareNewObjectsForCollection swipy.collections.tags
 			newTodos = @prepareNewObjectsForCollection swipy.collections.todos
 			newProjects = @prepareNewObjectsForCollection swipy.collections.projects
+			newMessages = @prepareNewObjectsForCollection swipy.collections.messages
 
 			updateTags = @prepareUpdatesForCollection swipy.collections.tags, "Tag"
 			updateTodos = @prepareUpdatesForCollection swipy.collections.todos, "ToDo"
 			updateProjects = @prepareUpdatesForCollection swipy.collections.projects, "Project"
+			updateMessages = @prepareUpdatesForCollection swipy.collections.messages, "Message"
 
 			serverJSON =
 				Tag : newTags.concat( updateTags )
 				ToDo : newTodos.concat( updateTodos )
 				Project: newProjects.concat( updateProjects )
-				
+				Message: newMessages.concat( updateMessages )
+
 			return serverJSON
 
 		sync: ->
 			return @needSync = true if @isSyncing
 			return if !Parse.User.current()
 			@isSyncing = true
-			url = "http://192.168.0.123:5000/v1/sync" #"https://api.swipesapp.com/v1/sync" #
+			url = "http://" + window.location.hostname + ":5000/v1/sync" #"https://api.swipesapp.com/v1/sync" #
 			user = Parse.User.current()
 			token = user.getSessionToken()
 			data =
@@ -194,8 +198,11 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			@changedAttributes.resetTempChanges()
 			if @needSync
 				@needSync = false
-				@sync( true )
+				@sync()
+			else
+				@bouncedSync()
 			Backbone.trigger( "sync-complete", @updatedTodos )
+
 			@updatedTodos = null
 		errorFromSync: ( data, textStatus, error ) ->
 			@util.sendError( data, "Sync Server Error")
@@ -204,10 +211,11 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			if data and data.serverTime
 				@currentSyncing = null
 				@changedAttributes.resetChanges()
+				@handleObjectsFromSync( data.Member, "Member" ) if data.Member?
 				@handleObjectsFromSync( data.Project, "Project" ) if data.Project?
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
-				@handleObjectsFromSync( data.Member, "Member" ) if data.Member?
+				@handleObjectsFromSync( data.Message, "Message" ) if data.Message?
 
 				if data.updateTime
 					@lastUpdate = data.updateTime 

@@ -4,15 +4,17 @@ define ["underscore"
 	Backbone.View.extend
 		className: "add-task-card-container task-item"
 		initialize: ->
+			@placeHolder = "Add new task to project"
 			@template = _.template Tmpl, { variable: "data" }
 			@render()
 		events:
 			"keyup input": "saveTask"
 		render: ->
-			@$el.html @template({})
+			@$el.html @template({ placeHolder: @placeHolder})
 			@delegateEvents()
 			return @
 		setPlaceHolder: (placeholder) ->
+			@placeHolder = placeholder
 			@$el.find('input').attr('placeholder',placeholder)
 		saveTask: (e) ->
 			if e.keyCode is 13

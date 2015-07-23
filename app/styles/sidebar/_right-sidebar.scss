@@ -63,7 +63,7 @@
 		$button-size: 44px;
 		$button-top: 8px;
 		$icon-size: 18px;
-		.right-side-close{
+		/*.right-side-close{
 			position: absolute;
 			left: 10px;
 			top: $button-top;
@@ -88,7 +88,7 @@
 			font-size: 14px;
 			opacity: 0.5;
 			letter-spacing: 2px;
-		}
+		}*/
 		opacity: 0;
 		height:100%;
 		border-left: 1px solid $small-seperator-color;
@@ -98,7 +98,8 @@
 			height: 100%;
 			top: 0px;
 			left: 0px;
-			padding-top: $button-top + $button-size;
+			padding-top: 16px;
+			//padding-top: $button-top + $button-size;
 
 		}
 	}

@@ -14,7 +14,7 @@ define [
 
 
 			@chatList = new ChatList()
-			@chatList.targetSelector = ".chat-list-view-controller .chat-list-container"
+			@chatList.targetSelector = ".chat-list-view-controller .chat-list-container-scroller"
 
 			@chatHandler = new ChatHandler()
 			# Settings the Task Handler to receive actions from the task list
@@ -29,3 +29,5 @@ define [
 			@$el.html @template({})
 			@newMessage.render()
 			@$el.prepend( @newMessage.el )
+			console.log @$el
+			@chatList.render()

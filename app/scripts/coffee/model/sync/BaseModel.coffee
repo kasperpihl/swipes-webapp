@@ -23,6 +23,7 @@ define ["js/utility/Utility"], ( Utility ) ->
 		constructor: ( attributes ) ->
 			if attributes && !attributes.objectId
 				util = new Utility()
+				attributes.userId = Parse.User.current().id
 				attributes.tempId = util.generateId 12
 				attributes.objectId = attributes.tempId
 				attributes.needSaveToServer = true
@@ -74,6 +75,8 @@ define ["js/utility/Utility"], ( Utility ) ->
 					json[ key ] = { "__type": "Date", "iso": value }
 			json
 
+
+		# Update object from server
 		updateFromServerObj: ( obj, recentChanges ) ->
 			if @get("needSaveToServer")
 				@set("needSaveToServer", false, {localSync: true})
