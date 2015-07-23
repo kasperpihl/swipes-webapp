@@ -28,4 +28,4 @@ define [
 		render: ->
 			@$el.html @template({})
 			@newMessage.render()
-			@$el.find('.chat-column').prepend( @newMessage.el )
+			@$el.prepend( @newMessage.el )

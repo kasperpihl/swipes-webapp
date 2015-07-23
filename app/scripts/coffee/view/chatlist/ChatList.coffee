@@ -5,9 +5,9 @@
 ###
 define [
 	"underscore"
-	"js/view/chatlist/ChatSection"
+	"js/view/modules/Section"
 	"js/view/chatlist/ChatMessage"
-	], (_, ChatSection, ChatMessage) ->
+	], (_, Section, ChatMessage) ->
 	Backbone.View.extend
 		className: "chat-list"
 		initialize: ->
@@ -53,9 +53,9 @@ define [
 				
 
 				# Instantiate 
-				chatSection = new ChatSection()
-				chatSection.setTitles(leftTitle, rightTitle)
-				chatSectionEl = chatSection.$el.find('.chat-section-list')
+				section = new Section()
+				section.setTitles(leftTitle, rightTitle)
+				sectionEl = section.$el.find('.chat-section-list')
 
 				for chat in chatsInSection
 					numberOfChats++
@@ -63,8 +63,8 @@ define [
 					if @chatDelegate?
 						chatMessage.chatDelegate = @chatDelegate
 					chatMessage.render()
-					chatSectionEl.append( chatMessage.el )
-				@$el.append chatSection.el
+					sectionEl.append( chatMessage.el )
+				@$el.append section.el
 
 		
 		customCleanUp: ->

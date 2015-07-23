@@ -65,18 +65,13 @@ $meta-margin: 10px;
 		input {
 			$height: 32px;
 			$font-size: 14px;
-			border:0;
+			
 			font-family: $font-normal;
 			font-size: $font-size;
 			width: 100%;
 			height:$height;
 			padding-top: ($height - $font-size)/2;
 			padding-bottom: ($height - $font-size)/2;
-		}
-		input:focus{
-			border:0;
-			outline: 0;
-			outline-offset: 0;
 		}
 	}
 }

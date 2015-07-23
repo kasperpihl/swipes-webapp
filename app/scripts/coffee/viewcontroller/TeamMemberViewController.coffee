@@ -42,7 +42,6 @@ define [
 			self = @
 			groups = collection.groupBy((model, i) ->
 				# TODO: Seperate tasks between who it's from
-				console.log model.get("toUserId"), self.currentMember.id
 				if model.get("toUserId") is self.currentMember.id
 					return "His Tasks"
 				else 

@@ -104,7 +104,6 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					targetIdentifier = "#"+id
 					if Draggable.hitTest(e, targetIdentifier, 0)
 						return hit if targetIdentifier is @draggingId
-						console.log e
 						
 						$hit = $(targetIdentifier)
 						sensitivityThreshold = 15 #$("#task-" + id).height()/2

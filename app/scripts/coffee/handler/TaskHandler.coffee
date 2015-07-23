@@ -10,9 +10,10 @@ define ["underscore"], (_) ->
 		loadCollection: (collection) ->
 			@collection = collection
 			@reloadWithEvent = _.debounce( @reloadWithEvent, 5 )
-			@collection.on("add remove reset", @reloadWithEvent )
+			@collection.on("add remove reset change:order change:projectOrder", @reloadWithEvent )
 			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
 		reloadWithEvent: ->
+			console.log "forced reload"
 			Backbone.trigger("reload/handler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
@@ -115,12 +116,17 @@ define ["underscore"], (_) ->
 				name = member.get "username"
 				actions = []
 				if draggedTask.get("projectLocalId")
-					actions.push({name: "Assign " + name, action: "assign"})
+					if draggedTask.userIsAssigned(memberId)
+						actions.push({name: "Unassign " + name, action: "unassign"})
+					else
+						actions.push({name: "Assign " + name, action: "assign"})
 				actions.push({name: "Copy to " + name, action: "copy"})
 				actions.push({name: "Move to " + name , action: "move"})
 				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
 					if result is "assign"
-						_.invoke(selectedTasks, "assign", [ member.id ], true )
+						_.invoke(selectedTasks, "assign", member.id, false )
+					if result is "unassign"
+						_.invoke(selectedTasks, "unassign", member.id, false )
 				)
 			false
 

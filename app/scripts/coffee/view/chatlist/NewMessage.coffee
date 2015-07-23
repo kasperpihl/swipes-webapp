@@ -6,17 +6,23 @@ define ["underscore"
 		initialize: ->
 			@template = _.template Tmpl, { variable: "data" }
 			@render()
+			_.bindAll(@, "pressedKey")
 		events:
-			"keyup input": "sendMessage"
+			"keyup input": "pressedKey"
 		render: ->
 			@$el.html @template({})
 			@delegateEvents()
 			return @
 		setPlaceHolder: (placeholder) ->
 			@$el.find('input').attr('placeholder',placeholder)
-		sendMessage: (e) ->
+		pressedKey: (e) ->
 			if e.keyCode is 13
-				@triggerAddTask(e)
+				@sendMessage()
+		sendMessage: ->
+			if @addDelegate? and _.isFunction(@addDelegate.taskCardDidCreateTask)
+				@addDelegate.taskCardDidCreateTask( @, @$el.find("input").val(), options)
+			else
+				throw new Error("AddTaskCard must have an addDelegate that implements taskCardDidCreateTask")
 		remove: ->
 		destroy: ->
 			@undelegateEvents()

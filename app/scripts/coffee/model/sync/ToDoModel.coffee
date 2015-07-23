@@ -113,28 +113,50 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			if save
 				@save {}, {sync:true}
 			return @model
-		assign: ( userId, save ) ->
+		assign: ( userIds, save ) ->
+			if _.isString(userIds)
+				userIds = [userIds]
+			
+			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
+			
 			currentAssignees = @get "assignees"
 			if !currentAssignees
 				currentAssignees = []
-			currentAssignees.push( userId ) if _.indexOf( currentAssignees, userId) is -1
-			@set "assignees", currentAssignees, {localSync: true}
-			if save
-				@save {}, {sync:true}
+
+			for userId in userIds
+				if _.indexOf( currentAssignees, userId) is -1
+					inserted = true
+					currentAssignees.push( userId )
+			if inserted?
+				@set("assignees": null)
+				if save
+					@save {"assignees": currentAssignees}, {sync:true}
+				else
+					@set "assignees", currentAssignees, {localSync: true}
 		userIsAssigned:(userId) ->
 			currentAssignees = @get "assignees"
 			return false if !currentAssignees
 			return _.indexOf(currentAssignees, userId) isnt -1
-		unassign: ( userId, save ) ->
+		unassign: ( userIds, save ) ->
+			if _.isString(userIds)
+				userIds = [userIds]
+			
+			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
+
 			currentAssignees = @get "assignees"
 			return false if !currentAssignees
 			for assignee, index in currentAssignees
-				if assignee is userId
+				if _.indexOf(userIds, assignee) isnt -1
+					removed = true
 					currentAssignees.splice(index, 1)
+
+			if removed?
+				@set("assignees": null)
+				if save
+					@save {"assignees": currentAssignees}, {sync:true}
+				else
 					@set "assignees", currentAssignees, {localSync: true}
-					break
-			if save
-				@save {}, {sync:true}
+
 		addNewSubtask: ( title, from ) ->
 			currentSubtasks = @getOrderedSubtasks()
 			parentLocalId = @id

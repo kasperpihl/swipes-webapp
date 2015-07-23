@@ -5,7 +5,7 @@
 		numberOfMetaInfos++;
 
 	var numberOfAssignees = 0;
-	if (data.task.get("assignees")){
+	if (data.task.get("assignees") && data.task.get("assignees").length ){
 		numberOfAssignees = data.task.get("assignees").length
 		numberOfMetaInfos++;
 	}
