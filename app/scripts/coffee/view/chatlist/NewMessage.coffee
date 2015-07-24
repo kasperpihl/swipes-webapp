@@ -28,5 +28,7 @@ define ["underscore"
 				throw new Error("NewMessage must have an addDelegate that implements newMessageSent")
 			@$el.find("input").val ""
 		remove: ->
+			@destroy()
+			@$el.empty()
 		destroy: ->
 			@undelegateEvents()

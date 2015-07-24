@@ -7,13 +7,12 @@
 define ["underscore"], (_) ->
 	class TaskHandler
 		constructor: ->
+			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
 		loadCollection: (collection) ->
 			@collection = collection
-			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
-			@collection.on("add remove reset change:order change:projectOrder", @bouncedReloadWithEvent )
-			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
+			@collection.on("add remove reset change:order change:projectOrder", @bouncedReloadWithEvent, @ )
 		reloadWithEvent: ->
-			console.log "forced reload"
+			console.trace "forced reload"
 			Backbone.trigger("reload/taskhandler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
@@ -211,3 +210,10 @@ define ["underscore"], (_) ->
 				orderNumber++
 
 			return sortedTodoArray
+			
+		destroy: ->
+			console.log("stopping to listen");
+			@delegate = null
+			@collection.off(null, null, @)
+			@collection.reset(null)
+			@collection = null

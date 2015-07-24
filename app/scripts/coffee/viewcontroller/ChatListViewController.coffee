@@ -22,12 +22,18 @@ define [
 			@chatList.dragDelegate = @chatHandler
 			@chatList.dataSource = @chatHandler
 
-
+		
 		setTemplate: ->
 			@template = _.template Template
 		render: ->
 			@$el.html @template({})
 			@newMessage.render()
 			@$el.prepend( @newMessage.el )
-			console.log @$el
 			@chatList.render()
+
+		destroy: ->
+			console.log "destroying chat"
+			@chatList?.remove?()
+			@newMessage?.remove?()
+			@chatHandler?.destroy?()
+			@remove()

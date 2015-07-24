@@ -30,7 +30,7 @@ define ["underscore"
 				throw new Error("AddTaskCard must have an addDelegate that implements taskCardDidCreateTask")
 			@$el.find("input").val ""
 		remove: ->
-			console.log "remove"
+			@destroy()
+			@$el.empty()
 		destroy: ->
-			console.log "destroyed"
 			@undelegateEvents()

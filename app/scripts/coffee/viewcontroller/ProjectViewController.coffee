@@ -7,33 +7,36 @@ define [
 	Backbone.View.extend
 		className: "project-view-controller"
 		initialize: ->
-			
+			console.log "init project"
 
 		render: (el) ->
 			@$el.html ""
 			$("#main").html(@$el)
 			
+			swipy.rightSidebarVC.reload()
+			@loadMainWindow(@mainView)
+
 		open: (options) ->
 			@projectId = options.id
-			swipy.rightSidebarVC.setNewDelegate(@)
-			@loadProject(@projectId)
-		loadProject: (projectId) ->
-			@render()
-			@currentProject = swipy.collections.projects.get(projectId)
+			@mainView = "task"
+
+			swipy.rightSidebarVC.sidebarDelegate = @
+
+			@currentProject = swipy.collections.projects.get(@projectId)
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),false)
 
-			
-			@loadMainWindow("task")
-			
+			@render()
+
 			
 		loadMainWindow: (type) ->
+			@vc?.destroy()
 			if type is "task"
-				vc = @getTaskListVC()
+				@vc = @getTaskListVC()
 			else if type is "chat"
-				vc = @getChatListVC()
+				@vc = @getChatListVC()
 			else return
-			@$el.html vc.el
-			vc.render()
+			@$el.html @vc.el
+			@vc.render()
 
 		### 
 			Get A TaskListViewController that filtered for this project
@@ -76,8 +79,18 @@ define [
 		###
 			RightSidebarDelegate
 		###
-		sidebarGetChatViewController: (sidebar) ->
-			@getChatListVC()
+		sidebarSwitchToView: (sidebar, view) ->
+			if @mainView is "task"
+				@mainView = "chat" 
+			else @mainView = "task"
+			@render()
+		sidebarGetViewController: (sidebar) ->
+			if @mainView is "task"
+				return @getChatListVC()
+			else
+				return @getTaskListVC()
+
+
 		###
 			NewMessage Delegate
 		###
@@ -98,3 +111,4 @@ define [
 			Backbone.trigger("reload/taskhandler")
 
 		destroy: ->
+			@vc?.destroy()

@@ -34,19 +34,12 @@ define [
 			if @activeClass
 				@loadSidemenu(@activeClass)
 		loadSidemenu:(target) ->
-			if target is "navbarChat"
-				title = "DISCUSSION"
-				if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarGetChatViewController)
-					chatVC = @sidebarDelegate.sidebarGetChatViewController( @ )
-					@loadWindow(chatVC.el, title)
-					chatVC.render()
-
-				else throw new Error("RightSidebarViewController: Couldn't get chat view controller from delegate")
-			else if target is "navbarFiles"
-				el = "Here will be your files"
-				title = "ATTACHMENTS"
-				@loadWindow(el, title)
-			else return
+			@vc?.destroy()
+			if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarGetViewController)
+				@vc = @sidebarDelegate.sidebarGetViewController( @, target )
+				@loadWindow(@vc.el)
+				@vc.render()
+			else throw new Error("RightSidebarViewController: sidebarDelegate must implement sidebarGetViewController")
 			@activeClass = target
 			@$el.find('.right-window-container').addClass('shown')
 			@$el.find('.right-sidebar-controls').addClass("hasActiveEl")
@@ -54,9 +47,8 @@ define [
 			@$el.find('.right-sidebar-controls .' + target).addClass("active")
 
 			#@loadWindow(el, title)
-		loadWindow:(el, title) ->
+		loadWindow:(el) ->
 			width = 400
-			@$el.find('.right-side-title').html(title)
 			@$el.find('.right-window-content').html(el)	
 			
 			@setWindowWidth(width)
@@ -64,8 +56,9 @@ define [
 		clickedClose: ->
 			if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarSwitchToView)
 				@sidebarDelegate.sidebarSwitchToView(@, @activeClass )
-			else throw new Error("RightSidebarViewController: delegate must implement sidebarSwitchToView")
+			else throw new Error("RightSidebarViewController: sidebarDelegate must implement sidebarSwitchToView")
 		closeWindow: ->
+			@vc?.destroy()
 			@$el.find('.right-window-container').removeClass('shown')
 			@$el.find('.right-sidebar-controls').removeClass("hasActiveEl")
 			@$el.find('.right-sidebar-controls .active').removeClass("active")

@@ -178,7 +178,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				data.objects = objects
 
 			serData = JSON.stringify data
-			@syncIndicator.show()
+			#@syncIndicator.show()
 			settings = 
 				url : url
 				type : 'POST'
@@ -193,7 +193,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			#console.log serData
 			$.ajax( settings )
 		finalizeSync: ( error ) ->
-			@syncIndicator.hide()
+			#@syncIndicator.hide()
 			@isSyncing = false
 			@changedAttributes.resetTempChanges()
 			if @needSync

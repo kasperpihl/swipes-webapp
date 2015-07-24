@@ -19,9 +19,12 @@ define [
 		open: (options) ->
 			@memberId = options.id
 			@mainView = "task"
+			
 			swipy.rightSidebarVC.sidebarDelegate = @
+
 			@currentMember = swipy.collections.members.get(@memberId)
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentMember.get("username"), false)
+
 			@render()	
 
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
@@ -42,13 +45,14 @@ define [
 
 
 		loadMainWindow: (type) ->
+			@vc?.destroy()
 			if type is "task"
-				vc = @getTaskListVC()
+				@vc = @getTaskListVC()
 			else if type is "chat"
-				vc = @getChatListVC()
+				@vc = @getChatListVC()
 			else return
-			@$el.html vc.el
-			vc.render()
+			@$el.html @vc.el
+			@vc.render()
 
 		### 
 			Get A TaskListViewController that filtered for this project
@@ -103,14 +107,14 @@ define [
 				@mainView = "chat" 
 			else @mainView = "task"
 			@render()
-		sidebarGetChatViewController: (sidebar) ->
+		sidebarGetViewController: (sidebar) ->
 			if @mainView is "task"
 				return @getChatListVC()
 			else
 				return @getTaskListVC()
 
 
-		destroy: ->
+		
 		###
 			NewMessage Delegate
 		###
@@ -129,3 +133,6 @@ define [
 			options.ownerId = @currentMember.get("organisationId")
 			Backbone.trigger("create-task", title, options)
 			Backbone.trigger("reload/taskhandler")
+
+		destroy: ->
+			@vc?.destroy()

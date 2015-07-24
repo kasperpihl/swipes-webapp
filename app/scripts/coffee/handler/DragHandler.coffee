@@ -155,6 +155,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					else @cleanDragAndDropElements()
 			@lastHit = hit
 		handleHitFinish: (hit) ->
+			console.log "hit finish"
 			# Notify delegate about final hit
 			callback = () ->
 				$(".drag-hover-moving-item").removeClass("drag-hover-moving-item")

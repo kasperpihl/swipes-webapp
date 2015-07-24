@@ -78,6 +78,11 @@ define [
 		
 		customCleanUp: ->
 		cleanUp: ->
+			@dragDelegate = null
+			@dataSource = null
+			@delegate = null
+			@taskDelegate = null
+
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
 			@stopListening()

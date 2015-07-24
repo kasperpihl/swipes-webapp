@@ -71,6 +71,9 @@ define [
 				console.log "ChatList el",@el
 		customCleanUp: ->
 		cleanUp: ->
+			@dataSource = null
+			@delegate = null
+			@chatDelegate = null
 			# A hook for the subviews to do custom clean ups
 			@customCleanUp()
 			@stopListening()

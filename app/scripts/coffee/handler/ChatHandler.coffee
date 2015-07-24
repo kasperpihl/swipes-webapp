@@ -7,10 +7,11 @@
 define ["underscore"], (_) ->
 	class TaskHandler
 		constructor: ->
+			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
 		loadCollection: (collection) ->
 			@collection = collection
-			@reloadWithEvent = _.debounce( @reloadWithEvent, 5 )
-			@collection.on("add remove reset", @reloadWithEvent )
+			@collection.on("add remove reset", @bouncedReloadWithEvent , @ )
+
 			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
 		reloadWithEvent: ->
 			Backbone.trigger("reload/chathandler")
@@ -42,3 +43,9 @@ define ["underscore"], (_) ->
 			models = @groupedMessages[ (section-1) ].messages
 
 			return models
+
+		destroy: ->
+			@groupedMessages = null
+			@collection.off( null, null, @ )
+			@collection.reset(null)
+			@collection = null

@@ -30,3 +30,10 @@ define [
 			@addTaskCard.render()
 			@$el.find('.task-column').prepend( @addTaskCard.el )
 			@taskList.render()
+
+		destroy: ->
+			console.log "destroying tasks"
+			@addTaskCard?.destroy?()
+			@taskHandler?.destroy?()
+			@taskList?.remove?()
+			@remove()
