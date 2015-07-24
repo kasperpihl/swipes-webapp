@@ -1,6 +1,10 @@
-<h1 class="title">Assign People</h1>
-<ul class="people-list">
-<% _.each( data.people, function(member){ %>
-	<li class="member" data-href="<%= member.objectId %>"><%= member.username %></li>
-<% }); %>
-</ul>
+<h2 class="title">Assign People</h2>
+<% if(data.people && data.people.length) { %>
+	<ul class="people-list">
+	<% _.each( data.people, function(member){ %>
+		<li class="member" data-href="<%= member.objectId %>"><%= member.username %></li>
+	<% }); %>
+	</ul>
+<% } else { %>
+	<div class="message">All members have been assigned</div>
+<% } %>

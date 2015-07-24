@@ -1,0 +1,33 @@
+$padding: 20px;
+.list-action{
+	
+	$icon-size: 20px;
+	$leftWidth: $icon-size + $padding * 2;
+	position:relative;
+	color: white;
+	padding:($padding/2) $padding;
+	font: 16px/1 $font-normal;
+	&:hover{
+		background: #595959;
+	}
+	&.hasIcon{
+		padding-left:$leftWidth;
+	}
+	svg{
+		position:absolute;
+		left:$leftWidth/2;
+		margin-left: -$icon-size/2;
+		top:50%;
+		margin-top: -$icon-size/2;
+		width:$icon-size;
+		height:$icon-size;
+		fill: $unselected-color;
+	}
+	min-width:180px;
+}
+.list-action-modal{
+	background: $sidebar-button-active-background-gray;
+	padding-top:10px;
+	padding-bottom: 10px;
+	@include border-radius(10px);
+}

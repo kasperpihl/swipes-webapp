@@ -19,7 +19,6 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 // Modules
 @import "module/forms";
-@import "module/todo-list";
 @import "module/list/task";
 @import "module/task-editor";
 @import "module/action-steps";
@@ -49,6 +48,10 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "module/calendar";
 @import "module/pickers";
 @import "module/section";
+
+// Modals
+@import "modal/list-action";
+@import "modal/assign";
 
 // Task List
 @import "tasklist/task-list";

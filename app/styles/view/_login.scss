@@ -154,7 +154,7 @@ html.login {
 	display: none;
 
 	.wrap {
-		background: $lobster;
+		background: $red;
 		padding: 0.2em 3em 1.5em;
 		border-radius: 0.5em;
 		margin-bottom: 2.5em;
@@ -164,7 +164,7 @@ html.login {
 			text-decoration: underline;
 
 			&:hover {
-				color: lighten($lobster, 30%);
+				color: lighten($red, 30%);
 			}
 		}
 	}

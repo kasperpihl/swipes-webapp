@@ -392,8 +392,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				schedule: date
 				completionDate: null
 			}
-			if !@isSubtask()
-				updateObj.order = -1
 			
 			@unset "schedule"
 			@save(updateObj,

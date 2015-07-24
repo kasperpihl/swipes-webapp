@@ -142,7 +142,7 @@
 			background: $brand-dakrcolor;
 			color: white;
 
-			.scheduled & { background: $lobster; }
+			.scheduled & { background: $red; }
 			.completed & { background: $green; }
 		}
 

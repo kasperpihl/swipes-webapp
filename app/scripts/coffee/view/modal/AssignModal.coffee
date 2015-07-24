@@ -1,6 +1,7 @@
-define ["underscore", 
-		"text!templates/modal/assign-modal.html"], (_, Tmpl) ->
-	Backbone.View.extend
+define ["underscore",
+		"js/view/modal/ModalView"
+		"text!templates/modal/assign-modal.html"], (_, ModalView, Tmpl) ->
+	ModalView.extend
 		className: 'assign-modal'
 		initialize: ->
 			@setTemplate()

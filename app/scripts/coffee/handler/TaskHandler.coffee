@@ -4,15 +4,14 @@
 		Find out who's the sender, where does it want to go, and what actions would be available
 	Receive select/unselect from TaskList
 ###
-define ["underscore"], (_) ->
+define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 	class TaskHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
 		loadCollection: (collection) ->
 			@collection = collection
 			@collection.on("add remove reset change:order change:projectOrder", @bouncedReloadWithEvent, @ )
-			Backbone.on("show-assign", @showAssignView, @)
-
+			Backbone.on("show-assign", @didPressAssign, @)
 		reloadWithEvent: ->
 			console.trace "forced reload"
 			Backbone.trigger("reload/taskhandler")
@@ -106,7 +105,7 @@ define ["underscore"], (_) ->
 				actions = []
 				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
 				actions.push({name: "Move", icon: "dragMenuMove", action: "move"})
-				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
+				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY}, (result) ->
 					if result is "move"
 						# and update selected tasks as well
 						_.invoke(selectedTasks, "save", {"toUserId": null, "projectLocalId": targetProject.id}, {sync: true} )
@@ -125,7 +124,7 @@ define ["underscore"], (_) ->
 						
 				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
 				actions.push({name: "Move", icon: "dragMenuMove", action: "move"})
-				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
+				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY}, (result) ->
 					if result is "assign"
 						_.invoke(selectedTasks, "assign", member.id, false )
 					if result is "unassign"
@@ -176,6 +175,28 @@ define ["underscore"], (_) ->
 			# Check filter for limitations
 			return models
 
+		didPressAssign: (model, e) ->
+			assignModal = new AssignModal({model: model})
+			assignModal.dataSource = @
+			assignModal.render()
+			assignModal.presentModal({ left: e.clientX, top:e.clientY+10, centerY: false })
+			
+		assignModalPeopleToAssign: (assignModal) ->
+			peopleToAssign = []
+			model = assignModal.model
+			me = swipy.collections.members.getMe()
+			if me? and !model.userIsAssigned(me.id)
+				peopleToAssign.push(me.toJSON())
+				
+			swipy.collections.members.each( (member) =>
+				return if member.get("me")
+				if !model.userIsAssigned(member.id)
+					peopleToAssign.push(member.toJSON())
+			)
+
+			return peopleToAssign
+
+
 		# Sort task and fix order of tasks based on the listSortAttribute provided
 		sortTasksAndSetOrder: (todos, newOnTop) ->
 			defaultOrderVal = -1
@@ -192,7 +213,6 @@ define ["underscore"], (_) ->
 					schedule = m.get("schedule")
 					if !schedule
 						if m.get("createdAt")
-							console.log m.get("createdAt")
 							return -m.get("createdAt").getTime()
 					else 
 						-schedule.getTime()

@@ -1,6 +1,11 @@
 <% if(data.actions){
 	_.each(data.actions, function(action){ %>
-	<li class="list-action" data-href="<%= action.action %>">
+	<li class="list-action <% if(action.icon) print('hasIcon') %>" data-href="<%= action.action %>">
+		<% if(action.icon){ %>
+			<svg class="icon">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-<%= action.icon %>"></use>
+			</svg>
+		<% } %>
 		<%= action.name %>
 	</li>
 	<% })

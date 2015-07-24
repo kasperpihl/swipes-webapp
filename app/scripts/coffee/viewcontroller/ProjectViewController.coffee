@@ -3,13 +3,13 @@ define [
 	"gsap"
 	"js/viewcontroller/TaskListViewController"
 	"js/viewcontroller/ChatListViewController"
-	"js/view/modal/AssignModal"
-	], (_, TweenLite, TaskListViewController, ChatListViewController, AssignModal) ->
+	
+	], (_, TweenLite, TaskListViewController, ChatListViewController) ->
 	Backbone.View.extend
 		className: "project-view-controller"
 		initialize: ->
 			console.log "init project"
-			Backbone.on("show-assign", @didPressAssign, @)
+
 		render: (el) ->
 			@$el.html ""
 			$("#main").html(@$el)
@@ -75,27 +75,7 @@ define [
 			chatListVC.chatHandler.loadCollection(@collectionSubset.child)
 			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentProject.get("name"))
 			return chatListVC
-		didPressAssign: (model, e) ->
-			assignModal = new AssignModal({model: model})
-			assignModal.dataSource = @
-			console.log "modal"
-			assignModal.render()
-			swipy.modalVC.presentView(assignModal.el, {frame:true, left: e.clientX, top:e.clientY+10, centerY: false })
-			
-		assignModalPeopleToAssign: (assignModal) ->
-			peopleToAssign = []
-			model = assignModal.model
-			me = swipy.collections.members.getMe()
-			if me? and !model.userIsAssigned(me.id)
-				peopleToAssign.push(me.toJSON())
-				
-			swipy.collections.members.each( (member) =>
-				return if member.get("me")
-				if !model.userIsAssigned(member.id)
-					peopleToAssign.push(member.toJSON())
-			)
-
-			return peopleToAssign
+		
 		###
 			RightSidebarDelegate
 		###
