@@ -25,6 +25,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			"origin"
 			"originIdentifier"
 			"toUserId"
+			"assignees"
 		]
 		defaults:
 			title: ""
@@ -46,6 +47,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			origin: null
 			originIdentifier: null
 			toUserId: null
+			assignees: null
 		constructor: ( attributes ) ->
 			if attributes.tags and attributes.tags.length > 0
 				attributes.tags = @handleTagsFromServer attributes.tags
