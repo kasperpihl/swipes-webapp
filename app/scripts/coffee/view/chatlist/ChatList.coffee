@@ -18,8 +18,7 @@ define [
 		remove: ->
 			@cleanUp()
 			@$el.empty()
-
-		
+			
 		# Reload datasource for 
 
 		render: ->
@@ -68,7 +67,7 @@ define [
 					sectionEl.append( chatMessage.el )
 
 				@$el.append section.el
-				console.log "ChatList el",@el
+
 		customCleanUp: ->
 		cleanUp: ->
 			@dataSource = null

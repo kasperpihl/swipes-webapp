@@ -4,16 +4,18 @@ define ["underscore"
 	Backbone.View.extend
 		className: "chat-new-message"
 		initialize: ->
+			@placeholder = "Write new message"
 			@template = _.template Tmpl, { variable: "data" }
 			@render()
 			_.bindAll(@, "pressedKey")
 		events:
 			"keyup input": "pressedKey"
 		render: ->
-			@$el.html @template({})
+			@$el.html @template({placeholder: @placeholder})
 			@delegateEvents()
 			return @
 		setPlaceHolder: (placeholder) ->
+			@placeholder = placeholder
 			@$el.find('input').attr('placeholder',placeholder)
 		pressedKey: (e) ->
 			if e.keyCode is 13

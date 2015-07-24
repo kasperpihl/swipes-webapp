@@ -29,7 +29,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		defaults:
 			title: ""
 			order: -1
-			schedule: "default"
+			schedule: null
 			completionDate: null
 			repeatOption: "never"
 			repeatDate: null
@@ -161,10 +161,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					parent.deleteSubtask( @ )
 			BaseModel.prototype.deleteObj.apply @ , arguments
 		initialize: ->
-			# We use 'default' as the default value that triggers a new schedule 1 second in the past,
-			# because null should be an allowed without triggering any logic, as null is used for
-			# tasks scheduled as 'unspecified'
-			if @get( "schedule" ) is "default" then @scheduleTask @getDefaultSchedule()
 
 			# Convert schedule dates to actual date obj if for some reason it's a string (Like if it was saved to LocalStorage)
 			@reviveDate "schedule"
@@ -206,8 +202,8 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				@setCompletionTimeStr()
 			
 		checkAssigned: ->
-			if @get("toUserId") is Parse.User.current().id
-				@set("isMyTask", true) 
+			if @get("toUserId") is Parse.User.current().id or @get("assignees") and _.indexOf(@get("assignees"), Parse.User.current().id) isnt -1
+				@set("isMyTask", true)
 			else @set("isMyTask", false)
 
 			if @get("toUserId") or @get("assignees") and @get("assignees").length > 0
@@ -230,11 +226,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 
 				# Check if scheduled
 				else return "scheduled"
-
-		getDefaultSchedule: ->
-			now = new Date()
-			now.setSeconds now.getSeconds() - 1
-			return now
 
 		getValidatedSchedule: ->
 			schedule = @get "schedule"

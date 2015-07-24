@@ -1,6 +1,27 @@
 <% 
+
 	var hasMetaClass = "";
+	var sourceOfTask;
+	if(data.showSource){
+		var currentUserId = Parse.User.current().id
+		if(data.task.get("projectLocalId")){
+			var srcProj = swipy.collections.projects.get(data.task.get("projectLocalId"));
+			if(srcProj)
+				sourceOfTask = srcProj.get("name");
+		}
+		else if(data.task.get("toUserId") === currentUserId && data.task.get("userId") !== currentUserId){
+			var srcMember = swipy.collections.members.get(data.task.get("userId"));
+			if(srcMember)
+				sourceOfTask = srcMember.get("username");
+		}
+		else{
+			sourceOfTask = "Personal";
+		}
+	}
 	var numberOfMetaInfos = 0;
+	if (sourceOfTask)
+		numberOfMetaInfos++;
+
 	if (data.task.get('tags') && data.task.get('tags').length)
 		numberOfMetaInfos++;
 
@@ -11,6 +32,7 @@
 	}
 	if (numberOfMetaInfos > 0)
 		hasMetaClass = "has-meta";
+	
 
 	var assignedClass = "";
 	if(data.task.get("isAssigned"))
@@ -27,9 +49,13 @@
 	
 	<% if (numberOfMetaInfos > 0) 
 		print('<div class="meta">') %>
-	<% if(numberOfAssignees) { %>
+
+	<% if (sourceOfTask) { %>
+		<div class="meta-text"><%= sourceOfTask %></div>
+
+	<% } if(numberOfAssignees) { %>
 		<div class="meta-text with-icon" title="This task has been assigned to 3 people">
-			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialSearch"></use></svg><%= numberOfAssignees %>
+			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-taskIconAssigned"></use></svg><%= numberOfAssignees %>
 		</div>
 	<% } if (data.task.get('tags') && data.task.get('tags').length) { %>
 			
@@ -58,31 +84,36 @@
 	<% } %>
 	
 </div><!-- .card-container -->
-<% numberOfButtons = 4 %>
+<% numberOfButtons = 2 
+	if(data.task.get("projectLocalId"))
+		numberOfButtons++;
+%>
 <div class="hover-container buttons-<%= numberOfButtons %>">
 	<div class="hover-inner-container">
 		<div class="actions">
 			<div>
-
+			<% if(data.task.get("projectLocalId")) { %>
+				<a href="#" class="assign-button" title="Assign people to this task">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarAssign"></use></svg>
+				</a>
+			<% } %>
 			<% state = data.task.get("state") %>
-				<a href="JavaScript:void(0);" class="schedule-button" title="Schedule todo">
+				<a href="#" class="schedule-button" title="Schedule todo">
 					<svg class="icon">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
 					</svg>
 				</a>
 			<% if (state !== "completed"){ %>
-				<a href="JavaScript:void(0);" class="complete-button" title="Mark task as completed">
+				<a href="#" class="complete-button" title="Mark task as completed">
 					<svg class="icon">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
 					</svg>
 				</a>
 			<% } %>
-				<a href="JavaScript:void(0);" class="work-button" title="Start workmode with this task">
-					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarOrganise"></use></svg>
-				</a>
-				<a href="JavaScript:void(0);" class="more-button" title="Start workmode with this task">
-					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarWorkspace"></use></svg>
-				</a>
+
+			<!--<a href="JavaScript:void(0);" class="more-button" title="Start workmode with this task">
+				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarWorkspace"></use></svg>
+			</a>-->
 			</div>
 		</div>
 	</div>

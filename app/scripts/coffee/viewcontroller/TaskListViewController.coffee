@@ -32,7 +32,6 @@ define [
 			@taskList.render()
 
 		destroy: ->
-			console.log "destroying tasks"
 			@addTaskCard?.destroy?()
 			@taskHandler?.destroy?()
 			@taskList?.remove?()

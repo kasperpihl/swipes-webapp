@@ -1,4 +1,4 @@
-define ["underscore", "js/model/extra/ScheduleModel", "momentjs"], (_, ScheduleModel) ->
+define ["underscore", "js/model/extra/ScheduleModel", "js/view/modal/ScheduleModal", "momentjs"], (_, ScheduleModel, ScheduleModal) ->
 	class ScheduleController
 		constructor: (opts) ->
 			@init()
@@ -6,31 +6,19 @@ define ["underscore", "js/model/extra/ScheduleModel", "momentjs"], (_, ScheduleM
 			@model = new ScheduleModel()
 
 			Backbone.on( "show-scheduler", @showScheduleView, @ )
-			Backbone.on( "pick-schedule-option", @pickOption, @ )
-			Backbone.on( "select-date", @selectDate, @ )
-		showScheduleView: (tasks) ->
-			loadViewDfd = new $.Deferred()
+			_.bindAll( @ , "scheduleModalCallback" )
+		showScheduleView: (tasks, e) ->
+			@view?.remove()
+			@model.updateData()
+			@view = new ScheduleModal( model: @model )
+			@view.render()
+			@view.presentModal({left: e.clientX, top:e.clientY-25, centerY: false, centerX: false}, @scheduleModalCallback)
 
-			if not @scheduleTemplate? then require ["js/view/overlay/ScheduleOverlay"], (ScheduleOverlayView) =>
-				@scheduleTemplate = ScheduleOverlayView
-				loadViewDfd.resolve()
-			else
-				loadViewDfd.resolve()
+			
+			@currentTasks = tasks
 
-			loadViewDfd.promise().done =>
-				@model.updateData()
-				@view = new @scheduleTemplate( model: @model )
-				$('.overlay.scheduler').remove()
-				$("body").append @view.render().el
-				
-				@view.render()
-				@view.show()
-				@view.currentTasks = @currentTasks = tasks
-
-		pickOption: (option) ->
+		scheduleModalCallback: (option) ->
 			return unless @currentTasks
-			if option is "pick a date"
-				return Backbone.trigger( "select-date" )
 			if typeof option is "string"
 				date = @model.getDateFromScheduleOption option
 			else if typeof option is "object"
@@ -41,8 +29,7 @@ define ["underscore", "js/model/extra/ScheduleModel", "momentjs"], (_, ScheduleM
 			analyticsOptions =  @getAnalyticsDataFromOption( option, date )
 			swipy.analytics.sendEvent( "Tasks", "Snoozed", analyticsOptions["Button Pressed"], analyticsOptions["Number of days ahead"])
 			swipy.analytics.sendEventToIntercom( 'Snoozed Tasks', analyticsOptions )
-			@view.currentTasks = undefined
-			@view.hide()
+
 		getAnalyticsDataFromOption: (option, date) ->
 			if typeof option is "object"
 				option = "Calendar"
@@ -83,8 +70,6 @@ define ["underscore", "js/model/extra/ScheduleModel", "momentjs"], (_, ScheduleM
 				return "56+"
 
 			return diff
-		selectDate: ->
-			@view.showDatePicker()
 		destroy: ->
 			@view?.remove()
 			Backbone.off( null, null, @ )

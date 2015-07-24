@@ -18,7 +18,6 @@ define ["underscore",
 					action.icon = act.icon if act.icon?
 					action.name = act.name if act.name?
 					action.action = act.action if act.action?
-				console.log act, i
 				@actions.push(action)
 		clickedAction: (e) ->
 			action = $(e.currentTarget).attr("data-href")

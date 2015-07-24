@@ -34,8 +34,8 @@ define [
 			@centerX = true
 			@centerY = true
 			
-			@left = null
-			@top = null
+			@left = "50%"
+			@top = "50%"
 
 			opaque = false
 			frame = false
@@ -91,15 +91,19 @@ define [
 			cssProps =
 				"bottom": "auto"
 				"right": "auto"
-				"left": "50%"
-				"top": "50%"
 
 			# Making sure content is inside the screen
 			if @left? or @top?
-				left = parseInt(@left, 10) if @left?
-				top = parseInt(@top, 10) if @top?
 				windowWidth = $(window).width()
 				windowHeight = $(window).height()
+				left = parseInt(@left, 10) if @left?
+				top = parseInt(@top, 10) if @top?
+
+				# Proper deal width percentage vs pixels
+				if @left? and _.isString(@left) and @left.indexOf("%") isnt -1
+					left = parseInt(windowWidth / 100 * left, 10)
+				if @top? and _.isString(@top) and @top.indexOf("%") isnt -1
+					top = parseInt(windowHeight / 100 * top, 10)
 
 				if (@left? and left + marginLeft) < 0
 					@left = 0
@@ -116,8 +120,8 @@ define [
 					cssProps["bottom"] = 0
 					marginTop = 0
 
-			cssProps["left"] = @left
-			cssProps["top"] = @top
+			cssProps["left"] = @left if @left?
+			cssProps["top"] = @top if @top?
 			cssProps["marginLeft"] = marginLeft
 			cssProps["marginTop"] = marginTop
 			
@@ -125,6 +129,7 @@ define [
 
 			
 		hideContent: ->
+			
 			@$el.removeClass("shown")
 			@$contentEl.removeClass("shown")
 			$(window).off( "resize.modalcontroller", @alignContent )

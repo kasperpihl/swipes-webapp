@@ -62,6 +62,8 @@ define [
 					taskCard = new TaskCard({model: task})
 					if @taskDelegate?
 						taskCard.taskDelegate = @taskDelegate
+					if @showSource?
+						taskCard.showSource = true
 					taskCard.render()
 					sectionEl.append( taskCard.el )
 				@$el.append section.el

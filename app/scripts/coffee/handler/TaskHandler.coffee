@@ -11,6 +11,8 @@ define ["underscore"], (_) ->
 		loadCollection: (collection) ->
 			@collection = collection
 			@collection.on("add remove reset change:order change:projectOrder", @bouncedReloadWithEvent, @ )
+			Backbone.on("show-assign", @showAssignView, @)
+
 		reloadWithEvent: ->
 			console.trace "forced reload"
 			Backbone.trigger("reload/taskhandler")
@@ -51,7 +53,7 @@ define ["underscore"], (_) ->
 			return if !draggedTask?
 			self = @
 			selectedTasks = @collection.getSelected( draggedTask )
-			console.log hit
+			
 			return false if !hit?
 			
 
@@ -102,8 +104,8 @@ define ["underscore"], (_) ->
 				targetProject = swipy.collections.projects.get( @projectCollectionIdFromHtmlId(hit.target) )
 				return if !targetProject?
 				actions = []
-				actions.push({name: "Copy to " + targetProject.get("name"), action: "copy"})
-				actions.push({name: "Move to " + targetProject.get("name"), action: "move"})
+				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
+				actions.push({name: "Move", icon: "dragMenuMove", action: "move"})
 				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
 					if result is "move"
 						# and update selected tasks as well
@@ -118,12 +120,11 @@ define ["underscore"], (_) ->
 				name = member.get "username"
 				actions = []
 				if draggedTask.get("projectLocalId")
-					if draggedTask.userIsAssigned(memberId)
-						actions.push({name: "Unassign " + name, action: "unassign"})
-					else
-						actions.push({name: "Assign " + name, action: "assign"})
-				actions.push({name: "Copy to " + name, action: "copy"})
-				actions.push({name: "Move to " + name , action: "move"})
+					if !draggedTask.userIsAssigned(memberId)
+						actions.push({name: "Assign", icon:"dragMenuAssign", action: "assign"})
+						
+				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
+				actions.push({name: "Move", icon: "dragMenuMove", action: "move"})
 				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY, frame:true}, (result) ->
 					if result is "assign"
 						_.invoke(selectedTasks, "assign", member.id, false )
@@ -145,7 +146,6 @@ define ["underscore"], (_) ->
 		taskCardDidComplete: (taskCard) ->
 			model = taskCard.model
 			model.completeTask()
-			console.log model.toJSON()
 			Backbone.trigger("reload/taskhandler")
 		taskCardDidClickAction: (taskCard, e) ->
 			
@@ -191,7 +191,9 @@ define ["underscore"], (_) ->
 				unorderedItems = _.sortBy( groupedItems.unordered, (m) ->
 					schedule = m.get("schedule")
 					if !schedule
-						-m.get("createdAt").getTime()
+						if m.get("createdAt")
+							console.log m.get("createdAt")
+							return -m.get("createdAt").getTime()
 					else 
 						-schedule.getTime()
 				)
@@ -212,8 +214,7 @@ define ["underscore"], (_) ->
 			return sortedTodoArray
 			
 		destroy: ->
-			console.log("stopping to listen");
 			@delegate = null
-			@collection.off(null, null, @)
-			@collection.reset(null)
+			@collection?.off(null, null, @)
+			@collection?.reset(null)
 			@collection = null

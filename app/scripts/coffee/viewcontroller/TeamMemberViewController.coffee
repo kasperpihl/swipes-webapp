@@ -94,6 +94,7 @@ define [
 			})
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
+			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentMember.get("username"))
 			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
 
 			return chatListVC

@@ -4,7 +4,8 @@
 define [
 	"underscore"
 	"text!templates/tasklist/task.html"
-	], (_, TaskTmpl) ->
+	"js/view/modal/ScheduleModal"
+	], (_, TaskTmpl, ScheduleModal) ->
 	Backbone.View.extend
 		tagName: "li"
 		className: "task-item"
@@ -15,7 +16,7 @@ define [
 			throw new Error("Model must be added when constructing a TaskCard") if !@model?
 			@template = _.template TaskTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
-			_.bindAll( @, 'clickedTask', 'handleAction' )
+			_.bindAll( @, 'clickedTask', 'handleAction', 'bouncedRender' )
 			@listenTo( @model, "change:selected", @onSelected )
 			@listenTo( @model, "change:assignees", @bouncedRender )
 		clickedTask: (e) ->
@@ -30,12 +31,15 @@ define [
 				@completeTask().then(->
 					self.taskDelegate.taskCardDidComplete(self)
 				)
-
+			if $(e.currentTarget).hasClass("schedule-button")
+				Backbone.trigger( "show-scheduler", [@model], e )
+			if $(e.currentTarget).hasClass("assign-button")
+				Backbone.trigger( "show-assign", @model, e)
+			false
 		completeTask: (callback) ->
 			dfd = new $.Deferred()
 			@$el.addClass('animate-out-right')
 			setTimeout(->
-				console.log "resolved"
 				dfd.resolve()
 			, 300)
 			return dfd.promise()
@@ -44,10 +48,9 @@ define [
 				@$el.addClass('selected')
 			if @model.get "animateIn"
 				@$el.addClass "animate-in"
-				@model.unset "animateIn"
-				@model.save()
+				@model.set "animateIn", null, {localSync: true}
 			@$el.attr('id', "task-"+@model.id )
-			@$el.html @template( task: @model )
+			@$el.html @template( task: @model, showSource: @showSource )
 
 			return @
 		onSelected: (model, selected) ->

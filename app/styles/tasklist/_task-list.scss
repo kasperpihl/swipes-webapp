@@ -96,7 +96,7 @@ $meta-margin: 10px;
 		.meta{
 			height:16px;
 			// - 2 
-			$icon-size: 15px;
+			$icon-size: 12px;
 			> div{
 				height:15px;
 				float:left;
@@ -114,7 +114,7 @@ $meta-margin: 10px;
 			}
 			.meta-text.with-icon{
 				position:relative;
-				padding-left:$icon-size;
+				padding-left:$icon-size + 2;
 				svg{
 					position:absolute;
 					left:0;

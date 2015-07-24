@@ -1,9 +1,16 @@
 define [], () ->
 	Backbone.View.extend
-		presentModal: (options) ->
+		presentModal: (options, callback) ->
 			self = @
+			@callback = callback
+			@shown = true
 			swipy.modalVC.presentView(@el, options, ->
+				self.shown = false
 				self.didCloseModal()
 			)
+		dismissModal: ->
+			swipy.modalVC.hideContent() if @shown
+			@shown = false
 		didCloseModal: ->
-			# override in subclass for handling
+			@callback?(false)
+			# override in subclass and remember to call @callback if needed

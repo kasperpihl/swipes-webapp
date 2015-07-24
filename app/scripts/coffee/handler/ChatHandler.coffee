@@ -5,7 +5,7 @@
 	Receive select/unselect from TaskList
 ###
 define ["underscore"], (_) ->
-	class TaskHandler
+	class ChatHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
 		loadCollection: (collection) ->
@@ -46,6 +46,6 @@ define ["underscore"], (_) ->
 
 		destroy: ->
 			@groupedMessages = null
-			@collection.off( null, null, @ )
-			@collection.reset(null)
+			@collection?.off( null, null, @ )
+			@collection?.reset(null)
 			@collection = null

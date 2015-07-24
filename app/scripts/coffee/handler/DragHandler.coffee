@@ -20,6 +20,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 				throwProps: no
 				edgeResistance: 0.8
 				maxDuration: 0.4
+				minimumMovement:6
 				onDragStartParams: [ @ ]
 				onDragParams: [ @ ]
 				onDragEndParams: [ @ ]
@@ -155,7 +156,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					else @cleanDragAndDropElements()
 			@lastHit = hit
 		handleHitFinish: (hit) ->
-			console.log "hit finish"
+			
 			# Notify delegate about final hit
 			callback = () ->
 				$(".drag-hover-moving-item").removeClass("drag-hover-moving-item")

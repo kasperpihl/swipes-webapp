@@ -1,23 +1,6 @@
 $breakWidthSnoozer: 500px;
 $breakHeightSnoozer: 500px;
-body.scheduler-open {
-
-	.overlay.scheduler {
-		visibility: visible;
-		.overlay-bg { opacity: 1; }
-	}
-
-	&.hide-scheduler .overlay.scheduler {
-		.overlay-bg {
-			opacity: 0;
-			@include transition(opacity 0.35s ease-out 0.1s);
-		}
-
-		.overlay-content { display: none; }
-	}
-}
-
-.overlay.scheduler {
+.scheduler {
 	.overlay-content{
 		width: 250px;
 		@include breakWidthHeight($breakWidthSnoozer, $breakHeightSnoozer){
@@ -34,7 +17,7 @@ body.scheduler-open {
 }
 
 // overlay inned elements
-.overlay {
+.scheduler {
 
 	.date-picker {
 		display: none;
@@ -169,7 +152,7 @@ body.scheduler-open {
 
 
 // customizing slider structure
-.overlay .range-slider {
+.scheduler .range-slider {
 
 	.track {
 		margin-top: -6px;

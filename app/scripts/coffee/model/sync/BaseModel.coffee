@@ -28,6 +28,12 @@ define ["js/utility/Utility"], ( Utility ) ->
 				attributes.objectId = attributes.tempId
 				attributes.needSaveToServer = true
 			Backbone.Model.apply @, arguments
+			@reviveDate "createdAt"
+			@reviveDate "updatedAt"
+			@on "change:createdAt", =>
+				@reviveDate "createdAt"
+			@on "change:updatedAt", =>
+				@reviveDate "updatedAt"
 		reviveDate: (prop) ->
 			value = @handleDateFromServer @get( prop )
 			@set prop, value, { silent: true }
