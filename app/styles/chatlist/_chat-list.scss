@@ -2,7 +2,7 @@
 	width:100%;
 	height: 100%;
 }
-$chat-new-message-height: 100px;
+$chat-new-message-height: 50px;
 
 .chat-list-container{
 	height:100%;
@@ -14,7 +14,7 @@ $chat-new-message-height: 100px;
 	}
 }
 .chat-message{
-	$left-side-width:15px;
+	$left-side-width:50px;
 	padding:5px;
 	position:relative;
 	.chat-left-side-container{
@@ -25,7 +25,9 @@ $chat-new-message-height: 100px;
 		margin-left: $left-side-width;
 	}
 	.picture-container{
+		img{
 
+		}
 	}
 	.sender-name{
 		font: 14px/1 $font-bold;
@@ -35,6 +37,36 @@ $chat-new-message-height: 100px;
 	}
 	.message-container{
 		font: 14px/1 $font-normal;
+	}
+	.attachment-container{
+		width:80%;
+		border-left: 3px solid #DDDDDD;
+		position:relative;
+		margin-top: 12px;
+		padding-left: 12px;
+		margin-bottom: 12px;
+		img{
+			width:100%;
+		}
+	}
+	.like-container{
+		$like-color: #babbbd;
+		font-size: 14px;
+		.like-button{
+			svg{
+				margin-bottom:-4px;
+				width:20px;
+				height:20px;
+				fill: $like-color;
+			}
+			color: $like-color;
+			&:hover{ text-decoration: none; }
+		}
+		.like-string{
+			margin-left:12px;
+			color: $unselected-color;
+		}
+
 	}
 }
 
@@ -46,11 +78,13 @@ $chat-new-message-height: 100px;
 	
 	.input-container{
 		width:90%;
+		height:100%;
 		margin-left:5%;
 		border-top: 1px solid #DDDDDD;
 	}
 	input{
 		border: 0;
 		width: 100%;
+		height:100%;
 	}
 }

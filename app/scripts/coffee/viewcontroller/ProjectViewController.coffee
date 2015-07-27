@@ -8,7 +8,6 @@ define [
 	Backbone.View.extend
 		className: "project-view-controller"
 		initialize: ->
-			console.log "init project"
 
 		render: (el) ->
 			@$el.html ""
@@ -39,6 +38,11 @@ define [
 			@$el.html @vc.el
 			@vc.render()
 
+
+		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
+			self = @
+			taskGroups = [{leftTitle: "PROJECT TASKS" , tasks: collection.models}]
+			return taskGroups
 		### 
 			Get A TaskListViewController that filtered for this project
 		###
@@ -47,6 +51,7 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskList.enableDragAndDrop = true
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
+			taskListVC.taskHandler.delegate = @
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @projectId

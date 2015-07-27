@@ -32,7 +32,6 @@ define [
 			@chatList.render()
 
 		destroy: ->
-			console.log "destroying chat"
 			@chatList?.remove?()
 			@newMessage?.remove?()
 			@chatHandler?.destroy?()

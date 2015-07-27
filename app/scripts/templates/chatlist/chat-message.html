@@ -16,5 +16,21 @@
 		<div class="message-container">
 			<%= data.message.get("message") %>
 		</div>
+		<% if( data.message.get("message").indexOf("attachment") != -1){ %>
+		<div class="attachment-container">
+			<a href="http://test.com" target="_blank"><img src="styles/img/attachment-placeholder.png"></a>
+		</div>
+		<div class="like-container">
+			<a class="like-button">
+				<svg class="icon">
+					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
+				</svg>
+				Like
+			</a>
+			<span class="like-string">
+				Be the first to like this.
+			</span>
+		</div>
+		<% } %>
 	</div>
 </div>
