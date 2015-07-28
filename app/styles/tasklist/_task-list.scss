@@ -25,8 +25,24 @@ $meta-margin: 10px;
 
 // Design for cards
 .card-container{
+
 	padding:5px;
-	padding-left: $left-padding;
+	.main-info-container{
+		padding-left: $left-padding;
+		position: relative;
+		.priority{
+			margin-top: -5px;
+		}
+	}
+	.expanding{
+		display:none;
+		.editMode & {
+			display:block;
+		}
+		img{
+			width:100%;
+		}
+	}
 	@include card-shadow(6px, 1px);
 	@include transition(all 0.1s ease-out);
 	@include border-radius(10px);

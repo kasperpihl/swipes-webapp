@@ -21,7 +21,7 @@
 
 	.sidebar-controls {
 		@extend .list-unstyled;
-		color: #fff;
+		color: $sidebar-button-gray;
 		padding-top: 30px;
 		text-align: left;
 		a{
@@ -105,12 +105,35 @@
 			}
 
 		}
+		.unread{
+			a{
+				.text{
+					font: 0.75em/1 $font-bold;
+					color: white;
+				}
+				$notification-size: 24px;
+				.notification{
+					position:absolute;
+					right: 5px;
+					@include border-radius(50%);
+					padding:3px;
+					padding-top:3px;
+					color: white;
+					border: 2px solid $red;
+					font: 12px $font-normal;
+					height:$notification-size;
+					top: 3px;
+					min-width:$notification-size;
+					text-align:center;
+				}
+			}
+		}
 		ul{
 			list-style: none;
 			padding-left:0px;
 			margin-bottom: 5px;
 			li {
-
+				position:relative;
 			}
 			
 			li:hover, li.active, li.drag-hover-entering{

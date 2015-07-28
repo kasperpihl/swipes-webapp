@@ -56,8 +56,18 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					self.handleHitFinish(hit)
 					self.draggingId = false
 
-			Draggable.create(selector, dragOpts)
+			@dragables = Draggable.create(selector, dragOpts)
+			if _.isFunction(@delegate.didCreateDragHandler)
+				@delegate.didCreateDragHandler(@)
 		# Used to update the position of the mouse pointer that follows the mouse when dragging
+		disable: ->
+			if @dragables?
+				for dragable in @dragables
+					dragable.disable()
+		enable: ->
+			if @dragables?
+				for dragable in @dragables
+					dragable.enable()
 		updateMousePointer: (e) ->
 			$(".drag-mouse-pointer").css({top: (e.pageY-20)+"px", left: (e.pageX + 15)+"px"})
 		cleanDragAndDropElements: ->

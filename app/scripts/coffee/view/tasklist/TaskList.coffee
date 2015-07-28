@@ -76,7 +76,6 @@ define [
 					@dragHandler = new DragHandler()
 					@dragHandler.delegate = @dragDelegate
 				@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card)")
-
 		
 		customCleanUp: ->
 		cleanUp: ->

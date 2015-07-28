@@ -13,7 +13,6 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			@collection.on("add remove reset change:order change:projectOrder", @bouncedReloadWithEvent, @ )
 			Backbone.on("show-assign", @didPressAssign, @)
 		reloadWithEvent: ->
-			console.trace "forced reload"
 			Backbone.trigger("reload/taskhandler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
@@ -31,6 +30,8 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		###
 			DragHandler Delegate
 		###
+		didCreateDragHandler: ( dragHandler ) ->
+			@dragHandler = dragHandler
 		extraIdsForDragging:( dragHandler, draggedId ) ->
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 
@@ -148,9 +149,20 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			Backbone.trigger("reload/taskhandler")
 		taskCardDidClickAction: (taskCard, e) ->
 			
-		taskDidClick: (taskCard) ->
-			model = taskCard.model
-			model.set("selected", !model.get("selected"))
+		taskDidClick: (taskCard, e) ->
+			if e.metaKey
+				model = taskCard.model
+				model.set("selected", !model.get("selected"))
+			else
+				
+				shouldShow = !taskCard.$el.hasClass("editMode")
+				$(".editMode").removeClass("editMode")
+				if shouldShow
+					taskCard.$el.addClass("editMode") 
+					@dragHandler?.disable()
+				else
+					@dragHandler?.enable()
+
 		### 
 			TaskList Datasource
 		###

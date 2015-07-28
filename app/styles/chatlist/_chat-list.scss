@@ -54,16 +54,23 @@ $chat-new-message-height: 50px;
 		font-size: 14px;
 		.like-button{
 			svg{
+				margin-right: 5px;
 				margin-bottom:-4px;
 				width:20px;
 				height:20px;
 				fill: $like-color;
 			}
 			color: $like-color;
-			&:hover{ text-decoration: none; }
+			&:hover{ text-decoration: none; 
+				svg{
+					fill: $red;
+
+				}
+				color: $red;
+			}
 		}
 		.like-string{
-			margin-left:12px;
+			margin-left:16px;
 			color: $unselected-color;
 		}
 

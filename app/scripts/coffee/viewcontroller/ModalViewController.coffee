@@ -7,7 +7,7 @@ define [
 		events:
 			"click .modal-clickable-background" : "clickedBackground"
 		initialize: ->
-			_.bindAll( @ , "clickedBackground", "alignContent")
+			_.bindAll( @ , "clickedBackground", "alignContent" )
 			@$contentEl = @$el.find('.modal-overlay-content')
 		
 		###
@@ -43,7 +43,7 @@ define [
 			@callback = callback
 			
 			if options? and _.isObject(options)
-
+				console.log options
 				clickableBackground = options.clickableBackground if options.clickableBackground?
 				opaque = options.opaque if options.opaque?
 					
@@ -91,6 +91,8 @@ define [
 			cssProps =
 				"bottom": "auto"
 				"right": "auto"
+				"top": @top
+				"left": @left
 
 			# Making sure content is inside the screen
 			if @left? or @top?
@@ -106,25 +108,23 @@ define [
 					top = parseInt(windowHeight / 100 * top, 10)
 
 				if (@left? and left + marginLeft) < 0
-					@left = 0
+					cssProps["left"] = 0
 					marginLeft = 0
 				if (@top? and top + marginTop) < 0
-					@top = 0
+					cssProps["top"] = 0
 					marginTop = 0
 				if @left? and (left + width + marginLeft) > windowWidth
-					@left = "auto"
+					cssProps["top"] = "auto"
 					cssProps["right"] = 0
 					marginLeft = 0
 				if @top? and (top + height + marginTop) > windowHeight
-					@top = "auto"
+					cssProps["top"] = "auto"
 					cssProps["bottom"] = 0
 					marginTop = 0
 
-			cssProps["left"] = @left if @left?
-			cssProps["top"] = @top if @top?
+
 			cssProps["marginLeft"] = marginLeft
 			cssProps["marginTop"] = marginTop
-			
 			@$contentEl.css(cssProps)
 
 			
