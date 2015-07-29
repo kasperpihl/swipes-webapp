@@ -3,6 +3,31 @@
 	height:100%;
 	overflow-y: scroll;
 	padding: 10px;
+	position:relative;
+	&.drag-hover-entering{
+		.drag-overlay{
+			display:block;
+		}
+	}
+	.drag-overlay{
+		position:absolute;
+		display: none;
+		left:0;
+		width:100%;
+		height:100%;
+		top:0;
+		opacity: 0.7;
+		background-color: $sidebar-dark-color;
+		span{
+			position:absolute;
+			left:0;
+			text-align: center;
+			right:0;
+			top:25%;
+			font:32px $font-normal;
+			color: white;
+		}
+	}
 }
 .task-column{
 	max-width:400px;
@@ -30,7 +55,7 @@ $meta-margin: 10px;
 
 // Design for cards
 .card-container{
-
+	position: relative;
 	padding:5px;
 	.main-info-container{
 		padding-left: $left-padding;
@@ -149,87 +174,58 @@ $meta-margin: 10px;
 		
 		// Show action buttons on hover
 		&:hover{
-			.hover-container{
+			.actions{
 				opacity: 1.0;
 				@include transition(opacity 0.2s ease-out);
 			}
 		}
 		// Action buttons that appear on hover
-		.hover-container{
-			$button-size: 24px;
-			$padding: 5px;
-			$spacing-from-card:10px;
-			$spacing-between-buttons: 10px;
-			$border-width: 1px;
-			@function width-with-buttons($buttons: 2){
-				@return 2 * $border-width + 2 * $spacing-from-card + $buttons * $button-size + $buttons * $spacing-between-buttons + 2 * $padding;
-			}
+
+		$button-size: 20px;
+		$padding: 3px;
+		$spacing-between-buttons: 8px;
+		.actions{
+			
+			opacity: 0;
+			
 			position:absolute;
-			opacity:0;
-			left:100%;
-			height:100%;
-			top:0;
-			width:200px;
-			&.buttons-2{
-				width: width-with-buttons(2);
-			}
-			&.buttons-3{
-				width: width-with-buttons(3);
-			}
-			&.buttons-4{
-				width: width-with-buttons(4);
-			}
+			//@include transition(opacity 0.1s ease-in);
+			
+			background-color: white;
+			padding: $padding $padding 0 $padding;
+			right: 0;
+			bottom: 0;
+			height:$button-size+2*$padding;
+			@include border-radius(($button-size + 2*$padding) / 2);
+			margin-top:-($button-size + 2*$padding )/2;
+			a{
+				&:hover{
+					text-decoration:none;
+					opacity: 0.8;
+				}
+				text-align:center;
+				line-height: 1;
+				float:left;
+				margin-right: $spacing-between-buttons / 2;
+				margin-left: $spacing-between-buttons / 2;
+				@include square($button-size);
+				@include border-radius(50%);
+				
+				padding:0;
+				position: relative;
 
-			.hover-inner-container{
-				position:relative;
-				width:100%;
-				height:100%;
-			}
-			.actions{
-				
-				display:block;
-				
-				position:absolute;
-				//@include transition(opacity 0.1s ease-in);
-				
-				background-color: #F9F9F9;
-				border: $border-width solid #e0e0e0;
-				padding: $padding - 1px $padding 0 $padding;
-				
-				height:$button-size+2*$padding;
-				@include border-radius(($button-size + 2*$padding) / 2);
-				top: 50%;
-				left: $spacing-from-card;
-				margin-top:-($button-size + 2*$padding )/2;
-				a{
-					&:hover{
-						text-decoration:none;
-						opacity: 0.8;
-					}
-					text-align:center;
-					line-height: 1;
-					float:left;
-					margin-right: $spacing-between-buttons / 2;
-					margin-left: $spacing-between-buttons / 2;
+				svg {
 					@include square($button-size);
-					@include border-radius(50%);
-					
-					padding:0;
-					position: relative;
+					@include centerBlock(0, 0, 0, 0, auto, absolute);
+				}
 
-					svg {
-						@include square($button-size);
-						@include centerBlock(0, 0, 0, 0, auto, absolute);
-					}
-
-					&.schedule-button{
-						border-color: $red;
-							svg { fill: $red; }
-					}
-					&.complete-button{
-						border-color: $green;
-							svg { fill: $green; }
-					}
+				&.schedule-button{
+					border-color: $red;
+						svg { fill: $red; }
+				}
+				&.complete-button{
+					border-color: $green;
+						svg { fill: $green; }
 				}
 			}
 		}

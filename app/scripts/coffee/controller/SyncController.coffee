@@ -208,7 +208,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			@util.sendError( data, "Sync Server Error")
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
-			if data and data.serverTime
+			if data and data.ok
 				@currentSyncing = null
 				@changedAttributes.resetChanges()
 				@handleObjectsFromSync( data.Member, "Member" ) if data.Member?

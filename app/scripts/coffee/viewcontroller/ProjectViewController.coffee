@@ -8,7 +8,7 @@ define [
 	Backbone.View.extend
 		className: "project-view-controller main-view-controller"
 		initialize: ->
-
+			Backbone.on( "create-task", @createTask, @ )
 		render: (el) ->
 			@$el.html ""
 			$("#main").html(@$el)
@@ -37,12 +37,24 @@ define [
 			else return
 			@$el.html @vc.el
 			@vc.render()
+		
 
+		createTask: ( title, options ) ->
+			options = {} if !options
+			options.projectLocalId = @projectId if !options.projectLocalId?
+			options.ownerId = @currentProject.get("ownerId")
+			@taskCollectionSubset?.child.createTask(title, options)
+			Backbone.trigger("reload/taskhandler")
 
+		### 
+			TaskHandler delegate
+		###
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
 			taskGroups = [{leftTitle: "PROJECT TASKS" , tasks: collection.models}]
 			return taskGroups
+
+
 		### 
 			Get A TaskListViewController that filtered for this project
 		###
@@ -54,12 +66,12 @@ define [
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @projectId
-			@collectionSubset = new Backbone.CollectionSubset({
+			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
 					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
 			})
-			taskListVC.taskHandler.loadCollection(@collectionSubset.child)
+			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)
 			
 			return taskListVC
 
@@ -69,14 +81,14 @@ define [
 		###
 		getChatListVC: ->
 			projectId = @projectId
-			@collectionSubset = new Backbone.CollectionSubset({
+			@chatCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.messages,
 				filter: (message) ->
 					return message.get("projectLocalId") is projectId
 			})
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
-			chatListVC.chatHandler.loadCollection(@collectionSubset.child)
+			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
 			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentProject.get("name"))
 			return chatListVC
 		
@@ -108,11 +120,7 @@ define [
 			AddTaskCard Delegate
 		###
 		taskCardDidCreateTask: ( taskCard, title, options) ->
-			options = {} if !options
-			options.projectLocalId = @projectId
-			options.ownerId = @currentProject.get("ownerId")
-			Backbone.trigger("create-task", title, options)
-			Backbone.trigger("reload/taskhandler")
+			@createTask( title, options)
 
 		destroy: ->
 			Backbone.off(null,null, @)

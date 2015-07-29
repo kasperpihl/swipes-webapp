@@ -1,7 +1,7 @@
 define ["underscore"], (_ ) ->
 	class InputController
 		constructor: ->
-			Backbone.on( "create-task", @createTask, @ )
+			#Backbone.on( "create-task", @createTask, @ )
 			Backbone.on( "send-message", @sendMessage, @)
 
 

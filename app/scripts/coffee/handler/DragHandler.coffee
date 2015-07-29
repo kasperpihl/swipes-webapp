@@ -7,6 +7,8 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 		###
 			Drag and drop functionality: 
 		###
+		constructor : ->
+			@enableFullScreenTaskList = false
 		createDragAndDropElements: (selector) ->
 			if !@delegate?
 				throw new Error("DragHandler must have delegate")
@@ -57,7 +59,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 		cleanDragAndDropElements: ->
 			$(".drag-hover-entering").removeClass("drag-hover-entering")
 			$(".task-list").find(".insert-seperator").remove()
-
+			false
 		hitTest: (e) ->
 			hit = {}
 			hit.pointerEvent = e
@@ -89,9 +91,13 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 						hit.target = "#" + id
 						hit.type = "project"
 						hit.position = "middle"
-
-
-			if Draggable.hitTest(e, ".task-list", 0)
+			if @enableFullScreenTaskList
+				if Draggable.hitTest(e, ".task-list-view-controller", 0)
+					hit.parent = ".task-list-view-controller"
+					hit.target = ".task-list-view-controller"
+					hit.type = "task-list"
+					hit.position = "middle"
+			else if Draggable.hitTest(e, ".task-list", 0)
 				hit.parent = ".task-list"
 				ids = $.map( $(".task-list .task-item"), (o) -> o["id"] ) #_.pluck(@tempTasks, "id")
 				for i, id of ids
@@ -123,21 +129,22 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 						isSame = false
 				return if isSame
 			
+			shouldClean = true			
 			# Check if empty hit and make sure to clear help elements
 			if !hit or hit? and !Object.keys(hit).length
-				@cleanDragAndDropElements()
+				shouldClean = @cleanDragAndDropElements()
 				hit = null
-
 
 			else if hit? and hit
 				if hit.position is "middle"
 					$hit = $(hit.target)
-					@cleanDragAndDropElements()
+					shouldClean = @cleanDragAndDropElements()
 					$hit.addClass("drag-hover-entering")
 
 				if hit.parent is ".task-list"
 					if hit.target and hit.position
 						$hit = $(hit.target)
+						shouldClean = false
 						if hit.position is "top"
 							if !$hit.prev().hasClass("insert-seperator")
 								@cleanDragAndDropElements()
@@ -146,7 +153,8 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 							if !$hit.next().hasClass("insert-seperator")
 								@cleanDragAndDropElements()
 								$hit.after("<li class=\"insert-seperator\"><div></div></li>")
-					else @cleanDragAndDropElements()
+			if shouldClean
+				@cleanDragAndDropElements()
 			@lastHit = hit
 		handleHitFinish: (hit) ->
 			

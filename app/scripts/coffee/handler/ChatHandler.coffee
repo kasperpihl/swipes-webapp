@@ -66,60 +66,14 @@ define ["underscore"], (_) ->
 		dragHandlerDidHit: ( dragHandler, draggedIds, hit, callback ) ->
 			draggedId = draggedIds[0]
 			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
+			console.log draggedMessage
 			return if !draggedMessage?
 			self = @
 			
 			return false if !hit?
-			
-
-			if hit.type is "task"
-				hitTask = swipy.collections.todos.get( @taskCollectionIdFromHtmlId(hit.target) )
-				return if !hitTask?
-
-				options = {}
-				options.projectLocalId = hitTask.get("projectLocalId")
-				options.toUserId = hitTask.get("toUserId")
-				newTask = swipy.input.createTask(draggedMessage.get("message"), options)
-				
-				if hit.position is "middle"
-					
-					setTimeout(()->
-						callback()
-					, 400)
-					return true
-					#hitTask.addSubtask draggedTask, true
-					#@bouncedReloadWithEvent()
-				else if hit.position is "bottom" or hit.position is "top"
-
-					fromOrder = 99999999
-					targetOrder = hitTask.get(@listSortAttribute)
-					# if a task is moved up all affected should go down - otherwise up 
-					addition = if fromOrder > targetOrder then 1 else -1
-
-					# If task is moved down and top is hit, or task is moved down and bottom is hit - adjust accordingly!
-					targetOrder -= 1 if addition is -1 and hit.position is "top"
-					targetOrder += 1 if addition is 1 and hit.position is "bottom"
-					
-					# get the order affected span and order depending if task is moved up or down
-					lowestOrderAffected = if addition is 1 then targetOrder else fromOrder
-					highestOrderAffected = if addition is 1 then fromOrder else targetOrder
-
-
-					self = @
-					# find all affected tasks and bump them one up or down
-					@swipy.todos.collection.each( (m) ->
-						order = m.get(self.listSortAttribute)
-						if order >= lowestOrderAffected and order <= highestOrderAffected and m isnt draggedTask
-							m.updateOrder(self.listSortAttribute, order + addition )
-					)
-
-					# and selected tasks with order
-					_.invoke(selectedTasks, "updateOrder", @listSortAttribute, targetOrder)
-					@reloadWithEvent()
-					setTimeout(
-						=> _.invoke(selectedTasks, "set", "selected", false)
-					, 400)
-
+			console.log hit
+			if hit.type is "task-list"
+				Backbone.trigger( "create-task", draggedMessage.get("message"))
 
 		###
 			ChatList Datasource

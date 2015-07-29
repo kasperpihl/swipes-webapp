@@ -73,6 +73,7 @@ define [
 					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
 				if !@dragHandler?
 					@dragHandler = new DragHandler()
+					@dragHandler.enableFullScreenTaskList = true
 					@dragHandler.delegate = @dragDelegate
 				@dragHandler.createDragAndDropElements(".chat-item")
 		customCleanUp: ->

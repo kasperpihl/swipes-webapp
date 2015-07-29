@@ -10,6 +10,7 @@ define [
 		className: "my-tasks-view-controller main-view-controller"
 		initialize: ->
 			@timeUtil = new TimeUtility()
+			Backbone.on( "create-task", @createTask, @ )
 		render: ->
 			@$el.html ""
 			$("#main").html(@$el)
@@ -35,6 +36,15 @@ define [
 			@$el.html @vc.el
 			@vc.render()
 
+		createTask: ( title, options ) ->
+			console.log "my task " + title
+			options = {} if !options
+			options.toUserId = Parse.User.current().id if !options.toUserId?
+			now = new Date()
+			now.setSeconds now.getSeconds() - 1
+			options.schedule = now if !options.schedule?
+			@taskCollectionSubset?.child.createTask(title, options)
+			Backbone.trigger("reload/taskhandler")
 
 		getTaskListVC: ->
 			taskListVC = new TaskListViewController()
@@ -132,13 +142,8 @@ define [
 			AddTaskCard Delegate
 		###
 		taskCardDidCreateTask: ( taskCard, title, options) ->
-			options = {} if !options
-			options.toUserId = Parse.User.current().id
-			now = new Date()
-			now.setSeconds now.getSeconds() - 1
-			options.schedule = now
-			Backbone.trigger("create-task", title, options)
-			Backbone.trigger("reload/taskhandler")
+			@createTask( title, options )
 
 		destroy: ->
+			Backbone.off(null,null, @)
 			@vc?.destroy()

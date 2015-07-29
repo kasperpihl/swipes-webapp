@@ -18,7 +18,7 @@ define [
 			@chatList.enableDragAndDrop = true
 			
 			@chatHandler = new ChatHandler()
-
+			
 			# Settings the Task Handler to receive actions from the task list
 			@chatList.taskDelegate = @chatHandler
 			@chatList.dragDelegate = @chatHandler

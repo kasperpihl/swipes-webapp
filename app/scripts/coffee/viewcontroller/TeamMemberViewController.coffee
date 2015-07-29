@@ -7,7 +7,7 @@ define [
 	Backbone.View.extend
 		className: "team-member-view-controller main-view-controller"
 		initialize: ->
-
+			Backbone.on( "create-task", @createTask, @ )
 		render: ->
 			@$el.html ""
 			$("#main").html(@$el)
@@ -53,6 +53,14 @@ define [
 			else return
 			@$el.html @vc.el
 			@vc.render()
+
+		createTask: ( title, options ) ->
+			options = {} if !options
+			options.toUserId = @currentMember.id if !options.toUserId?
+			options.ownerId = @currentMember.get("organisationId")
+			@taskCollectionSubset?.child.createTask(title, options)
+			Backbone.trigger("reload/taskhandler")
+
 
 		### 
 			Get A TaskListViewController that filtered for this project
@@ -128,11 +136,8 @@ define [
 			AddTaskCard Delegate
 		###
 		taskCardDidCreateTask: ( taskCard, title, options) ->
-			options = {} if !options
-			options.toUserId = @currentMember.id
-			options.ownerId = @currentMember.get("organisationId")
-			Backbone.trigger("create-task", title, options)
-			Backbone.trigger("reload/taskhandler")
+			@createTask(title, options)
 
 		destroy: ->
+			Backbone.off( null, null, @ )
 			@vc?.destroy()
