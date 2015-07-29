@@ -25,8 +25,8 @@ define [
 		render: ->
 			if !@dataSource?
 				throw new Error("TaskList must have dataSource")
-			if !_.isFunction(@dataSource.taskListTasksForSection)
-				throw new Error("TaskList dataSource must implement taskListTasksForSection")
+			if !_.isFunction(@dataSource.taskListDataForSection)
+				throw new Error("TaskList dataSource must implement taskListDataForSection")
 
 			if !@targetSelector?
 				throw new Error("TaskList must have targetSelector to render")
@@ -40,31 +40,30 @@ define [
 			
 			if _.isFunction(@dataSource.taskListNumberOfSections)
 				numberOfSections = @dataSource.taskListNumberOfSections( @ )
-			
+			@_taskCardsById = {}
 			for section in [1 .. numberOfSections]
 				
 
 				# Load tasks and titles for section
-				if _.isFunction(@dataSource.taskListLeftTitleForSection)
-					leftTitle = @dataSource.taskListLeftTitleForSection( @, section )
-				if _.isFunction(@dataSource.taskListRightTitleForSection)
-					rightTitle = @dataSource.taskListRightTitleForSection( @, section )
-				tasksInSection = @dataSource.taskListTasksForSection( @, section )
-				
+				sectionData = @dataSource.taskListDataForSection( @, section )
 
 				# Instantiate 
 				section = new Section()
-				section.setTitles(leftTitle, rightTitle)
+				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
 
-				for task in tasksInSection
+				for task in sectionData.tasks
 					numberOfTasks++
 					taskCard = new TaskCard({model: task})
 					if @taskDelegate?
 						taskCard.taskDelegate = @taskDelegate
-					if @showSource?
+					if sectionData.showSource?
 						taskCard.showSource = true
+					if sectionData.showSchedule
+						taskCard.showSchedule = true
+
 					taskCard.render()
+					@_taskCardsById[task.id] = taskCard
 					sectionEl.append( taskCard.el )
 				@$el.append section.el
 
@@ -76,7 +75,8 @@ define [
 					@dragHandler = new DragHandler()
 					@dragHandler.delegate = @dragDelegate
 				@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card)")
-		
+		taskCardById: (identifier) ->
+			return @_taskCardsById?[identifier]
 		customCleanUp: ->
 		cleanUp: ->
 			@dragDelegate = null

@@ -7,7 +7,8 @@ define [
 	"underscore"
 	"js/view/modules/Section"
 	"js/view/chatlist/ChatMessage"
-	], (_, Section, ChatMessage) ->
+	"js/handler/DragHandler"
+	], (_, Section, ChatMessage, DragHandler) ->
 	Backbone.View.extend
 		className: "chat-list"
 		initialize: ->
@@ -67,7 +68,13 @@ define [
 					sectionEl.append( chatMessage.el )
 
 				@$el.append section.el
-
+			if @enableDragAndDrop and numberOfChats > 0
+				if !@dragDelegate?
+					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
+				if !@dragHandler?
+					@dragHandler = new DragHandler()
+					@dragHandler.delegate = @dragDelegate
+				@dragHandler.createDragAndDropElements(".chat-item")
 		customCleanUp: ->
 		cleanUp: ->
 			@dataSource = null

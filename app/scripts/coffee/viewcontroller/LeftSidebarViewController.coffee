@@ -12,7 +12,7 @@ define [
 			#@listenTo( swipy.collections.members, "add remove reset change:name change:status", @renderSidebar )
 			_.bindAll( @, "renderSidebar")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
-			$(window).on "resize.sidebar", @checkAndEnableScrollBars
+			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 		clickedAddProject: (e) ->
@@ -41,4 +41,4 @@ define [
 			$(".sidebar-controls .active").removeClass("active")
 			$(".sidebar-controls #"+activeClass).addClass("active")
 		destroy: ->
-			$(window).off "resize.sidebar"
+			@stopListening()

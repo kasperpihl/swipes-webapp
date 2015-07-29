@@ -7,25 +7,29 @@ define ["underscore", "js/model/extra/ScheduleModel", "js/view/modal/ScheduleMod
 
 			Backbone.on( "show-scheduler", @showScheduleView, @ )
 			_.bindAll( @ , "scheduleModalCallback" )
-		showScheduleView: (tasks, e) ->
+		showScheduleView: (taskCards, e) ->
 			@view?.remove()
 			@model.updateData()
 			@view = new ScheduleModal( model: @model )
 			@view.render()
-			@view.presentModal({left: e.clientX, top:e.clientY-25, centerY: false, centerX: false}, @scheduleModalCallback)
+			@view.presentModal({left: e.clientX+30, top:e.clientY+30, centerY: true, centerX: true}, @scheduleModalCallback)
 
-			
-			@currentTasks = tasks
+			@currentCards = taskCards
+			@currentTasks = _.pluck( taskCards, "model" )
 
 		scheduleModalCallback: (option) ->
 			return unless @currentTasks
+			return if !option
 			if typeof option is "string"
 				date = @model.getDateFromScheduleOption option
 			else if typeof option is "object"
 				date = option.toDate()
-
-			for task in @currentTasks
-				task.scheduleTask date
+			deferredArr = []
+			console.log option
+			for taskCard in @currentCards
+				deferredArr.push taskCard.animateWithClass("fadeOutLeft")
+			$.when( deferredArr... ).then => 
+				_.invoke(@currentTasks, "scheduleTask", date)
 			analyticsOptions =  @getAnalyticsDataFromOption( option, date )
 			swipy.analytics.sendEvent( "Tasks", "Snoozed", analyticsOptions["Button Pressed"], analyticsOptions["Number of days ahead"])
 			swipy.analytics.sendEventToIntercom( 'Snoozed Tasks', analyticsOptions )

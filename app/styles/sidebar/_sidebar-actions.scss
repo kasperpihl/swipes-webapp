@@ -96,7 +96,7 @@
 			
 			.text{
 				float:left;
-				padding-top: 10px;
+				padding-top: 11px;
 				font: 0.75em/1 $font-normal;
 				letter-spacing: 1px;
 				text-align: left;
@@ -122,7 +122,7 @@
 					border: 2px solid $red;
 					font: 12px $font-normal;
 					height:$notification-size;
-					top: 3px;
+					top: 5px;
 					min-width:$notification-size;
 					text-align:center;
 				}

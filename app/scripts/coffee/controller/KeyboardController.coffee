@@ -9,12 +9,12 @@ define ["underscore"], (_) ->
 			_.bindAll( @, "keyDownHandling", "keyUpHandling", "lock", "unlock", "handleClick" )
 			$(document).on('keydown', @keyDownHandling )
 			$(document).on('keyup', @keyUpHandling )
-			$('#scrollcont').on("click.keycontroller", @handleClick)
+			$('.total-container').on("click.keycontroller", @handleClick)
 			 
 		destroy: ->
 			$(document).off('keydown', @keyDownHandling )
 			$(document).off('keyup', @keyUpHandling )
-			$('#scrollcont').off("click.keycontroller")
+			$('.total-container').off("click.keycontroller")
 		keyDownHandling: (e) ->
 			if !@globalLock and !$("input").is(":focus") and !$("div.content-editable").is(':focus')
 				if (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)

@@ -43,7 +43,6 @@ define [
 			@callback = callback
 			
 			if options? and _.isObject(options)
-				console.log options
 				clickableBackground = options.clickableBackground if options.clickableBackground?
 				opaque = options.opaque if options.opaque?
 					
@@ -71,7 +70,7 @@ define [
 
 			# Show and align center
 			@showContent()
-			$(window).on( "resize.modalcontroller", @alignContent )
+			Backbone.on( "resized-window", @alignContent, @ )
 			return
 		showContent: ->
 			@alignContent()
@@ -114,7 +113,7 @@ define [
 					cssProps["top"] = 0
 					marginTop = 0
 				if @left? and (left + width + marginLeft) > windowWidth
-					cssProps["top"] = "auto"
+					cssProps["left"] = "auto"
 					cssProps["right"] = 0
 					marginLeft = 0
 				if @top? and (top + height + marginTop) > windowHeight
@@ -132,7 +131,7 @@ define [
 			
 			@$el.removeClass("shown")
 			@$contentEl.removeClass("shown")
-			$(window).off( "resize.modalcontroller", @alignContent )
+			Backbone.off( null, null, @ )
 			@callback?()
 			@callback = null
 

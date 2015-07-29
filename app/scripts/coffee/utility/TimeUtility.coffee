@@ -83,6 +83,31 @@ define ["momentjs"], (Moment)->
 			else
 				@getNextWeekendDay moment schedule
 
+
+
+		getDayWithoutTime: (day) ->
+			fullStr = day.calendar()
+			timeIndex = fullStr.indexOf( " at " )
+
+			# Date is within the next week, so just sat the day name — calendar() returns something like "Tuesday at 3:30pm",
+			# and we only want "Tuesday", so use this little RegEx to select everything before the first space.
+			if timeIndex isnt -1
+				return fullStr.slice( 0, timeIndex )
+			else
+				return fullStr
+		dayStringForDate:(date) ->
+			now = moment()
+			parsedDate = moment date
+			dayDiff =  Math.abs parsedDate.diff( now, "days" )
+
+			if dayDiff >= 6 or dayDiff <= -6
+				# If it's next or previous years, add year suffix
+				if parsedDate.year() isnt now.year() then result = parsedDate.format "MMM Do 'YY"
+				else result = parsedDate.format "MMM Do"
+				return result
+			# Else return day string ("Today, Tomorrow, Monday etc")
+			else return @getDayWithoutTime parsedDate
+
 		getNextWeekDay: (date) ->
 			# If date is friday, go to next monday, else go to tomorrow
 			return date.add( "days", if date.day() is 5 then 3 else 1 ).toDate()

@@ -5,7 +5,7 @@ define [
 	"js/viewcontroller/ChatListViewController"
 	], (_, TweenLite, TaskListViewController, ChatListViewController) ->
 	Backbone.View.extend
-		className: "team-member-view-controller"
+		className: "team-member-view-controller main-view-controller"
 		initialize: ->
 
 		render: ->
@@ -24,7 +24,7 @@ define [
 
 			@currentMember = swipy.collections.members.get(@memberId)
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentMember.get("username"), false)
-
+			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()	
 
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
@@ -37,8 +37,8 @@ define [
 					return "My Tasks"
 			)
 			taskGroups = []
-			taskGroups.push({leftTitle: "RECEIVED TASKS" , tasks: groups["My Tasks"]}) if groups["My Tasks"]?.length > 0
-			taskGroups.push({rightTitle: "SENT TASKS", tasks: groups["His Tasks"]}) if groups["His Tasks"]?.length > 0
+			taskGroups.push({leftTitle: "RECEIVED TASKS" , tasks: groups["My Tasks"]}) #if groups["My Tasks"]?.length > 0
+			taskGroups.push({rightTitle: "SENT TASKS", tasks: groups["His Tasks"]}) #if groups["His Tasks"]?.length > 0
 			
 			return taskGroups
 
@@ -60,7 +60,6 @@ define [
 		getTaskListVC: ->
 			taskListVC = new TaskListViewController()
 			taskListVC.addTaskCard.addDelegate = @
-			taskListVC.taskList.enableDragAndDrop = true
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
 			taskListVC.addTaskCard.setPlaceHolder("Send task to " + @currentMember.get("username"))

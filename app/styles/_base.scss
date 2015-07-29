@@ -38,6 +38,10 @@ ul{
 ::-webkit-scrollbar { 
 	display: none; 
 }
+.main-view-controller{
+	width:100%;
+	height:100%;
+}
 
 #main-content {
 	padding-bottom:5em;
@@ -95,18 +99,6 @@ ul{
 
 			height:100%;
 
-			.scroll-container{
-				&::-webkit-scrollbar { 
-				    display: none; 
-				}
-				height:100%;
-				width:100%;
-				overflow-y:scroll;
-				position: relative;
-				z-index: 4;
-				padding-right: 5px;
-
-			}
 		}
 	
 	}
@@ -120,47 +112,6 @@ a:focus {
 button::-moz-focus-inner {
   border: 0;
 }
-div[role=main] {
-	margin: auto;
-	max-width: emCalc(685px);
-	position: relative;
-	height:100%;
-
-	@include breakpoint(desktop) {
-		
-		@include transition(max-width 0.5s ease-in-out);
-	}
-
-
-	padding-top: 1.0em;
-	@include transition(padding-top 0.4s ease-in-out);
-	> nav {
-		margin-bottom: 0.0em;
-		@include transition(margin-bottom 0.4s ease-in-out);
-	}
-	@include breakpoint(tablet, height){
-		padding-top: 1.4em;
-		> nav {
-			margin-bottom: 0.4em;
-			
-		}
-	}
-	@include breakpoint(desktop, height){
-		padding-top:1.8em;
-		> nav {
-			margin-bottom: 0.8em;
-		}
-	}
-	/*> nav {
-		margin-bottom: emCalc(10px);
-		
-
-		@include breakpoint(min-height, emCalc(1024px)) { margin-bottom: emCalc(20px); }
-	}*/
-
-	//padding-bottom: 3em;
-}
-
 
 
 // Pointer for drag & drop - added in body element (base.html)

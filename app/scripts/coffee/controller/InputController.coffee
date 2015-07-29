@@ -41,6 +41,8 @@ define ["underscore"], (_ ) ->
 
 			if( options && options.open )
 				swipy.router.navigate( "edit/#{ newTodo.id }", yes )
+
+			newTodo
 		parseTags: (str) ->
 			result = str.match /#(.[^,#]+)/g
 

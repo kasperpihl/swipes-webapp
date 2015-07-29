@@ -26,25 +26,9 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 				onDragEndParams: [ @ ]
 				# Handlers
 				onDragStart: (self) ->
-					if @pointerEvent.path?
-						for el in @pointerEvent.path
-							$el = $(el)
-							if $el.hasClass("task-item")
-								self.draggingId = "#" + $el.attr("id")
-					else if @pointerEvent.originalTarget?
-						currentTarget = @pointerEvent.originalTarget
-						for num in [1..10]
-							if currentTarget? and currentTarget
-								if _.indexOf(currentTarget.classList, "task-item") isnt -1
-									self.draggingId = "#" + currentTarget.id
-								else
-									currentTarget = currentTarget.parentNode
-							else
-								break
+					self.draggedIds = self.delegate.dragHandlerDraggedIdsForEvent( self, @pointerEvent )
 					self.updateMousePointer(@pointerEvent)
 					$(".drag-mouse-pointer").addClass("shown")
-					if self.delegate? and _.isFunction(self.delegate.extraIdsForDragging)
-						self.extraClasses = self.delegate.extraIdsForDragging( self, self.draggingId )
 
 				onDrag: (self) ->
 					hit = self.hitTest( @pointerEvent )
@@ -54,7 +38,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 				onDragEnd: (self) ->
 					hit = self.hitTest(@pointerEvent)
 					self.handleHitFinish(hit)
-					self.draggingId = false
+					self.draggedIds = null
 
 			@dragables = Draggable.create(selector, dragOpts)
 			if _.isFunction(@delegate.didCreateDragHandler)
@@ -109,12 +93,11 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 
 			if Draggable.hitTest(e, ".task-list", 0)
 				hit.parent = ".task-list"
-
 				ids = $.map( $(".task-list .task-item"), (o) -> o["id"] ) #_.pluck(@tempTasks, "id")
 				for i, id of ids
 					targetIdentifier = "#"+id
 					if Draggable.hitTest(e, targetIdentifier, 0)
-						return hit if targetIdentifier is @draggingId
+						return hit if _.indexOf(@draggedIds, targetIdentifier) isnt -1
 						
 						$hit = $(targetIdentifier)
 						sensitivityThreshold = 15 #$("#task-" + id).height()/2
@@ -173,7 +156,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 			@cleanDragAndDropElements()
 			$(".drag-mouse-pointer").removeClass("shown")
 			if hit? and @delegate? and _.isFunction(@delegate.dragHandlerDidHit)
-				willCallback = @delegate.dragHandlerDidHit( @ , @draggingId, hit, callback)
+				willCallback = @delegate.dragHandlerDidHit( @ , @draggedIds, hit, callback)
 				if !willCallback
 					callback()
 			else

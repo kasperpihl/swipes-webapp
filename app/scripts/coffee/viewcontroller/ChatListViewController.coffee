@@ -15,8 +15,10 @@ define [
 
 			@chatList = new ChatList()
 			@chatList.targetSelector = ".chat-list-view-controller .chat-list-container-scroller"
-
+			@chatList.enableDragAndDrop = true
+			
 			@chatHandler = new ChatHandler()
+
 			# Settings the Task Handler to receive actions from the task list
 			@chatList.taskDelegate = @chatHandler
 			@chatList.dragDelegate = @chatHandler

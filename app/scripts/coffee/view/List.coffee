@@ -141,7 +141,7 @@ define [
 					@selectedModels([task], e)
 					
 					# Handle auto scroll
-					scrollableView = $("#scrollcont")
+					scrollableView = $(".task-list-view-controller")
 					mainContentView = $('#main-content')
 
 					contentY = mainContentView.position().top

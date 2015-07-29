@@ -4,7 +4,8 @@ define [
 	"js/view/tasklist/TaskList"
 	"js/view/tasklist/AddTaskCard"
 	"js/handler/TaskHandler"
-	], (_, Template, TaskList, AddTaskCard, TaskHandler) ->
+	"js/view/workmode/RequestWorkOverlay"
+	], (_, Template, TaskList, AddTaskCard, TaskHandler, RequestWorkOverlay) ->
 	Backbone.View.extend
 		className: "task-list-view-controller"
 		initialize: ->
@@ -15,13 +16,15 @@ define [
 
 			@taskList = new TaskList()
 			@taskList.targetSelector = ".task-list-view-controller .task-list-container"
-
+			@taskList.enableDragAndDrop = true
+			
 			@taskHandler = new TaskHandler()
+
 			# Settings the Task Handler to receive actions from the task list
 			@taskList.taskDelegate = @taskHandler
 			@taskList.dragDelegate = @taskHandler
 			@taskList.dataSource = @taskHandler
-
+			Backbone.on( "request-work-task", @requestWorkTask, @ )
 
 		setTemplate: ->
 			@template = _.template Template
@@ -30,7 +33,8 @@ define [
 			@addTaskCard.render()
 			@$el.find('.task-column').prepend( @addTaskCard.el )
 			@taskList.render()
-
+		requestWorkTask: ( task ) ->
+			@workEditor = new RequestWorkOverlay( model: task )
 		destroy: ->
 			@addTaskCard?.destroy?()
 			@taskHandler?.destroy?()

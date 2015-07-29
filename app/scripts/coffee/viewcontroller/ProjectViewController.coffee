@@ -6,7 +6,7 @@ define [
 	
 	], (_, TweenLite, TaskListViewController, ChatListViewController) ->
 	Backbone.View.extend
-		className: "project-view-controller"
+		className: "project-view-controller main-view-controller"
 		initialize: ->
 
 		render: (el) ->
@@ -49,7 +49,6 @@ define [
 		getTaskListVC: ->
 			taskListVC = new TaskListViewController()
 			taskListVC.addTaskCard.addDelegate = @
-			taskListVC.taskList.enableDragAndDrop = true
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
 

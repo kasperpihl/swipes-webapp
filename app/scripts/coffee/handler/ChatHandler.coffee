@@ -13,6 +13,14 @@ define ["underscore"], (_) ->
 			@collection.on("add remove reset", @bouncedReloadWithEvent , @ )
 
 			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
+		messageCollectionIdFromHtmlId: (messageHtmlId) ->
+			# #message-
+			return if !messageHtmlId or !_.isString(messageHtmlId)
+			messageHtmlId.substring(9)
+		taskCollectionIdFromHtmlId: (taskHtmlId) ->
+			# #task-
+			return if !taskHtmlId or !_.isString(taskHtmlId)
+			taskHtmlId.substring(6)
 		reloadWithEvent: ->
 			Backbone.trigger("reload/chathandler")
 
@@ -23,6 +31,96 @@ define ["underscore"], (_) ->
 			else
 				@groupedMessages = [ { "leftTitle": null, "rightTitle": null, "messages": @collection.models }]
 			return @groupedMessages
+		
+
+		###
+			DragHandler Delegate
+		###
+		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
+			draggedIds = []
+
+			if e.path?
+				for el in e.path
+					$el = $(el)
+					if $el.hasClass("chat-item")
+						draggedId = "#" + $el.attr("id")
+			else if e.originalTarget?
+				currentTarget = e.originalTarget
+				for num in [1..10]
+					if currentTarget? and currentTarget
+						if _.indexOf(currentTarget.classList, "chat-item") isnt -1
+							draggedId = "#" + currentTarget.id
+						else
+							currentTarget = currentTarget.parentNode
+					else
+						break
+
+			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
+			if draggedMessage
+				draggedIds.push(draggedId)
+				$('.drag-mouse-pointer ul').html "<li>"+draggedMessage.get("message")+"</li>"
+			draggedIds
+		didCreateDragHandler: ( dragHandler ) ->
+			@dragHandler = dragHandler
+		# Deal with dropped items from DragHandler if true is returned, callback must be called!
+		dragHandlerDidHit: ( dragHandler, draggedIds, hit, callback ) ->
+			draggedId = draggedIds[0]
+			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
+			return if !draggedMessage?
+			self = @
+			
+			return false if !hit?
+			
+
+			if hit.type is "task"
+				hitTask = swipy.collections.todos.get( @taskCollectionIdFromHtmlId(hit.target) )
+				return if !hitTask?
+
+				options = {}
+				options.projectLocalId = hitTask.get("projectLocalId")
+				options.toUserId = hitTask.get("toUserId")
+				newTask = swipy.input.createTask(draggedMessage.get("message"), options)
+				
+				if hit.position is "middle"
+					
+					setTimeout(()->
+						callback()
+					, 400)
+					return true
+					#hitTask.addSubtask draggedTask, true
+					#@bouncedReloadWithEvent()
+				else if hit.position is "bottom" or hit.position is "top"
+
+					fromOrder = 99999999
+					targetOrder = hitTask.get(@listSortAttribute)
+					# if a task is moved up all affected should go down - otherwise up 
+					addition = if fromOrder > targetOrder then 1 else -1
+
+					# If task is moved down and top is hit, or task is moved down and bottom is hit - adjust accordingly!
+					targetOrder -= 1 if addition is -1 and hit.position is "top"
+					targetOrder += 1 if addition is 1 and hit.position is "bottom"
+					
+					# get the order affected span and order depending if task is moved up or down
+					lowestOrderAffected = if addition is 1 then targetOrder else fromOrder
+					highestOrderAffected = if addition is 1 then fromOrder else targetOrder
+
+
+					self = @
+					# find all affected tasks and bump them one up or down
+					@swipy.todos.collection.each( (m) ->
+						order = m.get(self.listSortAttribute)
+						if order >= lowestOrderAffected and order <= highestOrderAffected and m isnt draggedTask
+							m.updateOrder(self.listSortAttribute, order + addition )
+					)
+
+					# and selected tasks with order
+					_.invoke(selectedTasks, "updateOrder", @listSortAttribute, targetOrder)
+					@reloadWithEvent()
+					setTimeout(
+						=> _.invoke(selectedTasks, "set", "selected", false)
+					, 400)
+
+
 		###
 			ChatList Datasource
 		###

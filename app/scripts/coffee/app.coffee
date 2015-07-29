@@ -16,7 +16,6 @@ define [
 	"js/controller/ScheduleController"
 	"js/controller/FilterController"
 	"js/controller/SettingsController"
-	"js/controller/ErrorController"
 	"js/controller/SyncController"
 	"js/controller/APIController"
 	"js/controller/KeyboardController"
@@ -24,7 +23,7 @@ define [
 	"js/controller/UserController"
 	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, InputController, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, ErrorController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
+	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, InputController, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -42,6 +41,7 @@ define [
 			##@tags.fetch()
 			$(window).focus @openedWindow
 			$(window).blur @closedWindow
+			$(window).on( "resize", @resizedWindow )
 
 		manualInit: ->
 			#@hackParseAPI()
@@ -50,8 +50,6 @@ define [
 
 			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
-			@errors = new ErrorController()
-			
 			
 
 			# Synchronization
@@ -122,6 +120,8 @@ define [
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
+		resizedWindow: ->
+			Backbone.trigger("resized-window")
 		closedWindow: ->
 			Backbone.trigger("closed-window")
 		openedWindow: ->

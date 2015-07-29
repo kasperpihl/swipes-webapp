@@ -26,8 +26,15 @@
 		opacity: 0;
 		position: absolute;
 		display: inline-block;
-		top: 50%;
-		left: 50%;
+		&.level2{
+			z-index: 9002;
+		}
+		&.level3{
+			z-index: 9003;
+		}
+		&.level4{
+			z-index: 9004;
+		}
 		&.frame{
 			border: 1px solid $sidebar-dark-color;
 			background: white;

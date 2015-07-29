@@ -1,13 +1,39 @@
 define [
 	"underscore"
 	"text!templates/sidemenu/right-sidebar.html"
+	"gsap"
+	"gsap-draggable"
 	], (_, Template) ->
 	Backbone.View.extend
 		el: ".right-sidebar-outer-container"
 		initialize: ->
 			@setTemplate()
 			@renderSidebar()
+			@currentWidth = 400
+			@draggedStartX = @currentWidth
 			_.bindAll( @, "renderSidebar", "clickedRightSideButton", "clickedClose")
+			dragOpts =
+				type: "left"
+				bounds: $(".right-side-inner-container")
+				# Throwing / Dragging
+				throwProps: no
+				cursor: "col-resize"
+				maxDuration: 0.4
+				minimumMovement:6
+				onDragStartParams: [ @ ]
+				onDragParams: [ @ ]
+				onDragEndParams: [ @ ]
+				# Handlers
+				onDragStart: (self) ->
+				onDrag: (self) ->
+					targetWidth = self.draggedStartX - @x
+					self.setWindowWidth( targetWidth )
+				onDragEnd: (self) ->
+					targetWidth = self.draggedStartX - @x
+					self.setWindowWidth(targetWidth )
+					self.currentWidth = targetWidth
+
+			Draggable.create(".right-window-content-container .drag-resizer .drag-el", dragOpts)
 		events:
 			"click .rightbar-button" : "clickedRightSideButton"
 			"click .right-side-close": "clickedClose"
@@ -16,15 +42,18 @@ define [
 			@renderSidebar
 		clickedRightSideButton: (e) ->
 			target = $(e.currentTarget).attr("data-href")
-			if target is @activeClass
+			if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarSwitchToView)
+				@sidebarDelegate.sidebarSwitchToView(@, target )
+			###if target is @activeClass
 				@closeWindow()
 			else
-				@loadSidemenu(target)
-			
+				@loadSidemenu(target)###
+			@activeClass = target
+			@setActiveMenu(target)
 		setTemplate: ->
 			@template = _.template( Template, {variable: "data"})
 		renderSidebar: ->
-			@buttons = [{ "iconClass": "navbarChat"}, { "iconClass": "navbarFiles" }]
+			@buttons = [{ "iconClass": "navbarChat"}, { "iconClass": "today" }]
 			@$el.find(".right-sidebar-controls").html( @template({buttons: @buttons }) )
 			@delegateEvents()
 		setNewDelegate: (delegate) ->
@@ -40,18 +69,12 @@ define [
 				@loadWindow(@vc.el)
 				@vc.render()
 			else throw new Error("RightSidebarViewController: sidebarDelegate must implement sidebarGetViewController")
-			@activeClass = target
-			@$el.find('.right-window-container').addClass('shown')
-			@$el.find('.right-sidebar-controls').addClass("hasActiveEl")
-			@$el.find('.right-sidebar-controls .active').removeClass("active")
-			@$el.find('.right-sidebar-controls .' + target).addClass("active")
 
 			#@loadWindow(el, title)
 		loadWindow:(el) ->
-			width = 400
 			@$el.find('.right-window-content').html(el)	
-			
-			@setWindowWidth(width)
+			@$el.find('.right-window-container').addClass('shown')
+			@setWindowWidth(@currentWidth)
 
 		clickedClose: ->
 			if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarSwitchToView)
@@ -67,11 +90,13 @@ define [
 
 		setWindowWidth: (width) ->
 			widthOfRightSidebar = @$el.width()
+			widthOfRightSidebar = 0
 			$containerEl = @$el.find('.right-window-container')
 
 			$(".content-container").css("paddingRight", (width+widthOfRightSidebar) + "px")
 			$containerEl.css("width", width + "px")
 
 		setActiveMenu: (activeClass) ->
+			@$el.find('.right-sidebar-controls').addClass("hasActiveEl")
 			@$el.find(".right-sidebar-controls .active").removeClass("active")
 			@$el.find(".right-sidebar-controls ."+activeClass).addClass("active")

@@ -1,3 +1,9 @@
+.task-list-view-controller{
+	width:100%;
+	height:100%;
+	overflow-y: scroll;
+	padding: 10px;
+}
 .task-column{
 	max-width:400px;
 	margin: 40px auto;
@@ -9,9 +15,8 @@
 		@include experimental(animation-duration, 0.3s);
 	}
 		// Animate-in when adding new tasks
-	.animate-out-right {
+	.animated{
 		@extend .animated;
-		@extend .fadeOutRight;
 		@include experimental(animation-duration, 0.3s);
 	}
 }

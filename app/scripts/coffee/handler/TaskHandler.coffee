@@ -10,7 +10,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
 		loadCollection: (collection) ->
 			@collection = collection
-			@collection.on("add remove reset change:order change:projectOrder", @bouncedReloadWithEvent, @ )
+			@collection.on("add remove reset change:order change:projectOrder change:schedule", @bouncedReloadWithEvent, @ )
 			Backbone.on("show-assign", @didPressAssign, @)
 		reloadWithEvent: ->
 			Backbone.trigger("reload/taskhandler")
@@ -32,7 +32,25 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		###
 		didCreateDragHandler: ( dragHandler ) ->
 			@dragHandler = dragHandler
-		extraIdsForDragging:( dragHandler, draggedId ) ->
+		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
+			draggedIds = []
+
+			if e.path?
+				for el in e.path
+					$el = $(el)
+					if $el.hasClass("task-item")
+						draggedId = "#" + $el.attr("id")
+			else if e.originalTarget?
+				currentTarget = e.originalTarget
+				for num in [1..10]
+					if currentTarget? and currentTarget
+						if _.indexOf(currentTarget.classList, "task-item") isnt -1
+							draggedId = "#" + currentTarget.id
+						else
+							currentTarget = currentTarget.parentNode
+					else
+						break
+
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 
 			return [] if !draggedTask?
@@ -43,12 +61,12 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			$('.drag-mouse-pointer ul').html ""
 			for title in titles
 				$('.drag-mouse-pointer ul').append("<li>"+title+"</li>")
-			idsToReturn = []
 			for task in selectedTasks
-				idsToReturn.push("#task-"+task.id)
-			idsToReturn
+				draggedIds.push("#task-"+task.id)
+			draggedIds
 		# Deal with dropped items from DragHandler if true is returned, callback must be called!
-		dragHandlerDidHit: ( dragHandler, draggedId, hit, callback ) ->
+		dragHandlerDidHit: ( dragHandler, draggedIds, hit, callback ) ->
+			draggedId = draggedIds[0]
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 			return if !draggedTask?
 			self = @
@@ -133,13 +151,8 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				)
 			false
 
-		sortAndGroupCollection: ->
-			@groupedTasks = []
-			if @delegate? and _.isFunction(@delegate.taskHandlerSortAndGroupCollection)
-				@groupedTasks = @delegate.taskHandlerSortAndGroupCollection( @, @collection )
-			else
-				@groupedTasks = [ { "leftTitle": null, "rightTitle": null, "tasks": @collection.models }]
-			return @groupedTasks
+
+
 		### 
 			TaskCard Delegate
 		###
@@ -150,11 +163,10 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		taskCardDidClickAction: (taskCard, e) ->
 			
 		taskDidClick: (taskCard, e) ->
-			if e.metaKey
-				model = taskCard.model
+			model = taskCard.model
+			if model.get("selected")
 				model.set("selected", !model.get("selected"))
 			else
-				
 				shouldShow = !taskCard.$el.hasClass("editMode")
 				$(".editMode").removeClass("editMode")
 				if shouldShow
@@ -162,31 +174,6 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 					@dragHandler?.disable()
 				else
 					@dragHandler?.enable()
-
-		### 
-			TaskList Datasource
-		###
-
-		# TaskList asking for number of sections
-		taskListNumberOfSections: ( taskList ) ->
-			@sortAndGroupCollection()
-			return @groupedTasks.length
-		taskListLeftTitleForSection: ( taskList, section ) ->
-			return @groupedTasks[ (section-1) ]?.leftTitle
-		taskListRightTitleForSection: ( taskList, section ) ->
-			return @groupedTasks[ (section-1) ]?.rightTitle
-		
-		taskListTasksForSection: ( taskList, section ) ->
-			if !@collection?
-				throw new Error("TaskHandler: must loadSubcollection before loading TaskList")
-			#@collection.fetch()
-			models = @groupedTasks[ (section-1) ]?.tasks
-
-			if @listSortAttribute? and @listSortAttribute
-				models = @sortTasksAndSetOrder(models, true)
-			# Check filter for limitations
-			return models
-
 		didPressAssign: (model, e) ->
 			assignModal = new AssignModal({model: model})
 			assignModal.dataSource = @
@@ -207,6 +194,35 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			)
 
 			return peopleToAssign
+
+
+		### 
+			TaskList Datasource
+		###
+
+		# TaskList asking for number of sections
+		taskListNumberOfSections: ( taskList ) ->
+			@sortAndGroupCollection()
+			return @groupedTasks.length
+		sortAndGroupCollection: ->
+			@groupedTasks = []
+			if @delegate? and _.isFunction(@delegate.taskHandlerSortAndGroupCollection)
+				@groupedTasks = @delegate.taskHandlerSortAndGroupCollection( @, @collection )
+			else
+				@groupedTasks = [ { "leftTitle": null, "rightTitle": null, "tasks": @collection.models }]
+			return @groupedTasks
+		taskListDataForSection: ( taskList, section ) ->
+			if !@collection?
+				throw new Error("TaskHandler: must loadSubcollection before loading TaskList")
+			#@collection.fetch()
+			models = @groupedTasks[ (section-1) ].tasks
+			if @listSortAttribute? and @listSortAttribute
+				if !@groupedTasks[ (section-1) ].dontSort? or !@groupedTasks[ (section-1) ].dontSort
+					@groupedTasks[ (section-1) ].tasks = @sortTasksAndSetOrder(models, true)
+			# Check filter for limitations
+			
+			return @groupedTasks[ (section-1) ]
+
 
 
 		# Sort task and fix order of tasks based on the listSortAttribute provided

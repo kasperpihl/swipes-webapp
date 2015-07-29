@@ -3,11 +3,13 @@ define [
 	"gsap"
 	"js/viewcontroller/TaskListViewController"
 	"js/viewcontroller/ChatListViewController"
-	], (_, TweenLite, TaskListViewController, ChatListViewController) ->
+	"js/utility/TimeUtility"
+	"momentjs"
+	], (_, TweenLite, TaskListViewController, ChatListViewController, TimeUtility) ->
 	Backbone.View.extend
-		className: "my-tasks-view-controller"
+		className: "my-tasks-view-controller main-view-controller"
 		initialize: ->
-
+			@timeUtil = new TimeUtility()
 		render: ->
 			@$el.html ""
 			$("#main").html(@$el)
@@ -20,7 +22,7 @@ define [
 			@mainView = "task"
 			swipy.rightSidebarVC.sidebarDelegate = @
 			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
-
+			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
 
 		loadMainWindow: (type) ->
@@ -37,7 +39,6 @@ define [
 		getTaskListVC: ->
 			taskListVC = new TaskListViewController()
 			taskListVC.addTaskCard.addDelegate = @
-			taskListVC.taskList.enableDragAndDrop = true
 			taskListVC.taskList.showSource = true
 			taskListVC.taskHandler.listSortAttribute = "order"
 			taskListVC.taskHandler.delegate = @
@@ -69,15 +70,51 @@ define [
 			chatListVC.newMessage.setPlaceHolder("Send message to self")
 			return chatListVC
 
+
+		###
+			TaskHandler Delegate
+		###
+		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
+			self = @
+
+			groups = collection.groupBy((model, i) ->
+				if model.getState() is "active" then return -1
+				else if model.getState() is "scheduled"
+					schedule = model.get("schedule")
+					return 9999999999 if !schedule? or !schedule
+					return moment(schedule).startOf('day').unix()
+			)
+			taskGroups = []
+			sortedKeys = _.keys(groups).sort()
+			for key in sortedKeys
+				dontSort = false
+				showSchedule = false
+				if key is "-1"
+					title = "Your Current Tasks"
+				else if key is "9999999999"
+					title = "Unspecified"
+				else
+					dontSort = true
+					showSchedule = true
+					schedule = new Date(parseInt(key)*1000)
+					groups[key] = _.sortBy(groups[key], (model) ->
+						return model.get("schedule")?.getTime()
+					)
+					title = @timeUtil.dayStringForDate(schedule)
+					title = "Later Today" if title is "Today"
+				taskGroups.push({showSource: true, showSchedule: showSchedule, leftTitle: title, tasks: groups[key], dontSort: dontSort })
+			return taskGroups
+
+
 		###
 			RightSidebarDelegate
 		###
 		sidebarSwitchToView: (sidebar, view) ->
-			if @mainView is "task"
-				@mainView = "chat" 
+			if view is "navbarChat"
+				@mainView = "chat"
 			else @mainView = "task"
 			@render()
-		sidebarGetViewController: (sidebar) ->
+		sidebarGetViewController: (sidebar, view) ->
 			if @mainView is "task"
 				return @getChatListVC()
 			else

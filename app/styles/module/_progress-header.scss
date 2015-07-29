@@ -11,7 +11,7 @@
 	padding-right: 140px;
 
 }
-
+$def-color: $small-seperator-color;
 
 // Inner elements
 .progress-header {
@@ -42,7 +42,7 @@
 			&:after {
 				display: block;
 				content: '';
-				border-bottom: 2px solid #ffc107;
+				border-bottom: 2px solid $def-color;
 				background-color: #fff;
 				position: absolute;
 				z-index: 1;
@@ -58,7 +58,7 @@
 	.progress {
 		height: 8px;
 		background-color: $sidebar-bg;
-		border: 2px solid #ffc107;
+		border: 2px solid $def-color;
 		border-right: none;
 		margin: 0;
 		position: relative;
@@ -69,7 +69,7 @@
 
 		.progress-bar {
 			height: 8px;
-			background-color: #ffc107;
+			background-color: $def-color;
 
 			@include border-right-radius(7em);
 			@include box-shadow(none);
@@ -92,7 +92,9 @@
 				background-color: transparent;
 			}
 	}
-
+	svg #CURVE path {
+		fill: $def-color;
+	}
 
 
 	// States
@@ -102,7 +104,7 @@
 			display: block;
 			content: '';
 			height: 2px;
-			background-color: #ffc107;
+			background-color: $def-color;
 			width: 100%;
 		}
 
@@ -115,8 +117,20 @@
 		}
 
 	}
+	&.yellow{
+		&:before {
+			background-color: $yellow;
+		}
 
-	&.schedule {
+		h1:after {
+			border-bottom-color: $yellow;
+		}
+
+		svg #CURVE path {
+			fill: $yellow;
+		}
+	}
+	&.red {
 		&:before {
 			background-color: $red;
 		}
@@ -130,7 +144,7 @@
 		}
 	}
 
-	&.done {
+	&.green {
 		&:before {
 			background-color: $green;
 		}

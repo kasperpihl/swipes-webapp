@@ -28,18 +28,23 @@ define [
 			
 			self = @
 			if $(e.currentTarget).hasClass("complete-button") and _.isFunction(@taskDelegate.taskCardDidComplete)
-				@completeTask().then(->
+				@animateWithClass("fadeOutRight").then(->
 					self.taskDelegate.taskCardDidComplete(self)
 				)
 			if $(e.currentTarget).hasClass("schedule-button")
-				Backbone.trigger( "show-scheduler", [@model], e )
+				Backbone.trigger( "show-scheduler", [@], e )
 			if $(e.currentTarget).hasClass("assign-button")
 				Backbone.trigger( "show-assign", @model, e)
 			false
-		completeTask: (callback) ->
+		scheduleTask: ->
+		animateWithClass: (animateClass) ->
 			dfd = new $.Deferred()
-			@$el.addClass('animate-out-right')
+			@$el.addClass("animated")
+			@$el.addClass(animateClass)
+			self = @
 			setTimeout(->
+				self.$el.removeClass("animated")
+				self.$el.removeClass(animateClass)
 				dfd.resolve()
 			, 300)
 			return dfd.promise()
@@ -50,7 +55,7 @@ define [
 				@$el.addClass "animate-in"
 				@model.set "animateIn", null, {localSync: true}
 			@$el.attr('id', "task-"+@model.id )
-			@$el.html @template( task: @model, showSource: @showSource )
+			@$el.html @template( task: @model, showSource: @showSource, showSchedule: @showSchedule )
 
 			return @
 		onSelected: (model, selected) ->
