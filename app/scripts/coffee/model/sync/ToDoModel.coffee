@@ -205,7 +205,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			@setRestrictedForMe()
 		setRestrictedForMe: ->
 			if @get("toUserId")
-				if @get("toUserId") isnt Parse.User.current().id and @get("userId") isnt Parse.User.current()
+				if @get("toUserId") isnt Parse.User.current().id and @get("userId") isnt Parse.User.current().id
 					@set("restrictedForMe",true)
 		checkAssigned: ->
 			if @get("toUserId") is Parse.User.current().id or @get("assignees") and _.indexOf(@get("assignees"), Parse.User.current().id) isnt -1

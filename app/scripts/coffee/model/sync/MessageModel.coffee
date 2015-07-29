@@ -11,7 +11,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility"], (BaseModel, TimeUt
 			@setRestrictedForMe()
 		setRestrictedForMe: ->
 			if @get("toUserId")
-				if @get("toUserId") isnt Parse.User.current().id and @get("userId") isnt Parse.User.current()
+				if @get("toUserId") isnt Parse.User.current().id and @get("userId") isnt Parse.User.current().id
 					@set("restrictedForMe",true)
 		setTimeStr: ->
 			timestamp = @get "timestamp"
