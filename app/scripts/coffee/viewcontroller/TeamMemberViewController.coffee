@@ -110,7 +110,6 @@ define [
 			RightSidebarDelegate
 		###
 		sidebarSwitchToView: (sidebar, view) ->
-			console.log view
 			if @mainView is "task"
 				@mainView = "chat" 
 			else @mainView = "task"

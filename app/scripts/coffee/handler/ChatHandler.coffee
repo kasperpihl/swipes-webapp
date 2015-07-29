@@ -73,7 +73,11 @@ define ["underscore"], (_) ->
 			return false if !hit?
 			console.log hit
 			if hit.type is "task-list"
-				Backbone.trigger( "create-task", draggedMessage.get("message"))
+				Backbone.trigger("create-task", draggedMessage.get("message"))
+				###
+				title = prompt("Please enter task name", draggedMessage.get("message"));
+				if title
+					Backbone.trigger( "create-task", title)###
 
 		###
 			ChatList Datasource
