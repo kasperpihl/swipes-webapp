@@ -7,7 +7,6 @@ define [
 	"js/controller/AnalyticsController"
 	"js/router/MainRouter"
 	"js/collection/Collections"
-	"js/controller/InputController"
 	"js/controller/SidebarController"
 	"js/viewcontroller/ModalViewController"
 	"js/viewcontroller/LeftSidebarViewController"
@@ -23,7 +22,7 @@ define [
 	"js/controller/UserController"
 	"js/controller/WorkController"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, InputController, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
+	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -84,7 +83,6 @@ define [
 			
 			
 			@scheduler = new ScheduleController()
-			@input = new InputController()
 			@sidebar = new SidebarController()
 
 			@filter = new FilterController()
@@ -113,7 +111,6 @@ define [
 			@mainViewController?.destroy()
 			@router?.destroy()
 			@scheduler?.destroy()
-			@input?.destroy()
 			@sidebar?.destroy()
 			@filter?.destroy()
 			@settings?.destroy()

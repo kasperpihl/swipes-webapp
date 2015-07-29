@@ -8,6 +8,11 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility"], (BaseModel, TimeUt
 			@setTimeStr()
 			@on "change:timestamp", =>
 				@setTimeStr()
+			@setRestrictedForMe()
+		setRestrictedForMe: ->
+			if @get("toUserId")
+				if @get("toUserId") isnt Parse.User.current().id and @get("userId") isnt Parse.User.current()
+					@set("restrictedForMe",true)
 		setTimeStr: ->
 			timestamp = @get "timestamp"
 			if !timestamp then return @set( "timeStr", undefined )

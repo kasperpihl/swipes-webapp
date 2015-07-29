@@ -136,7 +136,7 @@ define [
 		newMessageSent: ( newMessage, message ) ->
 			options = {}
 			options.toUserId = Parse.User.current().id
-			Backbone.trigger("send-message", message, options)
+			@chatCollectionSubset?.child.sendMessage(message, options)
 			Backbone.trigger("reload/chathandler")
 		###
 			AddTaskCard Delegate

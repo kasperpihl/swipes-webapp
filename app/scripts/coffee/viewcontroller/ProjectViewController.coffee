@@ -114,7 +114,7 @@ define [
 			options = {}
 			options.projectLocalId = @projectId
 			options.ownerId = @currentProject.get("ownerId")
-			Backbone.trigger("send-message", message, options)
+			@chatCollectionSubset?.child.sendMessage(message, options)
 			Backbone.trigger("reload/chathandler")
 		###
 			AddTaskCard Delegate

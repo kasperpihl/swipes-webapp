@@ -1,5 +1,20 @@
-<% _.each(members, function(member) { %>
-	<li class="member" id="sidebar-member-<%= member.objectId %>">
+<% 
+_.each(data.members, function(member) { 
+	var unreadClass = "";
+	var hasNotificationClass = "";
+	var numberOfNotifications = 0;
+	var index = "member-" + member.objectId;
+	var notifications = data.notifications[index];
+	if(notifications){
+		if(notifications.unread)
+			unreadClass = "unread";
+		if(notifications.notifications){
+			numberOfNotifications = notifications.notifications;
+			hasNotificationClass = "hasNotification"
+		}
+	}
+%>
+	<li class="member <%= unreadClass %> <%= hasNotificationClass %>" id="sidebar-member-<%= member.objectId %>">
 		<a href="#member/<%= member.objectId %>">
 			<div class="status-container">
 				<span class="status <%= member.status %>">
@@ -8,6 +23,9 @@
 			<div class="text">
 				<%= member.username %>
 			</div>
+			<% if(numberOfNotifications){ %>
+				<span class="notification"><%= numberOfNotifications %></span>
+			<% }%>
 		</a>
 	</li>
 <% }); %>

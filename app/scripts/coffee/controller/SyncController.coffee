@@ -61,7 +61,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if !model
 					continue if obj.deleted
 					model = new collection.model obj
-
+					continue if model.get("restrictedForMe")
 					if !obj.parentLocalId? and model.has("completionDate")
 						completionDate = model.get("completionDate")
 						if completionDate? and completionDate

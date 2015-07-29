@@ -129,7 +129,7 @@ define [
 			options = {}
 			options.toUserId = @currentMember.id
 			options.ownerId = @currentMember.get("organisationId")
-			Backbone.trigger("send-message", message, options)
+			@chatCollectionSubset?.child.sendMessage(message, options)
 			Backbone.trigger("reload/chathandler")
 		###
 			AddTaskCard Delegate

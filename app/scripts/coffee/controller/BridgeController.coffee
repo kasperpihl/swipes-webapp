@@ -26,7 +26,7 @@ define ["underscore"], () ->
                 Intercom('show')
             )
             @bridge.registerHandler('add-task', (data, responseCallback) ->
-                #Backbone.trigger("create-task2", data.title)
+                
             )
             sessionToken = Parse.User.current()?.getSessionToken()
             @bridge.send({  sessionToken})

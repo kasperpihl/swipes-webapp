@@ -1,7 +1,25 @@
-<% _.each(projects, function(project) { %>
-	<li class="project" id="sidebar-project-<%= project.objectId %>">
+<% 
+_.each(data.projects, function(project) { 
+	var unreadClass = "";
+	var hasNotificationClass = "";
+	var numberOfNotifications = 0;
+	var index = "project-" + project.objectId;
+	var notifications = data.notifications[index];
+	if(notifications){
+		if(notifications.unread)
+			unreadClass = "unread";
+		if(notifications.notifications){
+			numberOfNotifications = notifications.notifications;
+			hasNotificationClass = "hasNotification"
+		}
+	}
+%>
+	<li class="project <%= unreadClass %> <%= hasNotificationClass %>" id="sidebar-project-<%= project.objectId %>">
 		<a href="#project/<%= project.objectId %>">
 			<span class="text"><%= project.name %></span>
+			<% if(numberOfNotifications){ %>
+				<span class="notification"><%= numberOfNotifications %></span>
+			<% }%>
 		</a>
 	</li>
 <% }); %>
