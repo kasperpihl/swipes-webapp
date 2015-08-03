@@ -13,7 +13,7 @@ define [
 			@template = _.template MessageTmpl, {variable: "data" }
 		render: ->
 			@$el.attr('id', "message-"+@model.id )
-			@$el.html @template( message: @model )
+			@$el.html @template( message: @model, isFromSameSender: @isFromSameSender )
 
 			return @
 		remove: ->

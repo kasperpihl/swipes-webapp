@@ -20,7 +20,7 @@ define [
 			@chatHandler = new ChatHandler()
 			
 			# Settings the Task Handler to receive actions from the task list
-			@chatList.taskDelegate = @chatHandler
+			@chatList.chatDelegate = @chatHandler
 			@chatList.dragDelegate = @chatHandler
 			@chatList.dataSource = @chatHandler
 

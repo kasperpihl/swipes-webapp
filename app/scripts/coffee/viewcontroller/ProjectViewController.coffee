@@ -72,7 +72,7 @@ define [
 					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
 			})
 			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)
-			
+			@taskListVC = taskListVC
 			return taskListVC
 
 
@@ -88,10 +88,17 @@ define [
 			})
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
+			chatListVC.chatList.delegate = @
 			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
 			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentProject.get("name"))
+			@chatListVC = chatListVC
 			return chatListVC
 		
+		###
+			ChatList ChatDelegate
+		###
+		chatListMarkAsRead: (chatList, timestamp) ->
+			Backbone.trigger("mark-read", "project-"+@projectId, timestamp)
 		###
 			RightSidebarDelegate
 		###
@@ -115,6 +122,7 @@ define [
 			options.projectLocalId = @projectId
 			options.ownerId = @currentProject.get("ownerId")
 			@chatCollectionSubset?.child.sendMessage(message, options)
+			@chatListVC.chatList.scrollToBottomVar = true
 			Backbone.trigger("reload/chathandler")
 		###
 			AddTaskCard Delegate
@@ -123,5 +131,7 @@ define [
 			@createTask( title, options)
 
 		destroy: ->
+			@chatListVC?.destroy()
+			@taskListVC?.destroy()
 			Backbone.off(null,null, @)
 			@vc?.destroy()

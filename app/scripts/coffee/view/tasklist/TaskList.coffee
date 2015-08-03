@@ -46,7 +46,7 @@ define [
 
 				# Load tasks and titles for section
 				sectionData = @dataSource.taskListDataForSection( @, section )
-
+				continue if !sectionData or !sectionData.tasks.length
 				# Instantiate 
 				section = new Section()
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)

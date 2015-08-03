@@ -8,7 +8,6 @@ define [
 		init: ->
 			# Listen for navigation events
 			Backbone.on( 'open/viewcontroller', @openVC, @)
-			Backbone.on( 'edit/task', @editTask, @ )
 		openVC: (viewcontroller, options) ->
 			if @currentControllerName is viewcontroller
 				@currentViewController.open( options )

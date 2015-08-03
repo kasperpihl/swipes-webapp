@@ -5,20 +5,26 @@
 %>
 <div class="chat-message">
 	<div class="chat-left-side-container">
+		<% if(!data.isFromSameSender){ %>
 		<div class="picture-container">
+			<div class="picture-circular" style="background: url(<%= sender.get("profileImageURL") %>) no-repeat; background-size: 40px 40px;">
+			</div>
 		</div>
+		<% } %>
 	</div>
 	<div class="chat-right-side-container">
+		<% if(!data.isFromSameSender){ %>
 		<div class="sender-container">
 			<span class="sender-name"><%= sender.get("username") %></span>
 			<span class="timestamp"><%= data.message.get("timeStr") %></span>
 		</div>
+		<% } %>
 		<div class="message-container">
 			<%= data.message.get("message") %>
 		</div>
 		<% if( data.message.get("message").indexOf("attachment") != -1){ %>
 		<div class="attachment-container">
-			<a href="http://test.com" target="_blank"><img src="styles/img/attachment-placeholder.png"></a>
+			<a href="http://test.com" target="_blank"><img src="styles/img/temp/attachment-placeholder.png"></a>
 		</div>
 		<div class="like-container">
 			<a class="like-button">

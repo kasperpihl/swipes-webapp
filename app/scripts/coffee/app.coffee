@@ -21,8 +21,9 @@ define [
 	"js/controller/BridgeController"
 	"js/controller/UserController"
 	"js/controller/WorkController"
+	"js/model/extra/NotificationModel"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController) ->
+	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -72,7 +73,7 @@ define [
 			@sync.sync()
 		init: ->
 			@cleanUp()
-
+			@notificationModel = new NotificationModel({id: 1})
 			@leftSidebarVC = new LeftSidebarViewController()
 			@topbarVC = new TopbarViewController()
 			@rightSidebarVC = new RightSidebarViewController()

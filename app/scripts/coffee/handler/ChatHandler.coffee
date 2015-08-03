@@ -66,12 +66,10 @@ define ["underscore"], (_) ->
 		dragHandlerDidHit: ( dragHandler, draggedIds, hit, callback ) ->
 			draggedId = draggedIds[0]
 			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
-			console.log draggedMessage
 			return if !draggedMessage?
 			self = @
 			
 			return false if !hit?
-			console.log hit
 			if hit.type is "task-list"
 				Backbone.trigger("create-task", draggedMessage.get("message"))
 				###

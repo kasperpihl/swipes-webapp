@@ -83,7 +83,7 @@ define [
 					return false
 			})
 			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)
-			
+			@taskListVC = taskListVC
 			return taskListVC
 
 
@@ -101,9 +101,10 @@ define [
 			})
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
+			chatListVC.chatList.delegate = @
 			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentMember.get("username"))
 			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
-
+			@chatListVC = chatListVC
 			return chatListVC
 
 		###
@@ -120,6 +121,11 @@ define [
 			else
 				return @getTaskListVC()
 
+		###
+			ChatList ChatDelegate
+		###
+		chatListMarkAsRead: (chatList, timestamp) ->
+			Backbone.trigger("mark-read", "member-"+@memberId, timestamp)
 
 		
 		###
@@ -130,7 +136,8 @@ define [
 			options.toUserId = @currentMember.id
 			options.ownerId = @currentMember.get("organisationId")
 			@chatCollectionSubset?.child.sendMessage(message, options)
-			Backbone.trigger("reload/chathandler")
+			@chatListVC.chatList.scrollToBottomVar = true
+			Backbone.trigger("reload/chathandler", "scrollToBottom")
 		###
 			AddTaskCard Delegate
 		###
@@ -138,5 +145,7 @@ define [
 			@createTask(title, options)
 
 		destroy: ->
+			@chatListVC?.destroy()
+			@taskListVC?.destroy()
 			Backbone.off( null, null, @ )
 			@vc?.destroy()

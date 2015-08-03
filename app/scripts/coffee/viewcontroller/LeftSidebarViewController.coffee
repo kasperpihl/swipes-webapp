@@ -2,17 +2,13 @@ define [
 	"underscore"
 	"text!templates/sidemenu/sidebar-projects.html"
 	"text!templates/sidemenu/sidebar-team-members.html"
-	"js/model/extra/NotificationModel"
-	], (_, ProjectsTemplate, TeamMembersTemplate, NotificationModel) ->
+	], (_, ProjectsTemplate, TeamMembersTemplate) ->
 	Backbone.View.extend
 		el: ".sidebar_content"
 		initialize: ->
 			@setTemplates()
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
-			
-			@notificationModel = new NotificationModel({id: 1})
-			@notificationModel.fetch()
-			@listenTo( @notificationModel, "change:notifications", @bouncedRenderSidebar )
+			@listenTo( swipy.notificationModel, "change:notifications", @bouncedRenderSidebar )
 			# Proper render list when projects change/add/remove
 			@listenTo( swipy.collections.projects, "add remove reset change:name", @renderSidebar )
 			#@listenTo( swipy.collections.members, "add remove reset change:name change:status", @renderSidebar )
@@ -32,7 +28,7 @@ define [
 			@projectsTpl = _.template ProjectsTemplate, {variable: "data"}
 			@membersTpl = _.template TeamMembersTemplate, {variable: "data"}
 		renderSidebar: ->
-			notifications = @notificationModel.get("notifications")
+			notifications = swipy.notificationModel.get("notifications")
 			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({notifications: notifications, projects: _.sortBy(swipy.collections.projects.toJSON(), "name")}))
 			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({notifications: notifications, members: _.sortBy(_.filter(swipy.collections.members.toJSON(), (member) -> return !member.me ), "username")}))
 			@checkAndEnableScrollBars()

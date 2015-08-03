@@ -78,6 +78,7 @@ define [
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
 			chatListVC.newMessage.setPlaceHolder("Send message to self")
+			@chatListVC = chatListVC
 			return chatListVC
 
 
@@ -137,7 +138,8 @@ define [
 			options = {}
 			options.toUserId = Parse.User.current().id
 			@chatCollectionSubset?.child.sendMessage(message, options)
-			Backbone.trigger("reload/chathandler")
+			@chatListVC.chatList.scrollToBottomVar = true
+			Backbone.trigger("reload/chathandler", "scrollToBottom")
 		###
 			AddTaskCard Delegate
 		###
@@ -145,5 +147,7 @@ define [
 			@createTask( title, options )
 
 		destroy: ->
+			@chatListVC?.destroy()
+			@taskListVC?.destroy()
 			Backbone.off(null,null, @)
 			@vc?.destroy()
