@@ -38,9 +38,18 @@ $chat-new-message-height: 50px;
 		}
 	}
 }
+.chat-item:hover, .chat-message:hover{
+	.left-hover-box, .top-hover-box{
+		opacity: 1;
+		@include transition(opacity 0.1s ease-out);
+	}
+}
 .chat-message{
-	$left-side-width:50px;
+	$left-side-width:55px;
+	$min-height:28px;
+	$like-color: #babbbd;
 	padding:5px;
+	min-height:$min-height;
 	position:relative;
 	.chat-left-side-container{
 		float:left;
@@ -76,8 +85,10 @@ $chat-new-message-height: 50px;
 			height: 300px;
 		}
 	}
+
 	.like-container{
-		$like-color: #babbbd;
+		margin-bottom: 10px;
+		margin-top: 3px;
 		font-size: 14px;
 		.like-button{
 			svg{
@@ -85,15 +96,6 @@ $chat-new-message-height: 50px;
 				margin-bottom:-4px;
 				width:20px;
 				height:20px;
-				fill: $like-color;
-			}
-			color: $like-color;
-			&:hover{ text-decoration: none; 
-				svg{
-					fill: $red;
-
-				}
-				color: $red;
 			}
 		}
 		.like-string{
@@ -101,6 +103,65 @@ $chat-new-message-height: 50px;
 			color: $unselected-color;
 		}
 
+	}
+	.like-button{
+		color: $like-color;
+		svg{
+			fill: $like-color;
+		}
+		&:hover{ text-decoration: none; 
+
+			svg{
+				fill: $red;
+
+			}
+			color: $red;
+		}
+	}
+	.like-button.liked{
+		color: $red;
+		svg{
+			fill: $red;
+		}
+		&:hover{ text-decoration: none; 
+
+			svg{
+				fill: $like-color;
+
+			}
+			color: $like-color;
+		}
+	}
+	.top-hover-box{
+		opacity: 0;
+		.like-button{
+			line-height: 10px;
+			font-size: 10px;
+			svg{
+				width:12px;
+				height:12px;
+			}
+		}
+	}
+	.left-hover-box{
+		width: $left-side-width;
+		opacity: 0;
+		.timestamp{
+			font: 9px/1 $font-normal;
+			position:absolute;
+			top:8px;
+			left:20px;
+		}
+		.like-button{
+			position:absolute;
+			top:5px;
+			line-height: 10px;
+			font-size: 10px;
+			svg{
+				width:12px;
+				height:12px;
+			}
+		}
 	}
 }
 

@@ -78,6 +78,14 @@ define ["underscore"], (_) ->
 					Backbone.trigger( "create-task", title)###
 
 		###
+			ChatMessage Delegate
+		###
+		messageDidClickLike: (chatMessage, e) ->
+			model = chatMessage.model
+			model.like()
+
+
+		###
 			ChatList Datasource
 		###
 		

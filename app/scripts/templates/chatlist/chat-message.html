@@ -1,7 +1,18 @@
 <% 
 	var hasProfilePicture = "";
 	var sender = swipy.collections.members.get(data.message.get("userId"));
+	var hasAttachment = false;
 
+	var shouldShowBigLike = false;
+	if( data.message.get("message").indexOf("attachment") != -1){
+		hasAttachment = true;
+		shouldShowBigLike = true;
+	}
+	if(data.message.get("numberOfLikes") > 0)
+		shouldShowBigLike = true;
+	var isLikedClass = ""
+	if(data.message.get("likedByMe"))
+		isLikedClass = "liked"
 %>
 <div class="chat-message">
 	<div class="chat-left-side-container">
@@ -10,6 +21,17 @@
 			<div class="picture-circular" style="background: url(<%= sender.get("profileImageURL") %>) no-repeat; background-size: 40px 40px;">
 			</div>
 		</div>
+		<% } else { %>
+			<div class="left-hover-box">
+				<% if(!shouldShowBigLike){ %>
+				<a class="like-button">
+					<svg class="icon">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-thumb"></use>
+					</svg>
+				</a>
+				<% } %>
+				<span class="timestamp"><%= data.message.get("timeStr") %></span>
+			</div>
 		<% } %>
 	</div>
 	<div class="chat-right-side-container">
@@ -17,21 +39,32 @@
 		<div class="sender-container">
 			<span class="sender-name"><%= sender.get("username") %></span>
 			<span class="timestamp"><%= data.message.get("timeStr") %></span>
+			<% if(!shouldShowBigLike){ %> 
+			<span class="top-hover-box">
+				<a class="like-button">
+					<svg class="icon">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-thumb"></use>
+					</svg>
+				</a>
+			</span>
+			<% } %>
 		</div>
 		<% } %>
 		<div class="message-container">
 			<%= data.message.get("message") %>
 		</div>
-		<% if( data.message.get("message").indexOf("attachment") != -1){ %>
+		<% if( hasAttachment ){ %>
 		<div class="attachment-container">
 			<a href="http://test.com" target="_blank"><img src="styles/img/temp/attachment-placeholder.png"></a>
 		</div>
+		<% } %>
+		<% if(shouldShowBigLike){ %>
 		<div class="like-container">
-			<a class="like-button">
+			<a class="like-button <%= isLikedClass %>">
 				<svg class="icon">
 					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-thumb"></use>
 				</svg>
-				Like
+				Like<% if(isLikedClass.length > 0) print("d"); %>
 			</a>
 			<span class="like-string">
 				Be the first to like this.

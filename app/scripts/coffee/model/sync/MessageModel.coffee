@@ -10,8 +10,32 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility"], (BaseModel, TimeUt
 			@setTimeStr()
 			@on "change:timestamp", =>
 				@setTimeStr()
+			@handleLikes()
+			@on "change:likes", =>
+				@handleLikes()
 			@setRestrictedForMe()
 			@set("unread",true) if @get("userId") isnt Parse.User.current().id
+		like: ->
+			currentLikes = @get "likes"
+			userId = Parse.User.current().id
+			if !currentLikes
+				currentLikes = []
+
+			index = _.indexOf( currentLikes, userId )
+			if index isnt -1
+				currentLikes.splice(index, 1)
+			else
+				currentLikes.push(userId)
+			@set("likes": null)
+			@save {"likes": currentLikes}, {sync:true}
+		handleLikes: ->
+			currentLikes = @get "likes"
+			if !currentLikes
+				currentLikes = []
+			userId = Parse.User.current().id
+			index = _.indexOf( currentLikes, userId )
+			@set("likedByMe", (index isnt -1))
+			@set("numberOfLikes", currentLikes.length)
 		setRestrictedForMe: ->
 			if @get("toUserId")
 				if @get("toUserId") isnt Parse.User.current().id and @get("userId") isnt Parse.User.current().id

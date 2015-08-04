@@ -418,7 +418,20 @@ module.exports = function (grunt) {
             'watch'
         ]);
     });
+    grunt.registerTask('flight', function (target) {
+        if (target === 'dist') {
+            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+        }
 
+        grunt.task.run([
+            'clean:server',
+            'bake:build',
+            'concurrent:server',
+            //'autoprefixer',
+            'connect:livereload',
+            'open'
+        ]);
+    });
     grunt.registerTask('test', [
         'clean:server',
         'concurrent:test',

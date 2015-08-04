@@ -1,0 +1,14 @@
+$edit-nav-height: 60px;
+.edit-task{
+	.nav-container{
+		height:$edit-nav-height;
+		.nav-item{
+			width:25%;
+			svg{
+				height:20px;
+				width:20px;
+			}
+		}
+
+	}
+}
