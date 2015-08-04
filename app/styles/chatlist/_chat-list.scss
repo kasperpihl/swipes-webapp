@@ -99,37 +99,27 @@ $chat-new-message-height: 50px;
 			}
 		}
 		.like-string{
-			margin-left:16px;
 			color: $unselected-color;
 		}
 
 	}
 	.like-button{
-		color: $like-color;
 		svg{
-			fill: $like-color;
+			fill: $unselected-color;
 		}
 		&:hover{ text-decoration: none; 
 
 			svg{
-				fill: $red;
+				opacity: 0.8;
 
 			}
-			color: $red;
 		}
 	}
 	.like-button.liked{
-		color: $red;
 		svg{
 			fill: $red;
 		}
-		&:hover{ text-decoration: none; 
-
-			svg{
-				fill: $like-color;
-
-			}
-			color: $like-color;
+		&:hover{
 		}
 	}
 	.top-hover-box{

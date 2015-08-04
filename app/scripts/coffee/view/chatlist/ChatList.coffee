@@ -28,8 +28,8 @@ define [
 		render: ->
 			if !@dataSource?
 				throw new Error("ChatList must have dataSource")
-			if !_.isFunction(@dataSource.chatListMessagesForSection)
-				throw new Error("ChatList dataSource must implement chatListChatsForSection")
+			if !_.isFunction(@dataSource.chatListDataForSection)
+				throw new Error("ChatList dataSource must implement chatListDataForSection")
 
 			if !@targetSelector?
 				throw new Error("ChatList must have targetSelector to render")
@@ -57,21 +57,20 @@ define [
 			@unread = null
 
 			for section in [1 .. numberOfSections]
+				
+				# Load messages and titles for section
+				sectionData = @dataSource.chatListDataForSection( @, section )
+				continue if !sectionData or !sectionData.messages.length
+
 				lastSender = false
-				# Load tasks and titles for section
-				if _.isFunction(@dataSource.chatListLeftTitleForSection)
-					leftTitle = @dataSource.chatListLeftTitleForSection( @, section )
-				if _.isFunction(@dataSource.chatListRightTitleForSection)
-					rightTitle = @dataSource.chatListRightTitleForSection( @, section )
-				chatsInSection = @dataSource.chatListMessagesForSection( @, section )
 				
 
 				# Instantiate 
 				section = new Section()
-				section.setTitles(leftTitle, rightTitle)
+				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
 
-				for chat in chatsInSection
+				for chat in sectionData.messages
 
 					numberOfChats++
 					if chat.get("unread")

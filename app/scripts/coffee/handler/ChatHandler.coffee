@@ -4,12 +4,13 @@
 		Find out who's the sender, where does it want to go, and what actions would be available
 	Receive select/unselect from TaskList
 ###
-define ["underscore"], (_) ->
+define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 	class ChatHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
 		loadCollection: (collection) ->
 			@collection = collection
+			@timeUtil = new TimeUtility()
 			@collection.on("add remove reset", @bouncedReloadWithEvent , @ )
 
 			# @listenTo( swipy.collections.todos, "add remove reset change:priority change:completionDate change:schedule change:rejectedByTag change:rejectedBySearch change:subtasksLocal", @renderList )
@@ -26,10 +27,19 @@ define ["underscore"], (_) ->
 
 		sortAndGroupCollection: ->
 			@groupedMessages = []
-			if @delegate? and _.isFunction(@delegate.chatHandlerSortAndGroupCollection)
-				@groupedMessages = @delegate.chatHandlerSortAndGroupCollection( @, @collection )
-			else
-				@groupedMessages = [ { "leftTitle": null, "rightTitle": null, "messages": @collection.models }]
+			groups = @collection.groupBy((model, i) ->
+				if model.get("timestamp")
+					return moment(model.get("timestamp")).startOf('day').unix()
+				else
+					return moment(model.get("localCreatedAt")).startOf('day').unix()
+			)
+			taskGroups = []
+			sortedKeys = _.keys(groups).sort()
+			for key in sortedKeys
+				schedule = new Date(parseInt(key)*1000)
+
+				title = @timeUtil.dayStringForDate(schedule)
+				@groupedMessages.push({ rightTitle: title, messages: groups[key]})
 			return @groupedMessages
 		
 
@@ -93,18 +103,13 @@ define ["underscore"], (_) ->
 		chatListNumberOfSections: ( chatList ) ->
 			@sortAndGroupCollection()
 			return @groupedMessages.length
-		chatListLeftTitleForSection: ( chatList, section ) ->
-			return @groupedMessages[ (section-1) ].leftTitle
-		chatListRightTitleForSection: ( chatList, section ) ->
-			return @groupedMessages[ (section-1) ].rightTitle
 		
-		chatListMessagesForSection: ( chatList, section ) ->
+		chatListDataForSection: ( chatList, section ) ->
 			if !@collection?
 				throw new Error("ChatHandler: must loadSubcollection before loading ChatList")
+			return null if !@groupedMessages or !@groupedMessages.length
 
-			models = @groupedMessages[ (section-1) ].messages
-
-			return models
+			return @groupedMessages[ (section-1) ]
 
 		destroy: ->
 			@groupedMessages = null

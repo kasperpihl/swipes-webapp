@@ -2,17 +2,37 @@
 	var hasProfilePicture = "";
 	var sender = swipy.collections.members.get(data.message.get("userId"));
 	var hasAttachment = false;
-
+	var numberOfLikes = data.message.get("numberOfLikes");
 	var shouldShowBigLike = false;
 	if( data.message.get("message").indexOf("attachment") != -1){
 		hasAttachment = true;
 		shouldShowBigLike = true;
 	}
-	if(data.message.get("numberOfLikes") > 0)
+	if(numberOfLikes > 0){
 		shouldShowBigLike = true;
+	}
 	var isLikedClass = ""
 	if(data.message.get("likedByMe"))
 		isLikedClass = "liked"
+
+	var likeString = "Be the first to like this.";
+	if(numberOfLikes > 0){
+		if(data.message.get("likedByMe")){
+			if(numberOfLikes == 1)
+				likeString = "You like this.";
+			else
+				likeString = "You and " + numberOfLikes-1 + " others like this."
+		}
+		else{
+			if(numberOfLikes == 1){
+				likeString = "1 person like this."
+			}
+			else
+				likeString = numberOfLikes + " people like this."
+		}
+	}
+	
+
 %>
 <div class="chat-message">
 	<div class="chat-left-side-container">
@@ -64,10 +84,10 @@
 				<svg class="icon">
 					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-thumb"></use>
 				</svg>
-				Like<% if(isLikedClass.length > 0) print("d"); %>
+				<!--Like<% if(isLikedClass.length > 0) print("d"); %>-->
 			</a>
 			<span class="like-string">
-				Be the first to like this.
+				<%= likeString %>
 			</span>
 		</div>
 		<% } %>

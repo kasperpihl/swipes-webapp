@@ -21,6 +21,7 @@ define [
 
 			return @
 		clickedLike: (e) ->
+			console.log e
 			if @chatDelegate? and _.isFunction(@chatDelegate.messageDidClickLike)
 				@chatDelegate.messageDidClickLike(@, e)
 		remove: ->
