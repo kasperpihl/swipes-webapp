@@ -15,6 +15,9 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility"], (BaseModel, TimeUt
 				@handleLikes()
 			@setRestrictedForMe()
 			@set("unread",true) if @get("userId") isnt Parse.User.current().id
+		getUnixTimestamp: ->
+			return new Date(@get("timestamp")).getTime()/1000 if @get("timestamp")
+			return @get("localCreatedAt").getTime()/1000
 		like: ->
 			currentLikes = @get "likes"
 			userId = Parse.User.current().id

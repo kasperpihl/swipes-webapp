@@ -63,7 +63,7 @@ define [
 				continue if !sectionData or !sectionData.messages.length
 
 				lastSender = false
-				
+				lastUnix = 0
 
 				# Instantiate 
 				section = new Section()
@@ -80,8 +80,15 @@ define [
 						@unread.lastUnread = chat.get("timestamp")
 					chatMessage = new ChatMessage({model: chat})
 					sender = chat.get("userId")
-					chatMessage.isFromSameSender = true if sender is lastSender
+					unixStamp = chat.getUnixTimestamp()
+					timeDiff = Math.abs(unixStamp - lastUnix)
+
+					if sender is lastSender and timeDiff < 2400
+						chatMessage.isFromSameSender = true 
+					else 
+						lastUnix = unixStamp
 					lastSender = sender
+
 					
 					if @chatDelegate?
 						chatMessage.chatDelegate = @chatDelegate
