@@ -1,14 +1,66 @@
-$edit-nav-height: 60px;
+$edit-nav-height: 50px;
+$nav-seperator-height: 20px;
+$nav-icon-size: 22px;
 .edit-task{
 	.nav-container{
 		height:$edit-nav-height;
 		.nav-item{
+			position:relative;
+			display:inline-block;
 			width:25%;
+			height:$edit-nav-height;
 			svg{
-				height:20px;
-				width:20px;
+				height:$nav-icon-size;
+				width:$nav-icon-size;
+				position:absolute;
+				left:50%;
+				top:50%;
+				margin-top:-$nav-icon-size/2;
+				margin-left:-$nav-icon-size/2;
+				@include transition(fill 0.17s ease-in-out);
+				fill: $small-seperator-color;
+			}
+			.number{
+				position:absolute;
+				font: 11px $font-bold;
+				@include transition(color 0.17s ease-in-out);
+				color: $small-seperator-color;
+				top:50%;
+				left:50%;
+				margin-left: 14px;
+				margin-top:-16px;
+			}
+			&.active, &:hover{
+				svg{
+					
+					fill: $sidebar-dark-color;
+				}
+				.number{
+					
+					color: $sidebar-dark-color;
+				}
+			}
+			.left-seperator, .right-seperator{
+				position:absolute;
+				top:($edit-nav-height - $nav-seperator-height)/2;
+				background-color: #F3F4F4;
+				width:1px;
+				height:$nav-seperator-height;
+			}
+			.left-seperator{
+				left:0;
+			}
+			.right-seperator{
+				right:0;
 			}
 		}
+		
 
+	}
+	.progress-header h1 span{
+		font-size: 12px;
+	}
+	.tab-container{
+		min-height: 50px;
 	}
 }

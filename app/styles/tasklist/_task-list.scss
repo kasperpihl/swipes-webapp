@@ -47,10 +47,6 @@
 		@include experimental(animation-duration, 0.3s);
 	}
 		// Animate-in when adding new tasks
-	.animated{
-		@extend .animated;
-		@include experimental(animation-duration, 0.3s);
-	}
 }
 $spacingBetweenTasks:6px;
 $left-padding: 40px;
@@ -63,8 +59,8 @@ $meta-margin: 10px;
 // Design for cards
 .card-container{
 	position: relative;
-	padding:5px;
 	.main-info-container{
+		padding:5px;
 		padding-left: $left-padding;
 		position: relative;
 		.priority{
@@ -72,12 +68,10 @@ $meta-margin: 10px;
 		}
 	}
 	.expanding{
+		margin-top:-10px;
 		display:none;
 		.editMode & {
 			display:block;
-		}
-		img{
-			width:100%;
 		}
 	}
 	@include card-shadow(6px, 1px);

@@ -5,10 +5,29 @@
 }
 $chat-new-message-height: 50px;
 .chat-list{
+	padding-bottom:8px;
+	padding-top: 20px;
+	.section{
+		padding-top:12px;
+	}
 	.section-list{
 		margin-bottom:0;
 		margin-top:0;
+		padding-top:5px;
 	}
+	.section-header{
+		margin-top: 0;
+		.seperator-container{
+			padding-left:10px;
+		}
+		.seperator{
+			height:1px;	
+		}
+	}
+
+}
+.chat-item{
+	display:relative;
 }
 .chat-list-container{
 	height:100%;
@@ -104,6 +123,7 @@ $chat-new-message-height: 50px;
 
 	}
 	.like-button{
+		display:inline-block;
 		svg{
 			fill: $unselected-color;
 		}
@@ -136,6 +156,7 @@ $chat-new-message-height: 50px;
 	.left-hover-box{
 		width: $left-side-width;
 		opacity: 0;
+		min-height: 20px;
 		.timestamp{
 			font: 9px/1 $font-normal;
 			position:absolute;

@@ -148,6 +148,18 @@ button::-moz-focus-inner {
 	}
 }
 
+.animated-short{
+	@extend .animated;
+	@include experimental(animation-duration, 0.1s);
+}
+.animated{
+	@extend .animated;
+	@include experimental(animation-duration, 0.3s);
+}
+.animated-long{
+	@extend .animated;
+	@include experimental(animation-duration, 0.5s);
+}
 
 // Tooltips updating animation
 .tooltip.right {

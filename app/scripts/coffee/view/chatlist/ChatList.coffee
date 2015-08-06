@@ -112,13 +112,13 @@ define [
 				@checkIsRead()
 			
 		isScrolledToBottom: ->
-			return ($(".chat-list-container-scroller").scrollTop() + $(".chat-list-container-scroller").height() >= $(".chat-list").height())
+			return ($(".chat-list-container-scroller").scrollTop() + $(".chat-list-container-scroller").height() >= $(".chat-list").outerHeight())
 		scrollToBottom: ->
-			targetPos = $(".chat-list").height() - $(".chat-list-container-scroller").height()
+			targetPos = $(".chat-list").outerHeight() - $(".chat-list-container-scroller").height()
 			if targetPos > 0
 				$(".chat-list-container-scroller").scrollTop(targetPos)
 		moveToBottomIfNeeded: ->
-			targetMargin = $(".chat-list-container-scroller").height() - $(".chat-list").height()
+			targetMargin = $(".chat-list-container-scroller").height() - $(".chat-list").outerHeight()
 			if targetMargin < 0
 				targetMargin = 0
 			$(".chat-list").css("marginTop", targetMargin)

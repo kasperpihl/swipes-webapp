@@ -4,7 +4,7 @@
 		Find out who's the sender, where does it want to go, and what actions would be available
 	Receive select/unselect from TaskList
 ###
-define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
+define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"], (_, AssignModal, EditTask) ->
 	class TaskHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
@@ -163,6 +163,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		taskCardDidClickAction: (taskCard, e) ->
 			
 		taskDidClick: (taskCard, e) ->
+			console.log e
 			model = taskCard.model
 			if model.get("selected")
 				model.set("selected", !model.get("selected"))
@@ -170,6 +171,9 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				shouldShow = !taskCard.$el.hasClass("editMode")
 				$(".editMode").removeClass("editMode")
 				if shouldShow
+					@editTask = new EditTask({model: model})
+					@editTask.render()
+					taskCard.$el.find(".expanding").html @editTask.el
 					taskCard.$el.addClass("editMode") 
 					@dragHandler?.disable()
 				else

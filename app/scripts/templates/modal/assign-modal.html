@@ -2,7 +2,15 @@
 <% if(data.people && data.people.length) { %>
 	<ul class="people-list">
 	<% _.each( data.people, function(member){ %>
-		<li class="member" data-href="<%= member.objectId %>"><%= member.username %></li>
+		<li class="member" data-href="<%= member.objectId %>">
+			<div class="picture-container">
+				<div class="picture-circular" style="background: url(<%= member.profileImageURL %>) no-repeat; background-size: 26px 26px;">
+				</div>
+			</div>
+			<div class="name">
+				<%= member.username %>
+			</div>
+		</li>
 	<% }); %>
 	</ul>
 <% } else { %>

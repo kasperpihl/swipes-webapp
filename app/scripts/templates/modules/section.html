@@ -2,6 +2,8 @@
 	<div class="section-header">
 		<% if( data.leftTitle ) { %>
 			<h2 class="left"><%= data.leftTitle %></h2>
+		<% } if( data.centerTitle ) { %>
+			<h2 class="center"><%= data.centerTitle %></h2>
 		<% } if( data.rightTitle ) { %>
 			<h2 class="right"><%= data.rightTitle %></h2>
 		<% } %>

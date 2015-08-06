@@ -1,7 +1,7 @@
 define ["js/model/sync/BaseModel", "js/utility/TimeUtility"], (BaseModel, TimeUtility) ->
 	BaseModel.extend
 		className: "Message"
-		attrWhitelist: [ "message", "toUserId", "projectLocalId", "timestamp" ]
+		attrWhitelist: [ "message", "toUserId", "projectLocalId", "timestamp", "likes" ]
 		defaults: { message: "", toUserId: null, projectLocalId: null  }
 		initialize: ->
 			@timeUtil = new TimeUtility()

@@ -39,7 +39,7 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 				schedule = new Date(parseInt(key)*1000)
 
 				title = @timeUtil.dayStringForDate(schedule)
-				@groupedMessages.push({ rightTitle: title, messages: groups[key]})
+				@groupedMessages.push({ leftTitle: title, messages: groups[key]})
 			return @groupedMessages
 		
 

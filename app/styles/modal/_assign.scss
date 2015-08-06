@@ -2,18 +2,36 @@
 	background: $sidebar-button-active-background-gray;
 	@include border-radius(10px);
 	padding:20px;
+
 	h2{
 		color: white;
 		font: 18px $font-normal;
 		margin-top:0;
 	}
 	.message, .member{
+		position:relative;
 		color: white;
 		font: 12px $font-normal;
 		padding:5px;
-		padding-left:0;
+		.picture-container{
+			padding-left:0px;
+			width:30px;
+			display:inline-block;
+			.picture-circular{
+				width:26px;
+				height:26px;
+				@include border-radius(13px);
+			}
+		}
+		.name{
+			position:absolute;
+			top:50%;
+			left:40px;
+			margin-top:-8px;
+		}
 	}
 	ul{
 		margin-bottom: 0;
 	}
+
 }

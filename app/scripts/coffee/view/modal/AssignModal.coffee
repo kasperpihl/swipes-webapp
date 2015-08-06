@@ -25,12 +25,14 @@ define ["underscore",
 		clickedPerson: (e) ->
 			$el = $(e.currentTarget)
 			memberId = $el.attr("data-href")
-			@assignPerson().then( =>
+			@assignPerson(memberId).then( =>
 				@model.assign( memberId, true )
 			)
-		assignPerson: (callback) ->
+		assignPerson: (href, callback) ->
 			dfd = new $.Deferred()
-			@$el.addClass('animate-out-right')
+			el = @$el.find('li[data-href='+href+']')
+			el.addClass('animated-short')
+			el.addClass('fadeOut')
 			setTimeout(->
 				dfd.resolve()
 			, 300)
