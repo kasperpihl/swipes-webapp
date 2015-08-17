@@ -4,7 +4,7 @@
 		Find out who's the sender, where does it want to go, and what actions would be available
 	Receive select/unselect from TaskList
 ###
-define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"], (_, AssignModal, EditTask) ->
+define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 	class TaskHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
@@ -32,9 +32,7 @@ define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"],
 		###
 		didCreateDragHandler: ( dragHandler ) ->
 			@dragHandler = dragHandler
-		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
-			draggedIds = []
-
+		idForEvent:(e) ->
 			if e.path?
 				for el in e.path
 					$el = $(el)
@@ -50,11 +48,16 @@ define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"],
 							currentTarget = currentTarget.parentNode
 					else
 						break
+			draggedId
+		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
+			draggedIds = []
 
+			draggedId = @idForEvent(e)
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 
 			return [] if !draggedTask?
-			draggedTask.set("selected",true)
+
+			draggedTask.set("selected",true) 
 			selectedTasks = @collection.getSelected(draggedTask)
 
 			titles = _.invoke(selectedTasks, "get", "title")
@@ -63,6 +66,7 @@ define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"],
 				$('.drag-mouse-pointer ul').append("<li>"+title+"</li>")
 			for task in selectedTasks
 				draggedIds.push("#task-"+task.id)
+
 			draggedIds
 		# Deal with dropped items from DragHandler if true is returned, callback must be called!
 		dragHandlerDidHit: ( dragHandler, draggedIds, hit, callback ) ->
@@ -80,13 +84,8 @@ define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"],
 				return if !hitTask?
 
 				if hit.position is "middle"
-					
-					setTimeout(()->
-						callback()
-					, 400)
-					return true
-					#hitTask.addSubtask draggedTask, true
-					#@bouncedReloadWithEvent()
+					hitTask.addSubtask draggedTask, true
+					@bouncedReloadWithEvent()
 				else if hit.position is "bottom" or hit.position is "top"
 
 					fromOrder = draggedTask.get(@listSortAttribute)
@@ -150,8 +149,15 @@ define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"],
 						_.invoke(selectedTasks, "unassign", member.id, false )
 				)
 			false
+		dragHandlerDidClick: (dragHandler, e) ->
+			hitTarget = $(e.target)
+			clickedId = @idForEvent(e)
 
-
+			model = @collection.get( @taskCollectionIdFromHtmlId(clickedId) )
+			taskCard = $(clickedId)
+			return if taskCard.hasClass("editMode")
+			@handleClickForModelAndTaskCard(e, model, taskCard)
+			false
 
 		### 
 			TaskCard Delegate
@@ -160,24 +166,6 @@ define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"],
 			model = taskCard.model
 			model.completeTask()
 			Backbone.trigger("reload/taskhandler")
-		taskCardDidClickAction: (taskCard, e) ->
-			
-		taskDidClick: (taskCard, e) ->
-			console.log e
-			model = taskCard.model
-			if model.get("selected")
-				model.set("selected", !model.get("selected"))
-			else
-				shouldShow = !taskCard.$el.hasClass("editMode")
-				$(".editMode").removeClass("editMode")
-				if shouldShow
-					@editTask = new EditTask({model: model})
-					@editTask.render()
-					taskCard.$el.find(".expanding").html @editTask.el
-					taskCard.$el.addClass("editMode") 
-					@dragHandler?.disable()
-				else
-					@dragHandler?.enable()
 		didPressAssign: (model, e) ->
 			assignModal = new AssignModal({model: model})
 			assignModal.dataSource = @
@@ -199,7 +187,19 @@ define ["underscore", "js/view/modal/AssignModal", "js/view/tasklist/EditTask"],
 
 			return peopleToAssign
 
-
+		handleClickForModelAndTaskCard: (e, model, taskCard) ->
+			if model.get("selected") or e.metaKey or e.ctrlKey
+				model.save("selected", !model.get("selected"))
+			else
+				shouldShow = !taskCard.hasClass("editMode")
+				$(".editMode").removeClass("editMode")
+				if shouldShow
+					#@editTask = new EditTask({model: model})
+					#@editTask.render()
+					Backbone.trigger("edit/task", model)
+					#taskCard.find(".expanding").html @editTask.el
+					#taskCard.addClass("editMode")
+					
 		### 
 			TaskList Datasource
 		###

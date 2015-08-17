@@ -20,6 +20,13 @@ $nav-icon-size: 22px;
 				@include transition(fill 0.17s ease-in-out);
 				fill: $small-seperator-color;
 			}
+			&.actionTab svg{
+				$action-tab-icon-size: 12px;
+				height:$action-tab-icon-size;
+				width:$action-tab-icon-size;
+				margin-top:-$action-tab-icon-size/2;
+				margin-left:-$action-tab-icon-size/2;
+			}
 			.number{
 				position:absolute;
 				font: 11px $font-bold;
@@ -54,13 +61,14 @@ $nav-icon-size: 22px;
 				right:0;
 			}
 		}
-		
 
 	}
 	.progress-header h1 span{
 		font-size: 12px;
 	}
 	.tab-container{
+		margin-top: -12px;
+		padding-bottom:8px;
 		min-height: 50px;
 	}
 }

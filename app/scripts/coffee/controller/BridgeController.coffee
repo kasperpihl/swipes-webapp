@@ -29,7 +29,8 @@ define ["underscore"], () ->
                 
             )
             sessionToken = Parse.User.current()?.getSessionToken()
-            @bridge.send({  sessionToken})
+            userId = Parse.User.current()?.id
+            @bridge.send({  sessionToken, userId })
         connectWebViewJavascriptBridge: (callback) ->
             if (window.WebViewJavascriptBridge)
                 callback(window.WebViewJavascriptBridge)

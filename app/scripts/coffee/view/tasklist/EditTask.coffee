@@ -4,7 +4,9 @@
 define [
 	"underscore"
 	"text!templates/tasklist/edit-task.html"
-	], (_, EditTaskTmpl) ->
+	"js/view/tasklist/TaskList"
+	"js/handler/TaskHandler"
+	], (_, EditTaskTmpl, TaskList, TaskHandler) ->
 	Backbone.View.extend
 		className: "edit-task"
 		events:
@@ -15,7 +17,6 @@ define [
 			@bouncedRender = _.debounce(@render, 5)
 		render: ->
 			@$el.html @template( task: @model )
-			@setSectionTitle("ACTIONS")
 			return @
 		setSectionTitle: (title) ->
 			@$el.find(".section-title > span").html(title)
@@ -33,8 +34,36 @@ define [
 			
 			target = $(e.currentTarget)
 			return false if target.hasClass("active")
+			@loadTarget(target)
+			false
+		loadTarget: (target) ->
 			@$el.find('.nav-item.active').removeClass("active")
 			target.addClass("active")
-			false
+			if target.hasClass("actionTab")
+				@loadActionSteps()
+		loadActionSteps: ->
+			@taskHandler?.destroy()
+			@taskList?.remove()
+			@setSectionTitle("ACTIONS")
+
+			@taskList = new TaskList()
+			@taskList.setActionList()
+			@taskList.targetSelector = ".edit-task .tab-container"
+			@taskList.enableDragAndDrop = true
+
+			@taskHandler = new TaskHandler()
+			@taskHandler.listSortAttribute = "projectOrder"
+			@taskList.taskDelegate = @taskHandler
+			@taskList.dragDelegate = @taskHandler
+			@taskList.dataSource = @taskHandler
+			self = @
+			@taskCollectionSubset = new Backbone.CollectionSubset({
+				parent: swipy.collections.todos,
+				filter: (task) ->
+					return task.get("parentLocalId") is self.model.id
+			})
+			@taskHandler.loadCollection(@taskCollectionSubset.child)
+			@taskList.render()
+
 		remove: ->
 			@$el.empty()

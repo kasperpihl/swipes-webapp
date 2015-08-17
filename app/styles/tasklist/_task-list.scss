@@ -104,11 +104,46 @@ $meta-margin: 10px;
 	.priority{
 		left:$left-padding/2;
 	}
+	.task-dot{
+		$action-dot-size: 10px;
+		$action-dot-border-size: 2px;
+		$action-dot-calendar-height: 26px;
+		
+		position: absolute;
+		left:12.5%;
+		top:50%;
+		margin-left: - $action-dot-size/2;
+		margin-top: - $action-dot-size/2;
+		border: 2px solid $red;
+		@include border-radius($action-dot-size/2);
+
+		width: $action-dot-size;
+		height: $action-dot-size;
+
+		&.calendar-event{
+			h2{
+				height:30px;
+			}
+			height: $action-dot-calendar-height;
+			margin-top: - $action-dot-calendar-height/2;
+		}
+	}
+}
+.action-item{
+	position: relative;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	h2{
+		margin-bottom:0;
+		margin-top: 0;
+		padding-left:16%;
+	}
 }
 // Add task card
 .add-task-card-container {
 	margin-bottom:20px;
 	.card-container{
+		padding: 5px;
 		input {
 			$height: 32px;
 			$font-size: 14px;
@@ -174,7 +209,7 @@ $meta-margin: 10px;
 
 		
 		// Show action buttons on hover
-		&:hover{
+		.main-info-container:hover{
 			.actions{
 				opacity: 1.0;
 				@include transition(opacity 0.2s ease-out);

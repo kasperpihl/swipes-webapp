@@ -18,10 +18,13 @@
 	var likeString = "Be the first to like this.";
 	if(numberOfLikes > 0){
 		if(data.message.get("likedByMe")){
-			if(numberOfLikes == 1)
+			if(numberOfLikes == 1){
 				likeString = "You like this.";
-			else
-				likeString = "You and " + numberOfLikes-1 + " others like this."
+			}
+			else{
+				var numberLeft = numberOfLikes - 1;
+				likeString = "You and " + numberLeft + " others like this."
+			}
 		}
 		else{
 			if(numberOfLikes == 1){

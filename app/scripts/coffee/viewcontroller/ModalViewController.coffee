@@ -39,13 +39,12 @@ define [
 
 			opaque = false
 			frame = false
-
-			@callback = callback
 			
+			@callback = callback
+
 			if options? and _.isObject(options)
 				clickableBackground = options.clickableBackground if options.clickableBackground?
-				opaque = options.opaque if options.opaque?
-					
+				opaque = options.opaque if options.opaque?	
 				@top = options.top if options.top?
 				@left = options.left if options.left?
 

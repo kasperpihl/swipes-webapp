@@ -18,7 +18,7 @@ define [
 
 		open: (options) ->
 			@memberId = options.id
-			@mainView = "task"
+			@mainView = "chat"
 			
 			swipy.rightSidebarVC.sidebarDelegate = @
 

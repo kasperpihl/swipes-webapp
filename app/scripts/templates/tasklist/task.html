@@ -91,38 +91,37 @@
 			<% } %>
 			</div><!-- .meta -->
 		<% } %>
-	</div>
-	<div class="actions">
-		<div>
-		<% if(data.task.get("projectLocalId")) { %>
-			<a href="#" class="assign-button" title="Assign people to this task">
-				<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarAssign"></use></svg>
-			</a>
-		<% } %>
-		<% state = data.task.get("state") %>
-			<a href="#" class="schedule-button" title="Schedule todo">
-				<svg class="icon">
-					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
-				</svg>
-			</a>
-		<% if (state !== "completed"){ %>
-			<a href="#" class="complete-button" title="Mark task as completed">
-				<svg class="icon">
-					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
-				</svg>
-			</a>
-		<% } %>
 
-		<!--<a href="JavaScript:void(0);" class="more-button" title="Start workmode with this task">
-			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarWorkspace"></use></svg>
-		</a>-->
+		<% numberOfButtons = 2 
+		if(data.task.get("projectLocalId"))
+			numberOfButtons++;
+		%>
+
+		<div class="actions">
+			<div>
+			<% if(data.task.get("projectLocalId")) { %>
+				<a href="#" class="assign-button" title="Assign people to this task">
+					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarAssign"></use></svg>
+				</a>
+			<% } %>
+			<% state = data.task.get("state") %>
+				<a href="#" class="schedule-button" title="Schedule todo">
+					<svg class="icon">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
+					</svg>
+				</a>
+			<% if (state !== "completed"){ %>
+				<a href="#" class="complete-button" title="Mark task as completed">
+					<svg class="icon">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
+					</svg>
+				</a>
+			<% } %>
+			</div>
 		</div>
 	</div>
+	
 	<div class="expanding">
 		<img src="styles/img/temp/editmode-preview.png">
 	</div>
 </div><!-- .card-container -->
-<% numberOfButtons = 2 
-	if(data.task.get("projectLocalId"))
-		numberOfButtons++;
-%>

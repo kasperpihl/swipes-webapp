@@ -26,7 +26,13 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 				onDragStartParams: [ @ ]
 				onDragParams: [ @ ]
 				onDragEndParams: [ @ ]
+				onClickParams: [ @ ]
 				# Handlers
+				onClick: (self) ->
+					#@pointerEvent.preventDefault()
+					if self.delegate? and _.isFunction(self.delegate.dragHandlerDidClick)
+						return self.delegate.dragHandlerDidClick(self, @pointerEvent)
+					false
 				onDragStart: (self) ->
 					self.draggedIds = self.delegate.dragHandlerDraggedIdsForEvent( self, @pointerEvent )
 					self.updateMousePointer(@pointerEvent)

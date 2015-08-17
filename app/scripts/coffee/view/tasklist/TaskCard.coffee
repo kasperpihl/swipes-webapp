@@ -10,7 +10,6 @@ define [
 		tagName: "li"
 		className: "task-item"
 		events:
-			"click .card-container": "clickedTask"
 			"click .actions a": "handleAction"
 		initialize: ->
 			throw new Error("Model must be added when constructing a TaskCard") if !@model?

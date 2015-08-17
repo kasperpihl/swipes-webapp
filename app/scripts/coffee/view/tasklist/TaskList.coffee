@@ -7,18 +7,22 @@ define [
 	"underscore"
 	"js/view/modules/Section"
 	"js/view/tasklist/TaskCard"
+	"js/view/tasklist/ActionRow"
 	"js/handler/DragHandler"
-	], (_, Section, TaskCard, DragHandler) ->
+	], (_, Section, TaskCard, ActionRow, DragHandler) ->
 	Backbone.View.extend
 		className: "task-list"
 		initialize: ->
 			# Set HTML tempalte for our list
 			@listenTo( Backbone, "reload/taskhandler", @render )
+			
 			@numberOfSections = 0
 		remove: ->
 			@cleanUp()
 			@$el.empty()
-
+		setActionList: ->
+			@className = "action-list"
+			@actionList = true
 		
 		# Reload datasource for 
 
@@ -54,17 +58,22 @@ define [
 
 				for task in sectionData.tasks
 					numberOfTasks++
-					taskCard = new TaskCard({model: task})
-					if @taskDelegate?
-						taskCard.taskDelegate = @taskDelegate
-					if sectionData.showSource?
-						taskCard.showSource = true
-					if sectionData.showSchedule
-						taskCard.showSchedule = true
+					
+					if @actionList
+						taskEl = new ActionRow({model: task})
+					else
+						taskEl = new TaskCard({model: task})
 
-					taskCard.render()
-					@_taskCardsById[task.id] = taskCard
-					sectionEl.append( taskCard.el )
+					if @taskDelegate?
+						taskEl.taskDelegate = @taskDelegate
+					if sectionData.showSource?
+						taskEl.showSource = true
+					if sectionData.showSchedule
+						taskEl.showSchedule = true
+
+					taskEl.render()
+					@_taskCardsById[task.id] = taskEl
+					sectionEl.append( taskEl.el )
 				@$el.append section.el
 
 
@@ -77,6 +86,7 @@ define [
 				@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card)")
 		taskCardById: (identifier) ->
 			return @_taskCardsById?[identifier]
+
 		customCleanUp: ->
 		cleanUp: ->
 			@dragDelegate = null

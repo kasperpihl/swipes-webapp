@@ -179,7 +179,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 			serData = JSON.stringify data
 			#@syncIndicator.show()
-			console.log data
 			settings = 
 				url : url
 				type : 'POST'
@@ -206,11 +205,9 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 			@updatedTodos = null
 		errorFromSync: ( data, textStatus, error ) ->
-			console.log data
 			@util.sendError( data, "Sync Server Error")
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
-			console.log data
 			if data and data.ok
 				@currentSyncing = null
 				@changedAttributes.resetChanges()
