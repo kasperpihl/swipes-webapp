@@ -8,7 +8,8 @@ define [
 		initialize: ->
 			@setTemplates()
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
-			@listenTo( swipy.notificationModel, "change:notifications", @bouncedRenderSidebar )
+			@listenTo( swipy.slackCollections.ims, "change:unread_count change:unread_count_display", @bouncedRenderSidebar )
+			@listenTo( swipy.slackCollections.channels, "change:unread_count change:unread_count_display", @bouncedRenderSidebar )
 			# Proper render list when projects change/add/remove
 			@listenTo( swipy.collections.projects, "add remove reset change:name", @renderSidebar )
 			#@listenTo( swipy.collections.members, "add remove reset change:name change:status", @renderSidebar )
@@ -29,8 +30,19 @@ define [
 			@membersTpl = _.template TeamMembersTemplate, {variable: "data"}
 		renderSidebar: ->
 			notifications = swipy.notificationModel.get("notifications")
-			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({notifications: notifications, projects: _.sortBy(swipy.collections.projects.toJSON(), "name")}))
-			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({notifications: notifications, members: _.sortBy(_.filter(swipy.collections.members.toJSON(), (member) -> return !member.me ), "username")}))
+			filteredChannels = _.filter(swipy.slackCollections.channels.toJSON(), (channel) -> return channel.is_member )
+			channels = _.sortBy( filteredChannels, (channel) -> return channel.name )
+			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({ channels: channels }))
+			
+
+			filteredIms = _.filter(swipy.slackCollections.ims.toJSON(), (im) -> return im.is_open)
+			ims = _.sortBy(filteredIms, (im) ->
+				im.user = swipy.slackCollections.users.get(im.user).toJSON()
+				return 0 if im.user.name is "slackbot"
+				return im.user.name
+			)
+			@$el.find("#sidebar-members-list .team-members").html(@membersTpl({ ims: ims}))
+			
 			@checkAndEnableScrollBars()
 			@delegateEvents()
 			@setActiveMenu(@activeClass) if @activeClass?

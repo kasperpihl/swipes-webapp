@@ -1,7 +1,6 @@
-define [ "underscore", "js/model/sync/MessageModel", "localStorage"], ( _, MessageModel) ->
+define [ "underscore", "js/model/slack/MessageModel", "localStorage"], ( _, MessageModel) ->
 	Backbone.Collection.extend
 		model: MessageModel
-		localStorage: new Backbone.LocalStorage("MessageCollection")
 		sendMessage: (message, options) ->
 			newMessage = @create { message: message }
 			if options
@@ -12,19 +11,19 @@ define [ "underscore", "js/model/sync/MessageModel", "localStorage"], ( _, Messa
 		comparator: (m1, m2) ->
 			m1Wins = 1
 			m2Wins = -1
-			if m1.get("timestamp") and m2.get("timestamp")
-				m1Unix = new Date( m1.get("timestamp") ).getTime()
-				m2Unix = new Date( m2.get("timestamp") ).getTime()
-			else if !m1.get("timestamp") and !m2.get("timestamp")
-				m1Unix = m1.get("localCreatedAt").getTime()
-				m2Unix = m2.get("localCreatedAt").getTime()
+			m1.get("ts")
+			if m1.get("ts") and m2.get("ts")
+				m1Unix = m1.get("ts")
+				m2Unix = m2.get("ts")
+			else if !m1.get("ts") and !m2.get("ts")
+				true
 
 			if m1Unix? and m1Unix
 				if m1Unix > m2Unix then return m1Wins else return m2Wins
 			
-			if m1.get("timestamp") and !m2.get("timestamp")
+			if m1.get("ts") and !m2.get("ts")
 				return m2Wins
-			else if !m1.get("timestamp") and m2.get("timestamp")
+			else if !m1.get("ts") and m2.get("ts")
 				return m1Wins
 			console.log "m1 here"
 			m1Wins	

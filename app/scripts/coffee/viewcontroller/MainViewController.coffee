@@ -22,8 +22,8 @@ define [
 			Backbone.trigger("set-active-menu", "sidebar-"+viewcontroller + "-" + options.id)
 		loadViewController: (viewcontroller) ->
 			dfd = new $.Deferred()
-			if viewcontroller is "member" then require ["js/viewcontroller/TeamMemberViewController"], (VC) -> dfd.resolve VC
-			else if viewcontroller is "project" then require ["js/viewcontroller/ProjectViewController"], (VC) -> dfd.resolve VC
+			if viewcontroller is "im" then require ["js/viewcontroller/TeamMemberViewController"], (VC) -> dfd.resolve VC
+			else if viewcontroller is "channel" then require ["js/viewcontroller/ProjectViewController"], (VC) -> dfd.resolve VC
 			else require ["js/viewcontroller/MyTasksViewController"], (VC) -> dfd.resolve VC
 			return dfd.promise()
 		destroy: ->

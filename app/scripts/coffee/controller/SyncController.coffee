@@ -40,9 +40,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 		handleObjectsFromSync: ( objects, className ) ->
 			collection = swipy.collections.tags if className is "Tag"
 			collection = swipy.collections.todos if className is "ToDo"
-			collection = swipy.collections.members if className is "Member"
-			collection = swipy.collections.projects if className is "Project"
-			collection = swipy.collections.messages if className is "Message"
 			if className is "ToDo"
 				@updatedTodos = []
 			newModels = []
@@ -140,19 +137,13 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 			newTags = @prepareNewObjectsForCollection swipy.collections.tags
 			newTodos = @prepareNewObjectsForCollection swipy.collections.todos
-			newProjects = @prepareNewObjectsForCollection swipy.collections.projects
-			newMessages = @prepareNewObjectsForCollection swipy.collections.messages
 
 			updateTags = @prepareUpdatesForCollection swipy.collections.tags, "Tag"
 			updateTodos = @prepareUpdatesForCollection swipy.collections.todos, "ToDo"
-			updateProjects = @prepareUpdatesForCollection swipy.collections.projects, "Project"
-			updateMessages = @prepareUpdatesForCollection swipy.collections.messages, "Message"
 
 			serverJSON =
 				Tag : newTags.concat( updateTags )
 				ToDo : newTodos.concat( updateTodos )
-				Project: newProjects.concat( updateProjects )
-				Message: newMessages.concat( updateMessages )
 
 			return serverJSON
 
@@ -211,11 +202,8 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			if data and data.ok
 				@currentSyncing = null
 				@changedAttributes.resetChanges()
-				@handleObjectsFromSync( data.Member, "Member" ) if data.Member?
-				@handleObjectsFromSync( data.Project, "Project" ) if data.Project?
 				@handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
-				@handleObjectsFromSync( data.Message, "Message" ) if data.Message?
 
 				if data.updateTime
 					@lastUpdate = data.updateTime 

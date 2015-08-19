@@ -1,22 +1,31 @@
 define [
 	"underscore"
 	"js/collection/ToDoCollection"
-	"js/collection/MemberCollection"
 	"js/collection/TagCollection"
-	"js/collection/ProjectCollection"
 	"js/collection/WorkCollection"
-	"js/collection/MessageCollection"
 	"plugins/backbone.collectionsubset"
-	], (_, ToDoCollection, MemberCollection, TagCollection, ProjectCollection, WorkCollection, MessageCollection) ->
+	], (_, ToDoCollection, TagCollection, WorkCollection) ->
 	class Collections
 		constructor: ->
+			### 
+				Extend backbone models to have an exclude pattern
+			###
+			oldToJSON = Backbone.Model.prototype.toJSON
+			Backbone.Model.prototype.toJSON = ->
+				json = oldToJSON.apply(@, arguments)
+				excludeFromJSON = @excludeFromJSON
+				if excludeFromJSON
+					_.each(excludeFromJSON, (key) ->
+						delete json[key]
+					)
+				return json
+
+
 			@todos = new ToDoCollection()
-			@members = new MemberCollection()
 			@tags = new TagCollection()
-			@projects = new ProjectCollection()
 			@workSessions = new WorkCollection()
-			@messages = new MessageCollection()
-			@all = [@members, @projects, @tags, @messages, @todos,  @workSessions]
+
+			@all = [@tags, @todos,  @workSessions]
 		fetchAll: ->
 			for collection in @all
 				collection.fetch()

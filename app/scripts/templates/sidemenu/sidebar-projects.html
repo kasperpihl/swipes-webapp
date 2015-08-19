@@ -1,22 +1,17 @@
 <% 
-_.each(data.projects, function(project) { 
+_.each(data.channels, function(channel) { 
 	var unreadClass = "";
 	var hasNotificationClass = "";
-	var numberOfNotifications = 0;
-	var index = "project-" + project.objectId;
-	var notifications = data.notifications[index];
-	if(notifications){
-		if(notifications.unread)
+	var numberOfUnread = channel.unread_count;
+	var numberOfNotifications = channel.unread_count_display;
+	if(numberOfUnread)
 			unreadClass = "unread";
-		if(notifications.notifications){
-			numberOfNotifications = notifications.notifications;
-			hasNotificationClass = "hasNotification"
-		}
-	}
+	if(numberOfNotifications)
+		hasNotificationClass = "hasNotification";
 %>
-	<li class="project <%= unreadClass %> <%= hasNotificationClass %>" id="sidebar-project-<%= project.objectId %>">
-		<a href="#project/<%= project.objectId %>">
-			<span class="text"><%= project.name %></span>
+	<li class="project <%= unreadClass %> <%= hasNotificationClass %>" id="sidebar-channel-<%= channel.name %>">
+		<a href="#channel/<%= channel.name %>">
+			<span class="text"># <%= channel.name %></span>
 			<% if(numberOfNotifications){ %>
 				<span class="notification"><%= numberOfNotifications %></span>
 			<% }%>

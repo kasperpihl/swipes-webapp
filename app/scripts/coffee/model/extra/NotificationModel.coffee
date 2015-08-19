@@ -3,12 +3,14 @@ define ["underscore", "localStorage"], (_) ->
 		localStorage: new Backbone.LocalStorage("NotificationModel")
 		className: "Notification"
 		initialize: ->
+			return
 			@bouncedHandleNotifications = _.debounce(@handleNotifications, 15)
 			@listenTo( swipy.collections.messages, "add", @bouncedHandleNotifications)
 			@listenTo( Backbone, "mark-read", @markRead )
 			@fetch()
 			@handleNotifications()
 		identifierForMessage: (message) ->
+			return
 			if message.get("projectLocalId")
 				identifier = "project-"+message.get("projectLocalId")
 			else if message.get("toUserId")
@@ -24,6 +26,7 @@ define ["underscore", "localStorage"], (_) ->
 				identifier = "personal"
 			identifier
 		markRead: (identifier, timestring) ->
+			return
 			console.log "marking read", identifier, timestring
 			return if !identifier or !timestring
 			currentUnread = @get("unread")
@@ -34,9 +37,11 @@ define ["underscore", "localStorage"], (_) ->
 			@save("unread", currentUnread)
 			@handleNotifications()
 		getUnread: (identifier) ->
+			return
 			currentUnread = @get("unread")
 			return currentUnread?[identifier]
 		handleNotifications: ->
+			return
 			currentNotifications = @get("notifications")
 			currentNotifications = {} if !currentNotifications
 			currentUnread = @get("unread")

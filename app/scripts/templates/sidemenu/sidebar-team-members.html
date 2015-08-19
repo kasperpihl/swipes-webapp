@@ -1,27 +1,24 @@
 <% 
-_.each(data.members, function(member) { 
+_.each(data.ims, function(im) { 
 	var unreadClass = "";
 	var hasNotificationClass = "";
-	var numberOfNotifications = 0;
-	var index = "member-" + member.objectId;
-	var notifications = data.notifications[index];
-	if(notifications){
-		if(notifications.unread)
-			unreadClass = "unread";
-		if(notifications.notifications){
-			numberOfNotifications = notifications.notifications;
-			hasNotificationClass = "hasNotification"
-		}
-	}
+	var presenceClass = "";
+	var numberOfUnread = im.unread_count;
+	var numberOfNotifications = im.unread_count_display;
+	if(numberOfUnread)
+		unreadClass = "unread";
+	if(numberOfNotifications)
+		hasNotificationClass = "hasNotification";
+	if(im.user.presence == "active")
+		presenceClass = "online";
 %>
-	<li class="member <%= unreadClass %> <%= hasNotificationClass %>" id="sidebar-member-<%= member.objectId %>">
-		<a href="#member/<%= member.objectId %>">
+	<li class="member <%= unreadClass %> <%= hasNotificationClass %>" id="sidebar-im-<%= im.user.name %>">
+		<a href="#im/<%= im.user.name %>">
 			<div class="status-container">
-				<span class="status <%= member.status %>">
-				</span>
+				<span class="status <%= presenceClass %>"></span>
 			</div>
 			<div class="text">
-				<%= member.username %>
+				<%= im.user.name %>
 			</div>
 			<% if(numberOfNotifications){ %>
 				<span class="notification"><%= numberOfNotifications %></span>

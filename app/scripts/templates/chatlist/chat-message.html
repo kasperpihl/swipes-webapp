@@ -1,10 +1,22 @@
 <% 
 	var hasProfilePicture = "";
-	var sender = swipy.collections.members.get(data.message.get("userId"));
+	var user = data.message.get("user");
+	var sender;
+	var profilePictureURL;
+	if(user){
+		sender = swipy.slackCollections.users.get(user);
+		profilePictureURL = sender.get("profile").image_192;
+	}
+	var bot_id = data.message.get("bot_id");
+	if(bot_id){
+		sender = swipy.slackCollections.bots.get(bot_id);
+		profilePictureURL = sender.get("icons").image_48;
+	}
+	console.log(sender.toJSON());
 	var hasAttachment = false;
 	var numberOfLikes = data.message.get("numberOfLikes");
 	var shouldShowBigLike = false;
-	if( data.message.get("message").indexOf("attachment") != -1){
+	if( data.message.get("attachment") ){
 		hasAttachment = true;
 		shouldShowBigLike = true;
 	}
@@ -41,7 +53,7 @@
 	<div class="chat-left-side-container">
 		<% if(!data.isFromSameSender){ %>
 		<div class="picture-container">
-			<div class="picture-circular" style="background: url(<%= sender.get("profileImageURL") %>) no-repeat; background-size: 40px 40px;">
+			<div class="picture-circular" style="background: url(<%= profilePictureURL %>) no-repeat; background-size: 40px 40px;">
 			</div>
 		</div>
 		<% } else { %>
@@ -60,7 +72,7 @@
 	<div class="chat-right-side-container">
 		<% if(!data.isFromSameSender){ %>
 		<div class="sender-container">
-			<span class="sender-name"><%= sender.get("username") %></span>
+			<span class="sender-name"><%= sender.get("name") %></span>
 			<span class="timestamp"><%= data.message.get("timeStr") %></span>
 			<% if(!shouldShowBigLike){ %> 
 			<span class="top-hover-box">
@@ -74,7 +86,7 @@
 		</div>
 		<% } %>
 		<div class="message-container">
-			<%= data.message.get("message") %>
+			<%= data.message.get("text") %>
 		</div>
 		<% if( hasAttachment ){ %>
 		<div class="attachment-container">

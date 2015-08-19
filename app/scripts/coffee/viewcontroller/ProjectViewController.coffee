@@ -17,13 +17,18 @@ define [
 			@loadMainWindow(@mainView)
 
 		open: (options) ->
-			@projectId = options.id
+			@identifier = options.id
+			@type = "channel"
+
 			@mainView = "chat"
 
 			swipy.rightSidebarVC.sidebarDelegate = @
 			
-			@currentProject = swipy.collections.projects.get(@projectId)
-			swipy.topbarVC.setMainTitleAndEnableProgress(@currentProject.get("name"),false)
+			collection = swipy.slackCollections.channels
+
+			@currentList = collection.findWhere({name: @identifier})
+			console.log @currentList, @identifier
+			swipy.topbarVC.setMainTitleAndEnableProgress(@currentList.get("name"),false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
 
@@ -41,7 +46,7 @@ define [
 
 		createTask: ( title, options ) ->
 			options = {} if !options
-			options.projectLocalId = @projectId if !options.projectLocalId?
+			options.projectLocalId = @identifier if !options.projectLocalId?
 			options.ownerId = @currentProject.get("ownerId")
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
@@ -65,7 +70,7 @@ define [
 			taskListVC.taskHandler.delegate = @
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
-			projectId = @projectId
+			projectId = @identifer
 			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
@@ -80,17 +85,14 @@ define [
 			Get A ChatListViewController that filtered for this project
 		###
 		getChatListVC: ->
-			projectId = @projectId
-			@chatCollectionSubset = new Backbone.CollectionSubset({
-				parent: swipy.collections.messages,
-				filter: (message) ->
-					return message.get("projectLocalId") is projectId
-			})
+			projectId = @identifer
+			@currentList.fetchMessages()
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
-			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
-			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentProject.get("name"))
+			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
+			chatListVC.chatHandler.loadCollection(@currentList.get("messages"))
+			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentList.get("name"))
 			@chatListVC = chatListVC
 			return chatListVC
 		

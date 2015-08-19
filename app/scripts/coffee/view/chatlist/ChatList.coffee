@@ -51,7 +51,7 @@ define [
 			
 			if _.isFunction(@dataSource.chatListNumberOfSections)
 				numberOfSections = @dataSource.chatListNumberOfSections( @ )
-			cachedMembers = _.indexBy(swipy.collections.members.toJSON(), "objectId")
+
 			if @unread
 				$(".chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
 			@unread = null
@@ -71,16 +71,18 @@ define [
 				sectionEl = section.$el.find('.section-list')
 
 				for chat in sectionData.messages
-
+					console.log chat
 					numberOfChats++
-					if chat.get("unread")
+					if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead
 						if !@unread?
 							@unread = new Unread()
 							sectionEl.append( @unread.el )
-						@unread.lastUnread = chat.get("timestamp")
+						@unread.lastUnread = chat.get("ts")
 					chatMessage = new ChatMessage({model: chat})
-					sender = chat.get("userId")
-					unixStamp = chat.getUnixTimestamp()
+					
+					sender = chat.get("user")
+					sender = chat.get("bot_id") if !sender
+					unixStamp = parseInt(chat.get("ts"))
 					timeDiff = Math.abs(unixStamp - lastUnix)
 
 					if sender is lastSender and timeDiff < 2400

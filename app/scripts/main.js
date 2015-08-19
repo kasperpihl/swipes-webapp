@@ -172,7 +172,7 @@ require(["jquery", "backbone"], function($) {
         var jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg";
         
         Parse.initialize(appId, jsId);
-        if (Parse.User.current()) {
+        if (localStorage.getItem("slack-token")) {
             require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
                 'use strict';
 
@@ -184,7 +184,7 @@ require(["jquery", "backbone"], function($) {
             });
         } else {
             
-            path = location.origin + "/login"
+            path = location.origin + "/loginslack"
             if(queryString && queryString.href){
                 path += "?href="+queryString.href;
             }

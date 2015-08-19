@@ -7,6 +7,7 @@ define [
 	"js/controller/AnalyticsController"
 	"js/router/MainRouter"
 	"js/collection/Collections"
+	"js/collection/slack/SlackCollections"
 	"js/controller/SidebarController"
 	"js/viewcontroller/ModalViewController"
 	"js/viewcontroller/LeftSidebarViewController"
@@ -16,6 +17,7 @@ define [
 	"js/controller/FilterController"
 	"js/controller/SettingsController"
 	"js/controller/SyncController"
+	"js/controller/SlackSyncController"
 	"js/controller/APIController"
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
@@ -23,7 +25,7 @@ define [
 	"js/controller/WorkController"
 	"js/model/extra/NotificationModel"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, NotificationModel) ->
+	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -47,6 +49,7 @@ define [
 			#@hackParseAPI()
 			# Base app data
 			@collections = new Collections()
+			@slackCollections = new SlackCollections()
 
 			@bridge = new BridgeController()
 			@analytics = new AnalyticsController()
@@ -55,6 +58,7 @@ define [
 			# Synchronization
 			@settings = new SettingsController()
 			@sync = new SyncController()
+			@slackSync = new SlackSyncController()
 			@api = new APIController()
 			@updateTimer = new ClockWork()
 
@@ -63,6 +67,8 @@ define [
 			
 			
 		start: ->
+			@slackCollections.fetchAll()
+			@slackSync.start()
 			if @sync.lastUpdate?
 				@collections.fetchAll()
 				_.invoke(@collections.todos.models, "set", { selected: no } )
@@ -70,6 +76,7 @@ define [
 				@init()
 			else
 				Backbone.once( "sync-complete", @init, @ )
+
 			@sync.sync()
 		init: ->
 			@cleanUp()
@@ -126,5 +133,5 @@ define [
 			Backbone.trigger("opened-window")
 			if swipy?
 				swipy.sync.sync()
-				swipy.userController.fetchUser()
+				swipy.userController?.fetchUser()
 			

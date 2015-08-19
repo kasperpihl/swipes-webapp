@@ -7,8 +7,8 @@ define [], () ->
 			"edit/:id": "edit"
 			"edit/:id/:action": "edit"
 			"tasks/:id": "tasks"
-			"project/:id": "project"
-			"member/:id": "member"
+			"channel/:id": "channel"
+			"im/:id": "im"
 			"list/:id/:action": "tasks"
 			"work": "work"
 			"*all": "root"
@@ -39,12 +39,12 @@ define [], () ->
 				when "done" then "Done Tab"
 
 			swipy.analytics.pushScreen eventName
-		project: ( id ) ->
+		channel: ( id ) ->
 			options = { id: id }
-			Backbone.trigger( "open/viewcontroller", "project", options )
-		member: ( id ) ->
+			Backbone.trigger( "open/viewcontroller", "channel", options )
+		im: ( id ) ->
 			options = { id: id }
-			Backbone.trigger( "open/viewcontroller", "member", options )
+			Backbone.trigger( "open/viewcontroller", "im", options )
 		openLastMainView: (trigger)->
 			if @lastMainRoute is ""
 				trigger = true
@@ -62,7 +62,7 @@ define [], () ->
 			if subview then Backbone.trigger( "settings/view", subview )
 			else swipy.analytics.pushScreen "Settings menu"
 		updateHistory: (me, page, subpage) ->
-			if @history.length is 0 and page isnt "edit" and page isnt "tasks" and page isnt "project" and page isnt "member"
+			if @history.length is 0 and page isnt "edit" and page isnt "tasks" and page isnt "channel" and page isnt "im"
 				Backbone.trigger( "open/viewcontroller", "tasks", {id:"now", onlyInstantiate: true} )
 			# We skip root, because it's just a redirect to another route.
 			return false if page is "" or page is "root"
