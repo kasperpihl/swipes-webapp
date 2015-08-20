@@ -17,24 +17,32 @@ define [
 			
 
 		open: (options) ->
-			@memberId = options.id
+			@identifier = options.id
+			@type = "im"
+
 			@mainView = "chat"
 			
 			swipy.rightSidebarVC.sidebarDelegate = @
 
-			@currentMember = swipy.collections.members.get(@memberId)
-			swipy.topbarVC.setMainTitleAndEnableProgress(@currentMember.get("username"), false)
+			collection = swipy.slackCollections.channels
+			
+			@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
+			console.log _.pluck(collection.toJSON(), "user")
+			@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
+
+			swipy.topbarVC.setMainTitleAndEnableProgress(@currentUser.get("name"), false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()	
 
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
+			meUser = swipy.slackCollections.users.me()
 			groups = collection.groupBy((model, i) ->
 				# TODO: Seperate tasks between who it's from
-				if model.get("toUserId") is self.currentMember.id
-					return "His Tasks"
-				else 
+				if model.get("toUserId") is meUser.id
 					return "My Tasks"
+				else 
+					return "His Tasks"
 			)
 			taskGroups = []
 			taskGroups.push({leftTitle: "RECEIVED TASKS" , tasks: groups["My Tasks"]}) #if groups["My Tasks"]?.length > 0
@@ -56,8 +64,9 @@ define [
 
 		createTask: ( title, options ) ->
 			options = {} if !options
-			options.toUserId = @currentMember.id if !options.toUserId?
-			options.ownerId = @currentMember.get("organisationId")
+			options.toUserId = @currentUser.id if !options.toUserId?
+			options.projectLocalId = @currentList.id
+			#options.ownerId = @currentUser.get("organisationId")
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
 
@@ -70,15 +79,16 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
-			taskListVC.addTaskCard.setPlaceHolder("Send task to " + @currentMember.get("username"))
+			taskListVC.addTaskCard.setPlaceHolder("Send task to " + @currentUser.get("name"))
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
-			memberId = @memberId
+			projectId = @currentList.id
+			meUser = swipy.slackCollections.users.me()
 			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
 					if !task.get("completionDate") and !task.isSubtask()
-						if (task.get("userId") is Parse.User.current().id and task.get("toUserId") is memberId) or (task.get("userId") is memberId and task.get("toUserId") is Parse.User.current().id)
+						if (task.get("projectLocalId") is projectId)
 							return true
 					return false
 			})
@@ -91,19 +101,16 @@ define [
 			Get A ChatListViewController that filtered for this project
 		###
 		getChatListVC: ->
-			memberId = @memberId
-			@chatCollectionSubset = new Backbone.CollectionSubset({
-				parent: swipy.collections.messages,
-				filter: (message) ->
-					if (message.get("userId") is Parse.User.current().id and message.get("toUserId") is memberId) or (message.get("userId") is memberId and message.get("toUserId") is Parse.User.current().id)
-						return true
-					return false
-			})
+			memberId = @identifier
+			@currentList.fetchMessages()
+
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
-			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentMember.get("username"))
-			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
+			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentUser.get("name"))
+			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
+			chatListVC.chatHandler.loadCollection(@currentList.get("messages"))
+			
 			@chatListVC = chatListVC
 			return chatListVC
 
@@ -132,12 +139,9 @@ define [
 			NewMessage Delegate
 		###
 		newMessageSent: ( newMessage, message ) ->
-			options = {}
-			options.toUserId = @currentMember.id
-			options.ownerId = @currentMember.get("organisationId")
-			@chatCollectionSubset?.child.sendMessage(message, options)
+			options = { type:"message", channel: @currentList.id, text: message, user: swipy.slackCollections.users.me().id }
+			swipy.slackSync.doSocketSend( options )
 			@chatListVC.chatList.scrollToBottomVar = true
-			Backbone.trigger("reload/chathandler", "scrollToBottom")
 		###
 			AddTaskCard Delegate
 		###

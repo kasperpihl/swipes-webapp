@@ -149,11 +149,11 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 		sync: ->
 			return @needSync = true if @isSyncing
-			return if !Parse.User.current()
+			return if !localStorage.getItem("slack-token")
 			@isSyncing = true
 			url = "http://" + window.location.hostname + ":5000/v1/sync" #"https://api.swipesapp.com/v1/sync" #
-			user = Parse.User.current()
-			token = user.getSessionToken()
+
+			token = localStorage.getItem("slack-token")
 			data =
 				sessionToken : token
 				platform : "web"
@@ -196,6 +196,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 			@updatedTodos = null
 		errorFromSync: ( data, textStatus, error ) ->
+			console.log data
 			@util.sendError( data, "Sync Server Error")
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->

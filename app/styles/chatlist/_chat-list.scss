@@ -64,6 +64,7 @@ $chat-new-message-height: 50px;
 	}
 }
 .chat-message{
+
 	$left-side-width:55px;
 	$min-height:28px;
 	$like-color: #babbbd;
@@ -92,16 +93,21 @@ $chat-new-message-height: 50px;
 		font: 11px/1 $font-bold;
 	}
 	.message-container{
+		@include select;
 		font: 14px/1 $font-normal;
 	}
 	.attachment-container{
 		border-left: 3px solid #DDDDDD;
 		position:relative;
-		margin-top: 12px;
+		margin-top: 0;
 		padding-left: 12px;
-		margin-bottom: 12px;
+		margin-bottom: 0px;
 		img{
 			height: 300px;
+		}
+		.attachment-content{
+			@include select;
+			font: 13px $font-normal;
 		}
 	}
 

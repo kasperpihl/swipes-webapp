@@ -24,7 +24,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 				if confirm "Are you sure you want to log out?"
 					localStorage.clear()
 					Parse.User.logOut()
-					location.href = "/login/"
+					location.href = "/loginslack/"
 			false
 		keyUpHandling: (e) ->
 			if e.keyCode is 27

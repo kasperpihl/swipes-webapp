@@ -28,10 +28,9 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 		sortAndGroupCollection: ->
 			@groupedMessages = []
 			groups = @collection.groupBy((model, i) ->
-				if model.get("timestamp")
-					return moment(model.get("timestamp")).startOf('day').unix()
-				else
-					return moment(model.get("localCreatedAt")).startOf('day').unix()
+				date = new Date(parseInt(model.get("ts"))*1000)
+				return moment(date).startOf('day').unix()
+				
 			)
 			taskGroups = []
 			sortedKeys = _.keys(groups).sort()
@@ -64,8 +63,9 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 							currentTarget = currentTarget.parentNode
 					else
 						break
-
+			console.log(draggedId)
 			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
+			console.log(draggedMessage)
 			if draggedMessage
 				draggedIds.push(draggedId)
 				$('.drag-mouse-pointer ul').html "<li>"+draggedMessage.get("message")+"</li>"

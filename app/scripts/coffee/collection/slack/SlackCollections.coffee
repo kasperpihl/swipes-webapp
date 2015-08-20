@@ -15,17 +15,9 @@ define [
 			@channels = new ChannelCollection()
 			@channels.localStorage = new Backbone.LocalStorage("ChannelCollection")
 
-			@ims = new ChannelCollection()
-			@ims.slackApiType = "im"
-			@ims.localStorage = new Backbone.LocalStorage("ImCollection")
-
-			@groups = new ChannelCollection()
-			@groups.slackApiType = "groups"
-			@groups.localStorage = new Backbone.LocalStorage("GroupCollection")
-
 			@messages = new MessageCollection()
 
-			@all = [@users, @bots, @channels, @ims, @groups]
+			@all = [@users, @bots, @channels]
 		fetchAll: ->
 			for collection in @all
 				collection.fetch()

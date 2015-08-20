@@ -1,0 +1,16 @@
+<% _.each( data.attachments, function(attachment){ 
+	console.log(attachment);
+	var colorStyle = "";
+	if(attachment.color)
+		colorStyle = "border-left: 3px solid #"+attachment.color;
+	var renderedText;
+	if(attachment.text){
+		renderedText = attachment.text;
+	}
+%>
+<div class="attachment-container" style="<%= colorStyle %>">
+	<div class="attachment-content">
+	<% if(renderedText) print(data.handleMentionsAndLinks(renderedText)); %>
+	</div>
+</div>
+<% }) %>

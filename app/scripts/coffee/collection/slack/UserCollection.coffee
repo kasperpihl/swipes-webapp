@@ -2,3 +2,5 @@ define [ "underscore", "js/model/slack/UserModel", "localStorage"], ( _, UserMod
 	Backbone.Collection.extend
 		model: UserModel
 		localStorage: new Backbone.LocalStorage("UserCollection")
+		me: ->
+			@findWhere({me: true})

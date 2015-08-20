@@ -21,9 +21,10 @@ define ["js/utility/Utility"], ( Utility ) ->
 			if shouldSync
 				@doSync.apply @ , []
 		constructor: ( attributes ) ->
+			me = swipy.slackCollections.users.me()
 			if attributes && !attributes.objectId
 				util = new Utility()
-				attributes.userId = Parse.User.current().id
+				attributes.userId = me.id
 				attributes.tempId = util.generateId 12
 				attributes.objectId = attributes.tempId
 				attributes.needSaveToServer = true

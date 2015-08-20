@@ -2,10 +2,9 @@ define [
 	"underscore"
 	"gsap"
 	"js/viewcontroller/TaskListViewController"
-	"js/viewcontroller/ChatListViewController"
 	"js/utility/TimeUtility"
 	"momentjs"
-	], (_, TweenLite, TaskListViewController, ChatListViewController, TimeUtility) ->
+	], (_, TweenLite, TaskListViewController, TimeUtility) ->
 	Backbone.View.extend
 		className: "my-tasks-view-controller main-view-controller"
 		initialize: ->
@@ -23,23 +22,22 @@ define [
 			@mainView = "task"
 			swipy.rightSidebarVC.sidebarDelegate = @
 			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
-			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
+			swipy.rightSidebarVC.hideSidemenu()
 			@render()
 
 		loadMainWindow: (type) ->
 			@vc?.destroy()
 			if type is "task"
 				@vc = @getTaskListVC()
-			else if type is "chat"
-				@vc = @getChatListVC()
 			else return
 			@$el.html @vc.el
 			@vc.render()
 
 		createTask: ( title, options ) ->
-			console.log "my task " + title
+			me = swipy.slackCollections.users.me()
+			console.log me.id + "-kasper"
 			options = {} if !options
-			options.toUserId = Parse.User.current().id if !options.toUserId?
+			options.toUserId = me.id if !options.toUserId?
 			now = new Date()
 			now.setSeconds now.getSeconds() - 1
 			options.schedule = now if !options.schedule?
@@ -66,22 +64,7 @@ define [
 			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)
 
 			return taskListVC
-		getChatListVC: ->
-			@chatCollectionSubset = new Backbone.CollectionSubset({
-				parent: swipy.collections.messages,
-				filter: (message) ->
-					if (message.get("userId") is Parse.User.current().id and message.get("toUserId") is Parse.User.current().id)
-						return true
-					return false
-			})
-			chatListVC = new ChatListViewController()
-			chatListVC.newMessage.addDelegate = @
-			chatListVC.chatHandler.loadCollection(@chatCollectionSubset.child)
-			chatListVC.newMessage.setPlaceHolder("Send message to self")
-			@chatListVC = chatListVC
-			return chatListVC
-
-
+		
 		###
 			TaskHandler Delegate
 		###
@@ -118,36 +101,12 @@ define [
 
 
 		###
-			RightSidebarDelegate
-		###
-		sidebarSwitchToView: (sidebar, view) ->
-			if view is "navbarChat"
-				@mainView = "chat"
-			else @mainView = "task"
-			@render()
-		sidebarGetViewController: (sidebar, view) ->
-			if @mainView is "task"
-				return @getChatListVC()
-			else
-				return @getTaskListVC()
-
-		###
-			NewMessage Delegate
-		###
-		newMessageSent: ( newMessage, message ) ->
-			options = {}
-			options.toUserId = Parse.User.current().id
-			@chatCollectionSubset?.child.sendMessage(message, options)
-			@chatListVC.chatList.scrollToBottomVar = true
-			Backbone.trigger("reload/chathandler", "scrollToBottom")
-		###
 			AddTaskCard Delegate
 		###
 		taskCardDidCreateTask: ( taskCard, title, options) ->
 			@createTask( title, options )
 
 		destroy: ->
-			@chatListVC?.destroy()
 			@taskListVC?.destroy()
 			Backbone.off(null,null, @)
 			@vc?.destroy()

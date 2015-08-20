@@ -28,9 +28,9 @@ define ["underscore"], () ->
             @bridge.registerHandler('add-task', (data, responseCallback) ->
                 
             )
-            sessionToken = Parse.User.current()?.getSessionToken()
-            userId = Parse.User.current()?.id
-            @bridge.send({  sessionToken, userId })
+            #sessionToken = Parse.User.current()?.getSessionToken()
+            #userId = Parse.User.current()?.id
+            #@bridge.send({  sessionToken, userId })
         connectWebViewJavascriptBridge: (callback) ->
             if (window.WebViewJavascriptBridge)
                 callback(window.WebViewJavascriptBridge)

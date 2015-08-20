@@ -69,15 +69,15 @@ define [
 		start: ->
 			@slackCollections.fetchAll()
 			@slackSync.start()
-			if @sync.lastUpdate?
-				@collections.fetchAll()
+			@collections.fetchAll()
+			if @sync.lastUpdate? and localStorage.getItem("slackLastConnected")
 				_.invoke(@collections.todos.models, "set", { selected: no } )
 				@collections.todos.repairActionStepsRelations()
 				@init()
+				@sync.sync()
 			else
+				Backbone.once( "slack-first-connected", @sync.sync, @sync )
 				Backbone.once( "sync-complete", @init, @ )
-
-			@sync.sync()
 		init: ->
 			@cleanUp()
 			@notificationModel = new NotificationModel({id: 1})

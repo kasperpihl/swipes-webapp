@@ -71,7 +71,11 @@ define [
 			else throw new Error("RightSidebarViewController: sidebarDelegate must implement sidebarGetViewController")
 
 			#@loadWindow(el, title)
+		hideSidemenu: ->
+			@closeWindow()
+			$('.right-sidebar-outer-container').hide()
 		loadWindow:(el) ->
+			$('.right-sidebar-outer-container').show()
 			@$el.find('.right-window-content').html(el)	
 			@$el.find('.right-window-container').addClass('shown')
 			@setWindowWidth(@currentWidth)

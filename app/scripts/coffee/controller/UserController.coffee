@@ -2,8 +2,8 @@ define ["underscore"], (_) ->
 	class SettingsController
 		constructor: (opts) ->
 			@init()
-			@user = Parse.User.current()
-			@fetchUser()
+			#@user = Parse.User.current()
+			#@fetchUser()
 			_.bindAll( @, "syncSettings" )
 			Backbone.on( "sync-settings", @syncSettings, @ )
 		init: ->
@@ -15,7 +15,7 @@ define ["underscore"], (_) ->
 				if secondsDifference < 500
 					return
 			self = @
-			@user.fetch({
+			@user?.fetch({
 				success: (object) ->
 					self.lastUserFetch = new Date()
 					settings = object.get("settings")

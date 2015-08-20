@@ -204,11 +204,13 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				@setCompletionTimeStr()
 			@setRestrictedForMe()
 		setRestrictedForMe: ->
+			me = swipy.slackCollections.users.me()
 			if @get("toUserId")
-				if @get("toUserId") isnt Parse.User.current().id and @get("userId") isnt Parse.User.current().id
+				if @get("toUserId") isnt me.id and @get("userId") isnt me.id
 					@set("restrictedForMe",true)
 		checkAssigned: ->
-			if @get("toUserId") is Parse.User.current().id or @get("assignees") and _.indexOf(@get("assignees"), Parse.User.current().id) isnt -1
+			me = swipy.slackCollections.users.me()
+			if @get("toUserId") is me.id or @get("assignees") and _.indexOf(@get("assignees"), me.id) isnt -1
 				@set("isMyTask", true)
 			else @set("isMyTask", false)
 

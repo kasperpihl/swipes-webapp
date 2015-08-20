@@ -12,11 +12,29 @@
 		sender = swipy.slackCollections.bots.get(bot_id);
 		profilePictureURL = sender.get("icons").image_48;
 	}
-	console.log(sender.toJSON());
+	
+	var icons = data.message.get("icons");
+	if(!sender){
+		console.log(data.message.toJSON());
+	}
+	var name = "";
+
+	if(sender){
+		name = sender.get("name");
+	}
+
+	var username = data.message.get("username");
+	if(username && !name){
+		name = username;
+	}
+	if(icons && !profilePictureURL){
+		profilePictureURL = icons.image_48;
+	}
+
 	var hasAttachment = false;
 	var numberOfLikes = data.message.get("numberOfLikes");
 	var shouldShowBigLike = false;
-	if( data.message.get("attachment") ){
+	if( data.message.get("attachments") ){
 		hasAttachment = true;
 		shouldShowBigLike = true;
 	}
@@ -46,7 +64,41 @@
 				likeString = numberOfLikes + " people like this."
 		}
 	}
-	
+	function handleMentionsAndLinks(text){
+		if(!text)
+			return;
+		var matches = text.match(/<(.*?)>/g);
+		if(matches && matches.length > 0){
+			for(var i = 0 ; i < matches.length ; i++){
+				match = matches[i];
+				var replacement = "";
+				// remove the <>
+				match = match.substring(1, match.length-1);
+				var res = match.split("|");
+				var action = res[0];
+				var placeholder = action;
+				if(res && res.length > 1)
+					placeholder = res[1];
+
+				// URL handling
+				if(action.startsWith("http") || action.startsWith("mailto:")){
+
+					replacement = "<a target=\"blank\" href=\""+action+"\">" + placeholder + "</a>";
+				}
+				else if( action.startsWith("@U")){
+					placeholder = swipy.slackCollections.users.get(action.substring(1)).get("name")
+					replacement = "@"+placeholder;
+				}
+				else{
+					console.log(match);
+				}
+				text = text.replace("<" + match+ ">", replacement);
+
+			}
+			
+		}
+		return text;
+	};
 
 %>
 <div class="chat-message">
@@ -59,11 +111,11 @@
 		<% } else { %>
 			<div class="left-hover-box">
 				<% if(!shouldShowBigLike){ %>
-				<a class="like-button">
+				<!--<a class="like-button">
 					<svg class="icon">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-thumb"></use>
 					</svg>
-				</a>
+				</a>-->
 				<% } %>
 				<span class="timestamp"><%= data.message.get("timeStr") %></span>
 			</div>
@@ -72,39 +124,40 @@
 	<div class="chat-right-side-container">
 		<% if(!data.isFromSameSender){ %>
 		<div class="sender-container">
-			<span class="sender-name"><%= sender.get("name") %></span>
+			<span class="sender-name"><%= name %></span>
 			<span class="timestamp"><%= data.message.get("timeStr") %></span>
 			<% if(!shouldShowBigLike){ %> 
 			<span class="top-hover-box">
-				<a class="like-button">
+				<!--<a class="like-button">
 					<svg class="icon">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-thumb"></use>
 					</svg>
-				</a>
+				</a>-->
 			</span>
 			<% } %>
 		</div>
 		<% } %>
 		<div class="message-container">
-			<%= data.message.get("text") %>
+			<%= handleMentionsAndLinks(data.message.get("text")) %>
 		</div>
 		<% if( hasAttachment ){ %>
-		<div class="attachment-container">
-			<a href="http://test.com" target="_blank"><img src="styles/img/temp/attachment-placeholder.png"></a>
-		</div>
+		
+			<%= data.attTmpl({attachments: data.message.get("attachments"), handleMentionsAndLinks: handleMentionsAndLinks}) %>
+			<!--<a href="http://test.com" target="_blank"><img src="styles/img/temp/attachment-placeholder.png"></a>-->
+
+		
 		<% } %>
 		<% if(shouldShowBigLike){ %>
-		<div class="like-container">
+		<!--<div class="like-container">
 			<a class="like-button <%= isLikedClass %>">
 				<svg class="icon">
 					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-thumb"></use>
 				</svg>
-				<!--Like<% if(isLikedClass.length > 0) print("d"); %>-->
 			</a>
 			<span class="like-string">
 				<%= likeString %>
 			</span>
-		</div>
+		</div>-->
 		<% } %>
 	</div>
 </div>

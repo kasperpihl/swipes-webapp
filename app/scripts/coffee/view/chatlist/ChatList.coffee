@@ -71,9 +71,10 @@ define [
 				sectionEl = section.$el.find('.section-list')
 
 				for chat in sectionData.messages
-					console.log chat
+					if(chat.get("text").startsWith("Hey Stefan, I love they way"))
+						console.log chat
 					numberOfChats++
-					if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead
+					if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user") isnt swipy.slackCollections.users.me()
 						if !@unread?
 							@unread = new Unread()
 							sectionEl.append( @unread.el )
@@ -83,6 +84,7 @@ define [
 					sender = chat.get("user")
 					sender = chat.get("bot_id") if !sender
 					unixStamp = parseInt(chat.get("ts"))
+					date = new Date(unixStamp*1000)
 					timeDiff = Math.abs(unixStamp - lastUnix)
 
 					if sender is lastSender and timeDiff < 2400
@@ -105,9 +107,30 @@ define [
 					@dragHandler = new DragHandler()
 					@dragHandler.enableFullScreenTaskList = true
 					@dragHandler.delegate = @dragDelegate
-				@dragHandler.createDragAndDropElements(".chat-item")
+
+				$(".chat-item").mousedown((e) =>
+					console.log("down",e)
+					text = ""
+					if (window.getSelection)
+						text = window.getSelection().toString()
+					else if (document.selection and document.selection.type isnt "Control")
+						text = document.selection.createRange().text
+					if text and text.length > 0
+						@isDragging = true
+						e.preventDefault()
+					$(".chat-item").mousemove((e) =>
+						
+						console.log("move",e)
+						console.log @isDragging
+					)
+
+				).mouseup((e)->
+					$(".chat-item").off("mousemove")
+					console.log("up",e)
+				)
+				#@dragHandler.createDragAndDropElements(".chat-item")
 			if shouldScrollToBottom
-				@scrollToBottom()
+				_.debounce(@scrollToBottom,10)()
 			@moveToBottomIfNeeded()
 			if @unread?
 				$(".chat-list-container-scroller").on("scroll.chatlist", @checkIsRead)

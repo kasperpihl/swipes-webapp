@@ -20,6 +20,7 @@ define ["underscore"], (_) ->
 				entityMap[s]
 			)
 		sendError: (error, type) ->
+			me = swipy.slackCollections.users.me()
 			ErrorObject = Parse.Object.extend("Error")
 			errorObject = new ErrorObject()
 
@@ -31,5 +32,5 @@ define ["underscore"], (_) ->
 			errorObject.set( "Platform", "Web" )
 			errorObject.set( "OSVersion", navigator.userAgent.toLowerCase() )
 			errorObject.set( "type", type ) if type?
-			errorObject.set( "user", Parse.User.current() ) if Parse.User.current()
+			errorObject.set( "user", me ) if me
 			errorObject.save()

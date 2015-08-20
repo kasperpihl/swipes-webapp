@@ -29,11 +29,11 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 
 			newTodo = @create { title, animateIn }
 			if options
-				newTodo.set( "ownerId", options.ownerId) if options.ownerId
 				newTodo.set( "projectLocalId", options.projectLocalId ) if options.projectLocalId
 				newTodo.set( "toUserId", options.toUserId) if options.toUserId
 				newTodo.set( "schedule", options.schedule) if options.schedule
 			newTodo.set( "tags", tags )
+			console.log newTodo.toJSON()
 			newTodo.save({}, {sync:true})
 
 			swipy.analytics.sendEvent("Tasks", "Added", "Input", title.length )

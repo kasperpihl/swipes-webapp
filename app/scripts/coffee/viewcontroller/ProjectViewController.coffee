@@ -27,7 +27,6 @@ define [
 			collection = swipy.slackCollections.channels
 
 			@currentList = collection.findWhere({name: @identifier})
-			console.log @currentList, @identifier
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentList.get("name"),false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
@@ -46,8 +45,7 @@ define [
 
 		createTask: ( title, options ) ->
 			options = {} if !options
-			options.projectLocalId = @identifier if !options.projectLocalId?
-			options.ownerId = @currentProject.get("ownerId")
+			options.projectLocalId = @currentList.id if !options.projectLocalId?
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
 
@@ -70,12 +68,13 @@ define [
 			taskListVC.taskHandler.delegate = @
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
-			projectId = @identifer
+			projectId = @currentList.id
 			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
 					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
 			})
+
 			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)
 			@taskListVC = taskListVC
 			return taskListVC
@@ -120,12 +119,9 @@ define [
 			NewMessage Delegate
 		###
 		newMessageSent: ( newMessage, message ) ->
-			options = {}
-			options.projectLocalId = @projectId
-			options.ownerId = @currentProject.get("ownerId")
-			@chatCollectionSubset?.child.sendMessage(message, options)
+			options = { type:"message", channel: @currentList.id, text: message, user: swipy.slackCollections.users.me().id }
+			swipy.slackSync.doSocketSend( options )
 			@chatListVC.chatList.scrollToBottomVar = true
-			Backbone.trigger("reload/chathandler")
 		###
 			AddTaskCard Delegate
 		###

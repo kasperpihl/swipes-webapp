@@ -8,10 +8,9 @@ define [
 		initialize: ->
 			@setTemplates()
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
-			@listenTo( swipy.slackCollections.ims, "change:unread_count change:unread_count_display", @bouncedRenderSidebar )
-			@listenTo( swipy.slackCollections.channels, "change:unread_count change:unread_count_display", @bouncedRenderSidebar )
+			@listenTo( swipy.slackCollections.channels, "add reset remove change:unread_count change:unread_count_display", @bouncedRenderSidebar )
 			# Proper render list when projects change/add/remove
-			@listenTo( swipy.collections.projects, "add remove reset change:name", @renderSidebar )
+			# 
 			#@listenTo( swipy.collections.members, "add remove reset change:name change:status", @renderSidebar )
 			_.bindAll( @, "renderSidebar")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
@@ -30,12 +29,12 @@ define [
 			@membersTpl = _.template TeamMembersTemplate, {variable: "data"}
 		renderSidebar: ->
 			notifications = swipy.notificationModel.get("notifications")
-			filteredChannels = _.filter(swipy.slackCollections.channels.toJSON(), (channel) -> return channel.is_member )
+			filteredChannels = _.filter(swipy.slackCollections.channels.toJSON(), (channel) -> return channel.is_channel and channel.is_member )
 			channels = _.sortBy( filteredChannels, (channel) -> return channel.name )
 			@$el.find("#sidebar-project-list .projects").html(@projectsTpl({ channels: channels }))
 			
 
-			filteredIms = _.filter(swipy.slackCollections.ims.toJSON(), (im) -> return im.is_open)
+			filteredIms = _.filter(swipy.slackCollections.channels.toJSON(), (channel) -> return channel.is_im and channel.is_open)
 			ims = _.sortBy(filteredIms, (im) ->
 				im.user = swipy.slackCollections.users.get(im.user).toJSON()
 				return 0 if im.user.name is "slackbot"

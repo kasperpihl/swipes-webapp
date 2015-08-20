@@ -3,16 +3,16 @@
 	var hasMetaClass = "";
 	var sourceOfTask, timeString, numberOfTags;
 	if(data.showSource){
-		var currentUserId = Parse.User.current().id
+		var currentUserId = swipy.slackCollections.users.me().id
 		if(data.task.get("projectLocalId")){
-			var srcProj = swipy.collections.projects.get(data.task.get("projectLocalId"));
+			/*var srcProj = swipy.slackCollections.projects.get(data.task.get("projectLocalId"));
 			if(srcProj)
-				sourceOfTask = srcProj.get("name");
+				sourceOfTask = srcProj.get("name");*/
 		}
 		else if(data.task.get("toUserId") === currentUserId && data.task.get("userId") !== currentUserId){
-			var srcMember = swipy.collections.members.get(data.task.get("userId"));
+			var srcMember = swipy.slackCollections.users.get(data.task.get("userId"));
 			if(srcMember)
-				sourceOfTask = srcMember.get("username");
+				sourceOfTask = srcMember.get("name");
 		}
 		else{
 			sourceOfTask = "Personal";
