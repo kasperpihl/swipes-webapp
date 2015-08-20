@@ -99,7 +99,7 @@ define [
 			ChatList ChatDelegate
 		###
 		chatListMarkAsRead: (chatList, timestamp) ->
-			Backbone.trigger("mark-read", "project-"+@projectId, timestamp)
+			@currentList.markAsRead()
 		###
 			RightSidebarDelegate
 		###
