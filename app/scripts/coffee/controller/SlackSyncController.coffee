@@ -90,10 +90,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			console.log evt.data
 		onSocketError: (evt) ->
 			console.log evt
-		doSocketSend: (message) ->
+		doSocketSend: (message, dontSave) ->
 			if _.isObject(message)
 				message.id = ++@currentIdCount
-				@sentMessages[""+message.id] = message
+				@sentMessages[""+message.id] = message if !dontSave
 				message = JSON.stringify(message)
 			@webSocket.send(message)
 		apiRequest: (command, options, callback) ->

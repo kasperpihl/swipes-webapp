@@ -20,11 +20,12 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			swipy.slackSync.apiRequest(apiType + ".history",options, 
 				(res, error) =>
 					if res and res.ok
+						@hasFetched = true
 						for message in res.messages
-							if !collection.get(message.ts)
-								collection.create( message )
+							@addMessage(message)
 			)
 		addMessage: (message) ->
+			return if(!@hasFetched? or !@hasFetched)
 			collection = @get("messages")
 			if !collection.get(message.ts)
 				collection.create( message )

@@ -55,7 +55,7 @@ define [
 			if @unread
 				$(".chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
 			@unread = null
-
+			
 			for section in [1 .. numberOfSections]
 				
 				# Load messages and titles for section
@@ -74,7 +74,7 @@ define [
 					if(chat.get("text").startsWith("Hey Stefan, I love they way"))
 						console.log chat
 					numberOfChats++
-					if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user") isnt swipy.slackCollections.users.me()
+					if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user") isnt swipy.slackCollections.users.me().id
 						if !@unread?
 							@unread = new Unread()
 							sectionEl.append( @unread.el )
@@ -132,6 +132,7 @@ define [
 			if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
 			@moveToBottomIfNeeded()
+			
 			if @unread?
 				$(".chat-list-container-scroller").on("scroll.chatlist", @checkIsRead)
 				@checkIsRead()
@@ -148,6 +149,7 @@ define [
 				targetMargin = 0
 			$(".chat-list").css("marginTop", targetMargin)
 		checkIsRead: (e) ->
+
 			if @unread
 				unreadY = @unread.$el.position().top
 				wrapperHeight = $(".chat-list-container-scroller").height()

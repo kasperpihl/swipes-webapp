@@ -142,6 +142,9 @@ define [
 			options = { type:"message", channel: @currentList.id, text: message, user: swipy.slackCollections.users.me().id }
 			swipy.slackSync.doSocketSend( options )
 			@chatListVC.chatList.scrollToBottomVar = true
+		newMessageIsTyping: (newMessage ) ->
+			options = {type: "typing", channel: @currentList.id }
+			swipy.slackSync.doSocketSend(options, true)
 		###
 			AddTaskCard Delegate
 		###

@@ -7,6 +7,7 @@ define ["underscore"
 			@placeholder = "Write new message"
 			@template = _.template Tmpl, { variable: "data" }
 			@render()
+
 			_.bindAll(@, "pressedKey")
 		events:
 			"keyup input": "pressedKey"
@@ -18,8 +19,14 @@ define ["underscore"
 			@placeholder = placeholder
 			@$el.find('input').attr('placeholder',placeholder)
 		pressedKey: (e) ->
+			nowStamp = new Date().getTime()
+			if !@lastSentTyping? or (@lastSentTyping + 3500) < nowStamp
+				@lastSentTyping = new Date().getTime()
+				if @addDelegate? and _.isFunction(@addDelegate.newMessageIsTyping)
+					@addDelegate.newMessageIsTyping( @ )
 			if e.keyCode is 13
 				@sendMessage()
+
 		sendMessage: ->
 			message = @$el.find("input").val()
 			return if message.length is 0

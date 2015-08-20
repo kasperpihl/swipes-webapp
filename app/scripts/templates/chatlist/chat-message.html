@@ -87,8 +87,12 @@
 				}
 				else if( action.startsWith("@U")){
 					placeholder = swipy.slackCollections.users.get(action.substring(1)).get("name")
-					replacement = "@"+placeholder;
+					replacement = "<a href=\"#im/"+placeholder+"\">@"+placeholder + "</a>";
 				}
+				else if( action.startsWith("@C")){
+					placeholder = swipy.slackCollections.channels.get(action.substring(1)).get("name")
+					replacement = "<a href=\"#channel/"+placeholder+"\">@"+placeholder + "</a>";
+				} 
 				else{
 					console.log(match);
 				}
