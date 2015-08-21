@@ -10,7 +10,7 @@ define [
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
 			@listenTo( swipy.slackCollections.channels, "add reset remove change:unread_count change:unread_count_display", @bouncedRenderSidebar )
 			# Proper render list when projects change/add/remove
-			# 
+			
 			#@listenTo( swipy.collections.members, "add remove reset change:name change:status", @renderSidebar )
 			_.bindAll( @, "renderSidebar")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )

@@ -10,8 +10,9 @@
 %>
 <div class="attachment-container" style="<%= colorStyle %>">
 	<div class="attachment-content">
-	
-	<% if(attachment.title){ %>
+	<% if(attachment.service_name ){ %>
+		<div class="service-name"><%= attachment.service_name %></div>
+	<% } if(attachment.title){ %>
 		
 		<div class="title">
 			<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>

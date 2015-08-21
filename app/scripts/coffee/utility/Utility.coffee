@@ -32,5 +32,5 @@ define ["underscore"], (_) ->
 			errorObject.set( "Platform", "Web" )
 			errorObject.set( "OSVersion", navigator.userAgent.toLowerCase() )
 			errorObject.set( "type", type ) if type?
-			errorObject.set( "user", me ) if me
+			errorObject.set( "user", me.id ) if me? and me.id
 			errorObject.save()

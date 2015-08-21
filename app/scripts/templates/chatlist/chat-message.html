@@ -2,6 +2,8 @@
 	var hasProfilePicture = "";
 	var user = data.message.get("user");
 	var sender;
+	if(data.message.get("file"))
+		console.log(data.message.toJSON());
 	var profilePictureURL;
 	if(user){
 		sender = swipy.slackCollections.users.get(user);
@@ -12,6 +14,10 @@
 		sender = swipy.slackCollections.bots.get(bot_id);
 		profilePictureURL = sender.get("icons").image_48;
 	}
+	if(data.message.get("comment")){
+		sender = swipy.slackCollections.users.get(data.message.get("comment").user)
+		profilePictureURL = sender.get("profile").image_192;
+	}
 	
 	var icons = data.message.get("icons");
 	
@@ -21,10 +27,13 @@
 		name = sender.get("name");
 	}
 
+
 	var username = data.message.get("username");
 	if(username && !name){
 		name = username;
 	}
+	if(!name)
+		console.log(data.message);
 	if(icons && !profilePictureURL){
 		profilePictureURL = icons.image_48;
 	}
@@ -141,6 +150,10 @@
 		<% } %>
 		<div class="message-container">
 			<%= handleMentionsAndLinks(data.message.get("text")) %>
+			<% if(data.message.get("type") == "file_share") { %>
+				<div class="comment"></div>
+			<% } %>
+
 		</div>
 		<% if( hasAttachment ){ %>
 		
