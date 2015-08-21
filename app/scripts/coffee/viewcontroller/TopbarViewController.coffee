@@ -9,7 +9,7 @@ define [
 			@render()
 			@currentProgress = 0
 			@showProgress = true
-			@setSectionTitleAndProgress("Loading...", 30)
+			@setSectionTitleAndProgress("1 / 3", 30)
 		render: ->
 			@$el.html(@template({}))
 			$(".top-bar-container").html(@$el)

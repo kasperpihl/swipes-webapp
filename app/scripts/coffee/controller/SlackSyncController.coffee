@@ -19,7 +19,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		start: ->
 			@apiRequest("rtm.start", {simple_latest: false}, (data, error) =>
 				if data and data.ok
-					
 					@handleSelf(data.self) if data.self
 					@handleUsers(data.users) if data.users
 					@handleBots(data.bots) if data.bots
@@ -87,6 +86,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 						delete @sentMessages[""+data.reply_to]
 				else if data.type is "message" and !data.reply_to?
 					@handleReceivedMessage(data)
+				else if data.type is "channel_marked"
+					swipy.slackCollections.channels.get(data.channel)
 			console.log evt.data
 		onSocketError: (evt) ->
 			console.log evt
@@ -96,6 +97,12 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				@sentMessages[""+message.id] = message if !dontSave
 				message = JSON.stringify(message)
 			@webSocket.send(message)
+
+		sendMessage:(message, channel) ->
+			options = {text: message, channel: channel, as_user: true, link_names: 1}
+			@apiRequest("chat.postMessage", options, (res, error) ->
+
+			)
 		apiRequest: (command, options, callback) ->
 			url = @baseURL + command
 			options = {} if !options? or !_.isObject(options)

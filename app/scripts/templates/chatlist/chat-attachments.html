@@ -1,6 +1,6 @@
 <% _.each( data.attachments, function(attachment){ 
-	console.log(attachment);
 	var colorStyle = "";
+	console.log(attachment);
 	if(attachment.color)
 		colorStyle = "border-left: 3px solid #"+attachment.color;
 	var renderedText;
@@ -10,7 +10,26 @@
 %>
 <div class="attachment-container" style="<%= colorStyle %>">
 	<div class="attachment-content">
-	<% if(renderedText) print(data.handleMentionsAndLinks(renderedText)); %>
+	
+	<% if(attachment.title){ %>
+		
+		<div class="title">
+			<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>
+				<%= attachment.title %>
+			<% if(attachment.title_link) print("</a>"); %>
+		</div>
+
+	<% } if(attachment.text){ %>
+
+		<div class="text"><%= data.handleMentionsAndLinks(attachment.text) %></div>
+	
+	<% } if(attachment.image_url ){ %>
+		
+		<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>
+			<img height="<%= attachment.image_height %>px" width="<%= attachment.image_width %>px" src="<%= attachment.image_url %>" />
+		<% if(attachment.title_link) print("</a>"); %>
+
+	<% } %>
 	</div>
 </div>
 <% }) %>

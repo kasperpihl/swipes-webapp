@@ -118,7 +118,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 					, 400)
 					
 			else if hit.type is "project"
-				targetProject = swipy.collections.projects.get( @projectCollectionIdFromHtmlId(hit.target) )
+				targetProject = swipy.slackCollections.channels.get( @projectCollectionIdFromHtmlId(hit.target) )
 				return if !targetProject?
 				actions = []
 				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
@@ -131,10 +131,10 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				)
 			else if hit.type is "member"
 				memberId = @memberCollectionIdFromHtmlId(hit.target)
-				member = swipy.collections.members.get(memberId)
+				member = swipy.slackCollections.users.get(memberId)
 				return if !member?
 
-				name = member.get "username"
+				name = member.get "name"
 				actions = []
 				if draggedTask.get("projectLocalId")
 					if !draggedTask.userIsAssigned(memberId)
@@ -154,9 +154,11 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			clickedId = @idForEvent(e)
 
 			model = @collection.get( @taskCollectionIdFromHtmlId(clickedId) )
+
 			taskCard = $(clickedId)
-			return if taskCard.hasClass("editMode")
-			@handleClickForModelAndTaskCard(e, model, taskCard)
+			for dragable in dragHandler.dragables
+				console.log dragable
+			@handleClickForModelAndTaskCard(e, model, taskCard, dragHandler)
 			false
 
 		### 
@@ -175,27 +177,30 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		assignModalPeopleToAssign: (assignModal) ->
 			peopleToAssign = []
 			model = assignModal.model
-			me = swipy.collections.members.getMe()
+			me = swipy.slackCollections.users.me()
 			if me? and !model.userIsAssigned(me.id)
 				peopleToAssign.push(me.toJSON())
 				
-			swipy.collections.members.each( (member) =>
-				return if member.get("me")
-				if !model.userIsAssigned(member.id)
-					peopleToAssign.push(member.toJSON())
+			swipy.slackCollections.users.each( (user) =>
+				return if user.id is me.id or user.get("deleted") or user.get("is_bot") or user.id is "USLACKBOT"
+				if !model.userIsAssigned(user.id)
+					peopleToAssign.push(user.toJSON())
 			)
 
 			return peopleToAssign
 
-		handleClickForModelAndTaskCard: (e, model, taskCard) ->
+		handleClickForModelAndTaskCard: (e, model, taskCard, dragHandler) ->
 			if model.get("selected") or e.metaKey or e.ctrlKey
 				model.save("selected", !model.get("selected"))
 			else
 				shouldShow = !taskCard.hasClass("editMode")
-				$(".editMode").removeClass("editMode")
+				console.log "shouldShow", shouldShow
+				if shouldShow or $(e.target).hasClass('main-info-container')
+					$(".editMode").removeClass("editMode")
 				if shouldShow
 					#@editTask = new EditTask({model: model})
 					#@editTask.render()
+					@editMode = true
 					Backbone.trigger("edit/task", model)
 					#taskCard.find(".expanding").html @editTask.el
 					#taskCard.addClass("editMode")

@@ -38,7 +38,7 @@ $def-color: $small-seperator-color;
 				top: -1px;
 				font-size: 15px;
 			}
-
+			
 			&:after {
 				display: block;
 				content: '';
@@ -51,6 +51,14 @@ $def-color: $small-seperator-color;
 				left: 10px;
 				right: 0;
 			}
+	}
+	&.full{
+		h1:after {
+			background-color: $def-color;
+		}
+		svg #WHITE path{
+			fill: $def-color;
+		}
 	}
 
 	
@@ -117,6 +125,25 @@ $def-color: $small-seperator-color;
 		}
 
 	}
+	&.yellow.full{
+		h1:after {
+			background-color: $yellow;
+		}
+		svg #WHITE path{
+			fill: $yellow;
+		}
+		&:before {
+			background-color: $dark-yellow;
+		}
+
+		h1:after {
+			border-bottom-color: $dark-yellow;
+		}
+
+		svg #CURVE path {
+			fill: $dark-yellow;
+		}
+	}
 	&.yellow{
 		&:before {
 			background-color: $yellow;
@@ -138,6 +165,14 @@ $def-color: $small-seperator-color;
 		h1:after {
 			border-bottom-color: $red;
 		}
+		&.full{
+			h1:after {
+				background-color: $red;
+			}
+			svg #WHITE path{
+				fill: $red;
+			}
+		}
 
 		svg #CURVE path {
 			fill: $red;
@@ -151,6 +186,14 @@ $def-color: $small-seperator-color;
 
 		h1:after {
 			border-bottom-color: $green;
+		}
+		&.full{
+			h1:after {
+				background-color: $green;
+			}
+			svg #WHITE path{
+				fill: $green;
+			}
 		}
 
 		svg #CURVE path {

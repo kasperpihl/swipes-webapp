@@ -190,8 +190,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			if @needSync
 				@needSync = false
 				@sync()
-			else
-				@bouncedSync()
 			Backbone.trigger( "sync-complete", @updatedTodos )
 
 			@updatedTodos = null

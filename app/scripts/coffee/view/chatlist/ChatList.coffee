@@ -36,7 +36,9 @@ define [
 
 
 			shouldScrollToBottom = false
+			shouldAddNewUnread = @hasRendered
 			shouldScrollToBottom = @hasRendered = true if !@hasRendered
+
 			if @scrollToBottomVar is true
 				@scrollToBottomVar = false
 				shouldScrollToBottom = true
@@ -52,9 +54,6 @@ define [
 			if _.isFunction(@dataSource.chatListNumberOfSections)
 				numberOfSections = @dataSource.chatListNumberOfSections( @ )
 
-			if @unread
-				$(".chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
-			@unread = null
 			
 			for section in [1 .. numberOfSections]
 				
@@ -71,14 +70,15 @@ define [
 				sectionEl = section.$el.find('.section-list')
 
 				for chat in sectionData.messages
-					if(chat.get("text").startsWith("Hey Stefan, I love they way"))
-						console.log chat
 					numberOfChats++
-					if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user") isnt swipy.slackCollections.users.me().id
-						if !@unread?
+					if !@removeUnreadIfSeen and @unread and chat.get("ts") is @unread.ts
+						sectionEl.append( @unread.el )
+
+					if !shouldAddNewUnread and !@unread?
+						if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user") isnt swipy.slackCollections.users.me().id
 							@unread = new Unread()
 							sectionEl.append( @unread.el )
-						@unread.lastUnread = chat.get("ts")
+							@unread.ts = chat.get("ts")
 					chatMessage = new ChatMessage({model: chat})
 					
 					sender = chat.get("user")
@@ -156,7 +156,7 @@ define [
 				#scrollY = $(".chat-list-container-scroller").scrollTop()
 				if unreadY >= 0 and unreadY < wrapperHeight
 					if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
-						@delegate.chatListMarkAsRead( @, @unread.lastUnread )
+						@delegate.chatListMarkAsRead( @ )
 					@bouncedMarkAsRead()
 					$(".chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
 		markAsRead: ->
@@ -164,7 +164,7 @@ define [
 				$('.unread-seperator').addClass("read")
 		customCleanUp: ->
 		cleanUp: ->
-			$(".chat-list-container .chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
+			$(".chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
 			@dataSource = null
 			@delegate = null
 			@chatDelegate = null

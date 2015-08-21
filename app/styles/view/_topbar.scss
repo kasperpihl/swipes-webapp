@@ -1,4 +1,13 @@
 .top-bar-container{
+	&.red{
+		background: $red;
+	}
+	&.yellow{
+		background: $yellow;
+	}
+	&.green{
+		background: $green;
+	}
 	height:$top-bar-height;
 	position:absolute;
 	width:100%;

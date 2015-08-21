@@ -30,13 +30,14 @@
 	
 	// Base content wrapper
 	&_content {
+		padding-top: $top-bar-height;
 		&::-webkit-scrollbar { 
 		    display: none;
 		}
 		overflow-y:scroll;
 		width: inherit;
 		text-align: center;
-		background-color: $sidebar-dark-color;
+		background-color: $light-background;
 		z-index: 4999;
 		.left & {
 			@include centerBlock(0, auto, 0, 0, 0, absolute);

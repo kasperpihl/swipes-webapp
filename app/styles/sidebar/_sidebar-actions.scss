@@ -17,17 +17,38 @@
 				fill: $gray-labels;
 			}
 	}
+	.sidebar-shadow{
+		z-index:5001;
+		position:absolute;
+		top: $top-bar-height + 1;
+		height: 100%;
+		left: $sidebar-width - 10;
+		width: 10px;
+		@include box-shadow(inset -3px 0 10px -4px #C7C7C7);
 
+	}
+	.sidebar-header{
+		background: $unselected-text-color;//$sidebar-black-header;
+		height: $top-bar-height + 1;
+		position: absolute;
+		top:0;
+		left:0;
+		width:$sidebar-width;
+		z-index: 5000;
 
+	}
 	.sidebar-controls {
 		@extend .list-unstyled;
-		color: $sidebar-button-gray;
+		color: $unselected-text-color;
 		padding-top: 0px;
 		text-align: left;
+		#sidebar-my-tasks{
+			padding-top: 20px;
+		}
 		a{
 			text-decoration: none;
 			display:block;
-			color: $sidebar-button-gray;
+			color: $unselected-text-color;
 			width:100%;
 			&:hover, &:active, &:visited{
 				text-decoration: none;
@@ -111,7 +132,7 @@
 			a{
 				.text{
 					font: 0.75em/1 $font-bold;
-					color: white;
+					color: $unread-text-color;
 				}
 				$notification-size: 22px;
 				.notification{
@@ -120,7 +141,7 @@
 					@include border-radius($notification-size/2);
 					padding:5px;
 					padding-top:3px;
-					color: white;
+					color: $unread-text-color;
 					border: 2px solid $red;
 					font: 11px $font-normal;
 					height:$notification-size;
@@ -139,9 +160,9 @@
 			}
 			
 			li:hover, li.active, li.drag-hover-entering{
-				background: $sidebar-button-active-background-gray;
+				background: $selected-overlay-background;
 				a{
-					color: $sidebar-button-active-gray;
+					color: $unread-text-color;
 				}
 			}
 			li.drag-hover-entering{

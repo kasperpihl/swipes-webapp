@@ -2,6 +2,7 @@
 // Custom Variables
 // --------------------------------------------------
 $yellow: #FFC85E; //#E4CA5C;
+$dark-yellow: #E2B65B;
 $green: #86D36E; //#45DB86;
 $online-green: #8BC34A;
 $busy-yellow: #FF512F;
@@ -17,12 +18,21 @@ $sidebar-button-active-gray: #999a9c;
 $sidebar-button-active-background-gray: #323539;
 $breakpointSmallHeight: 500px;
 
+$light-background: #fffff5;
+$white-background: #ffffff;
+
+$sidebar-black-header: #000C2F;
+$unselected-text-color: #7F8591;
+$unread-text-color: #010D2E;
+$selected-overlay-background: #F2F3EB;
+
+
 // Topbar variables
 $top-bar-height: 44px;
 
 // Sidebar variables
 // -------------------------
-$sidebar-width: 240px;
+$sidebar-width: 200px;
 $sidebar-sub-width: 300px;
 $sidebar-sub-width-large: 400px;
 $sidebar-slide-width: 25px;

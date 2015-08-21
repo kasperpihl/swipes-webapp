@@ -23,6 +23,7 @@ define [
 					newView.transitionInComplete.call newView, options
 
 		editTask: (taskId) ->
+			console.log "edit"
 			model = m for m in swipy.collections.todos.models when m.id is taskId or m.get("tempId") is taskId
 			if not model?
 				swipy.router.navigate( "", yes )

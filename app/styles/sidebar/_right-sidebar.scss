@@ -60,6 +60,7 @@
 	
 	.right-window-content-container{
 		position:relative;
+		background: $light-background;
 		$button-size: 44px;
 		$button-top: 8px;
 		$icon-size: 18px;
@@ -103,13 +104,18 @@
 		}
 		opacity: 0;
 		height:100%;
-		border-left: 2px solid $small-seperator-color;
+		//border-left: 2px solid $small-seperator-color;
 		.right-window-content{
+			.section-header h2{
+				background: $light-background;
+			}
+			@include box-shadow(inset 3px 0 10px -4px #C7C7C7);
 			position: absolute;
 			width:100%;
 			height: 100%;
 			top: 0px;
 			left: 0px;
+			padding: 7px;
 			padding-top: 16px;
 			//padding-top: $button-top + $button-size;
 

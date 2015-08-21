@@ -83,7 +83,10 @@ define [
 				if !@dragHandler?
 					@dragHandler = new DragHandler()
 					@dragHandler.delegate = @dragDelegate
-				@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card)")
+				if @actionList
+					@dragHandler.createDragAndDropElements(".action-item")
+				else
+					@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card-container)")
 		taskCardById: (identifier) ->
 			return @_taskCardsById?[identifier]
 
