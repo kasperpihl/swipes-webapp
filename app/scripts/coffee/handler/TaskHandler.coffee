@@ -156,8 +156,6 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			model = @collection.get( @taskCollectionIdFromHtmlId(clickedId) )
 
 			taskCard = $(clickedId)
-			for dragable in dragHandler.dragables
-				console.log dragable
 			@handleClickForModelAndTaskCard(e, model, taskCard, dragHandler)
 			false
 

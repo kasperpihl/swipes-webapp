@@ -36,6 +36,8 @@ define [
 
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
+			taskGroups = [{leftTitle: "You & " + @currentUser.get("name") + "'s tasks", tasks: collection.models}]
+			return taskGroups
 			meUser = swipy.slackCollections.users.me()
 			groups = collection.groupBy((model, i) ->
 				# TODO: Seperate tasks between who it's from

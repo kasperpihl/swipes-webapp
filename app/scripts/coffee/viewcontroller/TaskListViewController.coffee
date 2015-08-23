@@ -39,7 +39,7 @@ define [
 		render: ->
 			@$el.html @template({})
 			@addTaskCard.render()
-			@$el.find('.task-column').prepend( @addTaskCard.el )
+			@$el.find('.add-task-container').prepend( @addTaskCard.el )
 			@taskList.render()
 		requestWorkTask: ( task ) ->
 			@workEditor = new RequestWorkOverlay( model: task )

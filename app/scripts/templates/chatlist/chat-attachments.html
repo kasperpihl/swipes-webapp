@@ -1,6 +1,5 @@
 <% _.each( data.attachments, function(attachment){ 
 	var colorStyle = "";
-	console.log(attachment);
 	if(attachment.color)
 		colorStyle = "border-left: 3px solid #"+attachment.color;
 	var renderedText;
@@ -27,7 +26,7 @@
 	<% } if(attachment.image_url ){ %>
 		
 		<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>
-			<img height="<%= attachment.image_height %>px" width="<%= attachment.image_width %>px" src="<%= attachment.image_url %>" />
+			<img style="height: <%= attachment.image_height %>px; width:<%= attachment.image_width %>px;" src="<%= attachment.image_url %>" />
 		<% if(attachment.title_link) print("</a>"); %>
 
 	<% } %>

@@ -10,6 +10,9 @@ define [
 			@currentProgress = 0
 			@showProgress = true
 			@setSectionTitleAndProgress("1 / 3", 30)
+			@listenTo( Backbone, "update/numberOfTasks", @updateTaskNumber)
+		updateTaskNumber: (number) ->
+			@setSectionTitleAndProgress( number + " tasks")
 		render: ->
 			@$el.html(@template({}))
 			$(".top-bar-container").html(@$el)

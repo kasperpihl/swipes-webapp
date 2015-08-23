@@ -9,7 +9,33 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 		###
 		constructor : ->
 			@enableFullScreenTaskList = false
+		setupDragAndDropWithJQuery: (selector) ->
+			$(selector).mousedown((e) =>
+				console.log("down",e)
+				text = ""
+				if (window.getSelection)
+					text = window.getSelection().toString()
+				else if (document.selection and document.selection.type isnt "Control")
+					text = document.selection.createRange().text
+				if text and text.length > 0
+					if @isDragging isnt true
+						e.preventDefault()
+					@isDragging = true
+					
+				$(selector).mousemove((e) =>
+					console.log @hitTest(e.originalEvent)
+					#console.log @isDragging
+				)
+
+			).mouseup((e)->
+				$(selector).off("mousemove")
+				console.log("up",e)
+			)
 		createDragAndDropElements: (selector) ->
+			console.log selector
+			if selector.startsWith(".chat-")
+				return @setupDragAndDropWithJQuery(selector)
+			#return
 			if !@delegate?
 				throw new Error("DragHandler must have delegate")
 			if !_.isFunction(@delegate.dragHandlerDidHit)

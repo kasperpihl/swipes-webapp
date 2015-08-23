@@ -108,27 +108,7 @@ define [
 					@dragHandler.enableFullScreenTaskList = true
 					@dragHandler.delegate = @dragDelegate
 
-				$(".chat-item").mousedown((e) =>
-					console.log("down",e)
-					text = ""
-					if (window.getSelection)
-						text = window.getSelection().toString()
-					else if (document.selection and document.selection.type isnt "Control")
-						text = document.selection.createRange().text
-					if text and text.length > 0
-						@isDragging = true
-						e.preventDefault()
-					$(".chat-item").mousemove((e) =>
-						
-						console.log("move",e)
-						console.log @isDragging
-					)
-
-				).mouseup((e)->
-					$(".chat-item").off("mousemove")
-					console.log("up",e)
-				)
-				#@dragHandler.createDragAndDropElements(".chat-item")
+				@dragHandler.createDragAndDropElements(".chat-item")
 			if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
 			@moveToBottomIfNeeded()

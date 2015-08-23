@@ -63,9 +63,7 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 							currentTarget = currentTarget.parentNode
 					else
 						break
-			console.log(draggedId)
 			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
-			console.log(draggedMessage)
 			if draggedMessage
 				draggedIds.push(draggedId)
 				$('.drag-mouse-pointer ul').html "<li>"+draggedMessage.get("message")+"</li>"

@@ -54,7 +54,7 @@ define [
 		###
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
-			taskGroups = [{leftTitle: "PROJECT TASKS" , tasks: collection.models}]
+			taskGroups = [{leftTitle: @currentList.get("name")+ " tasks" , tasks: collection.models}]
 			return taskGroups
 
 
