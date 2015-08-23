@@ -3,7 +3,7 @@ _.each(data.ims, function(im) {
 	var unreadClass = "";
 	var hasNotificationClass = "";
 	var presenceClass = "";
-	var numberOfUnread = im.unread_count;
+	var numberOfUnread = im.unread_count_display;
 	var numberOfNotifications = im.unread_count_display;
 	if(numberOfUnread)
 		unreadClass = "unread";

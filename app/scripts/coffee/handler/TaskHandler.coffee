@@ -198,7 +198,6 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				model.save("selected", !model.get("selected"))
 			else
 				shouldShow = !taskCard.hasClass("editMode")
-				console.log "shouldShow", shouldShow
 				if shouldShow or $(e.target).hasClass('main-info-container')
 					$(".editMode").removeClass("editMode")
 				if shouldShow

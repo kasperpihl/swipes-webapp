@@ -27,7 +27,7 @@ define [
 			collection = swipy.slackCollections.channels
 			
 			@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
-			console.log _.pluck(collection.toJSON(), "user")
+			
 			@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
 
 			swipy.topbarVC.setMainTitleAndEnableProgress(@currentUser.get("name"), false)

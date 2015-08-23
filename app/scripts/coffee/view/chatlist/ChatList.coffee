@@ -91,6 +91,10 @@ define [
 						chatMessage.isFromSameSender = true 
 					else 
 						lastUnix = unixStamp
+					if chat.get("subtype") is "file_share" or chat.get("attachments")
+						chatMessage.isFromSameSender = false
+					if lastChat? and (lastChat.get("subtype") is "file_share" or lastChat.get("attachments"))
+						chatMessage.isFromSameSender = false
 					lastSender = sender
 
 					
@@ -98,8 +102,12 @@ define [
 						chatMessage.chatDelegate = @chatDelegate
 					chatMessage.render()
 					sectionEl.append( chatMessage.el )
+					lastChat = chat
 
 				@$el.append section.el
+			if !@unread? and lastChat? and unixStamp > @lastRead
+				if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
+					@delegate.chatListMarkAsRead( @ )
 			if @enableDragAndDrop and numberOfChats > 0
 				if !@dragDelegate?
 					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")

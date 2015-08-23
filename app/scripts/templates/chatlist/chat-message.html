@@ -89,8 +89,10 @@
 
 				// URL handling
 				if(action.startsWith("http") || action.startsWith("mailto:")){
-
-					replacement = "<a target=\"blank\" href=\""+action+"\">" + placeholder + "</a>";
+					var targetPart = "target=\"_blank\"";
+					if(action.startsWith("mailto:"))
+						targetPart = "";
+					replacement = "<a " + targetPart + " href=\""+action+"\">" + placeholder + "</a>";
 				}
 				else if( action.startsWith("@U")){
 					placeholder = swipy.slackCollections.users.get(action.substring(1)).get("name")
@@ -107,12 +109,15 @@
 
 			}
 			
-		}
+		};
+		text = text.replace(/(?:\r\n|\r|\n)/g, '<br>')
 		return text;
 	};
-
+	var hasImageClass = "hasProfileImage";
+	if(data.isFromSameSender)
+		hasImageClass = "";
 %>
-<div class="chat-message">
+<div class="chat-message <%= hasImageClass %>">
 	<div class="chat-left-side-container">
 		<% if(!data.isFromSameSender){ %>
 		<div class="picture-container">
@@ -150,11 +155,17 @@
 		<% } %>
 		<div class="message-container">
 			<%= handleMentionsAndLinks(data.message.get("text")) %>
-			<% if(data.message.get("type") == "file_share") { %>
-				<div class="comment"></div>
-			<% } %>
-
 		</div>
+		<% if(data.message.get("subtype") == "file_share") { %>
+			<div class="file-container">
+				<div class="comment"></div>
+				<% var file = data.message.get("file");
+				console.log(file);
+				if(file.thumb_360){ %>
+					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= file.thumb_360 %>" />
+				<% } %>
+			</div>
+		<% } %>
 		<% if( hasAttachment ){ %>
 		
 			<%= data.attTmpl({attachments: data.message.get("attachments"), handleMentionsAndLinks: handleMentionsAndLinks}) %>

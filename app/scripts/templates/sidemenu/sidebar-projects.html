@@ -2,7 +2,7 @@
 _.each(data.channels, function(channel) { 
 	var unreadClass = "";
 	var hasNotificationClass = "";
-	var numberOfUnread = channel.unread_count;
+	var numberOfUnread = channel.unread_count_display;
 	var numberOfNotifications = 0;//channel.unread_count_display;
 	if(numberOfUnread)
 			unreadClass = "unread";

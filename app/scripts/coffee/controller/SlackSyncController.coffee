@@ -69,7 +69,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 
 		onSocketOpen: (evt) ->
-			console.log evt
 		onSocketClose: (evt) ->
 			console.log evt
 		onSocketMessage: (evt) ->
@@ -84,10 +83,11 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 						delete sentMessage["id"]
 						@handleReceivedMessage(sentMessage)
 						delete @sentMessages[""+data.reply_to]
-				else if data.type is "message" and !data.reply_to?
+					return
+				if data.type is "message"
 					@handleReceivedMessage(data)
-				else if data.type is "channel_marked"
-					swipy.slackCollections.channels.get(data.channel)
+				else if data.type is "channel_marked" or data.type is "im_marked" or data.type is "group_marked"
+					swipy.slackCollections.channels.get(data.channel).save("last_read", data.ts)
 			console.log evt.data
 		onSocketError: (evt) ->
 			console.log evt

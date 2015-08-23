@@ -9,15 +9,22 @@
 %>
 <div class="attachment-container" style="<%= colorStyle %>">
 	<div class="attachment-content">
+	
 	<% if(attachment.service_name ){ %>
+	
 		<div class="service-name"><%= attachment.service_name %></div>
+	
 	<% } if(attachment.title){ %>
-		
+
 		<div class="title">
 			<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>
 				<%= attachment.title %>
 			<% if(attachment.title_link) print("</a>"); %>
 		</div>
+	
+	<% } if(attachment.pretext){ %>
+
+		<div class="pretext"><%= data.handleMentionsAndLinks(attachment.pretext) %></div>
 
 	<% } if(attachment.text){ %>
 
@@ -26,7 +33,9 @@
 	<% } if(attachment.image_url ){ %>
 		
 		<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>
-			<img style="height: <%= attachment.image_height %>px; width:<%= attachment.image_width %>px;" src="<%= attachment.image_url %>" />
+			
+			<img src="<%= attachment.image_url %>" />
+		
 		<% if(attachment.title_link) print("</a>"); %>
 
 	<% } %>
