@@ -52,6 +52,7 @@ define [
 			$('.sidebar_content').css("overflowY",overflow)
 		setActiveMenu: (activeClass) ->
 			@activeClass = activeClass
+			console.log activeClass
 			$(".sidebar-controls .active").removeClass("active")
 			$(".sidebar-controls #"+activeClass).addClass("active")
 		destroy: ->

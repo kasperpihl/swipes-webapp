@@ -19,6 +19,8 @@ define [
 					viewController.open( options )
 					@currentControllerName = viewcontroller
 					@currentViewController = viewController
+			if viewcontroller is "im"
+				viewcontroller = "member"
 			Backbone.trigger("set-active-menu", "sidebar-"+viewcontroller + "-" + options.id)
 		loadViewController: (viewcontroller) ->
 			dfd = new $.Deferred()

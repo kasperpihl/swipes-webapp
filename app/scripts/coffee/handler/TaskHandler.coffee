@@ -19,7 +19,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			return if !taskHtmlId or !_.isString(taskHtmlId)
 			taskHtmlId.substring(6)
 		projectCollectionIdFromHtmlId: (projectHtmlId) ->
-			# #sidebar-project-
+			# #sidebar-channel-
 			return if !projectHtmlId or !_.isString(projectHtmlId)
 			projectHtmlId.substring(17)
 		memberCollectionIdFromHtmlId: (memberHtmlId) ->
@@ -72,6 +72,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		dragHandlerDidHit: ( dragHandler, draggedIds, hit, callback ) ->
 			draggedId = draggedIds[0]
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
+
 			return if !draggedTask?
 			self = @
 			selectedTasks = @collection.getSelected( draggedTask )
@@ -118,7 +119,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 					, 400)
 					
 			else if hit.type is "project"
-				targetProject = swipy.slackCollections.channels.get( @projectCollectionIdFromHtmlId(hit.target) )
+				targetProject = swipy.slackCollections.channels.findWhere( {name: @projectCollectionIdFromHtmlId(hit.target)} )
 				return if !targetProject?
 				actions = []
 				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
@@ -126,14 +127,15 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY}, (result) ->
 					if result is "move"
 						# and update selected tasks as well
-						_.invoke(selectedTasks, "save", {"toUserId": null, "projectLocalId": targetProject.id}, {sync: true} )
+						_.invoke(selectedTasks, "save", {"toUserId": null, "projectLocalId": targetProject.id, "selected": false}, {sync: true} )
 						self.bouncedReloadWithEvent()
 				)
 			else if hit.type is "member"
 				memberId = @memberCollectionIdFromHtmlId(hit.target)
-				member = swipy.slackCollections.users.get(memberId)
-				return if !member?
+				member = swipy.slackCollections.users.findWhere({name: memberId})
 
+				return if !member?
+				targetProject = swipy.slackCollections.channels.findWhere({user: member.id})
 				name = member.get "name"
 				actions = []
 				if draggedTask.get("projectLocalId")
@@ -147,6 +149,10 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 						_.invoke(selectedTasks, "assign", member.id, false )
 					if result is "unassign"
 						_.invoke(selectedTasks, "unassign", member.id, false )
+					if result is "move"
+						# and update selected tasks as well
+						_.invoke(selectedTasks, "save", {"toUserId": memberId, "projectLocalId": targetProject.id, "selected": false}, {sync: true} )
+						self.bouncedReloadWithEvent()
 				)
 			false
 		dragHandlerDidClick: (dragHandler, e) ->

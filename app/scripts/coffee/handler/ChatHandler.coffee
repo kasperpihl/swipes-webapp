@@ -64,9 +64,10 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 					else
 						break
 			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
+
 			if draggedMessage
 				draggedIds.push(draggedId)
-				$('.drag-mouse-pointer ul').html "<li>"+draggedMessage.get("message")+"</li>"
+				$('.drag-mouse-pointer ul').html "<li>"+draggedMessage.getText()+"</li>"
 			draggedIds
 		didCreateDragHandler: ( dragHandler ) ->
 			@dragHandler = dragHandler
@@ -79,7 +80,7 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 			
 			return false if !hit?
 			if hit.type is "task-list"
-				Backbone.trigger("create-task", draggedMessage.get("message"))
+				Backbone.trigger("create-task", draggedMessage.getText())
 				###
 				title = prompt("Please enter task name", draggedMessage.get("message"));
 				if title

@@ -7,6 +7,10 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 			@setTimeStr()
 			@on "change:ts", =>
 				@setTimeStr()
+		getText: ->
+			return @get("text") if @get("text")
+			return @get("attachments")[0].fallback if @get("attachments") and @get("attachments").length
+			return "No text found" 
 		setTimeStr: ->
 			timestamp = new Date(parseInt(@get("ts"))*1000)
 			if !timestamp then return @set( "timeStr", undefined )
