@@ -34,7 +34,11 @@
 
 	var numberOfAssignees = 0;
 	if (data.task.get("assignees") && data.task.get("assignees").length ){
-		numberOfAssignees = data.task.get("assignees").length
+		numberOfAssignees = data.task.get("assignees").length;
+		if(numberOfAssignees == 1){
+			assignee = swipy.slackCollections.users.get(data.task.get("assignees")[0]);
+			numberOfAssignees = assignee.get("name");
+		}
 		numberOfMetaInfos++;
 	}
 	if (numberOfMetaInfos > 0)

@@ -48,7 +48,7 @@ define [
 
 			@taskList = new TaskList()
 			@taskList.setActionList()
-			@taskList.targetSelector = ".edit-task .tab-container"
+			@taskList.targetSelector = "#task-"+@model.id + " .edit-task .tab-container"
 			@taskList.enableDragAndDrop = true
 
 			@taskHandler = new TaskHandler()
@@ -62,6 +62,7 @@ define [
 				filter: (task) ->
 					return task.get("parentLocalId") is self.model.id
 			})
+			console.log @taskCollectionSubset.child.toJSON()
 			@taskHandler.loadCollection(@taskCollectionSubset.child)
 			@taskList.render()
 

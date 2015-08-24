@@ -29,6 +29,7 @@ define [
 			Backbone.on( "edit/task", @editTask, @ )
 		editTask: (model) ->
 			taskCard = @taskList.taskCardById(model.id)
+			console.log model
 			@editTask = new EditTask({model: model})
 			@editTask.render()
 			taskCard.$el.find(".expanding").html @editTask.el

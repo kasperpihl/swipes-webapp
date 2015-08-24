@@ -2,8 +2,8 @@
 	var hasProfilePicture = "";
 	var user = data.message.get("user");
 	var sender;
-	if(data.message.get("file"))
-		console.log(data.message.toJSON());
+	/*if(data.message.get("file"))
+		console.log(data.message.toJSON());*/
 	var profilePictureURL;
 	if(user){
 		sender = swipy.slackCollections.users.get(user);
@@ -160,7 +160,6 @@
 			<div class="file-container">
 				<div class="comment"></div>
 				<% var file = data.message.get("file");
-				console.log(file);
 				if(file.thumb_360){ %>
 					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= file.thumb_360 %>" />
 				<% } %>
