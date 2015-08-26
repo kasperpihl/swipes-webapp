@@ -2,6 +2,7 @@ define [
 	"jquery"
 	"backbone"
 	"localStorage"
+	"collectionSubset"
 	"js/model/extra/ClockWork"
 	"js/viewcontroller/MainViewController"
 	"js/controller/AnalyticsController"
@@ -25,7 +26,7 @@ define [
 	"js/controller/WorkController"
 	"js/model/extra/NotificationModel"
 	"gsap"
-	], ($, Backbone, BackLocal, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, NotificationModel) ->
+	], ($, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0

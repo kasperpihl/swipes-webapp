@@ -1,11 +1,12 @@
 define [
 	"underscore"
+	"backbone"
 	"js/collection/slack/UserCollection"
 	"js/collection/slack/BotCollection"
 	"js/collection/slack/ChannelCollection"
 	"js/collection/slack/MessageCollection"
-	"plugins/backbone.collectionsubset"
-	], (_, UserCollection, BotCollection, ChannelCollection, MessageCollection) ->
+	"collectionSubset"
+	], (_, Backbone, UserCollection, BotCollection, ChannelCollection, MessageCollection) ->
 	class Collections
 		constructor: ->
 			

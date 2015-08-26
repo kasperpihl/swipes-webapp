@@ -151,7 +151,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			return @needSync = true if @isSyncing
 			return if !localStorage.getItem("slack-token")
 			@isSyncing = true
-			url = "http://" + window.location.hostname + ":5000/v1/sync" #"https://api.swipesapp.com/v1/sync" #
+			url = "http://localhost:5000/v1/sync" #"http://swipesslack.elasticbeanstalk.com/v1/sync"  #"https://api.swipesapp.com/v1/sync" #
 
 			token = localStorage.getItem("slack-token")
 			data =

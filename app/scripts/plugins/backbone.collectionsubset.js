@@ -1,5 +1,16 @@
-(function() {
-
+(function (root, factory) {
+  if (typeof exports === 'object' && typeof require === 'function') {
+    module.exports = factory(require("backbone"));
+  } else if (typeof define === "function" && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(["backbone"], function(Backbone) {
+      // Use global variables if the locals are undefined.
+      return factory(Backbone || root.Backbone);
+    });
+  } else {
+    factory(Backbone);
+  }
+}(this, function(Backbone) {
   Backbone.CollectionSubset = (function() {
 
     CollectionSubset.extend = Backbone.Model.extend;
@@ -226,4 +237,4 @@
     module.exports = Backbone.CollectionSubset;
   }
 
-}).call(this);
+}));

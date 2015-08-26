@@ -1,0 +1,33 @@
+<% 
+var type;
+var prefix = "";
+var presenceClass = "";
+var name = data.channel.get("name");
+var numberOfNotifications = 0;
+
+if(data.channel.get("is_channel")){
+	type = "channel";
+	prefix = "# ";
+}
+if(data.channel.get("is_im")){
+	type = "im";
+	name = data.user.get("name");
+	numberOfNotifications = data.channel.get("unread_count_display");
+}
+if(data.channel.get("is_group")){
+	type = "group";
+}
+%>
+<a href="#<%= type %>/<%= name %>">
+	<% if(type == "im"){ %>
+	<div class="status-container">
+		<span class="status <%= presenceClass %>"></span>
+	</div>
+	<% } %>
+	<div class="text">
+		<%= prefix + name %>
+	</div>
+	<% if(numberOfNotifications){ %>
+		<span class="notification"><%= numberOfNotifications %></span>
+	<% }%>
+</a>

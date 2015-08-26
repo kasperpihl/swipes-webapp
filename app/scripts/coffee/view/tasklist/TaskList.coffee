@@ -87,7 +87,7 @@ define [
 				if @actionList
 					@dragHandler.createDragAndDropElements(".action-item")
 				else
-					@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card-container)")
+					@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card-container) .main-info-container")
 		taskCardById: (identifier) ->
 			return @_taskCardsById?[identifier]
 

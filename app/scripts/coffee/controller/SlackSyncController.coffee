@@ -56,9 +56,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				model = collection.create(channel) if !model
 				model.save(channel)
 
-		handleReceivedMessage: (message) ->
+		handleReceivedMessage: (message, incrementUnread) ->
 			channel = swipy.slackCollections.channels.get(message.channel)
-			channel.addMessage(message)
+			channel.addMessage(message, incrementUnread)
 
 		openWebSocket: (url) ->
 			@webSocket = new WebSocket(url)
@@ -73,8 +73,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			console.log evt
 		onSocketMessage: (evt) ->
 			if evt and evt.data
-				# Reply to sent message/
+				
 				data = JSON.parse(evt.data)
+				# Reply to sent data over websocket
 				if data.ok and data.reply_to
 					sentMessage = @sentMessages[""+data.reply_to]
 					return if !sentMessage?
@@ -84,10 +85,16 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 						@handleReceivedMessage(sentMessage)
 						delete @sentMessages[""+data.reply_to]
 					return
-				if data.type is "message"
-					@handleReceivedMessage(data)
+				if data.type is "presence_change"
+					user = swipy.slackCollections.users.get(data.user)
+					user.save("presence", data.presence)
+				else if data.type is "message"
+					@handleReceivedMessage(data, true)
 				else if data.type is "channel_marked" or data.type is "im_marked" or data.type is "group_marked"
-					swipy.slackCollections.channels.get(data.channel).save("last_read", data.ts)
+					channel = swipy.slackCollections.channels.get(data.channel)
+					channel.save("last_read", data.ts)
+					channel.save("unread_count_display", data.unread_count_display)
+
 			console.log evt.data
 		onSocketError: (evt) ->
 			console.log evt

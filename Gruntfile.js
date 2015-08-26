@@ -351,6 +351,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'login/*.*',
+                        'loginslack/*.*',
                         'scripts/js/Login.js',
                         'styles/img/{,*/}*.*',
                         'styles/fonts/{,*/}*.*'

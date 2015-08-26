@@ -75,13 +75,13 @@ define [
 						sectionEl.append( @unread.el )
 
 					if !shouldAddNewUnread and !@unread?
-						if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user") isnt swipy.slackCollections.users.me().id
+						if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user")?.id isnt swipy.slackCollections.users.me().id
 							@unread = new Unread()
 							sectionEl.append( @unread.el )
 							@unread.ts = chat.get("ts")
 					chatMessage = new ChatMessage({model: chat})
 					
-					sender = chat.get("user")
+					sender = chat.get("user")?.id
 					sender = chat.get("bot_id") if !sender
 					unixStamp = parseInt(chat.get("ts"))
 					date = new Date(unixStamp*1000)

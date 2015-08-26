@@ -17,6 +17,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
 			return if !taskHtmlId or !_.isString(taskHtmlId)
+
 			taskHtmlId.substring(6)
 		projectCollectionIdFromHtmlId: (projectHtmlId) ->
 			# #sidebar-channel-
@@ -36,13 +37,13 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			if e.path?
 				for el in e.path
 					$el = $(el)
-					if $el.hasClass("task-item")
+					if !draggedId and ($el.hasClass("action-item") or $el.hasClass("task-item"))
 						draggedId = "#" + $el.attr("id")
 			else if e.originalTarget?
 				currentTarget = e.originalTarget
 				for num in [1..10]
 					if currentTarget? and currentTarget
-						if _.indexOf(currentTarget.classList, "task-item") isnt -1
+						if _.indexOf(currentTarget.classList, "action-item") isnt -1 or _.indexOf(currentTarget.classList, "task-item") isnt -1
 							draggedId = "#" + currentTarget.id
 						else
 							currentTarget = currentTarget.parentNode
@@ -51,10 +52,10 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			draggedId
 		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
 			draggedIds = []
-
 			draggedId = @idForEvent(e)
+			
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
-
+			#console.log @collection.toJSON(), draggedTask.toJSON()
 			return [] if !draggedTask?
 
 			draggedTask.set("selected",true) 

@@ -1,10 +1,11 @@
 define [
 	"underscore"
+	"backbone"
 	"js/collection/ToDoCollection"
 	"js/collection/TagCollection"
 	"js/collection/WorkCollection"
-	"plugins/backbone.collectionsubset"
-	], (_, ToDoCollection, TagCollection, WorkCollection) ->
+	"collectionSubset"
+	], (_, Backbone, ToDoCollection, TagCollection, WorkCollection) ->
 	class Collections
 		constructor: ->
 			### 

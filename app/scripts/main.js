@@ -17,9 +17,11 @@ require.config({
         'sass-bootstrap': '../bower_components/sass-bootstrap/dist/js/bootstrap',
         underscore: '../bower_components/underscore/underscore',
         localStorage: '../bower_components/Backbone.localStorage/backbone.localStorage',
+        collectionSubset: 'plugins/backbone.collectionsubset',
         'TweenLite': 'plugins/greensock-js/src/minified/TweenLite.min',
         gsap: 'plugins/greensock-js/src/uncompressed/TweenMax',
         timelinelite: 'plugins/greensock-js/src/uncompressed/TimelineLite',
+        
         'gsap-scroll': 'plugins/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
         'gsap-text': 'plugins/greensock-js/src/uncompressed/plugins/TextPlugin',
         'gsap-easing': 'plugins/greensock-js/src/uncompressed/easing/EasePack',
@@ -101,6 +103,12 @@ require.config({
             ],
             exports: 'localStorage'
         },
+        collectionSubset:{
+            deps:[
+                'backbone'
+            ],
+            exports: 'collectionSubset'
+        },
         underscore: {
             exports: '_'
         },
@@ -161,6 +169,26 @@ var QueryString = function () {
     return query_string;
 } ();
 require(["jquery", "backbone"], function($) {
+    var appCache = window.applicationCache;
+    console.log(appCache);
+    if(appCache){
+        window.applicationCache.addEventListener('updateready', function(e) {
+            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                // Browser downloaded a new app cache.
+                if (confirm('A new version of this site is available. Load it?')) {
+                    window.location.reload();
+                }
+            } else {
+                // Manifest didn't changed. Nothing new to server.
+            }
+        }, false);
+        if(appCache.status != appCache.UNCACHED)
+            appCache.update(); // Attempt to update the user's cache.
+        if (appCache.status == window.applicationCache.UPDATEREADY) {
+            appCache.swapCache();  // The fetch was successful, swap in the new cache.
+        }
+    }
+    
     window.$ = window.jQuery = $;
     require(["bootstrapTooltip"],function(){
         $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});

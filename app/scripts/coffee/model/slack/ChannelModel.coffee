@@ -29,10 +29,12 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 						for message in res.messages
 							@addMessage(message)
 			)
-		addMessage: (message) ->
-			return if(!@hasFetched? or !@hasFetched)
+		addMessage: (message, increment) ->
 			collection = @get("messages")
+			console.log message
 			if !collection.get(message.ts)
+				@save("unread_count_display", @get("unread_count_display")+1) if increment
+				return if(!@hasFetched? or !@hasFetched)
 				collection.create( message )
 		markAsRead: ->
 			collection = @get("messages")
