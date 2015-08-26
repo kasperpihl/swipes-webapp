@@ -32,9 +32,17 @@
 	
 	<% } if(attachment.image_url ){ %>
 		
-		<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>
+		<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">");
+			var width = attachment.image_width;
+			var height = attachment.image_height;
+			var ratio = parseFloat(width/height);
+			if(width > 400){
+				width = 400;
+				height = width / ratio;
+			}
+		 %>
 			
-			<img src="<%= attachment.image_url %>" />
+			<img style="width: <%= width %>px; height: <%= height %>px;" src="<%= attachment.image_url %>" />
 		
 		<% if(attachment.title_link) print("</a>"); %>
 
