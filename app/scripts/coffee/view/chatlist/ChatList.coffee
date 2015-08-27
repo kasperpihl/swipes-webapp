@@ -83,6 +83,7 @@ define [
 					
 					sender = chat.get("user")
 					sender = chat.get("bot_id") if !sender
+					sender = chat.get("username") if !sender
 					unixStamp = parseInt(chat.get("ts"))
 					date = new Date(unixStamp*1000)
 					timeDiff = Math.abs(unixStamp - lastUnix)

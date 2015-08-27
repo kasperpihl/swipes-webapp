@@ -125,10 +125,11 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					currentAssignees.push( userId )
 			if inserted?
 				@set("assignees": null)
+				saveObj = {"assignees": currentAssignees, "schedule" : new Date()}
 				if save
-					@save {"assignees": currentAssignees}, {sync:true}
+					@save saveObj, {sync:true}
 				else
-					@set "assignees", currentAssignees, {localSync: true}
+					@set saveObj, {localSync: true}
 		userIsAssigned:(userId) ->
 			currentAssignees = @get "assignees"
 			return false if !currentAssignees

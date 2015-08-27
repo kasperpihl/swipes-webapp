@@ -92,7 +92,6 @@
 					var targetPart = "target=\"_blank\"";
 					if(action.startsWith("http://swipesapp.com/task/")){
 						action = "#" + action.substring("http://swipesapp.com/".length);
-						console.log("task",action);
 						targetPart = "class=\"catchClick\"";
 					}
 					if(action.startsWith("mailto:"))

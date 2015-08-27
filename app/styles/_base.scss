@@ -93,7 +93,7 @@ ul{
 			
 		}
 		.content-container{
-			@include transition(padding $sidebar-animation ease);
+			//@include transition(padding $sidebar-animation ease);
 			// padding to make topbar work
 			padding-top:$top-bar-height;
 			padding-right:$right-sidebar-width;

@@ -172,6 +172,11 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		taskCardDidComplete: (taskCard) ->
 			model = taskCard.model
 			model.completeTask()
+			if model.get("projectLocalId")
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";
+				swipy.slackSync.sendMessageAsSofi(sofiMessage, model.get("projectLocalId"))
+			
 			Backbone.trigger("reload/taskhandler")
 		didPressAssign: (model, e) ->
 			assignModal = new AssignModal({model: model})

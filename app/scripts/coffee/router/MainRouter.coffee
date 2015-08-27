@@ -47,7 +47,7 @@ define [], () ->
 				
 				fullPath = pathStart + "/task/" + task.id
 				console.log "compare", @getCurrRoute(), @lastMainRoute, pathStart
-				if @getCurrRoute().startsWith(pathStart)
+				if @getCurrRoute()?.startsWith(pathStart)
 					console.log "current path"
 					Backbone.trigger("edit/task", task)
 					@navigate( fullPath, {trigger: no })
