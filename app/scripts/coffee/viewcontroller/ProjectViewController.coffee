@@ -27,7 +27,7 @@ define [
 			collection = swipy.slackCollections.channels
 
 			@currentList = collection.findWhere({name: @identifier})
-			swipy.topbarVC.setMainTitleAndEnableProgress(@currentList.get("name"),false)
+			swipy.topbarVC.setMainTitleAndEnableProgress("# "+@currentList.get("name"),false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
 
@@ -119,8 +119,7 @@ define [
 			NewMessage Delegate
 		###
 		newMessageSent: ( newMessage, message ) ->
-			options = { type:"message", channel: @currentList.id, text: message, user: swipy.slackCollections.users.me().id }
-			swipy.slackSync.doSocketSend( options )
+			swipy.slackSync.sendMessage( message, @currentList.id)
 			@chatListVC.chatList.scrollToBottomVar = true
 			@chatListVC.chatList.removeUnreadIfSeen = true
 		newMessageIsTyping: (newMessage ) ->

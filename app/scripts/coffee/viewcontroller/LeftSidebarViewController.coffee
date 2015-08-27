@@ -64,7 +64,6 @@ define [
 				overflow = "scroll"
 			$('.sidebar_content').css("overflowY",overflow)
 		setActiveMenu: (activeClass) ->
-			console.log activeClass
 			@activeClass = activeClass
 			$(".sidebar-controls .active").removeClass("active")
 			$(".sidebar-controls #"+activeClass).addClass("active")

@@ -11,6 +11,7 @@ define [
 		className: "chat-item"
 		events:
 			"click .like-button" : "clickedLike"
+			"click .catchClick": "clickedLink"
 		initialize: ->
 			throw new Error("Model must be added when constructing a ChatMessage") if !@model?
 			@template = _.template MessageTmpl, {variable: "data" }
@@ -22,6 +23,12 @@ define [
 			@$el.html @template( message: @model, isFromSameSender: @isFromSameSender, attTmpl: @attTemplate )
 
 			return @
+		clickedLink: (e) ->
+			href = $(e.currentTarget).attr("href")
+			console.log href
+			if href.startsWith("#task/")
+				swipy.router.task(href.substring("#task/".length))
+			false
 		clickedLike: (e) ->
 			###console.log e
 			if @chatDelegate? and _.isFunction(@chatDelegate.messageDidClickLike)

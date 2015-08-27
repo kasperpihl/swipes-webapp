@@ -141,9 +141,9 @@ define [
 			NewMessage Delegate
 		###
 		newMessageSent: ( newMessage, message ) ->
-			options = { type:"message", channel: @currentList.id, text: message, user: swipy.slackCollections.users.me().id }
-			swipy.slackSync.doSocketSend( options )
+			swipy.slackSync.sendMessage( message, @currentList.id)
 			@chatListVC.chatList.scrollToBottomVar = true
+			@chatListVC.chatList.removeUnreadIfSeen = true
 		newMessageIsTyping: (newMessage ) ->
 			options = {type: "typing", channel: @currentList.id }
 			swipy.slackSync.doSocketSend(options, true)

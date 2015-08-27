@@ -108,7 +108,12 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		sendMessage:(message, channel) ->
 			options = {text: message, channel: channel, as_user: true, link_names: 1}
 			@apiRequest("chat.postMessage", options, (res, error) ->
-
+				console.log res
+			)
+		sendMessageAsSofi: (message, channel) ->
+			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "s.o.f.i", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
+			@apiRequest("chat.postMessage", options, (res, error) ->
+				console.log(res)
 			)
 		apiRequest: (command, options, callback) ->
 			url = @baseURL + command

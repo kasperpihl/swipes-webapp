@@ -75,7 +75,6 @@ define [
 					@_taskCardsById[task.id] = taskEl
 					sectionEl.append( taskEl.el )
 				@$el.append section.el
-				console.log "appending", @$el, section.el
 			Backbone.trigger("update/numberOfTasks", numberOfTasks)
 
 			if @enableDragAndDrop and numberOfTasks > 0

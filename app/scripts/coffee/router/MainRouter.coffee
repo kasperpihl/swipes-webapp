@@ -7,9 +7,13 @@ define [], () ->
 			"edit/:id": "edit"
 			"edit/:id/:action": "edit"
 			"tasks/:id": "tasks"
+			"task/:id": "task"
 			"channel/:id": "channel"
+			"channel/:id/:action/:actionId": "channel"
 			"im/:id": "im"
-			"list/:id/:action": "tasks"
+			"im/:id/:action/:actionId": "im"
+			"group/:id": "group"
+			"group/:id/:action/:actionId": "group"
 			"work": "work"
 			"*all": "root"
 		initialize: ->
@@ -26,6 +30,31 @@ define [], () ->
 			Backbone.trigger( "show-workspaces" )
 		work: ->
 			Backbone.trigger( "work-mode" )
+		task: (id) ->
+			task = swipy.collections.todos.get(id)
+			if task
+				pathStart = "tasks/now"
+				channelId = task.get("projectLocalId")
+				channel = swipy.slackCollections.channels.get(channelId)
+				if channel
+					if channel.get("is_channel")
+						pathStart = "channel/" + channel.get("name")
+					if channel.get("is_group")
+						pathStart = "group/" + channel.get("name")
+					if channel.get("is_im")
+						user = swipy.slackCollections.users.get(channel.get("user"))
+						pathStart = "im/" + user.get("name")
+				
+				fullPath = pathStart + "/task/" + task.id
+				console.log "compare", @getCurrRoute(), @lastMainRoute, pathStart
+				if @getCurrRoute().startsWith(pathStart)
+					console.log "current path"
+					Backbone.trigger("edit/task", task)
+					@navigate( fullPath, {trigger: no })
+				else
+					@navigate( fullPath, {trigger: yes})
+			else
+				@root()
 
 		tasks: (id = "now", action ) ->
 			options = { id: id }
@@ -39,12 +68,15 @@ define [], () ->
 				when "done" then "Done Tab"
 
 			swipy.analytics.pushScreen eventName
-		channel: ( id ) ->
-			options = { id: id }
+		channel: ( id, action, actionId ) ->
+			options = { id: id, action: action, actionId: actionId }
 			Backbone.trigger( "open/viewcontroller", "channel", options )
-		im: ( id ) ->
-			options = { id: id }
+		im: ( id, action, actionId ) ->
+			options = { id: id, action: action, actionId: actionId }
 			Backbone.trigger( "open/viewcontroller", "im", options )
+		group: (id, action, actionId) ->
+			options = { id: id, action: action, actionId: actionId }
+			Backbone.trigger( "open/viewcontroller", "group", options )
 		openLastMainView: (trigger)->
 			if @lastMainRoute is ""
 				trigger = true

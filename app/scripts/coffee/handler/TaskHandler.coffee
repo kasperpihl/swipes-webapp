@@ -227,14 +227,12 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		taskListDataForSection: ( taskList, section ) ->
 			if !@collection?
 				throw new Error("TaskHandler: must loadSubcollection before loading TaskList")
-			console.log("asking for data", section, taskList)
 			return null if !@groupedTasks or !@groupedTasks.length
 			models = @groupedTasks[ (section-1) ].tasks
 			if @listSortAttribute? and @listSortAttribute
 				if !@groupedTasks[ (section-1) ].dontSort? or !@groupedTasks[ (section-1) ].dontSort
 					@groupedTasks[ (section-1) ].tasks = @sortTasksAndSetOrder(models, true)
 			# Check filter for limitations
-			console.log "found data", @groupedTasks[ (section-1) ]
 			return @groupedTasks[ (section-1) ]
 
 
