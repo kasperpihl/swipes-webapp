@@ -81,21 +81,20 @@ define [
 							@unread.ts = chat.get("ts")
 					chatMessage = new ChatMessage({model: chat})
 					
-					sender = chat.get("user")?.id
+					sender = chat.get("user")
 					sender = chat.get("bot_id") if !sender
 					unixStamp = parseInt(chat.get("ts"))
 					date = new Date(unixStamp*1000)
 					timeDiff = Math.abs(unixStamp - lastUnix)
 
-					if sender is lastSender and timeDiff < 2400
-						chatMessage.isFromSameSender = true 
-					else 
-						lastUnix = unixStamp
+					if sender and sender is lastSender and timeDiff < 2400
+						chatMessage.isFromSameSender = true
 					if chat.get("subtype") is "file_share" or chat.get("attachments")
 						chatMessage.isFromSameSender = false
 					if lastChat? and (lastChat.get("subtype") is "file_share" or lastChat.get("attachments"))
 						chatMessage.isFromSameSender = false
 					lastSender = sender
+					lastUnix = unixStamp
 
 					
 					if @chatDelegate?
