@@ -59,7 +59,18 @@ $task-new-task-height: 60px;
 		@extend .fadeInDown;
 		@include experimental(animation-duration, 0.3s);
 	}
+	.empty-text{
+		padding-top:60px;
+		opacity: 0.4;
+		.title{
+			font-size: 18px;
+			text-align: center;
+		}
+		.subtitle{
+			text-align: center;
+		}
 		// Animate-in when adding new tasks
+	}
 }
 $spacingBetweenTasks:6px;
 $left-padding: 40px;

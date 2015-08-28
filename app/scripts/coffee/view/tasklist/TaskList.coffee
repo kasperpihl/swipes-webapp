@@ -75,6 +75,10 @@ define [
 					@_taskCardsById[task.id] = taskEl
 					sectionEl.append( taskEl.el )
 				@$el.append section.el
+			if numberOfTasks is 0 and @emptyTitle
+				@$el.html("<div class=\"empty-text\"><h4 class=\"title\">" + @emptyTitle + "</h4></div>")
+				if @emptySubtitle
+					@$el.find(".empty-text").append("<div class=\"subtitle\">"+@emptySubtitle + "</div>")			
 			Backbone.trigger("update/numberOfTasks", numberOfTasks)
 
 			if @enableDragAndDrop and numberOfTasks > 0

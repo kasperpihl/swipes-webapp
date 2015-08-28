@@ -80,11 +80,11 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 			
 			return false if !hit?
 			if hit.type is "task-list"
-				Backbone.trigger("create-task", draggedMessage.getText())
-				###
-				title = prompt("Please enter task name", draggedMessage.get("message"));
+				#Backbone.trigger("create-task", )
+				
+				title = prompt("Please enter task name", draggedMessage.getText())
 				if title
-					Backbone.trigger( "create-task", title)###
+					Backbone.trigger( "create-task", title)
 
 		###
 			ChatMessage Delegate

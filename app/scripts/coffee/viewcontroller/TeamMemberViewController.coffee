@@ -68,7 +68,6 @@ define [
 			options = {} if !options
 			options.toUserId = @currentUser.id if !options.toUserId?
 			options.projectLocalId = @currentList.id
-			#options.ownerId = @currentUser.get("organisationId")
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
 
@@ -81,6 +80,8 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
+			taskListVC.taskList.emptyTitle = "No tasks between you & " + @currentUser.get("name")
+			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
 			taskListVC.addTaskCard.setPlaceHolder("Send task to " + @currentUser.get("name"))
 
 			# https://github.com/anthonyshort/backbone.collectionsubset

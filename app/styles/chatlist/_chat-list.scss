@@ -109,6 +109,7 @@ $chat-new-message-height: 60px;
 	}
 	
 	.message-container{
+		word-wrap: break-word;
 		@include select;
 		font: 14px/1.5 $font-normal;
 	}
@@ -137,14 +138,17 @@ $chat-new-message-height: 60px;
 			.title{
 				font: 16px $font-bold;
 				padding-bottom: 5px;
+				word-wrap: break-word;
 			}
 			.text{
+				word-wrap: break-word;
 				font: 13px/1.5 $font-normal;
 				padding-top: 3px;
 				padding-bottom: 2px;
 			}
 			@include select;
 			font: 13px $font-normal;
+			word-wrap: break-word;
 		}
 	}
 

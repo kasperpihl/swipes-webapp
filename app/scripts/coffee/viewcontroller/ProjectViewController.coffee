@@ -66,7 +66,8 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
-
+			taskListVC.taskList.emptyTitle = "No tasks in # " + @currentList.get("name")
+			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @currentList.id
 			@taskCollectionSubset = new Backbone.CollectionSubset({
