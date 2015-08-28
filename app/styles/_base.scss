@@ -13,6 +13,7 @@ html {
 input{
 	cursor: text;
 	border:0;
+	@include select;
 }
 input:focus{
 	border:0;
