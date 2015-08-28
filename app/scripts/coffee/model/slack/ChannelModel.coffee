@@ -36,7 +36,9 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 		addMessage: (message, increment) ->
 			collection = @get("messages")
 			if !collection.get(message.ts)
-				@save("unread_count_display", @get("unread_count_display")+1) if increment
+				if increment and message.user isnt swipy.slackCollections.users.me().id
+					@save("unread_count_display", @get("unread_count_display")+1)
+					Backbone.trigger("play-new-message")
 				return if(!@hasFetched? or !@hasFetched)
 				collection.create( message )
 		markAsRead: ->

@@ -170,7 +170,6 @@ var QueryString = function () {
 } ();
 require(["jquery", "backbone"], function($) {
     var appCache = window.applicationCache;
-    console.log(appCache);
     if(appCache){
         window.applicationCache.addEventListener('updateready', function(e) {
             if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
@@ -212,7 +211,7 @@ require(["jquery", "backbone"], function($) {
             });
         } else {
             
-            path = location.origin + "/loginslack"
+            path = location.origin + "/loginslack/"
             if(queryString && queryString.href){
                 path += "?href="+queryString.href;
             }

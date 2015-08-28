@@ -24,9 +24,10 @@ define [
 	"js/controller/BridgeController"
 	"js/controller/UserController"
 	"js/controller/WorkController"
+	"js/controller/SoundController"
 	"js/model/extra/NotificationModel"
 	"gsap"
-	], ($, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, NotificationModel) ->
+	], ($, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, SoundController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -96,6 +97,7 @@ define [
 
 			@filter = new FilterController()
 			@userController = new UserController()
+			@sound = new SoundController()
 			@workmode = new WorkController()
 
 			Backbone.history.start( pushState: no )
@@ -123,6 +125,7 @@ define [
 			@sidebar?.destroy()
 			@filter?.destroy()
 			@settings?.destroy()
+			@sound?.destroy()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			if Parse.History.started then Parse.history.stop()
