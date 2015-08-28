@@ -26,6 +26,7 @@ define [
 			dfd = new $.Deferred()
 			if viewcontroller is "im" then require ["js/viewcontroller/TeamMemberViewController"], (VC) -> dfd.resolve VC
 			else if viewcontroller is "channel" then require ["js/viewcontroller/ProjectViewController"], (VC) -> dfd.resolve VC
+			else if viewcontroller is "group" then require ["js/viewcontroller/ProjectViewController"], (VC) -> dfd.resolve VC
 			else require ["js/viewcontroller/MyTasksViewController"], (VC) -> dfd.resolve VC
 			return dfd.promise()
 		destroy: ->

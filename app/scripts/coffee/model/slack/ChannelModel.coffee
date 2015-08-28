@@ -38,9 +38,11 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			if !collection.get(message.ts)
 				if increment and message.user isnt swipy.slackCollections.users.me().id
 					@save("unread_count_display", @get("unread_count_display")+1)
-					Backbone.trigger("play-new-message")
+					if @get("is_im") # OR you were mentioned in the task /TODO:
+						Backbone.trigger("play-new-message")
 				return if(!@hasFetched? or !@hasFetched)
-				collection.create( message )
+				newMessage = collection.create( message )
+
 		markAsRead: ->
 			collection = @get("messages")
 			options = {channel: @id }

@@ -66,8 +66,14 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
-			taskListVC.taskList.emptyTitle = "No tasks in # " + @currentList.get("name")
+			isGroup = @currentList.get("is_group")
+			channelLabel = if isGroup then "group" else "channel"
+			hashLabel = if isGroup then "" else "# "
+			taskListVC.taskList.emptyTitle = "No tasks in " + hashLabel + @currentList.get("name")
 			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
+			taskListVC.taskList.emptyDescription = "Tasks here will be visible to members of this " + channelLabel + ". You can assign tasks to people from the " + channelLabel + " and it will be sent into their workspace."
+			
+			taskListVC.addTaskCard.setPlaceHolder("Add new task to #" + @currentList.get("name"))
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @currentList.id
 			@taskCollectionSubset = new Backbone.CollectionSubset({

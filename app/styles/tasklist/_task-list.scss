@@ -69,6 +69,12 @@ $task-new-task-height: 60px;
 		.subtitle{
 			text-align: center;
 		}
+		.description{
+			text-align: center;
+			font-style:italic;
+			font-size: 14px;
+			margin-top: 24px;
+		}
 		// Animate-in when adding new tasks
 	}
 }

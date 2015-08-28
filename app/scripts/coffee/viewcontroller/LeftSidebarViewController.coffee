@@ -28,7 +28,6 @@ define [
 			@projectsTpl = _.template ProjectsTemplate, {variable: "data"}
 			@membersTpl = _.template TeamMembersTemplate, {variable: "data"}
 		renderSidebar: ->
-			notifications = swipy.notificationModel.get("notifications")
 			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_channel") and channel.get("is_member") )
 			channels = _.sortBy( filteredChannels, (channel) -> return channel.get("name") )
 			@$el.find("#sidebar-project-list .projects").html("")
@@ -37,8 +36,15 @@ define [
 				@$el.find("#sidebar-project-list .projects").append(rowView.el)
 				rowView.render()
 
-			#@$el.find("#sidebar-project-list .projects").html(@projectsTpl({ channels: channels }))
-			
+			filteredGroups = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_group") and channel.get("is_open") and !channel.get("is_archived") )
+			groups = _.sortBy( filteredGroups, (group) -> return group.get("name") )
+			@$el.find("#sidebar-group-list .groups").html("")
+			for group in groups
+				console.log("group", group)
+				rowView = new ChannelRow({model: group})
+				@$el.find("#sidebar-group-list .groups").append(rowView.el)
+				rowView.render()
+				
 
 			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_im") and channel.get("is_open"))
 			ims = _.sortBy(filteredIms, (im) ->

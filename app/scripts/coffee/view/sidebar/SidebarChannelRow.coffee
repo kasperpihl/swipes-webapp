@@ -28,6 +28,7 @@ define [
 			@$el.toggleClass("hasNotification", @model.get("unread_count_display") > 0) if @model.get("is_im")
 
 			identifier = "sidebar-channel-" + @model.get("name")
+			identifier = "sidebar-group-" + @model.get("name") if @model.get("is_group")
 			identifier = "sidebar-member-" + @user.get("name") if @model.get("is_im") and @user
 
 			@$el.attr('id', identifier)
