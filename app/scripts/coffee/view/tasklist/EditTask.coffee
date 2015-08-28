@@ -4,9 +4,8 @@
 define [
 	"underscore"
 	"text!templates/tasklist/edit-task.html"
-	"js/view/tasklist/TaskList"
-	"js/handler/TaskHandler"
-	], (_, EditTaskTmpl, TaskList, TaskHandler) ->
+	"js/view/tasklist/tabs/ActionTab"
+	], (_, EditTaskTmpl, ActionTab) ->
 	Backbone.View.extend
 		className: "edit-task"
 		events:
@@ -42,29 +41,13 @@ define [
 			if target.hasClass("actionTab")
 				@loadActionSteps()
 		loadActionSteps: ->
-			@taskHandler?.destroy()
-			@taskList?.remove()
+			@actionTab = new ActionTab({model: @model})
+			$("#task-"+@model.id + " .edit-task .tab-container").html @actionTab.el
+			@actionTab.loadActionSteps() 
 			@setSectionTitle("ACTIONS")
-
-			@taskList = new TaskList()
-			@taskList.setActionList()
-			@taskList.targetSelector = "#task-"+@model.id + " .edit-task .tab-container"
-			@taskList.enableDragAndDrop = true
-
-			@taskHandler = new TaskHandler()
-			@taskHandler.listSortAttribute = "projectOrder"
-			@taskList.taskDelegate = @taskHandler
-			@taskList.dragDelegate = @taskHandler
-			@taskList.dataSource = @taskHandler
-			self = @
-			@taskCollectionSubset = new Backbone.CollectionSubset({
-				parent: swipy.collections.todos,
-				filter: (task) ->
-					return task.get("parentLocalId") is self.model.id
-			})
-			console.log @taskCollectionSubset.child.toJSON()
-			@taskHandler.loadCollection(@taskCollectionSubset.child)
-			@taskList.render()
+		loadSchedule: ->
+		loadAssignees: ->
+		loadAttachments: ->
 
 		remove: ->
 			@$el.empty()

@@ -7,6 +7,10 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			messageCollection.localStorage = new Backbone.LocalStorage("MessageCollection-" + @id )
 			messageCollection.fetch()
 			@set("messages", messageCollection)
+		getName: ->
+			return @get("name") if @get("name")
+			if @get("user") and swipy.slackCollections and swipy.slackCollections.users.get(@get("user"))
+				return swipy.slackCollections.users.get(@get("user")).get("name")
 		getApiType: ->
 			apiType = "channels"
 			if @id.startsWith("D")

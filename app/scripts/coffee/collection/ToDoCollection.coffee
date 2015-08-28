@@ -14,7 +14,14 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 				@remove m for m in removeThese
 
 				@invoke( "set", { rejectedByTag: no, rejectedBySearch: no } )
-
+		createAction: (parentModel, str, options) ->
+			newTodo = @create {"parentLocalId": parentModel.id, "projectLocalId": parentModel.get("projectLocalId"), "title": str, "animateIn": true }
+			if newTodo.get("projectLocalId")
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				sofiMessage = capitalizedName + " added the action \"" + newTodo.getTaskLinkForSlack() + "\" to the task \"" + parentModel.getTaskLinkForSlack() + "\""
+				swipy.slackSync.sendMessageAsSofi(sofiMessage, newTodo.get("projectLocalId"))
+			
+			newTodo.save({}, {sync:true})
 		createTask: (str, options) ->
 
 			tags = @parseTags str

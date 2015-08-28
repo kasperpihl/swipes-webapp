@@ -77,7 +77,7 @@ $meta-margin: 10px;
 		padding-left: $left-padding;
 		//position: relative;
 		.priority{
-			margin-top: -5px;
+			margin-top: -3px;
 		}
 	}
 	.expanding{
@@ -127,12 +127,14 @@ $meta-margin: 10px;
 		top:50%;
 		margin-left: - $action-dot-size/2;
 		margin-top: - $action-dot-size/2;
-		border: 2px solid $red;
+		border: 2px solid $yellow;
 		@include border-radius($action-dot-size/2);
 
 		width: $action-dot-size;
 		height: $action-dot-size;
-
+		&.black{
+			border: 2px solid $sidebar-dark-color;
+		}
 		&.calendar-event{
 			h2{
 				height:30px;
@@ -149,6 +151,11 @@ $meta-margin: 10px;
 		margin-bottom:0;
 		margin-top: 0;
 		padding-left:16%;
+	}
+	input{
+		font: 0.7em/1.8 $font-normal;
+		width: 80%;
+		margin-left: 16%;
 	}
 }
 // Add task card
@@ -225,7 +232,9 @@ $meta-margin: 10px;
 			}
 		}
 
-		
+		.action-container{
+			position: relative;
+		}
 		// Show action buttons on hover
 		.main-info-container:hover{
 			.actions{

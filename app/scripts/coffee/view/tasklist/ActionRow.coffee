@@ -3,7 +3,7 @@
 ###
 define [
 	"underscore"
-	"text!templates/tasklist/action-row.html"
+	"text!templates/tasklist/tabs/action-row.html"
 	], (_, ActionTmpl) ->
 	Backbone.View.extend
 		tagName: "li"
