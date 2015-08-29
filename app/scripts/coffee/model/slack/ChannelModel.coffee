@@ -13,9 +13,9 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				return swipy.slackCollections.users.get(@get("user")).get("name")
 		getApiType: ->
 			apiType = "channels"
-			if @id.startsWith("D")
+			if @get("is_im")
 				apiType = "im"
-			if @id.startsWith("G")
+			if @get("is_group")
 				apiType = "groups"
 			apiType
 		fetchMessages: (collection) ->
@@ -38,8 +38,14 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			if !collection.get(message.ts)
 				if increment and message.user isnt swipy.slackCollections.users.me().id
 					@save("unread_count_display", @get("unread_count_display")+1)
-					if @get("is_im") # OR you were mentioned in the task /TODO:
-						Backbone.trigger("play-new-message")
+					if @get("is_im")
+						if !swipy.bridge.bridge # OR you were mentioned in the task /TODO:
+							Backbone.trigger("play-new-message")
+						else
+							text = "You received 1 new message"
+							text = message.text if message.text
+							title = "[Swipes] " + @getName() 
+							swipy.bridge.callHandler("notify",{title: title, message: text})
 				return if(!@hasFetched? or !@hasFetched)
 				newMessage = collection.create( message )
 

@@ -168,6 +168,12 @@ var QueryString = function () {
   } 
     return query_string;
 } ();
+if (typeof String.prototype.startsWith != 'function') {
+  // see below for better implementation!
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) === 0;
+  };
+}
 require(["jquery", "backbone"], function($) {
     var appCache = window.applicationCache;
     if(appCache){

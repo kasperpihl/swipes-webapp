@@ -47,14 +47,14 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 		###
 		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
 			draggedIds = []
-
 			if e.path?
 				for el in e.path
 					$el = $(el)
 					if $el.hasClass("chat-item")
 						draggedId = "#" + $el.attr("id")
-			else if e.originalTarget?
-				currentTarget = e.originalTarget
+			else if e.originalTarget? or e.target?
+				currentTarget = e.target if e.target?
+				currentTarget = e.originalTarget if e.originalTarget?
 				for num in [1..10]
 					if currentTarget? and currentTarget
 						if _.indexOf(currentTarget.classList, "chat-item") isnt -1

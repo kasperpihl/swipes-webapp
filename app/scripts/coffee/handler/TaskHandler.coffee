@@ -39,8 +39,9 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 					$el = $(el)
 					if !draggedId and ($el.hasClass("action-item") or $el.hasClass("task-item"))
 						draggedId = "#" + $el.attr("id")
-			else if e.originalTarget?
-				currentTarget = e.originalTarget
+			else if e.originalTarget? or e.target?
+				currentTarget = e.target if e.target?
+				currentTarget = e.originalTarget if e.originalTarget?
 				for num in [1..10]
 					if currentTarget? and currentTarget
 						if _.indexOf(currentTarget.classList, "action-item") isnt -1 or _.indexOf(currentTarget.classList, "task-item") isnt -1
@@ -53,7 +54,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
 			draggedIds = []
 			draggedId = @idForEvent(e)
-			
+			console.log draggedId
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 			#console.log @collection.toJSON(), draggedTask.toJSON()
 			return [] if !draggedTask?

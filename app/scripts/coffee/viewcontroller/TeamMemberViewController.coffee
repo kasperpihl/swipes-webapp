@@ -80,8 +80,10 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
-			taskListVC.taskList.emptyTitle = "No tasks between you & " + @currentUser.get("name")
+			taskListVC.taskList.emptyTitle = "No Direct Tasks between you & " + @currentUser.get("name")
 			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
+			taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you and " + @currentUser.get("name") + ". You can assign tasks to either you or " + @currentUser.get("name") + " and it will be sent into your workspaces."
+			
 			taskListVC.addTaskCard.setPlaceHolder("Send task to " + @currentUser.get("name"))
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
