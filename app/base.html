@@ -23,6 +23,10 @@
 		window.liveEnvironment = !!( location.host === "web.swipesapp.com" );
 		if (window.liveEnvironment && window.location.protocol != "https:")
 			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+		if (window.require) {
+			window.nodeRequire = window.require;
+			delete window.require;
+		}
 	</script>
 	<script async src='//www.google-analytics.com/analytics.js'></script>
 	<script>
@@ -57,7 +61,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 						<ul class="tasks">
 							<li class="" id="sidebar-tasks-now">
 								<a href="#tasks/now">
-									<span class="text">WORKSPACE :></span>
+									<span class="text">MY TASKS</span>
 								</a>
 							</li>
 						</ul>

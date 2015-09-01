@@ -222,7 +222,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		getTaskLinkForSlack: ->
 			title = @get("title")
 			if title.length > 30
-				title = title.substring(0,30)+'&hellip;'
+				title = title.substring(0,30)+'...'
 			return "<http://swipesapp.com/task/" + @id + "|" + title + ">"
 		isSubtask: ->
 			if @get("parentLocalId") then return true else false

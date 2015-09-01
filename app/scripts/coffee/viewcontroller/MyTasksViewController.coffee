@@ -21,7 +21,7 @@ define [
 
 			@mainView = "task"
 			swipy.rightSidebarVC.sidebarDelegate = @
-			swipy.topbarVC.setMainTitleAndEnableProgress("Workspace", false )
+			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
 
