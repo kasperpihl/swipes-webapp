@@ -10,12 +10,15 @@ define [
 			@setTemplates()
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
 			@listenTo( swipy.slackCollections.channels, "add reset remove", @bouncedRenderSidebar )
+			@bouncedUpdateNotificationsForMyTasks = _.debounce(@updateNotificationsForMyTasks, 15)
+			@listenTo( swipy.collections.todos, "add reset remove change:completionDate change:schedule", @bouncedUpdateNotificationsForMyTasks)
 			# Proper render list when projects change/add/remove
 			
 			_.bindAll( @, "renderSidebar")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
 			@renderSidebar()
+			@updateNotificationsForMyTasks()
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 		clickedAddProject: (e) ->
@@ -40,7 +43,6 @@ define [
 			groups = _.sortBy( filteredGroups, (group) -> return group.get("name") )
 			@$el.find("#sidebar-group-list .groups").html("")
 			for group in groups
-				console.log("group", group)
 				rowView = new ChannelRow({model: group})
 				@$el.find("#sidebar-group-list .groups").append(rowView.el)
 				rowView.render()
@@ -64,6 +66,12 @@ define [
 			@checkAndEnableScrollBars()
 			@delegateEvents()
 			@setActiveMenu(@activeClass) if @activeClass?
+		updateNotificationsForMyTasks: ->
+			activeTasks = swipy.collections.todos.getMyActive()
+			numberOfActive = activeTasks.length
+			notificationText = if numberOfActive > 0 then ""+numberOfActive else ""
+			$('.sidebar-controls #sidebar-tasks-now').toggleClass("unread", ( numberOfActive > 0))
+			$('.sidebar-controls #sidebar-tasks-now .notification').html notificationText
 		checkAndEnableScrollBars: ->
 			overflow = "hidden"
 			if $(".sidebar-controls").outerHeight(true) > $("body").height()

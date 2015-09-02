@@ -88,6 +88,8 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 					parentsById[parentId] = parent
 				if parent and !parent.hasSubtask(actionStep)
 					actionStep.linkToParent(parent)
+		getMyActive: ->
+			@filter (m) -> m.get("isMyTask") and m.getState() is "active" and !m.isSubtask()
 		getActive: ->
 			@filter (m) -> m.getState() is "active" and !m.isSubtask()
 		getScheduled: ->

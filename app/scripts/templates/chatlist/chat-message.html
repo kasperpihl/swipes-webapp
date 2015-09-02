@@ -99,8 +99,11 @@
 					replacement = "<a " + targetPart + " href=\""+action+"\">" + placeholder + "</a>";
 				}
 				else if( action.startsWith("@U")){
-					placeholder = swipy.slackCollections.users.get(action.substring(1)).get("name")
-					replacement = "<a href=\"#im/"+placeholder+"\">@"+placeholder + "</a>";
+					var user = swipy.slackCollections.users.get(action.substring(1))
+					if(user){
+						placeholder = user.get("name")
+						replacement = "<a href=\"#im/"+placeholder+"\">@"+placeholder + "</a>";
+					}
 				}
 				else if( action.startsWith("@C")){
 					placeholder = swipy.slackCollections.channels.get(action.substring(1)).get("name")

@@ -350,6 +350,7 @@ module.exports = function (grunt) {
                     src: [
                         '*.{ico,png,txt}',
                         '.htaccess',
+                        '!base.html',
                         'login/*.*',
                         'loginslack/*.*',
                         'scripts/js/Login.js',
