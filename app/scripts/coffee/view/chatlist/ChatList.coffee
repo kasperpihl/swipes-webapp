@@ -37,7 +37,7 @@ define [
 
 			shouldScrollToBottom = false
 			shouldAddNewUnread = @hasRendered
-			shouldScrollToBottom = @hasRendered = true if !@hasRendered
+			shouldScrollToBottom = true if !@hasRendered
 
 			if @scrollToBottomVar is true
 				@scrollToBottomVar = false
@@ -120,10 +120,11 @@ define [
 			if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
 			@moveToBottomIfNeeded()
-			
 			if @unread?
 				$(".chat-list-container-scroller").on("scroll.chatlist", @checkIsRead)
 				@checkIsRead()
+
+			@hasRendered = true
 			
 		isScrolledToBottom: ->
 			return ($(".chat-list-container-scroller").scrollTop() + $(".chat-list-container-scroller").height() >= $(".chat-list").outerHeight())

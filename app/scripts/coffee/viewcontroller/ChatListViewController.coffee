@@ -23,7 +23,7 @@ define [
 			@chatList.chatDelegate = @chatHandler
 			@chatList.dragDelegate = @chatHandler
 			@chatList.dataSource = @chatHandler
-
+			Backbone.on("opened-window", @focusInput, @)
 		
 		setTemplate: ->
 			@template = _.template Template
@@ -32,8 +32,11 @@ define [
 			@newMessage.render()
 			@$el.prepend( @newMessage.el )
 			@chatList.render()
-
+			@focusInput()
+		focusInput: ->
+			@newMessage?.$el.find('input').focus()
 		destroy: ->
+			Backbone.off(null, null, @)
 			@chatList?.remove?()
 			@newMessage?.remove?()
 			@chatHandler?.destroy?()
