@@ -53,8 +53,11 @@ define [
 				continue if !sectionData or !sectionData.tasks.length
 				# Instantiate 
 				section = new Section()
+
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
+				if lastLeftTitle and lastLeftTitle is "Your Current Tasks"
+					section.$el.find('.section-header').css("marginTop","150px")
 
 				for task in sectionData.tasks
 					numberOfTasks++
@@ -75,6 +78,7 @@ define [
 					@_taskCardsById[task.id] = taskEl
 					sectionEl.append( taskEl.el )
 				@$el.append section.el
+				lastLeftTitle = sectionData.leftTitle
 			if numberOfTasks is 0 and @emptyTitle
 				@$el.html("<div class=\"empty-text\"><h4 class=\"title\">" + @emptyTitle + "</h4></div>")
 				if @emptySubtitle

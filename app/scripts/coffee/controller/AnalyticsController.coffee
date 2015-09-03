@@ -6,12 +6,12 @@ define ["underscore"], (_) ->
 		constructor: ->
 			@init()
 		init: ->
-			analyticsKey = 'UA-41592802-4'
+			analyticsKey = 'UA-41592802-7'
 			@screens = []
 			@customDimensions = {}
 			@loadedIntercom = false
 
-			@user = Parse.User.current()
+			@user = swipy.slackCollections.users.me()
 			if @user? and @user.id
 				ga('create', analyticsKey, { 'userId' : @user.id } )
 			else
