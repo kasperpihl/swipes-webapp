@@ -118,7 +118,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			currentAssignees = @get "assignees"
 			if !currentAssignees
 				currentAssignees = []
-
+			currentAssignees = []
 			for userId in userIds
 				if _.indexOf( currentAssignees, userId) is -1
 					inserted = true

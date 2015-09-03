@@ -53,7 +53,7 @@ define [
 			taskListVC.taskList.emptySubtitle = "You can add Personal tasks below or assign tasks from channels and groups."
 			taskListVC.taskList.emptyDescription = "Tasks here is the ones assigned to you. Here you can get an overview of your commitments and put it all in order."
 			
-			taskListVC.addTaskCard.setPlaceHolder("Add Personal Task")
+			taskListVC.addTaskCard.setPlaceHolder("Add a new personal task")
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			@taskCollectionSubset = new Backbone.CollectionSubset({
@@ -87,7 +87,7 @@ define [
 				dontSort = false
 				showSchedule = false
 				if key is "-1"
-					title = "Your Current Tasks"
+					title = "Your current tasks"
 				else if key is "9999999999"
 					title = "Unspecified"
 				else

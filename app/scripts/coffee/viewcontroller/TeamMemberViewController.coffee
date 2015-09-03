@@ -70,7 +70,7 @@ define [
 			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
 			taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you and " + @currentUser.get("name") + ". You can assign tasks to either you or " + @currentUser.get("name") + " and it will be sent into your workspaces."
 			
-			taskListVC.addTaskCard.setPlaceHolder("Add task between you & " + @currentUser.get("name"))
+			taskListVC.addTaskCard.setPlaceHolder("Add a new task between you & " + @currentUser.get("name"))
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @currentList.id
@@ -98,7 +98,7 @@ define [
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
-			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentUser.get("name"))
+			chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentUser.get("name"))
 			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
 			chatListVC.chatHandler.loadCollection(@currentList.get("messages"))
 			

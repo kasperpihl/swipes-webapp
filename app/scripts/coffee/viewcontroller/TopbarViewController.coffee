@@ -12,7 +12,10 @@ define [
 			@setSectionTitleAndProgress("Loading...",30)
 			@listenTo( Backbone, "update/numberOfTasks", @updateTaskNumber)
 		updateTaskNumber: (number) ->
-			@setSectionTitleAndProgress( number + " tasks")
+			label = number + " task"
+			if number isnt 1
+				label += "s"
+			@setSectionTitleAndProgress( label)
 		render: ->
 			@$el.html(@template({}))
 			$(".top-bar-container").html(@$el)

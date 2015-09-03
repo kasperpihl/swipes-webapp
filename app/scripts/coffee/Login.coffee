@@ -16,8 +16,7 @@ QueryString = =>
 		else
 			query_string[pair[0]].push(pair[1])
 	query_string
-
-LoginView = Parse.View.extend
+LoginView = Backbone.View.extend
 	el: "#login"
 	events:
 		"submit form": "handleSubmitForm"
@@ -68,14 +67,7 @@ LoginView = Parse.View.extend
 		location.href = pathName
 		return
 	showError: (error) ->
-		switch error.code
-			when Parse.Error.USERNAME_TAKEN, Parse.Error.EMAIL_NOT_FOUND then alert "The password was wrong"
-			when Parse.Error.INVALID_EMAIL_ADDRESS then alert "The provided email is invalid. Please check it, and try again"
-			when Parse.Error.TIMEOUT then alert "The connection timed out. Please try again."
-			when Parse.Error.USERNAME_TAKEN then alert "The email/username was already taken"
-			when 202 then alert "The email is already in use, please login instead"
-			when 101 then alert "Wrong email or password"
-			else alert "something went wrong. Please try again."
+		alert "something went wrong. Please try again."
 
 queryString = QueryString()
 

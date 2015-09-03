@@ -70,10 +70,10 @@ define [
 			channelLabel = if isGroup then "group" else "channel"
 			hashLabel = if isGroup then "" else "# "
 			taskListVC.taskList.emptyTitle = "No tasks in " + hashLabel + @currentList.get("name")
-			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
-			taskListVC.taskList.emptyDescription = "Tasks here will be visible to members of this " + channelLabel + ". You can assign tasks to people from the " + channelLabel + " and it will be sent into their workspace."
+			taskListVC.taskList.emptySubtitle = "You can add new tasks below or simply drag a message here."
+			taskListVC.taskList.emptyDescription = "When you add tasks in this "+channelLabel+", they will be visible only to its members. You can assign tasks to them and they'll be sent to your teammates' personal workspaces."
 			
-			taskListVC.addTaskCard.setPlaceHolder("Add new task to #" + @currentList.get("name"))
+			taskListVC.addTaskCard.setPlaceHolder("Add a new task to #" + @currentList.get("name"))
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @currentList.id
 			@taskCollectionSubset = new Backbone.CollectionSubset({
@@ -98,7 +98,7 @@ define [
 			chatListVC.chatList.delegate = @
 			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
 			chatListVC.chatHandler.loadCollection(@currentList.get("messages"))
-			chatListVC.newMessage.setPlaceHolder("Send message to " + @currentList.get("name"))
+			chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentList.get("name"))
 			@chatListVC = chatListVC
 			return chatListVC
 		

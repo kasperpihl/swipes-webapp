@@ -25,14 +25,16 @@ define ["underscore",
 		clickedPerson: (e) ->
 			$el = $(e.currentTarget)
 			memberId = $el.attr("data-href")
+			targetUser = swipy.slackCollections.users.get(memberId)
+			@model.assign( memberId, true )
+			if @model.get("projectLocalId")
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				if swipy.slackCollections.users.me().id isnt targetUser.id
+					sofiMessage = capitalizedName + " assigned you the task \"" + @model.getTaskLinkForSlack() + "\"";
+					swipy.slackSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
+			@dismissModal()
+			return
 			@assignPerson(memberId).then( =>
-				targetUser = swipy.slackCollections.users.get(memberId)
-				@model.assign( memberId, true )
-				if @model.get("projectLocalId")
-					capitalizedName = swipy.slackCollections.users.me().capitalizedName()
-					if swipy.slackCollections.users.me().id isnt targetUser.id
-						sofiMessage = capitalizedName + " assigned you the task \"" + @model.getTaskLinkForSlack() + "\"";
-						swipy.slackSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
 					
 			)
 		assignPerson: (href, callback) ->

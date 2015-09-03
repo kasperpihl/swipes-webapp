@@ -69,7 +69,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 		hitTest: (e) ->
 			hit = {}
 			hit.pointerEvent = e
-			if Draggable.hitTest(e, "#sidebar-my-tasks", 0)
+			###if Draggable.hitTest(e, "#sidebar-my-tasks", 0)
 				hit.parent = "#sidebar-members-list"
 				ids = $.map( $("#sidebar-my-tasks .tasks > li"), (o) -> o["id"] )
 				for i, id of ids
@@ -96,7 +96,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					if Draggable.hitTest(e, "#" + id, 0)
 						hit.target = "#" + id
 						hit.type = "project"
-						hit.position = "middle"
+						hit.position = "middle"###
 			if @enableFullScreenTaskList
 				if Draggable.hitTest(e, ".task-list-view-controller", 0)
 					hit.parent = ".task-list-view-controller"
@@ -113,13 +113,13 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 						
 						$hit = $(targetIdentifier)
 						sensitivityThreshold = $hit.outerHeight()/2 #15 #$("#task-" + id).height()/2
-
+						hit.position = "top"
 						if e.clientY <= ($hit.offset().top + sensitivityThreshold)
 							hit.position = "top"
 						else if e.clientY >= ($hit.offset().top + $hit.outerHeight() - sensitivityThreshold)
 							hit.position = "bottom"
-						else if e.clientY >= $hit.offset().top and e.clientY <= ($hit.offset().top + $hit.outerHeight())
-							hit.position = "middle"
+						#else if e.clientY >= $hit.offset().top and e.clientY <= ($hit.offset().top + $hit.outerHeight())
+							#hit.position = "middle"
 
 						hit.target = "#" + id
 						hit.type = "task"

@@ -56,7 +56,7 @@ define [
 
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
-				if lastLeftTitle and lastLeftTitle is "Your Current Tasks"
+				if lastLeftTitle and lastLeftTitle is "Your current tasks"
 					section.$el.find('.section-header').css("marginTop","150px")
 
 				for task in sectionData.tasks
