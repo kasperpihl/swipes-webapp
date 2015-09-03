@@ -112,7 +112,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 						return hit if _.indexOf(@draggedIds, targetIdentifier) isnt -1
 						
 						$hit = $(targetIdentifier)
-						sensitivityThreshold = 15 #$("#task-" + id).height()/2
+						sensitivityThreshold = $hit.outerHeight()/2 #15 #$("#task-" + id).height()/2
 
 						if e.clientY <= ($hit.offset().top + sensitivityThreshold)
 							hit.position = "top"

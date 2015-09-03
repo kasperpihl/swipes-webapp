@@ -30,10 +30,10 @@ define ["underscore",
 				@model.assign( memberId, true )
 				if @model.get("projectLocalId")
 					capitalizedName = swipy.slackCollections.users.me().capitalizedName()
-
-					sofiMessage = capitalizedName + " assigned the task \"" + @model.getTaskLinkForSlack() + "\" to @" + targetUser.get("name");
-					swipy.slackSync.sendMessageAsSofi(sofiMessage, @model.get("projectLocalId"))
-				
+					if swipy.slackCollections.users.me().id isnt targetUser.id
+						sofiMessage = capitalizedName + " assigned you the task \"" + @model.getTaskLinkForSlack() + "\"";
+						swipy.slackSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
+					
 			)
 		assignPerson: (href, callback) ->
 			dfd = new $.Deferred()

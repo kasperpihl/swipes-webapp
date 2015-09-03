@@ -59,7 +59,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			#console.log @collection.toJSON(), draggedTask.toJSON()
 			return [] if !draggedTask?
 
-			draggedTask.set("selected",true) 
+			#draggedTask.set("selected",true) 
 			selectedTasks = @collection.getSelected(draggedTask)
 
 			titles = _.invoke(selectedTasks, "get", "title")
@@ -158,6 +158,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				)
 			false
 		dragHandlerDidClick: (dragHandler, e) ->
+			return false
 			hitTarget = $(e.target)
 			clickedId = @idForEvent(e)
 

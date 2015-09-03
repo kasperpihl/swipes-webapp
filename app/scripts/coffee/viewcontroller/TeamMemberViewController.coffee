@@ -38,20 +38,6 @@ define [
 			self = @
 			taskGroups = [{leftTitle: "You & " + @currentUser.get("name") + "'s tasks", tasks: collection.models}]
 			return taskGroups
-			meUser = swipy.slackCollections.users.me()
-			groups = collection.groupBy((model, i) ->
-				# TODO: Seperate tasks between who it's from
-				if model.get("toUserId") is meUser.id
-					return "My Tasks"
-				else 
-					return "His Tasks"
-			)
-			taskGroups = []
-			taskGroups.push({leftTitle: "RECEIVED TASKS" , tasks: groups["My Tasks"]}) #if groups["My Tasks"]?.length > 0
-			taskGroups.push({rightTitle: "SENT TASKS", tasks: groups["His Tasks"]}) #if groups["His Tasks"]?.length > 0
-			
-			return taskGroups
-
 
 
 		loadMainWindow: (type) ->
@@ -66,7 +52,7 @@ define [
 
 		createTask: ( title, options ) ->
 			options = {} if !options
-			options.toUserId = @currentUser.id if !options.toUserId?
+			#options.toUserId = @currentUser.id if !options.toUserId?
 			options.projectLocalId = @currentList.id
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
@@ -84,7 +70,7 @@ define [
 			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
 			taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you and " + @currentUser.get("name") + ". You can assign tasks to either you or " + @currentUser.get("name") + " and it will be sent into your workspaces."
 			
-			taskListVC.addTaskCard.setPlaceHolder("Send task to " + @currentUser.get("name"))
+			taskListVC.addTaskCard.setPlaceHolder("Add task between you & " + @currentUser.get("name"))
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @currentList.id

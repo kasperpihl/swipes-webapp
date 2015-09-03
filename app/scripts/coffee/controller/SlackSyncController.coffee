@@ -15,7 +15,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@util = new Utility()
 			@currentIdCount = 0
 			@sentMessages = {}
-			_.bindAll(@, "onSocketMessage")
+			_.bindAll(@, "onSocketMessage", "onSocketClose")
 		start: ->
 			@apiRequest("rtm.start", {simple_latest: false}, (data, error) =>
 				if data and data.ok
@@ -70,7 +70,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		onSocketOpen: (evt) ->
 		onSocketClose: (evt) ->
-			console.log evt
+			@start()
 		onSocketMessage: (evt) ->
 			if evt and evt.data
 				
@@ -111,7 +111,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				console.log res
 			)
 		sendMessageAsSofi: (message, channel) ->
-			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "s.o.f.i", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
+			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "sofi", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
 			@apiRequest("chat.postMessage", options, (res, error) ->
 				console.log(res)
 			)
