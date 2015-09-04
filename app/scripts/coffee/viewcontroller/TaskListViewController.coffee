@@ -28,6 +28,7 @@ define [
 			Backbone.on( "request-work-task", @requestWorkTask, @ )
 			Backbone.on( "edit/task", @editTask, @ )
 		editTask: (model) ->
+			return
 			taskCard = @taskList.taskCardById(model.id)
 			return if !taskCard
 			@editTask = new EditTask({model: model})

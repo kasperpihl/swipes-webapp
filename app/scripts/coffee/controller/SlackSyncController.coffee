@@ -123,7 +123,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				callback?(res, error)
 			)
 		sendMessageAsSofi: (message, channel, callback) ->
-			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "sofi", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
+			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "s.o.f.i.", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
 			@apiRequest("chat.postMessage", options, (res, error) ->
 				callback?(res, error)
 			)
