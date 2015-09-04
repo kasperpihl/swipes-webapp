@@ -54,7 +54,7 @@ define [
 		###
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
-			taskGroups = [{leftTitle: @currentList.get("name")+ " tasks" , tasks: collection.models}]
+			taskGroups = [{leftTitle: @currentList.get("name")+ " tasks" , tasks: _.filter(collection.models, (m) -> !m.get("completionDate"))}]
 			return taskGroups
 
 
@@ -79,7 +79,7 @@ define [
 			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
-					return task.get("projectLocalId") is projectId and !task.get("completionDate") and !task.isSubtask()
+					return task.get("projectLocalId") is projectId and !task.isSubtask()
 			})
 
 			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)

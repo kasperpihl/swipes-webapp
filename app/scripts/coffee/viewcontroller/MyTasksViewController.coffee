@@ -60,7 +60,7 @@ define [
 			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
-					if !task.get("completionDate") and !task.isSubtask()
+					if !task.isSubtask()
 						if task.get("isMyTask")
 							return true
 					return false
@@ -76,6 +76,7 @@ define [
 			self = @
 
 			groups = collection.groupBy((model, i) ->
+				if model.get("completionDate") then return "completed"
 				if model.getState() is "active" then return -1
 				else if model.getState() is "scheduled"
 					schedule = model.get("schedule")
@@ -85,6 +86,7 @@ define [
 			taskGroups = []
 			sortedKeys = _.keys(groups).sort()
 			for key in sortedKeys
+				continue if key is "completed"
 				dontSort = false
 				showSchedule = false
 				if key is "-1"

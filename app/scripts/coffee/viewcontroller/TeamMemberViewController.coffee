@@ -40,7 +40,7 @@ define [
 			title =  "You & " + @currentUser.get("name") + "'s tasks"
 			if @currentUser.get("name") is "slackbot"
 				title = "You, slackbot & sofi's tasks"
-			taskGroups = [{leftTitle: title, tasks: collection.models}]
+			taskGroups = [{leftTitle: title, tasks: _.filter(collection.models, (m) -> !m.get("completionDate"))}]
 			return taskGroups
 
 
@@ -87,7 +87,7 @@ define [
 			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
 				filter: (task) ->
-					if !task.get("completionDate") and !task.isSubtask()
+					if !task.isSubtask()
 						if (task.get("projectLocalId") is projectId)
 							return true
 					return false
