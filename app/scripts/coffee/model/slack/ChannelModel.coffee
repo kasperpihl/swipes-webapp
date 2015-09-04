@@ -35,8 +35,11 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			)
 		addMessage: (message, increment) ->
 			collection = @get("messages")
-			if !collection.get(message.ts)
-
+			identifier = message.ts
+			identifier = message.deleted_ts if message.deleted_ts?
+			model = collection.get(identifier)
+			console.log message.ts, model, collection.toJSON()
+			if !model
 				if swipy.onboarding?.getCurrentEvent() is "WaitingForMessageToSofi" and @id is swipy.slackCollections.channels.slackbot().id and message.user is swipy.slackCollections.users.me().id
 					swipy.onboarding.setCurrentEvent("DidSendMessageToSofi", true)
 				if increment and message.user isnt swipy.slackCollections.users.me().id
@@ -51,6 +54,12 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 							swipy.bridge.callHandler("notify",{title: title, message: text})
 				return if(!@hasFetched? or !@hasFetched)
 				newMessage = collection.create( message )
+			else
+				console.log message
+				if(message.deleted_ts)
+					collection.remove(model)
+				else
+					model.save(message)
 
 		markAsRead: ->
 			collection = @get("messages")
