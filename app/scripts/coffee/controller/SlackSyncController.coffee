@@ -15,9 +15,13 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@util = new Utility()
 			@currentIdCount = 0
 			@sentMessages = {}
-			_.bindAll(@, "onSocketMessage", "onSocketClose")
+			_.bindAll(@, "onSocketMessage", "onSocketClose", "onOpenedWindow")
+			Backbone.on("opened-window", @onOpenedWindow, @)
 		start: ->
+			return if @isStarting?
+			@isStarting = true
 			@apiRequest("rtm.start", {simple_latest: false}, (data, error) =>
+				@isStarting = null
 				if data and data.ok
 					@handleSelf(data.self) if data.self
 					@handleUsers(data.users) if data.users
@@ -70,6 +74,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		onSocketOpen: (evt) ->
 		onSocketClose: (evt) ->
+			@webSocket = null if @webSocket?
 			@start()
 		onSocketMessage: (evt) ->
 			if evt and evt.data
@@ -104,7 +109,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				@sentMessages[""+message.id] = message if !dontSave
 				message = JSON.stringify(message)
 			@webSocket.send(message)
-
+		onOpenedWindow: ->
+			if !@webSocket?
+				@start()
 		sendMessage:(message, channel, callback) ->
 			options = {text: message, channel: channel, as_user: true, link_names: 1}
 			@apiRequest("chat.postMessage", options, (res, error) ->

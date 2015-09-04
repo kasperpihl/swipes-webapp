@@ -12,7 +12,6 @@ define ["underscore"], (_) ->
 			@loadedIntercom = false
 
 			@user = swipy.slackCollections.users.me()
-			console.log "collection", @user
 			if @user? and @user.id
 				ga('create', analyticsKey, { 'userId' : @user.id } )
 			else
@@ -22,7 +21,6 @@ define ["underscore"], (_) ->
 			@startIntercom()
 			@updateIdentity()
 		startIntercom: ->
-			console.log "intercom" , @user
 			return if !@user?
 			userId = @user.id
 
@@ -30,7 +28,7 @@ define ["underscore"], (_) ->
 				email = @user.get("profile").email
 			
 			window.Intercom('boot', {
-				app_id: 'n15mxyvs'
+				app_id: 'yobuz4ff'
 				email: email
 				user_id: userId
 			})
@@ -62,25 +60,7 @@ define ["underscore"], (_) ->
 		updateIdentity: ->
 			gaSendIdentity = {}
 			intercomIdentity = {}
-
-			userLevel = "None"
-			if @user?
-				userLevel = "User"
-				numberUserLevel = parseInt( @user.get( "userLevel" ), 10 )
-				if numberUserLevel > 1
-					userLevel = "Plus"
-
-			currentUserLevel = @customDimensions['user_level']
-			if currentUserLevel isnt userLevel
-				gaSendIdentity["dimension1"] = userLevel
-				intercomIdentity["user_level"] = userLevel
-
-
-			theme = "Light"
-			currentTheme = @customDimensions['active_theme']
-			if currentTheme isnt theme
-				gaSendIdentity['dimension3'] = theme
-				intercomIdentity['active_theme'] = theme
+			intercomIdentity["slack_user"] = true
 
 			if swipy?
 				recurringTasks = swipy.collections.todos.filter (m) -> m.get("repeatOption") isnt "never"

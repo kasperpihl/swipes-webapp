@@ -2,7 +2,6 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 	class OnboardingController
 		constructor: ->
 			@currentEvent = localStorage.getItem("OnboardingStatus")
-			console.log "current event ", @currentEvent
 		start: ->
 			@runNextEvent()
 		destroy: ->
@@ -10,7 +9,6 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 			@currentEvent
 		setCurrentEvent: (event, next) ->
 			@currentEvent = event
-			console.log "setting event", event
 			localStorage.setItem("OnboardingStatus", event)
 			if next
 				@runNextEvent()
@@ -18,7 +16,6 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 		runNextEvent: ->
 			me = swipy.slackCollections.users.me()
 			return if !me
-			console.log "running event", @currentEvent
 			if !@currentEvent?
 				welcomeModal = new WelcomeModal()
 				welcomeModal.render()
