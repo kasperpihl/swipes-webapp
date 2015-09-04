@@ -29,14 +29,18 @@ define [
 			@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
 			
 			@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
-
-			swipy.topbarVC.setMainTitleAndEnableProgress(@currentUser.get("name"), false)
+			name = @currentUser.get("name")
+			name = "slackbot & sofi" if name is "slackbot"
+			swipy.topbarVC.setMainTitleAndEnableProgress(name, false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()	
 
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
-			taskGroups = [{leftTitle: "You & " + @currentUser.get("name") + "'s tasks", tasks: collection.models}]
+			title =  "You & " + @currentUser.get("name") + "'s tasks"
+			if @currentUser.get("name") is "slackbot"
+				title = "You, slackbot & sofi's tasks"
+			taskGroups = [{leftTitle: title, tasks: collection.models}]
 			return taskGroups
 
 
@@ -69,8 +73,13 @@ define [
 			taskListVC.taskList.emptyTitle = "No Direct Tasks between you & " + @currentUser.get("name")
 			taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
 			taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you and " + @currentUser.get("name") + ". You can assign tasks to either you or " + @currentUser.get("name") + " and it will be sent into your workspaces."
-			
 			taskListVC.addTaskCard.setPlaceHolder("Add a new task between you & " + @currentUser.get("name"))
+
+			if @currentUser.get("name") is "slackbot"
+				taskListVC.taskList.emptyTitle = "No Direct Tasks between you, slackbot & sofi"
+				taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you, slackbot & sofi. You can assign tasks to you or slackbot, but he probably won't do them!"
+				taskListVC.addTaskCard.setPlaceHolder("Add a new task between you, slackbot & sofi")
+			
 
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @currentList.id
@@ -99,6 +108,8 @@ define [
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
 			chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentUser.get("name"))
+			if @currentUser.get("name") is "slackbot"
+				chatListVC.newMessage.setPlaceHolder("Send a message to slackbot & sofi")
 			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
 			chatListVC.chatHandler.loadCollection(@currentList.get("messages"))
 			

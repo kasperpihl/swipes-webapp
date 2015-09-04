@@ -12,6 +12,8 @@ if(data.channel.get("is_channel")){
 if(data.channel.get("is_im")){
 	type = "im";
 	name = data.user.get("name");
+	if(name == "slackbot")
+		name = "slackbot & sofi";
 	numberOfNotifications = data.channel.get("unread_count_display");
 }
 if(data.channel.get("is_group")){

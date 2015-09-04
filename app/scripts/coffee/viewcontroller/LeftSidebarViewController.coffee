@@ -51,7 +51,8 @@ define [
 			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_im") and channel.get("is_open"))
 			ims = _.sortBy(filteredIms, (im) ->
 				user = swipy.slackCollections.users.get(im.get("user")).toJSON()
-				return 0 if user.name is "slackbot"
+				if user.name is "slackbot"
+					return 0 
 				return user.name
 			)
 			@$el.find("#sidebar-members-list .team-members").html("")
