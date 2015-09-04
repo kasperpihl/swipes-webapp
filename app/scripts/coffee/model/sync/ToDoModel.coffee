@@ -109,15 +109,17 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			swipy.collections.todos.create { title, parentLocalId, order }
 
 			#@addSubtask newSubtask
+		getAssignees: ->
+			currentAssignees = @get "assignees"
+			if !currentAssignees
+				currentAssignees = []
+			currentAssignees
 		assign: ( userIds, save ) ->
 			if _.isString(userIds)
 				userIds = [userIds]
 			
 			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
 			
-			currentAssignees = @get "assignees"
-			if !currentAssignees
-				currentAssignees = []
 			currentAssignees = []
 			for userId in userIds
 				if _.indexOf( currentAssignees, userId) is -1

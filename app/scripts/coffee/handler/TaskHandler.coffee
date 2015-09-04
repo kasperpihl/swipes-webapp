@@ -199,18 +199,35 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			peopleToAssign = []
 			model = assignModal.model
 			me = swipy.slackCollections.users.me()
+			if me?
+				data = me.toJSON()
+				if _.indexOf(model.getAssignees(), me.id) isnt -1
+					data.name = data.name + " (current)"
+				peopleToAssign.push(data)
 			channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
 			if channel
 				members = channel.get("members")
-				console.log channel
-			if me? and !model.userIsAssigned(me.id)
-				peopleToAssign.push(me.toJSON())
+				userId = channel.get("user")
+				if members
+					for member in members
+						user = swipy.slackCollections.users.get(member)
+						continue if !user or user.id is me.id or user.get("deleted")
+						data = user.toJSON()
+						if _.indexOf(model.getAssignees(), user.id) isnt -1
+							data.name = data.name + " (current)"
+						peopleToAssign.push(data)
+				else if userId
+					user = swipy.slackCollections.users.get(userId)
+					if user
+						peopleToAssign.push(user.toJSON())
+
 			
-			swipy.slackCollections.users.each( (user) =>
+			
+			###swipy.slackCollections.users.each( (user) =>
 				return if user.id is me.id or user.get("deleted") or user.get("is_bot") or user.id is "USLACKBOT"
 				if !model.userIsAssigned(user.id)
 					peopleToAssign.push(user.toJSON())
-			)
+			)###
 
 			return peopleToAssign
 

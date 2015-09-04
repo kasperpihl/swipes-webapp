@@ -3,6 +3,7 @@ var type;
 var prefix = "";
 var presenceClass = "";
 var name = data.channel.get("name");
+var showName = name;
 var numberOfNotifications = 0;
 
 if(data.channel.get("is_channel")){
@@ -11,9 +12,9 @@ if(data.channel.get("is_channel")){
 }
 if(data.channel.get("is_im")){
 	type = "im";
-	name = data.user.get("name");
+	name = showName = data.user.get("name");
 	if(name == "slackbot")
-		name = "slackbot & sofi";
+		showName = "slackbot & sofi";
 	numberOfNotifications = data.channel.get("unread_count_display");
 }
 if(data.channel.get("is_group")){
@@ -27,7 +28,7 @@ if(data.channel.get("is_group")){
 	</div>
 	<% } %>
 	<div class="text">
-		<%= prefix + name %>
+		<%= prefix + showName %>
 	</div>
 	<% if(numberOfNotifications){ %>
 		<span class="notification"><%= numberOfNotifications %></span>

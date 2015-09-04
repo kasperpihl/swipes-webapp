@@ -2,11 +2,25 @@
 	background: $sidebar-button-active-background-gray;
 	@include border-radius(10px);
 	padding:20px;
-
+	.assign-scroll-container{
+		overflow-y: scroll;
+		max-height: 250px;
+		@include breakpoint(min-height, 400px){
+			max-height: 300px;
+		}
+		@include breakpoint(min-height, 500px){
+			max-height: 400px;
+		}
+		@include breakpoint(min-height, 600px){
+			max-height: 500px;
+		}
+	}
 	h2{
 		color: white;
 		font: 18px $font-normal;
 		margin-top:0;
+		padding-left:30px;
+		padding-right:30px;
 	}
 	.message, .member{
 		position:relative;
@@ -28,6 +42,7 @@
 			top:50%;
 			left:40px;
 			margin-top:-8px;
+			word-wrap: break-word;
 		}
 	}
 	ul{
