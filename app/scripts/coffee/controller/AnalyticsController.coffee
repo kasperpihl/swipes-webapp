@@ -12,6 +12,7 @@ define ["underscore"], (_) ->
 			@loadedIntercom = false
 
 			@user = swipy.slackCollections.users.me()
+			console.log "collection", @user
 			if @user? and @user.id
 				ga('create', analyticsKey, { 'userId' : @user.id } )
 			else
@@ -21,19 +22,17 @@ define ["underscore"], (_) ->
 			@startIntercom()
 			@updateIdentity()
 		startIntercom: ->
+			console.log "intercom" , @user
 			return if !@user?
 			userId = @user.id
 
-			if @validateEmail @user.get("username")
-				email = @user.get("username")
-			else if @validateEmail @user.get("email")
-				email = @user.get("email")
+			if @validateEmail @user.get("profile").email
+				email = @user.get("profile").email
 			
 			window.Intercom('boot', {
-				app_id: 'yobuz4ff'
+				app_id: 'n15mxyvs'
 				email: email
 				user_id: userId
-				created_at: parseInt(@user.createdAt.getTime()/1000,10)
 			})
 			@loadedIntercom = true
 		validateEmail: (email) ->

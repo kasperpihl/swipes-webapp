@@ -55,7 +55,6 @@ define [
 			@slackCollections = new SlackCollections()
 
 			@bridge = new BridgeController()
-			@analytics = new AnalyticsController()
 			
 
 			# Synchronization
@@ -83,6 +82,8 @@ define [
 				Backbone.once( "sync-complete", @init, @ )
 		init: ->
 			@cleanUp()
+			@analytics = new AnalyticsController()
+			
 			@notificationModel = new NotificationModel({id: 1})
 			@leftSidebarVC = new LeftSidebarViewController()
 			@topbarVC = new TopbarViewController()
