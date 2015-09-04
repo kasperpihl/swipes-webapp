@@ -52,6 +52,6 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 				
 				setTimeout( =>
 					swipy.slackSync.sendMessageAsSofi("Stellar! The best part is that you can check all your tasks in one place. Just click on My tasks in the top left corner.", "@"+me.get("name"),  =>
-						#@setCurrentEvent("")
+						@setCurrentEvent("ShowedMyTaskMessage")
 					)
 				, 1000)
