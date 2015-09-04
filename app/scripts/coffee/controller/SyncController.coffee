@@ -198,6 +198,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			@util.sendError( data, "Sync Server Error")
 			@finalizeSync()
 		responseFromSync: ( data, textStatus ) ->
+			console.log data
 			if data and data.ok
 				@currentSyncing = null
 				@changedAttributes.resetChanges()

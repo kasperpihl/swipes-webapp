@@ -27,7 +27,7 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 				setTimeout( =>
 					swipy.slackSync.sendMessageAsSlackbot("Hey, fellows. You know what, even bots need love. Meet my awesome girlfriend S.O.F.I. She’s your team collaboration wizard who will also help you to get a hold of your personal workflow.", "@"+me.get("name"), =>
 						setTimeout( =>
-							swipy.slackSync.sendMessageAsSofi("Hola! Let me just show stuff we can do here. First what would you like to get done today?", "@"+me.get("name"), =>
+							swipy.slackSync.sendMessageAsSofi("Hola! Let me show you the awesome things you can do around here. First, what would you like to get done today?", "@"+me.get("name"), =>
 								@setCurrentEvent("WaitingForMessageToSofi")
 							)
 						, 2000)
@@ -41,7 +41,7 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 				, 1000)
 			else if @currentEvent is "DidDropMessage"
 				setTimeout( =>
-					swipy.slackSync.sendMessageAsSofi("So easy, no? Now just assign someone to take care of it, click on the assign icon in the righthand corner of the task and select your self.", "@"+me.get("name"),  =>
+					swipy.slackSync.sendMessageAsSofi("So easy, no? Now assign a person to take care of it by clicking on the assign icon in the righthand corner of the task and select yourself or Slackbot. Though he's probably not getting it done.", "@"+me.get("name"),  =>
 						@setCurrentEvent("WaitingForAssignment")
 					)
 				, 1000)

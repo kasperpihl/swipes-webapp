@@ -56,7 +56,7 @@ define [
 
 		createTask: ( title, options ) ->
 			options = {} if !options
-			#options.toUserId = @currentUser.id if !options.toUserId?
+			options.targetUserId = @currentUser.id
 			options.projectLocalId = @currentList.id
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
