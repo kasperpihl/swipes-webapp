@@ -39,7 +39,6 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			identifier = message.deleted_ts if message.deleted_ts?
 			identifier = message.message.ts if message.message? and message.message.ts?
 			model = collection.get(identifier)
-			console.log message.ts, model, collection.toJSON()
 			if !model
 				if swipy.onboarding?.getCurrentEvent() is "WaitingForMessageToSofi" and @id is swipy.slackCollections.channels.slackbot().id and message.user is swipy.slackCollections.users.me().id
 					swipy.onboarding.setCurrentEvent("DidSendMessageToSofi", true)
@@ -56,7 +55,7 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				return if(!@hasFetched? or !@hasFetched)
 				newMessage = collection.create( message )
 			else
-				console.log message
+				console.log "editing", message
 				if(message.deleted_ts)
 					collection.remove(model)
 				else

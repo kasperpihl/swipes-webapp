@@ -17,7 +17,7 @@ define [
 			@template = _.template MessageTmpl, {variable: "data" }
 			@attTemplate = _.template AttachmentsTmpl, {variable: "data"}
 			_.bindAll(@, "render")
-			@model.on("change:likes change:timestamp change:text", @render )
+			@model.on("change:likes change:timestamp change:text change:attachments", @render )
 		render: ->
 			@$el.attr('id', "message-"+@model.id )
 			@$el.html @template( message: @model, isFromSameSender: @isFromSameSender, attTmpl: @attTemplate )
