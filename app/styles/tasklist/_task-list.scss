@@ -23,9 +23,15 @@ $task-new-task-height: 60px;
 	}
 	
 	position:relative;
+	&.drag-message-show{
+		.drag-overlay{
+			display:block;
+		}
+	}
 	&.drag-hover-entering{
 		.drag-overlay{
 			display:block;
+			opacity: 0.7;
 		}
 	}
 	.drag-overlay{
@@ -35,7 +41,7 @@ $task-new-task-height: 60px;
 		width:100%;
 		height:100%;
 		top:0;
-		opacity: 0.7;
+		opacity: 0.4;
 		background-color: $sidebar-dark-color;
 		span{
 			position:absolute;

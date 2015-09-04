@@ -34,6 +34,8 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 						return self.delegate.dragHandlerDidClick(self, @pointerEvent)
 					false
 				onDragStart: (self) ->
+					if self.enableFullScreenTaskList
+						$('.task-list-view-controller').addClass("drag-message-show")
 					self.draggedIds = self.delegate.dragHandlerDraggedIdsForEvent( self, @pointerEvent )
 					self.updateMousePointer(@pointerEvent)
 					$(".drag-mouse-pointer").addClass("shown")
@@ -163,7 +165,8 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 				@cleanDragAndDropElements()
 			@lastHit = hit
 		handleHitFinish: (hit) ->
-			
+			if @enableFullScreenTaskList
+				$('.task-list-view-controller').removeClass("drag-message-show")
 			# Notify delegate about final hit
 			callback = () ->
 				$(".drag-hover-moving-item").removeClass("drag-hover-moving-item")
