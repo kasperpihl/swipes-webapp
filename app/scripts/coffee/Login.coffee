@@ -18,6 +18,13 @@ QueryString = =>
 	query_string
 LoginView = Backbone.View.extend
 	el: "#login"
+	generateId: ( length ) ->
+		text = ""
+		possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+		for i in [0..length]
+			text += possible.charAt(Math.floor(Math.random() * possible.length))
+		return text
 	events:
 		"submit form": "handleSubmitForm"
 	setBusyState: ->
@@ -32,6 +39,10 @@ LoginView = Backbone.View.extend
 	doAction: (action, e) ->
 		if $("body").hasClass "busy" then return console.warn "Can't do #{action} right now — I'm busy ..."
 		@setBusyState()
+		###if e.currentTarget.id is "slack-bottom-form"
+			@slackState = @generateId(10)
+			window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=500,width=500")
+			return###
 		switch action
 			when "slack"
 				token = @$el.find("#slack-token").val()
@@ -55,7 +66,41 @@ LoginView = Backbone.View.extend
 					data: options
 					processData: true
 				})
-		
+	handleSlackSuccess:(code, state) ->
+		self = @
+		console.log @slackState, state
+		if state is @slackState
+			console.log code, state
+			serverData = JSON.stringify {code: code}
+			settings = 
+				url : "http://swipesslack.elasticbeanstalk.com/v1/slackToken"
+				type : 'POST'
+				success : ( data ) ->
+					self.removeBusyState()
+					if data and data.ok
+						localStorage.setItem("slack-token", data.access_token)
+						pathName = location.origin
+
+						if(queryString && queryString.href)
+							pathName += "?href=" + queryString.href
+						if(location.hash)
+							pathName += location.hash
+						
+						location.href = pathName
+					else
+						alert("An error occured logging in to Slack")
+				error : ( error ) ->
+					self.removeBusyState()
+					alert("An error occured logging in to Slack")
+				dataType : "json"
+				contentType: "application/json; charset=utf-8"
+				crossDomain : true
+				context: @
+				data : serverData
+				processData : false
+			#console.log serData
+			$.ajax( settings )
+			
 	handleUserLoginSuccess: (token) ->
 		localStorage.setItem("slack-token", token )
 		pathName = location.origin
@@ -73,4 +118,6 @@ LoginView = Backbone.View.extend
 queryString = QueryString()
 
 # Finally, instantiate a new SwipesLogin
+
 login = new LoginView()
+window.loginView = login

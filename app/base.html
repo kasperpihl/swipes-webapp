@@ -23,11 +23,27 @@
 		window.liveEnvironment = !!( location.host === "web.swipesapp.com" );
 		if (window.liveEnvironment && window.location.protocol != "https:")
 			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
-		if (window.require) {
+		/**if (window.require) {
 			window.nodeRequire = window.require;
 			delete window.require;
-		}
+		}**/
 	</script>
+	<script type="text/javascript">
+	  (function(e,t){var r=e.amplitude||{};var n=t.createElement("script");n.type="text/javascript";
+	  n.async=true;n.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-2.3.0-min.gz.js";
+	  var s=t.getElementsByTagName("script")[0];s.parentNode.insertBefore(n,s);r._q=[];function a(e){
+	  r[e]=function(){r._q.push([e].concat(Array.prototype.slice.call(arguments,0)))}}var i=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties"];
+	  for(var o=0;o<i.length;o++){a(i[o])}e.amplitude=r})(window,document);
+
+	  amplitude.init("97942a9a628d261514a77cd97c500afb");
+	</script>
+	<script type="text/javascript">
+        /*if (window.process != null){
+        	if(process.versions['electron']) {
+            	window.$ = window.jQuery = nodeRequire('jquery');
+        	}
+        }*/
+    </script>
 	<script async src='//www.google-analytics.com/analytics.js'></script>
 	<script>
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
@@ -197,22 +213,5 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 	<!-- build:js scripts/main.js -->
 	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
 	<!-- endbuild -->
-	<script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '531435630236702',
-          xfbml      : true,
-          version    : 'v2.1'
-        });
-      };
-
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script>
 </body>
 </html>

@@ -176,9 +176,14 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			model = taskCard.model
 			model.completeTask()
 			if model.get("projectLocalId")
+				targetChannel = model.get("projectLocalId")
+				if model.get("projectLocalId").startsWith("D")
+					channel = swipy.slackCollections.users.get(model.get("projectLocalId"))
+					if channel
+						targetChannel = "@" + channel.getName()
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 				sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";
-				swipy.slackSync.sendMessageAsSofi(sofiMessage, model.get("projectLocalId"))
+				swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			
 			Backbone.trigger("reload/taskhandler")
 		didMoveToNow: (taskCards) ->

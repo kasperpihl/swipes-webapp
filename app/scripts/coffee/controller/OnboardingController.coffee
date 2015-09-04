@@ -25,7 +25,7 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 				)
 			else if @currentEvent is "ShowedWelcome"
 				setTimeout( =>
-					swipy.slackSync.sendMessageAsSlackbot("Hey, fellows. You know what, even bots need love. Meet my awesome girlfriend S.O.F.I. She’s your team collaboration wizard who will also help you to get a hold of your personal workflow.", "@"+me.get("name"), =>
+					swipy.slackSync.sendMessageAsSlackbot("Hey, fellows. You know what, even bots need love. Meet my awesome girlfriend s.o.f.i. She’s your team collaboration wizard who will also help you to get a hold of your personal workflow.", "@"+me.get("name"), =>
 						setTimeout( =>
 							swipy.slackSync.sendMessageAsSofi("Hola! Let me show you the awesome things you can do around here. First, what would you like to get done today?", "@"+me.get("name"), =>
 								@setCurrentEvent("WaitingForMessageToSofi")

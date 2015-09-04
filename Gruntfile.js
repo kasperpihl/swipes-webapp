@@ -352,6 +352,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         '!base.html',
                         'login/*.*',
+                        'slacksuccess/*.*',
                         'loginslack/*.*',
                         'scripts/js/Login.js',
                         'styles/img/{,*/}*.*',

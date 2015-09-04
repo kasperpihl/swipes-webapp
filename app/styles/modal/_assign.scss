@@ -77,12 +77,4 @@
 			bottom:145px;
 		}
 	}
-	@include breakpoint(min-height, 900px) {
-		background: url("img/swipes-ui-team-splash-screen-horizontal.png") no-repeat;
-		background-size: 990px 670px;
-		height: 670px;
-		.start-button{
-			bottom:230px;
-		}
-	}
 }
