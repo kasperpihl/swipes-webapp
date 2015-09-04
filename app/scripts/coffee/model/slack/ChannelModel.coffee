@@ -37,6 +37,7 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			collection = @get("messages")
 			identifier = message.ts
 			identifier = message.deleted_ts if message.deleted_ts?
+			identifier = message.message.ts if message.message? and message.message.ts?
 			model = collection.get(identifier)
 			console.log message.ts, model, collection.toJSON()
 			if !model
@@ -59,7 +60,10 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				if(message.deleted_ts)
 					collection.remove(model)
 				else
-					model.save(message)
+					if message.message
+						model.save(message.message)
+					else
+						model.save(message)
 
 		markAsRead: ->
 			collection = @get("messages")

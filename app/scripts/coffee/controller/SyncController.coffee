@@ -210,7 +210,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 						localStorage.setItem("syncLastUpdate", data.updateTime)
 				if not @firstSync
 					@firstSync = true
-					swipy.analytics.updateIdentity()
+					swipy.analytics?.updateIdentity()
 				##swipy.collections.todos.handleObjects data.ToDo
 			else
 				@util.sendError( data, "Sync Error")
