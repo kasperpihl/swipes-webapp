@@ -85,6 +85,8 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 				title = prompt("Please enter task name", draggedMessage.getText())
 				if title
 					Backbone.trigger( "create-task", title)
+					if swipy.onboarding.getCurrentEvent() is "WaitingForMessageToBeDropped" and draggedMessage.get("channel") is swipy.slackCollections.channels.slackbot().id
+						swipy.onboarding.setCurrentEvent("DidDropMessage", true)
 
 		###
 			ChatMessage Delegate

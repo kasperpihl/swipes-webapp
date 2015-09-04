@@ -22,12 +22,13 @@ define [
 	"js/controller/APIController"
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
+	"js/controller/OnboardingController"
 	"js/controller/UserController"
 	"js/controller/WorkController"
 	"js/controller/SoundController"
 	"js/model/extra/NotificationModel"
 	"gsap"
-	], ($, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, UserController, WorkController, SoundController, NotificationModel) ->
+	], ($, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, OnboardingController, UserController, WorkController, SoundController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -99,6 +100,7 @@ define [
 			@userController = new UserController()
 			@sound = new SoundController()
 			@workmode = new WorkController()
+			@onboarding = new OnboardingController()
 
 			Backbone.history.start( pushState: no )
 			$(".load-indicator").remove()
@@ -115,7 +117,7 @@ define [
 					when "keyboard" then @sidebar.showKeyboardShortcuts()
 					
 				@href = false
-
+			@onboarding.start()
 		cleanUp: ->
 			#@stopAutoUpdate()
 			##@tags?.destroy()

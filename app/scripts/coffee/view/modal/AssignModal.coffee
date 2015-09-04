@@ -26,7 +26,10 @@ define ["underscore",
 			$el = $(e.currentTarget)
 			memberId = $el.attr("data-href")
 			targetUser = swipy.slackCollections.users.get(memberId)
+
 			@model.assign( memberId, true )
+			if swipy.onboarding.getCurrentEvent() is "WaitingForAssignment" and @model.get("projectLocalId") is swipy.slackCollections.channels.slackbot().id
+				swipy.onboarding.setCurrentEvent("DidAssignTask", true)
 			if @model.get("projectLocalId")
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 				if swipy.slackCollections.users.me().id isnt targetUser.id

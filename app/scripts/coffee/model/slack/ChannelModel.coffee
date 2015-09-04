@@ -36,6 +36,9 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 		addMessage: (message, increment) ->
 			collection = @get("messages")
 			if !collection.get(message.ts)
+
+				if swipy.onboarding.getCurrentEvent() is "WaitingForMessageToSofi" and @getName() is "slackbot" and message.user is swipy.slackCollections.users.me().id
+					swipy.onboarding.setCurrentEvent("DidSendMessageToSofi", true)
 				if increment and message.user isnt swipy.slackCollections.users.me().id
 					@save("unread_count_display", @get("unread_count_display")+1)
 					if @get("is_im")

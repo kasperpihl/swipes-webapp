@@ -35,3 +35,39 @@
 	}
 
 }
+.welcome-modal{
+	background: url("img/swipes-ui-team-splash-screen-horizontal-medium.png") no-repeat;
+	background-size: 700px 375px;
+	width: 700px;
+	position:relative;
+	height: 375px;
+	.start-button{
+		background: $red;
+		padding: 20px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		@include border-radius(5px);
+		color: white;
+		font: 14px $font-normal;
+		position: absolute;
+		right: 100px;
+		bottom:95px;
+	}
+	@include breakpoint(min-height, 700px) {
+		background-size: 990px 530px;
+		width: 990px;
+		height: 530px;
+		.start-button{
+			right: 194px;
+			bottom:145px;
+		}
+	}
+	@include breakpoint(min-height, 900px) {
+		background: url("img/swipes-ui-team-splash-screen-horizontal.png") no-repeat;
+		background-size: 990px 670px;
+		height: 670px;
+		.start-button{
+			bottom:230px;
+		}
+	}
+}

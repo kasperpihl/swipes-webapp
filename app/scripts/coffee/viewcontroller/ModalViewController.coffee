@@ -31,6 +31,7 @@ define [
 		presentView: (el, options, callback) ->
 			# Default Values
 			clickableBackground = true
+			@closeOnClick = true
 			@centerX = true
 			@centerY = true
 			
@@ -44,6 +45,7 @@ define [
 
 			if options? and _.isObject(options)
 				clickableBackground = options.clickableBackground if options.clickableBackground?
+				@closeOnClick = options.closeOnClick if options.closeOnClick?
 				opaque = options.opaque if options.opaque?	
 				@top = options.top if options.top?
 				@left = options.left if options.left?
@@ -135,4 +137,5 @@ define [
 			@callback = null
 
 		clickedBackground: (e) ->
-			@hideContent()
+			if @closeOnClick
+				@hideContent()

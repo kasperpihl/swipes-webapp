@@ -105,15 +105,20 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				message = JSON.stringify(message)
 			@webSocket.send(message)
 
-		sendMessage:(message, channel) ->
+		sendMessage:(message, channel, callback) ->
 			options = {text: message, channel: channel, as_user: true, link_names: 1}
 			@apiRequest("chat.postMessage", options, (res, error) ->
-				console.log res
+				callback?(res, error)
 			)
-		sendMessageAsSofi: (message, channel) ->
+		sendMessageAsSlackbot: (message, channel, callback) ->
+			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "slackbot", icon_url: "http://team.swipesapp.com/styles/img/slackbot72.png" }
+			@apiRequest("chat.postMessage", options, (res, error) ->
+				callback?(res, error)
+			)
+		sendMessageAsSofi: (message, channel, callback) ->
 			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "sofi", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
 			@apiRequest("chat.postMessage", options, (res, error) ->
-				console.log(res)
+				callback?(res, error)
 			)
 		apiRequest: (command, options, callback) ->
 			url = @baseURL + command

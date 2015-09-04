@@ -23,7 +23,7 @@ define [
 				@taskDelegate.taskDidClick(@, e)
 		handleAction: (e) ->
 			# Actual trigger logic
-			return if !@taskDelegate?
+			return false if !@taskDelegate?
 			
 			self = @
 			if $(e.currentTarget).hasClass("complete-button") and _.isFunction(@taskDelegate.taskCardDidComplete)
