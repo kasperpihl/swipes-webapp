@@ -46,7 +46,7 @@ define ["underscore",
 				#if @$el.hasClass "show-datepicker"
 				elNumber = parseInt( e.keyCode - 48, 10 )
 				pressedKey = $('.overlay .grid > a:nth-child(' + elNumber + ')')
-				@selectOptionFromTarget(pressedKey, false)
+				@selectOptionFromTarget(pressedKey, true)
 				e.stopPropagation()
 		setTemplate: ->
 			@template = _.template ScheduleOverlayTmpl
@@ -130,7 +130,7 @@ define ["underscore",
 #			if $(e.currentTarget).attr("data-option") is "pick a date"
 #				return @showDatePicker()
 			target = $ e.currentTarget
-			@selectOptionFromTarget(target, false)
+			@selectOptionFromTarget(target, true)
 
 		setActiveMenu: (className) ->
 			$(".overlay-content .snooze-options > nav").removeClass("active")
