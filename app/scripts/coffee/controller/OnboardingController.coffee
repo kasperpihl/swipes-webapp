@@ -38,20 +38,26 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 				, 2000)
 			else if @currentEvent is "DidSendMessageToSofi"
 				setTimeout( =>
-					swipy.slackSync.sendMessageAsSofi("Awesome blossom. Now just drag and drop this message to the right to turn it into a task.", "@"+me.get("name"),  =>
+					swipy.slackSync.sendMessageAsSofi("Awesome blossom. Now just drag and drop your own message to the right to turn it into a task.", "@"+me.get("name"),  =>
 						@setCurrentEvent("WaitingForMessageToBeDropped")
 					)
 				, 1000)
 			else if @currentEvent is "DidDropMessage"
 				setTimeout( =>
-					swipy.slackSync.sendMessageAsSofi("So easy, no? Now just assign someone to take care of it, click on the assign icon in the righthand corner of the task and choose your name.", "@"+me.get("name"),  =>
+					swipy.slackSync.sendMessageAsSofi("So easy, no? Now just assign someone to take care of it, click on the assign icon in the righthand corner of the task and select your self.", "@"+me.get("name"),  =>
 						@setCurrentEvent("WaitingForAssignment")
 					)
 				, 1000)
 			else if @currentEvent is "DidAssignTask"
 				
 				setTimeout( =>
-					swipy.slackSync.sendMessageAsSofi("Stellar! The best part is that you can check all your tasks in one place. Just click on My tasks in the top left corner.", "@"+me.get("name"),  =>
-						@setCurrentEvent("ShowedMyTaskMessage")
+					swipy.slackSync.sendMessageAsSofi("To see your assigned tasks, just click on My tasks in the top left corner.", "@"+me.get("name"),  =>
+						@setCurrentEvent("WaitingForMyTasks")
 					)
 				, 1000)
+			else if @currentEvent is "DidOpenMyTasks"
+				setTimeout( =>
+					swipy.slackSync.sendMessageAsSofi("Stellar! You can remove the notifications from My Tasks by either completing or scheduling your current tasks for later. That's it from me for now.", "@"+me.get("name"),  =>
+						@setCurrentEvent("WaitingForNext")
+					)
+				, 3000)

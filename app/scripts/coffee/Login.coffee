@@ -25,18 +25,19 @@ LoginView = Backbone.View.extend
 		@$el.find("input[type=submit]").val "please wait ..."
 	removeBusyState: ->
 		$("body").removeClass "busy"
-		@$el.find("input[type=submit]").val "Continue"
+		@$el.find("input[type=submit]").val "Signup"
 	handleSubmitForm: (e) ->
 		e.preventDefault()
-		@doAction "slack"
-	doAction: (action) ->
+		@doAction "slack", e
+	doAction: (action, e) ->
 		if $("body").hasClass "busy" then return console.warn "Can't do #{action} right now — I'm busy ..."
 		@setBusyState()
 		switch action
 			when "slack"
 				token = @$el.find("#slack-token").val()
+				if e.currentTarget.id is "slack-bottom-form"
+					token = @$el.find("#slack-token-bottom").val()
 				options = {token: token}
-				console.log token
 				$.ajax( {
 					url: "https://slack.com/api/auth.test"
 					type:"POST"

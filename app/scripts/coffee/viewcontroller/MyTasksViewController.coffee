@@ -24,7 +24,8 @@ define [
 			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
-
+			if swipy.onboarding.getCurrentEvent() is "WaitingForMyTasks"
+				swipy.onboarding.setCurrentEvent("DidOpenMyTasks",true)
 		loadMainWindow: (type) ->
 			@vc?.destroy()
 			if type is "task"
