@@ -303,6 +303,10 @@ $meta-margin: 10px;
 					border-color: $red;
 						svg { fill: $red; }
 				}
+				&.now-button{
+					border-color: $yellow;
+						svg { fill: $yellow; }
+				}
 				&.complete-button{
 					border-color: $green;
 						svg { fill: $green; }

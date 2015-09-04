@@ -248,7 +248,10 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				@scheduleTask( new Date schedule )
 
 			return @get "schedule"
-
+		getDefaultSchedule: ->
+			now = new Date()
+			now.setSeconds now.getSeconds() - 1
+			return now
 		getTagStrList: ->
 			if @has "tags"
 				return _.invoke( @get( "tags" ), "get", "title" )

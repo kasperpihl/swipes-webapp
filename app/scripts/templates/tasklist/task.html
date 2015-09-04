@@ -104,13 +104,21 @@
 				<a href="#" class="assign-button" title="Assign people to this task">
 					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarAssign"></use></svg>
 				</a>
-			<% } else { %>
+			<% } else { 
+				if( state !== "scheduled") {
+			%>
 				<a href="#" class="schedule-button" title="Schedule todo">
 					<svg class="icon">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
 					</svg>
 				</a>
-			<% } 
+			<% }else { %>
+				<a href="#" class="now-button" title="Move todo to current">
+					<svg class="icon">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarNow"></use>
+					</svg>
+				</a>
+			<% }} 
 				if (state !== "completed"){ %>
 				<a href="#" class="complete-button" title="Mark task as completed">
 					<svg class="icon">

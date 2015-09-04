@@ -12,6 +12,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			@collection = collection
 			@collection.on("add remove reset change:order change:projectOrder change:schedule", @bouncedReloadWithEvent, @ )
 			Backbone.on("show-assign", @didPressAssign, @)
+			Backbone.on("move-to-now", @didMoveToNow, @)
 		reloadWithEvent: ->
 			Backbone.trigger("reload/taskhandler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
@@ -180,6 +181,14 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				swipy.slackSync.sendMessageAsSofi(sofiMessage, model.get("projectLocalId"))
 			
 			Backbone.trigger("reload/taskhandler")
+		didMoveToNow: (taskCards) ->
+			tasks = _.pluck( taskCards, "model" )
+			deferredArr = []
+			for taskCard in taskCards
+				deferredArr.push taskCard.animateWithClass("fadeOutRight")
+			$.when( deferredArr... ).then => 
+				_.invoke(tasks, "scheduleTask", tasks[0].getDefaultSchedule())
+			
 		didPressAssign: (model, e) ->
 			assignModal = new AssignModal({model: model})
 			assignModal.dataSource = @

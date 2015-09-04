@@ -32,6 +32,9 @@ define [
 				)
 			if $(e.currentTarget).hasClass("schedule-button")
 				Backbone.trigger( "show-scheduler", [@], e )
+			if $(e.currentTarget).hasClass("now-button")
+				Backbone.trigger( "move-to-now", [@], e )
+			
 			if $(e.currentTarget).hasClass("assign-button")
 				Backbone.trigger( "show-assign", @model, e)
 			false
