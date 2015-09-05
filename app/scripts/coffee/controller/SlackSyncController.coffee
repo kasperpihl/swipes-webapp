@@ -115,6 +115,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		sendMessage:(message, channel, callback) ->
 			options = {text: message, channel: channel, as_user: true, link_names: 1}
 			@apiRequest("chat.postMessage", options, (res, error) ->
+				if res and res.ok
+					if swipy.onboarding?.getCurrentEvent() is "WaitingForMessageToSofi" and channel is swipy.slackCollections.channels.slackbot().id and res.message?.user is swipy.slackCollections.users.me().id
+						swipy.onboarding.setCurrentEvent("DidSendMessageToSofi", true)
+				
 				callback?(res, error)
 			)
 		sendMessageAsSlackbot: (message, channel, callback) ->

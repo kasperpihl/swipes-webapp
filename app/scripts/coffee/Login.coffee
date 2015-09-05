@@ -27,14 +27,13 @@ LoginView = Backbone.View.extend
 		return text
 	events:
 		"click input[type=submit]": "clickedOAuth"
-		"click #oauth-button": "clickedOAuth"
 
 	setBusyState: ->
 		$("body").addClass "busy"
 		@$el.find("input[type=submit]").val "please wait ..."
 	removeBusyState: ->
 		$("body").removeClass "busy"
-		@$el.find("input[type=submit]").val "Signup"
+		@$el.find("input[type=submit]").val "LOGIN WITH SLACK"
 	handleSubmitForm: (e) ->
 		e.preventDefault()
 		@doAction "slack", e
@@ -42,32 +41,6 @@ LoginView = Backbone.View.extend
 		@slackState = @generateId(10)
 		window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess/&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=500,width=500")
 		return
-	doAction: (action, e) ->
-		if $("body").hasClass "busy" then return console.warn "Can't do #{action} right now — I'm busy ..."
-		@setBusyState()
-		switch action
-			when "slack"
-				token = @$el.find("#slack-token").val()
-				if e.currentTarget.id is "slack-bottom-form"
-					token = @$el.find("#slack-token-bottom").val()
-				options = {token: token}
-				$.ajax( {
-					url: "https://slack.com/api/auth.test"
-					type:"POST"
-					success: (data) =>
-						@removeBusyState()
-						if data and data.ok
-							@handleUserLoginSuccess(token)
-						else
-							alert(JSON.stringify(data))
-					error: (error) =>
-						@removeBusyState()
-						alert(JSON.stringify(error))
-					crossDomain: true
-					context: @
-					data: options
-					processData: true
-				})
 	handleSlackSuccess:(code, state, QueryString) ->
 		self = @
 		@setBusyState()
@@ -105,22 +78,18 @@ LoginView = Backbone.View.extend
 				processData : false
 			#console.log serData
 			$.ajax( settings )
-			
-	handleUserLoginSuccess: (token) ->
-		localStorage.setItem("slack-token", token )
-		pathName = location.origin
-
-		if(queryString && queryString.href)
-			pathName += "?href=" + queryString.href
-		if(location.hash)
-			pathName += location.hash
-		
-		location.href = pathName
-		return
-	showError: (error) ->
-		alert "something went wrong. Please try again."
 
 queryString = QueryString()
+if queryString.token
+	localStorage.setItem("slack-token", queryString.token)
+	pathName = location.origin
+
+	if(queryString && queryString.href)
+		pathName += "?href=" + queryString.href
+	if(location.hash)
+		pathName += location.hash
+	
+	location.href = pathName
 
 # Finally, instantiate a new SwipesLogin
 
