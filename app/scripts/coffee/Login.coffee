@@ -39,7 +39,7 @@ LoginView = Backbone.View.extend
 		@doAction "slack", e
 	clickedOAuth: ->
 		@slackState = @generateId(10)
-		window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess/&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=500,width=500")
+		window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess/&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=700,width=500")
 		return
 	handleSlackSuccess:(code, state, QueryString) ->
 		self = @
