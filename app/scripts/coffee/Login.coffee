@@ -26,7 +26,7 @@ LoginView = Backbone.View.extend
 			text += possible.charAt(Math.floor(Math.random() * possible.length))
 		return text
 	events:
-		"submit form": "handleSubmitForm"
+		"click input[type=submit]": "clickedOAuth"
 		"click #oauth-button": "clickedOAuth"
 
 	setBusyState: ->
@@ -70,6 +70,7 @@ LoginView = Backbone.View.extend
 				})
 	handleSlackSuccess:(code, state, QueryString) ->
 		self = @
+		@setBusyState()
 		console.log @slackState, state, QueryString
 		if state is @slackState
 			console.log code, state

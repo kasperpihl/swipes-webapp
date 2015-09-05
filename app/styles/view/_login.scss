@@ -20,14 +20,15 @@ html.login {
 		$src: "swipes-logo.png";
 		width: image-width($src) / 3;
 		height: image-height($src) / 5;
-		margin: 0.5em auto 1.5em;
+		//margin: 0.5em auto 1.5em;
+		margin: 0 auto 30px;
 
 		@include breakpoint(min-height, 600px) {
-			height: image-height($src) / 4;
-			margin: 5em auto 3em;
+			//height: image-height($src) / 4;
+			//margin: 5em auto 3em;
 		}
 		@include breakpoint(min-height, 800px){
-			margin-bottom:6em;
+			//margin-bottom:6em;
 		}
 
 		background: image-url($src) no-repeat top center;
@@ -38,56 +39,43 @@ html.login {
 		}
 	}
 	#login{
-
-	}
-	#how-to{
-		border-top: 1px solid $unselected-color;
-		margin-top: 70px;
-		color: $sidebar-dark-color;
-		h1.guide-title{
-			font: 26px $font-normal;
-			margin-top: 50px;
-		}
-		.step{
-			&.step-1{
-				padding-top: 30px;
-			}
-			&.last-step{
-				padding-bottom: 130px;
-			}
-			padding-top:30px;
-			h1{
-				font: 24px $font-normal;
-				margin-bottom: 0;
-			}
-			h2{
-				font: 16px $font-normal;
-				margin-top:0;
-			}
-			form{
-				margin-top:10px;
-			}
-		}
-	}
-	#login > h3 {
-		letter-spacing: 1px;
-		color: $text-gray;
-		font-size: 0.6em;
-		@include breakpoint(max-height, 700px) {
+		margin: 0 auto;
+		background: url("img/swipes-ui-team-splash-screen-horizontal-medium.png") no-repeat;
+		background-size: 700px 375px;
+		width: 700px;
+		position:relative;
+		height: 375px;
+		input[type=submit]{
+			padding: 1.0em;
+			background: $red; //#1B1E23;
+			border: 0px solid #424448;
+			border-top: 2px solid $red;
+			outline: none;
 			
-		}
-		@include breakpoint(min-height, 1000px) { margin-bottom: 0.6em; }
-		font-family: $font-normal;
-		> a{
-			text-decoration: underline;
-		}
-		> a:hover{
-			cursor:pointer;
-			text-decoration: none;
+			@include border-radius(emCalc(10px));
+			color: white;
+			font: 0.7em/1 $font-bold;
+			text-transform: uppercase;
+			position: absolute;
+			bottom:66px;
+			right: 73px;
+			max-width: 160px;
+
+			@include breakpoint(min-height, 800px) {
+//				padding: 0.65em;
+				margin-top: emCalc(32px);
+//				font-size: 1.4em;
+			}
+
+			@include transition(background 0.15s ease-out);
+
+			&:hover {
+				opacity:0.85;
+			}
 		}
 	}
 
-	input {
+/*	input {
 		padding: emCalc(20px);
 		padding-top: emCalc(28px);
 		margin-bottom: emCalc(13px);
@@ -127,7 +115,7 @@ html.login {
 			}
 		}
 	}
-
+*/
 	form {
 		margin-bottom: emCalc(5px);
 	}
@@ -187,43 +175,6 @@ html.login {
 			}
 		}
 	}
-}
-
-.plus-required {
-	display: none;
-
-	.wrap {
-		background: $red;
-		padding: 0.2em 3em 1.5em;
-		border-radius: 0.5em;
-		margin-bottom: 2.5em;
-
-		a {
-			color: inherit;
-			text-decoration: underline;
-
-			&:hover {
-				color: lighten($red, 30%);
-			}
-		}
-	}
-
-	h2 {
-		font-family: $font-light;
-		text-transform: uppercase;
-		font-size: 1.5em;
-		line-height: 1em;
-		margin-bottom: 1em;
-
-		span {
-			margin-right: 0.6em;
-			padding: 0.6em 0.5em 0.35em;
-			font-size: 0.8em;
-			border: thin solid white;
-			border-radius: 0.2em;
-		}
-	}
-
 }
 
 html.login .round-btn.inverted:hover {
