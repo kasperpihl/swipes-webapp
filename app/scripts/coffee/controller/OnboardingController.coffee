@@ -17,13 +17,6 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 			me = swipy.slackCollections.users.me()
 			return if !me
 			if !@currentEvent?
-				welcomeModal = new WelcomeModal()
-				welcomeModal.render()
-				welcomeModal.presentModal({opaque: true, closeOnClick: false}, =>
-					swipy.router.navigate("im/slackbot",{trigger: true})
-					@setCurrentEvent("ShowedWelcome", true)
-				)
-			else if @currentEvent is "ShowedWelcome"
 				setTimeout( =>
 					swipy.slackSync.sendMessageAsSlackbot("Hey, fellows. You know what, even bots need love. Meet my awesome girlfriend s.o.f.i. She’s your team collaboration wizard who will also help you to get a hold of your personal workflow.", "@"+me.get("name"), =>
 						setTimeout( =>
