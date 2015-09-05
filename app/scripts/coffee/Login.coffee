@@ -27,6 +27,8 @@ LoginView = Backbone.View.extend
 		return text
 	events:
 		"submit form": "handleSubmitForm"
+		"click #oauth-button": "clickedOAuth"
+
 	setBusyState: ->
 		$("body").addClass "busy"
 		@$el.find("input[type=submit]").val "please wait ..."
@@ -36,13 +38,13 @@ LoginView = Backbone.View.extend
 	handleSubmitForm: (e) ->
 		e.preventDefault()
 		@doAction "slack", e
+	clickedOAuth: ->
+		@slackState = @generateId(10)
+		window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess/&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=500,width=500")
+		return
 	doAction: (action, e) ->
 		if $("body").hasClass "busy" then return console.warn "Can't do #{action} right now — I'm busy ..."
 		@setBusyState()
-		###if e.currentTarget.id is "slack-bottom-form"
-			@slackState = @generateId(10)
-			window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=500,width=500")
-			return###
 		switch action
 			when "slack"
 				token = @$el.find("#slack-token").val()
@@ -66,9 +68,9 @@ LoginView = Backbone.View.extend
 					data: options
 					processData: true
 				})
-	handleSlackSuccess:(code, state) ->
+	handleSlackSuccess:(code, state, QueryString) ->
 		self = @
-		console.log @slackState, state
+		console.log @slackState, state, QueryString
 		if state is @slackState
 			console.log code, state
 			serverData = JSON.stringify {code: code}
@@ -88,9 +90,11 @@ LoginView = Backbone.View.extend
 						
 						location.href = pathName
 					else
+						console.log data
 						alert("An error occured logging in to Slack")
 				error : ( error ) ->
 					self.removeBusyState()
+					console.log error
 					alert("An error occured logging in to Slack")
 				dataType : "json"
 				contentType: "application/json; charset=utf-8"

@@ -181,17 +181,13 @@ require(["jquery", "backbone"], function($) {
             if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
                 // Browser downloaded a new app cache.
                 if (confirm('A new version of this site is available. Load it?')) {
+                    appCache.swapCache(); 
                     window.location.reload();
                 }
             } else {
                 // Manifest didn't changed. Nothing new to server.
             }
         }, false);
-        if(appCache.status != appCache.UNCACHED)
-            appCache.update(); // Attempt to update the user's cache.
-        if (appCache.status == window.applicationCache.UPDATEREADY) {
-            appCache.swapCache();  // The fetch was successful, swap in the new cache.
-        }
     }
     
     window.$ = window.jQuery = $;

@@ -1,4 +1,4 @@
-define ["underscore"], () ->
+define ["underscore"], (_) ->
     class BridgeController
         constructor: ->
             _.bindAll( @, "connectedBridge", "callHandler" )

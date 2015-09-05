@@ -23,10 +23,10 @@
 		window.liveEnvironment = !!( location.host === "web.swipesapp.com" );
 		if (window.liveEnvironment && window.location.protocol != "https:")
 			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
-		/**if (window.require) {
+		if (window.require) {
 			window.nodeRequire = window.require;
 			delete window.require;
-		}**/
+		}
 	</script>
 	<script type="text/javascript">
 	  (function(e,t){var r=e.amplitude||{};var n=t.createElement("script");n.type="text/javascript";
@@ -38,11 +38,11 @@
 	  amplitude.init("97942a9a628d261514a77cd97c500afb");
 	</script>
 	<script type="text/javascript">
-        /*if (window.process != null){
+        if (window.process != null){
         	if(process.versions['electron']) {
             	window.$ = window.jQuery = nodeRequire('jquery');
         	}
-        }*/
+        }
     </script>
 	<script async src='//www.google-analytics.com/analytics.js'></script>
 	<script>
@@ -207,8 +207,6 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 		<ul class="moved-items">
 		</ul>
 	</div>
-	<div id="fb-root"></div>
- 	<script type="text/javascript" async src="//platform.twitter.com/widgets.js"></script>
 
 	<!-- build:js scripts/main.js -->
 	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>

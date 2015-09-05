@@ -1,4 +1,4 @@
-define [], () ->
+define ["underscore"], (_) ->
 	Backbone.View.extend
 		presentModal: (options, callback) ->
 			self = @

@@ -1,4 +1,4 @@
-define [], () ->
+define ["underscore"], (_) ->
 	MainRouter = Backbone.Router.extend
 		routes:
 			"add": "add"

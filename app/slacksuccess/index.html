@@ -23,7 +23,7 @@ var QueryString = function () {
   } 
     return query_string;
 } ();
-window.opener.loginView.handleSlackSuccess(QueryString.code, QueryString.state);
+window.opener.loginView.handleSlackSuccess(QueryString.code, QueryString.state, QueryString);
 window.close()
 </script>
 </head>
