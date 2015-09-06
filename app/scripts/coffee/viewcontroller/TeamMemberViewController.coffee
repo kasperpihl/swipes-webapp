@@ -9,12 +9,14 @@ define [
 		initialize: ->
 			Backbone.on( "create-task", @createTask, @ )
 		render: ->
-			@$el.html ""
+			@$el.html "Loading"
 			$("#main").html(@$el)
 
 			swipy.rightSidebarVC.reload()
-			@loadMainWindow(@mainView)
-			
+			#@loadMainWindow(@mainView)
+			setTimeout( => 
+				@loadMainWindow(@mainView)
+			, 5)
 
 		open: (options) ->
 			@identifier = options.id

@@ -19,6 +19,8 @@ define [
 			@listenTo( Backbone, "reload/chathandler", @bouncedRender )
 			_.bindAll(@, "checkIsRead")
 			@hasRendered = false
+			@sectionsByTitle = {}
+			@chatsBySectionByTimestamp = {}
 		remove: ->
 			@cleanUp()
 			@$el.empty()
@@ -44,8 +46,9 @@ define [
 				shouldScrollToBottom = true
 			shouldScrollToBottom = true if @isScrolledToBottom()
 
-			@$el.html ""
-			$(@targetSelector).html( @$el )
+			if !@hasRendered	
+				@$el.html ""
+				$(@targetSelector).html( @$el )
 
 
 			numberOfSections = 1
@@ -54,21 +57,28 @@ define [
 			if _.isFunction(@dataSource.chatListNumberOfSections)
 				numberOfSections = @dataSource.chatListNumberOfSections( @ )
 
-			
+			startTime = new Date().getTime()
 			for section in [1 .. numberOfSections]
-				
 				# Load messages and titles for section
 				sectionData = @dataSource.chatListDataForSection( @, section )
 				continue if !sectionData or !sectionData.messages.length
 
 				lastSender = false
 				lastUnix = 0
+				renderSession = false
 
-				# Instantiate 
-				section = new Section()
-				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
+				# Instantiate
+				section = @sectionsByTitle[sectionData.leftTitle]
+				if !section
+					section = new Section()
+					@sectionsByTitle[sectionData.leftTitle] = section
+					@chatsBySectionByTimestamp[sectionData.leftTitle] = {}
+					section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
+					renderSession = true
+
 				sectionEl = section.$el.find('.section-list')
 
+				chatReference = @chatsBySectionByTimestamp[sectionData.leftTitle]
 				for chat in sectionData.messages
 					numberOfChats++
 					if !@removeUnreadIfSeen and @unread and chat.get("ts") is @unread.ts
@@ -79,8 +89,12 @@ define [
 							@unread = new Unread()
 							sectionEl.append( @unread.el )
 							@unread.ts = chat.get("ts")
-					chatMessage = new ChatMessage({model: chat})
-					
+					chatMessage = chatReference[chat.get("ts")]
+					renderChat = false
+					if !chatMessage
+						chatMessage = new ChatMessage({model: chat})
+						chatReference[chat.get("ts")] = chatMessage
+						renderChat = true
 					sender = chat.get("user")
 					sender = chat.get("bot_id") if !sender
 					sender = chat.get("username") if !sender
@@ -96,15 +110,13 @@ define [
 						chatMessage.isFromSameSender = false
 					lastSender = sender
 					lastUnix = unixStamp
-
 					
 					if @chatDelegate?
 						chatMessage.chatDelegate = @chatDelegate
 					chatMessage.render()
-					sectionEl.append( chatMessage.el )
+					sectionEl.append( chatMessage.el ) if renderChat
 					lastChat = chat
-
-				@$el.append section.el
+				@$el.append section.el if renderSession
 			if !@unread? and lastChat? and unixStamp > @lastRead
 				if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
 					@delegate.chatListMarkAsRead( @ )
@@ -115,16 +127,17 @@ define [
 					@dragHandler = new DragHandler()
 					@dragHandler.enableFullScreenTaskList = true
 					@dragHandler.delegate = @dragDelegate
-
-				@dragHandler.createDragAndDropElements(".chat-item")
+					@dragHandler?.createDragAndDropElements(".chat-item.new")
+					@$el?.find(".chat-item.new").removeClass("new")
+			
 			if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
 			@moveToBottomIfNeeded()
 			if @unread?
 				$(".chat-list-container-scroller").on("scroll.chatlist", @checkIsRead)
 				@checkIsRead()
-
 			@hasRendered = true
+			
 			
 		isScrolledToBottom: ->
 			return ($(".chat-list-container-scroller").scrollTop() + $(".chat-list-container-scroller").height() >= $(".chat-list").outerHeight())

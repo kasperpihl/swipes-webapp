@@ -14,7 +14,9 @@ define [
 			$("#main").html(@$el)
 			
 			swipy.rightSidebarVC.reload()
-			@loadMainWindow(@mainView)
+			setTimeout( => 
+				@loadMainWindow(@mainView)
+			, 5)
 
 		open: (options) ->
 			@identifier = options.id

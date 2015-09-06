@@ -17,11 +17,13 @@ define [
 			@template = _.template MessageTmpl, {variable: "data" }
 			@attTemplate = _.template AttachmentsTmpl, {variable: "data"}
 			_.bindAll(@, "render")
+			@new = true
 			@model.on("change:likes change:timestamp change:text change:attachments", @render )
 		render: ->
 			@$el.attr('id', "message-"+@model.id )
+			@$el.addClass("new") if @new
 			@$el.html @template( message: @model, isFromSameSender: @isFromSameSender, attTmpl: @attTemplate )
-
+			@new = false
 			return @
 		clickedLink: (e) ->
 			href = $(e.currentTarget).attr("href")
