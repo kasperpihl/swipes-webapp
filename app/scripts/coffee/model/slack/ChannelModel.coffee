@@ -42,6 +42,9 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			if !model
 				if increment and message.user isnt swipy.slackCollections.users.me().id
 					@save("unread_count_display", @get("unread_count_display")+1)
+					if @get("is_im") and @getName() is "slackbot"
+						swipy.sync.bouncedSync()
+						console.log "bounced sync from sofi"
 					if @get("is_im") and @getName() isnt swipy.activeId
 						if !swipy.bridge.bridge # OR you were mentioned in the task /TODO:
 							Backbone.trigger("play-new-message")

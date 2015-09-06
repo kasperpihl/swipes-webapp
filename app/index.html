@@ -630,7 +630,9 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 						</div>
 						<script>
 							setTimeout(function(){
-								document.getElementById("reload-button").style.display = '';
+								var el = document.getElementById("reload-button");
+								if(el)
+									el.style.display = '';
 							}, 5000)
 						</script>
 					</div>				
@@ -680,7 +682,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 	</div>
 
 	<!-- build:js scripts/main.js -->
-	<!--<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
 	<!-- endbuild -->
 </body>
 </html>
