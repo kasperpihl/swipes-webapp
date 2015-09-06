@@ -38,7 +38,7 @@ define ["underscore",
 			@dismissModal()
 			return
 			@assignPerson(memberId).then( =>
-					
+				
 			)
 		assignPerson: (href, callback) ->
 			dfd = new $.Deferred()

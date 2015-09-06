@@ -179,10 +179,10 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			model.completeTask()
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
-				if model.get("projectLocalId").startsWith("D")
+				###if model.get("projectLocalId").startsWith("D")
 					channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
 					if channel
-						targetChannel = "@" + channel.getName()
+						targetChannel = "@" + channel.getName()###
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";

@@ -50,9 +50,9 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 					@save("unread_count_display", @get("unread_count_display")+1)
 					if @get("is_im") and @getName() is "slackbot"
 						console.log message
-						swipy.sync.bouncedSync()
+						swipy.sync.shortBouncedSync()
 						console.log "bounced sync from sofi"
-					if @get("is_im") and @getName() isnt swipy.activeId
+					if @get("is_im") and (!swipy.isWindowOpened or @getName() isnt swipy.activeId)
 						if !swipy.bridge.bridge # OR you were mentioned in the task /TODO:
 							Backbone.trigger("play-new-message")
 						else
@@ -71,7 +71,6 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 						model.save(message.message)
 					else
 						model.save(message)
-
 		markAsRead: ->
 			collection = @get("messages")
 			options = {channel: @id }

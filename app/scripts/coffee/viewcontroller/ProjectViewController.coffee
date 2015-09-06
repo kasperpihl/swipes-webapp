@@ -10,7 +10,7 @@ define [
 		initialize: ->
 			Backbone.on( "create-task", @createTask, @ )
 		render: (el) ->
-			@$el.html ""
+			@$el.html "<div style=\"text-align:center; margin-top:100px;\">Loading</div>"
 			$("#main").html(@$el)
 			
 			swipy.rightSidebarVC.reload()

@@ -26,6 +26,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				if localStorage.getItem("syncLastUpdate")?
 					@lastUpdate = localStorage.getItem("syncLastUpdate")
 			@bouncedSync = _.debounce( @sync, 1500 )
+			@shortBouncedSync = _.debounce( @sync, 50 )
 			@currentSyncing = null
 			@firstSync = false
 			@util = new Utility()

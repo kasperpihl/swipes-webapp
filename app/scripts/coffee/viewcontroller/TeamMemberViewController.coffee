@@ -9,11 +9,10 @@ define [
 		initialize: ->
 			Backbone.on( "create-task", @createTask, @ )
 		render: ->
-			@$el.html "Loading"
+			@$el.html "<div style=\"text-align:center; margin-top:100px;\">Loading</div>"
 			$("#main").html(@$el)
 
 			swipy.rightSidebarVC.reload()
-			#@loadMainWindow(@mainView)
 			setTimeout( => 
 				@loadMainWindow(@mainView)
 			, 5)

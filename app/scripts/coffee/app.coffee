@@ -44,6 +44,8 @@ define [
 				
 		constructor: ->
 			##@tags.fetch()
+			@isOpened = true
+			_.bindAll(@, "openedWindow", "closedWindow")
 			$(window).focus @openedWindow
 			$(window).blur @closedWindow
 			$(window).on( "resize", @resizedWindow )
@@ -137,9 +139,10 @@ define [
 			Backbone.trigger("resized-window")
 		closedWindow: ->
 			Backbone.trigger("closed-window")
+			@isWindowOpened = false
+
 		openedWindow: ->
 			Backbone.trigger("opened-window")
-			if swipy?
-				swipy.sync.sync()
-				swipy.userController?.fetchUser()
+			@isWindowOpened = true
+			@sync?.sync()
 			
