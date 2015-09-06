@@ -6,9 +6,6 @@ define ["underscore"], (_) ->
 		constructor: ->
 			@init()
 		init: ->
-			analyticsKey = 'UA-41592802-7'
-			@screens = []
-			@customDimensions = {}
 			@loadedIntercom = false
 
 			@user = swipy.slackCollections.users.me()
@@ -37,13 +34,15 @@ define ["underscore"], (_) ->
 				platform = "Mac"
 			ga('set', {"dimension7": platform})
 			ga('send', 'event', category, action, label, value)
+		logEvent: (name, data) ->
+			amplitude.logEvent(name, data)
 		sendEventToIntercom: (eventName, metadata) ->
 			Intercom('trackEvent', eventName, metadata )
 		updateIdentity: ->
-			gaSendIdentity = {}
+			if @user? and @user.id
+				amplitude.setUserId(@user.id)
+				
 			intercomIdentity = {}
-			
-
 			if swipy?
 				intercomIdentity["slack_user"] = true
 
