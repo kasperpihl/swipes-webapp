@@ -1,4 +1,4 @@
-$task-new-task-height: 60px;
+$task-new-task-height: 70px;
 .add-task-container{
 	position: absolute;
 	width:100%;
@@ -185,11 +185,41 @@ $meta-margin: 10px;
 .add-task-card-container {
 	margin-bottom:20px;
 	max-width: 400px;
+
 	width:90%;
 	margin: 0 auto;
-	padding-top: 6px;
+	padding-top: 0px;
 	.card-container{
-		padding: 5px;
+		@include no-box-shadow();
+		background: transparent;
+		border: 2px solid rgba(27,30,35,0.1);
+		padding: 0px;
+		.inner-container{
+			padding: 11px;
+			margin-right: 35px;
+			border-right: 2px solid rgba(27,30,35,0.1);
+		}
+		.right-button-container{
+			position: absolute;
+			width: 34px;
+			height: 100%;
+			top:0;
+			right:0;
+			svg{
+				height: 24px;
+				width: 24px;
+				position:absolute;
+				right: 6px;
+				fill: rgba(27,30,35,0.2);
+				top: 50%;
+				margin-top: -11px;
+			}
+			&:hover{
+				svg{
+					fill: rgba(27,30,35,0.5);
+				}
+			}
+		}
 		input {
 			background-color: transparent;
 			$height: 32px;

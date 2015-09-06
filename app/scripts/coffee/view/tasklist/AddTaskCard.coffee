@@ -9,6 +9,7 @@ define ["underscore"
 			@render()
 		events:
 			"keyup input": "saveTask"
+			"click .right-button-container": "triggerAddTask"
 		render: ->
 			@$el.html @template({ placeHolder: @placeHolder})
 			@delegateEvents()
