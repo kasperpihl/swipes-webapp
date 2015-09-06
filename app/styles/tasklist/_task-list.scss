@@ -1,4 +1,4 @@
-$task-new-task-height: 70px;
+$task-new-task-height: 61px;
 .add-task-container{
 	position: absolute;
 	width:100%;
@@ -195,7 +195,8 @@ $meta-margin: 10px;
 		border: 2px solid rgba(27,30,35,0.1);
 		padding: 0px;
 		.inner-container{
-			padding: 11px;
+			padding: 8px;
+			padding-left: 14px;
 			margin-right: 35px;
 			border-right: 2px solid rgba(27,30,35,0.1);
 		}
@@ -210,20 +211,20 @@ $meta-margin: 10px;
 				width: 24px;
 				position:absolute;
 				right: 6px;
-				fill: rgba(27,30,35,0.2);
+				fill: rgba(27,30,35,0.5);
 				top: 50%;
 				margin-top: -11px;
 			}
 			&:hover{
 				svg{
-					fill: rgba(27,30,35,0.5);
+					fill: rgba(27,30,35,0.8);
 				}
 			}
 		}
 		input {
 			background-color: transparent;
 			$height: 32px;
-			$font-size: 14px;
+			$font-size: 12px;
 			
 			font-family: $font-normal;
 			font-size: $font-size;
