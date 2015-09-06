@@ -81,6 +81,18 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				if !subtask.get("completionDate")
 					uncompletedSubtasks.push(subtask)
 			uncompletedSubtasks
+		getType: ->
+			type = "Personal"
+			projectLocalId = @get("projectLocalId")
+			if projectLocalId
+				if projectLocalId.startsWith("D")
+					type = "DM"
+				if projectLocalId.startsWith("C")
+					type = "Channel"
+				if projectLocalId.startsWith("G")
+					type = "Group"
+			type
+
 		hasSubtask: ( model ) ->
 			currentSubtasks = @get "subtasksLocal"
 			return false if !currentSubtasks

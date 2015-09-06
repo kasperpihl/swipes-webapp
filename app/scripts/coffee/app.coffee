@@ -83,8 +83,8 @@ define [
 		init: ->
 			@cleanUp()
 			@analytics = new AnalyticsController()
-			@analytics.logEvent("Opened App")
-			
+			@analytics.logEvent("[Session] Opened App")
+
 			@notificationModel = new NotificationModel({id: 1})
 			@leftSidebarVC = new LeftSidebarViewController()
 			@topbarVC = new TopbarViewController()

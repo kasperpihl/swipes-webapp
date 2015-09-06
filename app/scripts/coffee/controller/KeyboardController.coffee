@@ -24,11 +24,6 @@ define ["underscore"], (_) ->
 							e.preventDefault()
 						return
 					if e.keyCode is 188
-						if confirm "Are you sure you want to log out?"
-							localStorage.clear()
-							Parse.User.logOut()
-							location.href = "/loginslack/"
-						return
 						if Backbone.history.fragment isnt "settings"
 							swipy.router.navigate("settings", true)
 						e.preventDefault()

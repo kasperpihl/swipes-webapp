@@ -40,14 +40,14 @@ LoginView = Backbone.View.extend
 	clickedOAuth: ->
 
 		@slackState = @generateId(10)
-		amplitude.logEvent "Clicked Login Button"
-		#window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess/&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=700,width=500")
+		amplitude.logEvent "[Login] Clicked Login Button"
+		window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess/&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=700,width=500")
 		
 		return
 	handleSlackSuccess:(code, state, QueryString) ->
 		self = @
 		@setBusyState()
-		amplitude.logEvent "Successfully Logged In"
+		amplitude.logEvent "[Login] Successfully Logged In"
 		if state is @slackState
 			console.log code, state
 			serverData = JSON.stringify {code: code}
@@ -81,7 +81,7 @@ LoginView = Backbone.View.extend
 				processData : false
 			#console.log serData
 			$.ajax( settings )
-amplitude.logEvent "Opened Login"
+amplitude.logEvent "[Login] Opened Login"
 queryString = QueryString()
 if queryString.token
 	localStorage.setItem("slack-token", queryString.token)

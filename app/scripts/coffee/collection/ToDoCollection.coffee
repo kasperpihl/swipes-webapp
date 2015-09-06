@@ -49,6 +49,11 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 				swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			newTodo.save({}, {sync:true})
 
+			from = "Input"
+			from = options.from if options.from?
+
+
+			swipy.analytics.logEvent("[Engagement] Added Task", {"Type": newTodo.getType(), "From": from})
 			swipy.analytics.sendEventToIntercom( "Added Task", { "From": "Input", "Length": title.length } )
 
 			newTodo

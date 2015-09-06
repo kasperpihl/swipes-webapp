@@ -19,6 +19,8 @@ define [
 					viewController.open( options )
 					@currentControllerName = viewcontroller
 					@currentViewController = viewController
+			swipy.activeId = options.id
+			console.log "active", options.id
 			if viewcontroller is "im"
 				viewcontroller = "member"
 			Backbone.trigger("set-active-menu", "sidebar-"+viewcontroller + "-" + options.id)

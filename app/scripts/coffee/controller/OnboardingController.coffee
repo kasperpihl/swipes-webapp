@@ -32,12 +32,14 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 						@setCurrentEvent("WaitingForMessageToBeDropped")
 					)
 				, 1000)
+				swipy.analytics.logEvent("[Onboard] Wrote Task")
 			else if @currentEvent is "DidDropMessage"
 				setTimeout( =>
 					swipy.slackSync.sendMessageAsSofi("So easy, no? Now assign a person to take care of it by clicking on the assign icon in the righthand corner of the task and select yourself or Slackbot. Though he's probably not getting it done.", "@"+me.get("name"),  =>
 						@setCurrentEvent("WaitingForAssignment")
 					)
 				, 1000)
+				swipy.analytics.logEvent("[Onboard] Dragged Message")
 			else if @currentEvent is "DidAssignTask"
 				
 				setTimeout( =>
@@ -45,9 +47,12 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 						@setCurrentEvent("WaitingForMyTasks")
 					)
 				, 1000)
+				swipy.analytics.logEvent("[Onboard] Assigned Task")
 			else if @currentEvent is "DidOpenMyTasks"
 				setTimeout( =>
 					swipy.slackSync.sendMessageAsSofi("Stellar! You can remove the notifications from My Tasks by either completing or scheduling your current tasks for later. That's it from me for now.", "@"+me.get("name"),  =>
 						@setCurrentEvent("WaitingForNext")
 					)
 				, 3000)
+				swipy.analytics.logEvent("[Onboard] Opened My Tasks")
+				swipy.analytics.logEvent("[Onboard] Completed")
