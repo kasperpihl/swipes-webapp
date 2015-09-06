@@ -31,7 +31,6 @@ define ["underscore", "js/model/extra/ScheduleModel", "js/view/modal/ScheduleMod
 			$.when( deferredArr... ).then => 
 				_.invoke(@currentTasks, "scheduleTask", date)
 			analyticsOptions =  @getAnalyticsDataFromOption( option, date )
-			swipy.analytics.sendEvent( "Tasks", "Snoozed", analyticsOptions["Button Pressed"], analyticsOptions["Number of days ahead"])
 			swipy.analytics.sendEventToIntercom( 'Snoozed Tasks', analyticsOptions )
 
 		getAnalyticsDataFromOption: (option, date) ->

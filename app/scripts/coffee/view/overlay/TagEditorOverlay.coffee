@@ -59,12 +59,8 @@ define ["underscore", "js/view/Overlay", "js/model/sync/TagModel", "text!templat
 
 			if remove
 				@removeTagFromModels tag
-				swipy.analytics.sendEvent( "Tags", "Unassigned", "Select Tasks", 1)
-				swipy.analytics.sendEventToIntercom( "Unassign Tags", { "From": "Select Tasks", "Number of Tasks": @options.models.length, "Number of Tags": 1 })
 			else 
 				@addTagToModels( tag, no )
-				swipy.analytics.sendEvent( "Tags", "Assigned", "Select Tasks", 1)
-				swipy.analytics.sendEventToIntercom( "Assign Tags", { "From": "Select Tasks", "Number of Tasks": @options.models.length, "Number of Tags": 1 })
 		createTag: (e) ->
 			e.preventDefault()
 			tagName = @$el.find("form.add-tag input").val()
@@ -78,8 +74,6 @@ define ["underscore", "js/view/Overlay", "js/model/sync/TagModel", "text!templat
 				tag = @getTagFromName tagName
 				if not tag and addToCollection 
 					tag = swipy.collections.tags.create { title: tagName }
-					swipy.analytics.sendEvent("Tags", "Added", "Select Tasks", tagName.length)
-					swipy.analytics.sendEventToIntercom( "Added Tag", { "From": "Select Tasks", "Length": tagName.length })
 					tag.save({}, {sync:true})
 				@addTagToModel( tag, model ) for model in @options.models
 

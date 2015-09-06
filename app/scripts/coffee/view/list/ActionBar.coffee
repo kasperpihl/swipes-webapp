@@ -89,8 +89,6 @@ define ["underscore", "js/view/overlay/TagEditorOverlay"], (_, TagEditorOverlay)
 				for model in selectedTasks
 					model.deleteObj()
 				@hide()
-				swipy.analytics.sendEvent( "Tasks", "Deleted", "", selectedTasks.length )
-				swipy.analytics.sendEventToIntercom( "Deleted Tasks", { "Number of Tasks": selectedTasks.length })
 				return if !@delegate?
 				if _.isFunction(@delegate.didDeleteTasks)
 					@delegate.didDeleteTasks(selectedTasks.length)
@@ -116,6 +114,3 @@ define ["underscore", "js/view/overlay/TagEditorOverlay"], (_, TagEditorOverlay)
 			emailString += encodeURIComponent "\r\nCreated with Swipes – Task list made for High Achievers\r\nhttp://swipesapp.com"
 
 			location.href = emailString
-
-			swipy.analytics.sendEvent( "Share Task", "Opened", "", selectedTasks.length )
-			swipy.analytics.sendEventToIntercom( "Share Task Opened", {"Number of Tasks": selectedTasks.length })

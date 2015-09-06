@@ -62,12 +62,6 @@ define ["underscore"], (_) ->
 				options["action"] = action
 			Backbone.trigger( "open/viewcontroller", "tasks", options )
 			@setLastMainView()
-			eventName = switch id
-				when "now" then "Now Tab"
-				when "later" then "Later Tab"
-				when "done" then "Done Tab"
-
-			swipy.analytics.pushScreen eventName
 		channel: ( id, action, actionId ) ->
 			options = { id: id, action: action, actionId: actionId }
 			Backbone.trigger( "open/viewcontroller", "channel", options )
@@ -88,11 +82,9 @@ define ["underscore"], (_) ->
 
 			Backbone.trigger( "edit/task", taskId )
 			@setLastMainView()
-			swipy.analytics.pushScreen "Edit Task"
 		settings: (subview) ->
 			Backbone.trigger "show-settings"
 			if subview then Backbone.trigger( "settings/view", subview )
-			else swipy.analytics.pushScreen "Settings menu"
 		updateHistory: (me, page, subpage) ->
 			if @history.length is 0 and page isnt "edit" and page isnt "tasks" and page isnt "channel" and page isnt "im" and page isnt "group"
 				Backbone.trigger( "open/viewcontroller", "tasks", {id:"now", onlyInstantiate: true} )

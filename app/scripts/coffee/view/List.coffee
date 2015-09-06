@@ -448,7 +448,6 @@ define [
 						m.completeTask()
 						compFunc()
 
-			swipy.analytics.sendEvent("Tasks", "Completed", "",  tasks.length)
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Number of Tasks": tasks.length })
 			
 		markTasksAsTodo: (model, shouldSelectNext) ->

@@ -133,8 +133,6 @@ define ["underscore"
 			notes = @getNotesFromHtml()
 			if notes != @model.get "notes"
 				@model.updateNotes notes
-				swipy.analytics.sendEvent("Tasks", "Notes", "", notes.length )
-				swipy.analytics.sendEventToIntercom("Update Note", { "Length": notes.length })
 			@renderNotes()
 		replaceURLsWithHTML: (text, addDiv, addBr)->
 			finalString = text
@@ -350,8 +348,6 @@ define ["underscore"
 			action = "delete" if target.hasClass("delete")
 			if action is "complete"
 				model.completeTask()
-				swipy.analytics.sendEvent( "Action Steps", "Completed" )
-				swipy.analytics.sendEventToIntercom( "Completed Action Step" )
 			else if action is "delete"
 				if confirm "Delete action step?"
 					model.deleteObj()

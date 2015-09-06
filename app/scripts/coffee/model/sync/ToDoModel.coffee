@@ -103,9 +103,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			currentSubtasks = @getOrderedSubtasks()
 			parentLocalId = @id
 			order = currentSubtasks.length
-			if from
-				swipy.analytics.sendEvent( "Action Steps", "Added", from, title.length )
-				swipy.analytics.sendEventToIntercom( "Added Action Step", { "From": "Input", "Length": title.length })
 			swipy.collections.todos.create { title, parentLocalId, order }
 
 			#@addSubtask newSubtask
@@ -404,8 +401,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			else
 				@save( "priority", 1 , { sync: true } )
 			if @get("priority") then priorityLabel = "On" else priorityLabel = "Off"
-			swipy.analytics.sendEvent( "Tasks", "Priority", priorityLabel )
-			swipy.analytics.sendEventToIntercom("Update Priority",  { "Assigned" : priorityLabel } )
 		scheduleTask: ( date ) ->
 			updateObj = {
 				schedule: date
@@ -467,9 +462,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			if @get( "schedule" ) and repeatOption isnt "never"
 				repeatDate =  @get "schedule"
 			@save({ repeatDate, repeatOption },{ sync: true })
-			swipy.analytics.sendEvent( "Tasks", "Recurring", repeatOption )
-			swipy.analytics.sendEventToIntercom( "Recurring Task", { "Reoccurrence": repeatOption } )
-
 		updateOrder: ( attr, order, opt ) ->
 			if attr isnt "order" and attr isnt "projectOrder"
 				throw new Error("TodoModel updateOrder: invalid order attribute")

@@ -12,12 +12,7 @@ define ["underscore"], (_) ->
 			@loadedIntercom = false
 
 			@user = swipy.slackCollections.users.me()
-			if @user? and @user.id
-				ga('create', analyticsKey, { 'userId' : @user.id } )
-			else
-				ga('create', analyticsKey, 'auto' )
 
-			ga('send', 'pageview')
 			@startIntercom()
 			@updateIdentity()
 		startIntercom: ->
@@ -44,42 +39,13 @@ define ["underscore"], (_) ->
 			ga('send', 'event', category, action, label, value)
 		sendEventToIntercom: (eventName, metadata) ->
 			Intercom('trackEvent', eventName, metadata )
-		pushScreen: (screenName) ->
-			ga('send', 'screenview', {
-  				'screenName': screenName
-			})
-			@screens.push screenName
-		popScreen: ->
-			if @screens.length
-				@screens.pop()
-				lastScreen = _.last @screens
-				return if !lastScreen?
-				ga('send', 'screenview', {
-  					'screenName': lastScreen
-				})
 		updateIdentity: ->
 			gaSendIdentity = {}
 			intercomIdentity = {}
-			intercomIdentity["slack_user"] = true
+			
 
 			if swipy?
-				recurringTasks = swipy.collections.todos.filter (m) -> m.get("repeatOption") isnt "never"
-				recurringCount = recurringTasks.length
-				currentRecurringCount = @customDimensions['recurring_tasks']
-				if currentRecurringCount isnt recurringCount
-					gaSendIdentity['dimension4'] = recurringCount
-					intercomIdentity["recurring_tasks"] = recurringCount
-
-				numberOfTags = swipy.collections.tags.length
-				currentNumberOfTags = @customDimensions['number_of_tags']
-				if currentNumberOfTags isnt numberOfTags
-					gaSendIdentity['dimension5'] = numberOfTags
-					intercomIdentity["number_of_tags"] = numberOfTags
-
-
-			if _.size( gaSendIdentity ) > 0
-				ga('set', gaSendIdentity)
-				@sendEvent("Session", "Updated Identity")
+				intercomIdentity["slack_user"] = true
 
 			if _.size( intercomIdentity ) > 0
 				Intercom("update", intercomIdentity)
