@@ -7,6 +7,12 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			messageCollection.localStorage = new Backbone.LocalStorage("MessageCollection-" + @id )
 			messageCollection.fetch()
 			@set("messages", messageCollection)
+		getMessages: ->
+			messages = @get("messages")
+			loop
+				break if messages.length < 101
+				messages.shift()
+			messages
 		getName: ->
 			return @get("name") if @get("name")
 			if @get("user") and swipy.slackCollections and swipy.slackCollections.users.get(@get("user"))
@@ -19,7 +25,7 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				apiType = "groups"
 			apiType
 		fetchMessages: (collection) ->
-			options = {channel: @id, count: 50 }
+			options = {channel: @id, count: 100 }
 			
 			collection = @get("messages")
 			collection.fetch()
