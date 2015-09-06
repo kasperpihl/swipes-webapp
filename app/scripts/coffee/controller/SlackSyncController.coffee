@@ -127,8 +127,17 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					swipy.analytics.logEvent("[Engagement] Sent Message", {"Type": type})
 				callback?(res, error)
 			)
-		uploadFile: (title, channels, file, callback, initialComment) ->
-			
+		uploadFile: (channels, file, callback, initialComment) ->
+			formData = new FormData()
+			formData.append("token", @token)
+			formData.append("channels", channels)
+			formData.append("filename", file.name)
+			formData.append("file", file);
+			console.log "upload called"
+			@apiRequest("files.upload", {}, (res, error) ->
+				console.log "response", res, error
+				callback?(res,error)
+			, formData)
 		sendMessageAsSlackbot: (message, channel, callback) ->
 			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "slackbot", icon_url: "http://team.swipesapp.com/styles/img/slackbot72.png" }
 			@apiRequest("chat.postMessage", options, (res, error) ->
@@ -139,7 +148,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@apiRequest("chat.postMessage", options, (res, error) ->
 				callback?(res, error)
 			)
-		apiRequest: (command, options, callback) ->
+		apiRequest: (command, options, callback, formData) ->
 			url = @baseURL + command
 			options = {} if !options? or !_.isObject(options)
 			options.token = @token
@@ -162,5 +171,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				context: @
 				data : options
 				processData : true
+			if formData
+				settings.data = formData
+				settings.processData = false
+				settings.contentType = false
 			#console.log serData
 			$.ajax( settings )

@@ -144,6 +144,13 @@ define [
 			swipy.slackSync.sendMessage( message, @currentList.id)
 			@chatListVC.chatList.scrollToBottomVar = true
 			@chatListVC.chatList.removeUnreadIfSeen = true
+		newFileSelected: (newMessage, file) ->
+			swipy.slackSync.uploadFile(@currentList.id, file, (res, error) ->
+				if res and res.ok
+					console.log "success!"
+				else
+					alert("An error happened with the upload")
+			)
 		newMessageIsTyping: (newMessage ) ->
 			options = {type: "typing", channel: @currentList.id }
 			swipy.slackSync.doSocketSend(options, true)

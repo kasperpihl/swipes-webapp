@@ -11,6 +11,8 @@ define ["underscore"
 			_.bindAll(@, "pressedKey")
 		events:
 			"keyup input": "pressedKey"
+			"click .attach-button-container": "clickedAttach"
+			"change #file-input": "fileChanged"
 		render: ->
 			@$el.html @template({placeholder: @placeholder})
 			@delegateEvents()
@@ -26,7 +28,12 @@ define ["underscore"
 					@addDelegate.newMessageIsTyping( @ )
 			if e.keyCode is 13
 				@sendMessage()
-
+		clickedAttach: ->
+			$("#file-input").click()
+		fileChanged: (e) ->
+			file = $("#file-input")[0].files[0]
+			if @addDelegate? and _.isFunction(@addDelegate.newFileSelected)
+				@addDelegate.newFileSelected(@, file)
 		sendMessage: ->
 			message = @$el.find("input").val()
 			return if message.length is 0
