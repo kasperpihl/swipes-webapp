@@ -113,12 +113,18 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			if !@webSocket?
 				@start()
 		sendMessage:(message, channel, callback) ->
+			self = @
 			options = {text: message, channel: channel, as_user: true, link_names: 1}
 			@apiRequest("chat.postMessage", options, (res, error) ->
 				if res and res.ok
-					if swipy.onboarding?.getCurrentEvent() is "WaitingForMessageToSofi" and channel is swipy.slackCollections.channels.slackbot().id and res.message?.user is swipy.slackCollections.users.me().id
+					slackbotChannelId = swipy.slackCollections.channels.slackbot().id
+					if swipy.onboarding?.getCurrentEvent() is "WaitingForMessageToSofi" and channel is slackbotChannelId and res.message?.user is swipy.slackCollections.users.me().id
 						swipy.onboarding.setCurrentEvent("DidSendMessageToSofi", true)
-				
+					type = self.util.slackTypeForId(channel)
+					if type is "DM" and channel is slackbotChannelId
+						type = "Slackbot"
+					console.log "Sent Message", type
+					swipy.analytics.logEvent("[Engagement] Sent Message", {"Type": type})
 				callback?(res, error)
 			)
 		sendMessageAsSlackbot: (message, channel, callback) ->

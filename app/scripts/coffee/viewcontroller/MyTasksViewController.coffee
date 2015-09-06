@@ -49,6 +49,7 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskList.showSource = true
 			taskListVC.taskHandler.listSortAttribute = "order"
+			taskListVC.taskHandler.isMyTasksView = true
 			taskListVC.taskHandler.delegate = @
 			taskListVC.taskList.emptyTitle = "No tasks in your workspace"
 			taskListVC.taskList.emptySubtitle = "You can add Personal tasks below or assign tasks from channels and groups."

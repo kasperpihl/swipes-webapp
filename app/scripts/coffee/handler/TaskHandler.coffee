@@ -120,6 +120,8 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 					setTimeout(
 						=> _.invoke(selectedTasks, "set", "selected", false)
 					, 400)
+					isMyTasks = if @isMyTasks? then "Yes" else "No"
+					swipy.analytics.logEvent("[Engagement] Reorder Task", {"Type": draggedTask.getType(), "Is My Tasks": isMyTasks})
 					
 			else if hit.type is "project"
 				targetProject = swipy.slackCollections.channels.findWhere( {name: @projectCollectionIdFromHtmlId(hit.target)} )
@@ -178,12 +180,16 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
 				if model.get("projectLocalId").startsWith("D")
-					channel = swipy.slackCollections.users.get(model.get("projectLocalId"))
+					channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
 					if channel
 						targetChannel = "@" + channel.getName()
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
-				sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";
-				swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+					sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";
+					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+			isMyTasks = if @isMyTasks? then "Yes" else "No"
+			swipy.analytics.logEvent("[Engagement] Completed Task", {"Type": model.getType() , "Is My Tasks": isMyTasks})
+			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Type": model.getType() })
 			
 			Backbone.trigger("reload/taskhandler")
 		didMoveToNow: (taskCards) ->

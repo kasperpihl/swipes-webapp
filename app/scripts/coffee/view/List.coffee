@@ -447,9 +447,7 @@ define [
 					view.swipeRight( "completed" ).then =>
 						m.completeTask()
 						compFunc()
-
-			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Number of Tasks": tasks.length })
-			
+						
 		markTasksAsTodo: (model, shouldSelectNext) ->
 			@shouldResetLast = true
 			if shouldSelectNext

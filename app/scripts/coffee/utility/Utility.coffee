@@ -7,6 +7,17 @@ define ["underscore"], (_) ->
 			for i in [0..length]
 				text += possible.charAt(Math.floor(Math.random() * possible.length))
 			return text
+		slackTypeForId: (identifier) ->
+			return if !identifier or !identifier.length
+			determinator = identifier.charAt(0)
+			type = switch determinator
+				when "U" then "User"
+				when "D" then "DM"
+				when "G" then "Group"
+				when "C" then "Channel"
+				when "T" then "Team"
+				else null
+			return type
 		escapeHtml: (string) ->
 			entityMap = {
 				"&": "&amp;"

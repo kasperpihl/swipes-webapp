@@ -31,6 +31,7 @@ define ["underscore", "js/model/extra/ScheduleModel", "js/view/modal/ScheduleMod
 			$.when( deferredArr... ).then => 
 				_.invoke(@currentTasks, "scheduleTask", date)
 			analyticsOptions =  @getAnalyticsDataFromOption( option, date )
+			swipy.analytics.logEvent("[Engagement] Scheduled Task", analyticsOptions)
 			swipy.analytics.sendEventToIntercom( 'Snoozed Tasks', analyticsOptions )
 
 		getAnalyticsDataFromOption: (option, date) ->
@@ -45,12 +46,10 @@ define ["underscore", "js/model/extra/ScheduleModel", "js/view/modal/ScheduleMod
 					when "this weekend" then "This Weekend"
 					when "next week" then "Next Week"
 					else "Unspecified"
-
 			return {
+				"Type": @currentTasks[0].getType()
 				"Button Pressed": option
-				"Number of Tasks": @currentTasks.length
-				"Number of days ahead": @getDayDiff date
-				"Used Time Picker": "No"
+				"Days Ahead": @getDayDiff date
 			}
 		getDayDiff: (date) ->
 			# For unspecified

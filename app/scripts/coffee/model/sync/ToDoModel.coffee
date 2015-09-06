@@ -86,7 +86,10 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			projectLocalId = @get("projectLocalId")
 			if projectLocalId
 				if projectLocalId.startsWith("D")
-					type = "DM"
+					if projectLocalId is swipy.slackCollections.channels.slackbot().id
+						type = "Slackbot"
+					else
+						type = "DM"
 				if projectLocalId.startsWith("C")
 					type = "Channel"
 				if projectLocalId.startsWith("G")
@@ -126,11 +129,13 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		assign: ( userIds, save ) ->
 			if _.isString(userIds)
 				userIds = [userIds]
-			
+			me = swipy.slackCollections.users.me()			
 			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
-			
+			assignedSelf = "No"
 			currentAssignees = []
 			for userId in userIds
+				if userId is me.id
+					assignedSelf = "Yes"
 				if _.indexOf( currentAssignees, userId) is -1
 					inserted = true
 					currentAssignees.push( userId )
@@ -141,6 +146,9 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					@save saveObj, {sync:true}
 				else
 					@set saveObj, {localSync: true}
+
+
+			swipy.analytics.logEvent("[Engagement] Assigned Task", {"Type": @getType(), "To Self": assignedSelf})
 		userIsAssigned:(userId) ->
 			currentAssignees = @get "assignees"
 			return false if !currentAssignees
