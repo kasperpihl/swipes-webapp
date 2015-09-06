@@ -625,8 +625,15 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 							<div class="bounce2"></div>
 							<div class="bounce3"></div>
 						</div>
-					</div>
-					
+						<div id="reload-button" style="text-align: center; display:none; padding-top:15px; color: black;">
+							<a onclick="location.reload();" style="color:black;">reload</a>
+						</div>
+						<script>
+							setTimeout(function(){
+								document.getElementById("reload-button").style.display = '';
+							}, 5000)
+						</script>
+					</div>				
 				</div>
 				<div class="top-bar-container yellow">
 				</div>
@@ -673,7 +680,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 	</div>
 
 	<!-- build:js scripts/main.js -->
-	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+	<!--<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
 	<!-- endbuild -->
 </body>
 </html>
