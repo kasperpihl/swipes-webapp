@@ -130,7 +130,9 @@ define [
 			@chatListVC.chatList.scrollToBottomVar = true
 			@chatListVC.chatList.removeUnreadIfSeen = true
 		newFileSelected: (newMessage, file) ->
+			newMessage.setUploading(true)
 			swipy.slackSync.uploadFile(@currentList.id, file, (res, error) ->
+				newMessage.setUploading(false)
 				if res and res.ok
 					console.log "success!"
 				else

@@ -34,6 +34,8 @@ define ["underscore"
 			file = $("#file-input")[0].files[0]
 			if @addDelegate? and _.isFunction(@addDelegate.newFileSelected)
 				@addDelegate.newFileSelected(@, file)
+		setUploading: (isUploading) ->
+			@$el.find(".attach-button-container").toggleClass("isUploading", isUploading)
 		sendMessage: ->
 			message = @$el.find("input").val()
 			return if message.length is 0
