@@ -98,3 +98,7 @@ if queryString.token
 
 login = new LoginView()
 window.loginView = login
+if window.process? and process.versions['electron']
+	require('ipc').on('slack_login', (event, QueryString) ->
+		loginView.handleSlackSuccess(QueryString.code, QueryString.state, QueryString)
+	)

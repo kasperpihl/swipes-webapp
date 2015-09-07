@@ -53,13 +53,15 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 						swipy.sync.shortBouncedSync()
 						console.log "bounced sync from sofi"
 					if @get("is_im") and (!swipy.isWindowOpened or @getName() isnt swipy.activeId)
-						if !swipy.bridge.bridge # OR you were mentioned in the task /TODO:
-							Backbone.trigger("play-new-message")
-						else
+						if swipy.bridge.bridge # OR you were mentioned in the task /TODO:
 							text = "You received 1 new message"
 							text = message.text if message.text
 							title = "[Swipes] " + @getName() 
 							swipy.bridge.callHandler("notify",{title: title, message: text})
+						else if window.process? and process.versions['electron'] 
+							nodeRequire('ipc').send('newEvent', 'data');
+						else
+							Backbone.trigger("play-new-message")
 				return if(!@hasFetched? or !@hasFetched)
 				newMessage = collection.create( message )
 			else
