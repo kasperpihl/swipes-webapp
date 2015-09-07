@@ -99,6 +99,6 @@ if queryString.token
 login = new LoginView()
 window.loginView = login
 if window.process? and process.versions['electron']
-	nodeRequire('ipc').on('slack_login', (event, QueryString) ->
+	nodeRequire('ipc').on('slack_login', (QueryString) ->
 		loginView.handleSlackSuccess(QueryString.code, QueryString.state, QueryString)
 	)
