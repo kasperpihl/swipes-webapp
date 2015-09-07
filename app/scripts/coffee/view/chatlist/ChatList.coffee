@@ -53,6 +53,7 @@ define [
 
 			numberOfSections = 1
 			numberOfChats = 0
+			numberOfNewChats = 0
 			
 			if _.isFunction(@dataSource.chatListNumberOfSections)
 				numberOfSections = @dataSource.chatListNumberOfSections( @ )
@@ -95,6 +96,7 @@ define [
 						chatMessage = new ChatMessage({model: chat})
 						chatReference[chat.get("ts")] = chatMessage
 						renderChat = true
+						numberOfNewChats++
 					sender = chat.get("user")
 					sender = chat.get("bot_id") if !sender
 					sender = chat.get("username") if !sender
@@ -120,15 +122,15 @@ define [
 			if !@unread? and lastChat? and unixStamp > @lastRead
 				if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
 					@delegate.chatListMarkAsRead( @ )
-			if @enableDragAndDrop and numberOfChats > 0
+			if @enableDragAndDrop and numberOfNewChats > 0
 				if !@dragDelegate?
 					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
 				if !@dragHandler?
 					@dragHandler = new DragHandler()
 					@dragHandler.enableFullScreenTaskList = true
 					@dragHandler.delegate = @dragDelegate
-					@dragHandler?.createDragAndDropElements(".chat-item.new")
-					@$el?.find(".chat-item.new").removeClass("new")
+				@dragHandler?.createDragAndDropElements(".chat-item.new")
+				@$el?.find(".chat-item.new").removeClass("new")
 			
 			if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
