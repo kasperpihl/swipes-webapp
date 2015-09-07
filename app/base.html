@@ -1,4 +1,3 @@
-
 <!doctype html>
 <!--[if IE 8]>         <html class="no-js ie8"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" manifest="manifest.appcache"> <!--<![endif]-->
@@ -23,7 +22,7 @@
 		
 		/*if (window.liveEnvironment && window.location.protocol != "https:")
 			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);*/
-		if (window.require) {
+		if (window.process != null && process.versions['electron'] && window.require) {
 			window.nodeRequire = window.require;
 			delete window.require;
 		}

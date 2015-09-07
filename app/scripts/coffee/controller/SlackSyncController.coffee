@@ -143,8 +143,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@apiRequest("chat.postMessage", options, (res, error) ->
 				callback?(res, error)
 			)
-		sendMessageAsSofi: (message, channel, callback) ->
+		sendMessageAsSofi: (message, channel, callback, attachments) ->
 			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "s.o.f.i.", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
+			options.attachments = attachments if attachments
 			@apiRequest("chat.postMessage", options, (res, error) ->
 				callback?(res, error)
 			)
