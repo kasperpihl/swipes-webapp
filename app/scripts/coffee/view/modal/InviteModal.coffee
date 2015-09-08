@@ -41,3 +41,7 @@ define ["underscore",
 				dfd.resolve()
 			, 300)
 			return dfd.promise()
+		didCloseModal: ->
+			if swipy.onboarding.getCurrentEvent() is "WaitingForInvites"
+				swipy.onboarding.setCurrentEvent("DidInviteUsers",true) 
+			@callback?(false)

@@ -47,7 +47,7 @@ LoginView = Backbone.View.extend
 	handleSlackSuccess:(code, state, QueryString) ->
 		self = @
 		@setBusyState()
-		amplitude.logEvent "[Login] Successfully Logged In"
+		amplitude.logEvent "[Login] Slack Connected"
 		if state is @slackState
 			console.log code, state
 			serverData = JSON.stringify {code: code}
@@ -55,8 +55,13 @@ LoginView = Backbone.View.extend
 				url : "http://swipesslack.elasticbeanstalk.com/v1/slackToken"
 				type : 'POST'
 				success : ( data ) ->
+
 					self.removeBusyState()
 					if data and data.ok
+						options = {"Is From Invite": "No"}
+						options["Is From Invite"] = "Yes" if data.fromInvite
+						options["Hours Since Invite"] = data.hoursSinceInvite if data.hoursSinceInvite?
+						amplitude.logEvent "[Login] Successfully Logged In", options
 						localStorage.setItem("slack-token", data.access_token)
 						pathName = location.origin
 

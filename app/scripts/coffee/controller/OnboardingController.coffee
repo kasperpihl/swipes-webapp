@@ -61,6 +61,6 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 						, 10)
 					, attachments)
 				, 1000)
-			else if @currentEvent is "DidInviteUsers"
 				swipy.analytics.logEvent("[Onboard] Opened My Tasks")
+			else if @currentEvent is "DidInviteUsers"
 				swipy.analytics.logEvent("[Onboard] Completed")
