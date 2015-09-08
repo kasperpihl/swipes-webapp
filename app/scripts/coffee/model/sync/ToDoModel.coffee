@@ -147,7 +147,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					@save saveObj, {sync:true}
 				else
 					@set saveObj, {localSync: true}
-			if assignedSelf isnt "No"
+			if assignedSelf is "No"
 				swipy.api.callAPI("invite/slack", "POST", {invite: {"slackUserId": targetUser, "type": @type}}, (res, error) =>
 					console.log "res from invite", res, error
 					if res and res.ok

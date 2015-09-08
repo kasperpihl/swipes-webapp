@@ -7,7 +7,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		constructor: ->
 			@util = new Utility()
-			@baseURL = "http://localhost:5000/v1/" #"http://swipesslack.elasticbeanstalk.com/v1"
+			@baseURL = "http://swipesslack.elasticbeanstalk.com/v1"
 		callAPI: (path, method, parameters, callback) ->
 			url = @baseURL + path
 			token = localStorage.getItem("slack-token")
