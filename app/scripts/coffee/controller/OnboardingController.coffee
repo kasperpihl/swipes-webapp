@@ -35,7 +35,7 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 			else if @currentEvent is "DidDropMessage"
 				setTimeout( =>
 					attachments = JSON.stringify([{"fallback": "Hover a task to see the assign button","image_url":"http://team.swipesapp.com/styles/img/onboard-assign.png"}])
-					swipy.slackSync.sendMessageAsSofi("So easy, no? Now assign a person to take care of it by clicking on the assign icon in the righthand corner of the task and select yourself or Slackbot. Though he's probably not getting it done.", "@"+me.get("name"),  =>
+					swipy.slackSync.sendMessageAsSofi("So easy, no? Now assign a person to take care of it by clicking on the assign icon in the righthand corner of the task and select yourself.", "@"+me.get("name"),  =>
 						@setCurrentEvent("WaitingForAssignment")
 					, attachments)
 				, 1000)
