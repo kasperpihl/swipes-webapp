@@ -151,7 +151,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				swipy.api.callAPI("invite/slack", "POST", {invite: {"slackUserId": targetUser, "type": @type}}, (res, error) =>
 					console.log "res from invite", res, error
 					if res and res.ok
-						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup})
+						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From" : "Assigning" })
 				)
 
 			swipy.analytics.logEvent("[Engagement] Assigned Task", {"Type": @getType(), "To Self": assignedSelf})

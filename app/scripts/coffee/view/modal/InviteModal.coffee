@@ -28,7 +28,7 @@ define ["underscore",
 			swipy.api.callAPI("invite/slack", "POST", {invite: {"slackUserId": targetUser.id, "type": @type}}, (res, error) =>
 				console.log "res from invite", res, error
 				if res and res.ok
-					swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup})
+					swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From": "Invite Overlay"})
 			)
 			@invitePerson(memberId)
 		invitePerson: (href, callback) ->
