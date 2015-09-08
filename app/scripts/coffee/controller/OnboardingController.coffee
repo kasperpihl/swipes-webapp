@@ -2,6 +2,7 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 	class OnboardingController
 		constructor: ->
 			@currentEvent = localStorage.getItem("OnboardingStatus")
+			@currentEvent = "DidOpenMyTasks"
 		start: ->
 			@runNextEvent()
 		destroy: ->
@@ -52,9 +53,15 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 			else if @currentEvent is "DidOpenMyTasks"
 				setTimeout( =>
 					attachments = JSON.stringify([{"fallback": "In My Tasks, you can use the schedule and complete buttons to remove notifications","image_url":"http://team.swipesapp.com/styles/img/onboard-schedule-complete.png"}])
-					swipy.slackSync.sendMessageAsSofi("Stellar! You can remove the notifications from My Tasks by either completing or scheduling your current tasks for later. That's it from me for now.", "@"+me.get("name"),  =>
-						@setCurrentEvent("WaitingForNext")
+					swipy.slackSync.sendMessageAsSofi("Stellar! You can remove the notifications from My Tasks by either completing or scheduling your current tasks for later.", "@"+me.get("name"),  =>
+						attachments = JSON.stringify([{"fallback": "Invite people to Swipes","title": "Invite colleagues to collaborate with Swipes", "title_link":"http://swipesapp.com/forward?dest=invite-popup"}])
+						setTimeout( =>
+							swipy.slackSync.sendMessageAsSofi("Swipes works much better when you collaborate and share tasks with your colleagues on Slack. Take a moment to invite a few so you can start working together", "@"+me.get("name"), =>
+								@setCurrentEvent("WaitingForInvites")
+							, attachments)
+						, 10)
 					, attachments)
-				, 3000)
+				, 1000)
+			else if @currentEvent is "DidInviteUsers"
 				swipy.analytics.logEvent("[Onboard] Opened My Tasks")
 				swipy.analytics.logEvent("[Onboard] Completed")
