@@ -47,16 +47,29 @@
 			padding-top: 20px;
 		}
 		#sidebar-settings-container{
+			position:relative;
 			padding-top: 20px;
 			padding-bottom: 10px;
-			a{
+			a.settings-button{
 				padding-left: 10px;
+			}
+			a.invite-link{
+				position:absolute;
+				right:12px;
+				text-align:right;
+				top: 27px;
+				font: 13px $font-normal;
+				text-decoration: underline;
+			}
+			a.invite-link:hover{
+				text-decoration: none;
 			}
 			svg{
 				height: 25px;
 				width: 25px;
 				fill: $unselected-text-color;
 			}
+
 		}
 		a{
 			text-decoration: none;

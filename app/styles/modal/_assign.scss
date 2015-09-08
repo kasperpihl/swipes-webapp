@@ -1,4 +1,4 @@
-.assign-modal{
+.assign-modal, .invite-modal{
 	background: $sidebar-button-active-background-gray;
 	@include border-radius(10px);
 	padding:20px;
@@ -17,10 +17,11 @@
 	}
 	h2{
 		color: white;
-		font: 18px $font-normal;
+		font: 14px $font-normal;
 		margin-top:0;
-		padding-left:30px;
-		padding-right:30px;
+		padding-left:5px;
+		padding-right:5px;
+		text-align: center;
 	}
 	.message, .member{
 		position:relative;
@@ -50,6 +51,7 @@
 	}
 
 }
+
 .welcome-modal{
 	background: url("img/swipes-ui-team-splash-screen-horizontal-medium.png") no-repeat;
 	background-size: 700px 375px;

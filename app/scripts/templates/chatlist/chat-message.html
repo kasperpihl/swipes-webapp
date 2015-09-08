@@ -86,6 +86,9 @@
 				// URL handling
 				if(action.startsWith("http") || action.startsWith("mailto:")){
 					var targetPart = "target=\"_blank\"";
+					if(action.startsWith("http://swipesapp.com/forward")){
+						targetPart = "class=\"catchClick\"";
+					}
 					if(action.startsWith("http://swipesapp.com/task/")){
 						action = "#" + action.substring("http://swipesapp.com/".length);
 						targetPart = "class=\"catchClick\"";

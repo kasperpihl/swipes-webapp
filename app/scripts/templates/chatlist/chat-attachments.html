@@ -17,7 +17,11 @@
 	<% } if(attachment.title){ %>
 
 		<div class="title">
-			<% if(attachment.title_link) print("<a target=\"blank\" href=\""+attachment.title_link + "\">"); %>
+			<% 
+			var catchTitle = "target=\"_blank\"";
+			if(attachment.title_link && attachment.title_link.startsWith("http://swipesapp.com/forward"))
+				catchTitle = "class=\"catchClick\"";
+			if(attachment.title_link) print("<a "+ catchTitle +" href=\""+attachment.title_link + "\">"); %>
 				<%= attachment.title %>
 			<% if(attachment.title_link) print("</a>"); %>
 		</div>

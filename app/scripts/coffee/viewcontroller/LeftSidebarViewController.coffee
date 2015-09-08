@@ -3,7 +3,8 @@ define [
 	"text!templates/sidemenu/sidebar-projects.html"
 	"text!templates/sidemenu/sidebar-team-members.html"
 	"js/view/sidebar/SidebarChannelRow"
-	], (_, ProjectsTemplate, TeamMembersTemplate, ChannelRow) ->
+	"js/view/modal/InviteModal"
+	], (_, ProjectsTemplate, TeamMembersTemplate, ChannelRow, InviteModal) ->
 	Backbone.View.extend
 		el: ".sidebar_content"
 		initialize: ->
@@ -17,10 +18,31 @@ define [
 			_.bindAll( @, "renderSidebar")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
+			@listenTo( Backbone, "open/invitemodal", @openInvite, @)
 			@renderSidebar()
 			@updateNotificationsForMyTasks()
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
+			"click .invite-link": "clickedInvite"
+		clickedInvite: ->
+			Backbone.trigger("open/invitemodal")
+		openInvite: ->
+			inviteModal = new InviteModal()
+			inviteModal.dataSource = @
+			inviteModal.render()
+			inviteModal.presentModal()
+
+		inviteModalPeopleToInvite: (assignModal) ->
+			peopleToInvite = []
+			model = assignModal.model
+			me = swipy.slackCollections.users.me()
+			usersToInvite = swipy.slackCollections.users.filter((user) ->
+				return false if user.get("deleted") or user.id is me.id or user.id is "USLACKBOT"
+				return true
+			)
+			for user in usersToInvite
+				peopleToInvite.push(user.toJSON())
+			return peopleToInvite
 		clickedAddProject: (e) ->
 			project = prompt("Please enter project name", "");
 			if project? and project.length > 0

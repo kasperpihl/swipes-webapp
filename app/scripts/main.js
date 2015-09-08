@@ -174,7 +174,7 @@ if (typeof String.prototype.startsWith != 'function') {
     return this.indexOf(str) === 0;
   };
 }
-require(["jquery", "backbone"], function($) {
+require(["jquery", "underscore", "backbone"], function($) {
     var appCache = window.applicationCache;
     if(appCache){
         window.applicationCache.addEventListener('updateready', function(e) {

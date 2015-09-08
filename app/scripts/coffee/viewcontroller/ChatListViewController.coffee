@@ -4,6 +4,7 @@ define [
 	"js/view/chatlist/ChatList"
 	"js/view/chatlist/NewMessage"
 	"js/handler/ChatHandler"
+
 	], (_, Template, ChatList, NewMessage, ChatHandler) ->
 	Backbone.View.extend
 		className: "chat-list-view-controller"
@@ -25,6 +26,7 @@ define [
 			@chatList.dataSource = @chatHandler
 			Backbone.on("opened-window", @focusInput, @)
 		
+
 		setTemplate: ->
 			@template = _.template Template
 		render: ->

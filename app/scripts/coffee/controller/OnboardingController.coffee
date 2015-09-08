@@ -2,7 +2,6 @@ define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
 	class OnboardingController
 		constructor: ->
 			@currentEvent = localStorage.getItem("OnboardingStatus")
-			@currentEvent = "DidOpenMyTasks"
 		start: ->
 			@runNextEvent()
 		destroy: ->

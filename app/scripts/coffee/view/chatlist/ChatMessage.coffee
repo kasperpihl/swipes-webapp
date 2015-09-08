@@ -27,7 +27,8 @@ define [
 			return @
 		clickedLink: (e) ->
 			href = $(e.currentTarget).attr("href")
-			console.log href
+			if(href.startsWith("http://swipesapp.com/forward?dest=invite"))
+				Backbone.trigger("open/invitemodal")
 			if href.startsWith("#task/")
 				swipy.router.task(href.substring("#task/".length))
 			false

@@ -7,11 +7,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		constructor: ->
 			@util = new Utility()
-			@baseURL = "http://localhost:5000/v1/"
+			@baseURL = "http://localhost:5000/v1/" #"http://swipesslack.elasticbeanstalk.com/v1"
 		callAPI: (path, method, parameters, callback) ->
 			url = @baseURL + path
-			user = Parse.User.current()
-			token = user.getSessionToken()
+			token = localStorage.getItem("slack-token")
 			data =
 				sessionToken : token
 				platform : "web"
@@ -40,6 +39,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				crossDomain : true
 				context: @
 				data : serverData
-				processData : false
+				processData : true
 			#console.log serData
 			$.ajax( settings )
