@@ -31,13 +31,13 @@ module.exports = function (grunt) {
                 options: {
                     // `name` and `out` is set by grunt-usemin
                     baseUrl: yeomanConfig.app + '/scripts',
+                    almond: true,
+                    replaceRequireScript: [{
+                        files: ['public/index.html'],
+                        module: 'main'
+                    }],
+
                     optimize: 'none',
-                    namespace: 'swipesReq',
-                    // TODO: Figure out how to make sourcemaps work with grunt-usemin
-                    // https://github.com/yeoman/grunt-usemin/issues/30
-                    // generateSourceMaps: true,
-                    // required to support SourceMaps
-                    // http://requirejs.org/docs/errors.html#sourcemapcomments
                     preserveLicenseComments: false,
                     useStrict: true,
                     wrap: true,

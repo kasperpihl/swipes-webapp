@@ -18,10 +18,11 @@
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-htmlmin": "*",
     "grunt-contrib-jshint": "*",
-    "grunt-contrib-requirejs": "*",
+    
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
     "grunt-include-replace": "*",
+    "grunt-requirejs": "*",
     "grunt-manifest": "^0.4.0",
     "grunt-mocha": "*",
     "grunt-modernizr": "*",
