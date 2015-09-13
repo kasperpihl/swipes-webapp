@@ -190,7 +190,6 @@ require(["jquery", "underscore", "backbone"], function($) {
         }, false);
     }
     
-    window.$ = window.jQuery = $;
     require(["bootstrapTooltip"],function(){
         $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});
     })

@@ -55,7 +55,7 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
 			draggedIds = []
 			draggedId = @idForEvent(e)
-			console.log draggedId
+			
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 			#console.log @collection.toJSON(), draggedTask.toJSON()
 			return [] if !draggedTask?

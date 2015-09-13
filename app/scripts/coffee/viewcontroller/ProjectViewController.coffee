@@ -99,7 +99,7 @@ define [
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
 			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
-			chatListVC.chatHandler.loadCollection(@currentList.getMessages())
+			chatListVC.chatHandler.loadCollection(@currentList)
 			chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentList.get("name"))
 			@chatListVC = chatListVC
 			return chatListVC

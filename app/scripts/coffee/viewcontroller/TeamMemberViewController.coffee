@@ -112,7 +112,7 @@ define [
 			if @currentUser.get("name") is "slackbot"
 				chatListVC.newMessage.setPlaceHolder("Send a message to slackbot & s.o.f.i.")
 			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
-			chatListVC.chatHandler.loadCollection(@currentList.getMessages())
+			chatListVC.chatHandler.loadCollection(@currentList)
 			
 			@chatListVC = chatListVC
 			return chatListVC

@@ -8,8 +8,9 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 	class ChatHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
-		loadCollection: (collection) ->
-			@collection = collection
+		loadCollection: (channelModel) ->
+			@model = channelModel
+			@collection = channelModel.getMessages()
 			@timeUtil = new TimeUtility()
 			@collection.on("add remove reset", @bouncedReloadWithEvent , @ )
 
@@ -41,10 +42,46 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 				@groupedMessages.push({ leftTitle: title, messages: groups[key]})
 			return @groupedMessages
 		
-
+		idForEvent:(e) ->
+			if e.path?
+				for el in e.path
+					$el = $(el)
+					if !draggedId and $el.hasClass("chat-item")
+						draggedId = "#" + $el.attr("id")
+			else if e.originalTarget? or e.target?
+				currentTarget = e.target if e.target?
+				currentTarget = e.originalTarget if e.originalTarget?
+				for num in [1..10]
+					if currentTarget? and currentTarget
+						if _.indexOf(currentTarget.classList, "chat-item") isnt -1
+							draggedId = "#" + currentTarget.id
+						else
+							currentTarget = currentTarget.parentNode
+					else
+						break
+			draggedId
 		###
 			DragHandler Delegate
 		###
+		dragHandlerDidClick: ( dragHandler, e) ->
+			hitTarget = $(e.target)
+			draggedId = @idForEvent(e)
+			clickedModel = @collection.get(@messageCollectionIdFromHtmlId(draggedId))
+			me = swipy.slackCollections.users.me()
+			if clickedModel and clickedModel.get("user") is me.id
+				newText = prompt("Edit Message", clickedModel.get("text"))
+				if newText? and newText.length and newText isnt clickedModel.get("text")
+					options = {
+						ts: clickedModel.get("ts")
+						text: newText
+						channel: @model.id
+					}
+					swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
+						console.log "result from message update", res, error
+						if res and res.ok
+							clickedModel.set("text", newText)
+					)
+			
 		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
 			draggedIds = []
 			if e.path?
