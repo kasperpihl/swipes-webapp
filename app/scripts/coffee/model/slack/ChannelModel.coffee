@@ -24,6 +24,11 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			if @get("is_group")
 				apiType = "groups"
 			apiType
+		closeChannel: ->
+			swipy.slackSync.apiRequest(@getApiType() + ".close",{channel: @id}, 
+				(res, error) =>
+					console.log("closed channel", res, error)
+			)
 		fetchMessages: (collection) ->
 			options = {channel: @id, count: 100 }
 			

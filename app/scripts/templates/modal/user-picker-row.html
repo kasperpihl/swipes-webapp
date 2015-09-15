@@ -1,0 +1,19 @@
+<% if(data.people && data.people.length) { %>
+	<div class="assign-scroll-container">
+		<ul class="people-list">
+		<% _.each( data.people, function(user){ %>
+			<li class="user" data-href="<%= user.id %>">
+				<div class="picture-container">
+					<div class="picture-circular" style="background: url(<%= user.profile.image_48 %>) no-repeat; background-size: 26px 26px;">
+					</div>
+				</div>
+				<div class="name">
+					<%= user.name %>
+				</div>
+			</li>
+		<% }); %>
+		</ul>
+	</div>
+<% } else { %>
+	<div class="message"><%= data.emptyMessage %></div>
+<% } %>

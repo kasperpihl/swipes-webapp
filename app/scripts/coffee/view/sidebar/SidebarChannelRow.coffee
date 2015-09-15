@@ -9,17 +9,19 @@ define [
 		tagName: "li"
 		className: "channel-row"
 		events:
-			"click .like-button" : "clickedLike"
+			"click .close-container" : "clickedClose"
 		initialize: ->
 			throw new Error("Model must be added when constructing a SidebarChannelRow") if !@model?
 			@template = _.template RowTmpl, {variable: "data" }
-			
-			_.bindAll(@, "render")
+			_.bindAll(@, "render", "clickedClose")
 			@bouncedRender = _.debounce(@render, 5)
 			@model.on("change:unread_count_display", @bouncedRender )
 		setUser: (user) ->
 			@user = user
 			@user.on("change:presence", @updatePresence, @)
+		clickedClose: (e) ->
+			Backbone.trigger("close/channel", @model)
+			false
 		updatePresence: ->
 			return if !@user?
 			@$el.find(".status-container .status").toggleClass("online", (@user.get("presence") is "active"))

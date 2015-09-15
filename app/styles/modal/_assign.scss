@@ -1,4 +1,4 @@
-.assign-modal, .invite-modal{
+.assign-modal, .invite-modal, .user-picker-modal{
 	background: $sidebar-button-active-background-gray;
 	@include border-radius(10px);
 	padding:20px;
@@ -23,7 +23,34 @@
 		padding-right:5px;
 		text-align: center;
 	}
-	.message, .member{
+	.search-container{
+		padding: 6px;
+		padding-left: 10px;
+		margin-top: 5px;
+		margin-bottom: 10px;
+		border: 1px solid white;
+		@include border-radius(7px);
+		position: relative;
+		svg{
+			height:12px;
+			width:12px;
+			top: 50%;
+			margin-top: -6px;
+			fill:white;
+			position: absolute;
+
+		}
+		input{
+			padding-left: 17px;
+			background-color: transparent;
+			color: white;
+			width: 100%;
+			font-size: 12px;
+			@include placeholder(white);
+		}
+	}
+	
+	.message, .member, .user{
 		position:relative;
 		color: white;
 		font: 12px $font-normal;

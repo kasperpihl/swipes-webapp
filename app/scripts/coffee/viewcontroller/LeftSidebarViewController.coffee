@@ -1,61 +1,86 @@
 define [
 	"underscore"
-	"text!templates/sidemenu/sidebar-projects.html"
-	"text!templates/sidemenu/sidebar-team-members.html"
 	"js/view/sidebar/SidebarChannelRow"
-	"js/view/modal/InviteModal"
-	], (_, ProjectsTemplate, TeamMembersTemplate, ChannelRow, InviteModal) ->
+	"js/view/modal/UserPickerModal"
+	], (_, ChannelRow, UserPickerModal) ->
 	Backbone.View.extend
 		el: ".sidebar_content"
 		initialize: ->
-			@setTemplates()
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
-			@listenTo( swipy.slackCollections.channels, "add reset remove", @bouncedRenderSidebar )
+			@listenTo( swipy.slackCollections.channels, "add reset remove change:is_open", @bouncedRenderSidebar )
 			@bouncedUpdateNotificationsForMyTasks = _.debounce(@updateNotificationsForMyTasks, 15)
 			@listenTo( swipy.collections.todos, "add reset remove change:completionDate change:schedule", @bouncedUpdateNotificationsForMyTasks)
 			# Proper render list when projects change/add/remove
 			
-			_.bindAll( @, "renderSidebar")
+			_.bindAll( @, "renderSidebar", "clickedInvite")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
-			@listenTo( Backbone, "open/invitemodal", @openInvite, @)
+			@listenTo( Backbone, "close/channel", @closeChannel, @)
 			@renderSidebar()
 			@updateNotificationsForMyTasks()
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 			"click .invite-link": "clickedInvite"
 		clickedInvite: ->
-			Backbone.trigger("open/invitemodal")
-		openInvite: ->
-			inviteModal = new InviteModal()
-			inviteModal.dataSource = @
-			inviteModal.render()
-			inviteModal.presentModal()
-
-		inviteModalPeopleToInvite: (assignModal) ->
-			peopleToInvite = []
-			model = assignModal.model
+			modal = @getModal("invite", "Invite your favorite colleagues<br>to work with.", "No more colleagues to invite")
+			modal.searchField = true
+			modal.selectOne = false
+			modal.render()
+			modal.presentModal()
+		clickedDM: ->
+			modal = @getModal("dm", "Direct Message.")
+			modal.searchField = true
+			modal.presentModal()
+		getModal: (type, title, emptyMessage) ->
+			@modalType = type
+			userPickerModal = new UserPickerModal()
+			userPickerModal.dataSource = @
+			userPickerModal.delegate = @
+			userPickerModal.title = title
+			userPickerModal.emptyMessage = emptyMessage
+			userPickerModal.loadPeople()
+			userPickerModal
+		userPickerClickedUser: (targetUser) ->
+			if @modalType is "invite"
+				swipy.api.callAPI("invite/slack", "POST", {invite: {"slackUserId": targetUser.id, "type": "Standard Invite"}}, (res, error) =>
+					console.log "res from invite", res, error
+					if res and res.ok
+						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From": "Invite Overlay"})
+				)
+		userPickerModalPeople: (userPickerModal) ->
+			people = []
 			me = swipy.slackCollections.users.me()
-			usersToInvite = swipy.slackCollections.users.filter((user) ->
+			users = swipy.slackCollections.users.filter((user) ->
 				return false if user.get("deleted") or user.id is me.id or user.id is "USLACKBOT"
 				return true
 			)
-			for user in usersToInvite
-				peopleToInvite.push(user.toJSON())
-			return peopleToInvite
+			for user in users
+				people.push(user.toJSON())
+			return people
+		closeChannel: (model) ->
+			model.closeChannel()
 		clickedAddProject: (e) ->
 			project = prompt("Please enter project name", "");
 			if project? and project.length > 0
 				projectObj = swipy.collections.projects.create({name: project, ownerId: 1})
 				projectObj.save({}, {sync:true})
 			false
-		setTemplates: ->
-			@projectsTpl = _.template ProjectsTemplate, {variable: "data"}
-			@membersTpl = _.template TeamMembersTemplate, {variable: "data"}
 		renderSidebar: ->
-			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_channel") and channel.get("is_member") )
+			channelsLeft = 0
+			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) -> 
+				if channel.get("is_channel")
+					if channel.get("is_member") 
+						return true
+					else if !channel.get("is_archived")
+						console.log channel.toJSON()
+						channelsLeft++
+				return false
+			)
 			channels = _.sortBy( filteredChannels, (channel) -> return channel.get("name") )
 			@$el.find("#sidebar-project-list .projects").html("")
+			@$el.find("#sidebar-project-list .more-button").toggleClass("shown", channelsLeft)
+			@$el.find("#sidebar-project-list .more-button").html("+"+ channelsLeft + " More...")
+
 			for channel in channels
 				rowView = new ChannelRow({model: channel})
 				@$el.find("#sidebar-project-list .projects").append(rowView.el)
@@ -77,6 +102,12 @@ define [
 					return 0 
 				return user.name
 			)
+			usersInTotal = _.filter(swipy.slackCollections.users.models, (user) -> !user.get("deleted") )
+			# Minus one extra - subtracting my self
+			usersLeft = usersInTotal.length - ims.length - 1
+			@$el.find("#sidebar-members-list .more-button").toggleClass("shown", usersLeft)
+			@$el.find("#sidebar-members-list .more-button").html("+"+ usersLeft + " More...")
+
 			@$el.find("#sidebar-members-list .team-members").html("")
 			for im in ims
 				user = swipy.slackCollections.users.get(im.get("user"))

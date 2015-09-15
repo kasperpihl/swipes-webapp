@@ -8,6 +8,7 @@ define ["underscore"], (_) ->
 				self.shown = false
 				self.didCloseModal()
 			)
+			self.didPresentModal?()
 		dismissModal: ->
 			swipy.modalVC.hideContent() if @shown
 			@shown = false

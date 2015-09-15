@@ -5,13 +5,14 @@ var presenceClass = "";
 var name = data.channel.get("name");
 var showName = name;
 var numberOfNotifications = 0;
-
+var showClose = false;
 if(data.channel.get("is_channel")){
 	type = "channel";
 	prefix = "# ";
 }
 if(data.channel.get("is_im")){
 	type = "im";
+	showClose = true;
 	name = showName = data.user.get("name");
 	if(name == "slackbot")
 		showName = "slackbot & sofi";
@@ -33,4 +34,11 @@ if(data.channel.get("is_group")){
 	<% if(numberOfNotifications){ %>
 		<span class="notification"><%= numberOfNotifications %></span>
 	<% }%>
+	<% if(showClose) { %>
+		<div class="close-container">
+			<svg class="icon">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialClose"></use>
+			</svg>
+		</div>
+	<% } %>
 </a>

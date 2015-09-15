@@ -72,6 +72,17 @@
 			}
 
 		}
+		.more-button{
+			font-size: 12px;
+			display: none;
+			text-decoration: underline;
+			&:hover{
+				text-decoration: none;
+			}
+			&.shown{
+				display: block;
+			}
+		}
 		a{
 			text-decoration: none;
 			display:block;
@@ -153,8 +164,33 @@
 				@include transition(padding 0.1s ease-out);
 				padding-left:0px;
 			}
+			&:hover{
+				.close-container{
+					display:block;
+				}
+			}
+			.close-container{
+				position: absolute;
+				right: 3px;
+				width:20px;
+				height:20px;
+				top: 50%;
+				margin-top: -10px;
+				display:none;
+				&:hover{
+					svg{
+						opacity: 1.0;
+					}
+				}
+				svg{
+					opacity: 0.5;
+					width: 20px;
+					height:20px;
+				}
+			}
 
 		}
+
 		.unread{
 			a{
 				.text{
@@ -175,6 +211,11 @@
 					top: 1px;
 					min-width:$notification-size;
 					text-align:center;
+				}
+				&:hover{
+					.close-container{
+						display:none;
+					}
 				}
 			}
 		}

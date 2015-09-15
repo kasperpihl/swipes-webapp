@@ -99,6 +99,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					channel = swipy.slackCollections.channels.get(data.channel)
 					channel.save("last_read", data.ts)
 					channel.save("unread_count_display", data.unread_count_display)
+				else if data.type is "im_close" or data.type is "group_close"
+					channel = swipy.slackCollections.channels.get(data.channel)
+					channel.save("is_open", false)
 
 			console.log evt.data
 		onSocketError: (evt) ->
