@@ -21,16 +21,20 @@ define [
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 			"click .invite-link": "clickedInvite"
+			"click #sidebar-members-list .more-button-dm, #sidebar-members-list > h1": "clickedDM"
 		clickedInvite: ->
 			modal = @getModal("invite", "Invite your favorite colleagues<br>to work with.", "No more colleagues to invite")
 			modal.searchField = true
 			modal.selectOne = false
 			modal.render()
 			modal.presentModal()
+			false
 		clickedDM: ->
 			modal = @getModal("dm", "Direct Message.")
 			modal.searchField = true
+			modal.render()
 			modal.presentModal()
+			false
 		getModal: (type, title, emptyMessage) ->
 			@modalType = type
 			userPickerModal = new UserPickerModal()
@@ -46,6 +50,12 @@ define [
 					console.log "res from invite", res, error
 					if res and res.ok
 						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From": "Invite Overlay"})
+				)
+			else if @modalType is "dm"
+				swipy.slackSync.apiRequest("im.open", {"user": targetUser.id}, (res,error) =>
+					if res and res.ok
+						swipy.router.navigate("im/"+targetUser.get("name"), {trigger:true})
+					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
 				)
 		userPickerModalPeople: (userPickerModal) ->
 			people = []
@@ -78,7 +88,7 @@ define [
 			)
 			channels = _.sortBy( filteredChannels, (channel) -> return channel.get("name") )
 			@$el.find("#sidebar-project-list .projects").html("")
-			@$el.find("#sidebar-project-list .more-button").toggleClass("shown", channelsLeft)
+			@$el.find("#sidebar-project-list .more-button").toggleClass("shown", (channelsLeft > 0))
 			@$el.find("#sidebar-project-list .more-button").html("+"+ channelsLeft + " More...")
 
 			for channel in channels
@@ -105,7 +115,8 @@ define [
 			usersInTotal = _.filter(swipy.slackCollections.users.models, (user) -> !user.get("deleted") )
 			# Minus one extra - subtracting my self
 			usersLeft = usersInTotal.length - ims.length - 1
-			@$el.find("#sidebar-members-list .more-button").toggleClass("shown", usersLeft)
+			console.log usersInTotal, usersLeft
+			@$el.find("#sidebar-members-list .more-button").toggleClass("shown", (usersLeft > 0))
 			@$el.find("#sidebar-members-list .more-button").html("+"+ usersLeft + " More...")
 
 			@$el.find("#sidebar-members-list .team-members").html("")

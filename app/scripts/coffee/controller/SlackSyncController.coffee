@@ -102,6 +102,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				else if data.type is "im_close" or data.type is "group_close"
 					channel = swipy.slackCollections.channels.get(data.channel)
 					channel.save("is_open", false)
+				else if data.type is "im_open"
+					channel = swipy.slackCollections.channels.get(data.channel)
+					channel.save("is_open", true)
 
 			console.log evt.data
 		onSocketError: (evt) ->
