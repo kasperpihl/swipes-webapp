@@ -81,50 +81,35 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 						if res and res.ok
 							clickedModel.set("text", newText)
 					)
-			
-		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
-			draggedIds = []
-			if e.path?
-				for el in e.path
-					$el = $(el)
-					if $el.hasClass("chat-item")
-						draggedId = "#" + $el.attr("id")
-			else if e.originalTarget? or e.target?
-				currentTarget = e.target if e.target?
-				currentTarget = e.originalTarget if e.originalTarget?
-				for num in [1..10]
-					if currentTarget? and currentTarget
-						if _.indexOf(currentTarget.classList, "chat-item") isnt -1
-							draggedId = "#" + currentTarget.id
-						else
-							currentTarget = currentTarget.parentNode
-					else
-						break
-			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
-
-			if draggedMessage
-				draggedIds.push(draggedId)
-				$('.drag-mouse-pointer ul').html "<li>"+draggedMessage.getText()+"</li>"
-			draggedIds
-		didCreateDragHandler: ( dragHandler ) ->
-			@dragHandler = dragHandler
-		# Deal with dropped items from DragHandler if true is returned, callback must be called!
-		dragHandlerDidHit: ( dragHandler, draggedIds, hit, callback ) ->
-			draggedId = draggedIds[0]
-			draggedMessage = @collection.get( @messageCollectionIdFromHtmlId(draggedId) )
-			return if !draggedMessage?
-			self = @
-			
-			return false if !hit?
-			if hit.type is "task-list"
-				#Backbone.trigger("create-task", )
-				
-				title = prompt("Please enter task name", draggedMessage.getText())
-				if title
-					Backbone.trigger( "create-task", title, {from: "Drag"})
-					if swipy.onboarding.getCurrentEvent() is "WaitingForMessageToBeDropped" and draggedMessage.get("channel") is swipy.slackCollections.channels.slackbot().id
-						swipy.onboarding.setCurrentEvent("DidDropMessage", true)
-
+		messageClickedActions: (chatMessage, e) ->
+			model = chatMessage.model
+			me = swipy.slackCollections.users.me()
+			actions = []
+			actions.push({name: "Create Task", icon: "dragMenuCopy", action: "create"})
+			if model and model.get("user") is me.id
+				actions.push({name: "Edit", icon: "dragMenuMove", action: "edit"})
+				actions.push({name: "Delete", icon: "navbarDelete", action: "delete"})
+			swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: e.pageX, top: e.pageY}, (result) =>
+				console.log "test"
+				if result is "create"
+					#Backbone.trigger("create-task", )
+					title = prompt("Please enter task name", model.getText())
+					if title
+						Backbone.trigger( "create-task", title, {from: "Drag"})
+				else if result is "edit"
+					newText = prompt("Edit Message", model.get("text"))
+					if newText? and newText.length and newText isnt model.get("text")
+						options = {
+							ts: model.get("ts")
+							text: newText
+							channel: @model.id
+						}
+						swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
+							console.log "result from message update", res, error
+							if res and res.ok
+								model.set("text", newText)
+						)
+			)
 		###
 			ChatMessage Delegate
 		###

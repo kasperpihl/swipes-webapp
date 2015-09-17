@@ -64,7 +64,7 @@ $chat-new-message-height: 60px;
 	}
 }
 .chat-item:hover, .chat-message:hover{
-	.left-hover-box, .top-hover-box{
+	.left-hover-box, .top-hover-box, .hover-box{
 		opacity: 1;
 		@include transition(opacity 0.1s ease-out);
 	}
@@ -220,6 +220,23 @@ $chat-new-message-height: 60px;
 				height:12px;
 			}
 		}
+	}
+	.hover-box{
+		opacity: 0;
+		right: 0;
+		top:50%;
+		margin-top: -10px;
+		svg{
+			height: 20px;
+			width:20px;
+			fill: $unselected-color;
+		}
+		&:hover{
+			svg{
+				fill: $sidebar-dark-color;
+			}	
+		}
+		position:absolute;
 	}
 }
 

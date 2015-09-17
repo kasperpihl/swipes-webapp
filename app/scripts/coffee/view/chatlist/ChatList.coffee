@@ -8,8 +8,7 @@ define [
 	"js/view/modules/Section"
 	"js/view/chatlist/ChatMessage"
 	"js/view/chatlist/Unread"
-	"js/handler/DragHandler"
-	], (_, Section, ChatMessage, Unread, DragHandler) ->
+	], (_, Section, ChatMessage, Unread) ->
 	Backbone.View.extend
 		className: "chat-list"
 		initialize: ->
@@ -122,16 +121,7 @@ define [
 			if !@unread? and lastChat? and unixStamp > @lastRead
 				if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
 					@delegate.chatListMarkAsRead( @ )
-			if @enableDragAndDrop and numberOfNewChats > 0
-				if !@dragDelegate?
-					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
-				if !@dragHandler?
-					@dragHandler = new DragHandler()
-					@dragHandler.enableFullScreenTaskList = true
-					@dragHandler.delegate = @dragDelegate
-				@dragHandler?.createDragAndDropElements(".chat-item.new")
-				@$el?.find(".chat-item.new").removeClass("new")
-			
+						
 			if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
 			@moveToBottomIfNeeded()

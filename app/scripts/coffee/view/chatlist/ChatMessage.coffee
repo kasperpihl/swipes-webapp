@@ -13,6 +13,7 @@ define [
 		events:
 			"click .like-button" : "clickedLike"
 			"click .catchClick": "clickedLink"
+			"click .hover-box a.actions": "clickedActions"
 		initialize: ->
 			throw new Error("Model must be added when constructing a ChatMessage") if !@model?
 			@template = _.template MessageTmpl, {variable: "data" }
@@ -27,6 +28,9 @@ define [
 			@$el.html @template( message: @model, handleMentionsAndLinks: @util.handleMentionsAndLinks, isFromSameSender: @isFromSameSender, attTmpl: @attTemplate )
 			@new = false
 			return @
+		clickedActions: (e) ->
+			if @chatDelegate? and _.isFunction(@chatDelegate.messageClickedActions)
+				@chatDelegate.messageClickedActions(@, e)
 		clickedLink: (e) ->
 			href = $(e.currentTarget).attr("href")
 			if(href.startsWith("http://swipesapp.com/forward?dest=invite"))
