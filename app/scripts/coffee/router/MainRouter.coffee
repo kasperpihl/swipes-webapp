@@ -14,6 +14,7 @@ define ["underscore"], (_) ->
 			"im/:id/:action/:actionId": "im"
 			"group/:id": "group"
 			"group/:id/:action/:actionId": "group"
+			"search": "search"
 			"work": "work"
 			"*all": "root"
 		initialize: ->
@@ -65,6 +66,8 @@ define ["underscore"], (_) ->
 		channel: ( id, action, actionId ) ->
 			options = { id: id, action: action, actionId: actionId }
 			Backbone.trigger( "open/viewcontroller", "channel", options )
+		search: ->
+			Backbone.trigger( "open/viewcontroller", "search" )
 		im: ( id, action, actionId ) ->
 			options = { id: id, action: action, actionId: actionId }
 			Backbone.trigger( "open/viewcontroller", "im", options )
@@ -79,14 +82,13 @@ define ["underscore"], (_) ->
 			Backbone.trigger "hide-sidemenu"
 			@lastMainRoute = Backbone.history.fragment
 		edit: (taskId, action) ->
-
 			Backbone.trigger( "edit/task", taskId )
 			@setLastMainView()
 		settings: (subview) ->
 			Backbone.trigger "show-settings"
 			if subview then Backbone.trigger( "settings/view", subview )
 		updateHistory: (me, page, subpage) ->
-			if @history.length is 0 and page isnt "edit" and page isnt "tasks" and page isnt "channel" and page isnt "im" and page isnt "group"
+			if @history.length is 0 and page isnt "edit" and page isnt "tasks" and page isnt "channel" and page isnt "im" and page isnt "group" and page isnt "search"
 				Backbone.trigger( "open/viewcontroller", "tasks", {id:"now", onlyInstantiate: true} )
 			# We skip root, because it's just a redirect to another route.
 			return false if page is "" or page is "root"

@@ -1,5 +1,5 @@
 .top-bar-container{
-	&.red{
+	/*&.red{
 		background: $red;
 	}
 	&.yellow{
@@ -7,7 +7,7 @@
 	}
 	&.green{
 		background: $green;
-	}
+	}*/
 	height:$top-bar-height;
 	position:absolute;
 	width:100%;
@@ -24,6 +24,20 @@
 			margin-left: 20px;
 			font: 1.1em/1 $font-normal;
 			text-align:left;
+		}
+		.search-button{
+			position: absolute;
+			width:40px;
+			height:40px;
+			right: 0;
+			top: 0;
+			svg{
+				height:20px;
+				margin-top: 10px;
+				margin-left: 10px;
+				width: 20px;
+				fill: $sidebar-dark-color;
+			}
 		}
 	}
 	.progress-header{

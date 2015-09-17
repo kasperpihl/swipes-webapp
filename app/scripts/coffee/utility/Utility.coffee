@@ -30,6 +30,7 @@ define ["underscore"], (_) ->
 			String(string).replace(/[&<>"'\/]/g, (s) ->
 				entityMap[s]
 			)
+
 		sendError: (error, type) ->
 			me = swipy.slackCollections.users.me()
 			ErrorObject = Parse.Object.extend("Error")
@@ -43,5 +44,41 @@ define ["underscore"], (_) ->
 			errorObject.set( "Platform", "Web" )
 			errorObject.set( "OSVersion", navigator.userAgent.toLowerCase() )
 			errorObject.set( "type", type ) if type?
-			errorObject.set( "user", me.id ) if me? and me.id
+			errorObject.set( "user", me.toJSON() ) if me?
 			errorObject.save()
+		handleMentionsAndLinks: (text) ->
+			return if !text
+			matches = text.match(/<(.*?)>/g)
+			if matches? and matches.length
+				for match in matches
+					replacement = ""
+					match = match.substring(1, match.length-1)
+					res = match.split("|")
+					action = res[0]
+					placeholder = action
+					if res and res.length > 1
+						placeholder = res[1]
+					
+					# URL handling
+					if action.startsWith("http") or action.startsWith("mailto:")
+						targetPart = "target=\"_blank\""
+						if action.startsWith("http://swipesapp.com/forward")
+							targetPart = "class=\"catchClick\""
+						if action.startsWith("http://swipesapp.com/task/")
+							action = "#" + action.substring("http://swipesapp.com/".length)
+							targetPart = "class=\"catchClick\""
+						if action.startsWith("mailto:")
+							targetPart = ""
+						replacement = "<a " + targetPart + " href=\""+action+"\">" + placeholder + "</a>"
+					if action.startsWith("@U")
+						user = swipy.slackCollections.users.get(action.substring(1))
+						if user
+							placeholder = user.get("name")
+							replacement = "<a href=\"#im/"+placeholder+"\">@"+placeholder + "</a>"
+					if action.startsWith("@C")
+						placeholder = swipy.slackCollections.channels.get(action.substring(1)).get("name")
+						replacement = "<a href=\"#channel/"+placeholder+"\">@"+placeholder + "</a>"
+				
+					text = text.replace("<" + match+ ">", replacement)
+			text = text.replace(/(?:\r\n|\r|\n)/g, '<br>')
+			return text

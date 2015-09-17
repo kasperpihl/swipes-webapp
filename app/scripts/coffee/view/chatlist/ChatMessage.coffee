@@ -5,7 +5,8 @@ define [
 	"underscore"
 	"text!templates/chatlist/chat-message.html"
 	"text!templates/chatlist/chat-attachments.html"
-	], (_, MessageTmpl, AttachmentsTmpl) ->
+	"js/utility/Utility"
+	], (_, MessageTmpl, AttachmentsTmpl, Utility) ->
 	Backbone.View.extend
 		tagName: "li"
 		className: "chat-item"
@@ -18,11 +19,12 @@ define [
 			@attTemplate = _.template AttachmentsTmpl, {variable: "data"}
 			_.bindAll(@, "render")
 			@new = true
+			@util = new Utility()
 			@model.on("change:likes change:timestamp change:text change:attachments", @render )
 		render: ->
 			@$el.attr('id', "message-"+@model.id )
 			@$el.addClass("new") if @new
-			@$el.html @template( message: @model, isFromSameSender: @isFromSameSender, attTmpl: @attTemplate )
+			@$el.html @template( message: @model, handleMentionsAndLinks: @util.handleMentionsAndLinks, isFromSameSender: @isFromSameSender, attTmpl: @attTemplate )
 			@new = false
 			return @
 		clickedLink: (e) ->

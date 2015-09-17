@@ -82,13 +82,12 @@ define [
 					if channel.get("is_member") 
 						return true
 					else if !channel.get("is_archived")
-						console.log channel.toJSON()
 						channelsLeft++
 				return false
 			)
 			channels = _.sortBy( filteredChannels, (channel) -> return channel.get("name") )
 			@$el.find("#sidebar-project-list .projects").html("")
-			@$el.find("#sidebar-project-list .more-button").toggleClass("shown", (channelsLeft > 0))
+			#@$el.find("#sidebar-project-list .more-button").toggleClass("shown", (channelsLeft > 0))
 			@$el.find("#sidebar-project-list .more-button").html("+"+ channelsLeft + " More...")
 
 			for channel in channels
@@ -115,7 +114,6 @@ define [
 			usersInTotal = _.filter(swipy.slackCollections.users.models, (user) -> !user.get("deleted") )
 			# Minus one extra - subtracting my self
 			usersLeft = usersInTotal.length - ims.length - 1
-			console.log usersInTotal, usersLeft
 			@$el.find("#sidebar-members-list .more-button").toggleClass("shown", (usersLeft > 0))
 			@$el.find("#sidebar-members-list .more-button").html("+"+ usersLeft + " More...")
 

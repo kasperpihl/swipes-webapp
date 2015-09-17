@@ -1,0 +1,89 @@
+<% 
+var sender;
+var profilePictureURL = "";
+if(data.result.user){
+	sender = swipy.slackCollections.users.get(data.result.user);
+	if(sender)
+		profilePictureURL = sender.get("profile").image_192;
+}
+else if(data.result.username){
+	sender = swipy.slackCollections.bots.findWhere({name: data.result.username})
+	if(sender)
+		profilePictureURL = sender.get("icons").image_48;
+	else
+		console.log("no sender", data.result);
+}
+var name = "";
+
+if(sender){
+	name = sender.get("name");
+}
+
+var message = "";
+if(data.result.text){
+	message = data.result.text;
+}
+var channelName, channelUrl;
+if(data.result.channel){
+	var channel = data.result.channel;
+	channelName = channel.name;
+	var urlStart = "#channel/";
+	if(channel.id.startsWith("C")){
+		channelName = "#" + channel.name;
+	}
+	if(channel.id.startsWith("D")){
+		urlStart = "#im/";
+		var channelObj = swipy.slackCollections.channels.get(channel.id);
+		if(channelObj)
+			channelName = "@"+channelObj.getName();
+	}
+	if(channel.id.startsWith("G")) urlStart = "#group/";
+	
+	channelUrl = urlStart + channelName;
+}
+var timeString, dayString;
+if(data.result.ts){
+	var timestamp = new Date(parseInt(data.result.ts)*1000)
+	dayString = data.timeUtil.dayStringForDate(timestamp);
+	timeString = data.timeUtil.getTimeStr(timestamp);
+}
+
+var file, fileURL;
+if(data.result.filetype){
+	file = data.result;
+	var timestamp = new Date(file.created*1000)
+	timeString = data.timeUtil.dayStringForDate(timestamp) + " - " + data.timeUtil.getTimeStr(timestamp);
+	fileURL = file.url_download;
+	if(!fileURL)
+		fileURL = file.url;
+}
+%>
+
+<div class="search-result-channel-header">
+	<a class="channel-text" href="<%= channelUrl %>"><%= channelName %></a> <span class="dayStr"><%= dayString %></span>
+</div>
+<div class="search-result-row-container">
+	<div class="search-result-left-side-container">
+		<div class="picture-container">
+			<div class="picture-circular" style="background: url(<%= profilePictureURL %>) no-repeat; background-size: 34px 34px;">
+			</div>
+		</div>
+	</div>
+	<div class="search-result-right-side-container">
+		<div class="sender-container">
+			<span class="sender-name"><%= name %></span>
+			<span class="timestamp"><%= timeString %></span>
+		</div>
+		<div class="message-container">
+			<%= data.util.handleMentionsAndLinks(message) %>
+		</div>
+		<% if(file) { %>
+			<div class="file-container">
+				<a target="_blank" href="<%= fileURL %>"><div class="comment"><%= file.name %></div></a>
+				<% if(file.thumb_360){ %>
+					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= file.thumb_360 %>" />
+				<% } %>
+			</div>
+		<% } %>
+	</div>
+</div>

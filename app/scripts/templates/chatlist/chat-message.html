@@ -67,58 +67,6 @@
 				likeString = numberOfLikes + " people like this."
 		}
 	}
-	function handleMentionsAndLinks(text){
-		if(!text)
-			return;
-		var matches = text.match(/<(.*?)>/g);
-		if(matches && matches.length > 0){
-			for(var i = 0 ; i < matches.length ; i++){
-				match = matches[i];
-				var replacement = "";
-				// remove the <>
-				match = match.substring(1, match.length-1);
-				var res = match.split("|");
-				var action = res[0];
-				var placeholder = action;
-				if(res && res.length > 1)
-					placeholder = res[1];
-
-				// URL handling
-				if(action.startsWith("http") || action.startsWith("mailto:")){
-					var targetPart = "target=\"_blank\"";
-					if(action.startsWith("http://swipesapp.com/forward")){
-						targetPart = "class=\"catchClick\"";
-					}
-					if(action.startsWith("http://swipesapp.com/task/")){
-						action = "#" + action.substring("http://swipesapp.com/".length);
-						targetPart = "class=\"catchClick\"";
-					}
-					if(action.startsWith("mailto:"))
-						targetPart = "";
-					replacement = "<a " + targetPart + " href=\""+action+"\">" + placeholder + "</a>";
-				}
-				else if( action.startsWith("@U")){
-					var user = swipy.slackCollections.users.get(action.substring(1))
-					if(user){
-						placeholder = user.get("name")
-						replacement = "<a href=\"#im/"+placeholder+"\">@"+placeholder + "</a>";
-					}
-				}
-				else if( action.startsWith("@C")){
-					placeholder = swipy.slackCollections.channels.get(action.substring(1)).get("name")
-					replacement = "<a href=\"#channel/"+placeholder+"\">@"+placeholder + "</a>";
-				} 
-				else{
-					//console.log(match);
-				}
-				text = text.replace("<" + match+ ">", replacement);
-
-			}
-			
-		};
-		text = text.replace(/(?:\r\n|\r|\n)/g, '<br>')
-		return text;
-	};
 	var hasImageClass = "hasProfileImage";
 	if(data.isFromSameSender)
 		hasImageClass = "";
@@ -160,7 +108,7 @@
 		</div>
 		<% } %>
 		<div class="message-container">
-			<%= handleMentionsAndLinks(data.message.get("text")) %>
+			<%= data.handleMentionsAndLinks(data.message.get("text")) %>
 		</div>
 		<% if(data.message.get("subtype") == "file_share") { %>
 			<div class="file-container">
@@ -173,7 +121,7 @@
 		<% } %>
 		<% if( hasAttachment ){ %>
 		
-			<%= data.attTmpl({attachments: data.message.get("attachments"), handleMentionsAndLinks: handleMentionsAndLinks}) %>
+			<%= data.attTmpl({attachments: data.message.get("attachments"), handleMentionsAndLinks: data.handleMentionsAndLinks}) %>
 			<!--<a href="http://test.com" target="_blank"><img src="styles/img/temp/attachment-placeholder.png"></a>-->
 
 		

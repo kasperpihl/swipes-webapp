@@ -12,23 +12,23 @@ define [
 			if @currentControllerName is viewcontroller
 				@currentViewController.open( options )
 			else
-
 				@loadViewController(viewcontroller).then (ViewController) =>
 					@currentViewController?.destroy()
 					viewController = new ViewController()
 					viewController.open( options )
 					@currentControllerName = viewcontroller
 					@currentViewController = viewController
-			swipy.activeId = options.id
+			swipy.activeId = options.id if options?.id
 			swipy.sync?.shortBouncedSync()
 			if viewcontroller is "im"
 				viewcontroller = "member"
-			Backbone.trigger("set-active-menu", "sidebar-"+viewcontroller + "-" + options.id)
+			Backbone.trigger("set-active-menu", "sidebar-"+viewcontroller + "-" + options.id) if options?.id
 		loadViewController: (viewcontroller) ->
 			dfd = new $.Deferred()
 			if viewcontroller is "im" then require ["js/viewcontroller/TeamMemberViewController"], (VC) -> dfd.resolve VC
 			else if viewcontroller is "channel" then require ["js/viewcontroller/ProjectViewController"], (VC) -> dfd.resolve VC
 			else if viewcontroller is "group" then require ["js/viewcontroller/ProjectViewController"], (VC) -> dfd.resolve VC
+			else if viewcontroller is "search" then require ["js/viewcontroller/SearchViewController"], (VC) -> dfd.resolve VC
 			else require ["js/viewcontroller/MyTasksViewController"], (VC) -> dfd.resolve VC
 			return dfd.promise()
 		destroy: ->
