@@ -111,9 +111,13 @@ $chat-new-message-height: 60px;
 	.message-container{
 		word-wrap: break-word;
 		@include select;
+		a{
+			@include select;
+		}
 		font: 14px/1.5 $font-normal;
 	}
 	.file-container{
+		@include select;
 		padding-top:5px;
 		img{
 			border: 1px solid #EAEAEA;
@@ -130,17 +134,24 @@ $chat-new-message-height: 60px;
 			max-width:400px;
 		}
 		.attachment-content{
+			a{
+				@include select;	
+			}
 			.service_name{
+				@include select;
 				font: 14px $font-normal;
 				padding-bottom: 5px;
 				color: $unselected-text-color;
 			}
 			.title{
+				@include select;
+
 				font: 16px $font-bold;
 				padding-bottom: 5px;
 				word-wrap: break-word;
 			}
 			.text{
+				@include select;
 				word-wrap: break-word;
 				font: 13px/1.5 $font-normal;
 				padding-top: 3px;
