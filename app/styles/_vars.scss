@@ -4,12 +4,13 @@
 $yellow: #FFC85E; //#E4CA5C;
 $dark-yellow: #E2B65B;
 $green: #86D36E; //#45DB86;
-$online-green: #8BC34A;
+$online-green: #2ecc71;
 $busy-yellow: #FF512F;
 
 $red: #FF5637; //#d31e2b;
 $orange: #ffc107;
-$unselected-color: #9E9E9E;
+$new-yellow: #fdca57;
+$unselected-color: #000c2f;
 $small-seperator-color: #DDDDDD;
 
 $sidebar-dark-color: #1B1E23;
@@ -20,9 +21,11 @@ $breakpointSmallHeight: 500px;
 
 $light-background: #fffff5;
 $white-background: #ffffff;
+$dark-background: #313653;
 
 $sidebar-black-header: #000C2F;
 $unselected-text-color: #7F8591;
+$unselected-light-text-color: #FFFFFF;
 $unread-text-color: #010D2E;
 $selected-overlay-background: #F2F3EB;
 
@@ -32,7 +35,7 @@ $top-bar-height: 44px;
 
 // Sidebar variables
 // -------------------------
-$sidebar-width: 200px;
+$sidebar-width: 250px;
 $sidebar-sub-width: 300px;
 $sidebar-sub-width-large: 400px;
 $sidebar-slide-width: 25px;
