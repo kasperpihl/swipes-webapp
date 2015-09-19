@@ -103,7 +103,6 @@ define [
 		###
 		getChatListVC: ->
 			memberId = @identifier
-			@currentList.fetchMessages()
 
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
@@ -115,6 +114,10 @@ define [
 			chatListVC.chatHandler.loadCollection(@currentList)
 			
 			@chatListVC = chatListVC
+			@currentList.fetchMessages(null, (res, error) ->
+				if res and res.ok
+					chatListVC.chatList.hasRendered = false
+			)
 			return chatListVC
 
 		###
@@ -136,7 +139,6 @@ define [
 		###
 		chatListMarkAsRead: (chatList, timestamp) ->
 			@currentList.markAsRead()
-
 		
 		###
 			NewMessage Delegate

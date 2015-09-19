@@ -2,6 +2,7 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 	Backbone.Model.extend
 		className: "Channel"
 		excludeFromJSON: [ "messages" ]
+		skipCount: 100
 		initialize: ->
 			messageCollection = new MessageCollection()
 			messageCollection.localStorage = new Backbone.LocalStorage("MessageCollection-" + @id )
@@ -10,7 +11,7 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 		getMessages: ->
 			messages = @get("messages")
 			loop
-				break if messages.length < 101
+				break if messages.length <= @skipCount
 				messages.shift()
 			messages
 		getName: ->
@@ -29,22 +30,23 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				(res, error) =>
 					console.log("closed channel", res, error)
 			)
-		fetchMessages: (collection) ->
-			options = {channel: @id, count: 100 }
+		fetchMessages: (newest, callback) ->
+			options = {channel: @id, count: @skipCount }
 			
 			collection = @get("messages")
 			collection.fetch()
-			if collection.models.length
-				lastModel = collection.at(collection.models.length-1)
-				options.oldest = lastModel.get("ts")
+			if newest
+				options.latest = newest
+				allowMore = true
 			swipy.slackSync.apiRequest(@getApiType() + ".history",options, 
 				(res, error) =>
 					if res and res.ok
 						@hasFetched = true
 						for message in res.messages
-							@addMessage(message)
+							@addMessage(message, allowMore)
+					callback?(res,error)
 			)
-		addMessage: (message, increment) ->
+		addMessage: (message, increment, allowMore) ->
 			collection = @get("messages")
 			identifier = message.ts
 			identifier = message.deleted_ts if message.deleted_ts?
@@ -68,9 +70,11 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 						else
 							Backbone.trigger("play-new-message")
 				return if(!@hasFetched? or !@hasFetched)
+				message.channelId = @id
 				newMessage = collection.create( message )
+				if collection.length > @skipCount and !allowMore
+					collection.shift()
 			else
-				console.log "editing", message
 				if(message.deleted_ts)
 					collection.remove(model)
 				else

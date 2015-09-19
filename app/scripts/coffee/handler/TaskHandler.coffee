@@ -4,7 +4,7 @@
 		Find out who's the sender, where does it want to go, and what actions would be available
 	Receive select/unselect from TaskList
 ###
-define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
+define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 	class TaskHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
@@ -201,14 +201,28 @@ define ["underscore", "js/view/modal/AssignModal"], (_, AssignModal) ->
 				_.invoke(tasks, "scheduleTask", tasks[0].getDefaultSchedule())
 			
 		didPressAssign: (model, e) ->
-			assignModal = new AssignModal({model: model})
-			assignModal.dataSource = @
-			assignModal.render()
-			assignModal.presentModal({ left: e.clientX, top:e.clientY+10, centerY: false })
-			
-		assignModalPeopleToAssign: (assignModal) ->
+			userPickerModal = new UserPickerModal()
+			@pickerModel = model
+			userPickerModal.dataSource = @
+			userPickerModal.delegate = @
+			userPickerModal.searchField = true
+			userPickerModal.title = "Assign People"
+			userPickerModal.emptyMessage = "No more people to assign"
+			userPickerModal.loadPeople()
+			userPickerModal.render()
+			userPickerModal.presentModal({ left: e.clientX, top:e.clientY+10, centerY: false })
+		userPickerClickedUser: (targetUser) ->		
+			@pickerModel.assign( targetUser.id, true )
+			if @pickerModel.get("projectLocalId")
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				if swipy.slackCollections.users.me().id isnt targetUser.id
+					sofiMessage = capitalizedName + " assigned you the task \"" + @pickerModel.getTaskLinkForSlack() + "\"";
+					swipy.slackSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
+			@pickerModel = null
+			#@dismissModal()
+		userPickerModalPeople: (userPickerModal) ->
 			peopleToAssign = []
-			model = assignModal.model
+			model = @pickerModel
 			me = swipy.slackCollections.users.me()
 			if me?
 				data = me.toJSON()

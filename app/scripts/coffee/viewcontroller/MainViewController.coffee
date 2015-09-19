@@ -22,7 +22,8 @@ define [
 			swipy.sync?.shortBouncedSync()
 			if viewcontroller is "im"
 				viewcontroller = "member"
-			Backbone.trigger("set-active-menu", "sidebar-"+viewcontroller + "-" + options.id) if options?.id
+			activeMenu = "sidebar-"+viewcontroller + "-" + options.id if options?.id
+			Backbone.trigger("set-active-menu", activeMenu)
 		loadViewController: (viewcontroller) ->
 			dfd = new $.Deferred()
 			if viewcontroller is "im" then require ["js/viewcontroller/TeamMemberViewController"], (VC) -> dfd.resolve VC

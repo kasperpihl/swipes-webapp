@@ -48,8 +48,8 @@ define ["underscore",
 			@filteredPeople = newFilter
 			@renderPeople()
 		render: ->
-			throw new Error("AssignModal must have dataSource") if !@dataSource?
-			throw new Error("AssignModal dataSource must implement userPickerModalPeople") if !_.isFunction(@dataSource.userPickerModalPeople)
+			throw new Error("UserPickerModal must have dataSource") if !@dataSource?
+			throw new Error("UserPickerModal dataSource must implement userPickerModalPeople") if !_.isFunction(@dataSource.userPickerModalPeople)
 			
 			html = @template({ searchField: @searchField, title: @title})
 			@$el.html html

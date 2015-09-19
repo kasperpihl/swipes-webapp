@@ -23,6 +23,7 @@
 		/*if (window.liveEnvironment && window.location.protocol != "https:")
 			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);*/
 		if (window.process != null && process.versions['electron'] && window.require) {
+			console.log("removing node");
 			window.nodeRequire = window.require;
 			delete window.require;
 		}
@@ -57,7 +58,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 </head>
 
 <body class="loading">
-	<!--(bake styles/icon-svg/swipes-icons.svg)-->
+	<!--(bake styles/icon-font/svgdefs.svg)-->
 
 	<!--[if lt IE 10]>
 	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>

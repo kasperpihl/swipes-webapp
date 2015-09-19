@@ -114,7 +114,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				message.id = ++@currentIdCount
 				@sentMessages[""+message.id] = message if !dontSave
 				message = JSON.stringify(message)
-			@webSocket.send(message)
+			@webSocket?.send(message)
 		onOpenedWindow: ->
 			if !@webSocket?
 				@start()
@@ -124,8 +124,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@apiRequest("chat.postMessage", options, (res, error) ->
 				if res and res.ok
 					slackbotChannelId = swipy.slackCollections.channels.slackbot().id
-					if swipy.onboarding?.getCurrentEvent() is "WaitingForMessageToSofi" and channel is slackbotChannelId and res.message?.user is swipy.slackCollections.users.me().id
-						swipy.onboarding.setCurrentEvent("DidSendMessageToSofi", true)
 					type = self.util.slackTypeForId(channel)
 					if type is "DM" and channel is slackbotChannelId
 						type = "Slackbot"

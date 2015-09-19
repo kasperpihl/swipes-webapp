@@ -90,12 +90,11 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 				actions.push({name: "Edit", icon: "dragMenuMove", action: "edit"})
 				actions.push({name: "Delete", icon: "navbarDelete", action: "delete"})
 			swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: e.pageX, top: e.pageY}, (result) =>
-				console.log "test"
 				if result is "create"
 					#Backbone.trigger("create-task", )
 					title = prompt("Please enter task name", model.getText())
 					if title
-						Backbone.trigger( "create-task", title, {from: "Drag"})
+						Backbone.trigger( "create-task", title, {from: "Message", assignee: me.id })
 				else if result is "edit"
 					newText = prompt("Edit Message", model.get("text"))
 					if newText? and newText.length and newText isnt model.get("text")

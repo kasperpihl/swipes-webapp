@@ -16,6 +16,7 @@ define [
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
 			@listenTo( Backbone, "close/channel", @closeChannel, @)
+			@listenTo( Backbone, "open/invitemodal", @clickedInvite)
 			@renderSidebar()
 			@updateNotificationsForMyTasks()
 		events:

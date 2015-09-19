@@ -1,18 +1,16 @@
 define ["js/view/sidebar/Sidebar"
 		"js/view/sidebar/TagFilter"
 		"js/view/sidebar/SearchFilter" 
-		"js/view/sidebar/TaskInput"
 		"js/view/sidebar/SidemenuSettings"
 		"js/view/list/OrganiseBar"
 		"js/view/sidebar/settings/SidemenuSnoozes"
 		"js/view/sidebar/settings/SidemenuTweaks"
 		"js/view/sidebar/settings/SidemenuIntegrations"
 		"js/view/overlay/KeyboardOverlay"
-	], (SidebarView, TagFilter, SearchFilter, TaskInputView, SidemenuSettings, OrganiseBar, SidemenuSnoozes, SidemenuTweaks, SidemenuIntegrations, KeyboardOverlay ) ->
+	], (SidebarView, TagFilter, SearchFilter, SidemenuSettings, OrganiseBar, SidemenuSnoozes, SidemenuTweaks, SidemenuIntegrations, KeyboardOverlay ) ->
 	class SidebarController
 		constructor: ->
 			@view = new SidebarView( el: $(".sidebar") )
-			Backbone.on( "show-add", @loadAdd, @)
 			Backbone.on( "show-search", @loadSearchFilter, @)
 			Backbone.on( "show-workspaces", @loadTagFilter, @)
 			Backbone.on( "show-settings", @loadSettings, @)
@@ -33,12 +31,6 @@ define ["js/view/sidebar/Sidebar"
 			@searchFilter = new SearchFilter()
 			@loadSubmenu @searchFilter, "Search", "icon-materialSearch", 0, "search"
 			@searchFilter.$el.find('input').focus()
-		loadAdd: ->
-			if @addMenu?
-				@addMenu.destroy()
-			@addMenu = new TaskInputView()
-			@loadSubmenu @addMenu, "Add a task", "icon-materialAdd", 0, "addtask"
-			@addMenu.$el.find("textarea").focus()
 		loadTagFilter: ->
 			if @tagFilter?
 				@tagFilter.destroy()

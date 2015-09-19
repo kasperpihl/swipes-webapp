@@ -1,4 +1,4 @@
-define ["underscore", "js/view/modal/WelcomeModal"], (_, WelcomeModal) ->
+define ["underscore"], (_) ->
 	class OnboardingController
 		constructor: ->
 			@currentEvent = localStorage.getItem("OnboardingStatus")

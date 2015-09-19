@@ -16,10 +16,8 @@ define [
 			@bouncedRender = _.debounce(@render, 5)
 			@bouncedMarkAsRead = _.debounce(@markAsRead, 800)
 			@listenTo( Backbone, "reload/chathandler", @bouncedRender )
-			_.bindAll(@, "checkIsRead")
+			_.bindAll(@, "checkIsRead", "didScroll")
 			@hasRendered = false
-			@sectionsByTitle = {}
-			@chatsBySectionByTimestamp = {}
 		remove: ->
 			@cleanUp()
 			@$el.empty()
@@ -45,9 +43,11 @@ define [
 				shouldScrollToBottom = true
 			shouldScrollToBottom = true if @isScrolledToBottom()
 
-			if !@hasRendered	
+			if !@hasRendered
 				@$el.html ""
 				$(@targetSelector).html( @$el )
+				@sectionsByTitle = {}
+				@chatsBySectionByTimestamp = {}
 
 
 			numberOfSections = 1
@@ -124,10 +124,15 @@ define [
 						
 			if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
+			
 			@moveToBottomIfNeeded()
+			
+			
+			
 			if @unread?
-				$(".chat-list-container-scroller").on("scroll.chatlist", @checkIsRead)
 				@checkIsRead()
+			if !@hasRendered
+				$(".chat-list-container-scroller").on("scroll.chatlist", @didScroll)
 			@hasRendered = true
 			
 			
@@ -142,6 +147,9 @@ define [
 			if targetMargin < 0
 				targetMargin = 0
 			$(".chat-list").css("marginTop", targetMargin)
+		didScroll: (e) ->
+			if @unread?
+				@checkIsRead()
 		checkIsRead: (e) ->
 
 			if @unread
@@ -152,13 +160,12 @@ define [
 					if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
 						@delegate.chatListMarkAsRead( @ )
 					@bouncedMarkAsRead()
-					$(".chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
 		markAsRead: ->
 			if @chatDelegate?
 				$('.unread-seperator').addClass("read")
 		customCleanUp: ->
 		cleanUp: ->
-			$(".chat-list-container-scroller").off( "scroll.chatlist", @checkIsRead )
+			$(".chat-list-container-scroller").off( "scroll.chatlist", @didScroll )
 			@dataSource = null
 			@delegate = null
 			@chatDelegate = null

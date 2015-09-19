@@ -102,6 +102,11 @@ define [
 			chatListVC.chatHandler.loadCollection(@currentList)
 			chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentList.get("name"))
 			@chatListVC = chatListVC
+			@currentList.fetchMessages(null, (res, error) ->
+				if res and res.ok
+					chatListVC.chatList.hasMore = true
+					chatListVC.chatList.hasRendered = false
+			)
 			return chatListVC
 		
 		###
