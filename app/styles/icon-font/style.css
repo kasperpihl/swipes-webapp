@@ -1,0 +1,82 @@
+.icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	fill: currentColor;
+}
+
+/* =======================================================================================
+Example showing how to change the color/size of the icons:
+.icon-name {
+	font-size: 32px; // works because "width" & "height" were set using em units
+	color: red; // works for single-colored icons, because "fill" was set to "currentColor"
+}
+======================================================================================== */
+.fill-color1 {
+	fill: #444;
+}
+
+.icon-editTabAssign {
+	width: 0.9091796875em;
+}
+
+.icon-editTabAttach {
+	width: 0.5em;
+}
+
+.icon-thumb {
+	width: 1.1875em;
+}
+
+.icon-taskIconAssigned {
+	width: 0.93359375em;
+}
+
+.icon-dragMenuAssign {
+	width: 0.900390625em;
+}
+
+.icon-dragMenuMove {
+	width: 1.4287109375em;
+}
+
+.icon-navbarChat {
+	width: 1.111328125em;
+}
+
+.icon-navbarFiles {
+	width: 0.4765625em;
+}
+
+.icon-navbarSearch {
+	width: 0.9501953125em;
+}
+
+.icon-later {
+	width: 0.990234375em;
+}
+
+
+.icon-editTags {
+	width: 0.7275390625em;
+}
+
+.icon-editRepeat {
+	width: 1.099609375em;
+}
+
+.icon-editEvernote {
+	width: 0.900390625em;
+}
+
+.icon-editURL {
+	width: 0.7001953125em;
+}
+
+.icon-logo {
+	width: 1.05078125em;
+}
+
+.icon-signature {
+	width: 2.1044921875em;
+}
