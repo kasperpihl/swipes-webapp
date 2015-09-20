@@ -8,6 +8,7 @@ define [
 	"js/view/modules/Section"
 	"js/view/chatlist/ChatMessage"
 	"js/view/chatlist/Unread"
+	"gsap-scroll"
 	], (_, Section, ChatMessage, Unread) ->
 	Backbone.View.extend
 		className: "chat-list"
@@ -33,7 +34,7 @@ define [
 			if !@targetSelector?
 				throw new Error("ChatList must have targetSelector to render")
 
-
+			$(".chat-list-container-scroller").off("scroll.chatlist", @didScroll)
 			shouldScrollToBottom = false
 			shouldAddNewUnread = @hasRendered
 			shouldScrollToBottom = true if !@hasRendered
@@ -65,7 +66,7 @@ define [
 
 				lastSender = false
 				lastUnix = 0
-				renderSession = false
+				renderSection = false
 
 				# Instantiate
 				section = @sectionsByTitle[sectionData.leftTitle]
@@ -74,7 +75,7 @@ define [
 					@sectionsByTitle[sectionData.leftTitle] = section
 					@chatsBySectionByTimestamp[sectionData.leftTitle] = {}
 					section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
-					renderSession = true
+					renderSection = true
 
 				sectionEl = section.$el.find('.section-list')
 
@@ -117,12 +118,21 @@ define [
 					chatMessage.render()
 					sectionEl.append( chatMessage.el ) if renderChat
 					lastChat = chat
-				@$el.append section.el if renderSession
+				if lastSection
+					lastSection.after section.el if renderSection
+				else
+					@$el.prepend section.el if renderSection
+				lastSection = sectionEl
 			if !@unread? and lastChat? and unixStamp > @lastRead
 				if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
 					@delegate.chatListMarkAsRead( @ )
-						
-			if shouldScrollToBottom
+				
+			if @scrollToTimestamp?
+				targetEl = @$el.find("#message-"+@scrollToTimestamp)
+				targetPos = targetEl.position().top
+				$(".chat-list-container-scroller").scrollTop(targetPos - 60)
+				@scrollToTimestamp = null
+			else if shouldScrollToBottom
 				_.debounce(@scrollToBottom,10)()
 			
 			@moveToBottomIfNeeded()
@@ -131,11 +141,13 @@ define [
 			
 			if @unread?
 				@checkIsRead()
-			if !@hasRendered
-				$(".chat-list-container-scroller").on("scroll.chatlist", @didScroll)
+			$(".chat-list-container-scroller").on("scroll.chatlist", @didScroll)
 			@hasRendered = true
 			
-			
+		setScrollToMessage: (ts, highlight) ->
+			console.log "setting scroll ts"
+			@scrollToTimestamp = ts.replace(".","\\.")
+
 		isScrolledToBottom: ->
 			return ($(".chat-list-container-scroller").scrollTop() + $(".chat-list-container-scroller").height() >= $(".chat-list").outerHeight())
 		scrollToBottom: ->
@@ -148,6 +160,12 @@ define [
 				targetMargin = 0
 			$(".chat-list").css("marginTop", targetMargin)
 		didScroll: (e) ->
+			if $(e.currentTarget).scrollTop() is 0
+				console.log @delegate, @delegate.chatListDidScrollToTop
+				if @delegate? and _.isFunction(@delegate.chatListDidScrollToTop)
+					console.log "did scroll to top - send to delegate"
+					@delegate.chatListDidScrollToTop(@)
+
 			if @unread?
 				@checkIsRead()
 		checkIsRead: (e) ->

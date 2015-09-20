@@ -137,6 +137,17 @@ define [
 		###
 			ChatList ChatDelegate
 		###
+		chatListDidScrollToTop: (chatList) ->
+			return if @isFetchingMore
+			@isFetchingMore = true
+			@currentList.fetchOlderMessages((res, error) =>
+				@isFetchingMore = false
+				if res and res.ok
+					if res.messages and res.messages.length
+						lastMessage = res.messages[0]
+						chatList.setScrollToMessage(lastMessage.ts)
+			)
+
 		chatListMarkAsRead: (chatList, timestamp) ->
 			@currentList.markAsRead()
 		

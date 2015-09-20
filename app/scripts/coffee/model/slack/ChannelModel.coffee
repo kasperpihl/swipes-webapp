@@ -10,9 +10,12 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			@set("messages", messageCollection)
 		getMessages: ->
 			messages = @get("messages")
+			messages.fetch()
 			loop
 				break if messages.length <= @skipCount
-				messages.shift()
+				first = messages.shift()
+				first.localStorage = new Backbone.LocalStorage("MessageCollection-" + @id )
+				first.destroy()
 			messages
 		getName: ->
 			return @get("name") if @get("name")
@@ -30,20 +33,27 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				(res, error) =>
 					console.log("closed channel", res, error)
 			)
+		fetchOlderMessages: (callback) ->
+			collection = @get("messages")
+			collection.fetch()
+			firstObject = collection.at(0)
+			console.log "first", firstObject.toJSON()
+			@fetchMessages(firstObject.get("ts"), callback)
 		fetchMessages: (newest, callback) ->
 			options = {channel: @id, count: @skipCount }
-			
 			collection = @get("messages")
 			collection.fetch()
 			if newest
 				options.latest = newest
 				allowMore = true
+				options.inclusive = 1
+			console.log options
 			swipy.slackSync.apiRequest(@getApiType() + ".history",options, 
 				(res, error) =>
 					if res and res.ok
 						@hasFetched = true
 						for message in res.messages
-							@addMessage(message, allowMore)
+							@addMessage(message, false, allowMore)
 					callback?(res,error)
 			)
 		addMessage: (message, increment, allowMore) ->
@@ -56,7 +66,6 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				if increment and message.user isnt swipy.slackCollections.users.me().id
 					@save("unread_count_display", @get("unread_count_display")+1)
 					if @get("is_im") and @getName() is "slackbot"
-						console.log message
 						swipy.sync.shortBouncedSync()
 						console.log "bounced sync from sofi"
 					if @get("is_im") and (!swipy.isWindowOpened or @getName() isnt swipy.activeId)
