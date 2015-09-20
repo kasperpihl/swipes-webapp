@@ -63,24 +63,6 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 		###
 			DragHandler Delegate
 		###
-		dragHandlerDidClick: ( dragHandler, e) ->
-			hitTarget = $(e.target)
-			draggedId = @idForEvent(e)
-			clickedModel = @collection.get(@messageCollectionIdFromHtmlId(draggedId))
-			me = swipy.slackCollections.users.me()
-			if clickedModel and clickedModel.get("user") is me.id
-				newText = prompt("Edit Message", clickedModel.get("text"))
-				if newText? and newText.length and newText isnt clickedModel.get("text")
-					options = {
-						ts: clickedModel.get("ts")
-						text: newText
-						channel: @model.id
-					}
-					swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
-						console.log "result from message update", res, error
-						if res and res.ok
-							clickedModel.set("text", newText)
-					)
 		messageClickedActions: (chatMessage, e) ->
 			model = chatMessage.model
 			me = swipy.slackCollections.users.me()
@@ -95,6 +77,18 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 					title = prompt("Please enter task name", model.getText())
 					if title
 						Backbone.trigger( "create-task", title, {from: "Message", assignee: me.id })
+				else if result is "delete"
+					shouldDelete = confirm("Delete Message")
+					if shouldDelete
+						options = {
+							ts: model.get("ts")
+							channel: @model.id
+						}
+						swipy.slackSync.apiRequest("chat.delete", options, (res, error) ->
+							console.log "result from message delete", res, error
+							if res and res.ok
+								model.set("text", newText)
+						)
 				else if result is "edit"
 					newText = prompt("Edit Message", model.get("text"))
 					if newText? and newText.length and newText isnt model.get("text")

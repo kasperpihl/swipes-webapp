@@ -145,7 +145,6 @@ define [
 			@hasRendered = true
 			
 		setScrollToMessage: (ts, highlight) ->
-			console.log "setting scroll ts"
 			@scrollToTimestamp = ts.replace(".","\\.")
 
 		isScrolledToBottom: ->
@@ -161,9 +160,7 @@ define [
 			$(".chat-list").css("marginTop", targetMargin)
 		didScroll: (e) ->
 			if $(e.currentTarget).scrollTop() is 0
-				console.log @delegate, @delegate.chatListDidScrollToTop
 				if @delegate? and _.isFunction(@delegate.chatListDidScrollToTop)
-					console.log "did scroll to top - send to delegate"
 					@delegate.chatListDidScrollToTop(@)
 
 			if @unread?

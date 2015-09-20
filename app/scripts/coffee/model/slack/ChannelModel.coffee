@@ -37,7 +37,6 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			collection = @get("messages")
 			collection.fetch()
 			firstObject = collection.at(0)
-			console.log "first", firstObject.toJSON()
 			@fetchMessages(firstObject.get("ts"), callback)
 		fetchMessages: (newest, callback) ->
 			options = {channel: @id, count: @skipCount }
@@ -47,7 +46,6 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				options.latest = newest
 				allowMore = true
 				options.inclusive = 1
-			console.log options
 			swipy.slackSync.apiRequest(@getApiType() + ".history",options, 
 				(res, error) =>
 					if res and res.ok
