@@ -6,7 +6,7 @@ define [
 	
 	], (_, TweenLite, TaskListViewController, ChatListViewController) ->
 	Backbone.View.extend
-		className: "project-view-controller main-view-controller"
+		className: "channel-view-controller main-view-controller"
 		initialize: ->
 			Backbone.on( "create-task", @createTask, @ )
 		render: (el) ->
@@ -18,18 +18,29 @@ define [
 				@loadMainWindow(@mainView)
 			, 5)
 
-		open: (options) ->
+		open: (type, options) ->
 			@identifier = options.id
-			@type = "channel"
+			@type = type
 
 			@mainView = "chat"
 
 			swipy.rightSidebarVC.sidebarDelegate = @
-			
-			collection = swipy.slackCollections.channels
+			console.log type
+			if @type isnt "im"
+				collection = swipy.slackCollections.channels
 
-			@currentList = collection.findWhere({name: @identifier})
-			swipy.topbarVC.setMainTitleAndEnableProgress("# "+@currentList.get("name"),false)
+				@currentList = collection.findWhere({name: @identifier})
+				name = "# "+@currentList.get("name")
+			else
+				collection = swipy.slackCollections.channels
+			
+				@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
+				
+				@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
+				name = @currentUser.get("name")
+				name = "slackbot & s.o.f.i." if name is "slackbot"
+				
+			swipy.topbarVC.setMainTitleAndEnableProgress(name, false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
 
@@ -47,7 +58,8 @@ define [
 
 		createTask: ( title, options ) ->
 			options = {} if !options
-			options.projectLocalId = @currentList.id if !options.projectLocalId?
+			options.targetUserId = @currentUser.id if @currentUser?
+			options.projectLocalId = @currentList.id
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
 
@@ -56,7 +68,12 @@ define [
 		###
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
-			taskGroups = [{leftTitle: @currentList.get("name")+ " tasks" , tasks: _.filter(collection.models, (m) -> !m.get("completionDate"))}]
+			title = @currentList.get("name")+ " tasks"
+			if @currentUser?
+				title =  "You & " + @currentUser.get("name") + "'s tasks"
+				if @currentUser.get("name") is "slackbot"
+					title = "You, slackbot & s.o.f.i's tasks"
+			taskGroups = [{leftTitle: title , tasks: _.filter(collection.models, (m) -> !m.get("completionDate"))}]
 			return taskGroups
 
 
@@ -68,14 +85,25 @@ define [
 			taskListVC.addTaskCard.addDelegate = @
 			taskListVC.taskHandler.listSortAttribute = "projectOrder"
 			taskListVC.taskHandler.delegate = @
-			isGroup = @currentList.get("is_group")
-			channelLabel = if isGroup then "group" else "channel"
-			hashLabel = if isGroup then "" else "# "
-			taskListVC.taskList.emptyTitle = "No tasks in " + hashLabel + @currentList.get("name")
-			taskListVC.taskList.emptySubtitle = "You can add new tasks below or simply drag a message here."
-			taskListVC.taskList.emptyDescription = "When you add tasks in this "+channelLabel+", they will be visible only to its members. You can assign tasks to them and they'll be sent to your teammates' personal workspaces."
-			
-			taskListVC.addTaskCard.setPlaceHolder("Add a new task to #" + @currentList.get("name"))
+
+			if @currentUser?
+				taskListVC.taskList.emptyTitle = "No Direct Tasks between you & " + @currentUser.get("name")
+				taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
+				taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you and " + @currentUser.get("name") + ". You can assign tasks to either you or " + @currentUser.get("name") + " and it will be sent into your workspaces."
+				taskListVC.addTaskCard.setPlaceHolder("Add a new task between you & " + @currentUser.get("name"))
+
+				if @currentUser.get("name") is "slackbot"
+					taskListVC.taskList.emptyTitle = "No Direct Tasks between you, slackbot & s.o.f.i."
+					taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you, slackbot & s.o.f.i. You can assign tasks to you or slackbot, but he probably won't do them!"
+					taskListVC.addTaskCard.setPlaceHolder("Add a new task between you, slackbot & s.o.f.i.")
+			else
+				isGroup = @currentList.get("is_group")
+				channelLabel = if isGroup then "group" else "channel"
+				hashLabel = if isGroup then "" else "# "
+				taskListVC.taskList.emptyTitle = "No tasks in " + hashLabel + @currentList.get("name")
+				taskListVC.taskList.emptySubtitle = "You can add new tasks below or simply drag a message here."
+				taskListVC.taskList.emptyDescription = "When you add tasks in this "+channelLabel+", they will be visible only to its members. You can assign tasks to them and they'll be sent to your teammates' personal workspaces."
+				taskListVC.addTaskCard.setPlaceHolder("Add a new task to #" + @currentList.get("name"))
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			projectId = @currentList.id
 			@taskCollectionSubset = new Backbone.CollectionSubset({
@@ -93,14 +121,19 @@ define [
 			Get A ChatListViewController that filtered for this project
 		###
 		getChatListVC: ->
-			projectId = @identifer
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
 			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
 			chatListVC.chatHandler.loadCollection(@currentList)
-			chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentList.get("name"))
+			if @currentUser? # if is IM
+				chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentUser.get("name"))
+				if @currentUser.get("name") is "slackbot"
+					chatListVC.newMessage.setPlaceHolder("Send a message to slackbot & s.o.f.i.")
+			else
+				chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentList.get("name"))
 			@chatListVC = chatListVC
+
 			@currentList.fetchMessages(null, (res, error) ->
 				if res and res.ok
 					chatListVC.chatList.hasMore = true

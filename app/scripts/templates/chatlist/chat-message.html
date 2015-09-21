@@ -114,9 +114,11 @@
 			<div class="file-container">
 				<div class="comment"></div>
 				<% var file = data.message.get("file");
-				if(file.thumb_360){ %>
+				if(file && file.thumb_360){ %>
 					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= file.thumb_360 %>" />
-				<% } %>
+				<% } 
+				else console.log(data.message); 
+				%>
 			</div>
 		<% } %>
 		<% if( hasAttachment ){ %>

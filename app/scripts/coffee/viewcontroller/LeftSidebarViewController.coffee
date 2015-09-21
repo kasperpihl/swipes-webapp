@@ -23,6 +23,7 @@ define [
 			"click .add-project.button-container a": "clickedAddProject"
 			"click .invite-link": "clickedInvite"
 			"click #sidebar-members-list .more-button-dm, #sidebar-members-list > h1": "clickedDM"
+			#"click #sidebar-group-list .more-button, #sidebar-group-list > h1": "clickedGroup"
 		clickedInvite: ->
 			modal = @getModal("invite", "Invite your favorite colleagues<br>to work with.", "No more colleagues to invite")
 			modal.searchField = true
@@ -96,9 +97,19 @@ define [
 				@$el.find("#sidebar-project-list .projects").append(rowView.el)
 				rowView.render()
 
-			filteredGroups = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_group") and channel.get("is_open") and !channel.get("is_archived") )
+			groupsLeft = 0
+			filteredGroups = _.filter(swipy.slackCollections.channels.models, (channel) -> 
+				if channel.get("is_group") and !channel.get("is_archived")
+					if channel.get("is_open")
+						return true
+					else
+						groupsLeft++
+				return false
+			)
 			groups = _.sortBy( filteredGroups, (group) -> return group.get("name") )
 			@$el.find("#sidebar-group-list .groups").html("")
+			#@$el.find("#sidebar-group-list .more-button").toggleClass("shown", (groupsLeft > 0))
+			@$el.find("#sidebar-group-list .more-button").html("+"+ groupsLeft + " More...")
 			for group in groups
 				rowView = new ChannelRow({model: group})
 				@$el.find("#sidebar-group-list .groups").append(rowView.el)
