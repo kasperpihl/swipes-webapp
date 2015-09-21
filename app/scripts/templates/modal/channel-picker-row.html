@@ -1,0 +1,15 @@
+<% if(data.channels && data.channels.length) { %>
+	<div class="assign-scroll-container">
+		<ul class="channel-list">
+		<% _.each( data.channels, function(channel){ 
+			var channelPrefix = "";
+			if(channel.is_channel) channelPrefix = "# "; %>
+			<li class="channel" data-href="<%= channel.id %>">
+				<%= channelPrefix %><%= channel.name %>
+			</li>
+		<% }); %>
+		</ul>
+	</div>
+<% } else{ %>
+	<div class="message"><%= data.emptyMessage %></div>
+<% } %>

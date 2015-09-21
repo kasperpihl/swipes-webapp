@@ -1,4 +1,4 @@
-.user-picker-modal{
+.picker-modal{
 	background: $sidebar-button-active-background-gray;
 	@include border-radius(10px);
 	padding:20px;
@@ -49,12 +49,16 @@
 			@include placeholder(white);
 		}
 	}
-	
-	.message, .member, .user{
+	.message, .member, .user, .channel{
+
 		position:relative;
 		color: white;
 		font: 12px $font-normal;
 		padding:5px;
+		min-height:26px;
+		&:hover{
+			opacity: 0.8;
+		}
 		.picture-container{
 			padding-left:0px;
 			width:30px;
@@ -71,6 +75,7 @@
 			left:40px;
 			margin-top:-8px;
 			word-wrap: break-word;
+
 		}
 	}
 	ul{

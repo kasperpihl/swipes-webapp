@@ -108,10 +108,16 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					channel = swipy.slackCollections.channels.get(data.channel)
 					channel.save("last_read", data.ts)
 					channel.save("unread_count_display", data.unread_count_display)
+				else if data.type is "channel_joined"
+					channel = swipy.slackCollections.channels.get(data.channel.id)
+					channel.save(data.channel)
+				else if data.type is "channel_left"
+					channel = swipy.slackCollections.channels.get(data.channel)
+					channel.save("is_member", false)
 				else if data.type is "im_close" or data.type is "group_close"
 					channel = swipy.slackCollections.channels.get(data.channel)
 					channel.save("is_open", false)
-				else if data.type is "im_open"
+				else if data.type is "im_open" or data.type is "group_open"
 					channel = swipy.slackCollections.channels.get(data.channel)
 					channel.save("is_open", true)
 

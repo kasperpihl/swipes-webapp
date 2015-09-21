@@ -1,9 +1,9 @@
 define ["underscore",
 		"js/view/modal/ModalView"
-		"text!templates/modal/user-picker-modal.html"
+		"text!templates/modal/picker-modal.html"
 		"text!templates/modal/user-picker-row.html"], (_, ModalView, Tmpl, RowTmpl) ->
 	ModalView.extend
-		className: 'user-picker-modal'
+		className: 'picker-modal'
 		initialize: ->
 			@setTemplates()
 			@bouncedRender = _.debounce(@render, 5)
@@ -58,8 +58,8 @@ define ["underscore",
 		didPresentModal: ->
 			@$el.find("input").focus()
 		renderPeople: ->
-			@$el.find(".user-picker-list-container").html @rowTemplate({people: @filteredPeople, emptyMessage: @emptyMessage })
-			@$el.find(".user-picker-list-container .user").on("click", @clickedPerson)
+			@$el.find(".picker-list-container").html @rowTemplate({people: @filteredPeople, emptyMessage: @emptyMessage })
+			@$el.find(".picker-list-container .user").on("click", @clickedPerson)
 		clickedPerson: (e) ->
 			$el = $(e.currentTarget)
 			userId = $el.attr("data-href")

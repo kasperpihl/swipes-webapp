@@ -2,12 +2,13 @@ define [
 	"underscore"
 	"js/view/sidebar/SidebarChannelRow"
 	"js/view/modal/UserPickerModal"
-	], (_, ChannelRow, UserPickerModal) ->
+	"js/view/modal/ChannelPickerModal"
+	], (_, ChannelRow, UserPickerModal, ChannelPickerModal) ->
 	Backbone.View.extend
 		el: ".sidebar_content"
 		initialize: ->
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
-			@listenTo( swipy.slackCollections.channels, "add reset remove change:is_open", @bouncedRenderSidebar )
+			@listenTo( swipy.slackCollections.channels, "add reset remove change:is_open change:is_member", @bouncedRenderSidebar )
 			@bouncedUpdateNotificationsForMyTasks = _.debounce(@updateNotificationsForMyTasks, 15)
 			@listenTo( swipy.collections.todos, "add reset remove change:completionDate change:schedule", @bouncedUpdateNotificationsForMyTasks)
 			# Proper render list when projects change/add/remove
@@ -24,11 +25,24 @@ define [
 			"click .invite-link": "clickedInvite"
 			"click #sidebar-members-list .more-button-dm, #sidebar-members-list > h1,  #sidebar-members-list .add-button": "clickedDM"
 			"click #sidebar-project-list .add-button" : "clickedAddChannel"
-			#"click #sidebar-group-list .more-button, #sidebar-group-list > h1": "clickedGroup"
+			"click #sidebar-project-list > h1, #sidebar-project-list .more-button" : "clickedChannels"
+			"click #sidebar-group-list .more-button, #sidebar-group-list > h1": "clickedGroups"
 		clickedInvite: ->
 			modal = @getModal("invite", "Invite your favorite colleagues<br>to work with.", "No more colleagues to invite")
 			modal.searchField = true
 			modal.selectOne = false
+			modal.render()
+			modal.presentModal()
+			false
+		clickedGroups: ->
+			modal = @getChannelModal("groups", "Join a private group you're not part of", "No more groups to join")
+			modal.searchField = true
+			modal.render()
+			modal.presentModal()
+			false
+		clickedChannels: ->
+			modal = @getChannelModal("channels", "Join a channel you're not part of", "No more channels to join")
+			modal.searchField = true
 			modal.render()
 			modal.presentModal()
 			false
@@ -38,6 +52,15 @@ define [
 			modal.render()
 			modal.presentModal()
 			false
+		getChannelModal: (type, title, emptyMessage) ->
+			@modalType = type
+			channelPickerModal = new ChannelPickerModal()
+			channelPickerModal.dataSource = @
+			channelPickerModal.delegate = @
+			channelPickerModal.title = title
+			channelPickerModal.emptyMessage = emptyMessage
+			channelPickerModal.loadChannels()
+			channelPickerModal
 		getModal: (type, title, emptyMessage) ->
 			@modalType = type
 			userPickerModal = new UserPickerModal()
@@ -60,6 +83,34 @@ define [
 						swipy.router.navigate("im/"+targetUser.get("name"), {trigger:true})
 					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
 				)
+		channelPickerClickedChannel: (targetChannel) ->
+			if @modalType is "channels"
+				swipy.slackSync.apiRequest("channels.join", {"name": targetChannel.get("name") }, (res,error) =>
+					if res and res.ok
+						swipy.router.navigate("channel/"+targetChannel.get("name"), {trigger:true})
+					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
+				)
+			else if @modalType is "groups"
+				swipy.slackSync.apiRequest("groups.open", {"channel": targetChannel.id }, (res,error) =>
+					if res and res.ok
+						swipy.router.navigate("group/"+targetChannel.get("name"), {trigger:true})
+					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
+				)
+		channelPickerModalChannels: (channelPickerModal) ->
+			channels = []
+			swipy.slackCollections.channels.each( (channel) =>
+				if @modalType is "channels"
+					if channel.get("is_channel") and !channel.get("is_archived")
+						if !channel.get("is_member") 
+							channels.push(channel.toJSON())
+				else if @modalType is "groups"
+					if channel.get("is_group") and !channel.get("is_archived")
+						if !channel.get("is_open")
+							channels.push(channel.toJSON())
+				return false
+			)
+			return channels
+
 		userPickerModalPeople: (userPickerModal) ->
 			people = []
 			me = swipy.slackCollections.users.me()
@@ -86,16 +137,16 @@ define [
 		renderSidebar: ->
 			channelsLeft = 0
 			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) -> 
-				if channel.get("is_channel")
+				if channel.get("is_channel") and !channel.get("is_archived")
 					if channel.get("is_member") 
 						return true
-					else if !channel.get("is_archived")
+					else
 						channelsLeft++
 				return false
 			)
 			channels = _.sortBy( filteredChannels, (channel) -> return channel.get("name") )
 			@$el.find("#sidebar-project-list .projects").html("")
-			#@$el.find("#sidebar-project-list .more-button").toggleClass("shown", (channelsLeft > 0))
+			@$el.find("#sidebar-project-list .more-button").toggleClass("shown", (channelsLeft > 0))
 			@$el.find("#sidebar-project-list .more-button").html("+"+ channelsLeft + " More...")
 
 			for channel in channels
@@ -114,7 +165,7 @@ define [
 			)
 			groups = _.sortBy( filteredGroups, (group) -> return group.get("name") )
 			@$el.find("#sidebar-group-list .groups").html("")
-			#@$el.find("#sidebar-group-list .more-button").toggleClass("shown", (groupsLeft > 0))
+			@$el.find("#sidebar-group-list .more-button").toggleClass("shown", (groupsLeft > 0))
 			@$el.find("#sidebar-group-list .more-button").html("+"+ groupsLeft + " More...")
 			for group in groups
 				rowView = new ChannelRow({model: group})
