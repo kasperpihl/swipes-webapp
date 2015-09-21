@@ -70,6 +70,8 @@ define [
 
 			numberOfFiles = res.files.total
 			@$el.find(".filter-option.files").html("Files ("+numberOfFiles+")")
+			
+			swipy.topbarVC.setSectionTitleAndProgress(+numberOfMessages+ + +numberOfFiles+ " results")
 		renderSearch: ->
 			@searchList.render()
 		clearSearch: ->
