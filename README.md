@@ -11,7 +11,7 @@ swipes-web
 5. `$ grunt build` Spits out a build to the public folder
 
 ### Create a build on Ubuntu
-# It's go without saying - node and npm are required. There is a lot of ways to install that so I'm no going to write a guide about it.
+#### It's go without saying - node and npm are required. There is a lot of ways to install that so I'm no going to write a guide about it.
 
 1. `sudo apt-get install ruby-full` You have to install ruby
 2. `sudo gem isntall compass`
