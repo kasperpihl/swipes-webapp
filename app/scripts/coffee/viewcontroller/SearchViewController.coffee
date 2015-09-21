@@ -78,6 +78,7 @@ define [
 			@$el.find(".search-result-container").html("")
 			@$el.find(".filter-option.messages").html("Messages")
 			@$el.find(".filter-option.files").html("Files")
+			swipy.topbarVC.setSectionTitleAndProgress("No results")
 
 		###
 			SearchList Datasource
