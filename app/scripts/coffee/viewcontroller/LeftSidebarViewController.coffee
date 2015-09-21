@@ -25,6 +25,7 @@ define [
 			"click .invite-link": "clickedInvite"
 			"click #sidebar-members-list .more-button-dm, #sidebar-members-list > h1,  #sidebar-members-list .add-button": "clickedDM"
 			"click #sidebar-project-list .add-button" : "clickedAddChannel"
+			"click #sidebar-group-list .add-button" : "clickedAddGroup"
 			"click #sidebar-project-list > h1, #sidebar-project-list .more-button" : "clickedChannels"
 			"click #sidebar-group-list .more-button, #sidebar-group-list > h1": "clickedGroups"
 		clickedInvite: ->
@@ -123,6 +124,17 @@ define [
 			return people
 		closeChannel: (model) ->
 			model.closeChannel()
+		clickedAddGroup: (e) ->
+			groupName = prompt("Please enter group name", "");
+			if groupName? and groupName.length > 0
+				console.log groupName	
+				swipy.slackSync.apiRequest("groups.create",{name: groupName},(res, error) =>
+					if res and res.ok
+						swipy.router.navigate("group/"+res.channel.name)
+					else
+						console.log("error group",res, error)
+				)
+			false
 		clickedAddChannel: (e) ->
 			channelName = prompt("Please enter channel name", "");
 			if channelName? and channelName.length > 0
