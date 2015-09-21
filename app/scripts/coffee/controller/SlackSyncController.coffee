@@ -26,9 +26,11 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@handleSelf(data.self) if data.self
 					@handleUsers(data.users) if data.users
 					@handleBots(data.bots) if data.bots
+					@_channelsById = {}
 					@handleChannels(data.channels) if data.channels
 					@handleChannels(data.groups) if data.groups
 					@handleChannels(data.ims) if data.ims
+					@clearDeletedChannels()
 					@openWebSocket(data.url)
 					localStorage.setItem("slackLastConnected", new Date())
 					Backbone.trigger('slack-first-connected')
@@ -53,13 +55,20 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				model = collection.create(bot) if !model
 				model.save(bot)
 		handleChannels: (channels) ->
+			
 			for channel in channels
+				@_channelsById[channel.id] = channel
 				collection = swipy.slackCollections.channels
 
 				model = collection.get(channel.id)
 				model = collection.create(channel) if !model
 				model.save(channel)
-
+		clearDeletedChannels: ->
+			channelsToDelete = []
+			for channel in swipy.slackCollections.channels.models
+				if !@_channelsById[channel.id]
+					channelsToDelete.push(channel)
+			swipy.slackCollections.channels.remove(channelsToDelete)
 		handleReceivedMessage: (message, incrementUnread) ->
 			channel = swipy.slackCollections.channels.get(message.channel)
 			channel.addMessage(message, incrementUnread)

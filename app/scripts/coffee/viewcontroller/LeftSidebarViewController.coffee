@@ -22,7 +22,8 @@ define [
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 			"click .invite-link": "clickedInvite"
-			"click #sidebar-members-list .more-button-dm, #sidebar-members-list > h1": "clickedDM"
+			"click #sidebar-members-list .more-button-dm, #sidebar-members-list > h1,  #sidebar-members-list .add-button": "clickedDM"
+			"click #sidebar-project-list .add-button" : "clickedAddChannel"
 			#"click #sidebar-group-list .more-button, #sidebar-group-list > h1": "clickedGroup"
 		clickedInvite: ->
 			modal = @getModal("invite", "Invite your favorite colleagues<br>to work with.", "No more colleagues to invite")
@@ -71,11 +72,16 @@ define [
 			return people
 		closeChannel: (model) ->
 			model.closeChannel()
-		clickedAddProject: (e) ->
-			project = prompt("Please enter project name", "");
-			if project? and project.length > 0
-				projectObj = swipy.collections.projects.create({name: project, ownerId: 1})
-				projectObj.save({}, {sync:true})
+		clickedAddChannel: (e) ->
+			channelName = prompt("Please enter channel name", "");
+			if channelName? and channelName.length > 0
+				console.log channelName	
+				swipy.slackSync.apiRequest("channels.create",{name: channelName},(res, error) =>
+					if res and res.ok
+						swipy.router.navigate("channel/"+res.channel.name)
+					else
+						console.log("error channel",res, error)
+				)
 			false
 		renderSidebar: ->
 			channelsLeft = 0
