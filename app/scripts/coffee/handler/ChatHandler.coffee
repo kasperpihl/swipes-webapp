@@ -4,7 +4,10 @@
 		Find out who's the sender, where does it want to go, and what actions would be available
 	Receive select/unselect from TaskList
 ###
-define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
+define [
+	"underscore",
+	"js/view/modal/EditMessageModal"
+	"js/utility/TimeUtility"], (_, EditMessageModal, TimeUtility) ->
 	class ChatHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
@@ -90,18 +93,22 @@ define ["underscore", "js/utility/TimeUtility"], (_, TimeUtility) ->
 								model.set("text", newText)
 						)
 				else if result is "edit"
-					newText = prompt("Edit Message", model.get("text"))
-					if newText? and newText.length and newText isnt model.get("text")
-						options = {
-							ts: model.get("ts")
-							text: newText
-							channel: @model.id
-						}
-						swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
-							console.log "result from message update", res, error
-							if res and res.ok
-								model.set("text", newText)
-						)
+					editMessageCallback = ((channelModel, chatMessageModel) ->
+						return (newText) ->
+							if newText? and newText.length and newText isnt chatMessageModel.get("text")
+								options = {
+									ts: chatMessageModel.get("ts")
+									text: newText
+									channel: channelModel.id
+								}
+								swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
+									console.log "result from message update", res, error
+									if res and res.ok
+										chatMessageModel.set("text", newText)
+								)
+					)(@model, model)
+
+					editMessageModal = new EditMessageModal {submitCallback: editMessageCallback, textAreaValue: model.get("text")}
 			)
 		###
 			ChatMessage Delegate

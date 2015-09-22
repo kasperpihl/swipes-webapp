@@ -25,7 +25,11 @@ define [
 		render: ->
 			@$el.attr('id', "message-"+@model.id )
 			@$el.addClass("new") if @new
-			@$el.html @template( message: @model, handleMentionsAndLinks: @util.handleMentionsAndLinks, isFromSameSender: @isFromSameSender, attTmpl: @attTemplate )
+			@$el.html @template
+				message: @model
+				handleMentionsAndLinks: @util.handleMentionsAndLinks
+				isFromSameSender: @isFromSameSender
+				attTmpl: @attTemplate
 			@new = false
 			return @
 		clickedActions: (e) ->

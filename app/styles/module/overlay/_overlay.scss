@@ -20,6 +20,11 @@
 			@include transition(opacity 0.2s ease-out);
 			opacity: 0.5;
 		}
+		&.dark-opaque {
+			@include transition(opacity 0.2s ease-out);
+			background-color: rgba($sidebar-black-header, .3);
+			opacity: 0.5;
+		}
 	}
 	.modal-overlay-content{
 		z-index: 9001;
