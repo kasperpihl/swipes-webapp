@@ -4,7 +4,6 @@ define [
 	], (_, ToggleTemplate) ->
 	Backbone.View.extend
 		initialize: (options) ->
-			self = @
 			@options = options
 
 			@setTemplates()
