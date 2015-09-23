@@ -58,6 +58,96 @@ $task-new-task-height: 61px;
 	max-width:400px;
 	width:90%;
 	margin: 0 auto;
+	
+	.completeted-toggle-wrapper {
+		width: 200px;
+		margin: 0 auto;
+		margin-top: 50px;
+		display: -webkit-box;
+		display: flex;
+	
+		.onoffswitch {
+			width: 50px;
+			position: relative;
+			user-select: none;
+			
+			.onoffswitch-checkbox {
+				display: none;
+			}
+		
+			.onoffswitch-label {
+				display: block;
+				overflow: hidden;
+				cursor: pointer;
+				border: 1px solid $sidebar-button-gray;
+				border-radius: 20px;
+			
+				.onoffswitch-inner {
+					display: block;
+					width: 200%;
+					margin-left: -100%;
+					transition: .2s ease-in-out;
+				
+					&:before, &:after {
+						content: "";
+						padding-right: 10px;
+						display: block; 
+						float: left;
+						width: 50%; 
+						height: 30px; 
+						padding: 0; 
+						line-height: 30px;
+						box-sizing: border-box;
+					}
+				}
+			
+				.onoffswitch-switch {
+					display: block; 
+					width: 36px; 
+					margin: -2px;
+					height: 36px;
+					background: $white-background;
+					position: absolute; 
+					top: 0; 
+					bottom: 0;
+					right: 26px;
+					border: 1px solid $sidebar-button-gray; 
+					border-radius: 20px;
+					transition: 0.2s ease-in-out; 
+					cursor: pointer;
+				}
+			}
+		
+			.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+				margin-left: 0;
+			}
+			
+			.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+				right: 0px; 
+	    		background-color: $online-green; 
+			}
+		}
+		
+		.toggle-text {
+			height: 36px;
+			padding-top: 8px;
+			overflow: hidden;
+			box-sizing: border-box;
+			margin-left: 20px;
+		
+			.toggle-text-one, .toggle-text-two {
+				font: 14px $font-normal;
+				color: rgba($sidebar-dark-color, .4);
+				height: 36px;
+				transition: .2s ease-in-out;
+			
+				&.active {
+					transform: translateY(-36px);
+					transition: .2s ease-in-out;
+				}
+			}
+		}
+	}
 }
 .task-list{
 	.animate-in {
