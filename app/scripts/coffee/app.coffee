@@ -115,7 +115,8 @@ define [
 				swipy.filter.clearFilters()
 				Backbone.trigger( "remove-filter", "all" )
 				return false
-			)
+			)	
+			
 			@workmode.checkForWork()
 			if @href
 				switch @href

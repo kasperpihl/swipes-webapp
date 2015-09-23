@@ -24,8 +24,10 @@
 		color: rgba($sidebar-black-header, .6);
 		resize: none;
 		border: none;
+		border-left: 1px solid rgba($sidebar-black-header, .6);
 		cursor: text;
 		outline: none;
+		padding-left: 10px;
 	}
 	
 	.buttons {

@@ -29,6 +29,7 @@
 }
 
 .search-view-controller{
+	width: 80%;
 	height: 100%;
 	position: relative;
 	$searchHeaderHeight: 60px;
@@ -37,10 +38,10 @@
 		margin-top: 0;
 		height: $searchHeaderHeight;
 		padding-top: 14px;
-		width: 100%;
+		width: calc(100% - 40px);
 		.loading{
 			position:absolute;
-			top:18px;
+			top:22px;
 			height:24px;
 			width: 24px;
 			right:91%;
@@ -48,7 +49,7 @@
 		}
 		.search-icon{
 			position:absolute;
-			top:18px;
+			top:22px;
 			height:24px;
 			width: 24px;
 			fill: $unselected-color;
@@ -71,17 +72,56 @@
 			
 			padding-bottom:5px;
 		}
-		.filter-options{
-			position: absolute;
-			top: 18px;
-			right:60px;
-			height: 40px;
+		z-index: 2;
+		background: white;
+		border-bottom: 2px solid $selected-overlay-background;
+		position: absolute;
+
+	}
+	
+	.search-loading-container{
+		width: 80%;
+		height: 100vh;
+		z-index: 1;
+		margin-left: 10%;
+		margin-top: $searchHeaderHeight;
+		position: absolute;
+		top: 0;
+		background-image: url('../styles/img/swipes-animation-ui-search.gif');
+		background-size: 200px 200px;
+		background-repeat: no-repeat;
+		background-position: calc(50% - 100px) calc(50% - 100px);
+		transform: scale(0);
+		
+		&.isLoading {
+			transform: scale(1);
+		}
+	}
+	
+	.search-result-container{
+		width: 80%;
+		z-index: 1;
+		margin-left: 10%;
+		padding-top: $searchHeaderHeight;
+		position: absolute;
+		top: 0;
+	}
+}
+
+.search-filter-container {
+	width: 20%;
+	height: 100%;
+	position: fixed;
+	right: 0;
+	top: 0px;
+	box-shadow: inset 5px -2px 15px 0px rgba(0,12,47,0.05);
+	
+	.filter-options{
+			margin-top: 125px;
+			margin-left:50px;
+			
 			.filter-option{
-				float:right;
-				padding: 3px;
-				padding-left: 10px;
-				padding-right: 10px;
-				border-left: 2px solid $selected-overlay-background;
+				padding: 5px 0;
 				&.selected{
 					text-decoration:underline;
 				}
@@ -90,22 +130,8 @@
 				}
 			}
 		}
-		z-index: 2;
-		background: white;
-		border-bottom: 2px solid $selected-overlay-background;
-		position: absolute;
-
-	}
-	.search-result-container{
-		width: 80%;
-		z-index: 1;
-		margin-left: 10%;
-		padding-top: $searchHeaderHeight;
-		position: absolute;
-		top: 0;
-		
-	}
 }
+
 .chat-list-container{
 	height:100%;
 	width: 94%;

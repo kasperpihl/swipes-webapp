@@ -59,6 +59,7 @@ define [
 						@currentResults = []
 						@clearSearch()
 					@setIsLoading(false)
+					
 				)
 		setIsLoading:(isLoading) ->
 			@isLoading = isLoading
