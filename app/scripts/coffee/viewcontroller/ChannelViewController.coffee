@@ -66,14 +66,23 @@ define [
 		### 
 			TaskHandler delegate
 		###
-		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
+		taskHandlerSortAndGroupCollection: (taskHandler, collection, toggleCompleted) ->
 			self = @
 			title = @currentList.get("name")+ " tasks"
+
 			if @currentUser?
 				title =  "You & " + @currentUser.get("name") + "'s tasks"
 				if @currentUser.get("name") is "slackbot"
 					title = "You, slackbot & s.o.f.i's tasks"
-			taskGroups = [{leftTitle: title , tasks: _.filter(collection.models, (m) -> !m.get("completionDate"))}]
+
+			tasks = _.filter collection.models, (m) ->
+				if toggleCompleted
+					m.get("completionDate")
+				else
+					!m.get("completionDate")
+					
+			taskGroups = [{leftTitle: title , tasks: tasks}]
+
 			return taskGroups
 
 

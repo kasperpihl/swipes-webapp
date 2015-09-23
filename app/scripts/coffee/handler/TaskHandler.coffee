@@ -277,23 +277,32 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 		# TaskList asking for number of sections
 		taskListNumberOfSections: ( taskList ) ->
-			@sortAndGroupCollection()
+			@sortAndGroupCollection(taskList.toggleCompleted)
+
 			return @groupedTasks.length
-		sortAndGroupCollection: ->
+
+		sortAndGroupCollection: (toggleCompleted) ->
 			@groupedTasks = []
+
 			if @delegate? and _.isFunction(@delegate.taskHandlerSortAndGroupCollection)
-				@groupedTasks = @delegate.taskHandlerSortAndGroupCollection( @, @collection )
+				@groupedTasks = @delegate.taskHandlerSortAndGroupCollection( @, @collection, toggleCompleted )
 			else
 				@groupedTasks = [ { "leftTitle": null, "rightTitle": null, "tasks": @collection.models }]
+
 			return @groupedTasks
+
 		taskListDataForSection: ( taskList, section ) ->
 			if !@collection?
 				throw new Error("TaskHandler: must loadSubcollection before loading TaskList")
+
 			return null if !@groupedTasks or !@groupedTasks.length
+
 			models = @groupedTasks[ (section-1) ].tasks
+
 			if @listSortAttribute? and @listSortAttribute
 				if !@groupedTasks[ (section-1) ].dontSort? or !@groupedTasks[ (section-1) ].dontSort
 					@groupedTasks[ (section-1) ].tasks = @sortTasksAndSetOrder(models, true)
+
 			# Check filter for limitations
 			return @groupedTasks[ (section-1) ]
 

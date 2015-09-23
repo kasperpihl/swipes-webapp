@@ -71,7 +71,7 @@ define [
 		###
 			TaskHandler Delegate
 		###
-		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
+		taskHandlerSortAndGroupCollection: (taskHandler, collection, toggleComplete) ->
 			self = @
 
 			groups = collection.groupBy((model, i) ->
@@ -85,11 +85,10 @@ define [
 			taskGroups = []
 			sortedKeys = _.keys(groups).sort()
 			for key in sortedKeys
-				continue if key is "completed"
 				dontSort = false
 				showSchedule = false
-				if key is "-1"
-					title = "Your current tasks"
+				if key is "-1" || key is "completed"
+					title = "Your tasks"
 				else if key is "9999999999"
 					title = "Unspecified"
 				else
@@ -101,7 +100,10 @@ define [
 					)
 					title = @timeUtil.dayStringForDate(schedule)
 					title = "Later Today" if title is "Today"
-				taskGroups.push({showSource: true, showSchedule: showSchedule, leftTitle: title, tasks: groups[key], dontSort: dontSort })
+
+			key = if toggleComplete then "completed" else "-1"
+			taskGroups.push({showSource: true, showSchedule: showSchedule, leftTitle: title, tasks: groups[key], dontSort: dontSort })
+
 			return taskGroups
 
 

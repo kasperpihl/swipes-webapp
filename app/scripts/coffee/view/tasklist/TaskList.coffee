@@ -13,10 +13,11 @@ define [
 	Backbone.View.extend
 		className: "task-list"
 		initialize: ->
-			# Set HTML tempalte for our list
+			# Set HTML template for our list
 			@listenTo( Backbone, "reload/taskhandler", @render )
 			
 			@numberOfSections = 0
+			@toggleCompleted = false
 		remove: ->
 			@cleanUp()
 			@$el.empty()
@@ -26,7 +27,7 @@ define [
 		
 		# Reload datasource for 
 
-		render: ->
+		render: (e) ->
 			if !@dataSource?
 				throw new Error("TaskList must have dataSource")
 			if !_.isFunction(@dataSource.taskListDataForSection)
@@ -34,28 +35,32 @@ define [
 
 			if !@targetSelector?
 				throw new Error("TaskList must have targetSelector to render")
-			
-			@$el.html ""
-			$(@targetSelector).html( @$el )
 
+			if e and e.hasOwnProperty('checked')
+				@toggleCompleted = e.checked
 
 			numberOfSections = 1
 			numberOfTasks = 0
+
+			@$el.html ""
+			$(@targetSelector).html( @$el )
 			
 			if _.isFunction(@dataSource.taskListNumberOfSections)
 				numberOfSections = @dataSource.taskListNumberOfSections( @ )
-			@_taskCardsById = {}
-			for section in [1 .. numberOfSections]
-				
 
+			@_taskCardsById = {}
+
+			for section in [1 .. numberOfSections]
 				# Load tasks and titles for section
 				sectionData = @dataSource.taskListDataForSection( @, section )
+
 				continue if !sectionData or !sectionData.tasks.length
+
 				# Instantiate 
 				section = new Section()
-
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
+
 				if lastLeftTitle and lastLeftTitle is "Your current tasks"
 					section.$el.find('.section-header').css("marginTop","150px")
 

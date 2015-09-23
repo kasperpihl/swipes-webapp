@@ -15,7 +15,7 @@ define [
 			label = number + " task"
 			if number isnt 1
 				label += "s"
-			@setSectionTitleAndProgress( label)
+			@setSectionTitleAndProgress(label)
 		render: ->
 			@$el.html(@template({}))
 			$(".top-bar-container").html(@$el)
