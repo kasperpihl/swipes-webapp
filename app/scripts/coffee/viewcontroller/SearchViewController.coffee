@@ -8,7 +8,7 @@ define [
 		className: "search-view-controller"
 		initialize: ->
 			@template = _.template Tmpl, {variable: "data" }
-			@tailBounceSearch = _.debounce(@doSearch, 1000)
+			@tailBounceSearch = _.debounce(@doSearch, 500)
 			_.bindAll(@, "doSearch")
 			@searchList = new SearchList()
 			@searchList.dataSource = @

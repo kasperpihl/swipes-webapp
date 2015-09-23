@@ -18,23 +18,26 @@
 	
 	textarea {
 		width: 80%;
-		min-height: 80px;
+		min-height: 110px;
 		margin-left: 10%;
 		font: 14px $font-normal;
 		color: rgba($sidebar-black-header, .6);
 		resize: none;
+		//border: 1px solid rgba($sidebar-black-header, .1);
+		//border-radius: 5px;
 		border: none;
-		border-left: 1px solid rgba($sidebar-black-header, .3);
 		cursor: text;
 		outline: none;
-		padding-left: 10px;
+		padding: 10px;
+		box-sizing: border-box;
+		background-color: #f7f7f8;
 	}
 	
 	.buttons {
 		position: relative;
 		width: 200px;
-		margin-left: 50%;
-		margin-top: 40px;
+		margin-left: 45%;
+		margin-top: 15px;
 		height: 50px;
 		display: inline-block;
 		

@@ -60,7 +60,7 @@
 	
 	.right-window-content-container{
 		position:relative;
-		background: $light-background;
+		background: $white-background;
 		$button-size: 44px;
 		$button-top: 8px;
 		$icon-size: 18px;
@@ -109,7 +109,7 @@
 			.section-header h2{
 				background: $light-background;
 			}
-			@include box-shadow(inset 3px 0 10px -4px #C7C7C7);
+			@include box-shadow(inset 5px -2px 15px 0px rgba(0,12,47,0.05));
 			position: absolute;
 			width:100%;
 			height: 100%;
