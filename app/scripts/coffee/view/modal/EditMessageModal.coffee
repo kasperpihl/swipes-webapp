@@ -23,7 +23,6 @@ define ["underscore",
 			@template = _.template Template, variable: "data"
 		afterOpen: ->
 			$('.modal-clickable-background').addClass('dark-opaque')
-			console.log @options.textAreaValue
 			@$el.find('textarea').text(_.unescape @options.textAreaValue)
 			@$el.find('textarea').focus()
 		afterClose: ->
