@@ -92,7 +92,7 @@ define [
 					@$el.find(".empty-text").append("<div class=\"description\">"+@emptyDescription+"</div>")		
 			Backbone.trigger("update/numberOfTasks", numberOfTasks)
 
-			if @enableDragAndDrop and numberOfTasks > 0
+			if @enableDragAndDrop and numberOfTasks > 0 and !@toggleCompleted
 				if !@dragDelegate?
 					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
 				if !@dragHandler?

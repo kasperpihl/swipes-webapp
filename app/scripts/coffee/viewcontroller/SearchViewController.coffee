@@ -58,7 +58,6 @@ define [
 
 				@isLoading = false
 				@toggleLoadingAnimation false
-				
 			)
 		toggleLoadingAnimation: (isVisible) ->
 			text = @$el.find(".search-field-container input").val()
