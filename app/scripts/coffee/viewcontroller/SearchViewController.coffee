@@ -19,9 +19,10 @@ define [
 			"click .filter-option" : "clickedFilterOption"   
 		pressedKey: (e) ->
 			if e.keyCode is 27
-				@doSearch
+				# T_TODO close search on escape would be nice
+				#@doSearch
 			else
-				@tailBounceSearch()
+				@toggleLoadingAnimation true
 		getCurrentSection: ->
 			currentSection = "messages"
 			currentSection = "files" if @$el.find(".filter-option.selected").hasClass("files")
@@ -43,26 +44,36 @@ define [
 			@render()
 		doSearch: ->
 			text = @$el.find(".search-field-container input").val()
+
+			return if @isLoading
+
+			@isLoading = true
+
+			swipy.slackSync.apiRequest("search.all",{query: text, sort: "score"}, (res,error) =>
+				if res and res.ok
+					@setCurrentResults(res)
+					@renderSearch()
+				else 
+					@currentResults = []
+
+				@isLoading = false
+				@toggleLoadingAnimation false
+				
+			)
+		toggleLoadingAnimation: (isVisible) ->
+			text = @$el.find(".search-field-container input").val()
+			loadingAnimation = @$el.find(".search-loading-container")
+
 			if !text or !text.length
 				@clearSearch()
+				loadingAnimation.removeClass("isLoading")
 			else if @currentResults? and @currentResults.query is text
+				loadingAnimation.removeClass("isLoading")
 				return false
 			else
-				return if @isLoading
-				@setIsLoading(true)
-				swipy.slackSync.apiRequest("search.all",{query: text, sort: "score"}, (res,error) =>
-					if res and res.ok
-						@setCurrentResults(res)
-						@renderSearch()
-					else 
-						@currentResults = []
-						@clearSearch()
-					@setIsLoading(false)
-					
-				)
-		setIsLoading:(isLoading) ->
-			@isLoading = isLoading
-			@$el.find(".search-field-container").toggleClass("isLoading", isLoading)
+				@clearSearch()
+				loadingAnimation.addClass("isLoading")
+				@tailBounceSearch()
 		setCurrentResults: (res) ->
 			@currentResults = res
 			numberOfMessages = res.messages.total
