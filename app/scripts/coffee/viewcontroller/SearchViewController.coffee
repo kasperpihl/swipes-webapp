@@ -13,11 +13,10 @@ define [
 			@searchList = new SearchList()
 			@searchList.dataSource = @
 			@searchList.targetSelector = ".search-result-container"
-
 		events:
 			"keyup input": "pressedKey"
 			"keydown input": "keydownEvent"
-			"click .filter-option" : "clickedFilterOption"
+			"click .filter-option" : "clickedFilterOption"   
 		pressedKey: (e) ->
 			if e.keyCode is 27
 				@doSearch

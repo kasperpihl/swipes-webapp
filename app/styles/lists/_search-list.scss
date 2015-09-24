@@ -87,10 +87,10 @@
 		margin-top: $searchHeaderHeight;
 		position: absolute;
 		top: 0;
-		background-image: url('../styles/img/swipes-animation-ui-search.gif');
-		background-size: 200px 200px;
+		background-image: url('../styles/img/swipes-animation-ui-search-2.gif');
+		background-size: 100px 100px;
 		background-repeat: no-repeat;
-		background-position: calc(50% - 100px) calc(50% - 100px);
+		background-position: calc(50% - 50px) calc(50% - 50px);
 		transform: scale(0);
 		
 		&.isLoading {
