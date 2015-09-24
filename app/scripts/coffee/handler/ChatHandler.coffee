@@ -108,7 +108,9 @@ define [
 								)
 					)(@model, model)
 
-					editMessageModal = new EditMessageModal {submitCallback: editMessageCallback, textAreaValue: model.get("text")}
+					editMessageModal = new EditMessageModal
+						submitCallback: editMessageCallback
+						textAreaValue: model.get("text")
 			)
 		###
 			ChatMessage Delegate
