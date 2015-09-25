@@ -110,13 +110,19 @@
 		<div class="message-container">
 			<%= data.handleMentionsAndLinks(data.message.get("text")) %>
 		</div>
-		<% if(data.message.get("subtype") == "file_share") { %>
+		<% if(data.message.get("subtype") == "file_share") { console.log(data.message); %>
+
 			<div class="file-container">
 				<div class="comment"></div>
 				<% var file = data.message.get("file");
-				if(file && file.thumb_360){ %>
-					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= file.thumb_360 %>" />
-				<% } 
+				if(file){ 
+					var fileURL = file.thumb_360;
+					if(file.thumb_360_gif)
+						fileURL = file.thumb_360_gif;
+					if(fileURL){
+				%>
+					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= fileURL %>" />
+				<% } } 
 				else console.log(data.message); 
 				%>
 			</div>
