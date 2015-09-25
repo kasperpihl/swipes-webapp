@@ -63,21 +63,30 @@ define [
 		###
 		taskHandlerSortAndGroupCollection: (taskHandler, collection, toggleComplete) ->
 			self = @
-
-			groups = collection.groupBy((model, i) ->
-				if model.get("completionDate") then return "completed"
+			tasks = _.filter collection.models, (m) ->
+				if toggleComplete
+					m.get("completionDate")
+				else
+					!m.get("completionDate")
+			groups = _.groupBy(tasks, (model, i) ->
+				if model.get("completionDate") then return moment(model.get("completionDate")).startOf('day').unix()
 				if model.getState() is "active" then return -1
 				else if model.getState() is "scheduled"
 					schedule = model.get("schedule")
 					return 9999999999 if !schedule? or !schedule
 					return moment(schedule).startOf('day').unix()
 			)
+			
 			taskGroups = []
 			sortedKeys = _.keys(groups).sort()
+
+			if toggleComplete
+				sortedKeys = sortedKeys.reverse()
+			
 			for key in sortedKeys
 				dontSort = false
 				showSchedule = false
-				if key is "-1" || key is "completed"
+				if key is "-1"
 					title = "Your tasks"
 				else if key is "9999999999"
 					title = "Unspecified"
@@ -86,13 +95,15 @@ define [
 					showSchedule = true
 					schedule = new Date(parseInt(key)*1000)
 					groups[key] = _.sortBy(groups[key], (model) ->
+						return -model.get("completionDate").getTime() if toggleComplete? and toggleComplete
 						return model.get("schedule")?.getTime()
 					)
 					title = @timeUtil.dayStringForDate(schedule)
-					title = "Later Today" if title is "Today"
-
-			key = if toggleComplete then "completed" else "-1"
-			taskGroups.push({showSource: true, showSchedule: showSchedule, leftTitle: title, tasks: groups[key], dontSort: dontSort })
+					if toggleComplete
+						title = "Completed " + title
+					else if title is "Today"
+						title = "Later Today"
+				taskGroups.push({showSource: true, showSchedule: showSchedule, leftTitle: title, tasks: groups[key], dontSort: dontSort })
 
 			return taskGroups
 

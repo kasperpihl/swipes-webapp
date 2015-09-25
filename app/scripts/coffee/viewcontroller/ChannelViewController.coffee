@@ -3,11 +3,13 @@ define [
 	"gsap"
 	"js/viewcontroller/TaskListViewController"
 	"js/viewcontroller/ChatListViewController"
+	"js/utility/TimeUtility"
 	
-	], (_, TweenLite, TaskListViewController, ChatListViewController) ->
+	], (_, TweenLite, TaskListViewController, ChatListViewController, TimeUtility) ->
 	Backbone.View.extend
 		className: "channel-view-controller main-view-controller"
 		initialize: ->
+			@timeUtil = new TimeUtility()
 			Backbone.on( "create-task", @createTask, @ )
 		render: (el) ->
 			@$el.html "<div style=\"text-align:center; margin-top:100px;\">Loading</div>"
@@ -80,8 +82,23 @@ define [
 					m.get("completionDate")
 				else
 					!m.get("completionDate")
-					
-			taskGroups = [{leftTitle: title , tasks: tasks}]
+			if toggleCompleted
+				groups = _.groupBy(tasks, (model, i) ->
+					return moment(model.get("completionDate")).startOf('day').unix()
+				)
+				taskGroups = []
+				sortedKeys = _.keys(groups).sort().reverse()
+				for key in sortedKeys
+					dontSort = true
+					schedule = new Date(parseInt(key)*1000)
+					groups[key] = _.sortBy(groups[key], (model) ->
+						return -model.get("completionDate").getTime()
+					)
+					title = "Completed " + @timeUtil.dayStringForDate(schedule)
+					taskGroups.push({showSource: true, leftTitle: title, tasks: groups[key], dontSort: dontSort })
+
+			else
+				taskGroups = [{leftTitle: title , tasks: tasks}]
 
 			return taskGroups
 
