@@ -193,10 +193,14 @@ $meta-margin: 10px;
 // Design for cards
 .card-container{
 	position: relative;
+	.relative-container{
+		position: relative;	
+	}
 	.main-info-container{
 		padding:5px;
 		padding-left: $left-padding;
-		//position: relative;
+
+		
 		.priority{
 			margin-top: -3px;
 		}

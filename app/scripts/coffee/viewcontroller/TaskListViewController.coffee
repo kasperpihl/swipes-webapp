@@ -45,7 +45,6 @@ define [
 
 			@setEmptyTitles()
 		editTask: (model) ->
-			return
 			taskCard = @taskList.taskCardById(model.id)
 			return if !taskCard
 			@editTask = new EditTask({model: model})

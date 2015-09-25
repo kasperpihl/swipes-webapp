@@ -161,7 +161,6 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				)
 			false
 		dragHandlerDidClick: (dragHandler, e) ->
-			return false
 			hitTarget = $(e.target)
 			clickedId = @idForEvent(e)
 
