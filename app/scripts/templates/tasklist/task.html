@@ -22,10 +22,15 @@
 	if (sourceOfTask)
 		numberOfMetaInfos++;
 
-	if( data.showSchedule && data.task.get("timeStr") ){
+	if( data.task.get("completionTimeStr") ){
+		timeString = data.task.get("completionTimeStr")
+		numberOfMetaInfos++;
+	}
+	else if( data.showSchedule && data.task.get("timeStr") ){
 		timeString = data.task.get("timeStr")
 		numberOfMetaInfos++;
 	}
+
 
 	if (data.task.get('tags') && data.task.get('tags').length){
 		numberOfMetaInfos++;
