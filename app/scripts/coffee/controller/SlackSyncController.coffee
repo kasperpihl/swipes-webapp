@@ -68,7 +68,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			for channel in swipy.slackCollections.channels.models
 				if !@_channelsById[channel.id]
 					channelsToDelete.push(channel)
-			swipy.slackCollections.channels.remove(channelsToDelete)
+			for channel in channelsToDelete
+				swipy.slackCollections.channels.remove(channel)
+				channel.localStorage = swipy.slackCollections.channels.localStorage
+				channel.destroy()
 		handleReceivedMessage: (message, incrementUnread) ->
 			channel = swipy.slackCollections.channels.get(message.channel)
 			channel.addMessage(message, incrementUnread)
