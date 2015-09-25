@@ -19,12 +19,12 @@
 	}
 	.sidebar-shadow{
 		z-index:5001;
-		position:absolute;
+		position:absolute; 
 		top: 0;
 		height: 100%;
 		left: $sidebar-width - 10;
 		width: 10px;
-		@include box-shadow(inset -3px 0 10px -4px #C7C7C7);
+		@include box-shadow(inset -3px 0 10px -4px $dark-background);
 
 	}
 	.sidebar-header{
@@ -44,7 +44,6 @@
 		padding-bottom: 0px; 
 		text-align: left;
 		#sidebar-my-tasks{
-			padding-top: 20px;
 		}
 		#sidebar-settings-container{
 			position:relative;
@@ -91,18 +90,13 @@
 				width: 25px;
 				right: 2px;
 				height:25px;
-				top: 3px;
+				top: 6px;
 				opacity: 0.9;
 				padding: 0;
 				svg{
 					height:25px;
 					width:25px;
 					fill: $unselected-text-color;
-				}
-				&:hover{
-					svg{
-						fill: $sidebar-dark-color;
-					}
 				}
 			}
 			/*h1.title{
@@ -130,7 +124,7 @@
 		}
 		h1{
 			padding-top: 10px;
-			font: 0.8em/1 $font-normal;
+			font: 14px $font-bold;
 			letter-spacing: 0px;
 			padding-left: 19px;
 			margin-top:8px;
@@ -138,9 +132,14 @@
 		}
 		a{
 			$block-height: 25px;
-			$dot-size: 10px;
+			$dot-size: 6px;
 			padding-left:20px;
 			height: $block-height;
+			
+			&.task {
+				height: 45px;
+				border-bottom: 2px solid $sidebar-black-header;
+			}
 			
 			// Status icon for team members
 			.status-container{
@@ -184,14 +183,25 @@
 
 			
 			.text{
+				width: 140px;
 				float:left;
-				padding-top: 6px;
-				font: 0.75em/1 $font-normal;
+				font: 13px $font-normal;
+				line-height: 25px;
 				letter-spacing: 1px;
 				text-align: left;
 				@include transition(padding 0.1s ease-out);
 				padding-left:0px;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+  				overflow: hidden;
+				color: rgba($unselected-text-color, .4);
 			}
+			
+			.task-text {
+				font: 15px $font-bold;
+				line-height: 45px;
+			}
+			
 			&:hover{
 				.close-container{
 					display:block;
@@ -222,23 +232,32 @@
 		.unread{
 			a{
 				.text{
-					font: 0.75em/1 $font-bold;
-					color: $unread-text-color;
+					font: 14px $font-bold;
+					color: $unselected-text-color;
+					line-height: 25px;
 				}
-				$notification-size: 22px;
+				$notification-size: 25px;
 				.notification{
 					position:absolute;
-					right: 3px;
+					right: 8px;
 					@include border-radius($notification-size/2);
-					padding:5px;
-					padding-top:3px;
-					color: $unread-text-color;
-					border: 2px solid $red;
-					font: 11px $font-normal;
+					font: 14px $font-bold;
+					line-height: 15px;
 					height:$notification-size;
-					top: 1px;
 					min-width:$notification-size;
+					padding: 5px;
 					text-align:center;
+					
+					&.task {
+						top: 10px;
+						color: $sidebar-dark-color;
+						background-color: $yellow;
+					}
+					
+					&.chat {
+						color: $white-background;
+						background-color: $orange;
+					}
 				}
 				&:hover{
 					.close-container{
@@ -256,9 +275,13 @@
 			}
 			
 			li:hover, li.active, li.drag-hover-entering{
-				background: $selected-overlay-background;
+				background: rgba($white-background, .2);
 				a{
-					color: $unread-text-color;
+					color: $unselected-text-color;
+				}
+				
+				.text {
+					color: $unselected-text-color;
 				}
 			}
 			li.drag-hover-entering{
