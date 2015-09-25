@@ -13,7 +13,7 @@ define [
 		events:
 			"click .like-button" : "clickedLike"
 			"click .catchClick": "clickedLink"
-			"click .hover-box a.actions": "clickedActions"
+			"click .hover-box": "clickedActions"
 		initialize: ->
 			throw new Error("Model must be added when constructing a ChatMessage") if !@model?
 			@template = _.template MessageTmpl, {variable: "data" }
