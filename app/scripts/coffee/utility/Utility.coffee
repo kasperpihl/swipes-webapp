@@ -57,7 +57,6 @@ define ["underscore"], (_) ->
 			return if !text
 
 			matches = text.match(/<(.*?)>/g)
-
 			if matches? and matches.length
 				for match in matches
 					replacement = ""
@@ -85,24 +84,25 @@ define ["underscore"], (_) ->
 
 						replacement = "<a " + targetPart + " href=\""+action+"\">" + placeholder + "</a>"
 						text = text.replace("<" + match+ ">", replacement)
-						break
+						continue
 					else if action.startsWith("@U")
 						user = swipy.slackCollections.users.get(action.substring(1))
 
 						if user
+
 							placeholder = user.get("name")
 							replacement = "<a href=\"#im/"+placeholder+"\">@"+placeholder + "</a>"
 
 						text = text.replace("<" + match+ ">", replacement)
-						break
+						continue
 					else if action.startsWith("@C")
 						placeholder = swipy.slackCollections.channels.get(action.substring(1)).get("name")
 						replacement = "<a href=\"#channel/"+placeholder+"\">@"+placeholder + "</a>"
 						text = text.replace("<" + match+ ">", replacement)
-						break
+						continue
 					else
 						text = _.escape text
-						break
+						continue
 
 			text = text.replace(/(?:\r\n|\r|\n)/g, '<br>')
 
