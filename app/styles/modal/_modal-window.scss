@@ -33,6 +33,30 @@
 		background-color: #f7f7f8;
 	}
 	
+	input {
+		width: 80%;
+		margin-left: 10%;
+		font: 14px $font-normal;
+		color: rgba($sidebar-black-header, .6);
+		resize: none;
+		//border: 1px solid rgba($sidebar-black-header, .1);
+		//border-radius: 5px;
+		border: none;
+		cursor: text;
+		outline: none;
+		padding: 10px;
+		box-sizing: border-box;
+		background-color: #f7f7f8;
+	}
+	
+	p.error {
+		text-align: center;
+		padding-top: 35px;
+		color: $orange;
+		font: 12px $font-normal;
+		display: none;
+	}
+	
 	.buttons {
 		position: relative;
 		width: 200px;

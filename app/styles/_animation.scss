@@ -7,6 +7,16 @@
  * Custom animations
  *
  */
+ 
+ @keyframes notification-in {
+   0% {
+     transform: translateX(100%);
+   }
+   
+   100% {
+     transform: translateX(0%);
+   }
+ }
 
 @-webkit-keyframes scaleDown {
   0% {
