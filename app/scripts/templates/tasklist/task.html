@@ -53,7 +53,7 @@
 %>
 <div class="card-container <%= hasMetaClass %> <%= assignedClass %>">
 	<div class="main-info-container">
-		<h2 class="title"><span class="priority"></span><%= data.task.get('title') %></h2>
+		<h2 class="title"><span class="priority"></span><%= data.task.escape('title') %></h2>
 		
 		<!--<span class="progress-label">50%</span>-->
 		
