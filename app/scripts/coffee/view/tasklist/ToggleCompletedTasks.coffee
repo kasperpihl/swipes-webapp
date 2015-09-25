@@ -7,12 +7,8 @@ define [
 			@options = options
 
 			@setTemplates()
-			@listenTo( Backbone, "update/numberOfTasks", @toggleVisibility)
 		setTemplates: ->
 			@template = _.template ToggleTemplate
-		toggleVisibility: (number) ->
-			@targetSelector = $(@options.targetSelector)
-			@targetSelector.toggle(number > 0)
 		taskListRefresh: (e) ->
 			@.targetSelector.find('.toggle-text-one').toggleClass 'active'
 			@.targetSelector.find('.toggle-text-two').toggleClass 'active'

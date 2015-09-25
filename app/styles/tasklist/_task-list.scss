@@ -164,7 +164,7 @@ $task-new-task-height: 61px;
 		@include experimental(animation-duration, 0.3s);
 	}
 	.empty-text{
-		padding-top:60px;
+		padding-top: 30px;
 		opacity: 0.4;
 		.title{
 			font-size: 18px;

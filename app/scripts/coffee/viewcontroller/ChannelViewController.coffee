@@ -90,41 +90,8 @@ define [
 			Get A TaskListViewController that filtered for this project
 		###
 		getTaskListVC: ->
-			taskListVC = new TaskListViewController()
-			taskListVC.addTaskCard.addDelegate = @
-			taskListVC.taskHandler.listSortAttribute = "projectOrder"
-			taskListVC.taskHandler.delegate = @
-
-			if @currentUser?
-				taskListVC.taskList.emptyTitle = "No Direct Tasks between you & " + @currentUser.get("name")
-				taskListVC.taskList.emptySubtitle = "You can add them below or you can drag a message to here."
-				taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you and " + @currentUser.get("name") + ". You can assign tasks to either you or " + @currentUser.get("name") + " and it will be sent into your workspaces."
-				taskListVC.addTaskCard.setPlaceHolder("Add a new task between you & " + @currentUser.get("name"))
-
-				if @currentUser.get("name") is "slackbot"
-					taskListVC.taskList.emptyTitle = "No Direct Tasks between you, slackbot & s.o.f.i."
-					taskListVC.taskList.emptyDescription = "Tasks here will only be visible between you, slackbot & s.o.f.i. You can assign tasks to you or slackbot, but he probably won't do them!"
-					taskListVC.addTaskCard.setPlaceHolder("Add a new task between you, slackbot & s.o.f.i.")
-			else
-				isGroup = @currentList.get("is_group")
-				channelLabel = if isGroup then "group" else "channel"
-				hashLabel = if isGroup then "" else "# "
-				taskListVC.taskList.emptyTitle = "No tasks in " + hashLabel + @currentList.get("name")
-				taskListVC.taskList.emptySubtitle = "You can add new tasks below or simply drag a message here."
-				taskListVC.taskList.emptyDescription = "When you add tasks in this "+channelLabel+", they will be visible only to its members. You can assign tasks to them and they'll be sent to your teammates' personal workspaces."
-				taskListVC.addTaskCard.setPlaceHolder("Add a new task to #" + @currentList.get("name"))
-			# https://github.com/anthonyshort/backbone.collectionsubset
-			projectId = @currentList.id
-			@taskCollectionSubset = new Backbone.CollectionSubset({
-				parent: swipy.collections.todos,
-				filter: (task) ->
-					return task.get("projectLocalId") is projectId and !task.isSubtask()
-			})
-
-			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)
-			@taskListVC = taskListVC
-			return taskListVC
-
+			@taskListVC = new TaskListViewController
+				delegate: @
 
 		### 
 			Get A ChatListViewController that filtered for this project

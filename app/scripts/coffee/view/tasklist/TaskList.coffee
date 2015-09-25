@@ -41,6 +41,7 @@ define [
 
 			numberOfSections = 1
 			numberOfTasks = 0
+			emptyTitles = if !@toggleCompleted then @titles.current else @titles.completed
 
 			@$el.html ""
 			$(@targetSelector).html( @$el )
@@ -84,12 +85,13 @@ define [
 					sectionEl.append( taskEl.el )
 				@$el.append section.el
 				lastLeftTitle = sectionData.leftTitle
-			if numberOfTasks is 0 and @emptyTitle
-				@$el.html("<div class=\"empty-text\"><h4 class=\"title\">" + @emptyTitle + "</h4></div>")
-				if @emptySubtitle
-					@$el.find(".empty-text").append("<div class=\"subtitle\">"+@emptySubtitle + "</div>")
-				if @emptyDescription
-					@$el.find(".empty-text").append("<div class=\"description\">"+@emptyDescription+"</div>")		
+
+			if numberOfTasks is 0 and emptyTitles.emptyTitle
+				@$el.html("<div class=\"empty-text\"><h4 class=\"title\">" + emptyTitles.emptyTitle + "</h4></div>")
+				if emptyTitles.emptySubtitle
+					@$el.find(".empty-text").append("<div class=\"subtitle\">"+ emptyTitles.emptySubtitle + "</div>")
+				if emptyTitles.emptyDescription
+					@$el.find(".empty-text").append("<div class=\"description\">"+ emptyTitles.emptyDescription+"</div>")
 			Backbone.trigger("update/numberOfTasks", numberOfTasks)
 
 			if @enableDragAndDrop and numberOfTasks > 0 and !@toggleCompleted
