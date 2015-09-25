@@ -43,18 +43,6 @@ define [
 			Backbone.trigger("reload/taskhandler")
 
 		getTaskListVC: ->
-			taskListVC = new TaskListViewController()
-			taskListVC.addTaskCard.addDelegate = @
-			taskListVC.taskList.showSource = true
-			taskListVC.taskHandler.listSortAttribute = "order"
-			taskListVC.taskHandler.isMyTasksView = true
-			taskListVC.taskHandler.delegate = @
-			taskListVC.taskList.emptyTitle = "No tasks in your workspace"
-			taskListVC.taskList.emptySubtitle = "You can add Private tasks below or assign tasks from channels and groups."
-			taskListVC.taskList.emptyDescription = "Tasks here is the ones assigned to you. Here you can get an overview of your commitments and put it all in order."
-			
-			taskListVC.addTaskCard.setPlaceHolder("Add a new private task")
-
 			# https://github.com/anthonyshort/backbone.collectionsubset
 			@taskCollectionSubset = new Backbone.CollectionSubset({
 				parent: swipy.collections.todos,
@@ -64,9 +52,11 @@ define [
 							return true
 					return false
 			})
-			taskListVC.taskHandler.loadCollection(@taskCollectionSubset.child)
 
-			return taskListVC
+			@taskListVC = new TaskListViewController
+				delegate: @
+				isMyTasksView: true
+				collectionToLoad: @taskCollectionSubset.child
 		
 		###
 			TaskHandler Delegate

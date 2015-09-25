@@ -12,31 +12,38 @@ define [
 		className: "task-list-view-controller"
 		initialize: (options) ->
 			@options = options
+			channelVC = @options.delegate
+			isMyTasks = @options.isMyTasksView
 
 			@setTemplate()
 			@addTaskCard = new AddTaskCard()
-			@addTaskCard.addDelegate = options.delegate
+			@addTaskCard.addDelegate = channelVC
 
 			@toggleCompletedTasks = new ToggleCompletedTasks
 				targetSelector: '.task-list-view-controller .toggle-completed-tasks-container'
 
+			@taskHandler = new TaskHandler()
+			@taskHandler.delegate = channelVC
+			@taskHandler.listSortAttribute = if isMyTasks then "order" else "projectOrder"
+			@taskHandler.isMyTasksView = isMyTasks
+			@taskHandler.loadCollection(options.collectionToLoad)
+
 			@taskList = new TaskList()
 			@taskList.targetSelector = ".task-list-view-controller .task-list-container"
 			@taskList.enableDragAndDrop = true
-			
-			@taskHandler = new TaskHandler()
-			@taskHandler.listSortAttribute = "projectOrder"
-			@taskHandler.delegate = options.delegate
+
+			if isMyTasks
+				@taskList.showSource = true
 
 			# Settings the Task Handler to receive actions from the task list
 			@taskList.taskDelegate = @taskHandler
 			@taskList.dragDelegate = @taskHandler
 			@taskList.dataSource = @taskHandler
+
 			Backbone.on( "request-work-task", @requestWorkTask, @ )
 			Backbone.on( "edit/task", @editTask, @ )
 
 			@setEmptyTitles()
-			@loadCollectionSubset()
 		editTask: (model) ->
 			return
 			taskCard = @taskList.taskCardById(model.id)
@@ -58,9 +65,22 @@ define [
 			@workEditor = new RequestWorkOverlay( model: task )
 		setEmptyTitles: () ->
 			channelVC = @options.delegate
+			isMyTasks = @options.isMyTasksView
 			titles = {}
 
-			if channelVC.currentUser?
+			if isMyTasks
+				titles =
+					current:
+						emptyTitle: "No tasks in your workspace"
+						emptySubtitle: "You can add Private tasks below or assign tasks from channels and groups."
+						emptyDescription: "Tasks here is the ones assigned to you. Here you can get an overview of your commitments and put it all in order."
+					completed:
+						emptyTitle: "No completed tasks in your workspace"
+						emptySubtitle: "You can add Private tasks below or assign tasks from channels and groups."
+						emptyDescription: "Tasks here is the ones assigned to you. Here you can get an overview of your commitments and put it all in order."
+				
+				@addTaskCard.setPlaceHolder("Add a new private task")
+			else if channelVC.currentUser?
 				if channelVC.currentUser.get("name") isnt "slackbot"
 					titles =
 						current:
@@ -98,18 +118,6 @@ define [
 				@addTaskCard.setPlaceHolder("Add a new task to #" + channelVC.currentList.get("name"))
 
 			@taskList.titles = titles
-		loadCollectionSubset: () ->
-			channelVC = @options.delegate
-
-			# https://github.com/anthonyshort/backbone.collectionsubset
-			projectId = channelVC.currentList.id
-			channelVC.taskCollectionSubset = new Backbone.CollectionSubset({
-				parent: swipy.collections.todos,
-				filter: (task) ->
-					return task.get("projectLocalId") is projectId and !task.isSubtask()
-			})
-
-			@taskHandler.loadCollection(channelVC.taskCollectionSubset.child)
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()

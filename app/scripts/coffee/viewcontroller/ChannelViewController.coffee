@@ -90,8 +90,17 @@ define [
 			Get A TaskListViewController that filtered for this project
 		###
 		getTaskListVC: ->
+			# https://github.com/anthonyshort/backbone.collectionsubset
+			projectId = @currentList.id
+			@taskCollectionSubset = new Backbone.CollectionSubset({
+				parent: swipy.collections.todos,
+				filter: (task) ->
+					return task.get("projectLocalId") is projectId and !task.isSubtask()
+			})
+
 			@taskListVC = new TaskListViewController
 				delegate: @
+				collectionToLoad: @taskCollectionSubset.child
 
 		### 
 			Get A ChatListViewController that filtered for this project
