@@ -37,7 +37,7 @@
 		numberOfAssignees = data.task.get("assignees").length;
 		if(numberOfAssignees == 1){
 			assignee = swipy.slackCollections.users.get(data.task.get("assignees")[0]);
-			numberOfAssignees = assignee.get("name");
+			numberOfAssignees = assignee.escape("name");
 		}
 		numberOfMetaInfos++;
 	}
@@ -66,7 +66,8 @@
 				<div class="meta-text"><%= sourceOfTask %></div>
 
 			<% } if(numberOfAssignees) { %>
-				<div class="meta-text with-icon" title="This task has been assigned to 3 people">
+				<!-- <div class="meta-text with-icon" title="This task has been assigned to 3 people"> -->
+				<div class="meta-text with-icon">
 					<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-taskIconAssigned"></use></svg><%= numberOfAssignees %>
 				</div>
 			<% } if (numberOfTags) { %>
