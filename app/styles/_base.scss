@@ -17,6 +17,9 @@ input{
 	border:0;
 	@include select;
 }
+textarea{
+	@include select;
+}
 input:focus{
 	border:0;
 	outline: 0;
