@@ -110,6 +110,8 @@ define [
 						chatMessage.isFromSameSender = false
 					if lastChat? and (lastChat.get("subtype") is "file_share" or lastChat.get("attachments"))
 						chatMessage.isFromSameSender = false
+					if @isThread
+						chatMessage.isThread = true
 					lastSender = sender
 					lastUnix = unixStamp
 					

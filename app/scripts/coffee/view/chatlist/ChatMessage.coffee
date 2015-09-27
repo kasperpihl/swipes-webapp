@@ -30,6 +30,7 @@ define [
 				handleMentionsAndLinks: @util.handleMentionsAndLinks
 				isFromSameSender: @isFromSameSender
 				attTmpl: @attTemplate
+				isThread: @isThread
 			@new = false
 			return @
 		clickedActions: (e) ->

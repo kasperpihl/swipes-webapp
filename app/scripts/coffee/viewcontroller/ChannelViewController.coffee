@@ -49,13 +49,15 @@ define [
 					Backbone.trigger("edit/task", task) if task
 		handleEditedTask: ->
 			@updateTopbarTitle()
-			# Is editing
+			return if !localStorage.getItem("EnableThreadedConversations")
 			
+			# Is editing
 			if @taskListVC? and @taskListVC.editModel
 				model = @taskListVC.editModel
 				@chatListVC?.chatHandler?.startsWith = "<http://swipesapp.com/task/"+ model.id
 				@currentList.skipCount = 200
 				@chatListVC?.chatList.hasRendered = false
+				@chatListVC?.chatList.isThread = true
 				@currentList.fetchMessages(null, (res, error) =>
 					if res and res.ok
 						@chatListVC.chatList.hasMore = true
@@ -63,6 +65,7 @@ define [
 				Backbone.trigger("reload/chathandler")
 			else
 				@chatListVC.chatList.hasRendered = false
+				@chatListVC?.chatList.isThread = false
 				@currentList.skipCount = 100
 				@currentList.getMessages()
 				@chatListVC?.chatHandler?.startsWith = null
@@ -207,7 +210,8 @@ define [
 			NewMessage Delegate
 		###
 		newMessageSent: ( newMessage, message ) ->
-			if @taskListVC? and @taskListVC.editModel
+			# Add thread identifier if needed
+			if @taskListVC? and @taskListVC.editModel and localStorage.getItem("EnableThreadedConversations")
 				model = @taskListVC.editModel
 				message = "<http://swipesapp.com/task/" + model.id + "|" + model.get("title") + ">: " + message
 			swipy.slackSync.sendMessage( message, @currentList.id)

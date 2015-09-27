@@ -13,7 +13,7 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			loop
 				break if messages.length <= @skipCount
 				first = messages.shift()
-				first.localStorage = new Backbone.LocalStorage("MessageCollection-" + @id )
+				first.localStorage = messages.localStorage
 				first.destroy()
 			messages
 		getMessageCollection: ->

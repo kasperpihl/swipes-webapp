@@ -30,6 +30,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@handleChannels(data.channels) if data.channels
 					@handleChannels(data.groups) if data.groups
 					@handleChannels(data.ims) if data.ims
+					if data.team.id is "T02A53ZUJ"
+						localStorage.setItem("EnableThreadedConversations", true)
 					@clearDeletedChannels()
 					@openWebSocket(data.url)
 					localStorage.setItem("slackLastConnected", new Date())

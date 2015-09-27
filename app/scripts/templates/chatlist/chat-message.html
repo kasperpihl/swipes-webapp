@@ -67,6 +67,28 @@
 				likeString = numberOfLikes + " people like this."
 		}
 	}
+
+	//#Handle thread - check for messages starting with <swipeslink>:
+	var isThreadRegex = /(<http:\/\/swipesapp.com\/task.*?\>:)/g;
+	var text = data.message.get("text")
+	if(text){
+		var matches = data.message.get("text").match(isThreadRegex)
+		var match;
+		if(matches && matches.length)
+			match = matches[0];
+		if(match && text.indexOf(match) == 0){
+			console.log(match);
+			if(data.isThread){
+				text = text.substring(match.length);
+			}
+			else{
+				text = name + " commented on \"" + match.slice(0, match.length-1) + "\""
+			}
+		}
+	}
+
+
+	//#Set class for showing profile image
 	var hasImageClass = "hasProfileImage";
 	if(data.isFromSameSender)
 		hasImageClass = "";
@@ -108,7 +130,7 @@
 		</div>
 		<% } %>
 		<div class="message-container">
-			<%= data.handleMentionsAndLinks(data.message.get("text")) %>
+			<%= data.handleMentionsAndLinks(text) %>
 		</div>
 		<% if(data.message.get("subtype") == "file_share") { %>
 
