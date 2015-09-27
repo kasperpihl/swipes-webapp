@@ -4,13 +4,15 @@ define [
 	"js/viewcontroller/TaskListViewController"
 	"js/viewcontroller/ChatListViewController"
 	"js/utility/TimeUtility"
-	
+	"collectionSubset"
 	], (_, TweenLite, TaskListViewController, ChatListViewController, TimeUtility) ->
 	Backbone.View.extend
 		className: "channel-view-controller main-view-controller"
 		initialize: ->
 			@timeUtil = new TimeUtility()
 			Backbone.on( "create-task", @createTask, @ )
+			@bouncedHandleEdited = _.debounce(@handleEditedTask, 10)
+			Backbone.on( "tasklistvc/edited-task", @bouncedHandleEdited, @)
 		render: (el) ->
 			@$el.html "<div style=\"text-align:center; margin-top:100px;\">Loading</div>"
 			$("#main").html(@$el)
@@ -19,7 +21,7 @@ define [
 			setTimeout( => 
 				@loadMainWindow(@mainView)
 			, 5)
-
+			@updateTopbarTitle()
 		open: (type, options) ->
 			@identifier = options.id
 			@type = type
@@ -30,26 +32,50 @@ define [
 				collection = swipy.slackCollections.channels
 
 				@currentList = collection.findWhere({name: @identifier})
-				name = "# "+@currentList.get("name")
+				
 			else
 				collection = swipy.slackCollections.channels
 			
 				@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
 				
 				@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
-				name = @currentUser.get("name")
-				name = "slackbot & s.o.f.i." if name is "slackbot"
 				
-			swipy.topbarVC.setMainTitleAndEnableProgress(name, false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
 			action = options.action
-
 			if action is "task" and options.actionId
 				task = swipy.collections.todos.get(options.actionId)
-				console.log "found task", task
 				if task
 					Backbone.trigger("edit/task", task) if task
+		handleEditedTask: ->
+			@updateTopbarTitle()
+			# Is editing
+			
+			if @taskListVC? and @taskListVC.editModel
+				model = @taskListVC.editModel
+				@chatListVC?.chatHandler?.startsWith = "<http://swipesapp.com/task/"+ model.id
+				@currentList.skipCount = 200
+				@chatListVC?.chatList.hasRendered = false
+				@currentList.fetchMessages(null, (res, error) =>
+					if res and res.ok
+						@chatListVC.chatList.hasMore = true
+				)
+				Backbone.trigger("reload/chathandler")
+			else
+				@chatListVC.chatList.hasRendered = false
+				@currentList.skipCount = 100
+				@currentList.getMessages()
+				@chatListVC?.chatHandler?.startsWith = null
+				Backbone.trigger("reload/chathandler")
+		updateTopbarTitle: ->
+			if @type isnt "im"
+				name = "# "+@currentList.get("name")
+			else
+				name = @currentUser.get("name")
+				name = "slackbot & s.o.f.i." if name is "slackbot"
+			if @taskListVC? and @taskListVC.editModel
+				name += " &nbsp;>&nbsp; " +@taskListVC.editModel.get("title")
+			swipy.topbarVC.setMainTitleAndEnableProgress(name, false)
 		loadMainWindow: (type) ->
 			@vc?.destroy()
 			if type is "task"
@@ -150,7 +176,8 @@ define [
 			ChatList ChatDelegate
 		###
 		chatListDidScrollToTop: (chatList) ->
-			return if @isFetchingMore
+			return if @isFetchingMore or !chatList.numberOfChats
+			return if @taskListVC? and @taskListVC.editModel
 			@isFetchingMore = true
 			@currentList.fetchOlderMessages((res, error) =>
 				@isFetchingMore = false
@@ -180,6 +207,9 @@ define [
 			NewMessage Delegate
 		###
 		newMessageSent: ( newMessage, message ) ->
+			if @taskListVC? and @taskListVC.editModel
+				model = @taskListVC.editModel
+				message = "<http://swipesapp.com/task/" + model.id + "|" + model.get("title") + ">: " + message
 			swipy.slackSync.sendMessage( message, @currentList.id)
 			@chatListVC.chatList.scrollToBottomVar = true
 			@chatListVC.chatList.removeUnreadIfSeen = true

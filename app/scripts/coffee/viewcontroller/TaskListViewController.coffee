@@ -47,24 +47,28 @@ define [
 		editTask: (model) ->
 			if model
 				@editTaskView = new EditTask({model: model})
+				@editModel = model
 				@editTaskView.delegate = @
 				@editTaskView.render()
 				@isEditing = true
 				@$el.find(".edit-task-container").html @editTaskView.el
 				@$el.addClass("editMode")
 			else
+				@editModel = null
 				@editTaskView?.remove()
+				@isEditing = false
 				@$el.removeClass("editMode")
-
+			Backbone.trigger("tasklistvc/edited-task")
 		editTaskDidClickBack: (editTask) ->
 			currRoute = Backbone.history.fragment
 			indexOfTask = currRoute.indexOf("/task")
+			@editTask(false)
 			if indexOfTask isnt -1
 				newRoute = currRoute.substring(0, indexOfTask)
 			if newRoute
 				swipy.router.navigate(newRoute, {trigger: false})
 				swipy.router.history.push(newRoute)
-			@editTask(false)
+			
 		setTemplate: ->
 			@template = _.template Template
 		render: ->
@@ -133,6 +137,7 @@ define [
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()
+			@editModel = null
 			@taskHandler?.destroy?()
 			@toggleCompletedTasks?.destroy?()
 			@taskList?.remove?()

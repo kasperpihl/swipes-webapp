@@ -7,6 +7,7 @@ define [
 	"js/view/tasklist/TaskList"
 	"js/handler/TaskHandler"
 	"js/view/tasklist/tabs/AddActionRow"
+	"collectionSubset"
 	], (_, ActionTabTmpl, TaskList, TaskHandler, AddActionRow) ->
 	Backbone.View.extend
 		className: "action-tab"
