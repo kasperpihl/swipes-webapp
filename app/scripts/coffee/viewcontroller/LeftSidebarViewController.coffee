@@ -115,8 +115,9 @@ define [
 		userPickerModalPeople: (userPickerModal) ->
 			people = []
 			me = swipy.slackCollections.users.me()
-			users = swipy.slackCollections.users.filter((user) ->
-				return false if user.get("deleted") or user.id is me.id or user.id is "USLACKBOT"
+			users = swipy.slackCollections.users.filter((user) =>
+				return false if user.get("deleted") or user.id is me.id
+				return false if @modalType is "invite" and user.id is "USLACKBOT"
 				return true
 			)
 			for user in users
