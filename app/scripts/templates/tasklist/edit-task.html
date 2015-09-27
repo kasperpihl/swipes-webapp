@@ -1,55 +1,21 @@
-<ul class="nav-container">
-	<li class="nav-item actionTab">
-		<svg class="icon ">
-			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTabAction"></use>
-		</svg>
-		<span class="number"></span>
-		<div class="right-seperator"></div>
-	</li><li class="nav-item scheduleTab">
-		<div class="left-seperator"></div>
-		<svg class="icon">
-			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTabSchedule"></use>
-		</svg>
-		<span class="number"></span>
-		<div class="right-seperator"></div>
-	</li><li class="nav-item assignTab">
-		<div class="left-seperator"></div>
-		<svg class="icon">
-			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTabAssign"></use>
-		</svg>
-		<span class="number"></span>
-		<div class="right-seperator"></div>
-	</li><li class="nav-item attachTab">
-		<div class="left-seperator"></div>
-		<svg class="icon">
-			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTabAttach"></use>
-		</svg>
-		<span class="number"></span>
-	</li>
-</ul>
-<div class="progress-header yellow no-progress">
-	<h1 class="section-title"><span>Loading...</span></h1>
-	<div class="progress">
-		<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 30%;">
-			<span class="sr-only">60% Complete</span>
-		</div>
+<a href="#" class="go-back back-button">
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrowLeftThick"></use>
+	</svg>
+</a>
+<h1 class="h2 task-title">
+	<div class="input-title content-editable" contenteditable="true"><%= data.task.get("title") %></div>
+</h1>
+
+
+<div class="action-step-container">
+</div>
+<!--
+<section>
+	<div class="notes has-icon">
+		<span class="icon-hold">
+			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
+		</span>
+		<div class="input-note content-editable" contenteditable="true"></div>
 	</div>
-	<span class="shapeline">
-		<svg version="1.1" id="progressbar-shape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-		 viewBox="0 0 20 18" enable-background="new 0 0 20 18" xml:space="preserve">
-			<g id="WHITE">
-				<path fill="#FFFFFF" d="M1.039,0c2.605,0,5.066,1.349,6.584,3.608l6.489,9.659c1.131,1.685,2.944,2.731,4.849,2.731H20V0H1.039z"/>
-			</g>
-			<g id="CURVE">
-				<path fill="#FFC107" d="M18.961,15.999c-1.905,0-3.718-1.046-4.849-2.731L7.623,3.608C6.104,1.349,3.644,0,1.039,0H0v2.001h1.039
-					c1.905,0,3.718,1.046,4.85,2.731l1.21,1.802l1.372,2.041l3.907,5.816C13.895,16.651,16.356,18,18.961,18H20v-2.001H18.961z"/>
-			</g>
-			<g id="LINE" class="the-line">
-				<polygon fill="#FFC107" points="7.091,6.555 0.015,6.555 0.015,8.555 8.458,8.555 9.015,8.555 9.015,6.555 	"/>
-			</g>
-		</svg>
-	</span>
-</div>
-<div class="tab-container">
-<!-- Tab content will be loaded here -->
-</div>
+</section>-->

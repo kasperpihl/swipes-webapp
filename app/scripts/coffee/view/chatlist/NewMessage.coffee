@@ -7,7 +7,6 @@ define ["underscore"
 			@placeholder = "Write new message"
 			@template = _.template Tmpl, { variable: "data" }
 			@render()
-
 			_.bindAll(@, "pressedKey")
 		events:
 			"keyup input": "pressedKey"

@@ -23,11 +23,9 @@ define [
 		open: (type, options) ->
 			@identifier = options.id
 			@type = type
-
 			@mainView = "chat"
-
 			swipy.rightSidebarVC.sidebarDelegate = @
-			console.log type
+			console.log options
 			if @type isnt "im"
 				collection = swipy.slackCollections.channels
 
@@ -45,8 +43,13 @@ define [
 			swipy.topbarVC.setMainTitleAndEnableProgress(name, false)
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
+			action = options.action
 
-			
+			if action is "task" and options.actionId
+				task = swipy.collections.todos.get(options.actionId)
+				console.log "found task", task
+				if task
+					Backbone.trigger("edit/task", task) if task
 		loadMainWindow: (type) ->
 			@vc?.destroy()
 			if type is "task"

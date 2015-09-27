@@ -1,15 +1,11 @@
 .full-modal {
 	width: 400px;
 	min-height: 250px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	background-color: $white-background;
 	border-radius: 10px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.23);
 	outline: none;
-	
+	padding-top: 1px;
 	h2 {
 		margin: 25px 10%;
 		font: 16px $font-bold;

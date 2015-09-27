@@ -29,7 +29,7 @@ define [
 
 			@taskList = new TaskList()
 			@taskList.setActionList()
-			@taskList.targetSelector = "#task-"+@model.id + " .edit-task .action-list-container"
+			@taskList.targetSelector = ".edit-task .action-list-container"
 			@taskList.enableDragAndDrop = true
 
 			@taskHandler = new TaskHandler()
