@@ -4,8 +4,9 @@ define [
 	"js/view/chatlist/ChatList"
 	"js/view/chatlist/NewMessage"
 	"js/handler/ChatHandler"
+	"js/view/chatlist/ThreadHeader"
 
-	], (_, Template, ChatList, NewMessage, ChatHandler) ->
+	], (_, Template, ChatList, NewMessage, ChatHandler, ThreadHeader) ->
 	Backbone.View.extend
 		className: "chat-list-view-controller"
 		initialize: ->
@@ -13,6 +14,8 @@ define [
 
 			@newMessage = new NewMessage()
 
+			@threadHeader = new ThreadHeader()
+			
 
 			@chatList = new ChatList()
 			@chatList.targetSelector = ".chat-list-view-controller .chat-list-container-scroller"
@@ -33,6 +36,10 @@ define [
 			@$el.html @template({})
 			@newMessage.render()
 			@$el.prepend( @newMessage.el )
+
+			@threadHeader.render()
+			@$el.prepend( @threadHeader.el )
+
 			@chatList.render()
 			@focusInput()
 		focusInput: ->
@@ -40,6 +47,7 @@ define [
 		destroy: ->
 			Backbone.off(null, null, @)
 			@chatList?.remove?()
+			@threadHeader?.remove()
 			@newMessage?.remove?()
 			@chatHandler?.destroy?()
 			@remove()

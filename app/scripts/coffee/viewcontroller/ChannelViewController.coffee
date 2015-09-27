@@ -46,6 +46,8 @@ define [
 				task = swipy.collections.todos.get(options.actionId)
 				if task
 					Backbone.trigger("edit/task", task) if task
+		threadHeaderDidClickClear: (threadHeader) ->
+			@taskListVC?.goBackFromEditMode()
 		handleEditedTask: ->
 			@updateTopbarTitle()
 			return if !localStorage.getItem("EnableThreadedConversations")
@@ -57,6 +59,7 @@ define [
 				@currentList.skipCount = 200
 				@chatListVC?.chatList.hasRendered = false
 				@chatListVC?.chatList.isThread = true
+				@chatListVC?.threadHeader.show(true)
 				@currentList.fetchMessages(null, (res, error) =>
 					if res and res.ok
 						@chatListVC.chatList.hasMore = true
@@ -65,6 +68,7 @@ define [
 			else
 				@chatListVC.chatList.hasRendered = false
 				@chatListVC?.chatList.isThread = false
+				@chatListVC?.threadHeader.show(false)
 				@currentList.skipCount = 100
 				@currentList.getMessages()
 				@chatListVC?.chatHandler?.startsWith = null
@@ -157,6 +161,7 @@ define [
 			chatListVC = new ChatListViewController()
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
+			chatListVC.threadHeader.clickDelegate = @
 			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
 			chatListVC.chatHandler.loadCollection(@currentList)
 			if @currentUser? # if is IM
