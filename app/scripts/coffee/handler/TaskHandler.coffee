@@ -161,6 +161,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				)
 			false
 		dragHandlerDidClick: (dragHandler, e) ->
+			return if !localStorage.getItem("EnableThreadedConversations")
 			hitTarget = $(e.target)
 			clickedId = @idForEvent(e)
 
