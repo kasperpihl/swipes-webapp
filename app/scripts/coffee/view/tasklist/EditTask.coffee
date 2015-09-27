@@ -31,4 +31,5 @@ define [
 			@$el.find(".action-step-container").html @actionTab.el
 			@actionTab.loadActionSteps() 
 		remove: ->
+			@actionTab?.remove()
 			@$el.empty()

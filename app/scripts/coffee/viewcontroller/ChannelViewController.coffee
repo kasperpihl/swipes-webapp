@@ -27,7 +27,6 @@ define [
 			@type = type
 			@mainView = "chat"
 			swipy.rightSidebarVC.sidebarDelegate = @
-			console.log options
 			if @type isnt "im"
 				collection = swipy.slackCollections.channels
 
