@@ -1,0 +1,10 @@
+<div class="full-modal" tabIndex="-1">
+    <h2><%= data.title %></h2>
+    <textarea><%= data.value %></textarea>
+    <p class="error"></p>
+    <div class="buttons">
+        <button class="cancel"><%= data.cancelText %></button>
+        <!-- T_TODO Handle the native submit event. -->
+        <button class="submit" type="submit"><%= data.submitText %></button>
+    </div>
+</div>

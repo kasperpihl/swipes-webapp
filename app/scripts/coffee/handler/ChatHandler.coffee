@@ -6,8 +6,8 @@
 ###
 define [
 	"underscore",
-	"js/view/modal/EditMessageModal"
-	"js/utility/TimeUtility"], (_, EditMessageModal, TimeUtility) ->
+	"js/view/modal/GenericModal"
+	"js/utility/TimeUtility"], (_, GenericModal, TimeUtility) ->
 	class ChatHandler
 		constructor: ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
@@ -76,22 +76,44 @@ define [
 				actions.push({name: "Delete", icon: "navbarDelete", action: "delete"})
 			swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: e.pageX, top: e.pageY}, (result) =>
 				if result is "create"
-					#Backbone.trigger("create-task", )
-					title = prompt("Please enter task name", model.getText())
-					if title
-						Backbone.trigger( "create-task", title, {from: "Message", assignee: me.id })
+					createTaskCallback = ((me) ->
+						return (title) ->
+							if title
+								Backbone.trigger( "create-task", title, {from: "Message", assignee: me.id })
+					)(me)
+
+					genericModal = new GenericModal
+						type: 'createWithInput'
+						submitCallback: createTaskCallback
+						inputSelector: 'input'
+						tmplOptions:
+							title: 'Create new task'
+							cancelText: 'CANCEL'
+							submitText: 'CREATE'
+							placeholder: 'Task title'
+							value: model.getText()
 				else if result is "delete"
-					shouldDelete = confirm("Delete Message")
-					if shouldDelete
-						options = {
-							ts: model.get("ts")
-							channel: @model.id
-						}
-						swipy.slackSync.apiRequest("chat.delete", options, (res, error) ->
-							console.log "result from message delete", res, error
-							if res and res.ok
-								model.set("text", newText)
-						)
+					deleteCallback = ((channelModel, chatMessageModel) ->
+						return () ->
+							options = {
+								ts: chatMessageModel.get("ts")
+								channel: channelModel.id
+							}
+							swipy.slackSync.apiRequest("chat.delete", options, (res, error) ->
+								console.log "result from message delete", res, error
+								#T_TODO check what I have to do here
+								#if res and res.ok
+									#chatMessageModel.set("text", newText)
+							)
+					)(@model, model)
+
+					genericModal = new GenericModal
+						type: 'delete'
+						submitCallback: deleteCallback
+						tmplOptions:
+							title: 'Delete message'
+							cancelText: 'CANCEL'
+							submitText: 'DELETE'
 				else if result is "edit"
 					editMessageCallback = ((channelModel, chatMessageModel) ->
 						return (newText) ->
@@ -108,9 +130,15 @@ define [
 								)
 					)(@model, model)
 
-					editMessageModal = new EditMessageModal
+					genericModal = new GenericModal
+						type: 'editWithTextarea'
 						submitCallback: editMessageCallback
-						textAreaValue: model.get("text")
+						inputSelector: 'textarea'
+						tmplOptions:
+							title: 'Edit Message'
+							cancelText: 'CANCEL'
+							submitText: 'SUBMIT'
+							value: model.get 'text'
 			)
 		###
 			ChatMessage Delegate

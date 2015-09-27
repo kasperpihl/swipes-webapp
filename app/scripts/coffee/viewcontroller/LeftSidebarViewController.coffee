@@ -3,7 +3,8 @@ define [
 	"js/view/sidebar/SidebarChannelRow"
 	"js/view/modal/UserPickerModal"
 	"js/view/modal/ChannelPickerModal"
-	], (_, ChannelRow, UserPickerModal, ChannelPickerModal) ->
+	"js/view/modal/GenericModal"
+	], (_, ChannelRow, UserPickerModal, ChannelPickerModal, GenericModal) ->
 	Backbone.View.extend
 		el: ".sidebar_content"
 		initialize: ->
@@ -125,26 +126,48 @@ define [
 		closeChannel: (model) ->
 			model.closeChannel()
 		clickedAddGroup: (e) ->
-			groupName = prompt("Please enter group name", "");
-			if groupName? and groupName.length > 0
-				console.log groupName	
-				swipy.slackSync.apiRequest("groups.create",{name: groupName},(res, error) =>
-					if res and res.ok
-						swipy.router.navigate("group/"+res.channel.name)
-					else
-						console.log("error group",res, error)
-				)
+			createGroupCallback = (() ->
+				return (groupName) ->
+					if groupName? and groupName.length > 0	
+						swipy.slackSync.apiRequest("groups.create",{name: groupName},(res, error) =>
+							if res and res.ok
+								swipy.router.navigate("group/"+res.channel.name)
+							else
+								console.log("error group",res, error)
+						)
+			)()
+
+			genericModal = new GenericModal
+				type: 'createWithInput'
+				submitCallback: createGroupCallback
+				inputSelector: 'input'
+				tmplOptions:
+					title: 'Create new private group'
+					cancelText: 'CANCEL'
+					submitText: 'CREATE'
+					placeholder: 'Group name'
 			false
 		clickedAddChannel: (e) ->
-			channelName = prompt("Please enter channel name", "");
-			if channelName? and channelName.length > 0
-				console.log channelName	
-				swipy.slackSync.apiRequest("channels.create",{name: channelName},(res, error) =>
-					if res and res.ok
-						swipy.router.navigate("channel/"+res.channel.name)
-					else
-						console.log("error channel",res, error)
-				)
+			createChannelCallback = (() ->
+				return (channelName) ->
+					if channelName? and channelName.length > 0
+						swipy.slackSync.apiRequest("channels.create",{name: channelName},(res, error) =>
+							if res and res.ok
+								swipy.router.navigate("channel/"+res.channel.name)
+							else
+								console.log("error channel",res, error)
+						)
+			)()
+
+			genericModal = new GenericModal
+				type: 'createWithInput'
+				submitCallback: createChannelCallback
+				inputSelector: 'input'
+				tmplOptions:
+					title: 'Create new channel'
+					cancelText: 'CANCEL'
+					submitText: 'CREATE'
+					placeholder: 'New channel name'
 			false
 		renderSidebar: ->
 			channelsLeft = 0
