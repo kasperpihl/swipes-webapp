@@ -104,7 +104,7 @@ define [
 								swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
 									console.log "result from message update", res, error
 									if res and res.ok
-										chatMessageModel.set("text", newText)
+										chatMessageModel.set("text", res.text)
 								)
 					)(@model, model)
 
