@@ -81,7 +81,9 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 				message.channelId = @id
 				newMessage = collection.create( message )
 				if collection.length > @skipCount and !allowMore
-					collection.shift()
+					first = collection.shift()
+					first.localStorage = collection.localStorage
+					first.destroy()
 			else
 				if(message.deleted_ts)
 					collection.remove(model)
