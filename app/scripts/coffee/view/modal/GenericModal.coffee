@@ -1,9 +1,9 @@
 define ["underscore"
 		"js/view/modal/ModalView"
-		"text!templates/modal/create-with-input-modal.html"
+		"text!templates/modal/input-modal.html"
 		"text!templates/modal/delete-modal.html"
-		"text!templates/modal/edit-with-textarea-modal.html"],
-	(_, ModalView, CreateWithInput, Delete, EditWithTextarea) ->
+		"text!templates/modal/textarea-modal.html"],
+	(_, ModalView, InputModal, DeleteModal, TextareaModal) ->
 		ModalView.extend
 			initialize: (options) ->
 				that = @
@@ -53,8 +53,8 @@ define ["underscore"
 					@cancel()
 			typeToTemplate: (type) ->
 				map = 
-					'editWithTextarea': EditWithTextarea
-					'createWithInput': CreateWithInput
-					'delete': Delete
+					'textareaModal': TextareaModal
+					'inputModal': InputModal
+					'deleteModal': DeleteModal
 
 				return map[type]

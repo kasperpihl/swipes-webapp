@@ -138,7 +138,7 @@ define [
 			)()
 
 			genericModal = new GenericModal
-				type: 'createWithInput'
+				type: 'inputModal'
 				submitCallback: createGroupCallback
 				inputSelector: 'input'
 				tmplOptions:
@@ -160,7 +160,7 @@ define [
 			)()
 
 			genericModal = new GenericModal
-				type: 'createWithInput'
+				type: 'inputModal'
 				submitCallback: createChannelCallback
 				inputSelector: 'input'
 				tmplOptions:

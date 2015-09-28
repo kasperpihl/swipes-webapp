@@ -83,7 +83,7 @@ define [
 					)(me)
 
 					genericModal = new GenericModal
-						type: 'createWithInput'
+						type: 'inputModal'
 						submitCallback: createTaskCallback
 						inputSelector: 'input'
 						tmplOptions:
@@ -108,7 +108,7 @@ define [
 					)(@model, model)
 
 					genericModal = new GenericModal
-						type: 'delete'
+						type: 'deleteModal'
 						submitCallback: deleteCallback
 						tmplOptions:
 							title: 'Delete message'
@@ -131,7 +131,7 @@ define [
 					)(@model, model)
 
 					genericModal = new GenericModal
-						type: 'editWithTextarea'
+						type: 'textareaModal'
 						submitCallback: editMessageCallback
 						inputSelector: 'textarea'
 						tmplOptions:
