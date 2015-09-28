@@ -128,7 +128,9 @@ define [
 		clickedAddGroup: (e) ->
 			createGroupCallback = (() ->
 				return (groupName) ->
-					if groupName? and groupName.length > 0	
+					if !groupName
+						return [{error: "You can't create group with an empty name"}]
+					else if groupName.length > 0
 						swipy.slackSync.apiRequest("groups.create",{name: groupName},(res, error) =>
 							if res and res.ok
 								swipy.router.navigate("group/"+res.channel.name)
@@ -150,7 +152,9 @@ define [
 		clickedAddChannel: (e) ->
 			createChannelCallback = (() ->
 				return (channelName) ->
-					if channelName? and channelName.length > 0
+					if !channelName
+						return [{error: "You can't create channel with an empty name"}]
+					else if channelName.length > 0
 						swipy.slackSync.apiRequest("channels.create",{name: channelName},(res, error) =>
 							if res and res.ok
 								swipy.router.navigate("channel/"+res.channel.name)

@@ -78,7 +78,9 @@ define [
 				if result is "create"
 					createTaskCallback = ((me) ->
 						return (title) ->
-							if title
+							if !title
+								return [{error: "You can't create task with an empty title"}]
+							else
 								Backbone.trigger( "create-task", title, {from: "Message", assignee: me.id })
 					)(me)
 
@@ -112,13 +114,14 @@ define [
 						submitCallback: deleteCallback
 						tmplOptions:
 							title: 'Delete message'
-							cancelText: 'CANCEL'
-							submitText: 'DELETE'
+							cancelText: 'NO'
+							submitText: 'YES'
+							text: 'Are you sure you want to delete this message?'
 				else if result is "edit"
 					editMessageCallback = ((channelModel, chatMessageModel) ->
 						return (newText) ->
-							if !newText and !newText.length
-								return [{error: "You can't edit with empty message"}]
+							if !newText
+								return [{error: "You can't edit with an empty message"}]
 							else if newText isnt chatMessageModel.get("text")
 								options = {
 									ts: chatMessageModel.get("ts")
@@ -139,7 +142,7 @@ define [
 						tmplOptions:
 							title: 'Edit Message'
 							cancelText: 'CANCEL'
-							submitText: 'SUBMIT'
+							submitText: 'EDIT'
 							value: model.get 'text'
 			)
 		###
