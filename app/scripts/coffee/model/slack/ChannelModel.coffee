@@ -87,6 +87,8 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			else
 				if(message.deleted_ts)
 					collection.remove(model)
+					model.localStorage = collection.localStorage
+					model.destroy()
 				else
 					if message.message
 						model.save(message.message)
