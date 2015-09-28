@@ -1,10 +1,11 @@
 .full-modal {
 	width: 400px;
-	min-height: 250px;
+	min-height: 100px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	padding-bottom: 15px;
 	background-color: $white-background;
 	border-radius: 10px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.23);
@@ -51,10 +52,25 @@
 	
 	p.error {
 		text-align: center;
+		padding: 0 30px;
 		padding-top: 35px;
 		color: $orange;
 		font: 12px $font-normal;
-		display: none;
+		transform: scale3d(0,0,0);
+		transition: .4s cubic-bezier(.41,-0.52,.62,1.63);
+		
+		&.active {
+			transform: scale3d(1,1,1);
+			transition: .4s cubic-bezier(.41,-0.52,.62,1.63);
+		}
+	}
+	
+	p.delete {
+		width: 80%;
+		margin: 0 auto;
+		font: 14px $font-normal;
+		color: rgba($sidebar-black-header, .6);
+		line-height: 1.4;
 	}
 	
 	.buttons {
