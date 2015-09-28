@@ -11,25 +11,65 @@ define [
 		events:
 			"click .nav-item": "clickedNav"
 			"click .go-back": "back"
-		back: ->
-			if @delegate? and _.isFunction(@delegate.editTaskDidClickBack)
-				@delegate.editTaskDidClickBack(@)
-			#swipy.router.back({trigger:false})
-			false
+			"blur .input-title": "updateTitle"
+
 		initialize: ->
 			throw new Error("Model must be added when constructing EditTask") if !@model?
 			@template = _.template EditTaskTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
+			_.bindAll(@, "keyUpHandling")
 		render: ->
 			@$el.html @template( task: @model )
 			setTimeout( =>
 				@loadActionSteps()
 			,0)
+			swipy.shortcuts.setDelegate( @ )
 			return @
+
+
+		back: ->
+			if @delegate? and _.isFunction(@delegate.editTaskDidClickBack)
+				@delegate.editTaskDidClickBack(@)
+			#swipy.router.back({trigger:false})
+			false
+		### 
+			Title Handling / Rendering etc
+		###
+		keyUpHandling: (e) ->
+			if e.keyCode is 13 and ($('.input-title').is(':focus') or $('.input-title *').is(':focus'))
+				$('.input-title').blur()
+				window.getSelection().removeAllRanges()
+				e.preventDefault()
+		keyDownHandling: (e) ->
+			if e.keyCode is 13 and ($('.input-title').is(':focus') or $('.input-title *').is(':focus'))
+				e.preventDefault()
+		updateTitle: ->
+			title = @validateTitle(@getTitle())
+			if !title
+				@$el.find( ".input-title" ).html(@model.get("title"))
+				return
+			@model.updateTitle title
+		getTitle: ->
+			@$el.find( ".input-title" ).html().replace(/&nbsp;/g , " ")
+		validateTitle: (title) ->
+			title = title.trim()
+			if title.length is 0
+				return false
+			else if title.length > 255
+				title = title.substr(0,255)
+			return title
+
+
+		###
+			Action Steps handling / Rendering
+		###
 		loadActionSteps: ->
 			@actionTab = new ActionTab({model: @model})
 			@$el.find(".action-step-container").html @actionTab.el
 			@actionTab.loadActionSteps() 
+
+
+
 		remove: ->
 			@actionTab?.remove()
 			@$el.empty()
