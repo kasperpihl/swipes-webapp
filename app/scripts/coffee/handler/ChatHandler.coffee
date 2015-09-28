@@ -104,6 +104,7 @@ define [
 									ts: chatMessageModel.get("ts")
 									text: newText
 									channel: channelModel.id
+									link_names: 1
 								}
 								swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
 									console.log "result from message update", res, error
