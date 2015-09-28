@@ -12,18 +12,18 @@ define [
 			"click .nav-item": "clickedNav"
 			"click .go-back": "back"
 			"blur .input-title": "updateTitle"
+			"keyup .input-title": "keyUpTitle"
+			"keydown .input-title": "keyDownTitle"
 
 		initialize: ->
 			throw new Error("Model must be added when constructing EditTask") if !@model?
 			@template = _.template EditTaskTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
-			_.bindAll(@, "keyUpHandling")
 		render: ->
 			@$el.html @template( task: @model )
 			setTimeout( =>
 				@loadActionSteps()
 			,0)
-			swipy.shortcuts.setDelegate( @ )
 			return @
 
 
@@ -32,17 +32,20 @@ define [
 				@delegate.editTaskDidClickBack(@)
 			#swipy.router.back({trigger:false})
 			false
-		### 
-			Title Handling / Rendering etc
-		###
-		keyUpHandling: (e) ->
+		
+		keyUpTitle: (e) ->
 			if e.keyCode is 13 and ($('.input-title').is(':focus') or $('.input-title *').is(':focus'))
 				$('.input-title').blur()
 				window.getSelection().removeAllRanges()
 				e.preventDefault()
-		keyDownHandling: (e) ->
+		keyDownTitle: (e) ->
 			if e.keyCode is 13 and ($('.input-title').is(':focus') or $('.input-title *').is(':focus'))
 				e.preventDefault()
+
+
+		### 
+			Title Handling / Rendering etc
+		###
 		updateTitle: ->
 			title = @validateTitle(@getTitle())
 			if !title
