@@ -1,4 +1,4 @@
-define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageCollection) ->
+define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset"], (_, MessageCollection) ->
 	Backbone.Model.extend
 		className: "Channel"
 		excludeFromJSON: [ "messages" ]
@@ -9,13 +9,16 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 			messageCollection.fetch()
 			@set("messages", messageCollection)
 		getMessages: ->
-			messages = @get("messages")
-			messages.fetch()
+			messages = @getMessageCollection()
 			loop
 				break if messages.length <= @skipCount
 				first = messages.shift()
-				first.localStorage = new Backbone.LocalStorage("MessageCollection-" + @id )
+				first.localStorage = messages.localStorage
 				first.destroy()
+			messages
+		getMessageCollection: ->
+			messages = @get("messages")
+			messages.fetch()
 			messages
 		getName: ->
 			return @get("name") if @get("name")
@@ -34,14 +37,12 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 					console.log("closed channel", res, error)
 			)
 		fetchOlderMessages: (callback) ->
-			collection = @get("messages")
-			collection.fetch()
+			collection = @getMessageCollection()
 			firstObject = collection.at(0)
 			@fetchMessages(firstObject.get("ts"), callback)
 		fetchMessages: (newest, callback) ->
 			options = {channel: @id, count: @skipCount }
-			collection = @get("messages")
-			collection.fetch()
+			collection = @getMessageCollection()
 			if newest
 				options.latest = newest
 				allowMore = true
@@ -55,7 +56,7 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 					callback?(res,error)
 			)
 		addMessage: (message, increment, allowMore) ->
-			collection = @get("messages")
+			collection = @getMessageCollection()
 			identifier = message.ts
 			identifier = message.deleted_ts if message.deleted_ts?
 			identifier = message.message.ts if message.message? and message.message.ts?
@@ -80,7 +81,9 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 				message.channelId = @id
 				newMessage = collection.create( message )
 				if collection.length > @skipCount and !allowMore
-					collection.shift()
+					first = collection.shift()
+					first.localStorage = collection.localStorage
+					first.destroy()
 			else
 				if(message.deleted_ts)
 					collection.remove(model)
@@ -90,7 +93,7 @@ define ["underscore", "js/collection/slack/MessageCollection"], (_, MessageColle
 					else
 						model.save(message)
 		markAsRead: ->
-			collection = @get("messages")
+			collection = @getMessageCollection()
 			options = {channel: @id }
 			if collection.models.length
 				lastModel = collection.at(collection.models.length-1)

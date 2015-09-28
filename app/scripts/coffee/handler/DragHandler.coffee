@@ -108,6 +108,8 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 			else if Draggable.hitTest(e, ".task-list", 0)
 				hit.parent = ".task-list"
 				ids = $.map( $(".task-list .task-item"), (o) -> o["id"] ) #_.pluck(@tempTasks, "id")
+				actionIds = $.map( $(".task-list .action-item"), (o) -> o["id"] ) #_.pluck(@tempTasks, "id")
+				ids = ids.concat(actionIds)
 				for i, id of ids
 					targetIdentifier = "#"+id
 					if Draggable.hitTest(e, targetIdentifier, 0)

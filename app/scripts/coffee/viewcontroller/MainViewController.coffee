@@ -1,7 +1,10 @@
 define [
 	"underscore"
 	"gsap"
-	], (_, TweenLite) ->
+	"js/viewcontroller/ChannelViewController"
+	"js/viewcontroller/MyTasksViewController"
+	"js/viewcontroller/SearchViewController"
+	], (_, TweenLite, ChannelViewController, MyTasksViewController, SearchViewController) ->
 	class MainViewController
 		constructor: (opts) ->
 			@init()
@@ -27,11 +30,11 @@ define [
 			Backbone.trigger("set-active-menu", activeMenu)
 		loadViewController: (viewcontroller) ->
 			dfd = new $.Deferred()
-			if viewcontroller is "im" then require ["js/viewcontroller/ChannelViewController"], (VC) -> dfd.resolve VC
-			else if viewcontroller is "channel" then require ["js/viewcontroller/ChannelViewController"], (VC) -> dfd.resolve VC
-			else if viewcontroller is "group" then require ["js/viewcontroller/ChannelViewController"], (VC) -> dfd.resolve VC
-			else if viewcontroller is "search" then require ["js/viewcontroller/SearchViewController"], (VC) -> dfd.resolve VC
-			else require ["js/viewcontroller/MyTasksViewController"], (VC) -> dfd.resolve VC
+			if viewcontroller is "im" then dfd.resolve ChannelViewController
+			else if viewcontroller is "channel" then dfd.resolve ChannelViewController
+			else if viewcontroller is "group" then dfd.resolve ChannelViewController
+			else if viewcontroller is "search" then dfd.resolve SearchViewController
+			else dfd.resolve MyTasksViewController
 			return dfd.promise()
 		destroy: ->
 			@currView?.remove()

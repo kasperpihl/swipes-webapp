@@ -47,13 +47,11 @@ define ["underscore"], (_) ->
 						pathStart = "im/" + user.get("name")
 				
 				fullPath = pathStart + "/task/" + task.id
-				console.log "compare", @getCurrRoute(), @lastMainRoute, pathStart
 				if @getCurrRoute()?.startsWith(pathStart)
-					console.log "current path"
 					Backbone.trigger("edit/task", task)
-					@navigate( fullPath, {trigger: no })
+					@navigate( fullPath, {trigger: no , replace: true})
 				else
-					@navigate( fullPath, {trigger: yes})
+					@navigate( fullPath, {trigger: yes, replace: true})
 			else
 				@root()
 

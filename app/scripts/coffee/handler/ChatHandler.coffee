@@ -31,7 +31,10 @@ define [
 
 		sortAndGroupCollection: ->
 			@groupedMessages = []
-			groups = @collection.groupBy((model, i) ->
+			groups = @collection.groupBy((model, i) =>
+				if @startsWith? and @startsWith
+					if model.get("text")? and !model.get("text").startsWith(@startsWith)
+						return "outfiltered"
 				date = new Date(parseInt(model.get("ts"))*1000)
 				return moment(date).startOf('day').unix()
 				
@@ -39,6 +42,7 @@ define [
 			taskGroups = []
 			sortedKeys = _.keys(groups).sort()
 			for key in sortedKeys
+				continue if key is "outfiltered"
 				schedule = new Date(parseInt(key)*1000)
 
 				title = @timeUtil.dayStringForDate(schedule)

@@ -4,9 +4,8 @@ define [
 	"js/collection/slack/UserCollection"
 	"js/collection/slack/BotCollection"
 	"js/collection/slack/ChannelCollection"
-	"js/collection/slack/MessageCollection"
 	"collectionSubset"
-	], (_, Backbone, UserCollection, BotCollection, ChannelCollection, MessageCollection) ->
+	], (_, Backbone, UserCollection, BotCollection, ChannelCollection) ->
 	class Collections
 		constructor: ->
 			
@@ -15,8 +14,6 @@ define [
 
 			@channels = new ChannelCollection()
 			@channels.localStorage = new Backbone.LocalStorage("ChannelCollection")
-
-			@messages = new MessageCollection()
 
 			@all = [@users, @bots, @channels]
 		fetchAll: ->

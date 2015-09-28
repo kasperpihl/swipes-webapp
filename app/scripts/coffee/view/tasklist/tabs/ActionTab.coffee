@@ -7,6 +7,7 @@ define [
 	"js/view/tasklist/TaskList"
 	"js/handler/TaskHandler"
 	"js/view/tasklist/tabs/AddActionRow"
+	"collectionSubset"
 	], (_, ActionTabTmpl, TaskList, TaskHandler, AddActionRow) ->
 	Backbone.View.extend
 		className: "action-tab"
@@ -29,7 +30,7 @@ define [
 
 			@taskList = new TaskList()
 			@taskList.setActionList()
-			@taskList.targetSelector = "#task-"+@model.id + " .edit-task .action-list-container"
+			@taskList.targetSelector = ".edit-task .action-list-container"
 			@taskList.enableDragAndDrop = true
 
 			@taskHandler = new TaskHandler()

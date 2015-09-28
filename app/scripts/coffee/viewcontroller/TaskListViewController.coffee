@@ -16,6 +16,8 @@ define [
 			isMyTasks = @options.isMyTasksView
 
 			@setTemplate()
+			
+
 			@addTaskCard = new AddTaskCard()
 			@addTaskCard.addDelegate = channelVC
 
@@ -39,26 +41,49 @@ define [
 			@taskList.taskDelegate = @taskHandler
 			@taskList.dragDelegate = @taskHandler
 			@taskList.dataSource = @taskHandler
-
+			_.bindAll(@, "editTaskDidClickBack")
 			Backbone.on( "request-work-task", @requestWorkTask, @ )
 			Backbone.on( "edit/task", @editTask, @ )
 
 			@setEmptyTitles()
+		showThreadOverlay: (show) ->
+			console.log "showing thread", show
 		editTask: (model) ->
-			return
-			taskCard = @taskList.taskCardById(model.id)
-			return if !taskCard
-			@editTask = new EditTask({model: model})
-			@editTask.render()
-			taskCard.$el.find(".expanding").html @editTask.el
-			@editTask.loadTarget($(".nav-item.actionTab"))
-			taskCard.$el.addClass("editMode")
+			if model
+				console.log model
+				@editTaskView = new EditTask({model: model})
+				@editModel = model
+				@editTaskView.delegate = @
+				@editTaskView.render()
+				@isEditing = true
+				@$el.find(".edit-task-container").html @editTaskView.el
+				@$el.addClass("editMode")
+			else
+				@editModel = null
+				@editTaskView?.remove()
+				@isEditing = false
+				@$el.removeClass("editMode")
+			Backbone.trigger("tasklistvc/edited-task")
+		goBackFromEditMode: ->
+			currRoute = Backbone.history.fragment
+			indexOfTask = currRoute.indexOf("/task")
+			if indexOfTask isnt -1
+				newRoute = currRoute.substring(0, indexOfTask)
+			if newRoute
+				swipy.router.navigate(newRoute, {trigger: false})
+				swipy.router.history.push(newRoute)
+			@editTask(false)
+		editTaskDidClickBack: (editTask) ->
+			@goBackFromEditMode()
+			
 		setTemplate: ->
 			@template = _.template Template
 		render: ->
 			@$el.html @template({})
+			
 			@addTaskCard.render()
 			@$el.find('.add-task-container').prepend( @addTaskCard.el )
+			
 			@toggleCompletedTasks.render()
 			@taskList.render()
 		requestWorkTask: ( task ) ->
@@ -121,7 +146,9 @@ define [
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()
+			@editModel = null
 			@taskHandler?.destroy?()
 			@toggleCompletedTasks?.destroy?()
 			@taskList?.remove?()
+			@editTaskView?.remove()
 			@remove()

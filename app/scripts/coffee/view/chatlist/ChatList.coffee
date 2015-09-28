@@ -14,7 +14,7 @@ define [
 		className: "chat-list"
 		initialize: ->
 			# Set HTML tempalte for our list
-			@bouncedRender = _.debounce(@render, 5)
+			@bouncedRender = _.debounce(@render, 10)
 			@bouncedMarkAsRead = _.debounce(@markAsRead, 800)
 			@listenTo( Backbone, "reload/chathandler", @bouncedRender )
 			_.bindAll(@, "checkIsRead", "didScroll")
@@ -52,7 +52,7 @@ define [
 
 
 			numberOfSections = 1
-			numberOfChats = 0
+			@numberOfChats = 0
 			numberOfNewChats = 0
 			
 			if _.isFunction(@dataSource.chatListNumberOfSections)
@@ -81,7 +81,7 @@ define [
 
 				chatReference = @chatsBySectionByTimestamp[sectionData.leftTitle]
 				for chat in sectionData.messages
-					numberOfChats++
+					@numberOfChats++
 					if !@removeUnreadIfSeen and @unread and chat.get("ts") is @unread.ts
 						sectionEl.append( @unread.el )
 
@@ -110,6 +110,8 @@ define [
 						chatMessage.isFromSameSender = false
 					if lastChat? and (lastChat.get("subtype") is "file_share" or lastChat.get("attachments"))
 						chatMessage.isFromSameSender = false
+					if @isThread
+						chatMessage.isThread = true
 					lastSender = sender
 					lastUnix = unixStamp
 					
@@ -129,11 +131,12 @@ define [
 				
 			if @scrollToTimestamp?
 				targetEl = @$el.find("#message-"+@scrollToTimestamp)
-				targetPos = targetEl.position().top
-				$(".chat-list-container-scroller").scrollTop(targetPos - 60)
-				@scrollToTimestamp = null
+				if targetEl? and targetEl.position()?
+					targetPos = targetEl.position().top 
+					$(".chat-list-container-scroller").scrollTop(targetPos - 60)
+					@scrollToTimestamp = null
 			else if shouldScrollToBottom
-				_.debounce(@scrollToBottom,10)()
+				@scrollToBottom()
 			
 			@moveToBottomIfNeeded()
 			

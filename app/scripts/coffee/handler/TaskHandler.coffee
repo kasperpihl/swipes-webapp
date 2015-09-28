@@ -161,7 +161,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				)
 			false
 		dragHandlerDidClick: (dragHandler, e) ->
-			return false
+			return if !localStorage.getItem("EnableThreadedConversations")
 			hitTarget = $(e.target)
 			clickedId = @idForEvent(e)
 
@@ -260,17 +260,9 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			if model.get("selected") or e.metaKey or e.ctrlKey
 				model.save("selected", !model.get("selected"))
 			else
-				shouldShow = !taskCard.hasClass("editMode")
-				if shouldShow or $(e.target).hasClass('main-info-container')
-					$(".editMode").removeClass("editMode")
-				if shouldShow
-					#@editTask = new EditTask({model: model})
-					#@editTask.render()
-					@editMode = true
-					Backbone.trigger("edit/task", model)
-					#taskCard.find(".expanding").html @editTask.el
-					#taskCard.addClass("editMode")
-					
+				@editMode = true
+				swipy.router.navigate("task/"+model.id, {trigger: true})
+				#Backbone.trigger("edit/task", model)
 		### 
 			TaskList Datasource
 		###

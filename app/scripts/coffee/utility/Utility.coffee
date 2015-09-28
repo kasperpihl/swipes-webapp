@@ -52,7 +52,6 @@ define ["underscore"], (_) ->
 			errorObject.set( "type", type ) if type?
 			errorObject.set( "user", me.toJSON() ) if me?
 			errorObject.save()
-
 		handleMentionsAndLinks: (text) ->
 			return if !text
 

@@ -5,7 +5,6 @@ $task-new-task-height: 61px;
 	height: $task-new-task-height;
 	bottom: 0;
 	padding-top: 2px;
-	
 }
 .task-list-view-controller{
 	width:100%;
@@ -58,6 +57,9 @@ $task-new-task-height: 61px;
 	max-width:400px;
 	width:90%;
 	margin: 0 auto;
+	.editMode & {
+		display: none;
+	}
 	
 	.completeted-toggle-wrapper {
 		width: 200px;
@@ -189,30 +191,12 @@ $margin-to-card: 15px;
 
 $meta-bottom-spacing: 6px;
 $meta-margin: 10px;
-
-// Design for cards
-.card-container{
-	position: relative;
-	.main-info-container{
-		padding:5px;
-		padding-left: $left-padding;
-		//position: relative;
-		.priority{
-			margin-top: -3px;
-		}
-	}
-	.expanding{
-		margin-top:-10px;
-		display:none;
-		.editMode & {
-			display:block;
-		}
-	}
-	@include card-shadow(6px, 1px);
-	@include transition(all 0.1s ease-out);
-	@include border-radius(10px);
-	background:#fff;
+.card-container, .action-container{
 	
+	position: relative;
+	.relative-container{
+		position: relative;	
+	}
 	h2{
 		// + 2 because of the font
 		margin-top:$margin-to-card + 2;
@@ -265,6 +249,30 @@ $meta-margin: 10px;
 		}
 	}
 }
+// Design for cards
+.card-container{
+	background:#fff;
+	.main-info-container{
+		padding:5px;
+		padding-left: $left-padding;
+
+		
+		.priority{
+			margin-top: -3px;
+		}
+	}
+	.expanding{
+		margin-top:-10px;
+		display:none;
+		.editMode & {
+			display:block;
+		}
+	}
+	@include card-shadow(6px, 1px);
+	@include transition(all 0.1s ease-out);
+	@include border-radius(10px);
+	
+}
 .action-item{
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -281,6 +289,9 @@ $meta-margin: 10px;
 }
 // Add task card
 .add-task-card-container {
+	.editMode & {
+		display: none;
+	}
 	margin-bottom:20px;
 	max-width: 400px;
 

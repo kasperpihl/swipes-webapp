@@ -4,6 +4,7 @@ define [
 	"js/viewcontroller/TaskListViewController"
 	"js/utility/TimeUtility"
 	"momentjs"
+	"collectionSubset"
 	], (_, TweenLite, TaskListViewController, TimeUtility) ->
 	Backbone.View.extend
 		className: "my-tasks-view-controller main-view-controller"

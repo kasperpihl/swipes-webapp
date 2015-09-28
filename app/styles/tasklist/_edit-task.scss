@@ -1,74 +1,94 @@
 $edit-nav-height: 50px;
 $nav-seperator-height: 20px;
 $nav-icon-size: 22px;
+textarea, input, .content-editable {
+	color: inherit;
+	text-indent: 0;
+	width: 100%;
+	padding:10px;
+
+	@include transition(color 0.2s ease-out);
+
+	&:focus, &:hover {
+		color: $gray;
+	}
+
+	&:active, &:focus {
+		border:none;
+		outline:none;
+	}
+}
+
+textarea, .content-editable {
+	@include input-placeholder() {
+		color: lighten($gray, 30%);
+	}
+}
+.edit-task-container{
+	display: none;
+	.editMode & {
+		display:block;
+	}
+}
 .edit-task{
-	.nav-container{
-		height:$edit-nav-height;
-		.nav-item{
-			position:relative;
-			display:inline-block;
-			width:25%;
-			height:$edit-nav-height;
-			svg{
-				height:$nav-icon-size;
-				width:$nav-icon-size;
-				position:absolute;
-				left:50%;
-				top:50%;
-				margin-top:-$nav-icon-size/2;
-				margin-left:-$nav-icon-size/2;
-				@include transition(fill 0.17s ease-in-out);
-				fill: $small-seperator-color;
-			}
-			&.actionTab svg{
-				$action-tab-icon-size: 12px;
-				height:$action-tab-icon-size;
-				width:$action-tab-icon-size;
-				margin-top:-$action-tab-icon-size/2;
-				margin-left:-$action-tab-icon-size/2;
-			}
-			.number{
-				position:absolute;
-				font: 11px $font-bold;
-				@include transition(color 0.17s ease-in-out);
-				color: $small-seperator-color;
-				top:50%;
-				left:50%;
-				margin-left: 14px;
-				margin-top:-16px;
-			}
-			&.active, &:hover{
-				svg{
-					
-					fill: $sidebar-dark-color;
-				}
-				.number{
-					
-					color: $sidebar-dark-color;
-				}
-			}
-			.left-seperator, .right-seperator{
-				position:absolute;
-				top:($edit-nav-height - $nav-seperator-height)/2;
-				background-color: #F3F4F4;
-				width:1px;
-				height:$nav-seperator-height;
-			}
-			.left-seperator{
-				left:0;
-			}
-			.right-seperator{
-				right:0;
-			}
+	max-width: 400px;
+	padding-top:25px;
+	margin: 0 auto;
+	position: relative;
+	.back-button{
+		position:absolute;
+		left:10px;
+		top: 34px;
+		svg{
+			width: 16px;
+			height: 16px;
+		}
+	}
+	.task-title {
+		position: relative;
+		font-size: 16px;
+		font-family: $font-normal;
+
+		margin-bottom: 12px;
+		margin-top: 0;
+		margin-left:25px;
+
+		
+		// legacy code
+		// input{
+		// 	font-family: $font-light;
+		// }
+	}
+	.info-label, .input-note{
+		font-size:16px;
+		padding-top:12px;
+		padding-left:54px;
+	}
+	.has-icon {
+		// Can't use em, because font-size might vary
+		padding-left: 10px;
+		position: relative;
+
+		p {
+			line-height: 1;
 		}
 
+		.icon-hold {
+			display: inline-block;
+			position: absolute;
+			left: 44px;
+			top: 12px;
+			svg {
+				fill: $gray;
+				width: 12px;
+				height: 12px;
+			}
+			border:0;
+		}
 	}
-	.progress-header h1 span{
-		font-size: 12px;
-	}
-	.tab-container{
-		margin-top: -12px;
-		padding-bottom:8px;
-		min-height: 50px;
+
+	> section {
+		margin-bottom: 1.0em;
+		min-height: 40px;
 	}
 }

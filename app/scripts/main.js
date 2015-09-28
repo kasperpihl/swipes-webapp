@@ -190,9 +190,9 @@ require(["jquery", "underscore", "backbone"], function($) {
         }, false);
     }
     
-    require(["bootstrapTooltip"],function(){
+    /*require(["bootstrapTooltip"],function(){
         $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});
-    })
+    })*/
     require(["parse"], function() {
         // First check that the user is actually logged in
         queryString = QueryString;
