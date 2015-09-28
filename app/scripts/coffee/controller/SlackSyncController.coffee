@@ -163,11 +163,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				console.log "response", res, error
 				callback?(res,error)
 			, formData)
-		sendMessageAsSlackbot: (message, channel, callback) ->
-			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "slackbot", icon_url: "http://team.swipesapp.com/styles/img/slackbot72.png" }
-			@apiRequest("chat.postMessage", options, (res, error) ->
-				callback?(res, error)
-			)
 		sendMessageAsSofi: (message, channel, callback, attachments) ->
 			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "s.o.f.i.", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
 			options.attachments = attachments if attachments

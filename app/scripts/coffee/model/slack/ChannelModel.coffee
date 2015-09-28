@@ -95,9 +95,13 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 		markAsRead: ->
 			collection = @getMessageCollection()
 			options = {channel: @id }
-			if collection.models.length
-				lastModel = collection.at(collection.models.length-1)
-				options.ts = lastModel.get("ts")
+			return if !collection.models.length
+			lastModel = collection.at(collection.models.length-1)
+			options.ts = lastModel.get("ts")
+			unixLastModel = new Date(parseFloat(lastModel.get("ts"))*1000).getTime()
+			if @get("last_read")
+				unixLastRead = new Date(parseFloat(@get("last_read"))*1000).getTime()
+				return if unixLastModel <= unixLastRead
 			swipy.slackSync.apiRequest(@getApiType() + ".mark",options, 
 				(res, error) =>
 					if res and res.ok
