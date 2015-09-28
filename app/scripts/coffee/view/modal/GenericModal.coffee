@@ -24,13 +24,16 @@ define ["underscore"
 			setTemplates: ->
 				@template = _.template @typeToTemplate(@options.type), variable: "data"
 			afterOpen: ->
+				self = @
 				$('.modal-clickable-background').addClass('dark-opaque')
 
 				if @options.inputSelector
 					@$el.find(@options.inputSelector).focus()
+					@$el.find(@options.inputSelector).on 'keyup', () ->
+						self.$el.find("p.error").removeClass('active')
 				else
 					@$el.find(".full-modal").focus()
-			afterClose: ->
+			close: ->
 				$('.modal-clickable-background').removeClass('dark-opaque')
 				@dismissModal()
 			render: ->
@@ -39,13 +42,16 @@ define ["underscore"
 				return @
 			submit: (e) ->
 				if @options.inputSelector
-					@options.submitCallback(@$el.find(@options.inputSelector).val())
+					errors = @options.submitCallback(@$el.find(@options.inputSelector).val())
 				else
-					@options.submitCallback()
+					errors = @options.submitCallback()
 					
-				@afterClose()
+				if errors? and errors.length > 0
+					@$el.find("p.error").text(errors[0].error).addClass('active')
+				else
+					@close()
 			cancel: (e) ->
-				@afterClose()
+				@close()
 			keyup: (e) ->
 				if e.keyCode == 13 && e.target.type != 'textarea'
 					@submit()

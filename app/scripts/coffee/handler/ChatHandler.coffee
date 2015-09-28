@@ -117,7 +117,9 @@ define [
 				else if result is "edit"
 					editMessageCallback = ((channelModel, chatMessageModel) ->
 						return (newText) ->
-							if newText? and newText.length and newText isnt chatMessageModel.get("text")
+							if !newText and !newText.length
+								return [{error: "You can't edit with empty message"}]
+							else if newText isnt chatMessageModel.get("text")
 								options = {
 									ts: chatMessageModel.get("ts")
 									text: newText
