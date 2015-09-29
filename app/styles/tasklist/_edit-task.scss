@@ -122,6 +122,11 @@ textarea, .content-editable {
 				font: 14px $font-normal;
 				line-height: 14px;
 				color: $gray;
+				padding-left: 10px;
+				text-decoration: underline;
+				&:hover{
+					text-decoration: none;
+				}
 			}
 		}
 	}
