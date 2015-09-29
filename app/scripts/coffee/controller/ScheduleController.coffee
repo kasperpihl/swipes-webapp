@@ -8,14 +8,19 @@ define ["underscore", "js/model/extra/ScheduleModel", "js/view/modal/ScheduleMod
 			Backbone.on( "show-scheduler", @showScheduleView, @ )
 			_.bindAll( @ , "scheduleModalCallback" )
 		showScheduleView: (taskCards, e) ->
+			@currentCards = null
 			@view?.remove()
 			@model.updateData()
 			@view = new ScheduleModal( model: @model )
 			@view.render()
 			@view.presentModal({left: e.clientX+30, top:e.clientY+30, centerY: true, centerX: true}, @scheduleModalCallback)
-
-			@currentCards = taskCards
-			@currentTasks = _.pluck( taskCards, "model" )
+			
+			if _.isArray(taskCards)
+				@currentCards = taskCards 
+				@currentTasks = _.pluck( taskCards, "model" )
+			else if _.isObject(taskCards)
+				@currentTasks = [taskCards]
+				console.log "task found, but no cards"
 
 		scheduleModalCallback: (option) ->
 			return unless @currentTasks
@@ -25,10 +30,12 @@ define ["underscore", "js/model/extra/ScheduleModel", "js/view/modal/ScheduleMod
 			else if typeof option is "object"
 				date = option.toDate()
 			deferredArr = []
-			console.log option
-			for taskCard in @currentCards
-				deferredArr.push taskCard.animateWithClass("fadeOutLeft")
-			$.when( deferredArr... ).then => 
+			if @currentCards?
+				for taskCard in @currentCards
+					deferredArr.push taskCard.animateWithClass("fadeOutLeft")
+				$.when( deferredArr... ).then => 
+					_.invoke(@currentTasks, "scheduleTask", date)
+			else
 				_.invoke(@currentTasks, "scheduleTask", date)
 			analyticsOptions =  @getAnalyticsDataFromOption( option, date )
 			swipy.analytics.logEvent("[Engagement] Scheduled Task", analyticsOptions)

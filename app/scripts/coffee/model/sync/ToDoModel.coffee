@@ -142,7 +142,11 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					currentAssignees.push( userId )
 			if inserted?
 				@set("assignees": null)
-				saveObj = {"assignees": currentAssignees, "schedule" : new Date()}
+				
+				saveObj = {"assignees": currentAssignees }
+				if !@get("schedule")
+					saveObj.schedule = new Date()
+					
 				if save
 					@save saveObj, {sync:true}
 				else

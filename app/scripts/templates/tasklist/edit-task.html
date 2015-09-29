@@ -6,8 +6,36 @@
 <h1 class="h2 task-title">
 	<div class="input-title content-editable" contenteditable="true"><%= data.task.get("title") %></div>
 </h1>
+<section class="action-step-container info-row">
+</section>
 
-<div class="assignees-container info-row">
+
+<%
+var scheduleString;
+if(data.task.get("schedule")){
+	scheduleString = data.task.get("scheduleStr");
+	if(data.task.get("timeStr"))
+		scheduleString += ", " + data.task.get("timeStr")
+}
+if(data.task.get("completionDate")){
+	scheduleString = data.task.get("completionStr");
+	if(data.task.get("completionTimeStr"))
+		scheduleString += ", " + data.task.get("completionTimeStr")
+}
+%>
+<section class="schedule-container info-row">
+	<div class="side-icon">
+		<svg class="icon">
+			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editSchedule"></use>
+		</svg>
+	</div>
+	<div class="content-div">
+		<%= scheduleString %>
+	</div>
+</section>
+
+
+<section class="assignees-container info-row">
 	<div class="side-icon">
 		<svg class="icon">
 			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editTabAssign"></use>
@@ -29,16 +57,21 @@
 			<li><a href="#" id="assign-text-button"><%= assignText %></a></li>
 		</ul>
 	</div>
-</div>
+</section>
 
-<div class="action-step-container info-row">
-</div>
+
 <!--
 <section>
+	<div class="side-icon">
+		<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
+	</div>
+	<div class="content-div">
+		<div class="input-note content-editable" contenteditable="true"></div>
+	</div>
 	<div class="notes has-icon">
 		<span class="icon-hold">
 			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
 		</span>
-		<div class="input-note content-editable" contenteditable="true"></div>
+		
 	</div>
 </section>-->

@@ -16,12 +16,13 @@ define [
 			"keydown .input-title": "keyDownTitle"
 			"click .assignees-list .assignee": "clickedAssignee"
 			"click #assign-text-button": "clickedAssign"
+			"click .schedule-container": "clickedSchedule"
 
 		initialize: ->
 			throw new Error("Model must be added when constructing EditTask") if !@model?
 			@template = _.template EditTaskTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
-			@model.on("change:assignees", @bouncedRender, @ )
+			@model.on("change:assignees change:schedule", @bouncedRender, @ )
 		render: ->
 			@$el.html @template( task: @model )
 			setTimeout( =>
@@ -44,6 +45,13 @@ define [
 		keyDownTitle: (e) ->
 			if e.keyCode is 13 and ($('.input-title').is(':focus') or $('.input-title *').is(':focus'))
 				e.preventDefault()
+
+		###
+			Schedule Handling / Rendering
+		###
+		clickedSchedule: (e) ->
+			Backbone.trigger( "show-scheduler", @model, e )
+
 
 		###
 			Asssign Handling / Rendering
