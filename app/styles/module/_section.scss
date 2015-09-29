@@ -8,6 +8,15 @@
 	margin-bottom: 4px;
 	margin-top: 20px;
 	position:relative;
+	.expandable{
+		h2{
+			color: $gray;
+			text-decoration: underline;
+		}
+		&:hover h2{
+			text-decoration: none;
+		}
+	}
 	h2{
 		&.left{
 			float:left;

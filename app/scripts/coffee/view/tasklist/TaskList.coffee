@@ -57,13 +57,16 @@ define [
 				# Load tasks and titles for section
 				sectionData = @dataSource.taskListDataForSection( @, section )
 
-				continue if !sectionData or !sectionData.tasks.length
+				continue if !sectionData
 
 				# Instantiate
 				section = new Section()
+				if sectionData.expandClass
+					section.expandClass = sectionData.expandClass
+					console.log "expand class", sectionData.expandClass
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
-
+				
 				if lastLeftTitle and lastLeftTitle is "Your current tasks"
 					section.$el.find('.section-header').css("marginTop","150px")
 

@@ -11,6 +11,7 @@ define [
 		initialize: ->
 			@timeUtil = new TimeUtility()
 			Backbone.on( "create-task", @createTask, @ )
+			Backbone.on( "clicked/section", @clickedSection, @)
 		render: ->
 			@$el.html ""
 			$("#main").html(@$el)
@@ -22,6 +23,8 @@ define [
 
 			@mainView = "task"
 			swipy.rightSidebarVC.sidebarDelegate = @
+			@showSomedayMaybe = false
+			@showLaterTasks = false
 			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
@@ -41,7 +44,7 @@ define [
 			now.setSeconds now.getSeconds() - 1
 			options.schedule = now if !options.schedule?
 			@taskCollectionSubset?.child.createTask(title, options)
-			@taskListVC?.tashHandler.bouncedReloadWithEvent()
+			@taskListVC?.taskHandler.bouncedReloadWithEvent()
 
 		getTaskListVC: ->
 			# https://github.com/anthonyshort/backbone.collectionsubset
@@ -59,6 +62,14 @@ define [
 				isMyTasksView: true
 				collectionToLoad: @taskCollectionSubset.child
 		
+		clickedSection: (section) ->
+			if section is "future-tasks"
+				@showLaterTasks = true
+			else if section is "someday-maybe"
+				@showSomedayMaybe = true
+			@taskListVC?.taskHandler.bouncedReloadWithEvent()
+			
+
 		###
 			TaskHandler Delegate
 		###
@@ -69,12 +80,13 @@ define [
 					m.get("completionDate")
 				else
 					!m.get("completionDate")
-			groups = _.groupBy(tasks, (model, i) ->
+			groups = _.groupBy(tasks, (model, i) =>
 				if model.get("completionDate") then return moment(model.get("completionDate")).startOf('day').unix()
 				if model.getState() is "active" then return -1
 				else if model.getState() is "scheduled"
 					schedule = model.get("schedule")
 					return 9999999999 if !schedule? or !schedule
+					return 9999999998 if !@showLaterTasks
 					return moment(schedule).startOf('day').unix()
 			)
 			
@@ -86,11 +98,23 @@ define [
 			
 			for key in sortedKeys
 				dontSort = false
+				includeTasks = true
+				expandClass = false
+				tasks = groups[key]
+				numberOfTasksForSection = tasks.length
 				showSchedule = false
 				if key is "-1"
 					title = "Your tasks"
 				else if key is "9999999999"
-					title = "Unspecified"
+					title = "Someday/Maybe"
+					if !@showSomedayMaybe
+						title += " ( " + numberOfTasksForSection + " )"
+						includeTasks = false
+						expandClass = "someday-maybe"
+				else if key is "9999999998"
+					title = "Future Tasks ( " + numberOfTasksForSection + " )"
+					includeTasks = false
+					expandClass = "future-tasks"
 				else
 					dontSort = true
 					showSchedule = true
@@ -104,7 +128,9 @@ define [
 						title = "Completed " + title
 					else if title is "Today"
 						title = "Later Today"
-				taskGroups.push({showSource: true, showSchedule: showSchedule, leftTitle: title, tasks: groups[key], dontSort: dontSort })
+				group = {showSchedule: showSchedule, leftTitle: title, dontSort: dontSort, expandClass: expandClass }
+				group.tasks = tasks if includeTasks
+				taskGroups.push(group)
 
 			return taskGroups
 

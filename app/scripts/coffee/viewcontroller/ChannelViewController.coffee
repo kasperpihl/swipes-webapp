@@ -5,6 +5,7 @@ define [
 	"js/viewcontroller/ChatListViewController"
 	"js/utility/TimeUtility"
 	"collectionSubset"
+	"momentjs"
 	], (_, TweenLite, TaskListViewController, ChatListViewController, TimeUtility) ->
 	Backbone.View.extend
 		className: "channel-view-controller main-view-controller"
@@ -13,6 +14,7 @@ define [
 			Backbone.on( "create-task", @createTask, @ )
 			@bouncedHandleEdited = _.debounce(@handleEditedTask, 10)
 			Backbone.on( "tasklistvc/edited-task", @bouncedHandleEdited, @)
+			Backbone.on( "clicked/section", @clickedSection, @)
 		render: (el) ->
 			@$el.html "<div style=\"text-align:center; margin-top:100px;\">Loading</div>"
 			$("#main").html(@$el)
@@ -26,6 +28,10 @@ define [
 			@identifier = options.id
 			@type = type
 			@mainView = "chat"
+
+			@showSomedayMaybe = false
+			@showLaterTasks = false
+
 			swipy.rightSidebarVC.sidebarDelegate = @
 			if @type isnt "im"
 				collection = swipy.slackCollections.channels
@@ -100,43 +106,82 @@ define [
 			options.projectLocalId = @currentList.id
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")
+		clickedSection: (section) ->
+			if section is "future-tasks"
+				@showLaterTasks = true
+			else if section is "someday-maybe"
+				@showSomedayMaybe = true
+			@taskListVC?.taskHandler.bouncedReloadWithEvent()
 
 		### 
 			TaskHandler delegate
 		###
-		taskHandlerSortAndGroupCollection: (taskHandler, collection, toggleCompleted) ->
+		taskHandlerSortAndGroupCollection: (taskHandler, collection, toggleComplete) ->
 			self = @
-			title = @currentList.get("name")+ " tasks"
-
-			if @currentUser?
-				title =  "You & " + @currentUser.get("name") + "'s tasks"
-				if @currentUser.get("name") is "slackbot"
-					title = "You, slackbot & s.o.f.i's tasks"
-
 			tasks = _.filter collection.models, (m) ->
-				if toggleCompleted
+				if toggleComplete
 					m.get("completionDate")
 				else
 					!m.get("completionDate")
-			if toggleCompleted
-				groups = _.groupBy(tasks, (model, i) ->
-					return moment(model.get("completionDate")).startOf('day').unix()
-				)
-				taskGroups = []
-				sortedKeys = _.keys(groups).sort().reverse()
-				for key in sortedKeys
+			groups = _.groupBy(tasks, (model, i) =>
+				if model.get("completionDate") then return moment(model.get("completionDate")).startOf('day').unix()
+				if model.getState() is "active" then return -1
+				else if model.getState() is "scheduled"
+					schedule = model.get("schedule")
+					return 9999999999 if !schedule? or !schedule
+					return 9999999998 if !@showLaterTasks
+					return moment(schedule).startOf('day').unix()
+			)
+			
+			taskGroups = []
+			sortedKeys = _.keys(groups).sort()
+
+			if toggleComplete
+				sortedKeys = sortedKeys.reverse()
+			
+			for key in sortedKeys
+				dontSort = false
+				includeTasks = true
+				expandClass = false
+				tasks = groups[key]
+				numberOfTasksForSection = tasks.length
+				showSchedule = false
+				if key is "-1"
+					title = @currentList.get("name")+ " tasks"
+					if @currentUser?
+						title =  "You & " + @currentUser.get("name") + "'s tasks"
+						if @currentUser.get("name") is "slackbot"
+							title = "You, slackbot & s.o.f.i's tasks"
+				else if key is "9999999999"
+					title = "Someday/Maybe"
+					if !@showSomedayMaybe
+						title += " ( " + numberOfTasksForSection + " )"
+						includeTasks = false
+						expandClass = "someday-maybe"
+				else if key is "9999999998"
+					title = "Future Tasks ( " + numberOfTasksForSection + " )"
+					includeTasks = false
+					expandClass = "future-tasks"
+				else
 					dontSort = true
+					showSchedule = true
 					schedule = new Date(parseInt(key)*1000)
 					groups[key] = _.sortBy(groups[key], (model) ->
-						return -model.get("completionDate").getTime()
+						return -model.get("completionDate").getTime() if toggleComplete? and toggleComplete
+						return model.get("schedule")?.getTime()
 					)
-					title = "Completed " + @timeUtil.dayStringForDate(schedule)
-					taskGroups.push({showSource: true, leftTitle: title, tasks: groups[key], dontSort: dontSort })
-
-			else
-				taskGroups = [{leftTitle: title , tasks: tasks}]
+					title = @timeUtil.dayStringForDate(schedule)
+					if toggleComplete
+						title = "Completed " + title
+					else if title is "Today"
+						title = "Later Today"
+				group = {showSchedule: showSchedule, leftTitle: title, dontSort: dontSort, expandClass: expandClass }
+				group.tasks = tasks if includeTasks
+				
+				taskGroups.push(group)
 
 			return taskGroups
+
 
 
 		### 
@@ -154,6 +199,8 @@ define [
 			@taskListVC = new TaskListViewController
 				delegate: @
 				collectionToLoad: @taskCollectionSubset.child
+
+
 
 		### 
 			Get A ChatListViewController that filtered for this project
@@ -180,6 +227,7 @@ define [
 			)
 			return chatListVC
 		
+
 		###
 			ChatList ChatDelegate
 		###
@@ -196,6 +244,8 @@ define [
 			)
 		chatListMarkAsRead: (chatList, timestamp) ->
 			@currentList.markAsRead()
+
+
 		###
 			RightSidebarDelegate
 		###
