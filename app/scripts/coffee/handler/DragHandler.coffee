@@ -105,7 +105,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					hit.target = ".task-list-view-controller"
 					hit.type = "task-list"
 					hit.position = "middle"
-			else if Draggable.hitTest(e, ".task-list", 0)
+			else if Draggable.hitTest(e, ".task-list", 0) or Draggable.hitTest(e, ".action-list-container .task-list",0)
 				hit.parent = ".task-list"
 				ids = $.map( $(".task-list .task-item"), (o) -> o["id"] ) #_.pluck(@tempTasks, "id")
 				actionIds = $.map( $(".task-list .action-item"), (o) -> o["id"] ) #_.pluck(@tempTasks, "id")

@@ -30,11 +30,45 @@ textarea, .content-editable {
 		display:block;
 	}
 }
+
+
 .edit-task{
 	max-width: 400px;
 	padding-top:25px;
 	margin: 0 auto;
 	position: relative;
+	.action-step-container{
+		.action-list-container{
+			.section-list{
+				margin-bottom: 0;
+			}
+		}
+		.action-item{
+			padding-top: 10px;
+			padding-bottom: 10px;
+			h2{
+				margin-bottom:0;
+				margin-top: 0;
+				padding-left:16%;
+			}
+			input{
+				font: 0.7em/1.8 $font-normal;
+				width: 80%;
+				margin-left: 16%;
+			}
+		}
+		.add-action-container.action-item{
+			padding: 0;
+			input{
+				margin-left:0;
+				background: none;
+				padding-top: 5px;
+				padding-bottom: 4px;
+				padding-left:16%;
+			}
+		}
+	}
+	
 	.back-button{
 		position:absolute;
 		left:10px;
@@ -69,9 +103,10 @@ textarea, .content-editable {
 		min-height:40px;
 		.side-icon{
 			position: absolute;
-			left:30px;
+			left:10%;
 			top: 50%;
 			margin-top: -7px;
+			margin-left: -7px;
 			height: 14px;
 			width: 14px;
 			svg{
@@ -81,7 +116,7 @@ textarea, .content-editable {
 			}
 		}
 		.content-div{
-			padding-left:60px;
+			padding-left:16%;
 			width:100%;	
 		}
 	}

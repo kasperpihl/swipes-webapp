@@ -228,7 +228,7 @@ $meta-margin: 10px;
 		$action-dot-calendar-height: 26px;
 		
 		position: absolute;
-		left:12.5%;
+		left:10%;
 		top:50%;
 		margin-left: - $action-dot-size/2;
 		margin-top: - $action-dot-size/2;
@@ -273,20 +273,7 @@ $meta-margin: 10px;
 	@include border-radius(10px);
 	
 }
-.action-item{
-	padding-top: 10px;
-	padding-bottom: 10px;
-	h2{
-		margin-bottom:0;
-		margin-top: 0;
-		padding-left:16%;
-	}
-	input{
-		font: 0.7em/1.8 $font-normal;
-		width: 80%;
-		margin-left: 16%;
-	}
-}
+
 // Add task card
 .add-task-card-container {
 	.editMode & {

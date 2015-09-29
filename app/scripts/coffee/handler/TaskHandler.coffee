@@ -196,7 +196,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			swipy.analytics.logEvent("[Engagement] Completed Task", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Type": model.getType() })
 
-			Backbone.trigger("reload/taskhandler")
+			@bouncedReloadWithEvent()
 		didMoveToNow: (taskCards) ->
 			tasks = _.pluck( taskCards, "model" )
 			deferredArr = []

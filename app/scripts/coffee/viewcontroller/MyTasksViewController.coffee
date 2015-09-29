@@ -41,7 +41,7 @@ define [
 			now.setSeconds now.getSeconds() - 1
 			options.schedule = now if !options.schedule?
 			@taskCollectionSubset?.child.createTask(title, options)
-			Backbone.trigger("reload/taskhandler")
+			@taskListVC?.tashHandler.bouncedReloadWithEvent()
 
 		getTaskListVC: ->
 			# https://github.com/anthonyshort/backbone.collectionsubset
