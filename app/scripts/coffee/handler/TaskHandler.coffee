@@ -205,20 +205,21 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			@pickerModel = model
 			userPickerModal.dataSource = @
 			userPickerModal.delegate = @
+			userPickerModal.selectOne = false
 			userPickerModal.searchField = true
 			userPickerModal.title = "Assign People"
 			userPickerModal.emptyMessage = "No more people to assign"
 			userPickerModal.loadPeople()
 			userPickerModal.render()
 			userPickerModal.presentModal({ left: e.clientX, top:e.clientY+10, centerY: false })
-		userPickerClickedUser: (targetUser) ->		
+		userPickerClickedUser: (targetUser) ->	
 			@pickerModel.assign( targetUser.id, true )
 			if @pickerModel.get("projectLocalId")
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 				if swipy.slackCollections.users.me().id isnt targetUser.id
 					sofiMessage = capitalizedName + " assigned you the task \"" + @pickerModel.getTaskLinkForSlack() + "\"";
 					swipy.slackSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
-			@pickerModel = null
+			#@pickerModel = null
 			#@dismissModal()
 		userPickerModalPeople: (userPickerModal) ->
 			peopleToAssign = []
@@ -226,9 +227,8 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			me = swipy.slackCollections.users.me()
 			if me?
 				data = me.toJSON()
-				if _.indexOf(model.getAssignees(), me.id) isnt -1
-					data.name = data.name + " (current)"
-				peopleToAssign.push(data)
+				if _.indexOf(model.getAssignees(), me.id) is -1
+					peopleToAssign.push(data)
 			channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
 			if channel
 				members = channel.get("members")
@@ -238,10 +238,9 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 						user = swipy.slackCollections.users.get(member)
 						continue if !user or user.id is me.id or user.get("deleted")
 						data = user.toJSON()
-						if _.indexOf(model.getAssignees(), user.id) isnt -1
-							data.name = data.name + " (current)"
-						peopleToAssign.push(data)
-				else if userId
+						if _.indexOf(model.getAssignees(), user.id) is -1
+							peopleToAssign.push(data)
+				else if userId and _.indexOf(model.getAssignees(), userId) is -1
 					user = swipy.slackCollections.users.get(userId)
 					if user
 						peopleToAssign.push(user.toJSON())

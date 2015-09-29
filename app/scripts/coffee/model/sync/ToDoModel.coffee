@@ -132,7 +132,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			me = swipy.slackCollections.users.me()			
 			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
 			assignedSelf = "No"
-			currentAssignees = []
+			currentAssignees = @getAssignees()
 			for userId in userIds
 				targetUser = userId
 				if userId is me.id

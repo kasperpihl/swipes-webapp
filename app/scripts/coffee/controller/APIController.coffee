@@ -29,10 +29,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					if data and data.ok
 						callback(data);
 					else
-						@util.sendError( data, "Sync Error" )
 						callback(false, data);
 				error : ( error ) ->
-					@util.sendError( error, "Server Error")
+					#@util.sendError( error, "Server Error")
 					callback(false, error)
 				dataType : "json"
 				contentType: "application/json; charset=utf-8"

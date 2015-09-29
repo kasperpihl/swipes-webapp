@@ -14,11 +14,14 @@ define [
 			"blur .input-title": "updateTitle"
 			"keyup .input-title": "keyUpTitle"
 			"keydown .input-title": "keyDownTitle"
+			"click .assignees-list .assignee": "clickedAssignee"
+			"click #assign-text-button": "clickedAssign"
 
 		initialize: ->
 			throw new Error("Model must be added when constructing EditTask") if !@model?
 			@template = _.template EditTaskTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
+			@model.on("change:assignees", @bouncedRender, @ )
 		render: ->
 			@$el.html @template( task: @model )
 			setTimeout( =>
@@ -42,6 +45,16 @@ define [
 			if e.keyCode is 13 and ($('.input-title').is(':focus') or $('.input-title *').is(':focus'))
 				e.preventDefault()
 
+		###
+			Asssign Handling / Rendering
+		###
+		clickedAssignee: (e) ->
+			userId = $(e.currentTarget).attr("data-href")
+			console.log userId
+			@model.unassign(userId, true)
+		clickedAssign: (e) ->
+			Backbone.trigger("show-assign", @model, e)
+			false
 
 		### 
 			Title Handling / Rendering etc
