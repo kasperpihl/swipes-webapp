@@ -50,7 +50,6 @@ define [
 			console.log "showing thread", show
 		editTask: (model) ->
 			if model
-				console.log model
 				@editTaskView = new EditTask({model: model})
 				@editModel = model
 				@editTaskView.delegate = @
