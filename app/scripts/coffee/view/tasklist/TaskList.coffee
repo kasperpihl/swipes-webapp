@@ -15,7 +15,7 @@ define [
 		initialize: ->
 			# Set HTML template for our list
 			@listenTo( Backbone, "reload/taskhandler", @render )
-			
+
 			@numberOfSections = 0
 			@toggleCompleted = false
 		remove: ->
@@ -24,8 +24,8 @@ define [
 		setActionList: ->
 			@className = "action-list"
 			@actionList = true
-		
-		# Reload datasource for 
+
+		# Reload datasource for
 
 		render: (e) ->
 			if !@dataSource?
@@ -41,12 +41,13 @@ define [
 
 			numberOfSections = 1
 			numberOfTasks = 0
+
 			if @titles?
 				emptyTitles = if !@toggleCompleted then @titles.current else @titles.completed
 
 			@$el.html ""
 			$(@targetSelector).html( @$el )
-			
+
 			if _.isFunction(@dataSource.taskListNumberOfSections)
 				numberOfSections = @dataSource.taskListNumberOfSections( @ )
 
@@ -58,7 +59,7 @@ define [
 
 				continue if !sectionData or !sectionData.tasks.length
 
-				# Instantiate 
+				# Instantiate
 				section = new Section()
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
@@ -68,7 +69,7 @@ define [
 
 				for task in sectionData.tasks
 					numberOfTasks++
-					
+
 					if @actionList
 						taskEl = new ActionRow({model: task})
 					else
@@ -83,7 +84,7 @@ define [
 
 					taskEl.render()
 					@_taskCardsById[task.id] = taskEl
-					sectionEl.append( taskEl.el )
+					sectionEl.append taskEl.el
 				@$el.append section.el
 				lastLeftTitle = sectionData.leftTitle
 
@@ -93,6 +94,7 @@ define [
 					@$el.find(".empty-text").append("<div class=\"subtitle\">"+ emptyTitles.emptySubtitle + "</div>")
 				if emptyTitles.emptyDescription
 					@$el.find(".empty-text").append("<div class=\"description\">"+ emptyTitles.emptyDescription+"</div>")
+
 			Backbone.trigger("update/numberOfTasks", numberOfTasks)
 
 			if @enableDragAndDrop and numberOfTasks > 0 and !@toggleCompleted
@@ -101,6 +103,7 @@ define [
 				if !@dragHandler?
 					@dragHandler = new DragHandler()
 					@dragHandler.delegate = @dragDelegate
+
 				if @actionList
 					@dragHandler.createDragAndDropElements(".action-item:not(.add-action-container)")
 				else
