@@ -52,6 +52,7 @@
 		text-align: center;
 		padding: 0 30px;
 		color: $orange;
+		overflow: hidden;
 		font: 12px $font-normal;
 		transform: scale3d(0,0,0);
 		transition: .4s cubic-bezier(.41,-0.52,.62,1.63);
