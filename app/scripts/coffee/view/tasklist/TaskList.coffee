@@ -63,7 +63,6 @@ define [
 				section = new Section()
 				if sectionData.expandClass
 					section.expandClass = sectionData.expandClass
-					console.log "expand class", sectionData.expandClass
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
 				

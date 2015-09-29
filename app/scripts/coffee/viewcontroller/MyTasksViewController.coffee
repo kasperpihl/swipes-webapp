@@ -102,7 +102,6 @@ define [
 				expandClass = false
 				tasks = groups[key]
 				numberOfTasksForSection = tasks.length
-				showSchedule = false
 				if key is "-1"
 					title = "Your tasks"
 				else if key is "9999999999"
@@ -128,7 +127,7 @@ define [
 						title = "Completed " + title
 					else if title is "Today"
 						title = "Later Today"
-				group = {showSchedule: showSchedule, leftTitle: title, dontSort: dontSort, expandClass: expandClass }
+				group = {showSource: true, showSchedule: showSchedule, leftTitle: title, dontSort: dontSort, expandClass: expandClass }
 				group.tasks = tasks if includeTasks
 				taskGroups.push(group)
 

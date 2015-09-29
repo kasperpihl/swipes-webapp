@@ -103,6 +103,9 @@ define [
 		createTask: ( title, options ) ->
 			options = {} if !options
 			options.targetUserId = @currentUser.id if @currentUser?
+			now = new Date()
+			now.setSeconds now.getSeconds() - 1
+			options.schedule = now if !options.schedule?
 			options.projectLocalId = @currentList.id
 			@taskCollectionSubset?.child.createTask(title, options)
 			Backbone.trigger("reload/taskhandler")

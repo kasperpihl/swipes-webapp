@@ -18,7 +18,6 @@ define [
 			Backbone.trigger("clicked/section", $(e.currentTarget).attr("data-href"))
 			false
 		render: ->
-			console.log @expandClass
 			@$el.html @template( { leftTitle: @leftTitle, rightTitle: @rightTitle, expandClass: @expandClass } )
 			return @
 		remove: ->

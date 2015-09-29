@@ -106,13 +106,7 @@
 
 			<div class="actions">
 				<div>
-				<% if(!data.showSource) { %>
-					<a href="#" class="assign-button" title="Assign people to this task">
-						<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarAssign"></use></svg>
-					</a>
-				<% } else { 
-					if( state !== "scheduled") {
-				%>
+				<% if( state !== "scheduled") { %>
 					<a href="#" class="schedule-button" title="Schedule todo">
 						<svg class="icon">
 							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
@@ -124,7 +118,7 @@
 							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarNow"></use>
 						</svg>
 					</a>
-				<% }} 
+				<% }
 					if (state !== "completed"){ %>
 					<a href="#" class="complete-button" title="Mark task as completed">
 						<svg class="icon">
