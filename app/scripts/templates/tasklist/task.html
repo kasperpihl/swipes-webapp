@@ -5,14 +5,13 @@
 	if(data.showSource){
 		var currentUserId = swipy.slackCollections.users.me().id
 		if(data.task.get("projectLocalId")){
-			var srcName = swipy.slackCollections.channels.get(data.task.get("projectLocalId")).getName();
-			if(srcName)
-				sourceOfTask = srcName;
-		}
-		else if(data.task.get("toUserId") === currentUserId && data.task.get("userId") !== currentUserId){
-			var srcMember = swipy.slackCollections.users.get(data.task.get("userId"));
-			if(srcMember)
-				sourceOfTask = srcMember.get("name");
+			var channel = swipy.slackCollections.channels.get(data.task.get("projectLocalId"));
+			if(channel){
+				var srcName = channel.getName();
+				if(channel.get("is_channel"))
+					srcName = "# "+ srcName;
+				sourceOfTask = "From: " + srcName;
+			}
 		}
 		else{
 			sourceOfTask = "Personal";
