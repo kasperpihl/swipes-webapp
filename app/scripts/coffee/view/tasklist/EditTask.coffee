@@ -36,7 +36,7 @@ define [
 				@delegate.editTaskDidClickBack(@)
 			#swipy.router.back({trigger:false})
 			false
-		
+
 		keyUpTitle: (e) ->
 			if e.keyCode is 13 and ($('.input-title').is(':focus') or $('.input-title *').is(':focus'))
 				$('.input-title').blur()
@@ -64,15 +64,18 @@ define [
 			Backbone.trigger("show-assign", @model, e)
 			false
 
-		### 
+		###
 			Title Handling / Rendering etc
 		###
 		updateTitle: ->
 			title = @validateTitle(@getTitle())
+
 			if !title
 				@$el.find( ".input-title" ).html(@model.get("title"))
 				return
+
 			@model.updateTitle title
+			Backbone.trigger("reload/taskhandler")
 		getTitle: ->
 			@$el.find( ".input-title" ).html().replace(/&nbsp;/g , " ")
 		validateTitle: (title) ->
@@ -90,7 +93,7 @@ define [
 		loadActionSteps: ->
 			@actionTab = new ActionTab({model: @model})
 			@$el.find(".action-step-container").html @actionTab.el
-			@actionTab.loadActionSteps() 
+			@actionTab.loadActionSteps()
 
 
 
