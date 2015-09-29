@@ -417,7 +417,7 @@ module.exports = function (grunt) {
             'clean:server',
             'bake:build',
             'concurrent:server',
-            //'autoprefixer',
+            'autoprefixer',
             'connect:livereload',
             'open',
             'watch'
@@ -432,7 +432,7 @@ module.exports = function (grunt) {
             'clean:server',
             'bake:build',
             'concurrent:server',
-            //'autoprefixer',
+            'autoprefixer',
             'connect:livereload',
             'open'
         ]);
@@ -440,7 +440,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'clean:server',
         'concurrent:test',
-        //'autoprefixer',
+        'autoprefixer',
         'connect:test',
         'mocha'
     ]);
@@ -450,7 +450,7 @@ module.exports = function (grunt) {
         'bake:build',
         'useminPrepare',
         'concurrent:dist',
-        //'autoprefixer',
+        'autoprefixer',
         
         'requirejs',
         'concat',

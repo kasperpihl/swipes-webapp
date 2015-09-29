@@ -28,9 +28,14 @@ define ["underscore"
 				$('.modal-clickable-background').addClass('dark-opaque')
 
 				if @options.inputSelector
-					@$el.find(@options.inputSelector).focus()
-					@$el.find(@options.inputSelector).on 'keyup', () ->
+					input = $(@options.inputSelector)
+					value = input.val()
+
+					input.focus()
+					input.on 'keyup', () ->
 						self.$el.find("p.error").removeClass('active')
+					# Move the cursor to the end
+					input.val('').val(value)
 				else
 					@$el.find(".full-modal").focus()
 			close: ->
@@ -45,7 +50,7 @@ define ["underscore"
 					errors = @options.submitCallback(@$el.find(@options.inputSelector).val())
 				else
 					errors = @options.submitCallback()
-					
+
 				if errors? and errors.length > 0
 					@$el.find("p.error").text(errors[0].error).addClass('active')
 				else
@@ -58,7 +63,7 @@ define ["underscore"
 				if e.keyCode == 27
 					@cancel()
 			typeToTemplate: (type) ->
-				map = 
+				map =
 					'textareaModal': TextareaModal
 					'inputModal': InputModal
 					'deleteModal': DeleteModal

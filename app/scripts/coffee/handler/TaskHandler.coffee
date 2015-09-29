@@ -28,7 +28,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			# #sidebar-member-
 			return if !memberHtmlId or !_.isString(memberHtmlId)
 			memberHtmlId.substring(16)
-		
+
 		###
 			DragHandler Delegate
 		###
@@ -38,11 +38,13 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			if e.path?
 				for el in e.path
 					$el = $(el)
+
 					if !draggedId and ($el.hasClass("action-item") or $el.hasClass("task-item"))
 						draggedId = "#" + $el.attr("id")
 			else if e.originalTarget? or e.target?
 				currentTarget = e.target if e.target?
 				currentTarget = e.originalTarget if e.originalTarget?
+
 				for num in [1..10]
 					if currentTarget? and currentTarget
 						if _.indexOf(currentTarget.classList, "action-item") isnt -1 or _.indexOf(currentTarget.classList, "task-item") isnt -1
@@ -55,12 +57,12 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 		dragHandlerDraggedIdsForEvent: (dragHandler, e ) ->
 			draggedIds = []
 			draggedId = @idForEvent(e)
-			
+
 			draggedTask = @collection.get( @taskCollectionIdFromHtmlId(draggedId) )
 			#console.log @collection.toJSON(), draggedTask.toJSON()
 			return [] if !draggedTask?
 
-			#draggedTask.set("selected",true) 
+			#draggedTask.set("selected",true)
 			selectedTasks = @collection.getSelected(draggedTask)
 
 			titles = _.invoke(selectedTasks, "get", "title")
@@ -79,9 +81,9 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			return if !draggedTask?
 			self = @
 			selectedTasks = @collection.getSelected( draggedTask )
-			
+
 			return false if !hit?
-			
+
 
 			if hit.type is "task"
 				hitTask = @collection.get( @taskCollectionIdFromHtmlId(hit.target) )
@@ -94,13 +96,13 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 					fromOrder = draggedTask.get(@listSortAttribute)
 					targetOrder = hitTask.get(@listSortAttribute)
-					# if a task is moved up all affected should go down - otherwise up 
+					# if a task is moved up all affected should go down - otherwise up
 					addition = if fromOrder > targetOrder then 1 else -1
 
 					# If task is moved down and top is hit, or task is moved down and bottom is hit - adjust accordingly!
 					targetOrder -= 1 if addition is -1 and hit.position is "top"
 					targetOrder += 1 if addition is 1 and hit.position is "bottom"
-					
+
 					# get the order affected span and order depending if task is moved up or down
 					lowestOrderAffected = if addition is 1 then targetOrder else fromOrder
 					highestOrderAffected = if addition is 1 then fromOrder else targetOrder
@@ -122,7 +124,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 					, 400)
 					isMyTasks = if @isMyTasks? then "Yes" else "No"
 					swipy.analytics.logEvent("[Engagement] Reorder Task", {"Type": draggedTask.getType(), "Is My Tasks": isMyTasks})
-					
+
 			else if hit.type is "project"
 				targetProject = swipy.slackCollections.channels.findWhere( {name: @projectCollectionIdFromHtmlId(hit.target)} )
 				return if !targetProject?
@@ -146,7 +148,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				if draggedTask.get("projectLocalId")
 					if !draggedTask.userIsAssigned(memberId)
 						actions.push({name: "Assign", icon:"dragMenuAssign", action: "assign"})
-						
+
 				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
 				actions.push({name: "Move", icon: "dragMenuMove", action: "move"})
 				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: hit.pointerEvent.pageX, top: hit.pointerEvent.pageY}, (result) ->
@@ -171,12 +173,14 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			@handleClickForModelAndTaskCard(e, model, taskCard, dragHandler)
 			false
 
-		### 
+		###
 			TaskCard Delegate
 		###
 		taskCardDidComplete: (taskCard) ->
 			model = taskCard.model
+
 			model.completeTask()
+
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
 				###if model.get("projectLocalId").startsWith("D")
@@ -184,22 +188,25 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 					if channel
 						targetChannel = "@" + channel.getName()###
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+
 				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";
 					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Completed Task", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Type": model.getType() })
-			
+
 			Backbone.trigger("reload/taskhandler")
 		didMoveToNow: (taskCards) ->
 			tasks = _.pluck( taskCards, "model" )
 			deferredArr = []
+
 			for taskCard in taskCards
 				deferredArr.push taskCard.animateWithClass("fadeOutRight")
-			$.when( deferredArr... ).then => 
+
+			$.when( deferredArr... ).then =>
 				_.invoke(tasks, "scheduleTask", tasks[0].getDefaultSchedule())
-			
+
 		didPressAssign: (model, e) ->
 			userPickerModal = new UserPickerModal()
 			@pickerModel = model
@@ -212,7 +219,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			userPickerModal.loadPeople()
 			userPickerModal.render()
 			userPickerModal.presentModal({ left: e.clientX, top:e.clientY+10, centerY: false })
-		userPickerClickedUser: (targetUser) ->	
+		userPickerClickedUser: (targetUser) ->
 			@pickerModel.assign( targetUser.id, true )
 			if @pickerModel.get("projectLocalId")
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
@@ -245,8 +252,8 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 					if user
 						peopleToAssign.push(user.toJSON())
 
-			
-			
+
+
 			###swipy.slackCollections.users.each( (user) =>
 				return if user.id is me.id or user.get("deleted") or user.get("is_bot") or user.id is "USLACKBOT"
 				if !model.userIsAssigned(user.id)
@@ -258,11 +265,11 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 		handleClickForModelAndTaskCard: (e, model, taskCard, dragHandler) ->
 			if model.get("selected") or e.metaKey or e.ctrlKey
 				model.save("selected", !model.get("selected"))
-			else
+			else if taskCard.hasClass 'task-item'
 				@editMode = true
 				swipy.router.navigate("task/"+model.id, {trigger: true})
 				#Backbone.trigger("edit/task", model)
-		### 
+		###
 			TaskList Datasource
 		###
 
@@ -305,7 +312,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			sortedTodoArray = []
 			self = @
 			# First group tasks into already ordered or not yet ordered (new tasks or moved from schedule etc.)
-			groupedItems = _.groupBy( todos, (m) -> 
+			groupedItems = _.groupBy( todos, (m) ->
 				if m.has(self.listSortAttribute) and m.get(self.listSortAttribute) > defaultOrderVal then "ordered" else "unordered"
 			)
 
@@ -316,16 +323,16 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 					if !schedule
 						if m.get("createdAt")
 							return -m.get("createdAt").getTime()
-					else 
+					else
 						-schedule.getTime()
 				)
 				sortedTodoArray = unorderedItems
 
-			# After the grouping and ordering, concat the two groups in the right order based on new ones should be on top or bottom 
+			# After the grouping and ordering, concat the two groups in the right order based on new ones should be on top or bottom
 			if groupedItems.ordered?
 				orderedItems = _.sortBy( groupedItems.ordered , (m) -> m.get self.listSortAttribute )
 				sortedTodoArray = if newOnTop then sortedTodoArray.concat orderedItems else orderedItems.concat sortedTodoArray
-			
+
 			# Loop through all and set the order values
 			orderNumber = 0
 			for m in sortedTodoArray
@@ -334,7 +341,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				orderNumber++
 
 			return sortedTodoArray
-			
+
 		destroy: ->
 			@delegate = null
 			@collection?.off(null, null, @)

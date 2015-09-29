@@ -16,7 +16,7 @@ define [
 			isMyTasks = @options.isMyTasksView
 
 			@setTemplate()
-			
+
 
 			@addTaskCard = new AddTaskCard()
 			@addTaskCard.addDelegate = channelVC
@@ -66,6 +66,7 @@ define [
 		goBackFromEditMode: ->
 			currRoute = Backbone.history.fragment
 			indexOfTask = currRoute.indexOf("/task")
+
 			if indexOfTask isnt -1
 				newRoute = currRoute.substring(0, indexOfTask)
 			if newRoute
@@ -74,15 +75,15 @@ define [
 			@editTask(false)
 		editTaskDidClickBack: (editTask) ->
 			@goBackFromEditMode()
-			
+
 		setTemplate: ->
 			@template = _.template Template
 		render: ->
 			@$el.html @template({})
-			
+
 			@addTaskCard.render()
 			@$el.find('.add-task-container').prepend( @addTaskCard.el )
-			
+
 			@toggleCompletedTasks.render()
 			@taskList.render()
 		requestWorkTask: ( task ) ->
@@ -102,7 +103,7 @@ define [
 						emptyTitle: "No completed tasks in your workspace"
 						emptySubtitle: "You can add Private tasks below or assign tasks from channels and groups."
 						emptyDescription: "Tasks here is the ones assigned to you. Here you can get an overview of your commitments and put it all in order."
-				
+
 				@addTaskCard.setPlaceHolder("Add a new private task")
 			else if channelVC.currentUser?
 				if channelVC.currentUser.get("name") isnt "slackbot"
@@ -117,7 +118,7 @@ define [
 
 					@addTaskCard.setPlaceHolder("Add a new task between you & " + channelVC.currentUser.get("name"))
 				else
-					titles = 
+					titles =
 						current:
 							emptyTitle: "No Direct Tasks between you, slackbot & s.o.f.i."
 							emptyDescription: "Tasks here will only be visible between you, slackbot & s.o.f.i. You can assign tasks to you or slackbot, but he probably won't do them!"

@@ -24,31 +24,36 @@ define [
 		handleAction: (e) ->
 			# Actual trigger logic
 			return false if !@taskDelegate?
-			
+
 			self = @
-			if $(e.currentTarget).hasClass("complete-button") and _.isFunction(@taskDelegate.taskCardDidComplete)
-				@animateWithClass("fadeOutRight").then(->
+			currentTarget = $(e.currentTarget)
+
+			if currentTarget.hasClass("complete-button") and _.isFunction(@taskDelegate.taskCardDidComplete)
+				@animateWithClass("fadeOutRight").then ->
 					self.taskDelegate.taskCardDidComplete(self)
-				)
-			if $(e.currentTarget).hasClass("schedule-button")
+			else if currentTarget.hasClass("schedule-button")
 				Backbone.trigger( "show-scheduler", [@], e )
-			if $(e.currentTarget).hasClass("now-button")
+			else if currentTarget.hasClass("now-button")
 				Backbone.trigger( "move-to-now", [@], e )
-			
-			if $(e.currentTarget).hasClass("assign-button")
+			else if currentTarget.hasClass("assign-button")
 				Backbone.trigger( "show-assign", @model, e)
+
 			false
 		scheduleTask: ->
 		animateWithClass: (animateClass) ->
+			#T_TODO make this a reusable plugin
+			self = @
 			dfd = new $.Deferred()
+
 			@$el.addClass("animated")
 			@$el.addClass(animateClass)
-			self = @
+
 			setTimeout(->
 				self.$el.removeClass("animated")
 				self.$el.removeClass(animateClass)
 				dfd.resolve()
 			, 300)
+
 			return dfd.promise()
 		render: ->
 			if @model.get("selected")
@@ -56,8 +61,13 @@ define [
 			if @model.get "animateIn"
 				@$el.addClass "animate-in"
 				@model.set "animateIn", null, {localSync: true}
+
 			@$el.attr('id', "task-"+@model.id )
-			@$el.html @template( task: @model, showSource: @showSource, showSchedule: @showSchedule )
+
+			@$el.html @template
+				task: @model
+				showSource: @showSource
+				showSchedule: @showSchedule
 
 			return @
 		onSelected: (model, selected) ->

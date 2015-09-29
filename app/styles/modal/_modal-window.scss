@@ -1,11 +1,13 @@
 .full-modal {
 	width: 400px;
-	min-height: 250px;
+	min-height: 100px;
 	background-color: $white-background;
 	border-radius: 10px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.23);
 	outline: none;
 	padding-top: 1px;
+	padding-bottom: 15px;
+	
 	h2 {
 		margin: 25px 10%;
 		font: 16px $font-bold;
@@ -46,15 +48,18 @@
 	}
 	
 	p.error {
+		height: 0px;
 		text-align: center;
 		padding: 0 30px;
-		padding-top: 35px;
 		color: $orange;
+		overflow: hidden;
 		font: 12px $font-normal;
 		transform: scale3d(0,0,0);
 		transition: .4s cubic-bezier(.41,-0.52,.62,1.63);
 		
 		&.active {
+			height: 50px;
+			padding-top: 35px;
 			transform: scale3d(1,1,1);
 			transition: .4s cubic-bezier(.41,-0.52,.62,1.63);
 		}
