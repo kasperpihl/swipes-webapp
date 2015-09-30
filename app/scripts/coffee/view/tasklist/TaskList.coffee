@@ -52,13 +52,13 @@ define [
 				numberOfSections = @dataSource.taskListNumberOfSections( @ )
 
 			@_taskCardsById = {}
-
+			realNumSections = 0
 			for section in [1 .. numberOfSections]
 				# Load tasks and titles for section
 				sectionData = @dataSource.taskListDataForSection( @, section )
 
 				continue if !sectionData
-
+				realNumSections++
 				# Instantiate
 				section = new Section()
 				if sectionData.expandClass
@@ -91,7 +91,7 @@ define [
 				lastLeftTitle = sectionData.leftTitle
 
 			if numberOfTasks is 0 and emptyTitles and emptyTitles.emptyTitle
-				@$el.html("<div class=\"empty-text\"><h4 class=\"title\">" + emptyTitles.emptyTitle + "</h4></div>")
+				@$el.prepend("<div class=\"empty-text\"><h4 class=\"title\">" + emptyTitles.emptyTitle + "</h4></div>")
 				if emptyTitles.emptySubtitle
 					@$el.find(".empty-text").append("<div class=\"subtitle\">"+ emptyTitles.emptySubtitle + "</div>")
 				if emptyTitles.emptyDescription
@@ -99,7 +99,7 @@ define [
 
 			Backbone.trigger("update/numberOfTasks", numberOfTasks)
 
-			if @enableDragAndDrop and numberOfTasks > 0 and !@toggleCompleted
+			if @enableDragAndDrop and numberOfTasks > 0
 				if !@dragDelegate?
 					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
 				if !@dragHandler?
@@ -112,7 +112,6 @@ define [
 					@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card-container) .main-info-container")
 		taskCardById: (identifier) ->
 			return @_taskCardsById?[identifier]
-
 		customCleanUp: ->
 		cleanUp: ->
 			@dragDelegate = null

@@ -31,6 +31,7 @@ define [
 
 			@showSomedayMaybe = false
 			@showLaterTasks = false
+			@showCompletedTasks = false
 
 			swipy.rightSidebarVC.sidebarDelegate = @
 			if @type isnt "im"
@@ -114,32 +115,37 @@ define [
 				@showLaterTasks = true
 			else if section is "someday-maybe"
 				@showSomedayMaybe = true
+			else if section is "completed-tasks"
+				@taskListVC?.scrollToTop()
+				@showCompletedTasks = true
+			else if section is "hide-completed-tasks"
+				@showCompletedTasks = false
 			@taskListVC?.taskHandler.bouncedReloadWithEvent()
 
 		### 
 			TaskHandler delegate
 		###
-		taskHandlerSortAndGroupCollection: (taskHandler, collection, toggleComplete) ->
+		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
-			tasks = _.filter collection.models, (m) ->
-				if toggleComplete
-					m.get("completionDate")
-				else
-					!m.get("completionDate")
+			tasks = collection.models
+			if @showCompletedTasks
+				tasks = _.filter collection.models, (m) -> m.get("completionDate")
 			groups = _.groupBy(tasks, (model, i) =>
-				if model.get("completionDate") then return moment(model.get("completionDate")).startOf('day').unix()
+				if model.get("completionDate")
+					if @showCompletedTasks then return moment(model.get("completionDate")).startOf('day').unix()
+					else return 9999999999
 				if model.getState() is "active" then return -1
 				else if model.getState() is "scheduled"
 					schedule = model.get("schedule")
-					return 9999999999 if !schedule? or !schedule
-					return 9999999998 if !@showLaterTasks
+					return 9999999998 if !schedule? or !schedule
+					return 9999999997 if !@showLaterTasks
 					return moment(schedule).startOf('day').unix()
 			)
 			
 			taskGroups = []
 			sortedKeys = _.keys(groups).sort()
 
-			if toggleComplete
+			if @showCompletedTasks
 				sortedKeys = sortedKeys.reverse()
 			
 			for key in sortedKeys
@@ -155,26 +161,30 @@ define [
 						title =  "You & " + @currentUser.get("name") + "'s tasks"
 						if @currentUser.get("name") is "slackbot"
 							title = "You, slackbot & s.o.f.i's tasks"
-				else if key is "9999999999"
+				else if key is "9999999997"
+					title = "Future Tasks ( " + numberOfTasksForSection + " )"
+					includeTasks = false
+					expandClass = "future-tasks"
+				else if key is "9999999998"
 					title = "Someday/Maybe"
 					if !@showSomedayMaybe
 						title += " ( " + numberOfTasksForSection + " )"
 						includeTasks = false
 						expandClass = "someday-maybe"
-				else if key is "9999999998"
-					title = "Future Tasks ( " + numberOfTasksForSection + " )"
+				else if key is "9999999999"
+					title = "Completed Tasks ( " + numberOfTasksForSection + " )"
 					includeTasks = false
-					expandClass = "future-tasks"
+					expandClass = "completed-tasks"
 				else
 					dontSort = true
 					showSchedule = true
 					schedule = new Date(parseInt(key)*1000)
-					groups[key] = _.sortBy(groups[key], (model) ->
-						return -model.get("completionDate").getTime() if toggleComplete? and toggleComplete
+					groups[key] = _.sortBy(groups[key], (model) =>
+						return -model.get("completionDate").getTime() if @showCompletedTasks
 						return model.get("schedule")?.getTime()
 					)
 					title = @timeUtil.dayStringForDate(schedule)
-					if toggleComplete
+					if @showCompletedTasks
 						title = "Completed " + title
 					else if title is "Today"
 						title = "Later Today"
@@ -182,7 +192,8 @@ define [
 				group.tasks = tasks if includeTasks
 				
 				taskGroups.push(group)
-
+			if @showCompletedTasks and taskGroups.length
+				taskGroups = [{leftTitle:"Hide completed tasks", "expandClass": "hide-completed-tasks"}].concat( taskGroups )
 			return taskGroups
 
 

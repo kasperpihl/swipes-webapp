@@ -21,8 +21,8 @@ define [
 			@addTaskCard = new AddTaskCard()
 			@addTaskCard.addDelegate = channelVC
 
-			@toggleCompletedTasks = new ToggleCompletedTasks
-				targetSelector: '.task-list-view-controller .toggle-completed-tasks-container'
+			#@toggleCompletedTasks = new ToggleCompletedTasks
+				#targetSelector: '.task-list-view-controller .toggle-completed-tasks-container'
 
 			@taskHandler = new TaskHandler()
 			@taskHandler.delegate = channelVC
@@ -84,8 +84,10 @@ define [
 			@addTaskCard.render()
 			@$el.find('.add-task-container').prepend( @addTaskCard.el )
 
-			@toggleCompletedTasks.render()
+			#@toggleCompletedTasks.render()
 			@taskList.render()
+		scrollToTop: ->
+			@$el.find(".scroller").scrollTop(0)
 		requestWorkTask: ( task ) ->
 			@workEditor = new RequestWorkOverlay( model: task )
 		setEmptyTitles: () ->
@@ -148,7 +150,7 @@ define [
 			@addTaskCard?.destroy?()
 			@editModel = null
 			@taskHandler?.destroy?()
-			@toggleCompletedTasks?.destroy?()
+			#@toggleCompletedTasks?.destroy?()
 			@taskList?.remove?()
 			@editTaskView?.remove()
 			@remove()
