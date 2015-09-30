@@ -5,7 +5,7 @@ define [
 	Backbone.View.extend
 		className: "section"
 		events:
-			"click a": "clickedHeader"
+			"click a.expandable": "clickedHeader"
 		initialize: ->
 			@template = _.template SectionTmpl, { variable: "data" }
 		setClass: (className) ->
