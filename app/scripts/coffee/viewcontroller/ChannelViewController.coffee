@@ -118,8 +118,10 @@ define [
 			else if section is "completed-tasks"
 				@taskListVC?.scrollToTop()
 				@showCompletedTasks = true
+				@taskListVC.taskList.enableDragAndDrop = false
 			else if section is "hide-completed-tasks"
 				@showCompletedTasks = false
+				@taskListVC.taskList.enableDragAndDrop = true
 			@taskListVC?.taskHandler.bouncedReloadWithEvent()
 
 		### 
