@@ -197,6 +197,22 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Type": model.getType() })
 
 			@bouncedReloadWithEvent()
+		taskCardDoDelete: (taskCard) ->
+			model = taskCard.model
+
+			model.deleteTask()
+
+			if model.get("projectLocalId")
+				targetChannel = model.get("projectLocalId")
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+
+				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+					sofiMessage = capitalizedName + " deleted the task \"" + model.getTaskLinkForSlack() + "\"";
+					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+
+			isMyTasks = if @isMyTasks? then "Yes" else "No"
+			swipy.analytics.logEvent("[Engagement] Deleted Task", {"Type": model.getType() , "Is My Tasks": isMyTasks})
+			swipy.analytics.sendEventToIntercom("Deleted Tasks", {"Type": model.getType() })
 		didMoveToNow: (taskCards) ->
 			tasks = _.pluck( taskCards, "model" )
 			deferredArr = []

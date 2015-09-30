@@ -1,6 +1,11 @@
 <% %>
 <div class="action-container">
 	<div class="relative-container">
-		<h2 class="title"><span class="task-dot"></span><%= data.task.get('title') %></h2>
+		<h2 class="title">
+			<span class="task-dot"></span>
+			<div class="input-action-title content-editable" contenteditable="true">
+				<%= data.task.get('title') %>
+			</div>
+		</h2>
 	</div>
 </div><!-- .card-container -->

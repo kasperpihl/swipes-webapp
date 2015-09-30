@@ -8,7 +8,7 @@
  * @license Copyright (c) 2008-2015, GreenSock. All rights reserved.
  * This work is subject to the terms at http://greensock.com/standard-license or for
  * Club GreenSock members, the software agreement that was issued with your membership.
- * 
+ *
  * @author: Jack Doyle, jack@greensock.com
  */
 var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window; //helps ensure compatibility with AMD/RequireJS and CommonJS/Node
@@ -2123,7 +2123,9 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 					_tempRect.height = _tempRect.bottom = ((e.innerHeight || 0) - 20 < _docElement.clientHeight) ? _docElement.clientHeight : e.innerHeight || _doc.body.clientHeight || 0;
 					return _tempRect;
 				}
-				var r = (e.pageX !== undefined) ? {left:e.pageX, top:e.pageY, right:e.pageX + 1, bottom:e.pageY + 1} : (!e.nodeType && e.left !== undefined && e.top !== undefined) ? e : _unwrapElement(e).getBoundingClientRect();
+				// SWIPES FIX HERE
+				// _unwrapElement(e) ? _unwrapElement(e).getBoundingClientRect() : false;
+				var r = (e.pageX !== undefined) ? {left:e.pageX, top:e.pageY, right:e.pageX + 1, bottom:e.pageY + 1} : (!e.nodeType && e.left !== undefined && e.top !== undefined) ? e : _unwrapElement(e) ? _unwrapElement(e).getBoundingClientRect() : false;
 				if (r.right === undefined && r.width !== undefined) {
 					r.right = r.left + r.width;
 					r.bottom = r.top + r.height;

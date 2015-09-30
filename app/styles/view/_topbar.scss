@@ -31,12 +31,18 @@
 			height:40px;
 			right: 0;
 			top: 0;
+			cursor: pointer;
 			svg{
 				height:20px;
 				margin-top: 10px;
 				margin-left: 10px;
 				width: 20px;
 				fill: $sidebar-dark-color;
+				opacity: .6;
+			}
+			
+			&:hover > svg {
+				opacity: 1;
 			}
 		}
 	}

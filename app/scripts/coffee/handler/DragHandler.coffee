@@ -5,7 +5,7 @@
 define ["underscore", "gsap", "gsap-draggable"], (_) ->
 	class DragHandler
 		###
-			Drag and drop functionality: 
+			Drag and drop functionality:
 		###
 		constructor : ->
 			@enableFullScreenTaskList = false
@@ -114,7 +114,7 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 					targetIdentifier = "#"+id
 					if Draggable.hitTest(e, targetIdentifier, 0)
 						return hit if _.indexOf(@draggedIds, targetIdentifier) isnt -1
-						
+
 						$hit = $(targetIdentifier)
 						sensitivityThreshold = $hit.outerHeight()/2 #15 #$("#task-" + id).height()/2
 						hit.position = "top"
@@ -133,13 +133,13 @@ define ["underscore", "gsap", "gsap-draggable"], (_) ->
 		handleHitHover: (hit) ->
 			# Check if hit is the same to minimise dom manipulation
 			if self.lastHit
-				isSame = true 
+				isSame = true
 				for key, val of self.lastHit
 					if !hit or hit and hit[key] isnt val
 						isSame = false
 				return if isSame
-			
-			shouldClean = true			
+
+			shouldClean = true
 			# Check if empty hit and make sure to clear help elements
 			if !hit or hit? and !Object.keys(hit).length
 				shouldClean = @cleanDragAndDropElements()

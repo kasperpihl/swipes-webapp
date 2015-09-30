@@ -43,15 +43,15 @@ if(data.task.get("completionDate")){
 	</div>
 	<div class="content-div">
 		<ul class="assignees-list">
-			
+
 			<% var assignText = "Assign People";
 			_.each(data.task.get("assignees"), function(userId){
-				assignText = "Assign more"; 
+				assignText = "Assign more";
 				var user = swipy.slackCollections.users.get(userId);
 			%>
 				<li class="assignee" data-href="<%= userId %>"><div class="picture-circular" style="background: url(<%= user.get("profile").image_48 %>) no-repeat; background-size: 28px 28px;">
 				x</div><div class="hover-lay">X</div></li>
-			<% }); 
+			<% });
 
 			%>
 			<li><a href="#" id="assign-text-button"><%= assignText %></a></li>
@@ -72,6 +72,6 @@ if(data.task.get("completionDate")){
 		<span class="icon-hold">
 			<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-editNotes"></use></svg>
 		</span>
-		
+
 	</div>
 </section>-->
