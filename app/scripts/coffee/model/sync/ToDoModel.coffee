@@ -56,7 +56,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			BaseModel.apply @, arguments
 			if attributes.parentLocalId
 				identifier = attributes.parentLocalId
-				parentModel = swipy.collections.todos.find( 
+				parentModel = swipy.collections.todos.find(
 					( model ) ->
 						return true if identifier? and model.id is identifier
 						false
@@ -129,7 +129,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		assign: ( userIds, save ) ->
 			if _.isString(userIds)
 				userIds = [userIds]
-			me = swipy.slackCollections.users.me()			
+			me = swipy.slackCollections.users.me()
 			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
 			assignedSelf = "No"
 			currentAssignees = @getAssignees()
@@ -142,11 +142,11 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					currentAssignees.push( userId )
 			if inserted?
 				@set("assignees": null)
-				
+
 				saveObj = {"assignees": currentAssignees }
 				if !@get("schedule")
 					saveObj.schedule = new Date()
-					
+
 				if save
 					@save saveObj, {sync:true}
 				else
@@ -167,7 +167,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		unassign: ( userIds, save ) ->
 			if _.isString(userIds)
 				userIds = [userIds]
-			
+
 			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
 
 			currentAssignees = @get "assignees"
@@ -246,7 +246,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			else @set("isMyTask", false)
 
 			if @get("toUserId") or @get("assignees") and @get("assignees").length > 0
-				@set("isAssigned", true) 
+				@set("isAssigned", true)
 			else @set("isAssigned", false)
 
 		getTaskLinkForSlack: ->
@@ -380,7 +380,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			# We have a completionDate set, update timeStr prop
 			@set( "completionTimeStr", moment( completionDate ).format format )
 
-		
+
 
 		sanitizeDataForDuplication: (data) ->
 			# Make sure to only duplicate the white-listed attributes
@@ -412,7 +412,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		toJSON: ->
 			@set( "state", @getState() )
 			clonedAttributes = _.clone @attributes
-			
+
 			clonedAttributes
 		attachmentsForService:(service) ->
 			foundAttachments = []
@@ -437,13 +437,13 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				schedule: date
 				completionDate: null
 			}
-			
+
 			@unset "schedule"
 			@save(updateObj,
 				sync: true
 			)
 
-		
+
 		completeRepeatedTask: ->
 			timeUtil = new TimeUtility()
 			nextDate = timeUtil.getNextDateFrom( @get("repeatDate"), @get "repeatOption"  )
@@ -467,9 +467,9 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 
 		copyActionStepsToDuplicate: ( duplicate ) ->
 			for subtask in @getOrderedSubtasks()
-				parentLocalId = duplicate.get "tempId" 
+				parentLocalId = duplicate.get "tempId"
 				parentLocalId = duplicate.id if duplicate.id?
-				attributes = 
+				attributes =
 					title: subtask.get "title"
 					order: subtask.get "order"
 					parentLocalId: parentLocalId
@@ -487,6 +487,8 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				return @completeRepeatedTask()
 			@save "completionDate" , new Date() , { sync: true }
 
+		deleteTask: ->
+			@save "deleted" , true , { sync: true }
 
 		setRepeatOption: ( repeatOption ) ->
 			repeatDate = null
@@ -536,4 +538,3 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				if model
 					modelTags.push model
 			modelTags
-		

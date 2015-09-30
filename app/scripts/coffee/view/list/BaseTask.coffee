@@ -13,14 +13,14 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			@setTemplate()
 			@init()
 			@render()
-			
+
 			@bindEvents()
 		bindEvents: ->
 			# Bind all events manually, so events extending me can use the
 			# events hash freely
 			@$el.on( 'click', ".clickable-tag", @toggleTag )
 			@$el.on( "click", ".todo-content", @toggleSelected )
-			
+
 			@$el.on( "click", ".priority", @togglePriority )
 			@$el.on( "click", ".actions a", @handleAction )
 		setTemplate: ->
@@ -42,7 +42,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 				if hasFilter then Backbone.trigger( "remove-filter", "tag", tag.get("title") )
 				else Backbone.trigger( "apply-filter", "tag", tag.get("title") )
 			return false
-				
+
 		toggleSelected: (e) ->
 			return if e.target.className is "clickable-tag"
 
@@ -69,7 +69,7 @@ define ["underscore", "gsap", "timelinelite", "text!templates/task.html"], (_, T
 			renderJSON = @model.toJSON()
 			renderJSON.title = renderJSON.title.replace(/ /g, "&nbsp;")
 			numberOfActionStepsLeft = 0
-			if @model.get "subtasksLocal" 
+			if @model.get "subtasksLocal"
 				numberOfActionStepsLeft = @model.get("subtasksLocal").length
 				for subtask in @model.get "subtasksLocal"
 					if subtask.get "completionDate"
