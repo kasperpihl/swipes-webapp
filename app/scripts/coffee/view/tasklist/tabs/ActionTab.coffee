@@ -35,6 +35,7 @@ define [
 			@taskHandler = new TaskHandler()
 			@taskHandler.delegate = @
 			@taskHandler.listSortAttribute = "projectOrder"
+			@taskHandler.newOnBottom = true
 			@taskList.taskDelegate = @taskHandler
 			@taskList.dragDelegate = @taskHandler
 			@taskList.dataSource = @taskHandler

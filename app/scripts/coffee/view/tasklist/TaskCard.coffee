@@ -11,7 +11,7 @@ define [
 		className: "task-item"
 		events:
 			"click .actions a": "handleAction"
-			"click .relative-container" : "clickedTask"
+			#"click .relative-container" : "clickedTask"
 		initialize: ->
 			throw new Error("Model must be added when constructing a TaskCard") if !@model?
 			@template = _.template TaskTmpl, {variable: "data" }
@@ -22,6 +22,7 @@ define [
 		clickedTask: (e) ->
 			if @taskDelegate? and _.isFunction(@taskDelegate.taskDidClick)
 				@taskDelegate.taskDidClick(@, e)
+			false
 		handleAction: (e) ->
 			# Actual trigger logic
 			return false if !@taskDelegate?
@@ -73,7 +74,8 @@ define [
 				task: @model
 				showSource: @showSource
 				showSchedule: @showSchedule
-
+			if @model.get("completionDate")
+				@$el.find(".relative-container").on("click", @clickedTask)
 			return @
 		onSelected: (model, selected) ->
 			@$el.toggleClass( "selected", selected )
