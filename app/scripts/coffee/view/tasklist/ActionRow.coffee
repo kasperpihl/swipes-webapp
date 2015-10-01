@@ -12,7 +12,7 @@ define [
 			"blur .input-action-title": "updateTitle"
 			"keyup .input-action-title": "keyUpTitle"
 			"keydown .input-action-title": "keyDownTitle"
-			"click a.action": "handleAction"
+			"click .action-step-buttons div": "handleAction"
 		initialize: ->
 			throw new Error("Model must be added when constructing an ActionRow") if !@model?
 			@template = _.template ActionTmpl, {variable: "data" }
@@ -54,6 +54,10 @@ define [
 				#@animateWithClass("fadeOutRight").then ->
 				self.$el.hide()
 				self.taskDelegate.taskActionStepComplete(self, @taskDelegate.delegate.model) # we pass here the parent task's model
+			else if currentTarget.hasClass("delete") and _.isFunction(@taskDelegate.taskActionStepDelete)
+				#@animateWithClass("fadeOutRight").then ->
+				self.$el.hide()
+				self.taskDelegate.taskActionStepDelete(self, @taskDelegate.delegate.model) # we pass here the parent task's model
 
 			false
 		animateWithClass: (animateClass) ->

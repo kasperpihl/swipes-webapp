@@ -192,6 +192,23 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			swipy.analytics.logEvent("[Engagement] Completed Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Action Step", {"Type": model.getType() })
 
+		taskActionStepDelete: (task, parentTaskModel) ->
+			model = task.model
+
+			model.deleteTask()
+
+			if model.get("projectLocalId")
+				targetChannel = model.get("projectLocalId")
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+
+				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+					sofiMessage = capitalizedName + " deleted the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
+					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+
+			isMyTasks = if @isMyTasks? then "Yes" else "No"
+			swipy.analytics.logEvent("[Engagement] Deleted Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
+			swipy.analytics.sendEventToIntercom("Deleted Action step", {"Type": model.getType() })
+
 		###
 			TaskCard Delegate
 		###
