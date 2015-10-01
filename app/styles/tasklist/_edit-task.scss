@@ -422,6 +422,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								transition: .1s ease-in-out;
 								
 								&:hover {
+									cursor: text;
 									background-color: rgba($sidebar-black-header, .05);
 									-webkit-transition: .1s ease-in-out;
 									transition: .1s ease-in-out;
@@ -690,6 +691,14 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			}
 		}
 	}
+}
+
+p.edit-microcopy {
+	width: 90%;
+	margin: 25px auto;
+	text-align: center;
+	font: 14px $font-normal;
+	color: rgba($sidebar-black-header,.6);
 }
 
 /*.edit-task{
