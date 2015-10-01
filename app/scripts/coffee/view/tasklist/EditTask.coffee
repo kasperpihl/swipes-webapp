@@ -3,10 +3,11 @@
 ###
 define [
 	"underscore"
-	"text!templates/tasklist/edit-task.html"
+	"text!templates/tasklist/edit/edit-task.html"
+	"text!templates/tasklist/edit/edit-task-content.html"
 	"js/view/tasklist/tabs/ActionTab"
 	"js/view/modal/GenericModal"
-	], (_, EditTaskTmpl, ActionTab, GenericModal) ->
+	], (_, EditTaskTmpl, EditTaskContentTmpl, ActionTab, GenericModal) ->
 	Backbone.View.extend
 		className: "edit-task"
 		events:
@@ -25,10 +26,12 @@ define [
 		initialize: ->
 			throw new Error("Model must be added when constructing EditTask") if !@model?
 			@template = _.template EditTaskTmpl, {variable: "data" }
+			@contentTemplate = _.template EditTaskContentTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
 			@model.on("change:assignees change:schedule", @bouncedRender, @ )
+			@$el.html @template()
 		render: ->
-			@$el.html @template( task: @model )
+			@$el.find(".task-card").html @contentTemplate( task: @model )
 			setTimeout( =>
 				@loadActionSteps()
 				if @? and (!@model.get("assignees") or @model.get("assignees").length is 0)
@@ -38,7 +41,11 @@ define [
 							@$el.find(".assign-label").addClass("hideAnimate")
 					, 4000)
 			,0)
-
+			setTimeout( =>
+				if @? and @$el
+					@$el.removeClass("open")
+				
+			, 1000)
 			return @
 
 
@@ -69,7 +76,6 @@ define [
 		###
 		clickedAssignee: (e) ->
 			userId = $(e.currentTarget).attr("data-href")
-			console.log userId
 			@model.unassign(userId, true)
 		clickedAssign: (e) ->
 			Backbone.trigger("show-assign", @model, e)

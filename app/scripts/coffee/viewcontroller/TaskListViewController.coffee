@@ -62,11 +62,12 @@ define [
 				@editTaskView?.remove()
 				@isEditing = false
 				@$el.removeClass("editMode")
+				@taskHandler?.bouncedReloadWithEvent()
 			Backbone.trigger("tasklistvc/edited-task")
 		goBackFromEditMode: ->
 			currRoute = Backbone.history.fragment
 			indexOfTask = currRoute.indexOf("/task")
-			console.log "curr", currRoute
+
 			if indexOfTask isnt -1
 				newRoute = currRoute.substring(0, indexOfTask)
 

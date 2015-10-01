@@ -105,7 +105,7 @@ define [
 				if !@dragHandler?
 					@dragHandler = new DragHandler()
 					@dragHandler.delegate = @dragDelegate
-
+				console.log "adding drag drop"
 				if @actionList
 					@dragHandler.createDragAndDropElements(".action-item:not(.add-action-container)")
 				else
