@@ -31,10 +31,7 @@ textarea, .content-editable {
 	}
 }
 
-
-$bg: #eee;
 $white: #fff;
-$yellow: #fecb4b;
 $dark: #000c2f;
 
 $mat-sha-one: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -55,11 +52,48 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	justify-content: center;
 }
 
+.go-back-expanded {
+	max-width: 400px;
+	width: 90%;
+	margin: 0 auto;
+	padding: 25px 0;
+	cursor: pointer;
+	
+	a {
+		color: rgba($sidebar-black-header, .5);
+		cursor: pointer;
+		
+		svg {
+			width: 18px;
+			height: 18px;
+			fill: rgba($sidebar-black-header, .5);
+			-webkit-transform: translateY(2px);
+			transform: translateY(2px);
+			-webkit-transition: .2s ease-in-out;
+			transition: .2s ease-in-out;
+			cursor: pointer;
+		}
+	}
+	
+	&:hover > a > svg {
+		fill: rgba($sidebar-black-header, 1);
+		-webkit-transition: .2s ease-in-out;
+		transition: .2s ease-in-out;
+	} 
+	
+	&:hover > a {
+		color: rgba($sidebar-black-header, 1);
+		text-decoration: none;
+		-webkit-transition: .2s ease-in-out;
+		transition: .2s ease-in-out;
+	} 
+}
+
 .task-card {
 	max-width: 400px;
 	width: 90%;
-	margin: 50px auto;
-	background-color: $white;
+	margin: 0 auto;
+	background-color: $white-background;
 	box-shadow: $mat-sha-one;
 	border-radius: 5px;
 	overflow: hidden;
@@ -93,13 +127,19 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			transition: .2s ease-in-out;
 			
 			.input-title.content-editable {
-				width: 80%;
+				width: calc(100% - 100px);
 				font: 16px $font-normal;
 				padding: 30px 0;
-				color: $dark;
+				color: $sidebar-black-header;
 				
-				-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-				animation: task-fade-ani .8s forwards ease-in-out;
+				&.open {
+					-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+					animation: task-fade-ani .8s forwards ease-in-out;
+				}
+				
+				&:hover {
+					cursor: text;
+				}
 			}
 		}
 		
@@ -114,8 +154,10 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			cursor: pointer;
 			box-sizing: content-box;
 			
-			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-			animation: task-fade-ani .8s forwards ease-in-out;
+			&.open {
+				-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+				animation: task-fade-ani .8s forwards ease-in-out;
+			}
 			
 			&:hover  {
 				top: 0;
@@ -157,7 +199,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 					position: absolute;
 					width: 1px;
 					height: 20px;
-					background-color: rgba($dark, .1);
+					background-color: rgba($sidebar-black-header, .1);
 					left: -20px;
 					top: calc(50% - (20px / 2));
 					
@@ -167,27 +209,30 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 				
 				span.year {
 					font: 12px $font-normal;
-					color: rgba($dark, .5);
+					color: rgba($sidebar-black-header, .5);
 					cursor: pointer;
 				}
 				
 				span.month {
 					font: 17px $font-bold;
-					color: $dark;
+					color: $sidebar-black-header;
 					cursor: pointer;
 				}
 				
 				span.time {
 					font: 12px $font-normal;
-					color: rgba($dark, .5);
+					color: rgba($sidebar-black-header, .5);
 					cursor: pointer;
 				}
 			}
 		}
 		
 		section.assignees-container.info-row {
-			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-			animation: task-fade-ani .8s forwards ease-in-out;
+			
+			&.open {
+				-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+				animation: task-fade-ani .8s forwards ease-in-out;
+			}
 			
 			.content-div {
 				position: absolute;
@@ -223,7 +268,8 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						
 						&.assign {
 							margin-right: 5px;
-							background-color: $dark;
+							background-color: $sidebar-black-header;
+;
 							position: relative;
 							
 							&:before {
@@ -231,7 +277,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								width: 2px;
 								height: 10px;
-								background-color: $white;
+								background-color: $white-background;
 								top: calc(50% - 5px);
 								left: calc(50% - 1px);
 							}
@@ -241,7 +287,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								height: 2px;
 								width: 10px;
-								background-color: $white;
+								background-color:$white-background;
 								left: calc(50% - 5px);
 								top: calc(50% - 1px);
 							}
@@ -250,7 +296,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						&.assign-label {
 							border-radius: 5px;
 							width: auto;
-							background-color: $dark;
+							background-color: $sidebar-black-header;
 							position: relative;
 							overflow: visible;
 							margin-left: 12px;
@@ -263,13 +309,13 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								top: 6px;
 								left: -3px;
 								transform: rotate(45deg);
-								background-color: $dark;
+								background-color: $sidebar-black-header;
 								z-index: 1;
 							}
 							
 							p.assign-label-text {
 								position: relative;
-								color: $white;
+								color: $white-background;
 								font: 12px $font-normal;
 								line-height: 30px;
 								padding: 0 10px;
@@ -313,7 +359,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								top: 0;
 								left: 0;
-								background-color: rgba($dark,.7);
+								background-color: rgba($sidebar-black-header,.7);
 								opacity: 0;
 								border-radius: 50%;
 								cursor: pointer;
@@ -327,7 +373,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 									position: absolute;
 									width: 2px;
 									height: 16px;
-									background-color: $white;
+									background-color: $white-background;
 									top: calc(50% - 8px);
 									left: calc(50% - 1px);
 								}
@@ -337,7 +383,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 									position: absolute;
 									height: 2px;
 									width: 16px;
-									background-color: $white;
+									background-color: $white-background;
 									left: calc(50% - 8px);
 									top: calc(50% - 1px);
 								}
@@ -352,8 +398,10 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	section.action-step-container.info-row {
 		margin-top: 25px;
 		
-		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-		animation: task-fade-ani .8s forwards ease-in-out;
+		&.open {
+			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+			animation: task-fade-ani .8s forwards ease-in-out;
+		}
 		
 		.action-tab {
 			.action-list-container {
@@ -374,13 +422,78 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								transition: .1s ease-in-out;
 								
 								&:hover {
-									background-color: rgba($dark, .05);
+									background-color: rgba($sidebar-black-header, .05);
 									-webkit-transition: .1s ease-in-out;
 									transition: .1s ease-in-out;
 								}
 								
+								&:hover > .action-step-buttons {
+									opacity: 1;
+									-webkit-transition: .1s ease-in-out;
+									transition: .1s ease-in-out;
+								}
+								
+								.action-step-buttons {
+									height: 50px;
+									position: absolute;
+									width: 64px;
+									top: 0;
+									right: 0;
+									opacity: 0;
+									
+									-webkit-transition: .2s ease-in-out;
+									transition: .2s ease-in-out;
+											
+									@extend %flex;
+											
+									.delete {
+										width: 50px;
+										height: 50px;
+										cursor: pointer;
+										
+										&:hover > svg {
+											fill: $red;
+											-webkit-transition: .1s ease-in-out;
+											transition: .1s ease-in-out;
+										}
+										
+										svg {
+											fill: rgba($red, .5);
+											margin-top: 15px;
+											width: 20px;
+											height: 20px;
+											
+											-webkit-transition: .1s ease-in-out;
+											transition: .1s ease-in-out;
+										}
+									}
+											
+									.complete {
+										width: 50px;
+										height: 50px;
+										cursor: pointer;
+										
+										&:hover > svg {
+											fill: $online-green;
+											-webkit-transition: .1s ease-in-out;
+											transition: .1s ease-in-out;
+										}
+												
+										svg {
+											fill: rgba($online-green, .5);
+											margin-top: 15px;
+											width: 20px;
+											height: 20px;
+											
+											-webkit-transition: .1s ease-in-out;
+											transition: .1s ease-in-out;
+										}
+									}
+								}
+								
 								.action-container {
 									.relative-container {
+										width: 100%;
 										height: 50px;
 										@extend %flex;
 										-webkit-align-items: center;
@@ -389,7 +502,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 										h2.title {
 											padding: 0;
 											font: 13px $font-bold;
-											color: $dark;
+											color: $sidebar-black-header;
 											
 											span.task-dot {
 												width: 10px;
@@ -431,7 +544,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								width: 2px;
 								height: 10px;
-								background-color: $dark;
+								background-color: $sidebar-black-header;
 								top: calc(50% - 5px);
 								left: calc(50% - 1px);
 							}
@@ -441,7 +554,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								height: 2px;
 								width: 10px;
-								background-color: $dark;
+								background-color: $sidebar-black-header;
 								left: calc(50% - 5px);
 								top: calc(50% - 1px);
 							}
@@ -452,10 +565,11 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 							height: 50px;
 							margin-left: 40px;
 							font: 13px $font-normal;
-							color: $dark;
+							color: $sidebar-black-header;
+							background-color: transparent;
 							
 							&:focus {
-								background-color: rgba($dark, .1);
+								outline: none;
 							}
 						}
 					}
@@ -468,7 +582,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		width: 100%;
 		height: 70px;
 		margin-top: 60px;
-		border-top: 2px solid rgba($dark,.1);
+		border-top: 2px solid rgba($sidebar-black-header,.1);
 		position: relative;
 		
 		@extend %flex;
@@ -477,8 +591,10 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		-webkit-justify-content: space-around;
 		justify-content: space-around;
 		
-		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-		animation: task-fade-ani .8s forwards ease-in-out;
+		&.open {
+			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+			animation: task-fade-ani .8s forwards ease-in-out;
+		}
 		
 		.btn {
 			height: 70px;
@@ -503,7 +619,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 				padding: 0;
 				padding-top: 10px;
 				font: 12px $font-bold;
-				color: rgba($dark, .4);
+				color: rgba($sidebar-black-header, .4);
 				text-align: center;
 				cursor: pointer;
 			}
@@ -511,7 +627,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			svg {
 				width: 20px;
 				height: 20px;
-				fill: rgba($dark, .4);
+				fill: rgba($sidebar-black-header, .4);
 				position: absolute;
 				left: calc(50% - 10px);
 				top: calc(33% - 10px);
@@ -556,19 +672,19 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			}
 			
 			&.delete:hover {
-				background-color: rgba($dark, .05);
+				background-color: rgba($sidebar-black-header, .05);
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.schedule:hover {
-				background-color: rgba($dark, .05);
+				background-color: rgba($sidebar-black-header, .05);
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.complete:hover {
-				background-color: rgba($dark, .05);
+				background-color: rgba($sidebar-black-header, .05);
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}

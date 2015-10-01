@@ -1,3 +1,16 @@
+
+
+<div class="go-back-expanded go-back back-button">
+	<a href="#" class="go-back back-button">
+		<svg class="icon">
+			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrowLeftThick"></use>
+		</svg>
+		
+		Go back
+		
+	</a>
+</div>
+
 <div class="task-card">
 	<!-- Header -->
 	<div class="top">
@@ -43,9 +56,12 @@
 						_.each(data.task.get("assignees"), function(userId){
 						assignText = "Assign more";
 						var user = swipy.slackCollections.users.get(userId);
+						
+						console.log(user)
 					%>
+					
+					<li class="assignee" data-href="<%= userId %>" title="<%= user.get('name') %>">
 
-					<li class="assignee" data-href="<%= userId %>">
 						<div class="picture-circular" style="background: url(<%= user.get("profile").image_48 %>) no-repeat; background-size: 40px 40px;"></div>
 						<div class="assignee-hover"></div>
 					</li>
