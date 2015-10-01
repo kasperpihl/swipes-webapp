@@ -216,8 +216,8 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Type": model.getType() })
 
 			@bouncedReloadWithEvent()
-		taskCardDoDelete: (taskCard) ->
-			model = taskCard.model
+		taskCardDoDelete: (task) ->
+			model = task.model
 
 			model.deleteTask()
 

@@ -31,11 +31,11 @@ define [
 			if currentTarget.hasClass("complete-button") and _.isFunction(@taskDelegate.taskCardDidComplete)
 				@animateWithClass("fadeOutRight").then ->
 					self.taskDelegate.taskCardDidComplete(self)
-			else if currentTarget.hasClass("delete-button") and _.isFunction(@taskDelegate.taskCardDoDelete)
-				@animateWithClass("fadeOutLeft").then ->
-					self.$el.hide()
-					self.taskDelegate.taskCardDoDelete(self)
-			else if currentTarget.hasClass("schedule-button")
+			# else if currentTarget.hasClass("delete-button") and _.isFunction(@taskDelegate.taskCardDoDelete)
+			# 	@animateWithClass("fadeOutLeft").then ->
+			# 		self.$el.hide()
+			# 		self.taskDelegate.taskCardDoDelete(self)
+			if currentTarget.hasClass("schedule-button")
 				Backbone.trigger( "show-scheduler", [@], e )
 			else if currentTarget.hasClass("now-button")
 				Backbone.trigger( "move-to-now", [@], e )

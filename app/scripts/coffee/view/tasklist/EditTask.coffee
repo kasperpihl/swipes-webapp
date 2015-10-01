@@ -5,7 +5,8 @@ define [
 	"underscore"
 	"text!templates/tasklist/edit-task.html"
 	"js/view/tasklist/tabs/ActionTab"
-	], (_, EditTaskTmpl, ActionTab) ->
+	"js/view/modal/GenericModal"
+	], (_, EditTaskTmpl, ActionTab, GenericModal) ->
 	Backbone.View.extend
 		className: "edit-task"
 		events:
@@ -16,7 +17,9 @@ define [
 			"keydown .input-title": "keyDownTitle"
 			"click .assignees-list .assignee": "clickedAssignee"
 			"click #assign-text-button": "clickedAssign"
-			"click .schedule-container": "clickedSchedule"
+			"click .open-schedule": "clickedSchedule"
+			"click .delete-task": "deleteTask"
+			"click .comlete-task": "completeTask"
 
 		initialize: ->
 			throw new Error("Model must be added when constructing EditTask") if !@model?
@@ -95,7 +98,35 @@ define [
 			@$el.find(".action-step-container").html @actionTab.el
 			@actionTab.loadActionSteps()
 
+		completeTask: ->
+			self = @
 
+			if self.delegate? && _.isFunction(self.delegate.taskHandler.taskCardDidComplete)
+				#T_TODO put a nice animation for completing here
+				#@animateWithClass("fadeOutRight").then ->
+				self.delegate.taskHandler.taskCardDidComplete(self)
+				self.back()
+
+		deleteTask: ->
+			self = @
+
+			deleteCallback = ((self) ->
+				return () ->
+					if self.delegate? && _.isFunction(self.delegate.taskHandler.taskCardDoDelete)
+						#T_TODO put a nice animation for deleting here
+						#self.animateWithClass("fadeOutLeft").then ->
+						self.delegate.taskHandler.taskCardDoDelete(self)
+						self.back()
+			)(self)
+
+			genericModal = new GenericModal
+				type: 'deleteModal'
+				submitCallback: deleteCallback
+				tmplOptions:
+					title: 'Delete task'
+					cancelText: 'NO'
+					submitText: 'YES'
+					text: "Are you sure you want to delete this task? You can't undo that action!"
 
 		remove: ->
 			@actionTab?.remove()
