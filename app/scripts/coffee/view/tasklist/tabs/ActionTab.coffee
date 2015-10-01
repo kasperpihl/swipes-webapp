@@ -30,7 +30,7 @@ define [
 			@taskList = new TaskList()
 			@taskList.setActionList()
 			@taskList.targetSelector = ".edit-task .action-list-container"
-			@taskList.enableDragAndDrop = true
+			@taskList.enableDragAndDrop = false
 
 			@taskHandler = new TaskHandler()
 			@taskHandler.delegate = @
