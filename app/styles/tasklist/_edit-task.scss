@@ -88,7 +88,31 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		transition: .2s ease-in-out;
 	} 
 }
+.task-card.open{
+	-webkit-animation: task-full-ani .3s forwards ease-in-out;
+	animation: task-full-ani .3s forwards ease-in-out;
+	.input-title.content-editable {
+		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+		animation: task-fade-ani .8s forwards ease-in-out;
+	}
+	.schedule-container.info-row {
+		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+		animation: task-fade-ani .8s forwards ease-in-out;
+	}
+	section.assignees-container.info-row {
+		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+		animation: task-fade-ani .8s forwards ease-in-out;
+	}
+	section.action-step-container.info-row {
+		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+		animation: task-fade-ani .8s forwards ease-in-out;
+	}
+	.tasks-buttons-container {
+		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
+		animation: task-fade-ani .8s forwards ease-in-out;
+	}
 
+}
 .task-card {
 	max-width: 400px;
 	width: 90%;
@@ -97,11 +121,6 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	box-shadow: $mat-sha-one;
 	border-radius: 5px;
 	overflow: hidden;
-	
-	&.open {
-		-webkit-animation: task-full-ani .3s forwards ease-in-out;
-		animation: task-full-ani .3s forwards ease-in-out;
-	}
 	
 	.top {
 		width: 100%;
@@ -132,11 +151,6 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 				padding: 30px 0;
 				color: $sidebar-black-header;
 				
-				&.open {
-					-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-					animation: task-fade-ani .8s forwards ease-in-out;
-				}
-				
 				&:hover {
 					cursor: text;
 				}
@@ -154,11 +168,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			cursor: pointer;
 			box-sizing: content-box;
 			
-			&.open {
-				-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-				animation: task-fade-ani .8s forwards ease-in-out;
-			}
-			
+
 			&:hover  {
 				top: 0;
 				height: 100%;
@@ -228,11 +238,6 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		}
 		
 		section.assignees-container.info-row {
-			
-			&.open {
-				-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-				animation: task-fade-ani .8s forwards ease-in-out;
-			}
 			
 			.content-div {
 				position: absolute;
@@ -397,11 +402,6 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	
 	section.action-step-container.info-row {
 		margin-top: 25px;
-		
-		&.open {
-			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-			animation: task-fade-ani .8s forwards ease-in-out;
-		}
 		
 		.action-tab {
 			.action-list-container {
@@ -592,10 +592,6 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		-webkit-justify-content: space-around;
 		justify-content: space-around;
 		
-		&.open {
-			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-			animation: task-fade-ani .8s forwards ease-in-out;
-		}
 		
 		.btn {
 			height: 70px;
