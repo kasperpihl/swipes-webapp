@@ -1,4 +1,4 @@
-<% 
+<%
 	var hasProfilePicture = "";
 	var user = data.message.get("user");
 	var sender;
@@ -16,9 +16,9 @@
 		sender = swipy.slackCollections.users.get(data.message.get("comment").user)
 		profilePictureURL = sender.get("profile").image_192;
 	}
-	
+
 	var icons = data.message.get("icons");
-	
+
 	var name = "";
 
 	if(sender){
@@ -118,7 +118,7 @@
 		<div class="sender-container">
 			<span class="sender-name"><%= name %></span>
 			<span class="timestamp"><%= data.message.get("timeStr") %></span>
-			<% if(!shouldShowBigLike){ %> 
+			<% if(!shouldShowBigLike){ %>
 			<span class="top-hover-box">
 				<!--<a class="like-button">
 					<svg class="icon">
@@ -137,24 +137,24 @@
 			<div class="file-container">
 				<div class="comment"></div>
 				<% var file = data.message.get("file");
-				if(file){ 
+				if(file){
 					var fileURL = file.thumb_360;
 					if(file.thumb_360_gif)
 						fileURL = file.thumb_360_gif;
 					if(fileURL){
 				%>
 					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= fileURL %>" />
-				<% } } 
-				else console.log(data.message); 
+				<% } }
+				else console.log(data.message);
 				%>
 			</div>
 		<% } %>
 		<% if( hasAttachment ){ %>
-		
+
 			<%= data.attTmpl({attachments: data.message.get("attachments"), handleMentionsAndLinks: data.handleMentionsAndLinks}) %>
 			<!--<a href="http://test.com" target="_blank"><img src="styles/img/temp/attachment-placeholder.png"></a>-->
 
-		
+
 		<% } %>
 		<% if(shouldShowBigLike){ %>
 		<!--<div class="like-container">

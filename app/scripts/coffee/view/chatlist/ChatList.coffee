@@ -22,8 +22,8 @@ define [
 		remove: ->
 			@cleanUp()
 			@$el.empty()
-			
-		# Reload datasource for 
+
+		# Reload datasource for
 
 		render: ->
 			if !@dataSource?
@@ -54,7 +54,7 @@ define [
 			numberOfSections = 1
 			@numberOfChats = 0
 			numberOfNewChats = 0
-			
+
 			if _.isFunction(@dataSource.chatListNumberOfSections)
 				numberOfSections = @dataSource.chatListNumberOfSections( @ )
 
@@ -114,7 +114,7 @@ define [
 						chatMessage.isThread = true
 					lastSender = sender
 					lastUnix = unixStamp
-					
+
 					if @chatDelegate?
 						chatMessage.chatDelegate = @chatDelegate
 					chatMessage.render()
@@ -128,25 +128,23 @@ define [
 			if !@unread? and lastChat? and unixStamp > @lastRead
 				if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
 					@delegate.chatListMarkAsRead( @ )
-				
+
 			if @scrollToTimestamp?
 				targetEl = @$el.find("#message-"+@scrollToTimestamp)
 				if targetEl? and targetEl.position()?
-					targetPos = targetEl.position().top 
+					targetPos = targetEl.position().top
 					$(".chat-list-container-scroller").scrollTop(targetPos - 60)
 					@scrollToTimestamp = null
 			else if shouldScrollToBottom
 				@scrollToBottom()
-			
+
 			@moveToBottomIfNeeded()
-			
-			
-			
+
 			if @unread?
 				@checkIsRead()
 			$(".chat-list-container-scroller").on("scroll.chatlist", @didScroll)
 			@hasRendered = true
-			
+
 		setScrollToMessage: (ts, highlight) ->
 			@scrollToTimestamp = ts.replace(".","\\.")
 

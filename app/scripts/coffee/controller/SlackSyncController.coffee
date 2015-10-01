@@ -32,12 +32,13 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@handleChannels(data.ims) if data.ims
 					# Only enable threaded conversations for Swipes Team
 					if data.team.id is "T02A53ZUJ"
-						localStorage.setItem("EnableThreadedConversations", true)
+						# T_TODO disabling threds. There are still comments when you try to type from the edit view
+						localStorage.setItem("EnableThreadedConversations", false)
 					@clearDeletedChannels()
 					@openWebSocket(data.url)
 					localStorage.setItem("slackLastConnected", new Date())
 					Backbone.trigger('slack-first-connected')
-					
+
 			)
 		handleSelf:(self) ->
 			collection = swipy.slackCollections.users
@@ -58,7 +59,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				model = collection.create(bot) if !model
 				model.save(bot)
 		handleChannels: (channels) ->
-			
+
 			for channel in channels
 				@_channelsById[channel.id] = channel
 				collection = swipy.slackCollections.channels
@@ -93,7 +94,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@start()
 		onSocketMessage: (evt) ->
 			if evt and evt.data
-				
+
 				data = JSON.parse(evt.data)
 				# Reply to sent data over websocket
 				if data.ok and data.reply_to
@@ -174,7 +175,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			options = {} if !options? or !_.isObject(options)
 			options.token = @token
 
-			settings = 
+			settings =
 				url : url
 				type : 'POST'
 				success : ( data ) ->
