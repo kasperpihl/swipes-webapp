@@ -34,6 +34,7 @@ define [
 			@taskList.enableDragAndDrop = true
 
 			@taskHandler = new TaskHandler()
+			@taskHandler.delegate = @
 			@taskHandler.listSortAttribute = "projectOrder"
 			@taskList.taskDelegate = @taskHandler
 			@taskList.dragDelegate = @taskHandler
@@ -49,6 +50,12 @@ define [
 			@taskList.render()
 		actionRowDidCreateAction: (actionRow, title, options) ->
 			@taskCollectionSubset.child.createAction(@model, title, options)
+		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
+			tasks = collection.models
+
+			tasks = _.filter collection.models, (m) -> !m.get("completionDate")
+
+			return [ { "leftTitle": null, "rightTitle": null, "tasks": tasks }]
 		remove: ->
 			@taskHandler?.destroy()
 			@taskList?.remove()

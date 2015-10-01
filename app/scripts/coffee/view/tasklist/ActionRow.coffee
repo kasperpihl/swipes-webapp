@@ -12,6 +12,7 @@ define [
 			"blur .input-action-title": "updateTitle"
 			"keyup .input-action-title": "keyUpTitle"
 			"keydown .input-action-title": "keyDownTitle"
+			"click a.action": "handleAction"
 		initialize: ->
 			throw new Error("Model must be added when constructing an ActionRow") if !@model?
 			@template = _.template ActionTmpl, {variable: "data" }
@@ -42,6 +43,34 @@ define [
 			else if title.length > 255
 				title = title.substr(0,255)
 			return title
+		handleAction: (e) ->
+			# Actual trigger logic
+			return false if !@taskDelegate?
+
+			self = @
+			currentTarget = $(e.currentTarget)
+
+			if currentTarget.hasClass("complete") and _.isFunction(@taskDelegate.taskActionStepComplete)
+				#@animateWithClass("fadeOutRight").then ->
+				self.$el.hide()
+				self.taskDelegate.taskActionStepComplete(self, @taskDelegate.delegate.model) # we pass here the parent task's model
+
+			false
+		animateWithClass: (animateClass) ->
+			#T_TODO make this a reusable plugin
+			self = @
+			dfd = new $.Deferred()
+
+			@$el.addClass("animated")
+			@$el.addClass(animateClass)
+
+			setTimeout(->
+				self.$el.removeClass("animated")
+				self.$el.removeClass(animateClass)
+				dfd.resolve()
+			, 300)
+
+			return dfd.promise()
 		render: ->
 			@$el.attr('id', "task-"+@model.id )
 			@$el.html @template( task: @model )

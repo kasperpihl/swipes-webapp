@@ -65,7 +65,7 @@ define [
 					section.expandClass = sectionData.expandClass
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 				sectionEl = section.$el.find('.section-list')
-				
+
 				if lastLeftTitle and lastLeftTitle is "Your current tasks"
 					section.$el.find('.section-header').css("marginTop","150px")
 

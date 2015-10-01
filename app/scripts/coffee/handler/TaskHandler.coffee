@@ -174,6 +174,30 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			false
 
 		###
+			Task Action Step Delegate
+		###
+		taskActionStepComplete: (task, parentTaskModel) ->
+			model = task.model
+
+			model.completeTask()
+
+			if model.get("projectLocalId")
+				targetChannel = model.get("projectLocalId")
+				###if model.get("projectLocalId").startsWith("D")
+					channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
+					if channel
+						targetChannel = "@" + channel.getName()###
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+
+				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+					sofiMessage = capitalizedName + " completed the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
+					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+			isMyTasks = if @isMyTasks? then "Yes" else "No"
+			swipy.analytics.logEvent("[Engagement] Completed Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
+			swipy.analytics.sendEventToIntercom("Completed Action Step", {"Type": model.getType() })
+			#@bouncedReloadWithEvent()
+
+		###
 			TaskCard Delegate
 		###
 		taskCardDidComplete: (taskCard) ->

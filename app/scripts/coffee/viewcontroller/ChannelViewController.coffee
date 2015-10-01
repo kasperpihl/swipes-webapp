@@ -18,9 +18,9 @@ define [
 		render: (el) ->
 			@$el.html "<div style=\"text-align:center; margin-top:100px;\">Loading</div>"
 			$("#main").html(@$el)
-			
+
 			swipy.rightSidebarVC.reload()
-			setTimeout( => 
+			setTimeout( =>
 				@loadMainWindow(@mainView)
 			, 5)
 			@updateTopbarTitle()
@@ -38,14 +38,14 @@ define [
 				collection = swipy.slackCollections.channels
 
 				@currentList = collection.findWhere({name: @identifier})
-				
+
 			else
 				collection = swipy.slackCollections.channels
-			
+
 				@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
-				
+
 				@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
-				
+
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@render()
 			action = options.action
@@ -59,7 +59,7 @@ define [
 			@updateTopbarTitle()
 			return
 			#if !localStorage.getItem("EnableThreadedConversations")
-			
+
 			# Is editing
 			if @taskListVC? and @taskListVC.editModel
 				model = @taskListVC.editModel
@@ -99,7 +99,7 @@ define [
 			else return
 			@$el.html @vc.el
 			@vc.render()
-		
+
 
 		createTask: ( title, options ) ->
 			options = {} if !options
@@ -124,12 +124,13 @@ define [
 				@taskListVC.taskList.enableDragAndDrop = true
 			@taskListVC?.taskHandler.bouncedReloadWithEvent()
 
-		### 
+		###
 			TaskHandler delegate
 		###
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			self = @
 			tasks = collection.models
+
 			if @showCompletedTasks
 				tasks = _.filter collection.models, (m) -> m.get("completionDate")
 			groups = _.groupBy(tasks, (model, i) =>
@@ -143,13 +144,13 @@ define [
 					return 9999999997 if !@showLaterTasks
 					return moment(schedule).startOf('day').unix()
 			)
-			
+
 			taskGroups = []
 			sortedKeys = _.keys(groups).sort()
 
 			if @showCompletedTasks
 				sortedKeys = sortedKeys.reverse()
-			
+
 			for key in sortedKeys
 				dontSort = false
 				includeTasks = true
@@ -192,15 +193,14 @@ define [
 						title = "Later Today"
 				group = {showSchedule: showSchedule, leftTitle: title, dontSort: dontSort, expandClass: expandClass }
 				group.tasks = tasks if includeTasks
-				
+
 				taskGroups.push(group)
 			if @showCompletedTasks and taskGroups.length
 				taskGroups = [{leftTitle:"Hide completed tasks", "expandClass": "hide-completed-tasks"}].concat( taskGroups )
+
 			return taskGroups
 
-
-
-		### 
+		###
 			Get A TaskListViewController that filtered for this project
 		###
 		getTaskListVC: ->
@@ -218,7 +218,7 @@ define [
 
 
 
-		### 
+		###
 			Get A ChatListViewController that filtered for this project
 		###
 		getChatListVC: ->
@@ -242,7 +242,7 @@ define [
 					chatListVC.chatList.hasRendered = false
 			)
 			return chatListVC
-		
+
 
 		###
 			ChatList ChatDelegate
@@ -267,7 +267,7 @@ define [
 		###
 		sidebarSwitchToView: (sidebar, view) ->
 			if @mainView is "task"
-				@mainView = "chat" 
+				@mainView = "chat"
 			else @mainView = "task"
 			@render()
 		sidebarGetViewController: (sidebar) ->
