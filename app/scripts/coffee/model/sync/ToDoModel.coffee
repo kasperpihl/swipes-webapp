@@ -318,18 +318,25 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			return result
 		setScheduleStr: ->
 			schedule = @get "schedule"
+
 			if !schedule
 				return @set( "scheduleStr", "unspecified" )
 
 			now = moment()
 			parsedDate = moment schedule
 			dayDiff =  Math.abs parsedDate.diff( now, "days" )
+			resultObj = {}
 
 			# If difference is more than 1 week, we want different formatting
 			#if dayDiff >= 6
 			# If it's next year, add year suffix
 			if parsedDate.year() > now.year() then result = parsedDate.format "DD MMM YYYY"
 			else result = parsedDate.format "DD MMM"
+
+			result = result.split("|")
+			resultObj.date = result[0]
+			resultObj.month = result[1]
+			resultObj.year = result[2]
 
 			#console.log parsedDate
 			#dayWithoutTime = @getDayWithoutTime parsedDate
@@ -338,7 +345,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			#if dayWithoutTime is "Today" and not parsedDate.isBefore()
 				#dayWithoutTime = "Later today"
 
-			@set( "scheduleStr", result )
+			@set( "scheduleDateObj", resultObj )
 
 		setTimeStr: ->
 			schedule = @get "schedule"
