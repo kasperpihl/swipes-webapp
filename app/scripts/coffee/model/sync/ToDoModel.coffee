@@ -333,7 +333,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			if parsedDate.year() > now.year() then result = parsedDate.format "DD MMM YYYY"
 			else result = parsedDate.format "DD MMM"
 
-			result = result.split("|")
+			result = result.split(" ")
 			resultObj.date = result[0]
 			resultObj.month = result[1]
 			resultObj.year = result[2]
