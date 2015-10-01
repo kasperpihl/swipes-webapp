@@ -4,7 +4,7 @@ define ["underscore"
 	Backbone.View.extend
 		className: "add-action-container action-item"
 		initialize: ->
-			@placeHolder = "Add new action"
+			@placeHolder = "Add a new action and hit Enter"
 			@template = _.template Tmpl, { variable: "data" }
 			@render()
 		events:

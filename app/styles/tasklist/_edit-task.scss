@@ -32,7 +32,491 @@ textarea, .content-editable {
 }
 
 
-.edit-task{
+$bg: #eee;
+$white: #fff;
+$yellow: #fecb4b;
+$dark: #000c2f;
+
+$mat-sha-one: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+$mat-sha-two: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+$mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+
+%flex {
+	display: flex;
+}
+
+%flex-complete {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.task-card {
+	max-width: 400px;
+	width: 90%;
+	margin: 50px auto;
+	background-color: $white;
+	box-shadow: $mat-sha-one;
+	border-radius: 5px;
+	overflow: hidden;
+	
+	animation: task-full-ani .3s forwards ease-in-out;
+	
+	.top {
+		width: 100%;
+		min-height: 60px;
+		padding-left: 20px;
+		background-color: $yellow;
+		box-shadow: $mat-sha-one;
+		position: relative;
+		
+		transition: .2s ease-in-out;
+		
+		h1.h2.task-title {
+			min-height: 60px;
+			width: calc(100% - 30px);
+			margin: 0;
+			
+			@extend %flex;
+			align-items: center;
+			
+			transition: .2s ease-in-out;
+			
+			.input-title.content-editable {
+				font: 16px $font-normal;
+				padding: 30px 0;
+				color: $dark;
+				
+				animation: task-fade-ani .8s forwards ease-in-out;
+			}
+		}
+		
+		.schedule-container.info-row {
+			height: 60px;
+			width: 50px;
+			position: absolute;
+			top: calc(50% - 30px);
+			right: 0;
+			background-color: $yellow;
+			cursor: pointer;
+			
+			animation: task-fade-ani .8s forwards ease-in-out;
+			
+			
+			.content-div.info-label.top-date {
+				height: 60px;
+				width: 50px;
+				position: relative;
+				top: 0;
+				right: 30px;
+				padding: 0 40px;
+				text-align: center;
+				cursor: pointer;
+				
+				@extend %flex;
+				justify-content: center;
+				align-content: center;
+				flex-wrap: wrap;
+				
+				transition: .1s ease-in-out;
+				
+				&:before {
+					content: '';
+					position: absolute;
+					width: 1px;
+					height: 20px;
+					background-color: rgba($dark, .1);
+					left: 0;
+					top: calc(50% - (20px / 2));
+					transition: .2s ease-in-out;
+				}
+				
+				&:hover {
+					background-color: lighten($yellow, 5%);
+					transition: .1s ease-in-out;
+					
+					&:before {
+						height: 60px;
+						top: 0;
+						transition: .2s ease-in-out;
+					}
+				}
+				
+				
+				span.month {
+					font: 12px $font-bold;
+					color: rgba($dark, .5);
+					cursor: pointer;
+				}
+				
+				span.date {
+					font: 30px $font-normal;
+					color: $dark;
+					cursor: pointer;
+				}
+			}
+		}
+		
+		section.assignees-container.info-row {
+			animation: task-fade-ani .8s forwards ease-in-out;
+			
+			.content-div {
+				position: absolute;
+				width: 100%;
+				height: 30px;
+				left: 0;
+				margin-top: -15px;
+				
+				ul.assignees-list {
+					height: 30px;
+					padding-left: 30px;
+					
+					@extend %flex; 
+					
+					li {
+						width: 30px;
+						height: 30px;
+						border-radius: 50%;
+						box-shadow: $mat-sha-two;
+						cursor: pointer;
+						transition: .2s ease-in-out;
+						position: relative;
+						overflow: hidden;
+						
+						&:hover {
+							transform: scale3d(1.15,1.15,1.15);
+							box-shadow: $mat-sha-three;
+							transition: .2s ease-in-out;
+						}
+						
+						&.assign {
+							margin-right: 5px;
+							background-color: $dark;
+							
+							&:before {
+								content: '';
+								position: absolute;
+								width: 2px;
+								height: 10px;
+								background-color: $white;
+								top: calc(50% - 5px);
+								left: calc(50% - 1px);
+							}
+							
+							&:after {
+								content: '';
+								position: absolute;
+								height: 2px;
+								width: 10px;
+								background-color: $white;
+								left: calc(50% - 5px);
+								top: calc(50% - 1px);
+							}
+						}
+						
+						&.assignee {
+							width: 40px;
+							height: 40px;
+							margin: 0 5px;
+							margin-top: -5px;
+							position: relative;
+							cursor: pointer;
+							
+							&:hover > .assignee-hover {
+								opacity: 1;
+								transform: rotate(45deg) scale(1);
+								transition: .25s ease-in-out;
+							}
+							
+							.picture-circular {
+								width: 40px;
+								height: 40px;
+								background-repeat: no-repeat;
+								background-size: 40px 40px;
+								cursor: pointer;
+							}
+							
+							.assignee-hover {
+								width: 40px;
+								height: 40px;
+								position: absolute;
+								top: 0;
+								left: 0;
+								background-color: rgba($dark,.7);
+								opacity: 0;
+								border-radius: 50%;
+								cursor: pointer;
+								transform: rotate(45deg) scale(0);
+								transition: .25s ease-in-out;
+								
+								&:before {
+									content: '';
+									position: absolute;
+									width: 2px;
+									height: 16px;
+									background-color: $white;
+									top: calc(50% - 8px);
+									left: calc(50% - 1px);
+								}
+
+								&:after {
+									content: '';
+									position: absolute;
+									height: 2px;
+									width: 16px;
+									background-color: $white;
+									left: calc(50% - 8px);
+									top: calc(50% - 1px);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	section.action-step-container.info-row {
+		margin-top: 25px;
+		
+		animation: task-fade-ani .8s forwards ease-in-out;
+		
+		.action-tab {
+			.action-list-container {
+				.task-list {
+					.section {
+						ul.section-list {
+							li.action-item {
+								width: 100%;
+								height: 50px;
+								position: relative;
+								padding-left: 50px;
+								
+								@extend %flex;
+								align-items: center;
+								
+								transition: .1s ease-in-out;
+								
+								&:hover {
+									background-color: rgba($dark, .05);
+									transition: .1s ease-in-out;
+								}
+								
+								.action-container {
+									.relative-container {
+										h2.title {
+											font: 13px $font-bold;
+											color: $dark;
+											
+											span.task-dot {
+												width: 10px;
+												height: 10px;
+												border: 2px solid $yellow;
+												border-radius: 50%;
+												position: absolute;
+												left: -25px;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			.add-action-outer-container {
+				.add-action-container.action-item {
+					.action-container {
+						height: 50px;
+						position: relative;
+						
+						span.add {
+							width: 10px;
+							height: 10px;
+							position: absolute;
+							left: 20px;
+							top: calc(50% - 5px);
+							
+							&:before {
+								content: '';
+								position: absolute;
+								width: 2px;
+								height: 10px;
+								background-color: $dark;
+								top: calc(50% - 5px);
+								left: calc(50% - 1px);
+							}
+							
+							&:after {
+								content: '';
+								position: absolute;
+								height: 2px;
+								width: 10px;
+								background-color: $dark;
+								left: calc(50% - 5px);
+								top: calc(50% - 1px);
+							}
+						}
+						
+						input {
+							width: 100%;
+							height: 50px;
+							margin-left: 40px;
+							font: 13px $font-normal;
+							color: $dark;
+							
+							&:focus {
+								outline: none;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	.tasks-buttons-container {
+		width: 100%;
+		height: 70px;
+		margin-top: 60px;
+		border-top: 2px solid rgba($dark,.1);
+		position: relative;
+		
+		@extend %flex;
+		align-items: center;
+		justify-content: space-around;
+		
+		animation: task-fade-ani .8s forwards ease-in-out;
+		
+		.delete-confirmation {
+			width: 100%;
+			height: 70px;
+			position: absolute;
+			left: 0;
+			top: 0;
+			
+			@extend %flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-around;
+			flex-direction: column;
+			
+			transform: translate(-100%);
+			
+			&.active {
+				transform: translate(0%);
+				transition: .4s ease-in-out;
+			}
+			
+			.title-confirm {
+				height: 50%;
+				width: 100%;
+				position: relative;
+				
+				@extend %flex-complete;
+				
+				h2.confirmation {
+					margin: 0;
+					padding: 0;
+					font: 14px $font-bold;
+					color: $dark;
+					text-align: center;
+				}
+			}
+			
+			.options-confirm {
+				height: 50%;
+				width: 100%;
+				position: relative;
+				
+				@extend %flex-complete;
+				
+				.no {
+					width: 25%;
+					height: 100%;
+					
+					@extend %flex-complete;
+					
+					&:hover {
+						background-color: green;
+					}
+				}
+				
+				.yes {
+					width: 25%;
+					height: 100%;
+					
+					@extend %flex-complete;
+				}
+			}
+		}
+		
+		.btn {
+			height: 70px;
+			width: calc(100% / 3);
+			cursor: pointer;
+			font: 12px $font-bold;
+			color: rgba($dark, .4);
+			text-align: center;
+			
+			@extend %flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-around;
+			flex-direction: column;
+			
+			transition: .1s ease-in-out;
+			
+			&.active {
+				transform: translate(400px);
+				transition: .4s ease-in-out;
+			}
+			
+			svg {
+				width: 20px;
+				height: 20px;
+				fill: rgba($dark, .4);
+				transition: .2s ease-in-out;
+			}
+			
+			&.delete:hover > svg {
+				fill: #e74c3c;
+				transition: .2s ease-in-out;
+			}
+			
+			&.schedule:hover > svg {
+				fill: $yellow;
+				transition: .2s ease-in-out;
+			}
+			
+			&.complete:hover > svg {
+				fill: #2ecc71;
+				transition: .2s ease-in-out;
+			}
+			
+			&.delete:hover {
+				background-color: rgba($dark, .05);
+				color: #e74c3c;
+				transition: .2s ease-in-out;
+			}
+			
+			&.schedule:hover {
+				background-color: rgba($dark, .05);
+				color: $yellow;
+				transition: .2s ease-in-out;
+			}
+			
+			&.complete:hover {
+				background-color: rgba($dark, .05);
+				color: #2ecc71;
+				transition: .2s ease-in-out;
+			}
+		}
+	}
+}
+
+/*.edit-task{
 	max-width: 400px;
 	padding-top:25px;
 	margin: 0 auto;
@@ -192,5 +676,26 @@ textarea, .content-editable {
 	> section {
 		margin-bottom: 1.0em;
 		min-height: 40px;
+	}
+}*/
+
+@keyframes task-full-ani {
+	0% {
+		transform-origin: 50% 0%;
+		transform: scale3d(1, 0, 1);
+	}
+	100% {
+		transform-origin: 50% 0%;
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+@keyframes task-fade-ani {
+	0% {
+		opacity: 0;
+	}
+	
+	100% {
+		opacity: 1;
 	}
 }

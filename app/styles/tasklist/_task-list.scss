@@ -258,7 +258,10 @@ $meta-margin: 10px;
 	.main-info-container{
 		padding:5px;
 		padding-left: $left-padding;
-
+		
+		.title {
+			width: 90%;
+		}
 		
 		.priority{
 			margin-top: -3px;
@@ -414,10 +417,8 @@ $meta-margin: 10px;
 			@include border-radius(($button-size + 2*$padding) / 2);
 			margin-top:-($button-size + 2*$padding )/2;
 			a{
-				&:hover{
-					text-decoration:none;
-					opacity: 0.8;
-				}
+				cursor: pointer;
+				opacity: 0.6;
 				text-align:center;
 				line-height: 1;
 				float:left;
@@ -428,23 +429,28 @@ $meta-margin: 10px;
 				
 				padding:0;
 				position: relative;
+				
+				&:hover{
+					text-decoration:none;
+					opacity: 1;
+				}
 
 				svg {
 					@include square($button-size);
 					@include centerBlock(0, 0, 0, 0, auto, absolute);
 				}
 
-				&.schedule-button{
+				&.delete-button{
 					border-color: $red;
-						svg { fill: $red; }
+					svg { fill: $red; }
 				}
-				&.now-button{
+				&.schedule-button{
 					border-color: $yellow;
-						svg { fill: $yellow; }
+					svg { fill: $yellow; }
 				}
 				&.complete-button{
 					border-color: $green;
-						svg { fill: $green; }
+					svg { fill: $green; }
 				}
 			}
 		}
