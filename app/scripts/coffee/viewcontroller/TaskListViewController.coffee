@@ -27,7 +27,7 @@ define [
 			@taskHandler = new TaskHandler()
 			@taskHandler.delegate = channelVC
 			@taskHandler.listSortAttribute = if isMyTasks then "order" else "projectOrder"
-			@taskHandler.isMyTasksView = isMyTasks
+			@taskHandler.isMyTasks = isMyTasks
 			@taskHandler.loadCollection(options.collectionToLoad)
 
 			@taskList = new TaskList()
@@ -66,9 +66,13 @@ define [
 		goBackFromEditMode: ->
 			currRoute = Backbone.history.fragment
 			indexOfTask = currRoute.indexOf("/task")
-
+			console.log "curr", currRoute
 			if indexOfTask isnt -1
 				newRoute = currRoute.substring(0, indexOfTask)
+
+			indexOfTasks = currRoute.indexOf("tasks")
+			if indexOfTasks is 0
+				newRoute = "tasks"
 			if newRoute
 				swipy.router.navigate(newRoute, {trigger: false})
 				swipy.router.history.push(newRoute)

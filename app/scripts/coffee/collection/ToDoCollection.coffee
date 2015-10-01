@@ -131,20 +131,15 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 		getActiveList: ->
 			route = swipy.router.getCurrRoute()
 			switch route
-				when "", "tasks/now", "tasks/later", "tasks/done"
-					if route is "" or route is "tasks/now"
+				when "", "tasks"
+					if route is "" or route is "tasks"
 						return "todo"
-					else if route is "tasks/later"
-						return "scheduled"
-					else if route is "tasks/done"
-						return "completed"
-				else return "todo"
 		getTasksTaggedWith: (tags, filterOnlyCurrentTasks) ->
 			activeList = @getActiveList()
 
 			switch activeList
 				when "todo" then models = @getActive()
-				when "scheduled" then models = @getScheduled()
+				when "scheduleds" then models = @getScheduled()
 				else models = @getCompleted()
 
 			_.filter models, (m) ->

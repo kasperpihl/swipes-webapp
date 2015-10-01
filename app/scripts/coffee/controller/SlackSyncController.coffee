@@ -149,8 +149,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					type = self.util.slackTypeForId(channel)
 					if type is "DM" and channel is slackbotChannelId
 						type = "Slackbot"
-					console.log "Sent Message", type
 					swipy.analytics.logEvent("[Engagement] Sent Message", {"Type": type})
+					swipy.analytics.sendEventToIntercom( 'Sent Message', {"Type": type} )
 				callback?(res, error)
 			)
 		uploadFile: (channels, file, callback, initialComment) ->
@@ -159,9 +159,11 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			formData.append("channels", channels)
 			formData.append("filename", file.name)
 			formData.append("file", file);
-			console.log "upload called"
+			swipy.analytics.logEvent("[Engagement] Upload File Started", {})
 			@apiRequest("files.upload", {}, (res, error) ->
-				console.log "response", res, error
+				if res and res.ok
+					swipy.analytics.logEvent("[Engagement] Uploaded File", {} )
+					swipy.analytics.sendEventToIntercom( 'Uploaded File', {} )
 				callback?(res,error)
 			, formData)
 		sendMessageAsSofi: (message, channel, callback, attachments) ->

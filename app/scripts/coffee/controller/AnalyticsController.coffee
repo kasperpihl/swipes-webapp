@@ -28,13 +28,10 @@ define ["underscore"], (_) ->
 		validateEmail: (email) ->
 			regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 			regex.test email
-		sendEvent: (category, action, label, value) ->
+		logEvent: (name, data) ->
 			platform = "Web"
 			if @isMac?
 				platform = "Mac"
-			ga('set', {"dimension7": platform})
-			ga('send', 'event', category, action, label, value)
-		logEvent: (name, data) ->
 			amplitude.logEvent(name, data)
 		sendEventToIntercom: (eventName, metadata) ->
 			Intercom('trackEvent', eventName, metadata )

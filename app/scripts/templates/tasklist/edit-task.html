@@ -42,7 +42,7 @@
 		<!-- Date end -->
 
 		<!-- Assignees -->
-
+		<% if(!data.task.get("isPersonalTask")){ %>
 		<section class="assignees-container info-row open">
 			<div class="content-div">
 				<ul class="assignees-list">
@@ -79,7 +79,7 @@
 				</ul>
 			</div>
 		</section>
-
+		<% } %>
 		<!-- Assignees end -->
 
 	</div>

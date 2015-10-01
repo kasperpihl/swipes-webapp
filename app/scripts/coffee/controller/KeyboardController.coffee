@@ -19,8 +19,8 @@ define ["underscore"], (_) ->
 			if !@globalLock and !$("input").is(":focus") and !$("div.content-editable").is(':focus')
 				if (e.metaKey or e.ctrlKey) and !(e.metaKey and e.ctrlKey)
 					if e.keyCode is 49
-						if Backbone.history.fragment isnt "tasks/now"
-							swipy.router.navigate("tasks/now",true)
+						if Backbone.history.fragment isnt "tasks"
+							swipy.router.navigate("tasks",true)
 							e.preventDefault()
 						return
 					if e.keyCode is 188

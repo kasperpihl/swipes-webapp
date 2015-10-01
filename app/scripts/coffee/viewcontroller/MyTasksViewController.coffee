@@ -30,6 +30,10 @@ define [
 			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
+			if options and options.id
+				task = swipy.collections.todos.get(options.id)
+				if task
+					Backbone.trigger("edit/task", task) if task
 		loadMainWindow: (type) ->
 			@vc?.destroy()
 			if type is "task"

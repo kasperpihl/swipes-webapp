@@ -27,6 +27,8 @@ define [
 			if viewcontroller is "im"
 				activeMenuDet = "member"
 			activeMenu = "sidebar-"+activeMenuDet + "-" + options.id if options?.id
+			if viewcontroller is "tasks"
+				activeMenu = "sidebar-tasks-now"
 			Backbone.trigger("set-active-menu", activeMenu)
 		loadViewController: (viewcontroller) ->
 			dfd = new $.Deferred()

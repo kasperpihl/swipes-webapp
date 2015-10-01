@@ -6,6 +6,7 @@ define ["underscore"], (_) ->
 			"settings": "settings"
 			"edit/:id": "edit"
 			"edit/:id/:action": "edit"
+			"tasks": "tasks"
 			"tasks/:id": "tasks"
 			"task/:id": "task"
 			"channel/:id": "channel"
@@ -22,7 +23,7 @@ define ["underscore"], (_) ->
 			@lastMainRoute = "now"
 			Backbone.history.on( "route", @updateHistory, @ )
 		root: ->
-			@navigate( "tasks/now", { trigger: yes, replace: yes } )
+			@navigate( "tasks", { trigger: yes, replace: yes } )
 		add: ->
 			Backbone.trigger( "show-add")	
 		search: ->
@@ -34,7 +35,7 @@ define ["underscore"], (_) ->
 		task: (id) ->
 			task = swipy.collections.todos.get(id)
 			if task
-				pathStart = "tasks/now"
+				pathStart = "tasks"
 				channelId = task.get("projectLocalId")
 				channel = swipy.slackCollections.channels.get(channelId)
 				if channel
@@ -55,7 +56,7 @@ define ["underscore"], (_) ->
 			else
 				@root()
 
-		tasks: (id = "now", action ) ->
+		tasks: (id, action ) ->
 			options = { id: id }
 			if action
 				options["action"] = action

@@ -124,6 +124,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 					, 400)
 					isMyTasks = if @isMyTasks? then "Yes" else "No"
 					swipy.analytics.logEvent("[Engagement] Reorder Task", {"Type": draggedTask.getType(), "Is My Tasks": isMyTasks})
+					swipy.analytics.sendEventToIntercom("Reorder Task", {"Type": draggedTask.getType(), "Is My Tasks": isMyTasks})
 
 			else if hit.type is "project"
 				targetProject = swipy.slackCollections.channels.findWhere( {name: @projectCollectionIdFromHtmlId(hit.target)} )
@@ -322,8 +323,12 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				model.save("selected", !model.get("selected"))
 			else if taskCard.hasClass 'task-item'
 				@editMode = true
-				swipy.router.navigate("task/"+model.id, {trigger: true})
-				#Backbone.trigger("edit/task", model)
+				if @isMyTasks
+					console.log "is my tasks"
+					swipy.router.navigate("tasks/"+model.id, {trigger: true})
+				else
+					swipy.router.navigate("task/"+model.id, {trigger: true})
+				#
 		###
 			TaskList Datasource
 		###
