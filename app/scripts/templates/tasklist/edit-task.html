@@ -15,7 +15,7 @@
 		<div class="schedule-container info-row open-schedule">
 			<div class="content-div info-label top-date">
 				<span class="year"><%= data.task.get("scheduleDateObj").year %></span>
-				<span class="month"><%= data.task.get("scheduleDateObj").date %></span>
+				<span class="month"><%= data.task.get("scheduleDateObj").date %> <%= data.task.get("scheduleDateObj").month %></span>
 				<span class="time"><%= data.task.get("timeStr") %></span>
 			</div>
 		</div>
@@ -31,7 +31,7 @@
 					<li class="assign" id="assign-text-button"></li>
 
 					<%
-						var hiddenClass = data.task.get("assignees").length > 0 ? "hidden" : ""
+						var hiddenClass = data.task.get("assignees") && data.task.get("assignees").length > 0 ? "hidden" : ""
 					%>
 
 					<li class="assign-label <%= hiddenClass %>">
