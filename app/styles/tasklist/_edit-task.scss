@@ -42,12 +42,16 @@ $mat-sha-two: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 
 %flex {
+	display: -webkit-box;
 	display: flex;
 }
 
 %flex-complete {
+	display: -webkit-box;
 	display: flex;
+	-webkit-align-items: center;
 	align-items: center;
+	-webkit-justify-content: center;
 	justify-content: center;
 }
 
@@ -60,7 +64,10 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	border-radius: 5px;
 	overflow: hidden;
 	
-	animation: task-full-ani .3s forwards ease-in-out;
+	&.open {
+		-webkit-animation: task-full-ani .3s forwards ease-in-out;
+		animation: task-full-ani .3s forwards ease-in-out;
+	}
 	
 	.top {
 		width: 100%;
@@ -70,6 +77,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		box-shadow: $mat-sha-one;
 		position: relative;
 		
+		-webkit-transition: .2s ease-in-out;
 		transition: .2s ease-in-out;
 		
 		h1.h2.task-title {
@@ -78,46 +86,70 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			margin: 0;
 			
 			@extend %flex;
+			-webkit-align-items: center;
 			align-items: center;
 			
+			-webkit-transition: .2s ease-in-out;
 			transition: .2s ease-in-out;
 			
 			.input-title.content-editable {
+				width: 80%;
 				font: 16px $font-normal;
 				padding: 30px 0;
 				color: $dark;
 				
+				-webkit-animation: task-fade-ani .8s forwards ease-in-out;
 				animation: task-fade-ani .8s forwards ease-in-out;
 			}
 		}
 		
 		.schedule-container.info-row {
 			height: 60px;
-			width: 50px;
+			width: 60px;
 			position: absolute;
 			top: calc(50% - 30px);
+			padding: 0 20px;
 			right: 0;
 			background-color: $yellow;
 			cursor: pointer;
+			box-sizing: content-box;
 			
+			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
 			animation: task-fade-ani .8s forwards ease-in-out;
 			
+			&:hover  {
+				top: 0;
+				height: 100%;
+				background-color: lighten($yellow, 5%);
+				-webkit-transition: .1s ease-in-out;
+				transition: .1s ease-in-out;		
+			}
 			
+			&:hover > .content-div.info-label.top-date:before {
+				height: 100%;
+				top: 0;
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+			}
+						
 			.content-div.info-label.top-date {
 				height: 60px;
-				width: 50px;
+				width: 60px;
 				position: relative;
-				top: 0;
-				right: 30px;
-				padding: 0 40px;
+				top: calc(50% - 30px);
+				right: 0;
 				text-align: center;
 				cursor: pointer;
 				
 				@extend %flex;
+				-webkit-justify-content: center;
 				justify-content: center;
+				-webkit-align-content: center;
 				align-content: center;
+				-webkit-flex-wrap: wrap;
 				flex-wrap: wrap;
 				
+				-webkit-transition: .1s ease-in-out;
 				transition: .1s ease-in-out;
 				
 				&:before {
@@ -126,38 +158,35 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 					width: 1px;
 					height: 20px;
 					background-color: rgba($dark, .1);
-					left: 0;
+					left: -20px;
 					top: calc(50% - (20px / 2));
+					
+					-webkit-transition: .2s ease-in-out;
 					transition: .2s ease-in-out;
 				}
 				
-				&:hover {
-					background-color: lighten($yellow, 5%);
-					transition: .1s ease-in-out;
-					
-					&:before {
-						height: 60px;
-						top: 0;
-						transition: .2s ease-in-out;
-					}
-				}
-				
-				
-				span.month {
-					font: 12px $font-bold;
+				span.year {
+					font: 12px $font-normal;
 					color: rgba($dark, .5);
 					cursor: pointer;
 				}
 				
-				span.date {
-					font: 30px $font-normal;
+				span.month {
+					font: 17px $font-bold;
 					color: $dark;
+					cursor: pointer;
+				}
+				
+				span.time {
+					font: 12px $font-normal;
+					color: rgba($dark, .5);
 					cursor: pointer;
 				}
 			}
 		}
 		
 		section.assignees-container.info-row {
+			-webkit-animation: task-fade-ani .8s forwards ease-in-out;
 			animation: task-fade-ani .8s forwards ease-in-out;
 			
 			.content-div {
@@ -177,21 +206,25 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						width: 30px;
 						height: 30px;
 						border-radius: 50%;
-						box-shadow: $mat-sha-two;
+						box-shadow: $mat-sha-one;
 						cursor: pointer;
+						-webkit-transition: .2s ease-in-out;
 						transition: .2s ease-in-out;
 						position: relative;
 						overflow: hidden;
 						
 						&:hover {
+							-webkit-transform: scale3d(1.15,1.15,1.15);
 							transform: scale3d(1.15,1.15,1.15);
-							box-shadow: $mat-sha-three;
+							box-shadow: $mat-sha-two;
+							-webkit-transition: .2s ease-in-out;
 							transition: .2s ease-in-out;
 						}
 						
 						&.assign {
 							margin-right: 5px;
 							background-color: $dark;
+							position: relative;
 							
 							&:before {
 								content: '';
@@ -214,6 +247,42 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 							}
 						}
 						
+						&.assign-label {
+							border-radius: 5px;
+							width: auto;
+							background-color: $dark;
+							position: relative;
+							overflow: visible;
+							margin-left: 12px;
+							z-index: 99;
+							
+							.arrow {
+								position: absolute;
+								width: 20px;
+								height: 20px;
+								top: 6px;
+								left: -3px;
+								transform: rotate(45deg);
+								background-color: $dark;
+								z-index: 1;
+							}
+							
+							p.assign-label-text {
+								position: relative;
+								color: $white;
+								font: 12px $font-normal;
+								line-height: 30px;
+								padding: 0 10px;
+								z-index: 99;
+							}
+							
+							&:hover {
+								-webkit-transform: scale3d(1,1,1);
+								transform: scale3d(1,1,1);
+								box-shadow: $mat-sha-one;
+							}
+						}
+						
 						&.assignee {
 							width: 40px;
 							height: 40px;
@@ -224,7 +293,9 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 							
 							&:hover > .assignee-hover {
 								opacity: 1;
+								-webkit-transform: rotate(45deg) scale(1);
 								transform: rotate(45deg) scale(1);
+								-webkit-transition: .25s ease-in-out;
 								transition: .25s ease-in-out;
 							}
 							
@@ -246,7 +317,9 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								opacity: 0;
 								border-radius: 50%;
 								cursor: pointer;
+								-webkit-transform: rotate(45deg) scale(0);
 								transform: rotate(45deg) scale(0);
+								-webkit-transition: .25s ease-in-out;
 								transition: .25s ease-in-out;
 								
 								&:before {
@@ -279,6 +352,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	section.action-step-container.info-row {
 		margin-top: 25px;
 		
+		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
 		animation: task-fade-ani .8s forwards ease-in-out;
 		
 		.action-tab {
@@ -293,18 +367,27 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								padding-left: 50px;
 								
 								@extend %flex;
+								-webkit-align-items: center;
 								align-items: center;
 								
+								-webkit-transition: .1s ease-in-out;
 								transition: .1s ease-in-out;
 								
 								&:hover {
 									background-color: rgba($dark, .05);
+									-webkit-transition: .1s ease-in-out;
 									transition: .1s ease-in-out;
 								}
 								
 								.action-container {
 									.relative-container {
+										height: 50px;
+										@extend %flex;
+										-webkit-align-items: center;
+										align-items: center;
+										
 										h2.title {
+											padding: 0;
 											font: 13px $font-bold;
 											color: $dark;
 											
@@ -315,6 +398,11 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 												border-radius: 50%;
 												position: absolute;
 												left: -25px;
+											}
+											
+											.input-action-title.content-editable {
+												padding: 0;
+												margin-top: -4px;
 											}
 										}
 									}
@@ -336,7 +424,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 							height: 10px;
 							position: absolute;
 							left: 20px;
-							top: calc(50% - 5px);
+							top: calc(50% - 6px);
 							
 							&:before {
 								content: '';
@@ -360,14 +448,14 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						}
 						
 						input {
-							width: 100%;
+							width: calc(100% - 40px);
 							height: 50px;
 							margin-left: 40px;
 							font: 13px $font-normal;
 							color: $dark;
 							
 							&:focus {
-								outline: none;
+								background-color: rgba($dark, .1);
 							}
 						}
 					}
@@ -384,132 +472,104 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		position: relative;
 		
 		@extend %flex;
+		-webkit-align-items: center;
 		align-items: center;
+		-webkit-justify-content: space-around;
 		justify-content: space-around;
 		
+		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
 		animation: task-fade-ani .8s forwards ease-in-out;
-		
-		.delete-confirmation {
-			width: 100%;
-			height: 70px;
-			position: absolute;
-			left: 0;
-			top: 0;
-			
-			@extend %flex;
-			flex-wrap: wrap;
-			align-items: center;
-			justify-content: space-around;
-			flex-direction: column;
-			
-			transform: translate(-100%);
-			
-			&.active {
-				transform: translate(0%);
-				transition: .4s ease-in-out;
-			}
-			
-			.title-confirm {
-				height: 50%;
-				width: 100%;
-				position: relative;
-				
-				@extend %flex-complete;
-				
-				h2.confirmation {
-					margin: 0;
-					padding: 0;
-					font: 14px $font-bold;
-					color: $dark;
-					text-align: center;
-				}
-			}
-			
-			.options-confirm {
-				height: 50%;
-				width: 100%;
-				position: relative;
-				
-				@extend %flex-complete;
-				
-				.no {
-					width: 25%;
-					height: 100%;
-					
-					@extend %flex-complete;
-					
-					&:hover {
-						background-color: green;
-					}
-				}
-				
-				.yes {
-					width: 25%;
-					height: 100%;
-					
-					@extend %flex-complete;
-				}
-			}
-		}
 		
 		.btn {
 			height: 70px;
 			width: calc(100% / 3);
 			cursor: pointer;
-			font: 12px $font-bold;
-			color: rgba($dark, .4);
-			text-align: center;
+			position: relative;
 			
 			@extend %flex;
-			flex-wrap: wrap;
-			align-items: center;
-			justify-content: space-around;
-			flex-direction: column;
 			
+			-webkit-transition: .1s ease-in-out;
 			transition: .1s ease-in-out;
 			
 			&.active {
+				-webkit-transform: translate(400px);
 				transform: translate(400px);
+				-webkit-transition: .4s ease-in-out;
 				transition: .4s ease-in-out;
+			}
+			
+			h3 {
+				width: 100%;
+				padding: 0;
+				padding-top: 10px;
+				font: 12px $font-bold;
+				color: rgba($dark, .4);
+				text-align: center;
+				cursor: pointer;
 			}
 			
 			svg {
 				width: 20px;
 				height: 20px;
 				fill: rgba($dark, .4);
+				position: absolute;
+				left: calc(50% - 10px);
+				top: calc(33% - 10px);
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+			}
+			
+			&.delete:hover > h3 {
+				color: #e74c3c;
+				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.delete:hover > svg {
 				fill: #e74c3c;
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+			}
+			
+			&.schedule:hover > h3 {
+				color: $yellow;
+				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.schedule:hover > svg {
 				fill: $yellow;
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+			}
+			
+			&.complete:hover > h3 {
+				color: #2ecc71;
+				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.complete:hover > svg {
 				fill: #2ecc71;
+				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.delete:hover {
 				background-color: rgba($dark, .05);
-				color: #e74c3c;
+				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.schedule:hover {
 				background-color: rgba($dark, .05);
-				color: $yellow;
+				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
 			&.complete:hover {
 				background-color: rgba($dark, .05);
-				color: #2ecc71;
+				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 		}
@@ -679,14 +739,35 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	}
 }*/
 
-@keyframes task-full-ani {
+@-webkit-keyframes task-full-ani {
 	0% {
-		transform-origin: 50% 0%;
-		transform: scale3d(1, 0, 1);
+		-webkit-transform-origin: 50% 0%;
+		-webkit-transform: scale3d(1, 0, 1);
 	}
 	100% {
-		transform-origin: 50% 0%;
-		transform: scale3d(1, 1, 1);
+		-webkit-transform-origin: 50% 0%;
+		-webkit-transform: scale3d(1, 1, 1);
+	}
+}
+
+@keyframes task-fade-ani {
+	0% {
+		opacity: 0;
+	}
+	
+	100% {
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes task-full-ani {
+	0% {
+		-webkit-transform-origin: 50% 0%;
+		-webkit-transform: scale3d(1, 0, 1);
+	}
+	100% {
+		-webkit-transform-origin: 50% 0%;
+		-webkit-transform: scale3d(1, 1, 1);
 	}
 }
 
