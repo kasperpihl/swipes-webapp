@@ -353,8 +353,11 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			models = @groupedTasks[ (section-1) ].tasks
 
 			if @listSortAttribute? and @listSortAttribute
+				newOnTop = true
+				if @newOnBottom
+					newOnTop = false
 				if !@groupedTasks[ (section-1) ].dontSort? or !@groupedTasks[ (section-1) ].dontSort
-					@groupedTasks[ (section-1) ].tasks = @sortTasksAndSetOrder(models, true)
+					@groupedTasks[ (section-1) ].tasks = @sortTasksAndSetOrder(models, newOnTop)
 
 			# Check filter for limitations
 			return @groupedTasks[ (section-1) ]
