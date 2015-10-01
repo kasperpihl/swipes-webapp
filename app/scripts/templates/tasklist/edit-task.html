@@ -30,7 +30,11 @@
 
 					<li class="assign" id="assign-text-button"></li>
 
-					<li class="assign-label hidden">
+					<%
+						var hiddenClass = data.task.get("assignees").length > 0 ? "hidden" : ""
+					%>
+
+					<li class="assign-label <%= hiddenClass %>">
 						<div class="arrow"></div>
 						<p class="assign-label-text">Click here to assign this task</p>
 					</li>
