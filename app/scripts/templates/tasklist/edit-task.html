@@ -1,100 +1,97 @@
 <div class="task-card">
 	<!-- Header -->
 	<div class="top">
-
+		
 		<!-- Title -->
-
+		
 		<h1 class="h2 task-title">
 			<div class="input-title content-editable"><%= data.task.get("title") %></div>
 		</h1>
-
+		
 		<!-- Title End -->
-
+		
 		<!-- Date -->
-
+		
 		<div class="schedule-container info-row open-schedule">
 			<div class="content-div info-label top-date">
-				<span class="month">MAY</span>
-				<span class="date">19</span>
+				<span class="year"><%= data.task.get("scheduleDateObj").year %></span>
+				<span class="month"><%= data.task.get("scheduleDateObj").date %></span>
+				<span class="time"><%= data.task.get("timeStr") %></span>
 			</div>
 		</div>
-
+		
 		<!-- Date end -->
-
+		
 		<!-- Assignees -->
-
+		
 		<section class="assignees-container info-row">
 			<div class="content-div">
 				<ul class="assignees-list">
-
+					
 					<li class="assign" id="assign-text-button"></li>
-
+					
+					<li class="assign-label hidden">
+						<div class="arrow"></div>
+						<p class="assign-label-text">Click here to assign this task</p>
+					</li>
+					
 					<% var assignText = "Assign People";
 						_.each(data.task.get("assignees"), function(userId){
-						assignText = "Assign more";
+						assignText = "Assign more"; 
 						var user = swipy.slackCollections.users.get(userId);
 					%>
-
+					
 					<li class="assignee" data-href="<%= userId %>">
 						<div class="picture-circular" style="background: url(<%= user.get("profile").image_48 %>) no-repeat; background-size: 40px 40px;"></div>
 						<div class="assignee-hover"></div>
 					</li>
-					<% });
+					<% }); 
 
 					%>
-
+						
 				</ul>
 			</div>
 		</section>
-
+		
 		<!-- Assignees end -->
-
+		
 	</div>
-
+	
 	<!-- Header end -->
-
+	
 	<!-- Action steps -->
-
+		
 	<section class="action-step-container info-row">
-
+		
 	</section>
-
+	
 	<!-- Action steps end -->
-
+	
 	<!-- Buttons -->
-
+	
 	<div class="tasks-buttons-container">
-		<div class="delete-confirmation">
-			<div class="title-confirm">
-				<h2 class="confirmation">Delete this task?</h2>
-			</div>
-			<div class="options-confirm">
-				<div class="no">NO</div>
-				<div class="yes">YES</div>
-			</div>
-		</div>
 		<div class="btn delete delete-task">
 			<svg class="icon icon-actionDelete">
 				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarDelete"></use>
-			</svg>
-			DELETE
+			</svg>	
+			<h3>DELETE</h3>
 		</div>
 		<div class="btn schedule open-schedule">
 			<svg class="icon">
 				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarSnooze"></use>
 			</svg>
-			SCHEDULE
+			<h3>SCHEDULE</h3>
 		</div>
 		<div class="btn complete comlete-task">
 			<svg class="icon">
 				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
 			</svg>
-			COMPLETE
+			<h3>COMPLETE</h3>
 		</div>
 	</div>
-
+	
 	<!-- Buttons end -->
-
+	
 </div>
 
 
