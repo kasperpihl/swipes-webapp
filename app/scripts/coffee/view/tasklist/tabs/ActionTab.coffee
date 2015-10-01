@@ -27,7 +27,6 @@ define [
 			@taskHandler?.destroy()
 			@taskList?.remove()
 
-
 			@taskList = new TaskList()
 			@taskList.setActionList()
 			@taskList.targetSelector = ".edit-task .action-list-container"

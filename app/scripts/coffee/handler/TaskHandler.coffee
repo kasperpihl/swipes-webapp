@@ -183,10 +183,6 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
-				###if model.get("projectLocalId").startsWith("D")
-					channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
-					if channel
-						targetChannel = "@" + channel.getName()###
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 
 				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
@@ -195,7 +191,6 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Completed Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Action Step", {"Type": model.getType() })
-			#@bouncedReloadWithEvent()
 
 		###
 			TaskCard Delegate
