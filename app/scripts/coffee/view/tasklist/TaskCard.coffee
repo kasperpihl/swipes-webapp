@@ -11,6 +11,7 @@ define [
 		className: "task-item"
 		events:
 			"click .actions a": "handleAction"
+			"click .relative-container" : "clickedTask"
 		initialize: ->
 			throw new Error("Model must be added when constructing a TaskCard") if !@model?
 			@template = _.template TaskTmpl, {variable: "data" }

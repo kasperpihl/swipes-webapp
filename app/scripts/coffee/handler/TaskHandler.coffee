@@ -163,14 +163,13 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				)
 			false
 		dragHandlerDidClick: (dragHandler, e) ->
-			return if !localStorage.getItem("EnableThreadedConversations")
 			hitTarget = $(e.target)
 			clickedId = @idForEvent(e)
 
 			model = @collection.get( @taskCollectionIdFromHtmlId(clickedId) )
 
 			taskCard = $(clickedId)
-			@handleClickForModelAndTaskCard(e, model, taskCard, dragHandler)
+			@handleClickForModelAndTaskCard(e, model, taskCard)
 			false
 
 		###
@@ -212,6 +211,8 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 		###
 			TaskCard Delegate
 		###
+		taskDidClick: (taskCard, e) ->
+			@handleClickForModelAndTaskCard(e, taskCard.model, taskCard.$el)
 		taskCardDidComplete: (taskCard) ->
 			model = taskCard.model
 
@@ -314,7 +315,9 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 			return peopleToAssign
 
-		handleClickForModelAndTaskCard: (e, model, taskCard, dragHandler) ->
+		handleClickForModelAndTaskCard: (e, model, taskCard) ->
+			return if !localStorage.getItem("EnableThreadedConversations")
+
 			if model.get("selected") or e.metaKey or e.ctrlKey
 				model.save("selected", !model.get("selected"))
 			else if taskCard.hasClass 'task-item'
