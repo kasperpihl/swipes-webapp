@@ -93,8 +93,8 @@ define [
 				if model.getState() is "active" then return -1
 				else if model.getState() is "scheduled"
 					schedule = model.get("schedule")
-					return 9999999999 if !schedule? or !schedule
-					return 9999999998 if !@showLaterTasks
+					return 9999999998 if !schedule? or !schedule
+					return 9999999997 if !@showLaterTasks
 					return moment(schedule).startOf('day').unix()
 			)
 			
