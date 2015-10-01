@@ -18,6 +18,7 @@ define [
 			"click .assignees-list .assignee": "clickedAssignee"
 			"click #assign-text-button": "clickedAssign"
 			"click .open-schedule": "clickedSchedule"
+			"click .assign-task": "clickedAssign"
 			"click .delete-task": "deleteTask"
 			"click .comlete-task": "completeTask"
 
@@ -30,7 +31,14 @@ define [
 			@$el.html @template( task: @model )
 			setTimeout( =>
 				@loadActionSteps()
+				if @? and (!@model.get("assignees") or @model.get("assignees").length is 0)
+					@$el.find(".assign-label").removeClass("hidden")
+					setTimeout( => 
+						if @? and @$el
+							@$el.find(".assign-label").addClass("hideAnimate")
+					, 4000)
 			,0)
+
 			return @
 
 
@@ -127,7 +135,7 @@ define [
 					cancelText: 'NO'
 					submitText: 'YES'
 					text: "Are you sure you want to delete this task? You can't undo that action!"
-
+			false
 		remove: ->
 			@actionTab?.remove()
 			@$el.empty()

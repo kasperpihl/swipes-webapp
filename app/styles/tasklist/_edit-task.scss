@@ -134,7 +134,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			transition: .2s ease-in-out;
 			
 			.input-title.content-editable {
-				width: calc(100% - 100px);
+				width: calc(100% - 70px);
 				font: 16px $font-normal;
 				padding: 30px 0;
 				color: $sidebar-black-header;
@@ -261,8 +261,8 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						
 						&.assign {
 							margin-right: 5px;
-							background-color: $sidebar-black-header;
-;
+							//background-color: $sidebar-black-header;
+;							border: 1px solid $sidebar-black-header;
 							position: relative;
 							
 							&:before {
@@ -270,7 +270,8 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								width: 2px;
 								height: 10px;
-								background-color: $white-background;
+								background: $sidebar-black-header;
+								//background-color: $white-background;
 								top: calc(50% - 5px);
 								left: calc(50% - 1px);
 							}
@@ -280,7 +281,8 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								height: 2px;
 								width: 10px;
-								background-color:$white-background;
+								background: $sidebar-black-header;
+								//background-color:$white-background;
 								left: calc(50% - 5px);
 								top: calc(50% - 1px);
 							}
@@ -292,9 +294,13 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 							background-color: $sidebar-black-header;
 							position: relative;
 							overflow: visible;
+							opacity: 1.0;
 							margin-left: 12px;
 							z-index: 99;
-							
+							&.hideAnimate{
+								opacity: 0;
+								@include transition(opacity 0.5s ease-out);
+							}
 							.arrow {
 								position: absolute;
 								width: 20px;
@@ -620,13 +626,13 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 				transition: .2s ease-in-out;
 			}
 			
-			&.delete:hover > h3 {
+			&.delete-task:hover > h3 {
 				color: #e74c3c;
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
-			&.delete:hover > svg {
+			&.delete-task:hover > svg {
 				fill: #e74c3c;
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
@@ -656,13 +662,13 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 				transition: .2s ease-in-out;
 			}
 			
-			&.delete:hover {
+			&.delete-task:hover {
 				background-color: rgba($sidebar-black-header, .05);
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
 			}
 			
-			&.schedule:hover {
+			&.delete-task:hover {
 				background-color: rgba($sidebar-black-header, .05);
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
@@ -676,178 +682,33 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		}
 	}
 }
-
-p.edit-microcopy {
-	width: 90%;
-	margin: 25px auto;
-	text-align: center;
-	font: 14px $font-normal;
-	color: rgba($sidebar-black-header,.6);
-}
-
-/*.edit-task{
-	max-width: 400px;
-	padding-top:25px;
-	margin: 0 auto;
+.task-footer{
 	position: relative;
-	.action-step-container{
-		.action-list-container{
-			.section-list{
-				margin-bottom: 0;
-			}
-		}
-		.action-item{
-			padding-top: 10px;
-			padding-bottom: 10px;
-			h2{
-				margin-bottom:0;
-				margin-top: 0;
-				padding-left:16%;
-			}
-			input{
-				font: 0.7em/1.8 $font-normal;
-				width: 80%;
-				margin-left: 16%;
-			}
-		}
-		.add-action-container.action-item{
-			padding: 0;
-			input{
-				margin-left:0;
-				background: none;
-				padding-top: 5px;
-				padding-bottom: 4px;
-				padding-left:16%;
-			}
-		}
-	}
-	
-	.back-button{
-		position:absolute;
-		left:10px;
-		top: 34px;
+	max-width: 400px;
+	width: 90%;
+	margin: 0 auto;
+	.delete-task{
+		position: absolute;
+		right: 5px;
+		top: 50%;
+		margin-top: -10px;
 		svg{
-			width: 16px;
-			height: 16px;
+			fill: rgba($sidebar-black-header,.6);
+			width:20px;
+			height:20px;
+		}
+		&:hover svg{
+			fill: rgba($sidebar-black-header,1.0);
 		}
 	}
-	.task-title {
-		position: relative;
-		font-size: 16px;
-		font-family: $font-normal;
-
-		margin-bottom: 12px;
-		margin-top: 0;
-		margin-left:25px;
-
-		
-		// legacy code
-		// input{
-		// 	font-family: $font-light;
-		// }
+	p.edit-microcopy {
+		width: 90%;
+		margin: 25px auto;
+		text-align: center;
+		font: 14px $font-normal;
+		color: rgba($sidebar-black-header,.6);
 	}
-	.info-label, .input-note{
-		font-size:16px;
-		padding-top:12px;
-		padding-left:54px;
-	}
-	.info-row{
-		position:relative;
-		min-height:40px;
-		.side-icon{
-			position: absolute;
-			left:10%;
-			top: 50%;
-			margin-top: -7px;
-			margin-left: -7px;
-			height: 14px;
-			width: 14px;
-			svg{
-				width:14px;
-				height: 14px;
-				opacity: 0.6;
-			}
-		}
-		.content-div{
-			padding-left:16%;
-			width:100%;	
-		}
-	}
-	.assignees-list{
-		$imageHeight:28px;
-		padding-top:17px;
-		padding-bottom: 10px;
-		margin: 0;
-		li{
-			display: inline-block;
-			position:relative;
-			&.assignee:hover{
-				.hover-lay{
-					display: block;
-				}
-			}
-			.picture-circular{
-				width:$imageHeight;
-				height:$imageHeight;
-				@include border-radius($imageHeight/2);
-				text-indent: -9999px;
-				white-space: nowrap;
-			}
-			.hover-lay{
-				position: absolute;
-				display:none;
-				@include border-radius($imageHeight/2);
-				width: $imageHeight;
-				height: $imageHeight;
-				text-align:center;
-				top: 0;
-				left: 0;
-				color: white;
-				padding-top: 4px;
-				background: rgba(50,50,50,0.5);
-			}
-			#assign-text-button{
-				font: 14px $font-normal;
-				line-height: 14px;
-				color: $gray;
-				padding-left: 10px;
-				text-decoration: underline;
-				&:hover{
-					text-decoration: none;
-				}
-			}
-		}
-	}
-	
-	.has-icon {
-		// Can't use em, because font-size might vary
-		padding-left: 10px;
-		position: relative;
-
-		p {
-			line-height: 1;
-		}
-
-		.icon-hold {
-			display: inline-block;
-			position: absolute;
-			left: 44px;
-			top: 12px;
-			svg {
-				fill: $gray;
-				width: 12px;
-				height: 12px;
-			}
-			border:0;
-		}
-	}
-
-	> section {
-		margin-bottom: 1.0em;
-		min-height: 40px;
-	}
-}*/
-
+}
 @-webkit-keyframes task-full-ani {
 	0% {
 		-webkit-transform-origin: 50% 0%;

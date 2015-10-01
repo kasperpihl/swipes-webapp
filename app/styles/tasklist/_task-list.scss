@@ -14,6 +14,12 @@ $task-new-task-height: 61px;
 		height:100%;
 		padding-bottom: $task-new-task-height;
 	}
+	&.editMode{
+		.scroll-container{
+			padding-bottom: 0;
+		}
+	}
+	
 	.scroller{
 		width:100%;
 		height: 100%;
@@ -279,12 +285,14 @@ $meta-margin: 10px;
 	@include border-radius(10px);
 	
 }
-
-// Add task card
-.add-task-card-container {
+.add-task-container{
 	.editMode & {
 		display: none;
 	}
+}
+// Add task card
+.add-task-card-container {
+	
 	margin-bottom:20px;
 	max-width: 400px;
 
