@@ -91,22 +91,10 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 .task-card.open{
 	-webkit-animation: task-full-ani .3s forwards ease-in-out;
 	animation: task-full-ani .3s forwards ease-in-out;
-	.input-title.content-editable {
-		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-		animation: task-fade-ani .8s forwards ease-in-out;
-	}
-	.schedule-container.info-row {
-		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-		animation: task-fade-ani .8s forwards ease-in-out;
-	}
-	section.assignees-container.info-row {
-		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-		animation: task-fade-ani .8s forwards ease-in-out;
-	}
-	section.action-step-container.info-row {
-		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
-		animation: task-fade-ani .8s forwards ease-in-out;
-	}
+	.input-title.content-editable,
+	.schedule-container.info-row,
+	section.assignees-container.info-row,
+	section.action-step-container.info-row,
 	.tasks-buttons-container {
 		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
 		animation: task-fade-ani .8s forwards ease-in-out;
