@@ -38,13 +38,20 @@
 					<%
 						var hiddenClass = "hidden";
 					%>
-
-
+					
+					<li class="assign" id="assign-text-button"></li>
+					<li class="assign-label <%= hiddenClass %>">
+						<div class="arrow"></div>
+						<p class="assign-label-text">Assign a task</p>
+					</li>
+						
 					<% var assignText = "Assign People";
 						_.each(data.task.get("assignees"), function(userId){
 						assignText = "Assign more";
 						var user = swipy.slackCollections.users.get(userId);
 					%>
+					
+					
 					
 					<li class="assignee" data-href="<%= userId %>" title="<%= user.get('name') %>">
 
@@ -54,11 +61,6 @@
 					<% });
 
 					%>
-					<li class="assign" id="assign-text-button"></li>
-					<li class="assign-label <%= hiddenClass %>">
-						<div class="arrow"></div>
-						<p class="assign-label-text">Click here to assign this task</p>
-					</li>
 
 				</ul>
 			</div>

@@ -95,7 +95,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	.schedule-container.info-row,
 	section.assignees-container.info-row,
 	section.action-step-container.info-row,
-	.tasks-buttons-container {
+	.tasks-buttons-container, .task-footer {
 		-webkit-animation: task-fade-ani .8s forwards ease-in-out;
 		animation: task-fade-ani .8s forwards ease-in-out;
 	}
@@ -260,31 +260,19 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						}
 						
 						&.assign {
-							margin-right: 5px;
-							//background-color: $sidebar-black-header;
-;							border: 1px solid $sidebar-black-header;
+							width: 30px;
+							height: 30px;
+							margin-right: 10px;
+							background-color: $sidebar-black-header;
+							background-image: url('../styles/img/swipes-ui-team-icon-assign.png');
+							background-repeat: no-repeat;
+							background-size: 25px 25px;
+							background-position: center center;
 							position: relative;
 							
-							&:before {
-								content: '';
-								position: absolute;
-								width: 2px;
-								height: 10px;
-								background: $sidebar-black-header;
-								//background-color: $white-background;
-								top: calc(50% - 5px);
-								left: calc(50% - 1px);
-							}
-							
-							&:after {
-								content: '';
-								position: absolute;
-								height: 2px;
-								width: 10px;
-								background: $sidebar-black-header;
-								//background-color:$white-background;
-								left: calc(50% - 5px);
-								top: calc(50% - 1px);
+							&:hover {
+								-webkit-transform: scale3d(1,1,1);
+								transform: scale3d(1,1,1);
 							}
 						}
 						
@@ -720,12 +708,13 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	
 	p.edit-microcopy {
 		width: 90%;
-		margin: 25px auto;
+		margin: 40px auto;
 		text-align: center;
 		font: 14px $font-normal;
 		color: rgba($sidebar-black-header,.6);
 	}
 }
+
 @-webkit-keyframes task-full-ani {
 	0% {
 		-webkit-transform-origin: 50% 0%;
