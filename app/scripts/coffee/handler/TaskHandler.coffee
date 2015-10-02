@@ -297,7 +297,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			return peopleToAssign
 
 		handleClickForModelAndTaskCard: (e, model, taskCard) ->
-			return if !localStorage.getItem("EnableThreadedConversations")
+			#return if !localStorage.getItem("EnableThreadedConversations")
 			if model.isSubtask()
 				actions = []
 				if model.get("completionDate")
