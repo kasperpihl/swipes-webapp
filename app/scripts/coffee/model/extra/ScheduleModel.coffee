@@ -17,7 +17,7 @@ define ["underscore", "momentjs", "js/utility/TimeUtility"], (_, Moment, TimeUti
 				{ id: "day after tomorrow", title: @getDynamicTime( "Day After Tomorrow" ), disabled: no }
 				{ id: "this weekend", title: @getDynamicTime( "This Weekend" ), disabled: no }
 				{ id: "next week", title: @getDynamicTime( "Next Week" ), disabled: no }
-				{ id: "unspecified", title: @getDynamicTime( "Someday/Maybe" ), disabled: no }
+				{ id: "unspecified", title: @getDynamicTime( "Someday" ), disabled: no }
 				{ id: "at location", title: @getDynamicTime( "At Location" ), disabled: yes }
 				{ id: "pick a date", title: @getDynamicTime( "Pick A Date" ), disabled: no }
 			]
