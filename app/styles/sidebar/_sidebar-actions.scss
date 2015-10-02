@@ -270,6 +270,7 @@
 						color: $white-background;
 						background-color: $orange;
 						line-height: 15px;
+						-webkit-animation: notification-in .3s forwards ease-in-out;
 						animation: notification-in .3s forwards ease-in-out;
 					}
 				}
