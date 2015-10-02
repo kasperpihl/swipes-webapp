@@ -241,8 +241,6 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					@set("restrictedForMe",true)
 				else if @get("toUserId") is me.id and @get("userId") is me.id
 					@set("isPersonalTask", true)
-			if !@get("projectLocalId")
-				@set("isPersonalTask", true)
 		checkAssigned: ->
 			me = swipy.slackCollections.users.me()
 			if @get("toUserId") is me.id or @get("assignees") and _.indexOf(@get("assignees"), me.id) isnt -1

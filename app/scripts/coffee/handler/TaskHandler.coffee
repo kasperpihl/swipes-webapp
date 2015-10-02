@@ -13,7 +13,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			@collection.on("add remove reset change:order change:projectOrder change:schedule change:completionDate", @bouncedReloadWithEvent, @ )
 			Backbone.on("show-assign", @didPressAssign, @)
 			Backbone.on("move-to-now", @didMoveToNow, @)
-		reloadWithEvent: (e) ->
+		reloadWithEvent: () ->
 			Backbone.trigger("reload/taskhandler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
