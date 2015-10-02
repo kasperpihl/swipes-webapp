@@ -36,7 +36,7 @@ define [
 				@loadActionSteps()
 				if @? and (!@model.get("assignees") or @model.get("assignees").length is 0)
 					@$el.find(".assign-label").removeClass("hidden")
-					setTimeout( => 
+					setTimeout( =>
 						if @? and @$el
 							@$el.find(".assign-label").addClass("hideAnimate")
 					, 4000)
@@ -44,7 +44,7 @@ define [
 			setTimeout( =>
 				if @? and @$el
 					@$el.find(".task-card").removeClass("animateIn")
-				
+
 			, 1000)
 			return @
 

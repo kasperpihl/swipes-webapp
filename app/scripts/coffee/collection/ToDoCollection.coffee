@@ -4,7 +4,7 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 		localStorage: new Backbone.LocalStorage("ToDoCollection")
 		initialize: ->
 			_.bindAll( @ , "changedSchedule", "addChangeListenerForBridge" )
-			@on( "change:deleted", (model, deleted) => 
+			@on( "change:deleted", (model, deleted) =>
 				if !deleted
 					@add model
 			)
@@ -20,10 +20,9 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 				sofiMessage = capitalizedName + " added the action \"" + newTodo.getTaskLinkForSlack() + "\" to the task \"" + parentModel.getTaskLinkForSlack() + "\""
 				swipy.slackSync.sendMessageAsSofi(sofiMessage, newTodo.get("projectLocalId"))
-			
+
 			newTodo.save({}, {sync:true})
 		createTask: (str, options) ->
-
 			tags = @parseTags str
 			title = @parseTitle str
 			animateIn = yes
@@ -88,6 +87,7 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 		repairActionStepsRelations: ->
 			lostActionSteps = @filter (m) -> m.has("parentLocalId")
 			parentsById = {}
+			
 			for actionStep in lostActionSteps
 				parentId = actionStep.get "parentLocalId"
 				parent = parentsById[ parentId ]
@@ -104,7 +104,7 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 			@filter (m) -> m.getState() is "scheduled" and !m.isSubtask()
 		getScheduledLaterToday: ->
 			nowMoment = moment(new Date())
-			@filter (m) -> 
+			@filter (m) ->
 				if m.getState() is "scheduled" and !m.isSubtask()
 					return false if !m.get("schedule")? or !m.get("schedule")
 					return nowMoment.isSame(m.get("schedule"), "day")
@@ -114,7 +114,7 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 			@filter (m) -> m.getState() is "completed" and !m.isSubtask()
 		getCompletedToday: ->
 			nowMoment = moment(new Date())
-			@filter (m) -> 
+			@filter (m) ->
 				if m.getState() is "completed" and !m.isSubtask()
 					return false if !m.get("completionDate")? or !m.get("completionDate")
 					return nowMoment.isSame(m.get("completionDate"), "day")

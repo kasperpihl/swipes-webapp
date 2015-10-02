@@ -104,7 +104,10 @@ define [
 					@dragHandler = new DragHandler()
 					@dragHandler.delegate = @dragDelegate
 				if @actionList
-					@dragHandler.createDragAndDropElements(".action-item:not(.add-action-container) .relative-container")
+					selector = ".action-item:not(.add-action-container) .relative-container"
+					
+					if $(selector).length > 0
+						@dragHandler.createDragAndDropElements(selector)
 				else
 					@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card-container) .main-info-container")
 		taskCardById: (identifier) ->

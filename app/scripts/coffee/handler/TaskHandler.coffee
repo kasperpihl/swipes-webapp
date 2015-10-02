@@ -13,7 +13,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			@collection.on("add remove reset change:order change:projectOrder change:schedule change:completionDate", @bouncedReloadWithEvent, @ )
 			Backbone.on("show-assign", @didPressAssign, @)
 			Backbone.on("move-to-now", @didMoveToNow, @)
-		reloadWithEvent: ->
+		reloadWithEvent: (e) ->
 			Backbone.trigger("reload/taskhandler")
 		taskCollectionIdFromHtmlId: (taskHtmlId) ->
 			# #task-
@@ -91,9 +91,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 				if hit.position is "middle"
 					hitTask.addSubtask draggedTask, true
-					@bouncedReloadWithEvent()
 				else if hit.position is "bottom" or hit.position is "top"
-
 					fromOrder = draggedTask.get(@listSortAttribute)
 					targetOrder = hitTask.get(@listSortAttribute)
 					# if a task is moved up all affected should go down - otherwise up
@@ -118,7 +116,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 					# and selected tasks with order
 					_.invoke(selectedTasks, "updateOrder", @listSortAttribute, targetOrder)
-					@reloadWithEvent()
+
 					setTimeout(
 						=> _.invoke(selectedTasks, "set", "selected", false)
 					, 400)
