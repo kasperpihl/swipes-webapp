@@ -23,9 +23,11 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@apiRequest("rtm.start", {simple_latest: false}, (data, error) =>
 				@isStarting = null
 				if data and data.ok
+					@handleTeam(data.team) if data.team
 					@handleSelf(data.self) if data.self
 					@handleUsers(data.users) if data.users
 					@handleBots(data.bots) if data.bots
+
 					@_channelsById = {}
 					@handleChannels(data.channels) if data.channels
 					@handleChannels(data.groups) if data.groups
@@ -38,8 +40,12 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@openWebSocket(data.url)
 					localStorage.setItem("slackLastConnected", new Date())
 					Backbone.trigger('slack-first-connected')
-
 			)
+		handleTeam: (team) ->
+			collection = swipy.slackCollections.teams
+			model = collection.get(team.id)
+			model = collection.create(team) if !model
+			model.save(team)
 		handleSelf:(self) ->
 			collection = swipy.slackCollections.users
 			model = collection.get(self.id)
