@@ -601,7 +601,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 		
 		.btn {
 			height: 70px;
-			width: calc(100% / 3);
+			width: 50%;
 			cursor: pointer;
 			position: relative;
 			
@@ -680,7 +680,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 				transition: .2s ease-in-out;
 			}
 			
-			&.delete-task:hover {
+			&.schedule:hover {
 				background-color: rgba($sidebar-black-header, .05);
 				-webkit-transition: .2s ease-in-out;
 				transition: .2s ease-in-out;
@@ -699,20 +699,25 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	max-width: 400px;
 	width: 90%;
 	margin: 0 auto;
-	.delete-task{
-		position: absolute;
-		right: 5px;
-		top: 50%;
-		margin-top: -10px;
-		svg{
-			fill: rgba($sidebar-black-header,.6);
-			width:20px;
-			height:20px;
-		}
-		&:hover svg{
-			fill: rgba($sidebar-black-header,1.0);
+	.delete-task-button {
+		padding: 10px 20px;
+		color: rgba($sidebar-black-header, .7);
+		border: 1px solid rgba($sidebar-black-header, .2);
+		font: 12px $font-normal;
+		width: 150px;
+		text-align: center;
+		border-radius: 5px;
+		margin: 25px auto;
+		cursor: pointer;
+		transition: .1s linear;
+
+		&:hover {
+			background-color: rgba($sidebar-black-header, .7);
+			color: $white-background;
+			transition: .1s linear;
 		}
 	}
+	
 	p.edit-microcopy {
 		width: 90%;
 		margin: 25px auto;
