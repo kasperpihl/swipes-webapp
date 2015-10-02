@@ -52,13 +52,6 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	justify-content: center;
 }
 
-.no-current-tasks-state {
-	max-width: 400px;
-	width: 90%;
-	background-image: url('../styles/img/swipes-ui-team-trumpet.png') no-repeat center center fixed; 
-  	background-size: cover;
-}
-
 .go-back-expanded {
 	max-width: 400px;
 	width: 90%;
@@ -283,10 +276,16 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 							}
 						}
 						
+						&:hover ~ .assign-label.hideAnimate {
+							opacity: 1;
+							-webkit-transition: .25s ease-in-out;
+							transition: .25s ease-in-out;
+						}
+						
 						&.assign-label {
 							border-radius: 5px;
 							width: auto;
-							background-color: $sidebar-black-header;
+							background-color: lighten(black,50%);
 							position: relative;
 							overflow: visible;
 							opacity: 1.0;
@@ -303,7 +302,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								top: 6px;
 								left: -3px;
 								transform: rotate(45deg);
-								background-color: $sidebar-black-header;
+								background-color: lighten(black,50%);
 								z-index: 1;
 							}
 							

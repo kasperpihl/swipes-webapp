@@ -165,7 +165,7 @@ define [
 						if @currentUser.get("name") is "slackbot"
 							title = "You, slackbot & s.o.f.i's tasks"
 				else if key is "9999999997"
-					title = "Upcoming Tasks ( " + numberOfTasksForSection + " )"
+					title = "Upcoming ( " + numberOfTasksForSection + " )"
 					includeTasks = false
 					expandClass = "future-tasks"
 				else if key is "9999999998"
