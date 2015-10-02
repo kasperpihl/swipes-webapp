@@ -7,11 +7,13 @@ if(data.task.get("completionDate")) completeClass = "complete"; %>
 			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarDelete"></use>
 		</svg>
 	</div>-->
+	<% if(!completeClass.length) { %>
 	<div class="complete" title="Complete">
 		<svg class="icon">
 			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-quickBarComplete"></use>
 		</svg>
 	</div>
+	<% } %>
 </div>
 
 <div class="relative-container">

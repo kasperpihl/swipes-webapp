@@ -303,11 +303,16 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			if model.isSubtask()
 				console.log "pressed action"
 				actions = []
+				if model.get("completionDate")
+					actions.push({name: "Uncomplete", icon: "quickBarNow", action: "uncomplete"})
 				actions.push({name: "Edit", icon: "dragMenuMove", action: "edit"})
 				actions.push({name: "Delete", icon: "navbarDelete", action: "delete"})
+
 				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: e.pageX, top: e.pageY}, (result) ->
 					if result is "edit"
 						taskCard.find(".input-action-title").attr("contentEditable", true).focus()
+					if result is "uncomplete"
+						model.scheduleTask()
 					if result is "delete"
 						model.deleteTask()
 				)
