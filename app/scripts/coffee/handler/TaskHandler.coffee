@@ -301,7 +301,6 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 		handleClickForModelAndTaskCard: (e, model, taskCard) ->
 			return if !localStorage.getItem("EnableThreadedConversations")
 			if model.isSubtask()
-				console.log "pressed action"
 				actions = []
 				if model.get("completionDate")
 					actions.push({name: "Uncomplete", icon: "quickBarNow", action: "uncomplete"})

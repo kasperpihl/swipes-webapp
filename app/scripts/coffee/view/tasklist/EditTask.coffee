@@ -28,7 +28,7 @@ define [
 			@template = _.template EditTaskTmpl, {variable: "data" }
 			@contentTemplate = _.template EditTaskContentTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
-			@model.on("change:assignees change:schedule", @bouncedRender, @ )
+			@model.on("change:assignees change:schedule change:subtasksLocal", @bouncedRender, @ )
 			@$el.html @template()
 		render: ->
 			@$el.find(".task-card").html @contentTemplate( task: @model )

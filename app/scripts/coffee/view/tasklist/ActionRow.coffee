@@ -19,7 +19,7 @@ define [
 			@bouncedRender = _.debounce(@render, 5)
 		keyUpTitle: (e) ->
 			if e.keyCode is 13 and ($('.input-action-title').is(':focus') or $('.input-action-title *').is(':focus'))
-				$('.input-action-title').blur()
+				@$el.find('.input-action-title').blur()
 				window.getSelection().removeAllRanges()
 				e.preventDefault()
 		keyDownTitle: (e) ->
@@ -27,13 +27,12 @@ define [
 				e.preventDefault()
 		updateTitle: ->
 			title = @validateTitle(@getTitle())
-
+			@$el.find(".input-action-title").attr("contentEditable", false)
 			if !title
 				@$el.find( ".input-action-title" ).html(@model.get("title"))
 				return
 
 			@model.updateTitle title
-			Backbone.trigger("reload/taskhandler")
 		getTitle: ->
 			@$el.find( ".input-action-title" ).html().replace(/&nbsp;/g , " ")
 		validateTitle: (title) ->
@@ -54,27 +53,7 @@ define [
 				#@animateWithClass("fadeOutRight").then ->
 				#self.$el.hide()
 				self.taskDelegate.taskActionStepComplete(self, @taskDelegate.delegate.model) # we pass here the parent task's model
-			else if currentTarget.hasClass("delete") and _.isFunction(@taskDelegate.taskActionStepDelete)
-				#@animateWithClass("fadeOutRight").then ->
-				#self.$el.hide()
-				self.taskDelegate.taskActionStepDelete(self, @taskDelegate.delegate.model) # we pass here the parent task's model
-
 			false
-		animateWithClass: (animateClass) ->
-			#T_TODO make this a reusable plugin
-			self = @
-			dfd = new $.Deferred()
-
-			@$el.addClass("animated")
-			@$el.addClass(animateClass)
-
-			setTimeout(->
-				self.$el.removeClass("animated")
-				self.$el.removeClass(animateClass)
-				dfd.resolve()
-			, 300)
-
-			return dfd.promise()
 		render: ->
 			@$el.attr('id', "task-"+@model.id )
 			@$el.html @template( task: @model )
