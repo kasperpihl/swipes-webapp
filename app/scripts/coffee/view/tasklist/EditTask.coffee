@@ -43,7 +43,7 @@ define [
 			,0)
 			setTimeout( =>
 				if @? and @$el
-					@$el.removeClass("open")
+					@$el.find(".task-card").removeClass("animateIn")
 				
 			, 1000)
 			return @
