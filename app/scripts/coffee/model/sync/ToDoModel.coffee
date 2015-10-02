@@ -322,6 +322,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			schedule = @get "schedule"
 
 			if !schedule
+				@unset("scheduleDateObj")
 				return @set( "scheduleStr", "unspecified" )
 
 			now = moment()
