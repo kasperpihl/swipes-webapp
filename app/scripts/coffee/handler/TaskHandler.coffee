@@ -10,7 +10,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			@bouncedReloadWithEvent = _.debounce( @reloadWithEvent, 5 )
 		loadCollection: (collection) ->
 			@collection = collection
-			@collection.on("add remove reset change:order change:projectOrder change:schedule", @bouncedReloadWithEvent, @ )
+			@collection.on("add remove reset change:order change:projectOrder change:schedule change:completionDate", @bouncedReloadWithEvent, @ )
 			Backbone.on("show-assign", @didPressAssign, @)
 			Backbone.on("move-to-now", @didMoveToNow, @)
 		reloadWithEvent: ->
@@ -191,24 +191,6 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Completed Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Action Step", {"Type": model.getType() })
-
-		taskActionStepDelete: (task, parentTaskModel) ->
-			model = task.model
-
-			model.deleteTask()
-
-			if model.get("projectLocalId")
-				targetChannel = model.get("projectLocalId")
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
-
-				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
-					sofiMessage = capitalizedName + " deleted the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
-					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
-
-			isMyTasks = if @isMyTasks? then "Yes" else "No"
-			swipy.analytics.logEvent("[Engagement] Deleted Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
-			swipy.analytics.sendEventToIntercom("Deleted Action step", {"Type": model.getType() })
-
 		###
 			TaskCard Delegate
 		###
@@ -318,13 +300,23 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 		handleClickForModelAndTaskCard: (e, model, taskCard) ->
 			return if !localStorage.getItem("EnableThreadedConversations")
-
+			if model.isSubtask()
+				console.log "pressed action"
+				actions = []
+				actions.push({name: "Edit", icon: "dragMenuMove", action: "edit"})
+				actions.push({name: "Delete", icon: "navbarDelete", action: "delete"})
+				swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: e.pageX, top: e.pageY}, (result) ->
+					if result is "edit"
+						taskCard.find(".input-action-title").attr("contentEditable", true).focus()
+					if result is "delete"
+						model.deleteTask()
+				)
+				return
 			if model.get("selected") or e.metaKey or e.ctrlKey
 				model.save("selected", !model.get("selected"))
 			else if taskCard.hasClass 'task-item'
 				@editMode = true
 				if @isMyTasks
-					console.log "is my tasks"
 					swipy.router.navigate("tasks/"+model.id, {trigger: true})
 				else
 					swipy.router.navigate("task/"+model.id, {trigger: true})

@@ -71,7 +71,6 @@ define [
 
 				for task in sectionData.tasks
 					numberOfTasks++
-
 					if @actionList
 						taskEl = new ActionRow({model: task})
 					else
@@ -98,16 +97,14 @@ define [
 					@$el.find(".empty-text").append("<div class=\"description\">"+ emptyTitles.emptyDescription+"</div>")
 
 			Backbone.trigger("update/numberOfTasks", numberOfTasks)
-
 			if @enableDragAndDrop and numberOfTasks > 0
 				if !@dragDelegate?
 					throw new Error("TaskList must have dragDelegate to enable Drag & Drop")
 				if !@dragHandler?
 					@dragHandler = new DragHandler()
 					@dragHandler.delegate = @dragDelegate
-				console.log "adding drag drop"
 				if @actionList
-					@dragHandler.createDragAndDropElements(".action-item:not(.add-action-container)")
+					@dragHandler.createDragAndDropElements(".action-item:not(.add-action-container) .relative-container")
 				else
 					@dragHandler.createDragAndDropElements(".task-item:not(.add-task-card-container) .main-info-container")
 		taskCardById: (identifier) ->

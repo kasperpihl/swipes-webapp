@@ -52,11 +52,11 @@ define [
 
 			if currentTarget.hasClass("complete") and _.isFunction(@taskDelegate.taskActionStepComplete)
 				#@animateWithClass("fadeOutRight").then ->
-				self.$el.hide()
+				#self.$el.hide()
 				self.taskDelegate.taskActionStepComplete(self, @taskDelegate.delegate.model) # we pass here the parent task's model
 			else if currentTarget.hasClass("delete") and _.isFunction(@taskDelegate.taskActionStepDelete)
 				#@animateWithClass("fadeOutRight").then ->
-				self.$el.hide()
+				#self.$el.hide()
 				self.taskDelegate.taskActionStepDelete(self, @taskDelegate.delegate.model) # we pass here the parent task's model
 
 			false

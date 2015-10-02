@@ -403,10 +403,15 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 					.section {
 						ul.section-list {
 							li.action-item {
+								.relative-container{
+									width:100%;
+									height:100%;
+								}
 								width: 100%;
 								height: 50px;
 								position: relative;
 								padding-left: 50px;
+								padding-right:40px;
 								
 								@extend %flex;
 								-webkit-align-items: center;
@@ -431,7 +436,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								.action-step-buttons {
 									height: 50px;
 									position: absolute;
-									width: 64px;
+									width: 40px;
 									top: 0;
 									right: 0;
 									opacity: 0;
@@ -487,31 +492,35 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								}
 								
 								.action-container {
-									.relative-container {
-										width: 100%;
-										height: 50px;
-										@extend %flex;
-										-webkit-align-items: center;
-										align-items: center;
+									width: 100%;
+									height: 50px;
+									@extend %flex;
+									-webkit-align-items: center;
+									align-items: center;
+									h2.title {
+										padding: 0;
+										font: 13px $font-bold;
+										color: $sidebar-black-header;
+										&.complete{
+											color: $unselected-color;
+										}
 										
-										h2.title {
+										width: 100%;
+										span.task-dot {
+											width: 10px;
+											height: 10px;
+											border: 2px solid $yellow;
+											&.complete{
+												border: 2px solid $green;
+											}
+											border-radius: 50%;
+											position: absolute;
+											left: -25px;
+										}
+										
+										.input-action-title.content-editable {
 											padding: 0;
-											font: 13px $font-bold;
-											color: $sidebar-black-header;
-											
-											span.task-dot {
-												width: 10px;
-												height: 10px;
-												border: 2px solid $yellow;
-												border-radius: 50%;
-												position: absolute;
-												left: -25px;
-											}
-											
-											.input-action-title.content-editable {
-												padding: 0;
-												margin-top: -4px;
-											}
+											margin-top: -4px;
 										}
 									}
 								}

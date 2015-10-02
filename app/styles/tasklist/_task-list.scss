@@ -249,6 +249,9 @@ $meta-margin: 10px;
 		&.black{
 			border: 2px solid $sidebar-dark-color;
 		}
+		&.complete{
+			border: 2px solid $green;
+		}
 		&.calendar-event{
 			h2{
 				height:30px;

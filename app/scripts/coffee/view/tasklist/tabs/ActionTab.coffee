@@ -24,13 +24,14 @@ define [
 			@$el.find(".add-action-outer-container").html(@addActionRow.el)
 			return @
 		loadActionSteps: ->
+
 			@taskHandler?.destroy()
 			@taskList?.remove()
 
 			@taskList = new TaskList()
 			@taskList.setActionList()
 			@taskList.targetSelector = ".edit-task .action-list-container"
-			@taskList.enableDragAndDrop = false
+			@taskList.enableDragAndDrop = true
 
 			@taskHandler = new TaskHandler()
 			@taskHandler.delegate = @
@@ -53,7 +54,7 @@ define [
 		taskHandlerSortAndGroupCollection: (taskHandler, collection) ->
 			tasks = collection.models
 
-			tasks = _.filter collection.models, (m) -> !m.get("completionDate")
+			#tasks = _.filter collection.models, (m) -> !m.get("completionDate")
 
 			return [ { "leftTitle": null, "rightTitle": null, "tasks": tasks }]
 		remove: ->
