@@ -189,6 +189,19 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Completed Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Action Step", {"Type": model.getType() })
+
+		taskActionStepDidDelete: (model, parentTaskModel) ->
+			if model.get("projectLocalId")
+				targetChannel = model.get("projectLocalId")
+				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+
+				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+					sofiMessage = capitalizedName + " deleted the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
+					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+
+			isMyTasks = if @isMyTasks? then "Yes" else "No"
+			swipy.analytics.logEvent("[Engagement] Deleted Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
+			swipy.analytics.sendEventToIntercom("Deleted Action step", {"Type": model.getType() })
 		###
 			TaskCard Delegate
 		###
@@ -298,7 +311,11 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 		handleClickForModelAndTaskCard: (e, model, taskCard) ->
 			return if !localStorage.getItem("EnableThreadedConversations")
+
+			self = @
+
 			if model.isSubtask()
+				console.log model.get("parentLocalId")
 				actions = []
 				if model.get("completionDate")
 					actions.push({name: "Uncomplete", icon: "quickBarNow", action: "uncomplete"})
@@ -311,7 +328,10 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 					if result is "uncomplete"
 						model.scheduleTask()
 					if result is "delete"
+						parentModel = swipy.collections.todos.get(model.get("parentLocalId"))
+
 						model.deleteTask()
+						self.taskActionStepDidDelete model, parentModel
 				)
 				return
 			if model.get("selected") or e.metaKey or e.ctrlKey
