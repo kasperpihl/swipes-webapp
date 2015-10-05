@@ -11,7 +11,9 @@ $padding: 20px;
 	cursor: pointer;
 	opacity: 0;
 	
+	-webkit-animation: fade-this-in .3s ease-in-out forwards;
 	animation: fade-this-in .3s ease-in-out forwards;
+	-webkit-animation-delay: .15s;
 	animation-delay: .15s;
 	
 	&:not(:last-child) {
@@ -42,7 +44,30 @@ $padding: 20px;
 	background: $gray-background;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	
+	-webkit-animation: come-in .3s ease-in-out forwards;
 	animation: come-in .3s ease-in-out forwards;
+}
+
+@-webkit-keyframes come-in {
+	0% {
+		-webkit-transform-origin: 50% 0%;
+		-webkit-transform: scale3d(1, 0, 1);
+	}
+	
+	100% {
+		-webkit-transform-origin: 50% 0%;
+		-webkit-transform: scale3d(1, 1, 1);
+	}
+}
+
+@-webkit-keyframes fade-this-in {
+	0% {
+		opacity: 0;
+	}
+	
+	100% {
+		opacity: 1;
+	}
 }
 
 @keyframes come-in {
