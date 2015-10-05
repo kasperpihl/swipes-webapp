@@ -134,7 +134,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 			transition: .2s ease-in-out;
 			
 			.input-title.content-editable {
-				width: calc(100% - 70px);
+				width: calc(100% - 80px);
 				font: 16px $font-normal;
 				padding: 30px 0;
 				color: $sidebar-black-header;
@@ -245,6 +245,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						height: 30px;
 						border-radius: 50%;
 						box-shadow: $mat-sha-one;
+						background-color: transparent;
 						cursor: pointer;
 						-webkit-transition: .2s ease-in-out;
 						transition: .2s ease-in-out;
@@ -252,6 +253,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 						overflow: hidden;
 						
 						&:hover {
+							background-color: $sidebar-black-header;
 							-webkit-transform: scale3d(1.15,1.15,1.15);
 							transform: scale3d(1.15,1.15,1.15);
 							box-shadow: $mat-sha-two;
@@ -338,6 +340,12 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								transition: .25s ease-in-out;
 							}
 							
+							&:hover > .picture-circular {
+								opacity: .3;
+								-webkit-transition: .25s ease-in-out;
+								transition: .25s ease-in-out;
+							}
+							
 							.picture-circular {
 								width: 40px;
 								height: 40px;
@@ -352,7 +360,6 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								position: absolute;
 								top: 0;
 								left: 0;
-								background-color: rgba($sidebar-black-header,.7);
 								opacity: 0;
 								border-radius: 50%;
 								cursor: pointer;

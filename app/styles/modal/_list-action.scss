@@ -4,11 +4,23 @@ $padding: 20px;
 	$icon-size: 20px;
 	$leftWidth: $icon-size + $padding * 2;
 	position:relative;
-	color: white;
-	padding:($padding/2) $padding;
+	color: rgba($sidebar-black-header,.5);
+	padding: $padding;
 	font: 16px/1 $font-normal;
+	transition: .1s ease-in-out;
+	cursor: pointer;
+	opacity: 0;
+	
+	animation: fade-this-in .3s ease-in-out forwards;
+	animation-delay: .15s;
+	
+	&:not(:last-child) {
+		border-bottom: 1px solid darken($gray-background,10%);
+	}
+	
 	&:hover{
-		background: #595959;
+		background: darken($gray-background,10%);
+		transition: .1s ease-in-out;
 	}
 	&.hasIcon{
 		padding-left:$leftWidth;
@@ -21,13 +33,36 @@ $padding: 20px;
 		margin-top: -$icon-size/2;
 		width:$icon-size;
 		height:$icon-size;
-		fill: $unselected-color;
+		fill: rgba($sidebar-black-header,.5);
 	}
 	min-width:180px;
 }
 .list-action-modal{
-	background: $sidebar-button-active-background-gray;
-	padding-top:10px;
-	padding-bottom: 10px;
-	@include border-radius(10px);
+	overflow: hidden;
+	background: $gray-background;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	
+	animation: come-in .3s ease-in-out forwards;
+}
+
+@keyframes come-in {
+	0% {
+		transform-origin: 50% 0%;
+		transform: scale3d(1, 0, 1);
+	}
+	
+	100% {
+		transform-origin: 50% 0%;
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+@keyframes fade-this-in {
+	0% {
+		opacity: 0;
+	}
+	
+	100% {
+		opacity: 1;
+	}
 }
