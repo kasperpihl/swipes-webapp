@@ -242,7 +242,7 @@ $meta-margin: 10px;
 		margin-left: - $action-dot-size/2;
 		margin-top: - $action-dot-size/2;
 		border: 2px solid $yellow;
-		@include border-radius($action-dot-size/2);
+		@include border-radius($action-dot-size/5);
 
 		width: $action-dot-size;
 		height: $action-dot-size;
@@ -264,6 +264,13 @@ $meta-margin: 10px;
 // Design for cards
 .card-container{
 	background:#fff;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 1px 6px rgba(0, 0, 0, 0.1);
+	transition: .3s ease-in-out;
+	
+	&:hover {
+		box-shadow: 0 6px 12px rgba(0,0,0,0.19), 0 3px 6px rgba(0,0,0,0.09);
+		transition: .3s ease-in-out;
+	}
 	.main-info-container{
 		padding:5px;
 		padding-left: $left-padding;
@@ -283,9 +290,8 @@ $meta-margin: 10px;
 			display:block;
 		}
 	}
-	@include card-shadow(6px, 1px);
 	@include transition(all 0.1s ease-out);
-	@include border-radius(10px);
+	@include border-radius(5px); 
 	
 }
 .add-task-container{
