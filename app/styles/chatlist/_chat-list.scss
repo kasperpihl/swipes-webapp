@@ -306,13 +306,27 @@ $chat-new-message-height: 60px;
 	position:absolute;
 	bottom: 0;
 	width:100%;
-	height: $chat-new-message-height;
+	min-height: 40px;
 	padding-top: 2px;
+	background-color: $white-background;
+	z-index: 9999;
 	.input-container{
 		width:94%;
-		height:100%;
+		min-height:100%;
 		margin-left:3%;
 		border-top: 2px solid #DDDDDD;
+		padding: 10px 0;
+		
+		textarea {
+			width: 100%;
+			min-height: 40px;
+			max-height: 160px;
+			margin: 0;
+			resize: none;
+			border: none;		
+			font: 14px $font-light;
+			padding: 10px 64px;
+		}
 	}
 	#file-input{
 		display:none;
@@ -333,12 +347,20 @@ $chat-new-message-height: 60px;
 		position:absolute;
 		width: 40px;
 		height:40px;
-		right: 7px;
-		top:14px;
+		left: 3%;
+		top: calc(50% - 20px);
+		border-right: 1px solid rgba($sidebar-black-header, .2);
+		cursor: pointer;
 		svg{
 			height: 20px;
 			width: 20px;
-			fill: $unselected-color;
+			margin-top: calc(50% - 10px);
+			margin-left: calc(50% - 20px);
+			fill: rgba($sidebar-black-header, .5);
+		}
+		
+		&:hover > svg {
+			fill: rgba($sidebar-black-header, .8);
 		}
 	}
 	input{
