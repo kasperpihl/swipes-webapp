@@ -66,7 +66,7 @@ $chat-new-message-height: 60px;
 	display:relative;
 }
 .chat-list-container{
-	height:100%;
+	height:calc(100% - 30px);
 	padding-bottom: $chat-new-message-height;
 	width: 96%;
 	margin: 0 auto;
@@ -311,7 +311,7 @@ $chat-new-message-height: 60px;
 	background-color: $white-background;
 	z-index: 9999;
 	.input-container{
-		width:94%;
+		width:95%;
 		min-height:100%;
 		margin-left:3%;
 		border-top: 2px solid #DDDDDD;

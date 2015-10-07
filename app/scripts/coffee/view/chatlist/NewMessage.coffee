@@ -12,8 +12,8 @@ define ["underscore"
 			@render()
 			_.bindAll(@, "pressedKey")
 			
-			@$el.find('textarea'), ->
-				self.offset = @offsetHeight - (@clientHeight)
+			textarea = @$el.find('textarea')
+			@offset = textarea[0].offsetHeight - textarea[0].clientHeight
 		events:
 			"keyup textarea": "pressedKey"
 			"keydown textarea": "keyDown"
@@ -27,13 +27,12 @@ define ["underscore"
 			@placeholder = placeholder
 			@$el.find('textarea').attr('placeholder',placeholder)
 		autoExpand: () ->
+			chatContainer = $('.chat-list-container')
 			textarea = @$el.find('textarea')
-			textarea.css('height', 'auto').css 'height', textarea.scrollHeight + @offset
+			textareaHeight = textarea.height()
+			textarea.css('height', 'auto').css 'height', textarea[0].scrollHeight + @offset
+			chatContainer.css('height', 'calc(100% - ' + textareaHeight + 'px - 30px)')
 			return
-		manualShrink: () ->
-			console.log('manualshrink')
-			textarea = @$el.find('textarea')
-			textarea.css('max-height', '40px')
 		pressedKey: (e) ->
 			nowStamp = new Date().getTime()
 			if !@lastSentTyping? or (@lastSentTyping + 3500) < nowStamp
@@ -44,7 +43,6 @@ define ["underscore"
 				@shiftDown = false
 			if e.keyCode is 13 && @shiftDown == false
 				@sendMessage()
-				@manualShrink()
 			@autoExpand()
 			return false
 		keyDown: (e) ->
