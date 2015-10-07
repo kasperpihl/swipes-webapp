@@ -29,9 +29,10 @@ define ["underscore"
 		autoExpand: () ->
 			chatContainer = $('.chat-list-container')
 			textarea = @$el.find('textarea')
-			textareaHeight = textarea.height()
 			textarea.css('height', 'auto').css 'height', textarea[0].scrollHeight + @offset
-			chatContainer.css('height', 'calc(100% - ' + textareaHeight + 'px - 30px)')
+			newMessageCont = $('.chat-new-message')
+			newMessageContHeight = newMessageCont.height()
+			chatContainer.css('height', 'calc(100% - ' + newMessageContHeight + 'px - 4px)')
 			return
 		pressedKey: (e) ->
 			nowStamp = new Date().getTime()
