@@ -147,6 +147,7 @@ $chat-new-message-height: 60px;
 		}
 		.timestamp{
 			font: 11px/1 $font-bold;
+			opacity: .4;
 		}
 	}
 	
@@ -157,7 +158,8 @@ $chat-new-message-height: 60px;
 			cursor: pointer;
 			@include select;
 		}
-		font: 14px/1.5 $font-normal;
+		font: 14px/1.5 $font-light;
+		color: rgba($sidebar-black-header, .8);
 	}
 	.file-container{
 		@include select;
