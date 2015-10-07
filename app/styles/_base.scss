@@ -45,19 +45,14 @@ ul{
 	margin-right:0px;
 }
 ::-webkit-scrollbar { 
-	height: 99%;
 	width: 10px;
-	background-color: rgba(black,.09);
+	background-color: rgba(black,0);
 	border-radius: 50px;
 	overflow: hidden;
 }
 
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
-}
-
 ::-webkit-scrollbar-thumb {
-	background-color: rgba(black,.2);
+	background-color: rgba(black,.1);
   	border-radius: 50px;
 }
 

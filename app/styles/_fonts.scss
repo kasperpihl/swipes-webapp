@@ -5,7 +5,7 @@ $fonts-url: 'fonts/';
 	Normal fonts
 	====================
  */
-$font_name: 'GothamRounded-Medium';
+$font_name: 'sf-ui-text-bold-webfont';
 @font-face {
 	font-family: $font-name;
 	src: url($fonts-url + $font-name + '.woff');
@@ -17,7 +17,7 @@ $font_name: 'GothamRounded-Medium';
 	font-style: normal;
 }
 
-$font_name: 'GothamRounded-Book';
+$font_name: 'sf-ui-text-medium-webfont';
 @font-face {
 	font-family: $font-name;
 	src: url($fonts-url + $font-name + '.woff');
@@ -29,7 +29,7 @@ $font_name: 'GothamRounded-Book';
 	font-style: normal;
 }
 
-$font_name: 'GothamRounded-Light';
+$font_name: 'sf-ui-text-regular-webfont';
 @font-face {
 	font-family: $font-name;
 	src: url($fonts-url + $font-name + '.woff');
@@ -41,9 +41,9 @@ $font_name: 'GothamRounded-Light';
 	font-style: normal;
 }
 
-$font-bold: "GothamRounded-Medium", sans-serif;
-$font-normal: "GothamRounded-Book", sans-serif;
-$font-light: "GothamRounded-Light", sans-serif;
+$font-bold: "sf-ui-text-bold-webfont", sans-serif;
+$font-normal: "sf-ui-text-medium-webfont", sans-serif;
+$font-light: "sf-ui-text-regular-webfont", sans-serif;
 
 /*
 	====================

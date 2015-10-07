@@ -75,6 +75,7 @@
 			position:relative;
 			.more-button{
 				font-size: 12px;
+				color: rgba($unselected-text-color, .4);
 				display: none;
 				text-decoration: underline;
 				&:hover{
@@ -128,7 +129,8 @@
 		}
 		h1{
 			padding-top: 10px;
-			font: 14px $font-bold;
+			font: 14px $font-normal;
+			color: rgba($unselected-text-color,.5);
 			letter-spacing: 0px;
 			padding-left: 19px;
 			margin-top:8px;
@@ -205,7 +207,7 @@
 			}
 			
 			.task-text {
-				font: 15px $font-bold;
+				font: 15px $font-normal;
 				line-height: 45px;
 				cursor: pointer;
 			}

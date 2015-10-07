@@ -9,10 +9,18 @@ $task-new-task-height: 61px;
 .task-list-view-controller{
 	width:100%;
 	height:100%;
+	
+	&::-webkit-scrollbar {
+		display: none;
+	}
 	.scroll-container{
 		width:100%;
 		height:100%;
 		padding-bottom: $task-new-task-height;
+		
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 	&.editMode{
 		.scroll-container{
@@ -24,8 +32,13 @@ $task-new-task-height: 61px;
 		width:100%;
 		height: 100%;
 		overflow-y: scroll;
+		overflow-x: hidden;
 		position:relative;
 		padding-bottom: 20px;
+		
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 	
 	position:relative;
@@ -211,6 +224,7 @@ $meta-margin: 10px;
 		margin-top:$margin-to-card + 2;
 		margin-bottom:$margin-to-card;
 		font: 0.8em/1 $font-normal;
+		color: rgba($sidebar-dark-color, .8);
 	}
 	.meta{
 		margin-bottom: $margin-to-card - 2;
