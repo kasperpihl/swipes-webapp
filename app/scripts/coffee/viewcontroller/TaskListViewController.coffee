@@ -10,6 +10,8 @@ define [
 	], (_, Template, ToggleCompletedTasks, TaskList, AddTaskCard, TaskHandler, EditTask, RequestWorkOverlay) ->
 	Backbone.View.extend
 		className: "task-list-view-controller"
+		events:
+			"click #import-asana": "importAsana"
 		initialize: (options) ->
 			@options = options
 			channelVC = @options.delegate
@@ -150,6 +152,10 @@ define [
 				@addTaskCard.setPlaceHolder("Add a new task to #" + channelVC.currentList.get("name"))
 
 			@taskList.titles = titles
+		importAsana: ->
+			swipy.api.callAPI "asana/asanaToken", "POST", {}, (res, error) ->
+				if res && res.asanaAuthorizeUrl
+					window.location = res.asanaAuthorizeUrl
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()

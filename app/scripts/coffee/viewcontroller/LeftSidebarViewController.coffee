@@ -13,7 +13,7 @@ define [
 			@bouncedUpdateNotificationsForMyTasks = _.debounce(@updateNotificationsForMyTasks, 15)
 			@listenTo( swipy.collections.todos, "add reset remove change:completionDate change:schedule", @bouncedUpdateNotificationsForMyTasks)
 			# Proper render list when projects change/add/remove
-			
+
 			_.bindAll( @, "renderSidebar", "clickedInvite")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
@@ -76,7 +76,7 @@ define [
 			if @modalType is "invite"
 				swipy.api.callAPI("invite/slack", "POST", {invite: {"slackUserId": targetUser.id, "type": "Standard Invite"}}, (res, error) =>
 					console.log "res from invite", res, error
-					if res and res.ok
+					if res
 						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From": "Invite Overlay"})
 				)
 			else if @modalType is "dm"
@@ -103,7 +103,7 @@ define [
 			swipy.slackCollections.channels.each( (channel) =>
 				if @modalType is "channels"
 					if channel.get("is_channel") and !channel.get("is_archived")
-						if !channel.get("is_member") 
+						if !channel.get("is_member")
 							channels.push(channel.toJSON())
 				else if @modalType is "groups"
 					if channel.get("is_group") and !channel.get("is_archived")
@@ -176,9 +176,9 @@ define [
 			false
 		renderSidebar: ->
 			channelsLeft = 0
-			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) -> 
+			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) ->
 				if channel.get("is_channel") and !channel.get("is_archived")
-					if channel.get("is_member") 
+					if channel.get("is_member")
 						return true
 					else
 						channelsLeft++
@@ -195,7 +195,7 @@ define [
 				rowView.render()
 
 			groupsLeft = 0
-			filteredGroups = _.filter(swipy.slackCollections.channels.models, (channel) -> 
+			filteredGroups = _.filter(swipy.slackCollections.channels.models, (channel) ->
 				if channel.get("is_group") and !channel.get("is_archived")
 					if channel.get("is_open")
 						return true
@@ -211,13 +211,13 @@ define [
 				rowView = new ChannelRow({model: group})
 				@$el.find("#sidebar-group-list .groups").append(rowView.el)
 				rowView.render()
-				
+
 
 			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_im") and channel.get("is_open"))
 			ims = _.sortBy(filteredIms, (im) ->
 				user = swipy.slackCollections.users.get(im.get("user")).toJSON()
 				if user.name is "slackbot"
-					return 0 
+					return 0
 				return user.name
 			)
 			usersInTotal = _.filter(swipy.slackCollections.users.models, (user) -> !user.get("deleted") )

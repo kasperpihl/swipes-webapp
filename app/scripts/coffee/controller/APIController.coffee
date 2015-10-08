@@ -7,7 +7,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		constructor: ->
 			@util = new Utility()
-			@baseURL = "http://swipesslack.elasticbeanstalk.com/v1/"
+			@baseURL = "http://localhost:5000/v1/"
+			#@baseURL = "http://swipesslack.elasticbeanstalk.com/v1/"
 		callAPI: (path, method, parameters, callback) ->
 			url = @baseURL + path
 			token = localStorage.getItem("slack-token")
@@ -22,14 +23,12 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 			serverData = JSON.stringify data
 
-			settings = 
+			settings =
 				url : url
-				type : 'POST'
-				success : ( data ) ->
-					if data and data.ok
-						callback(data);
-					else
-						callback(false, data);
+				type : method
+				success : ( res ) ->
+					if res
+						callback(res);
 				error : ( error ) ->
 					#@util.sendError( error, "Server Error")
 					callback(false, error)

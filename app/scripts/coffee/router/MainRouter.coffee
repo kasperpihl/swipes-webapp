@@ -25,7 +25,7 @@ define ["underscore"], (_) ->
 		root: ->
 			@navigate( "tasks", { trigger: yes, replace: yes } )
 		add: ->
-			Backbone.trigger( "show-add")	
+			Backbone.trigger( "show-add")
 		search: ->
 			Backbone.trigger( "show-search" )
 		workspaces: ->
@@ -46,7 +46,7 @@ define ["underscore"], (_) ->
 					if channel.get("is_im")
 						user = swipy.slackCollections.users.get(channel.get("user"))
 						pathStart = "im/" + user.get("name")
-				
+
 				fullPath = pathStart + "/task/" + task.id
 				if @getCurrRoute()?.startsWith(pathStart)
 					Backbone.trigger("edit/task", task)
