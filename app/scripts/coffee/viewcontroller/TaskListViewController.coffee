@@ -16,9 +16,9 @@ define [
 			@options = options
 			channelVC = @options.delegate
 			isMyTasks = @options.isMyTasksView
+			startImportFromAsana = swipy.startImportFromAsana
 
 			@setTemplate()
-
 
 			@addTaskCard = new AddTaskCard()
 			@addTaskCard.addDelegate = channelVC
@@ -48,6 +48,10 @@ define [
 			Backbone.on( "edit/task", @editTask, @ )
 
 			@setEmptyTitles()
+
+			if startImportFromAsana
+				swipy.startImportFromAsana = false
+				@startImportFromAsana()
 		showThreadOverlay: (show) ->
 			console.log "showing thread", show
 		editTask: (model) ->
@@ -154,8 +158,12 @@ define [
 			@taskList.titles = titles
 		importAsana: ->
 			swipy.api.callAPI "asana/asanaToken", "POST", {}, (res, error) ->
-				if res && res.asanaAuthorizeUrl
-					window.location = res.asanaAuthorizeUrl
+				if res && res.redirect
+					window.location = res.redirect
+		startImportFromAsana: ->
+			swipy.api.callAPI "asana/import", "GET", {}, (res, error) ->
+				if res
+					console.log 'done'
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()

@@ -34,6 +34,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					callback(false, error)
 				dataType : "json"
 				contentType: "application/json; charset=utf-8"
+				xhrFields:
+					withCredentials: true
 				crossDomain : true
 				context: @
 				data : serverData

@@ -17,6 +17,7 @@ define ["underscore"], (_) ->
 			"group/:id/:action/:actionId": "group"
 			"search": "search"
 			"work": "work"
+			"asana_import": "asanaImport"
 			"*all": "root"
 		initialize: ->
 			@history = []
@@ -32,6 +33,9 @@ define ["underscore"], (_) ->
 			Backbone.trigger( "show-workspaces" )
 		work: ->
 			Backbone.trigger( "work-mode" )
+		asanaImport: ->
+			swipy.startImportFromAsana = true
+			@navigate( "tasks", { trigger: yes, replace: yes } )
 		task: (id) ->
 			task = swipy.collections.todos.get(id)
 			if task
