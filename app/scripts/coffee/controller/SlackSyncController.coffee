@@ -35,7 +35,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					# Only enable threaded conversations for Swipes Team
 					if data.team.id is "T02A53ZUJ"
 						# T_TODO disabling threds. There are still comments when you try to type from the edit view
-						localStorage.setItem("EnableThreadedConversations", false)
+						localStorage.setItem("EnableThreadedConversations", true)
 					@clearDeletedChannels()
 					@openWebSocket(data.url)
 					localStorage.setItem("slackLastConnected", new Date())
