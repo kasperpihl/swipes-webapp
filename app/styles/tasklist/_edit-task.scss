@@ -523,6 +523,8 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 										}
 										
 										.input-action-title.content-editable {
+											font: 13px $font-normal;
+											color: $sidebar-black-header;
 											padding: 0;
 											margin-top: -3px;
 										}
