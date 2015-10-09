@@ -180,6 +180,26 @@ $task-new-task-height: 61px;
 			}
 		}
 	}
+	
+	.btn-import	{
+		width: 250px;
+		margin: 0 auto;
+		margin-top: 75px;
+		padding: 10px 0;
+		background-color: rgba($sidebar-dark-color,.1);
+		text-align: center;
+		border-radius: 5px;
+		font: 14px $font-normal;
+		color: rgba($sidebar-dark-color,.6);
+		cursor: pointer;
+		transition: .1s ease-in-out;
+		
+		&:hover {
+			background-color: rgba($sidebar-dark-color,.7);
+			color: $unselected-text-color;
+			transition: .1s ease-in-out;
+		}
+	}
 }
 .task-list{
 	.animate-in {

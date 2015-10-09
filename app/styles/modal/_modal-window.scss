@@ -118,3 +118,77 @@
 		}
 	}
 }
+
+.import-wrap {
+	width: 550px;
+	margin: 100px auto;
+	background-color: #eee;
+	padding: 15px 0;
+	position: relative;
+	
+	h2 {
+		padding: 0;
+		text-align: center;
+	}
+	
+	p {
+		width: 90%;
+		margin: 0 auto;
+	}
+	
+	.btn-import {
+		width: 150px;
+		margin: 10px auto;
+		margin-top: 50px;
+		background-color: white;
+		text-align: center;
+		padding: 10px 0;
+		border-radius: 5px;
+	}
+	
+	.loader {
+		clip: rect(0, 84px, 84px, 42px); 
+		height: 84px;
+		width: 84px;
+		position: absolute;
+		left: calc(50% - 42px);
+		top: calc(50% - 42px);
+		animation: loading 1.05s linear infinite;
+		animation-delay: .6s;
+		
+		&:after {
+			transform: scale(1);
+			clip: rect(0, 84px, 84px, 42px);
+			content:'';
+			border-radius: 50%; 
+			height: 84px;
+			width: 84px;
+			position: absolute;
+			
+			animation: loading-after 1.05s linear infinite;
+			animation-delay: .6s;
+		}
+	}
+}
+
+@keyframes loading {
+  	0% {
+		transform: scale(1); 
+    	transform: rotate(0deg)
+  	}
+  	100% { 
+	  	transform: scale(1);
+   	 	transform: rotate(220deg)
+  	}
+}
+
+@keyframes loading-after {
+  	0% {
+    	box-shadow: inset red 0 0 0 4px;
+    	transform: rotate(-140deg);
+  	}
+  	100% {
+    	box-shadow: inset red 0 0 0 4px;
+    	transform: rotate(140deg);
+  	}
+}
