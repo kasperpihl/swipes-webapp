@@ -164,6 +164,7 @@ $chat-new-message-height: 60px;
 		@include select;
 		padding-top:5px;
 		img{
+			cursor: pointer;
 			border: 1px solid #EAEAEA;
 			@include border-radius(5px);
 		}
