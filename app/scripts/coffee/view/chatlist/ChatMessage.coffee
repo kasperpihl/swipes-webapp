@@ -35,7 +35,6 @@ define [
 			@new = false
 			return @
 		lightboxOpen: (e) ->
-			console.log("does this work")
 			img = $('img')
 			#for some reason it doesn't work without and extra click, not sure why, if you can figure it out kudos!
 			img.on 'click', ->
@@ -47,7 +46,6 @@ define [
 					endLink = imgSrcFirst + '-' + imgSrcSecond + '/' + imgSrcFileOne + '/'
 					bigEndLink = endLink.replace('_360', '')
 					newImgLink = 'https://files.slack.com/files-pri/' + bigEndLink
-					console.log imgSrcFileOne
 					$('.lightbox-overlay').fadeIn '100', ->
 						$('.lightbox').html '<img src="' + newImgLink + '" />'
 						return
