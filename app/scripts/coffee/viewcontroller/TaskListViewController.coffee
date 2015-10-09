@@ -161,7 +161,7 @@ define [
 				if res && res.redirect
 					window.location = res.redirect
 		startImportFromAsana: ->
-			swipy.api.callAPI "asana/import", "GET", {}, (res, error) ->
+			swipy.api.callAPI "asana/import", "POST", {}, (res, error) ->
 				if res
 					console.log 'done'
 		destroy: ->
