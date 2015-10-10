@@ -11,10 +11,10 @@ $padding: 20px;
 	cursor: pointer;
 	opacity: 0;
 	
-	-webkit-animation: fade-this-in .3s ease-in-out forwards;
-	animation: fade-this-in .3s ease-in-out forwards;
-	-webkit-animation-delay: .15s;
-	animation-delay: .15s;
+	-webkit-animation: fade-this-in .2s ease-in-out forwards;
+	animation: fade-this-in .2s ease-in-out forwards;
+	-webkit-animation-delay: .2s;
+	animation-delay: .2s;
 	
 	&:not(:last-child) {
 		border-bottom: 1px solid darken($gray-background,10%);
@@ -44,8 +44,8 @@ $padding: 20px;
 	background: $gray-background;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	
-	-webkit-animation: come-in .3s ease-in-out forwards;
-	animation: come-in .3s ease-in-out forwards;
+	-webkit-animation: come-in .3s ease-out forwards;
+	animation: come-in .3s ease-out forwards;
 }
 
 @-webkit-keyframes come-in {

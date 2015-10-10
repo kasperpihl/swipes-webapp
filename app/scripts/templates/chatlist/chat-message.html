@@ -143,7 +143,7 @@
 						fileURL = file.thumb_360_gif;
 					if(fileURL){
 				%>
-					<img style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= fileURL %>" />
+					<img class="chat-image" style="height: <%= file.thumb_360_h %>px; width:<%= file.thumb_360_w %>px;" src="<%= fileURL %>" />
 				<% } }
 				else console.log(data.message);
 				%>

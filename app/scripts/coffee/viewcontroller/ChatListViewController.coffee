@@ -11,6 +11,7 @@ define [
 		className: "chat-list-view-controller"
 		initialize: ->
 			@setTemplate()
+			
 
 			@newMessage = new NewMessage()
 
@@ -28,7 +29,6 @@ define [
 			@chatList.dragDelegate = @chatHandler
 			@chatList.dataSource = @chatHandler
 			Backbone.on("opened-window", @focusInput, @)
-		
 
 		setTemplate: ->
 			@template = _.template Template

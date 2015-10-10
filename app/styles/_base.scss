@@ -45,8 +45,17 @@ ul{
 	margin-right:0px;
 }
 ::-webkit-scrollbar { 
-	display: none; 
+	width: 10px;
+	background-color: rgba(black,0);
+	border-radius: 50px;
+	overflow: hidden;
 }
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(black,.1);
+  	border-radius: 50px;
+}
+
 .main-view-controller{
 	width:100%;
 	height:100%;
@@ -194,4 +203,94 @@ button::-moz-focus-inner {
 
 .hidden {
 	display: none;
+}
+
+.lightbox-overlay {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background-color: rgba(0,0,0,.6);
+	top: 0;
+	left: 0;
+	display: none;
+	z-index: 9999;
+	
+	.close-container {
+		width: 32px;
+		height: 32px;
+		top: 32px;
+		right: 32px;
+		opacity: 1;
+		border-radius: 50%;
+		border: 2px solid white;
+		cursor: pointer;
+		position: absolute;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+			-ms-flex-align: center;
+				align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+			-ms-flex-pack: center;
+				justify-content: center;
+		
+		.close {
+			width: 18px;
+			height: 2px;
+			transform: rotate(45deg);
+			position: relative;
+			background-color: white;
+			opacity: 1;
+			
+			&:before {
+				content: "";
+				display: block;
+				position: relative;
+				height: 18px;
+				width: 2px;
+				transform: rotate(0deg);
+				background-color: white;
+				opacity: 1;
+				margin-left: 8px;
+				margin-top: -8px;
+			}
+
+		}
+		
+		&:hover {
+			opacity: 1;
+		}
+	}
+	
+	.lightbox {
+		height: 70%;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+			-ms-flex-align: center;
+				align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+			-ms-flex-pack: center;
+				justify-content: center;
+		
+		img {
+			max-width: 90%;
+			max-height: 100%;
+			position: relative;
+			border-radius: 5px;
+			box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+		}
+	}
 }
