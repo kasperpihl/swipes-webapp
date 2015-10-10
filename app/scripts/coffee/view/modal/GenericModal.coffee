@@ -2,8 +2,9 @@ define ["underscore"
 		"js/view/modal/ModalView"
 		"text!templates/modal/input-modal.html"
 		"text!templates/modal/delete-modal.html"
-		"text!templates/modal/textarea-modal.html"],
-	(_, ModalView, InputModal, DeleteModal, TextareaModal) ->
+		"text!templates/modal/textarea-modal.html"
+		"text!templates/modal/import-asana-modal.html"],
+	(_, ModalView, InputModal, DeleteModal, TextareaModal, ImportAsanaModal) ->
 		ModalView.extend
 			initialize: (options) ->
 				that = @
@@ -67,5 +68,6 @@ define ["underscore"
 					'textareaModal': TextareaModal
 					'inputModal': InputModal
 					'deleteModal': DeleteModal
+					'importAsanaModal': ImportAsanaModal
 
 				return map[type]
