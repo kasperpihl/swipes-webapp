@@ -173,6 +173,10 @@ define [
 					submitText: 'IMPORT'
 					text: 'This will import all your projects from Asana as channels and all your public and private tasks.'
 		startImportFromAsana: ->
+			genericModal = new GenericModal
+				type: 'importAsanaModal'
+				tmplOptions: {}
+
 			swipy.api.callAPI "asana/import", "POST", {}, (res, error) ->
 				if res
 					window.location = '/'
