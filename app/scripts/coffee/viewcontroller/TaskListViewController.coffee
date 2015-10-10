@@ -163,7 +163,7 @@ define [
 		startImportFromAsana: ->
 			swipy.api.callAPI "asana/import", "POST", {}, (res, error) ->
 				if res
-					console.log 'done'
+					window.location = '/'
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()
