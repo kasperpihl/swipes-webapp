@@ -7,7 +7,8 @@ define [
 	"js/handler/TaskHandler"
 	"js/view/tasklist/EditTask"
 	"js/view/workmode/RequestWorkOverlay"
-	], (_, Template, ToggleCompletedTasks, TaskList, AddTaskCard, TaskHandler, EditTask, RequestWorkOverlay) ->
+	"js/view/modal/GenericModal"
+	], (_, Template, ToggleCompletedTasks, TaskList, AddTaskCard, TaskHandler, EditTask, RequestWorkOverlay, GenericModal) ->
 	Backbone.View.extend
 		className: "task-list-view-controller"
 		events:
@@ -158,9 +159,19 @@ define [
 
 			@taskList.titles = titles
 		importAsana: ->
-			swipy.api.callAPI "asana/asanaToken", "POST", {}, (res, error) ->
-				if res && res.redirect
-					window.location = res.redirect
+			importCallback = () ->
+				swipy.api.callAPI "asana/asanaToken", "POST", {}, (res, error) ->
+					if res && res.redirect
+						window.location = res.redirect
+
+			genericModal = new GenericModal
+				type: 'deleteModal'
+				submitCallback: importCallback
+				tmplOptions:
+					title: 'Import from Asana'
+					cancelText: 'CANCEL'
+					submitText: 'IMPORT'
+					text: 'This will import all your projects from Asana as channels and all your public and private tasks.'
 		startImportFromAsana: ->
 			swipy.api.callAPI "asana/import", "POST", {}, (res, error) ->
 				if res
