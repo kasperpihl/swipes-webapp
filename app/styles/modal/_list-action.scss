@@ -41,8 +41,10 @@ $padding: 20px;
 }
 .list-action-modal{
 	overflow: hidden;
+	position: relative;
 	background: $gray-background;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	z-index: 9999;
 	
 	-webkit-animation: come-in .3s ease-out forwards;
 	animation: come-in .3s ease-out forwards;

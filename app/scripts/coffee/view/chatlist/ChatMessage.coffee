@@ -8,7 +8,7 @@ define [
 	"js/utility/Utility"
 	], (_, MessageTmpl, AttachmentsTmpl, Utility) ->
 	Backbone.View.extend
-		#tagName: "li"
+		tagName: "li"
 		className: "chat-item"
 		events:
 			"click img.chat-image" : "lightboxOpen"
@@ -35,6 +35,22 @@ define [
 				isThread: @isThread
 			@new = false
 			return @
+		clickedActions: (e) ->
+			if @chatDelegate? and _.isFunction(@chatDelegate.messageClickedActions)
+				@chatDelegate.messageClickedActions(@, e)
+		clickedLink: (e) ->
+			href = $(e.currentTarget).attr("href")
+			if(href.startsWith("http://swipesapp.com/forward?dest=invite"))
+				Backbone.trigger("open/invitemodal")
+			if href.startsWith("#task/")
+				swipy.router.task(href.substring("#task/".length))
+			false
+		clickedLike: (e) ->
+			###console.log e
+			if @chatDelegate? and _.isFunction(@chatDelegate.messageDidClickLike)
+				@chatDelegate.messageDidClickLike(@, e)###
+		remove: ->
+			@$el.empty()
 		lightboxOpen: (e) ->
 			img = e.target
 			imgSrc = img.src
@@ -56,19 +72,3 @@ define [
 			$('.lightbox').empty()
 			$('.lightbox-overlay').fadeOut 'fast', ->
 			return	
-		clickedActions: (e) ->
-			if @chatDelegate? and _.isFunction(@chatDelegate.messageClickedActions)
-				@chatDelegate.messageClickedActions(@, e)
-		clickedLink: (e) ->
-			href = $(e.currentTarget).attr("href")
-			if(href.startsWith("http://swipesapp.com/forward?dest=invite"))
-				Backbone.trigger("open/invitemodal")
-			if href.startsWith("#task/")
-				swipy.router.task(href.substring("#task/".length))
-			false
-		clickedLike: (e) ->
-			###console.log e
-			if @chatDelegate? and _.isFunction(@chatDelegate.messageDidClickLike)
-				@chatDelegate.messageDidClickLike(@, e)###
-		remove: ->
-			@$el.empty()
