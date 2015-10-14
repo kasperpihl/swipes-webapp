@@ -35,22 +35,33 @@
 }
 
 form {
-  width: 300px;
+  max-width: 350px;
   margin: 0 auto;
   margin-top: 70px;
+  padding: 0 20px;
+  
+  ::-webkit-input-placeholder {
+    color: $deepBlue-40;
+   }
   
   input:not([type="submit"]) {
     padding: 0;
     font: 14px $font-light;
-    color: $deepBlue-40;
+    color: $deepBlue-80;
     height: 50px;
     margin: 15px 0;
     border-bottom: 1px solid $studioGray-40;
+    padding-left: 10px;
     transition: .1s linear; 
     
-    &:focus, &:hover {
-      border-bottom: 1px solid $studioGray-100;
+    &:hover {
+      border-bottom: 1px solid $studioGray-80;
       transition: .1s linear; 
+    }
+    
+    &:focus {
+      border-bottom: 2px solid $deepBlue-80;
+      transition: .2s ease-in-out; 
     }
   }
   
