@@ -21,7 +21,7 @@ require.config({
         'TweenLite': 'plugins/greensock-js/src/minified/TweenLite.min',
         gsap: 'plugins/greensock-js/src/uncompressed/TweenMax',
         timelinelite: 'plugins/greensock-js/src/uncompressed/TimelineLite',
-        
+
         'gsap-scroll': 'plugins/greensock-js/src/uncompressed/plugins/ScrollToPlugin',
         'gsap-text': 'plugins/greensock-js/src/uncompressed/plugins/TextPlugin',
         'gsap-easing': 'plugins/greensock-js/src/uncompressed/easing/EasePack',
@@ -147,7 +147,7 @@ require.config({
     }
 });
 var QueryString = function () {
-  // This function is anonymous, is executed immediately and 
+  // This function is anonymous, is executed immediately and
   // the return value is assigned to QueryString!
   var query_string = {};
   var query = window.location.search.substring(1);
@@ -165,7 +165,7 @@ var QueryString = function () {
     } else {
       query_string[pair[0]].push(pair[1]);
     }
-  } 
+  }
     return query_string;
 } ();
 if (typeof String.prototype.startsWith != 'function') {
@@ -181,7 +181,7 @@ require(["jquery", "underscore", "backbone"], function($) {
             if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
                 // Browser downloaded a new app cache.
                 if (confirm('A new version of this site is available. Load it?')) {
-                    appCache.swapCache(); 
+                    appCache.swapCache();
                     window.location.reload();
                 }
             } else {
@@ -189,40 +189,57 @@ require(["jquery", "underscore", "backbone"], function($) {
             }
         }, false);
     }
-    
+
     /*require(["bootstrapTooltip"],function(){
         $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});
     })*/
-    require(["parse"], function() {
-        // First check that the user is actually logged in
-        queryString = QueryString;
-        var appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3";
-        var jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg";
-        
-        Parse.initialize(appId, jsId);
-        if (localStorage.getItem("slack-token")) {
-            require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
-                'use strict';
+    if (localStorage.getItem("logged")) {
+      // First check that the user is actually logged in
+      queryString = QueryString;
+      require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
+          'use strict';
 
-                window.swipy = new App();
-                window.swipy.handleQueryString(queryString);
-                window.swipy.manualInit();
-                window.debugHelper = new DebugHelper();
-                swipy.start();
-            });
-        } else {
-            
-            path = location.origin + "/loginslack/"
-            if(queryString && queryString.href){
-                path += "?href="+queryString.href;
-            }
-            if(location.hash){
-                path += "#" + location.hash.substring(1);
-            }
-            
+          window.swipy = new App();
+          window.swipy.handleQueryString(queryString);
+          window.swipy.manualInit();
+          window.debugHelper = new DebugHelper();
+          swipy.start();
+      });
+    } else {
+      path = location.origin + "/newlogin/"
 
-
-            location.href = path;
-        }
-    });
+      location.href = path;
+    }
+    // require(["parse"], function() {
+    //     // First check that the user is actually logged in
+    //     queryString = QueryString;
+    //     var appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3";
+    //     var jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg";
+    //
+    //     Parse.initialize(appId, jsId);
+    //     if (localStorage.getItem("slack-token")) {
+    //         require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
+    //             'use strict';
+    //
+    //             window.swipy = new App();
+    //             window.swipy.handleQueryString(queryString);
+    //             window.swipy.manualInit();
+    //             window.debugHelper = new DebugHelper();
+    //             swipy.start();
+    //         });
+    //     } else {
+    //
+    //         path = location.origin + "/loginslack/"
+    //         if(queryString && queryString.href){
+    //             path += "?href="+queryString.href;
+    //         }
+    //         if(location.hash){
+    //             path += "#" + location.hash.substring(1);
+    //         }
+    //
+    //
+    //
+    //         location.href = path;
+    //     }
+    // });
 });
