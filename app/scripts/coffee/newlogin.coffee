@@ -31,3 +31,30 @@ $('#sign-up').on 'submit', (e) ->
   $.ajax settings
 
   return false
+
+# Sign-in form
+$('#sign-in').on 'submit', (e) ->
+  target = $(e.target);
+  email = target.find('.email').val()
+  password = target.find('.password').val()
+
+  data =
+    email: email,
+    password: password
+
+  settings = {
+    url: 'http://localhost:5000/v1/users.login'
+    type: 'POST'
+    dataType: 'json'
+    contentType: "application/json; charset=utf-8"
+    crossDomain : true
+    data: JSON.stringify data
+    success: () ->
+      window.location = '/'
+    error: (error) ->
+      console.log error
+  }
+
+  $.ajax settings
+
+  return false
