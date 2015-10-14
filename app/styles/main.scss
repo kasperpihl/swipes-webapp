@@ -73,6 +73,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import "sidebar/_sidemenu-settings-tweaks.scss";
 
 // Views
+@import "view/login-signup";
 @import "view/login";
 @import "view/topbar";
 

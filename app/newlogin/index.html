@@ -25,25 +25,30 @@
     <!-- endbuild -->
   </head>
   <body>
-    <div style="width: 400px; float: left;">
-      <h3>Sign up</h3>
-      <form action="/" id="sign-up">
-        <input type="email" class="email borderless" placeholder="email">
-        <input type="username" class="email borderless" placeholder="username">
-        <input type="password" class="password borderless" placeholder="password">
-        <input type="repassword" class="password borderless" placeholder="repeat password">
-        <input type="submit" value="Sign up">
-      </form>
+    <div class="login-wrapper">
+      <div class="login-logo">
+        <img src="../styles/img/swipes-ui-team-logo.png">
+      </div>
+      <div class="signup">
+        <form action="/" id="sign-up">
+          <input type="email" class="email borderless" placeholder="Enter your email">
+          <input type="username" class="email borderless" placeholder="Enter your username">
+          <input type="password" class="password borderless" placeholder="Enter your password">
+          <input type="password" class="password borderless" placeholder="Repeat your password">
+          <input type="submit" value="SIGN UP">
+        </form>
+      </div>
+      
+      <div class="login hidden">
+        <form action="/" id="sign-in">
+          <input type="email" class="email borderless" placeholder="Enter your email">
+          <input type="password" class="password borderless" placeholder="Enter your password">
+          <input type="submit" value="SIGN IN">
+        </form>
+      </div>
+      
+      <p>Already have an account? <span class="bold">Sign in.</span></p>
     </div>
-    <div style="width: 400px; float: left;">
-      <h3>Sign in</h3>
-      <form action="/" id="sign-in">
-        <input type="email" class="email borderless" placeholder="email">
-        <input type="password" class="password borderless" placeholder="password">
-        <input type="submit" value="Sign in">
-      </form>
-    </div>
-
     <script src="../scripts/js/Login.js"></script>
   </body>
 </html>

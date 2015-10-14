@@ -12,6 +12,13 @@ html {
 	cursor:default;
 	@include no-select;
 }
+
+*,*:before,*:after,form,input {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 input{
 	cursor: text;
 	border:0;
