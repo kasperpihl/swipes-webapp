@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Log in | Swipes</title>
+
+    <meta name="description" content="Log into Swipes">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.tmp) ../styles/main.css -->
+    <link rel="stylesheet" href="../styles/main.css">
+    <!-- endbuild -->
+
+    <script>
+    	window.liveEnvironment = !!( location.host === "web.swipesapp.com" );
+    	if (window.liveEnvironment && window.location.protocol != "https:")
+    		window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+    </script>
+
+    <!-- build:js ../scripts/vendor/modernizr.js -->
+    <script src="../bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+  </head>
+  <body>
+    <div style="width: 400px; float: left;">
+      <h3>Sign up</h3>
+      <form action="/" id="sign-up">
+        <input type="email" class="email borderless" placeholder="email">
+        <input type="username" class="email borderless" placeholder="username">
+        <input type="password" class="password borderless" placeholder="password">
+        <input type="repassword" class="password borderless" placeholder="repeat password">
+        <input type="submit" value="Sign up">
+      </form>
+    </div>
+    <div style="width: 400px; float: left;">
+      <h3>Sign in</h3>
+      <form action="/" id="sign-in">
+        <input type="email" class="email borderless" placeholder="email">
+        <input type="password" class="password borderless" placeholder="password">
+        <input type="submit" value="Sign in">
+      </form>
+    </div>
+
+    <script src="../scripts/js/Login.js"></script>
+  </body>
+</html>
