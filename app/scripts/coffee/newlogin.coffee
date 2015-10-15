@@ -20,10 +20,7 @@ $('#sign-up').on 'submit', (e) ->
     crossDomain : true
     data: JSON.stringify data
     success: (data) ->
-      target.find('.email input').val('')
-      target.find('.username input').val('')
-      target.find('.password input').val('')
-      target.find('.repassword input').val('')
+      window.location = '/'
     error: (errors) ->
       errors = errors.responseJSON.errors
 
@@ -81,6 +78,7 @@ $('.sign-up-btn').on 'click', () ->
 # Handle errors
 handleErrors = (target, errors) ->
   target.find('.input-wrapper').removeClass 'error'
+  target.find('.input-wrapper input').removeClass 'error'
 
   errors.forEach (error) ->
     element = target.find('.input-wrapper.' + error.field)
