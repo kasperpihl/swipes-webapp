@@ -71,6 +71,8 @@ form {
   margin-top: 70px;
   padding: 0 20px;
   
+  animation: fadeIn .3s ease-in-out forwards;
+  
   ::-webkit-input-placeholder {
     color: $deepBlue-40;
    }
