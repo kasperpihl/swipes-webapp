@@ -193,23 +193,50 @@ require(["jquery", "underscore", "backbone"], function($) {
     /*require(["bootstrapTooltip"],function(){
         $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});
     })*/
-    if (localStorage.getItem("logged")) {
-      // First check that the user is actually logged in
-      queryString = QueryString;
-      require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
-          'use strict';
 
-          window.swipy = new App();
-          window.swipy.handleQueryString(queryString);
-          window.swipy.manualInit();
-          window.debugHelper = new DebugHelper();
-          swipy.start();
-      });
-    } else {
-      path = location.origin + "/newlogin/"
+    $.ajax({
+      url: 'http://localhost:5000/v1/users.logged',
+      type: 'GET',
+      dataType: 'json',
+      contentType: "application/json; charset=utf-8",
+      crossDomain : true,
+      xhrFields: {
+        withCredentials: true
+      },
+      success: function () {
+        queryString = QueryString;
+        require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
+            'use strict';
 
-      location.href = path;
-    }
+            window.swipy = new App();
+            window.swipy.handleQueryString(queryString);
+            window.swipy.manualInit();
+            window.debugHelper = new DebugHelper();
+            swipy.start();
+        });
+      },
+      error: function (error) {
+        location.href = location.origin + "/newlogin/"
+      }
+    });
+
+    // if (localStorage.getItem("logged")) {
+    //   // First check that the user is actually logged in
+    //   queryString = QueryString;
+    //   require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
+    //       'use strict';
+    //
+    //       window.swipy = new App();
+    //       window.swipy.handleQueryString(queryString);
+    //       window.swipy.manualInit();
+    //       window.debugHelper = new DebugHelper();
+    //       swipy.start();
+    //   });
+    // } else {
+    //   path = location.origin + "/newlogin/"
+    //
+    //   location.href = path;
+    // }
     // require(["parse"], function() {
     //     // First check that the user is actually logged in
     //     queryString = QueryString;

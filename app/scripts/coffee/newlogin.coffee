@@ -25,7 +25,7 @@ $('#sign-up').on 'submit', (e) ->
       target.find('.password').val('')
       target.find('.repassword').val('')
     error: (error) ->
-      console.log error
+      console.log error.err
   }
 
   $.ajax settings
@@ -49,12 +49,27 @@ $('#sign-in').on 'submit', (e) ->
     contentType: "application/json; charset=utf-8"
     crossDomain : true
     data: JSON.stringify data
+    xhrFields:
+      withCredentials: true
     success: () ->
       window.location = '/'
     error: (error) ->
-      console.log error
+      console.log error.err
   }
 
   $.ajax settings
 
   return false
+
+# Hide/show forms
+$('.sign-in-btn').on 'click', () ->
+  $('.signup').addClass 'hidden'
+  $('.login').removeClass 'hidden'
+  $('.sign-in-link').addClass 'hidden'
+  $('.sign-up-link').removeClass 'hidden'
+
+$('.sign-up-btn').on 'click', () ->
+  $('.login').addClass 'hidden'
+  $('.signup').removeClass 'hidden'
+  $('.sign-up-link').addClass 'hidden'
+  $('.sign-in-link').removeClass 'hidden'
