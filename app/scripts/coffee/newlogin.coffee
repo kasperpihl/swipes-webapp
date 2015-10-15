@@ -1,10 +1,10 @@
 # Sign-up form
 $('#sign-up').on 'submit', (e) ->
   target = $(e.target);
-  email = target.find('.email').val()
-  username = target.find('.username').val()
-  password = target.find('.password').val()
-  repassword = target.find('.repassword').val()
+  email = target.find('.email input').val()
+  username = target.find('.username input').val()
+  password = target.find('.password input').val()
+  repassword = target.find('.repassword input').val()
 
   data =
     email: email,
@@ -20,12 +20,14 @@ $('#sign-up').on 'submit', (e) ->
     crossDomain : true
     data: JSON.stringify data
     success: (data) ->
-      target.find('.email').val('')
-      target.find('.username').val('')
-      target.find('.password').val('')
-      target.find('.repassword').val('')
-    error: (error) ->
-      console.log error.err
+      target.find('.email input').val('')
+      target.find('.username input').val('')
+      target.find('.password input').val('')
+      target.find('.repassword input').val('')
+    error: (errors) ->
+      errors = errors.responseJSON.errors
+
+      handleErrors target, errors
   }
 
   $.ajax settings
@@ -35,8 +37,8 @@ $('#sign-up').on 'submit', (e) ->
 # Sign-in form
 $('#sign-in').on 'submit', (e) ->
   target = $(e.target);
-  email = target.find('.email').val()
-  password = target.find('.password').val()
+  email = target.find('.email input').val()
+  password = target.find('.password input').val()
 
   data =
     email: email,
@@ -53,8 +55,10 @@ $('#sign-in').on 'submit', (e) ->
       withCredentials: true
     success: () ->
       window.location = '/'
-    error: (error) ->
-      console.log error.err
+    error: (errors) ->
+      errors = errors.responseJSON.errors
+
+      handleErrors target, errors
   }
 
   $.ajax settings
@@ -73,3 +77,14 @@ $('.sign-up-btn').on 'click', () ->
   $('.signup').removeClass 'hidden'
   $('.sign-up-link').addClass 'hidden'
   $('.sign-in-link').removeClass 'hidden'
+
+# Handle errors
+handleErrors = (target, errors) ->
+  target.find('.input-wrapper').removeClass 'error'
+
+  errors.forEach (error) ->
+    element = target.find('.input-wrapper.' + error.field)
+
+    element.attr('error-attribute', error.message)
+    element.addClass 'error'
+    element.find('input').addClass 'error'
