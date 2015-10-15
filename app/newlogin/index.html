@@ -24,26 +24,38 @@
     <script src="../bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
   </head>
-  <body style="overflow: auto;">
+  <body style="overflow: auto; background-color: #F4F4F5;">
     <div class="login-wrapper">
       <div class="login-logo">
         <img src="../styles/img/swipes-ui-team-logo.png">
       </div>
       <div class="signup">
         <form action="/" id="sign-up">
-          <input type="email" class="email borderless" placeholder="Enter your email">
-          <input type="username" class="username borderless" placeholder="Enter your username">
-          <input type="password" class="password borderless" placeholder="Enter your password">
-          <input type="password" class="repassword borderless" placeholder="Repeat your password">
-          <input type="submit" value="SIGN UP">
+          <div class="input-wrapper email" error-attribute="">
+            <input type="email" placeholder="Enter your email">
+          </div>
+          <div class="input-wrapper username" error-attribute="">
+            <input type="username" placeholder="Enter your username">
+          </div>
+          <div class="input-wrapper password" error-attribute="">
+            <input type="password" placeholder="Enter your password">
+          </div>
+          <div class="input-wrapper repassword" error-attribute="">
+            <input type="password" placeholder="Repeat your password">
+          </div>
+            <input type="submit" value="SIGN UP">
         </form>
       </div>
 
       <div class="login hidden">
         <form action="/" id="sign-in">
-          <input type="email" class="email borderless" placeholder="Enter your email">
-          <input type="password" class="password borderless" placeholder="Enter your password">
-          <input type="submit" value="SIGN IN">
+          <div class="input-wrapper email" error-attribute="">
+            <input type="email" class="email borderless" placeholder="Enter your email">
+          </div>
+          <div class="input-wrapper password" error-attribute="">
+            <input type="password" class="password borderless" placeholder="Enter your password">
+          </div>
+            <input type="submit" value="SIGN IN">
         </form>
       </div>
 
