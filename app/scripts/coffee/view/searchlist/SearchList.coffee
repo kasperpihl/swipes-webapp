@@ -7,19 +7,23 @@ define [
 	"underscore"
 	"js/view/modules/Section"
 	"js/view/searchlist/SearchResultRow"
-	], (_, Section, SearchResultRow) ->
+	"text!templates/searchlist/load-more.html"
+	], (_, Section, SearchResultRow, LoadMoreTmpl) ->
 	Backbone.View.extend
 		className: "search-result-list"
+		events:
+			'click .load-more': 'loadMore'
 		initialize: ->
-			# Set HTML tempalte for our list
+			# Set HTML template for our list
+			@loadMoreTmpl = _.template LoadMoreTmpl, {variable: "data" }
 			@bouncedRender = _.debounce(@render, 5)
 			@listenTo( Backbone, "reload/searchresult", @bouncedRender )
 			@hasRendered = false
 		remove: ->
 			@cleanUp()
 			@$el.empty()
-			
-		# Reload datasource for 
+
+		# Reload datasource for
 
 		render: ->
 			if !@dataSource?
@@ -30,12 +34,15 @@ define [
 			if !@targetSelector?
 				throw new Error("SearchList must have targetSelector to render")
 
-			@$el.html ""
-			$(@targetSelector).html( @$el )
+			if @dataSource.pageNumber == 1
+				@$el.html ""
+				$(@targetSelector).html( @$el )
+
+			@$el.find('.more-btn-wrapper').remove()
 
 
 			numberOfSections = 1
-			
+
 			if _.isFunction(@dataSource.searchListNumberOfSections)
 				numberOfSections = @dataSource.searchListNumberOfSections( @ )
 
@@ -50,15 +57,23 @@ define [
 				section.setTitles(sectionData.leftTitle, sectionData.rightTitle)
 
 				sectionEl = section.$el.find('.section-list')
-			
+
 				for result in sectionData.results
 					resultView = new SearchResultRow({model: result})
 					resultView.render()
 					sectionEl.append( resultView.el )
 				@$el.append section.el
+				@$el.append @loadMoreTmpl({})
 
 			@hasRendered = true
-			
+
+		loadMore: ->
+			btnWraper = @$el.find('.more-btn-wrapper')
+			btnWraper.children().addClass 'active'
+
+			@dataSource.pageNumber = @dataSource.pageNumber + 1
+			@dataSource.doSearch()
+
 		customCleanUp: ->
 		cleanUp: ->
 			@dataSource = null
