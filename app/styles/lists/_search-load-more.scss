@@ -1,29 +1,43 @@
 .more-btn-wrapper {
-	width: 200px;
-	height: 60px;
+	width: 250px;
+	height: 50px;
 	margin: 50px auto;
 	position: relative;
 	
 	.load-more {
-		width: 200px;
-		height: 60px;
+		width: 250px;
+		height: 50px;
 		position: absolute;
+    top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		background-color: transparent;
-		border: 2px solid $sidebar-black-header;
-		border-radius: 50px;
-		color: $sidebar-black-header;
-		font: 13px $font-normal;
+		border: 2px solid $blue-100;
+		border-radius: 5px;
+		color: $blue-100;
+		font: 16px $font-light;
 		cursor: pointer;
 		overflow: hidden;
+    transition: .2s eease-in-out;
+    
+    &:hover {
+      background-color: $blue-100;
+      color: white;
+      transition: .2s eease-in-out;
+    }
 		
 		&:focus, &:active {
 			outline: none;
 		}
 
 		&.active {
-			animation: load-more 1s ease-in-out forwards;
+			padding: 0;
+			margin: 0;
+			border-radius: 50%;
+			width: 10px;
+			height: 10px;
+			font: 0px $font-light;;
+			transition: .2s ease-in-out;
 		}
 	}
 
@@ -58,28 +72,6 @@
 	}
 }
 
-@keyframes load-more {
-	0%{
-		width: 200px;
-		height: 60px;
-		background-color: transparent;
-	}
-	
-	20% {
-		width: 60px;
-		height: 60px;
-		font-size: 0em;
-		background-color: transparent;
-	}
-	100% {
-		width: 60px;
-		height: 60px;
-		color: transparent;
-		font-size: 0em;
-		background-color: transparent;
-	}
-}
-
 @keyframes more-loader-one {
   	0% {
 		transform: scale(1); 
@@ -93,11 +85,12 @@
 
 @keyframes more-loader-two  {
   	0% {
-    	box-shadow: inset $red 0 0 0 4px;
+    	box-shadow: inset $blue-100 0 0 4px;
     	transform: rotate(-140deg);
   	}
   	100% {
-    	box-shadow: inset $red 0 0 0 4px;
+    	box-shadow: inset $blue-100 0 0 0 4px;
     	transform: rotate(140deg);
   	}
 }
+
