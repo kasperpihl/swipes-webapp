@@ -33,7 +33,11 @@ define [
 			@$el.find(".filter-option").removeClass("selected")
 			el.addClass("selected")
 			@pageNumber = 1
-			@renderSearch()
+
+			if @currentResults
+				@currentResults.query = ''
+			@toggleLoadingAnimation true
+			#@renderSearch()
 		render: ->
 			@$el.html @template({})
 			$("#main").html(@$el)
@@ -45,6 +49,7 @@ define [
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
 		doSearch: ->
+			type = @getCurrentSection()
 			text = @$el.find(".search-field-container input").val()
 
 			return if @isLoading
@@ -53,6 +58,7 @@ define [
 
 			swipy.slackSync.apiRequest("search.all",{query: text, sort: "score", count: '50', page: @pageNumber}, (res,error) =>
 				if res and res.ok
+					@searchList.totalPages = res[type].paging.pages
 					@setCurrentResults(res)
 					@renderSearch()
 				else

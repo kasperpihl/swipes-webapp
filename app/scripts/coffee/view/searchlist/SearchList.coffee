@@ -11,8 +11,7 @@ define [
 	], (_, Section, SearchResultRow, LoadMoreTmpl) ->
 	Backbone.View.extend
 		className: "search-result-list"
-		events:
-			'click .load-more': 'loadMore'
+		totalPages: 0
 		initialize: ->
 			# Set HTML template for our list
 			@loadMoreTmpl = _.template LoadMoreTmpl, {variable: "data" }
@@ -34,6 +33,7 @@ define [
 			if !@targetSelector?
 				throw new Error("SearchList must have targetSelector to render")
 
+			self = @
 			if @dataSource.pageNumber == 1
 				@$el.html ""
 				$(@targetSelector).html( @$el )
@@ -63,7 +63,14 @@ define [
 					resultView.render()
 					sectionEl.append( resultView.el )
 				@$el.append section.el
-				@$el.append @loadMoreTmpl({})
+
+				if @totalPages > @dataSource.pageNumber
+					@$el.append @loadMoreTmpl({})
+
+					# T We are doing the events stuff here because I hate backbone
+					@$el.find('.more-btn-wrapper .load-more').one 'click', () ->
+						self.loadMore()
+
 
 			@hasRendered = true
 
