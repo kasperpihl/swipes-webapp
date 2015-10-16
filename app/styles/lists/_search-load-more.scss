@@ -36,8 +36,8 @@
 			border-radius: 50%;
 			width: 10px;
 			height: 10px;
-			font: 0px $font-light;;
-			transition: .2s ease-in-out;
+			font: 0px $font-light;
+			transition: .3s cubic-bezier(.35,-0.53,.64,1.65);
 		}
 	}
 
