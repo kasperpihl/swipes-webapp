@@ -12,7 +12,7 @@ define [
 	Backbone.View.extend
 		className: "task-list-view-controller"
 		events:
-			"click #import-asana": "importAsana"
+			"click .btn-import": "importAsana"
 		initialize: (options) ->
 			@options = options
 			channelVC = @options.delegate
