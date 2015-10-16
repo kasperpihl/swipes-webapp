@@ -56,7 +56,12 @@ define [
 
 			@isLoading = true
 
-			swipy.slackSync.apiRequest("search.all",{query: text, sort: "score", count: '50', page: @pageNumber}, (res,error) =>
+			swipy.slackSync.apiRequest("search.all", {
+				query: text
+				sort: "timestamp"
+				count: '50'
+				page: @pageNumber
+			}, (res,error) =>
 				if res and res.ok
 					@searchList.totalPages = res[type].paging.pages
 					@setCurrentResults(res)
