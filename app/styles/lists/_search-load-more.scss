@@ -1,0 +1,109 @@
+$mainColor: rgb(129,154,169);
+$bg: rgb(226,229,230);
+$crimson: rgb(243,109,102);
+
+.more-btn-wrapper {
+	width: 200px;
+	height: 60px;
+	margin: 50px auto;
+	position: relative;
+	
+	.load-more {
+		width: 200px;
+		height: 60px;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: transparent;
+		border: 2px solid $mainColor;
+		border-radius: 50px;
+		color: $mainColor;
+		font-weight: 400;
+		font-size: 1.2em;
+		cursor: pointer;
+		overflow: hidden;
+		
+		&:focus, &:active {
+			outline: none;
+		}
+
+		&.active {
+			animation: load-more13s ease-in-out forwards;
+		}
+	}
+
+	.load-more-loader {
+		transform: scale(0);
+		clip: rect(0, 84px, 84px, 42px); 
+		height: 84px;
+		width: 84px;
+		position: absolute;
+		left: calc(50% - 42px);
+		top: calc(50% - 42px);
+
+		&.active {
+			animation: more-loader-one 1.05s linear infinite;
+			animation-delay: .5s;
+
+			&:after {
+				animation: more-loader-two 1.05s linear infinite;
+				animation-delay: .5s;
+			}
+		}
+
+		&:after {
+			transform: scale(0);
+			clip: rect(0, 84px, 84px, 42px);
+			content:'';
+			border-radius: 50%; 
+			height: 84px;
+			width: 84px;
+			position: absolute; 
+		}
+	}
+}
+
+@keyframes load-more {
+	0%{
+		width: 200px;
+		height: 60px;
+		color: $mainColor;
+		background-color: transparent;
+	}
+	
+	20% {
+		width: 60px;
+		height: 60px;
+		font-size: 0em;
+		background-color: transparent;
+	}
+	100% {
+		width: 60px;
+		height: 60px;
+		color: transparent;
+		font-size: 0em;
+		background-color: transparent;
+	}
+}
+
+@keyframes more-loader-one {
+  	0% {
+		transform: scale(1); 
+    	transform: rotate(0deg)
+  	}
+  	100% { 
+	  	transform: scale(1);
+   	 	transform: rotate(220deg)
+  	}
+}
+
+@keyframes more-loader-two  {
+  	0% {
+    	box-shadow: inset $crimson 0 0 0 4px;
+    	transform: rotate(-140deg);
+  	}
+  	100% {
+    	box-shadow: inset $crimson 0 0 0 4px;
+    	transform: rotate(140deg);
+  	}
+}
