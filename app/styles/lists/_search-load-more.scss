@@ -1,7 +1,3 @@
-$mainColor: rgb(129,154,169);
-$bg: rgb(226,229,230);
-$crimson: rgb(243,109,102);
-
 .more-btn-wrapper {
 	width: 200px;
 	height: 60px;
@@ -15,11 +11,10 @@ $crimson: rgb(243,109,102);
 		left: 50%;
 		transform: translateX(-50%);
 		background-color: transparent;
-		border: 2px solid $mainColor;
+		border: 2px solid $sidebar-black-header;
 		border-radius: 50px;
-		color: $mainColor;
-		font-weight: 400;
-		font-size: 1.2em;
+		color: $sidebar-black-header;
+		font: 13px $font-normal;
 		cursor: pointer;
 		overflow: hidden;
 		
@@ -28,7 +23,7 @@ $crimson: rgb(243,109,102);
 		}
 
 		&.active {
-			animation: load-more13s ease-in-out forwards;
+			animation: load-more 1s ease-in-out forwards;
 		}
 	}
 
@@ -43,11 +38,11 @@ $crimson: rgb(243,109,102);
 
 		&.active {
 			animation: more-loader-one 1.05s linear infinite;
-			animation-delay: .5s;
+			animation-delay: .3s;
 
 			&:after {
 				animation: more-loader-two 1.05s linear infinite;
-				animation-delay: .5s;
+				animation-delay: .3s;
 			}
 		}
 
@@ -67,7 +62,6 @@ $crimson: rgb(243,109,102);
 	0%{
 		width: 200px;
 		height: 60px;
-		color: $mainColor;
 		background-color: transparent;
 	}
 	
@@ -99,11 +93,11 @@ $crimson: rgb(243,109,102);
 
 @keyframes more-loader-two  {
   	0% {
-    	box-shadow: inset $crimson 0 0 0 4px;
+    	box-shadow: inset $red 0 0 0 4px;
     	transform: rotate(-140deg);
   	}
   	100% {
-    	box-shadow: inset $crimson 0 0 0 4px;
+    	box-shadow: inset $red 0 0 0 4px;
     	transform: rotate(140deg);
   	}
 }
