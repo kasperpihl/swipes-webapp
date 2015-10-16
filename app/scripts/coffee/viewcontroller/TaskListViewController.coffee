@@ -10,10 +10,13 @@ define [
 	], (_, Template, ToggleCompletedTasks, TaskList, AddTaskCard, TaskHandler, EditTask, RequestWorkOverlay) ->
 	Backbone.View.extend
 		className: "task-list-view-controller"
+		events:
+			"click #import-asana": "importAsana"
 		initialize: (options) ->
 			@options = options
 			channelVC = @options.delegate
 			isMyTasks = @options.isMyTasksView
+			startImportFromAsana = swipy.startImportFromAsana
 
 			@setTemplate()
 
@@ -46,6 +49,10 @@ define [
 			Backbone.on( "edit/task", @editTask, @ )
 
 			@setEmptyTitles()
+
+			if startImportFromAsana
+				swipy.startImportFromAsana = false
+				@startImportFromAsana()
 		showThreadOverlay: (show) ->
 			console.log "showing thread", show
 		editTask: (model) ->
@@ -150,6 +157,14 @@ define [
 				@addTaskCard.setPlaceHolder("Add a new task to #" + channelVC.currentList.get("name"))
 
 			@taskList.titles = titles
+		importAsana: ->
+			swipy.api.callAPI "asana/asanaToken", "POST", {}, (res, error) ->
+				if res && res.redirect
+					window.location = res.redirect
+		startImportFromAsana: ->
+			swipy.api.callAPI "asana/import", "POST", {}, (res, error) ->
+				if res
+					window.location = '/'
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()
