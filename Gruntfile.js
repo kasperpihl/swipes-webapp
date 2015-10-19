@@ -13,6 +13,7 @@ var mountFolder = function (connect, dir) {
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
+    grunt.loadNpmTasks('grunt-postcss');
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load all grunt tasks
@@ -249,9 +250,11 @@ module.exports = function (grunt) {
                 }
             }
         },
-        autoprefixer: {
+        postcss: {
             options: {
-                browsers: ['last 1 version']
+                processors: [
+                  require('autoprefixer')({browsers: ['last 2 version']})
+                ]
             },
             dist: {
                 files: [{
@@ -267,7 +270,7 @@ module.exports = function (grunt) {
         /*concat: {
             dist: {}
         },*/
-        
+
         rev: {
             dist: {
                 files: {
@@ -417,7 +420,7 @@ module.exports = function (grunt) {
             'clean:server',
             'bake:build',
             'concurrent:server',
-            'autoprefixer',
+            'postcss',
             'connect:livereload',
             'open',
             'watch'
@@ -432,7 +435,7 @@ module.exports = function (grunt) {
             'clean:server',
             'bake:build',
             'concurrent:server',
-            'autoprefixer',
+            'postcss',
             'connect:livereload',
             'open'
         ]);
@@ -440,7 +443,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'clean:server',
         'concurrent:test',
-        'autoprefixer',
+        'postcss',
         'connect:test',
         'mocha'
     ]);
@@ -450,13 +453,13 @@ module.exports = function (grunt) {
         'bake:build',
         'useminPrepare',
         'concurrent:dist',
-        'autoprefixer',
-        
+        'postcss',
+
         'requirejs',
         'concat',
         'cssmin',
         'uglify',
-        
+
         // 'modernizr',
         'copy:dist',
 
