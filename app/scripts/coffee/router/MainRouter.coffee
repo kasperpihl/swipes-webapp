@@ -17,6 +17,7 @@ define ["underscore"], (_) ->
 			"group/:id/:action/:actionId": "group"
 			"search": "search"
 			"work": "work"
+			"asana_import": "asanaImport"
 			"*all": "root"
 		initialize: ->
 			@history = []
@@ -25,13 +26,16 @@ define ["underscore"], (_) ->
 		root: ->
 			@navigate( "tasks", { trigger: yes, replace: yes } )
 		add: ->
-			Backbone.trigger( "show-add")	
+			Backbone.trigger( "show-add")
 		search: ->
 			Backbone.trigger( "show-search" )
 		workspaces: ->
 			Backbone.trigger( "show-workspaces" )
 		work: ->
 			Backbone.trigger( "work-mode" )
+		asanaImport: ->
+			swipy.startImportFromAsana = true
+			@navigate( "tasks", { trigger: yes, replace: yes } )
 		task: (id) ->
 			task = swipy.collections.todos.get(id)
 			if task
@@ -46,7 +50,7 @@ define ["underscore"], (_) ->
 					if channel.get("is_im")
 						user = swipy.slackCollections.users.get(channel.get("user"))
 						pathStart = "im/" + user.get("name")
-				
+
 				fullPath = pathStart + "/task/" + task.id
 				if @getCurrRoute()?.startsWith(pathStart)
 					Backbone.trigger("edit/task", task)

@@ -6,6 +6,7 @@ define [
 	], (_, TweenLite, Tmpl, SearchList) ->
 	Backbone.View.extend
 		className: "search-view-controller"
+		pageNumber: 1,
 		initialize: ->
 			@template = _.template Tmpl, {variable: "data" }
 			@tailBounceSearch = _.debounce(@doSearch, 500)
@@ -16,7 +17,7 @@ define [
 		events:
 			"keyup input": "pressedKey"
 			"keydown input": "keydownEvent"
-			"click .filter-option" : "clickedFilterOption"   
+			"click .filter-option" : "clickedFilterOption"
 		pressedKey: (e) ->
 			if e.keyCode is 27
 				# T_TODO close search on escape would be nice
@@ -31,7 +32,12 @@ define [
 			el = $(e.currentTarget)
 			@$el.find(".filter-option").removeClass("selected")
 			el.addClass("selected")
-			@renderSearch()
+			@pageNumber = 1
+
+			if @currentResults
+				@currentResults.query = ''
+			@toggleLoadingAnimation true
+			#@renderSearch()
 		render: ->
 			@$el.html @template({})
 			$("#main").html(@$el)
@@ -43,17 +49,24 @@ define [
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
 		doSearch: ->
+			type = @getCurrentSection()
 			text = @$el.find(".search-field-container input").val()
 
 			return if @isLoading
 
 			@isLoading = true
 
-			swipy.slackSync.apiRequest("search.all",{query: text, sort: "score"}, (res,error) =>
+			swipy.slackSync.apiRequest("search.all", {
+				query: text
+				sort: "timestamp"
+				count: '50'
+				page: @pageNumber
+			}, (res,error) =>
 				if res and res.ok
+					@searchList.totalPages = res[type].paging.pages
 					@setCurrentResults(res)
 					@renderSearch()
-				else 
+				else
 					@currentResults = []
 
 				@isLoading = false
@@ -80,7 +93,7 @@ define [
 
 			numberOfFiles = res.files.total
 			@$el.find(".filter-option.files").html("Files ("+numberOfFiles+")")
-			
+
 			swipy.topbarVC.setSectionTitleAndProgress(+numberOfMessages+ + +numberOfFiles+ " results")
 		renderSearch: ->
 			@searchList.render()
@@ -93,7 +106,7 @@ define [
 		###
 			SearchList Datasource
 		###
-		
+
 		# SearchList asking for number of sections
 		searchListNumberOfSections: ( chatList ) ->
 			return 1

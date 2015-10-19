@@ -29,7 +29,7 @@
 }
 
 .search-view-controller{
-	width: 80%;
+	width: 77%;
 	height: 100%;
 	position: relative;
 	$searchHeaderHeight: 60px;
@@ -70,6 +70,17 @@
 		position: absolute;
 
 	}
+  
+  .load-more-btn {
+    content: "Load more result";
+    width: 250px;
+    height: 40px;
+    background-color: $sidebar-black-header;
+    border-radius: 5px;
+    color: $unselected-text-color;
+    font: 14px $font-light;
+    line-height: 40px;
+  }
 	
 	.search-loading-container{
 		width: 80%;
