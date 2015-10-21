@@ -43,7 +43,7 @@ define [
 			@chatList.render()
 			@focusInput()
 		focusInput: ->
-			@newMessage?.$el.find('input').focus()
+			@newMessage?.$el.find('textarea').focus()
 		destroy: ->
 			Backbone.off(null, null, @)
 			@chatList?.remove?()
