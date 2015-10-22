@@ -4,12 +4,12 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
- 
+
 	<title>Swipes</title>
- 
+
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
- 
+
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 	<!-- build:css(.tmp) styles/main.css -->
 	<link rel="stylesheet" href="styles/main.css">
@@ -18,8 +18,11 @@
 	<link rel="apple-touch-icon" sizes="76x76" href="styles/img/touch-icon-ipad.png" />
 	<link rel="apple-touch-icon" sizes="120x120" href="styles/img/touch-icon-iphone-retina.png" />
 	<link rel="apple-touch-icon" sizes="152x152" href="styles/img/touch-icon-ipad-retina.png" />
+
+  <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+
 	<script>
-		
+
 		/*if (window.liveEnvironment && window.location.protocol != "https:")
 			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);*/
 		if (window.process != null && process.versions['electron'] && window.require) {
@@ -791,7 +794,7 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 			</div><!-- sub structures come here -->
 			<div class="clickable-overlay"></div>
 		</aside><!-- sidebar -->
-		
+
 		<div class="right-side-container">
 			<div class="right-side-inner-container">
 				<div class="content-container" id="main">
@@ -809,10 +812,10 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 								var el = document.getElementById("reload-button");
 								if(el)
 									el.style.display = '';
-								
+
 							}, 5000)
 						</script>
-					</div>				
+					</div>
 				</div>
 				<div class="top-bar-container yellow">
 				</div>
@@ -832,15 +835,15 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialClose"></use>
 								</svg>
 							</a>-->
-							
-							
+
+
 						</div>
 					</div>
 					<aside class="right-sidebar-container">
 						<ul class="right-sidebar-controls">
 						</ul>
 					</aside>
-					
+
 				</div>
 			</div>
 
@@ -852,10 +855,10 @@ var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.a
 			<!-- Modal's get inserted here! -->
 		</div>
 	</div>
-	
+
 	<div class="lightbox-overlay">
 		<div class="close-container">
-			<div class="close"></div>			
+			<div class="close"></div>
 		</div>
 		<div class="lightbox"></div>
 	</div>

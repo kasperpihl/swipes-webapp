@@ -42,7 +42,7 @@ define [
 					if window.location.hash
 						newurl += window.location.hash
 					window.history.pushState({path:newurl},'',newurl)
-				
+
 		constructor: ->
 			##@tags.fetch()
 			@isOpened = true
@@ -58,7 +58,7 @@ define [
 			@slackCollections = new SlackCollections()
 
 			@bridge = new BridgeController()
-			
+
 
 			# Synchronization
 			@settings = new SettingsController()
@@ -69,8 +69,8 @@ define [
 
 			# Keyboard/Shortcut handler
 			@shortcuts = new KeyboardController()
-			
-			
+
+
 		start: ->
 			@slackCollections.fetchAll()
 			@slackSync.start()
@@ -93,11 +93,11 @@ define [
 			@topbarVC = new TopbarViewController()
 			@rightSidebarVC = new RightSidebarViewController()
 			@modalVC = new ModalViewController()
-			
+
 			@mainViewController = new MainViewController()
 			@router = new MainRouter()
-			
-			
+
+
 			@scheduler = new ScheduleController()
 			@sidebar = new SidebarController()
 
@@ -109,19 +109,19 @@ define [
 
 			Backbone.history.start( pushState: no )
 			$(".load-indicator").remove()
-			
+
 
 			$('.search-result a').click( (e) ->
 				swipy.filter.clearFilters()
 				Backbone.trigger( "remove-filter", "all" )
 				return false
-			)	
-			
+			)
+
 			@workmode.checkForWork()
 			if @href
 				switch @href
 					when "keyboard" then @sidebar.showKeyboardShortcuts()
-					
+
 				@href = false
 			@onboarding.start()
 		cleanUp: ->
@@ -136,7 +136,7 @@ define [
 			@sound?.destroy()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
-			if Parse.History.started then Parse.history.stop()
+			#if Parse.History.started then Parse.history.stop()
 		resizedWindow: ->
 			Backbone.trigger("resized-window")
 		closedWindow: ->
@@ -147,4 +147,3 @@ define [
 			Backbone.trigger("opened-window")
 			@isWindowOpened = true
 			@sync?.sync()
-			

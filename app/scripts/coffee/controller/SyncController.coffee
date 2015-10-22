@@ -51,7 +51,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					didAddMainTasks = true
 					newModels = []
 				objectId = obj.objectId
-				model = collection.find( 
+				model = collection.find(
 					( model ) ->
 						return true if objectId? and model.id is objectId
 						false
@@ -77,7 +77,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 					if className is "Tag" and collection.getTagByName(model.get("title"))
 						model.destroy()
 						continue
-						
+
 					collection.add model
 					newModels.push model
 					model.doSync()
@@ -107,19 +107,19 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 			for objID, attr of updatedAttributes
 				if _.indexOf( attr, "deleted" ) isnt -1
-					deleteJSON = 
+					deleteJSON =
 						objectId: objID
 						deleted: true
 					serverJSON.push deleteJSON
 			identifiers = _.keys( updatedAttributes )
-			
+
 			updateModels = collection.filter (model) ->
 				return (_.indexOf(identifiers , model.id ) isnt -1)
 			for mdl in updateModels
 				mdlsChanges = updatedAttributes[ mdl.id ]
 				json = mdl.toServerJSON mdlsChanges
 				json.objectId = mdl.id
-				serverJSON.push json 
+				serverJSON.push json
 			serverJSON
 
 
@@ -152,7 +152,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			return @needSync = true if @isSyncing
 			return if !localStorage.getItem("slack-token")
 			@isSyncing = true
-			url = "http://swipesslack.elasticbeanstalk.com/v1/sync"  #"https://api.swipesapp.com/v1/sync" #
+			url = "http://localhost:5000/v1/sync"  #"https://api.swipesapp.com/v1/sync" #
 
 			token = localStorage.getItem("slack-token")
 			data =
@@ -171,7 +171,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 
 			serData = JSON.stringify data
 			#@syncIndicator.show()
-			settings = 
+			settings =
 				url : url
 				type : 'POST'
 				success : @responseFromSync
@@ -207,7 +207,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 				@handleObjectsFromSync( data.ToDo, "ToDo" ) if data.ToDo?
 
 				if data.updateTime
-					@lastUpdate = data.updateTime 
+					@lastUpdate = data.updateTime
 					if typeof(Storage) isnt "undefined"
 						localStorage.setItem("syncLastUpdate", data.updateTime)
 				if not @firstSync

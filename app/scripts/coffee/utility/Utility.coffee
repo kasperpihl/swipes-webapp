@@ -3,7 +3,7 @@ define ["underscore"], (_) ->
 		generateId: ( length ) ->
 			text = ""
 			possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-    
+
 			for i in [0..length]
 				text += possible.charAt(Math.floor(Math.random() * possible.length))
 
@@ -38,20 +38,20 @@ define ["underscore"], (_) ->
 
 		sendError: (error, type) ->
 			me = swipy.slackCollections.users.me()
-			ErrorObject = Parse.Object.extend("Error")
-			errorObject = new ErrorObject()
-
-			if error? and error
-				errorObject.set( "code", error.status ) if error.status
-				errorObject.set( "error", error.statusText ) if error.statusText
-				errorObject.set( "code", error.code ) if error.code
-				errorObject.set( "error", error.message ) if error.message
-
-			errorObject.set( "Platform", "Web" )
-			errorObject.set( "OSVersion", navigator.userAgent.toLowerCase() )
-			errorObject.set( "type", type ) if type?
-			errorObject.set( "user", me.toJSON() ) if me?
-			errorObject.save()
+			#ErrorObject = Parse.Object.extend("Error")
+			# errorObject = new ErrorObject()
+			#
+			# if error? and error
+			# 	errorObject.set( "code", error.status ) if error.status
+			# 	errorObject.set( "error", error.statusText ) if error.statusText
+			# 	errorObject.set( "code", error.code ) if error.code
+			# 	errorObject.set( "error", error.message ) if error.message
+			#
+			# errorObject.set( "Platform", "Web" )
+			# errorObject.set( "OSVersion", navigator.userAgent.toLowerCase() )
+			# errorObject.set( "type", type ) if type?
+			# errorObject.set( "user", me.toJSON() ) if me?
+			# errorObject.save()
 		handleMentionsAndLinks: (text) ->
 			return if !text
 
@@ -66,7 +66,7 @@ define ["underscore"], (_) ->
 
 					if res and res.length > 1
 						placeholder = res[1]
-					
+
 					# URL handling
 					if action.startsWith("http") or action.startsWith("mailto:")
 						targetPart = "target=\"_blank\""

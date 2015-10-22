@@ -11,7 +11,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 	class SlackSyncController
 		constructor: ->
 			@token = localStorage.getItem("slack-token")
-			@baseURL = "https://slack.com/api/"
+			@baseURL = "http://localhost:5000/v1/"
 			@util = new Utility()
 			@currentIdCount = 0
 			@sentMessages = {}
@@ -20,7 +20,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		start: ->
 			return if @isStarting?
 			@isStarting = true
-			@apiRequest("rtm.start", {simple_latest: false}, (data, error) =>
+			@apiRequest("rtm.start", 'GET', {simple_latest: false}, (data, error) =>
 				@isStarting = null
 				if data and data.ok
 					@handleTeam(data.team) if data.team
@@ -33,9 +33,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@handleChannels(data.groups) if data.groups
 					@handleChannels(data.ims) if data.ims
 					# Only enable threaded conversations for Swipes Team
-					if data.team.id is "T02A53ZUJ"
+					#if data.team.id is "T02A53ZUJ"
 						# T_TODO disabling threds. There are still comments when you try to type from the edit view
-						localStorage.setItem("EnableThreadedConversations", false)
+						#localStorage.setItem("EnableThreadedConversations", false)
 					@clearDeletedChannels()
 					@openWebSocket(data.url)
 					localStorage.setItem("slackLastConnected", new Date())
@@ -87,11 +87,15 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			channel.addMessage(message, incrementUnread)
 
 		openWebSocket: (url) ->
-			@webSocket = new WebSocket(url)
-			@webSocket.onopen = @onSocketOpen
-			@webSocket.onclose = @onSocketClose
-			@webSocket.onmessage = @onSocketMessage
-			@webSocket.onerror = @onSocketError
+			#@webSocket = new WebSocket(url)
+			@socket = io.connect('http://localhost:5000');
+			@socket.on('message', (data) ->
+				console.log data
+			)
+			# @webSocket.onopen = @onSocketOpen
+			# @webSocket.onclose = @onSocketClose
+			# @webSocket.onmessage = @onSocketMessage
+			# @webSocket.onerror = @onSocketError
 
 
 		onSocketOpen: (evt) ->
@@ -149,7 +153,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		sendMessage:(message, channel, callback) ->
 			self = @
 			options = {text: message, channel: channel, as_user: true, link_names: 1}
-			@apiRequest("chat.postMessage", options, (res, error) ->
+			@apiRequest("chat.postMessage", 'POST', options, (res, error) ->
 				if res and res.ok
 					slackbotChannelId = swipy.slackCollections.channels.slackbot().id
 					type = self.util.slackTypeForId(channel)
@@ -166,7 +170,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			formData.append("filename", file.name)
 			formData.append("file", file);
 			swipy.analytics.logEvent("[Engagement] Upload File Started", {})
-			@apiRequest("files.upload", {}, (res, error) ->
+			@apiRequest("files.upload", 'POST', {}, (res, error) ->
 				if res and res.ok
 					swipy.analytics.logEvent("[Engagement] Uploaded File", {} )
 					swipy.analytics.sendEventToIntercom( 'Uploaded File', {} )
@@ -175,17 +179,17 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		sendMessageAsSofi: (message, channel, callback, attachments) ->
 			options = {text: message, channel: channel, as_user: false, link_names: 1, username: "s.o.f.i.", icon_url: "http://team.swipesapp.com/styles/img/sofi48.jpg"}
 			options.attachments = attachments if attachments
-			@apiRequest("chat.postMessage", options, (res, error) ->
+			@apiRequest("chat.postMessage", 'POST', options, (res, error) ->
 				callback?(res, error)
 			)
-		apiRequest: (command, options, callback, formData) ->
+		apiRequest: (command, type, options, callback, formData) ->
 			url = @baseURL + command
 			options = {} if !options? or !_.isObject(options)
 			options.token = @token
 
 			settings =
 				url : url
-				type : 'POST'
+				type : type
 				success : ( data ) ->
 					console.log "slack success", data
 					if data and data.ok
@@ -198,6 +202,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@util.sendError( error, "Server Error")
 					callback?(false, error)
 				crossDomain : true
+				dataType : "json"
+				contentType: "application/json; charset=utf-8"
+				xhrFields:
+					withCredentials: true
 				context: @
 				data : options
 				processData : true

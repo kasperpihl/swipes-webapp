@@ -42,7 +42,7 @@ LoginView = Backbone.View.extend
 		@slackState = @generateId(10)
 		amplitude.logEvent "[Login] Clicked Login Button"
 		window.open("https://slack.com/oauth/authorize?client_id=2345135970.9201204242&redirect_uri=http://team.swipesapp.com/slacksuccess/&scope=client&state="+@slackState,"Authorize Swipes w/ Slack", "height=700,width=500")
-		
+
 		return
 	handleSlackSuccess:(code, state, QueryString) ->
 		self = @
@@ -51,8 +51,8 @@ LoginView = Backbone.View.extend
 		if state is @slackState
 			console.log code, state
 			serverData = JSON.stringify {code: code}
-			settings = 
-				url : "http://swipesslack.elasticbeanstalk.com/v1/slackToken"
+			settings =
+				url : "http://localhost:5000/v1/slackToken"
 				type : 'POST'
 				success : ( data ) ->
 
@@ -69,7 +69,7 @@ LoginView = Backbone.View.extend
 							pathName += "?href=" + queryString.href
 						if(location.hash)
 							pathName += location.hash
-						
+
 						location.href = pathName
 					else
 						console.log data
@@ -96,7 +96,7 @@ if queryString.token
 		pathName += "?href=" + queryString.href
 	if(location.hash)
 		pathName += location.hash
-	
+
 	location.href = pathName
 
 # Finally, instantiate a new SwipesLogin
