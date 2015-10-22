@@ -143,6 +143,7 @@ define ["underscore",
 				@$el.find( ".overlay-content .snooze-options .date-picker" ).html @datePicker.el
 				#@$el.addClass "show-datepicker"
 				@datePicker.render()
+				@alignModal()
 			else
 				#@$el.addClass "show-datepicker"
 			

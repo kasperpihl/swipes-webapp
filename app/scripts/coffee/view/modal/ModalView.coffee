@@ -9,6 +9,8 @@ define ["underscore"], (_) ->
 				self.didCloseModal()
 			)
 			self.didPresentModal?()
+		alignModal: ->
+			swipy.modalVC.alignContent()
 		dismissModal: ->
 			swipy.modalVC.hideContent() if @shown
 			@shown = false
