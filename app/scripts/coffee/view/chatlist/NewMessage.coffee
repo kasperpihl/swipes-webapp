@@ -3,7 +3,6 @@ define ["underscore"
 	], (_, Tmpl) ->
 	Backbone.View.extend
 		className: "chat-new-message"
-		shiftDown: false
 		offset: null
 		initialize: ->
 			self = @
@@ -40,15 +39,13 @@ define ["underscore"
 				@lastSentTyping = new Date().getTime()
 				if @addDelegate? and _.isFunction(@addDelegate.newMessageIsTyping)
 					@addDelegate.newMessageIsTyping( @ )
-			if e.keyCode is 16
-				@shiftDown = false
-			if e.keyCode is 13 && @shiftDown == false
+			if e.keyCode is 13 && !e.shiftKey
 				@sendMessage()
 			@autoExpand()
 			return false
 		keyDown: (e) ->
-			if e.keyCode is 16
-				@shiftDown = true
+			if e.keyCode is 13 and !e.shiftKey
+				e.preventDefault()
 		clickedAttach: ->
 			$("#file-input").click()
 		fileChanged: (e) ->
