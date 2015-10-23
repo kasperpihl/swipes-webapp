@@ -142,10 +142,10 @@ $chat-new-message-height: 60px;
 		line-height: 1;
 		padding-bottom: 4px;
 		.sender-name{
-			font: 14px/1 $font-bold;
+			font: $bold 14px/1 $font-bold;
 		}
 		.timestamp{
-			font: 11px/1 $font-bold;
+			font: $semibold 11px/1 $font-bold;
 			opacity: .4;
 		}
 	}
