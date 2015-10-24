@@ -50,9 +50,7 @@ define [
 				return false if e.keyCode is 38
 				return false if e.keyCode is 40
 				if e.keyCode is 13
-					res = @results[@selectedIndex]
-					@delegate?.acListSelectedItem?(@, res)
-					@toggleShown(false)
+					@sendResultAndClose()
 					return false
 				
 
@@ -62,6 +60,11 @@ define [
 				results = @dataSource.getResultsForTextAndSearchLetter?(@searchLetter, searchText)
 				@setResults(results)
 			return true
+		sendResultAndClose: ->
+			res = @results[@selectedIndex]
+			@delegate?.acListSelectedItem?(@, res)
+			
+			@toggleShown(false)
 		selectNext: ->
 			@selectedIndex++
 			if @selectedIndex >= @results.length
@@ -78,6 +81,7 @@ define [
 			$targetEl = @$el.find(".ac-result-list li#ac-item-" + el.id)
 			if $targetEl
 				$targetEl.addClass("selected")
+
 		toggleShown: (toggle, startIndex) ->
 			if startIndex?
 				@startIndex = startIndex
@@ -95,6 +99,12 @@ define [
 			for item in results
 				item.i = i++
 				$listEl.append( @itemTemplate(item) )
+			$listEl.find("li.ac-res-item").click((e) =>
+				index = parseInt($(e.currentTarget).attr("data-href"))
+				@selectedIndex = index
+				@selectRow()
+				@sendResultAndClose()
+			)
 			if results and results.length 
 				@selectRow()
 		remove: ->

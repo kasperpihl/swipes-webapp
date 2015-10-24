@@ -64,6 +64,7 @@ define [
 			@threadHeader.render()
 			@$el.prepend( @threadHeader.el )
 
+			# Adding the Auto completer above the input field (bottom of chat container)
 			@$el.find(".chat-list-container").prepend( @autoCompleteList.el )
 
 			@chatList.render()
