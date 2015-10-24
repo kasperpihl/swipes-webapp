@@ -127,10 +127,7 @@ define [
 				#console.log "scrolltop", scrollPos, scrollContainerHeight, contentTotalHeight
 
 
-		toggleShown: (toggle, startIndex) ->
-			if startIndex?
-				@startIndex = startIndex
-			else @startIndex = -1
+		toggleShown: (toggle) ->
 			if !toggle
 				@setResults([])
 			@shown = toggle

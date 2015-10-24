@@ -62,9 +62,19 @@ define ["underscore"
 			@$el.find(".attach-button-container").toggleClass("isUploading", isUploading)
 		acListSelectedItem: (acList, result) ->
 			message = @$el.find("textarea").val()
-			newMessage = message.substr(0, acList.startIndex) + result.name + " " + message.substr(acList.startIndex+acList.searchText.length)
-			console.log acList.startIndex, acList.searchText, result
+
+			firstPart = message.substr(0, acList.searchStartIndex)
+			replacementText = result.name + " "
+			lastPart = message.substr(acList.searchStartIndex+acList.searchText.length)
+			
+			newMessage = firstPart + replacementText + lastPart
+			newSelectionIndex = acList.searchStartIndex + replacementText.length
+			
 			@$el.find("textarea").val(newMessage)
+			@$el.find("textarea").focus()
+			textAreaJSEl = document.getElementById("new-message-textarea")
+			textAreaJSEl.selectionStart = newSelectionIndex
+			textAreaJSEl.selectionEnd = newSelectionIndex
 		sendMessage: ->
 			message = @$el.find("textarea").val()
 			return if message.length is 0
