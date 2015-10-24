@@ -39,6 +39,8 @@ define ["underscore"
 				@lastSentTyping = new Date().getTime()
 				if @addDelegate? and _.isFunction(@addDelegate.newMessageIsTyping)
 					@addDelegate.newMessageIsTyping( @ )
+			message = @$el.find("textarea").val()
+			@autoCompleteList?.updateWithEventAndText(e, message)
 			if e.keyCode is 13 && !e.shiftKey
 				@sendMessage()
 			@autoExpand()

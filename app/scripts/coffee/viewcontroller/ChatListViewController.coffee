@@ -18,7 +18,9 @@ define [
 
 			@threadHeader = new ThreadHeader()
 			@autoCompleteList = new AutoCompleteList()
-
+			@autoCompleteList.dataSource = @
+			@newMessage.autoCompleteList = @autoCompleteList
+			
 			@chatList = new ChatList()
 			@chatList.targetSelector = ".chat-list-view-controller .chat-list-container-scroller"
 			@chatList.enableDragAndDrop = true
@@ -30,7 +32,29 @@ define [
 			@chatList.dragDelegate = @chatHandler
 			@chatList.dataSource = @chatHandler
 			Backbone.on("opened-window", @focusInput, @)
-
+		getResultsForTextAndSearchLetter: (searchLetter, searchText) ->
+			results = []
+			if searchLetter is "@"
+				console.log searchLetter, searchText
+				sortedUsers = _.sortBy(swipy.slackCollections.users.activeUsers(true), (user) ->
+					return user.get("name")
+				)
+				_.each(sortedUsers, (user) ->
+					#console.log user.toJSON()
+					if user.get("name").startsWith(searchText)
+						results.push({name: user.get("name")})
+				)
+			else if searchLetter is "#"
+				console.log searchLetter, searchText
+				sortedChannels = _.sortBy(swipy.slackCollections.channels.activeChannels(), (channel) ->
+					return channel.get("name")
+				)
+				_.each(sortedChannels, (channel) ->
+					#console.log user.toJSON()
+					if channel.get("name") and channel.get("name").startsWith(searchText)
+						results.push({name: channel.get("name")})
+				)
+			return results
 		setTemplate: ->
 			@template = _.template Template
 		render: ->
@@ -52,5 +76,6 @@ define [
 			@chatList?.remove?()
 			@threadHeader?.remove()
 			@newMessage?.remove?()
+			@autoCompleteList?.remove()
 			@chatHandler?.destroy?()
 			@remove()
