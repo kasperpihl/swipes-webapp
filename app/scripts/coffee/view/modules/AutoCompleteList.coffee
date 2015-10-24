@@ -38,14 +38,38 @@ define [
 		updateWithEventAndText: (e, fullText) ->
 			fullText = "" if !fullText? or !fullText
 			return @toggleShown(false) if !fullText.length
+			
+			cursorIndex = e.currentTarget.selectionStart
+			textBeforeCursor = fullText.substr(0, cursorIndex)
+			iteratorIndex = cursorIndex
+			
+			### 
+				Strategy:
+				Get cursor position
+				Go back each char
+				break if newline or space
+				if @ or # is found
+					searchText is the string between
+					showResults!
+				else
+					hide!
 
+			###
+			toggleShow = false
+			while char = textBeforeCursor.charAt(--iteratorIndex)
+				if char is " "
+					break
+				if char is "@" or char is "#"
+					@searchStartIndex = iteratorIndex+1
+					@searchLetter = char
+					toggleShow = true
+			return @toggleShown(false) if !toggleShow
 			if !@shown
-				lastLetter = fullText.substr(fullText.length - 1)
-				if lastLetter is "@" or lastLetter is "#"
-					@searchLetter = lastLetter
-					@toggleShown(true, fullText.length)
+				@toggleShown(true)
+			searchText = textBeforeCursor.substr(iteratorIndex+2)
+			
+
 			if @shown
-				console.log e.keyCode
 				return false if e.keyCode is 27
 				return false if e.keyCode is 38
 				return false if e.keyCode is 40
@@ -53,8 +77,6 @@ define [
 					@sendResultAndClose()
 					return false
 				
-
-			searchText = fullText.substr(@startIndex)
 			if !searchText or searchText isnt @searchText
 				@searchText = searchText
 				results = @dataSource.getResultsForTextAndSearchLetter?(@searchLetter, searchText)
@@ -62,8 +84,8 @@ define [
 			return true
 		sendResultAndClose: ->
 			res = @results[@selectedIndex]
+			# Delegate call with the result
 			@delegate?.acListSelectedItem?(@, res)
-			
 			@toggleShown(false)
 		selectNext: ->
 			@selectedIndex++
@@ -77,10 +99,31 @@ define [
 			@selectRow()
 		selectRow: ->
 			el = @results[@selectedIndex]
-			@$el.find(".ac-result-list li.selected").removeClass("selected")
-			$targetEl = @$el.find(".ac-result-list li#ac-item-" + el.id)
+			$listEl = @$el.find(".ac-result-list")
+			$listEl.find("li.selected").removeClass("selected")
+			$targetEl = $listEl.find("li#ac-item-" + el.id)
 			if $targetEl
 				$targetEl.addClass("selected")
+				scrollPos = @$el.scrollTop()
+				scrollContainerHeight = @$el.outerHeight()
+				maxScrollPos = $listEl.outerHeight() - scrollContainerHeight
+				elPos = $targetEl.position().top
+				elHeight = $targetEl.outerHeight()
+				extraScrollPadding = 10
+
+				# check if el is above
+				if elPos < 0
+					newScroll = scrollPos + elPos
+				newScroll = 0 if newScroll < 0
+
+				if elPos > scrollContainerHeight - elHeight
+					newScroll = scrollPos + elPos - scrollContainerHeight + elHeight
+				newScroll = maxScrollPos if newScroll > maxScrollPos
+				if newScroll?
+					#console.log newScroll
+					@$el.scrollTop(newScroll)
+				#console.log "scrolltop", scrollPos, scrollContainerHeight, contentTotalHeight
+
 
 		toggleShown: (toggle, startIndex) ->
 			if startIndex?
@@ -95,6 +138,7 @@ define [
 			@selectedIndex = 0
 			$listEl = @$el.find(".ac-result-list")
 			$listEl.html ""
+			@$el.scrollTop(0)
 			i = 0
 			for item in results
 				item.i = i++
