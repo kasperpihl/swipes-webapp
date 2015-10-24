@@ -144,7 +144,7 @@
 		}
 		h1{
 			padding-top: 10px;
-			font: 14px $font-normal;
+			font: $semibold 14px $font-normal;
 			color: rgba($unselected-text-color,.5);
 			letter-spacing: 0px;
 			padding-left: 19px;
@@ -222,7 +222,7 @@
 			}
 			
 			.task-text {
-				font: 15px $font-normal;
+				font: $bold 15px $font-normal;
 				line-height: 45px;
 				cursor: pointer;
 			}
@@ -271,7 +271,7 @@
 					&.task {
 						top: 10px;
 						right: 8px;
-						font: 14px $font-bold;
+						font: $semibold 14px $font-bold;
 						height: $notification-size;
 						min-width: $notification-size;
 						color: $sidebar-dark-color;
