@@ -57,8 +57,7 @@ define [
 			@taskListVC?.goBackFromEditMode()
 		handleEditedTask: ->
 			@updateTopbarTitle()
-			return
-			#if !localStorage.getItem("EnableThreadedConversations")
+			return if !localStorage.getItem("EnableThreadedConversations")
 
 			# Is editing
 			if @taskListVC? and @taskListVC.editModel

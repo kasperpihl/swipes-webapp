@@ -1,0 +1,12 @@
+.autocomplete-list{
+	display:none;
+	position: absolute;
+    bottom: 0;
+    width: 100%;
+    
+    background-color: #ffffff;
+    z-index: 999;
+	&.shown{
+		display: block;
+	}
+}

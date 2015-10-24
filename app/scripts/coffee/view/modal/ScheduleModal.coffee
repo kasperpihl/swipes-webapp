@@ -139,13 +139,10 @@ define ["underscore",
 		showDatePicker: ->
 			if not @datePicker? then require ["js/view/modules/DatePicker"], (DatePicker) =>
 				@datePicker = new DatePicker()
-
 				@$el.find( ".overlay-content .snooze-options .date-picker" ).html @datePicker.el
 				#@$el.addClass "show-datepicker"
 				@datePicker.render()
-				@alignModal()
-			else
-				#@$el.addClass "show-datepicker"
+			@alignModal()
 			
 			@setActiveMenu("date-picker")
 		changedTimeOnPicker: (model, value) ->

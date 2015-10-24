@@ -5,8 +5,9 @@ define [
 	"js/view/chatlist/NewMessage"
 	"js/handler/ChatHandler"
 	"js/view/chatlist/ThreadHeader"
+	"js/view/modules/AutoCompleteList"
 
-	], (_, Template, ChatList, NewMessage, ChatHandler, ThreadHeader) ->
+	], (_, Template, ChatList, NewMessage, ChatHandler, ThreadHeader, AutoCompleteList) ->
 	Backbone.View.extend
 		className: "chat-list-view-controller"
 		initialize: ->
@@ -16,7 +17,7 @@ define [
 			@newMessage = new NewMessage()
 
 			@threadHeader = new ThreadHeader()
-			
+			@autoCompleteList = new AutoCompleteList()
 
 			@chatList = new ChatList()
 			@chatList.targetSelector = ".chat-list-view-controller .chat-list-container-scroller"
@@ -39,6 +40,8 @@ define [
 
 			@threadHeader.render()
 			@$el.prepend( @threadHeader.el )
+
+			@$el.find(".chat-list-container").prepend( @autoCompleteList.el )
 
 			@chatList.render()
 			@focusInput()

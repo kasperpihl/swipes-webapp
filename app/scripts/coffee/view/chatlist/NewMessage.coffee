@@ -31,7 +31,7 @@ define ["underscore"
 			textarea.css('height', 'auto').css 'height', textarea[0].scrollHeight + @offset
 			newMessageCont = $('.chat-new-message')
 			newMessageContHeight = newMessageCont.height()
-			chatContainer.css('height', 'calc(100% - ' + newMessageContHeight + 'px - 4px)')
+			chatContainer.css('height', 'calc(100% - ' + newMessageContHeight + 'px - 0px)')
 			return
 		pressedKey: (e) ->
 			nowStamp = new Date().getTime()
