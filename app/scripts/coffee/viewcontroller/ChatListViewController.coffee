@@ -42,7 +42,7 @@ define [
 				_.each(sortedUsers, (user) ->
 					#console.log user.toJSON()
 					if user.get("name").startsWith(searchText)
-						results.push({name: user.get("name")})
+						results.push({id: user.id, name: user.get("name")})
 				)
 			else if searchLetter is "#"
 				console.log searchLetter, searchText
@@ -52,7 +52,7 @@ define [
 				_.each(sortedChannels, (channel) ->
 					#console.log user.toJSON()
 					if channel.get("name") and channel.get("name").startsWith(searchText)
-						results.push({name: channel.get("name")})
+						results.push({id: channel.id, name: channel.get("name")})
 				)
 			return results
 		setTemplate: ->

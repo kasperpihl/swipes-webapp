@@ -17,7 +17,6 @@ define [
 			@itemTemplate = _.template ItemTmpl, {variable: "data" }
 			@render()
 
-
 			#$(document).on('keydown', @keyDownHandling )
 		render: ->
 			@$el.html @template()
@@ -31,6 +30,16 @@ define [
 				if lastLetter is "@" or lastLetter is "#"
 					@searchLetter = lastLetter
 					@toggleShown(true, fullText.length)
+			console.log e.keyCode
+			if e.keyCode is 27
+				@toggleShown(false)
+				return false
+			if e.keyCode is 38
+				@selectPrev()
+				return false
+			if e.keyCode is 40
+				@selectNext()
+				return false
 
 
 			searchText = fullText.substr(@startIndex)
@@ -38,9 +47,23 @@ define [
 				@searchText = searchText
 				results = @dataSource.getResultsForTextAndSearchLetter(@searchLetter, searchText)
 				@setResults(results)
-			
-
-		keyDownHandling: (e) ->
+			return true
+		selectNext: ->
+			@selectedIndex++
+			if @selectedIndex >= @results.length
+				@selectedIndex = 0
+			@selectRow()
+		selectPrev: ->
+			@selectedIndex--
+			if @selectedIndex < 0
+				@selectedIndex = @results.length - 1
+			@selectRow()
+		selectRow: ->
+			el = @results[@selectedIndex]
+			@$el.find(".ac-result-list li.selected").removeClass("selected")
+			$targetEl = @$el.find(".ac-result-list li#ac-item-" + el.id)
+			if $targetEl
+				$targetEl.addClass("selected")
 		toggleShown: (toggle, startIndex) ->
 			if startIndex?
 				@startIndex = startIndex
@@ -50,11 +73,15 @@ define [
 			@shown = toggle
 			@$el.toggleClass("shown", toggle)
 		setResults: (results) ->
+			@results = results
+			@selectedIndex = 0
 			$listEl = @$el.find(".ac-result-list")
 			$listEl.html ""
 
 			for item in results
 				$listEl.append( @itemTemplate(item) )
+			if results and results.length 
+				@selectRow()
 		remove: ->
 			@cleanUp()
 			@$el.empty()
