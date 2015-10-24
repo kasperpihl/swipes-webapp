@@ -21,16 +21,8 @@ define [
 		render: ->
 			@$el.html @template()
 			@toggleShown(false)
-		updateWithEventAndText: (e, fullText) ->
-			fullText = "" if !fullText? or !fullText
-			return @toggleShown(false) if !fullText.length
-
-			if !@shown
-				lastLetter = fullText.substr(fullText.length - 1)
-				if lastLetter is "@" or lastLetter is "#"
-					@searchLetter = lastLetter
-					@toggleShown(true, fullText.length)
-			console.log e.keyCode
+		keyDownHandling: (e) ->
+			return true if !@shown
 			if e.keyCode is 27
 				@toggleShown(false)
 				return false
@@ -40,12 +32,34 @@ define [
 			if e.keyCode is 40
 				@selectNext()
 				return false
+			if e.keyCode is 13
+				return false
+			return true
+		updateWithEventAndText: (e, fullText) ->
+			fullText = "" if !fullText? or !fullText
+			return @toggleShown(false) if !fullText.length
 
+			if !@shown
+				lastLetter = fullText.substr(fullText.length - 1)
+				if lastLetter is "@" or lastLetter is "#"
+					@searchLetter = lastLetter
+					@toggleShown(true, fullText.length)
+			if @shown
+				console.log e.keyCode
+				return false if e.keyCode is 27
+				return false if e.keyCode is 38
+				return false if e.keyCode is 40
+				if e.keyCode is 13
+					res = @results[@selectedIndex]
+					@delegate?.acListSelectedItem?(@, res)
+					@toggleShown(false)
+					return false
+				
 
 			searchText = fullText.substr(@startIndex)
 			if !searchText or searchText isnt @searchText
 				@searchText = searchText
-				results = @dataSource.getResultsForTextAndSearchLetter(@searchLetter, searchText)
+				results = @dataSource.getResultsForTextAndSearchLetter?(@searchLetter, searchText)
 				@setResults(results)
 			return true
 		selectNext: ->
@@ -77,8 +91,9 @@ define [
 			@selectedIndex = 0
 			$listEl = @$el.find(".ac-result-list")
 			$listEl.html ""
-
+			i = 0
 			for item in results
+				item.i = i++
 				$listEl.append( @itemTemplate(item) )
 			if results and results.length 
 				@selectRow()

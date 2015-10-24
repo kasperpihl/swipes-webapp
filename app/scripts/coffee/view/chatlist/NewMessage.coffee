@@ -40,12 +40,16 @@ define ["underscore"
 				if @addDelegate? and _.isFunction(@addDelegate.newMessageIsTyping)
 					@addDelegate.newMessageIsTyping( @ )
 			message = @$el.find("textarea").val()
-			@autoCompleteList?.updateWithEventAndText(e, message)
+			
+			keepGoing = @autoCompleteList?.updateWithEventAndText(e, message)
+			return false if !keepGoing
 			if e.keyCode is 13 && !e.shiftKey
 				@sendMessage()
 			@autoExpand()
 			return false
 		keyDown: (e) ->
+			keepGoing = @autoCompleteList?.keyDownHandling(e)
+			return false if !keepGoing
 			if e.keyCode is 13 and !e.shiftKey
 				e.preventDefault()
 		clickedAttach: ->
@@ -56,6 +60,11 @@ define ["underscore"
 				@addDelegate.newFileSelected(@, file)
 		setUploading: (isUploading) ->
 			@$el.find(".attach-button-container").toggleClass("isUploading", isUploading)
+		acListSelectedItem: (acList, result) ->
+			message = @$el.find("textarea").val()
+			newMessage = message.substr(0, acList.startIndex) + result.name + " " + message.substr(acList.startIndex+acList.searchText.length)
+			console.log acList.startIndex, acList.searchText, result
+			@$el.find("textarea").val(newMessage)
 		sendMessage: ->
 			message = @$el.find("textarea").val()
 			return if message.length is 0

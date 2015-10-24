@@ -19,6 +19,7 @@ define [
 			@threadHeader = new ThreadHeader()
 			@autoCompleteList = new AutoCompleteList()
 			@autoCompleteList.dataSource = @
+			@autoCompleteList.delegate = @newMessage
 			@newMessage.autoCompleteList = @autoCompleteList
 			
 			@chatList = new ChatList()
@@ -35,7 +36,6 @@ define [
 		getResultsForTextAndSearchLetter: (searchLetter, searchText) ->
 			results = []
 			if searchLetter is "@"
-				console.log searchLetter, searchText
 				sortedUsers = _.sortBy(swipy.slackCollections.users.activeUsers(true), (user) ->
 					return user.get("name")
 				)
@@ -45,7 +45,6 @@ define [
 						results.push({id: user.id, name: user.get("name")})
 				)
 			else if searchLetter is "#"
-				console.log searchLetter, searchText
 				sortedChannels = _.sortBy(swipy.slackCollections.channels.activeChannels(), (channel) ->
 					return channel.get("name")
 				)
