@@ -13,9 +13,23 @@
 	}
 	.ac-result-list{
 		li{
+			position: relative;
+			padding:5px;
+			padding-left:35px;
+			.leftIcon{
+				position: absolute;
+				top:50%;
+				margin-top: -10px;
+				left: 10px;
+				width:20px;
+				height: 20px;
+			}
 			&.selected{
 				background-color: blue;
 				color: white;
+				.leftIcon{
+					fill: white;
+				}
 			}
 		}
 	}

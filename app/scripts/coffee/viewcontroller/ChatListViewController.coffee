@@ -42,7 +42,7 @@ define [
 				_.each(sortedUsers, (user) ->
 					#console.log user.toJSON()
 					if user.get("name").startsWith(searchText)
-						results.push({id: user.id, name: user.get("name")})
+						results.push({id: user.id, icon: "person", name: user.get("name")})
 				)
 			else if searchLetter is "#"
 				sortedChannels = _.sortBy(swipy.slackCollections.channels.activeChannels(), (channel) ->

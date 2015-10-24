@@ -63,15 +63,19 @@ define ["underscore"
 		acListSelectedItem: (acList, result) ->
 			message = @$el.find("textarea").val()
 
+			# the parts of the new string, taking out the search string and prepare replacement
 			firstPart = message.substr(0, acList.searchStartIndex)
 			replacementText = result.name + " "
 			lastPart = message.substr(acList.searchStartIndex+acList.searchText.length)
 			
 			newMessage = firstPart + replacementText + lastPart
+			# Calculating where cursor should be after
 			newSelectionIndex = acList.searchStartIndex + replacementText.length
 			
 			@$el.find("textarea").val(newMessage)
 			@$el.find("textarea").focus()
+
+			# normal js to set the cursor 
 			textAreaJSEl = document.getElementById("new-message-textarea")
 			textAreaJSEl.selectionStart = newSelectionIndex
 			textAreaJSEl.selectionEnd = newSelectionIndex
