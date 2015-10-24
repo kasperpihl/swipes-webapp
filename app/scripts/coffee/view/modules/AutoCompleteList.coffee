@@ -112,13 +112,15 @@ define [
 				extraScrollPadding = 10
 
 				# check if el is above
-				if elPos < 0
-					newScroll = scrollPos + elPos
+				if elPos < extraScrollPadding
+					newScroll = scrollPos + elPos - extraScrollPadding
 				newScroll = 0 if newScroll < 0
 
-				if elPos > scrollContainerHeight - elHeight
-					newScroll = scrollPos + elPos - scrollContainerHeight + elHeight
+				# check if el is below
+				if elPos > scrollContainerHeight - elHeight - extraScrollPadding
+					newScroll = scrollPos + elPos - scrollContainerHeight + elHeight + extraScrollPadding
 				newScroll = maxScrollPos if newScroll > maxScrollPos
+				
 				if newScroll?
 					#console.log newScroll
 					@$el.scrollTop(newScroll)
