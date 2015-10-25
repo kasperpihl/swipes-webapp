@@ -63,19 +63,20 @@ define [
 					@searchStartIndex = iteratorIndex+1
 					@searchLetter = char
 					toggleShow = true
+			
 			return @toggleShown(false) if !toggleShow
+			
 			if !@shown
 				@toggleShown(true)
-			searchText = textBeforeCursor.substr(iteratorIndex+2)
 			
+			searchText = textBeforeCursor.substr(iteratorIndex+2)
 
-			if @shown
-				return false if e.keyCode is 27
-				return false if e.keyCode is 38
-				return false if e.keyCode is 40
-				if e.keyCode is 13
-					@sendResultAndClose()
-					return false
+			return false if e.keyCode is 27
+			return false if e.keyCode is 38
+			return false if e.keyCode is 40
+			if e.keyCode is 13
+				@sendResultAndClose()
+				return false
 				
 			if !searchText or searchText isnt @searchText
 				@searchText = searchText
@@ -106,7 +107,7 @@ define [
 			
 			$contentEl = @$el.find(".ac-main-container")
 			
-			$listEl @$el.find(".ac-result-list")
+			$listEl = @$el.find(".ac-result-list")
 			$listEl.find("li.selected").removeClass("selected")
 			
 			$targetEl = $listEl.find("li#ac-item-" + el.id)
