@@ -99,18 +99,40 @@ define [
 			@selectRow()
 		selectRow: ->
 			el = @results[@selectedIndex]
-			$listEl = @$el.find(".ac-result-list")
+
+			# scrollEl should be the container set with overflow-y:scroll;
+			$scrollEl = @$el
+			# contentEl el should contain all the scrollable content in full length
+			
+			$contentEl = @$el.find(".ac-main-container")
+			
+			$listEl @$el.find(".ac-result-list")
 			$listEl.find("li.selected").removeClass("selected")
+			
 			$targetEl = $listEl.find("li#ac-item-" + el.id)
+			
 			if $targetEl
 				$targetEl.addClass("selected")
-				scrollPos = @$el.scrollTop()
-				scrollContainerHeight = @$el.outerHeight()
-				maxScrollPos = $listEl.outerHeight() - scrollContainerHeight
-				elPos = $targetEl.position().top
-				elHeight = $targetEl.outerHeight()
-				extraScrollPadding = 10
+				
+				# current position of the scroll
+				scrollPos = $scrollEl.scrollTop()
 
+				# the height of the scroll window (not content!)
+				scrollContainerHeight = $scrollEl.outerHeight()
+
+				# the max scroll position allowed (full content height - scroll container height)
+				maxScrollPos = $contentEl.outerHeight() - scrollContainerHeight
+				
+				# relative element position compared to scroll position
+				elPos = $targetEl.position().top - scrollPos
+				
+				elHeight = $targetEl.outerHeight()
+				
+				# additional scroll spacing when moving up/down (0 would be element follow edge)
+				extraScrollPadding = 30
+				
+				#console.log elPos, scrollContainerHeight
+				
 				# check if el is above
 				if elPos < extraScrollPadding
 					newScroll = scrollPos + elPos - extraScrollPadding
@@ -122,10 +144,8 @@ define [
 				newScroll = maxScrollPos if newScroll > maxScrollPos
 				
 				if newScroll?
-					#console.log newScroll
-					@$el.scrollTop(newScroll)
-				#console.log "scrolltop", scrollPos, scrollContainerHeight, contentTotalHeight
-
+					$scrollEl.scrollTop(newScroll)
+				
 
 		toggleShown: (toggle) ->
 			if !toggle
@@ -136,8 +156,9 @@ define [
 			@results = results
 			@selectedIndex = 0
 			$listEl = @$el.find(".ac-result-list")
+			$scrollEl = @$el
 			$listEl.html ""
-			@$el.scrollTop(0)
+			$scrollEl.scrollTop(0)
 			i = 0
 			for item in results
 				item.i = i++
