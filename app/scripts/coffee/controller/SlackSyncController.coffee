@@ -185,7 +185,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			url = @baseURL + command
 			options = {} if !options? or !_.isObject(options)
 			options.token = @token
-			console.log "request start", options
+
+			options = JSON.stringify(options)
+
 			settings =
 				url : url
 				type : type
@@ -201,7 +203,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@util.sendError( error, "Server Error")
 					callback?(false, error)
 				crossDomain : true
-				dataType : "json"
 				contentType: "application/json; charset=utf-8"
 				xhrFields:
 					withCredentials: true

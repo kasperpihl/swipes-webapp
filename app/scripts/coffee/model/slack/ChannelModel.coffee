@@ -33,7 +33,7 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 				apiType = "groups"
 			apiType
 		closeChannel: ->
-			swipy.slackSync.apiRequest(@getApiType() + ".close", "POST",{channel: @id}, 
+			swipy.slackSync.apiRequest(@getApiType() + ".close", "POST",{channel: @id},
 				(res, error) =>
 					console.log("closed channel", res, error)
 			)
@@ -42,13 +42,13 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			firstObject = collection.at(0)
 			@fetchMessages(firstObject.get("ts"), callback)
 		fetchMessages: (newest, callback) ->
-			options = {channel_id: @id, count: @skipCount }
+			options = {"channel_id": @id, count: @skipCount }
 			collection = @getMessageCollection()
 			###if newest
 				options.latest = newest
 				allowMore = true
 				options.inclusive = 1###
-			swipy.slackSync.apiRequest(@getApiType() + ".history", "POST", options, 
+			swipy.slackSync.apiRequest(@getApiType() + ".history", "POST", options,
 				(res, error) =>
 					if res and res.ok
 						@hasFetched = true
@@ -72,9 +72,9 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 						if swipy.bridge.bridge # OR you were mentioned in the task /TODO:
 							text = "You received 1 new message"
 							text = message.text if message.text
-							title = "[Swipes] " + @getName() 
+							title = "[Swipes] " + @getName()
 							swipy.bridge.callHandler("notify",{title: title, message: text})
-						else if window.process? and process.versions['electron'] 
+						else if window.process? and process.versions['electron']
 							nodeRequire('ipc').send('newEvent', 'data');
 						else
 							Backbone.trigger("play-new-message")
@@ -105,7 +105,7 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			if @get("last_read")
 				unixLastRead = new Date(parseFloat(@get("last_read"))*1000).getTime()
 				return if unixLastModel <= unixLastRead
-			swipy.slackSync.apiRequest(@getApiType() + ".mark",options, 
+			swipy.slackSync.apiRequest(@getApiType() + ".mark",options,
 				(res, error) =>
 					if res and res.ok
 						console.log "marked"
