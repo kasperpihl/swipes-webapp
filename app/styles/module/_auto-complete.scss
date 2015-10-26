@@ -12,7 +12,10 @@ $headerHeight: 30px;
 		width:100%;
 		.ac-header{
 			height: $headerHeight;
+			position: fixed;
 			width:100%;
+			margin-top: -30px;
+			background-color: $white-background;
 			.key{
 
 			}

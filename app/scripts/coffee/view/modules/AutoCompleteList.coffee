@@ -132,6 +132,11 @@ define [
 				# additional scroll spacing when moving up/down (0 would be element follow edge)
 				extraScrollPadding = 30
 				
+				$targetEl.on 'mouseover', ->
+					$listEl.find("li.selected").removeClass 'selected'
+					$targetEl.addClass 'selected'
+				return
+				
 				#console.log elPos, scrollContainerHeight
 				
 				# check if el is above
