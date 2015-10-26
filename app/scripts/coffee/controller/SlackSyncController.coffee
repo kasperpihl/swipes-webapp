@@ -88,8 +88,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		openWebSocket: (url) ->
 			#@webSocket = new WebSocket(url)
-			@socket = io.connect('http://localhost:5000');
-			@socket.on('message', (data) ->
+			@webSocket = io.connect('http://localhost:5000');
+			@webSocket.on('message', (data) ->
 				console.log data
 			)
 			# @webSocket.onopen = @onSocketOpen
