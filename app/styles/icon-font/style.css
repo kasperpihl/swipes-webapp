@@ -12,9 +12,6 @@ Example showing how to change the color/size of the icons:
 	color: red; // works for single-colored icons, because "fill" was set to "currentColor"
 }
 ======================================================================================== */
-.fill-color1 {
-	fill: #444;
-}
 
 .icon-editTabAssign {
 	width: 0.9091796875em;
@@ -55,7 +52,13 @@ Example showing how to change the color/size of the icons:
 .icon-later {
 	width: 0.990234375em;
 }
+#icon-later .path1, #icon-later .path2 {
+	fill: #444;
+}
 
+#icon-today .path1, #icon-today .path2, #icon-today .path3 {
+	fill: #444;
+}
 
 .icon-editTags {
 	width: 0.7275390625em;

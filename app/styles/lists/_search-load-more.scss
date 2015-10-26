@@ -1,0 +1,96 @@
+.more-btn-wrapper {
+	width: 250px;
+	height: 50px;
+	margin: 50px auto;
+	position: relative;
+	
+	.load-more {
+		width: 250px;
+		height: 50px;
+		position: absolute;
+    top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: transparent;
+		border: 2px solid $blue-100;
+		border-radius: 5px;
+		color: $blue-100;
+		font: 16px $font-light;
+		cursor: pointer;
+		overflow: hidden;
+    transition: .2s eease-in-out;
+    
+    &:hover {
+      background-color: $blue-100;
+      color: white;
+      transition: .2s eease-in-out;
+    }
+		
+		&:focus, &:active {
+			outline: none;
+		}
+
+		&.active {
+			padding: 0;
+			margin: 0;
+			border-radius: 50%;
+			width: 10px;
+			height: 10px;
+			font: 0px $font-light;
+			transition: .3s cubic-bezier(.35,-0.53,.64,1.65);
+		}
+	}
+
+	.load-more-loader {
+		transform: scale(0);
+		clip: rect(0, 84px, 84px, 42px); 
+		height: 84px;
+		width: 84px;
+		position: absolute;
+		left: calc(50% - 42px);
+		top: calc(50% - 42px);
+
+		&.active {
+			animation: more-loader-one 1.05s linear infinite;
+			animation-delay: .3s;
+
+			&:after {
+				animation: more-loader-two 1.05s linear infinite;
+				animation-delay: .3s;
+			}
+		}
+
+		&:after {
+			transform: scale(0);
+			clip: rect(0, 84px, 84px, 42px);
+			content:'';
+			border-radius: 50%; 
+			height: 84px;
+			width: 84px;
+			position: absolute; 
+		}
+	}
+}
+
+@keyframes more-loader-one {
+  	0% {
+		transform: scale(1); 
+    	transform: rotate(0deg)
+  	}
+  	100% { 
+	  	transform: scale(1);
+   	 	transform: rotate(220deg)
+  	}
+}
+
+@keyframes more-loader-two  {
+  	0% {
+    	box-shadow: inset $blue-100 0 0 4px;
+    	transform: rotate(-140deg);
+  	}
+  	100% {
+    	box-shadow: inset $blue-100 0 0 0 4px;
+    	transform: rotate(140deg);
+  	}
+}
+

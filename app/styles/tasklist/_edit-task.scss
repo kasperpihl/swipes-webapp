@@ -40,11 +40,13 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 
 %flex {
 	display: -webkit-box;
+	display: -webkit-flex;
 	display: flex;
 }
 
 %flex-complete {
 	display: -webkit-box;
+  display: -webkit-flex;
 	display: flex;
 	-webkit-align-items: center;
 	align-items: center;
@@ -351,6 +353,7 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 								height: 40px;
 								background-repeat: no-repeat;
 								background-size: 40px 40px;
+                border-radius: 50%;
 								cursor: pointer;
 							}
 							
@@ -523,8 +526,11 @@ $mat-sha-three: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 										}
 										
 										.input-action-title.content-editable {
+											font: 13px $font-normal;
+											color: $sidebar-black-header;
 											padding: 0;
 											margin-top: -3px;
+											word-wrap: break-word;
 										}
 									}
 								}

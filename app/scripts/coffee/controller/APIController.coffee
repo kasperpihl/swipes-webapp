@@ -22,7 +22,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 			serverData = JSON.stringify data
 
-			settings = 
+			settings =
 				url : url
 				type : 'POST'
 				success : ( data ) ->
@@ -35,6 +35,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					callback(false, error)
 				dataType : "json"
 				contentType: "application/json; charset=utf-8"
+				xhrFields:
+					withCredentials: true
 				crossDomain : true
 				context: @
 				data : serverData

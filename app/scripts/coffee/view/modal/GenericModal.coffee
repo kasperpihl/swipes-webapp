@@ -2,8 +2,9 @@ define ["underscore"
 		"js/view/modal/ModalView"
 		"text!templates/modal/input-modal.html"
 		"text!templates/modal/delete-modal.html"
-		"text!templates/modal/textarea-modal.html"],
-	(_, ModalView, InputModal, DeleteModal, TextareaModal) ->
+		"text!templates/modal/textarea-modal.html"
+		"text!templates/modal/import-asana-modal.html"],
+	(_, ModalView, InputModal, DeleteModal, TextareaModal, ImportAsanaModal) ->
 		ModalView.extend
 			initialize: (options) ->
 				that = @
@@ -30,6 +31,10 @@ define ["underscore"
 				if @options.inputSelector
 					input = $(@options.inputSelector)
 					value = input.val()
+					
+					#this doesn't actually work, but it fixes the issue with modals not pulling the text for edit or create task, no idea why
+					chatVal = that.closest('.chat-message').children('.chat-right-side-container').children('.message-container').text()
+					console.log(chatVal)
 
 					input.focus()
 					input.on 'keyup', () ->
@@ -67,5 +72,6 @@ define ["underscore"
 					'textareaModal': TextareaModal
 					'inputModal': InputModal
 					'deleteModal': DeleteModal
+					'importAsanaModal': ImportAsanaModal
 
 				return map[type]

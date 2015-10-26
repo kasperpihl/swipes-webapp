@@ -9,10 +9,18 @@ $task-new-task-height: 61px;
 .task-list-view-controller{
 	width:100%;
 	height:100%;
+	
+	&::-webkit-scrollbar {
+		display: none;
+	}
 	.scroll-container{
 		width:100%;
 		height:100%;
 		padding-bottom: $task-new-task-height;
+		
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 	&.editMode{
 		.scroll-container{
@@ -24,8 +32,13 @@ $task-new-task-height: 61px;
 		width:100%;
 		height: 100%;
 		overflow-y: scroll;
+		overflow-x: hidden;
 		position:relative;
 		padding-bottom: 20px;
+		
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 	
 	position:relative;
@@ -167,6 +180,26 @@ $task-new-task-height: 61px;
 			}
 		}
 	}
+	
+	.btn-import	{
+		width: 250px;
+		margin: 0 auto;
+		margin-top: 75px;
+		padding: 10px 0;
+		background-color: rgba($sidebar-dark-color,.1);
+		text-align: center;
+		border-radius: 5px;
+		font: 14px $font-normal;
+		color: rgba($sidebar-dark-color,.6);
+		cursor: pointer;
+		transition: .1s ease-in-out;
+		
+		&:hover {
+			background-color: rgba($sidebar-dark-color,.7);
+			color: $unselected-text-color;
+			transition: .1s ease-in-out;
+		}
+	}
 }
 .task-list{
 	.animate-in {
@@ -211,6 +244,7 @@ $meta-margin: 10px;
 		margin-top:$margin-to-card + 2;
 		margin-bottom:$margin-to-card;
 		font: 0.8em/1 $font-normal;
+		color: rgba($sidebar-dark-color, .8);
 	}
 	.meta{
 		margin-bottom: $margin-to-card - 2;
@@ -242,7 +276,7 @@ $meta-margin: 10px;
 		margin-left: - $action-dot-size/2;
 		margin-top: - $action-dot-size/2;
 		border: 2px solid $yellow;
-		@include border-radius($action-dot-size/2);
+		@include border-radius($action-dot-size/5);
 
 		width: $action-dot-size;
 		height: $action-dot-size;
@@ -264,12 +298,20 @@ $meta-margin: 10px;
 // Design for cards
 .card-container{
 	background:#fff;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 1px 6px rgba(0, 0, 0, 0.1);
+	transition: .3s ease-in-out;
+	
+	&:hover {
+		box-shadow: 0 6px 12px rgba(0,0,0,0.19), 0 3px 6px rgba(0,0,0,0.09);
+		transition: .3s ease-in-out;
+	}
 	.main-info-container{
 		padding:5px;
 		padding-left: $left-padding;
 		
 		.title {
 			width: 90%;
+			font-weight: $semibold;
 		}
 		
 		.priority{
@@ -283,9 +325,8 @@ $meta-margin: 10px;
 			display:block;
 		}
 	}
-	@include card-shadow(6px, 1px);
 	@include transition(all 0.1s ease-out);
-	@include border-radius(10px);
+	@include border-radius(5px); 
 	
 }
 .add-task-container{
