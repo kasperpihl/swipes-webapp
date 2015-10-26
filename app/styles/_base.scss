@@ -6,6 +6,10 @@ html {
 		width: 100%;
 		height:100%;
 		overflow: hidden;
+		font-smooth: always;
+		transform: rotate(-0.0000000001deg);
+		text-rendering: optimizeLegibility !important;
+		-webkit-font-smoothing: antialiased !important;
 	}
 }
 * {

@@ -2,10 +2,10 @@ define [ "underscore", "js/model/slack/UserModel", "localStorage"], ( _, UserMod
 	Backbone.Collection.extend
 		model: UserModel
 		localStorage: new Backbone.LocalStorage("UserCollection")
-		activeUsers: ->
+		activeUsers: (includeSlackbot)->
 			@filter((user) =>
 				return false if user.get("deleted")
-				return false if user.id is "USLACKBOT"
+				return false if !includeSlackbot? and !includeSlackbot and user.id is "USLACKBOT"
 				return true
 			)
 		slackbot: ->

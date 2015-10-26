@@ -57,8 +57,7 @@ define [
 			@taskListVC?.goBackFromEditMode()
 		handleEditedTask: ->
 			@updateTopbarTitle()
-			return
-			#if !localStorage.getItem("EnableThreadedConversations")
+			return if !localStorage.getItem("EnableThreadedConversations")
 
 			# Is editing
 			if @taskListVC? and @taskListVC.editModel
@@ -283,9 +282,9 @@ define [
 		newMessageSent: ( newMessage, message ) ->
 			# Add thread identifier if needed
 			#T_TODO trying to disable the thread completely
-			# if @taskListVC? and @taskListVC.editModel and localStorage.getItem("EnableThreadedConversations")
-			# 	model = @taskListVC.editModel
-			# 	message = "<http://swipesapp.com/task/" + model.id + "|" + model.get("title") + ">: " + message
+			if @taskListVC? and @taskListVC.editModel and localStorage.getItem("EnableThreadedConversations")
+			 	model = @taskListVC.editModel
+			 	message = "<http://swipesapp.com/task/" + model.id + "|" + model.get("title") + ">: " + message
 			swipy.slackSync.sendMessage( message, @currentList.id)
 			@chatListVC.chatList.scrollToBottomVar = true
 			@chatListVC.chatList.removeUnreadIfSeen = true

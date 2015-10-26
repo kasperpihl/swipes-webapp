@@ -31,7 +31,7 @@ define ["underscore"
 			textarea.css('height', 'auto').css 'height', textarea[0].scrollHeight + @offset
 			newMessageCont = $('.chat-new-message')
 			newMessageContHeight = newMessageCont.height()
-			chatContainer.css('height', 'calc(100% - ' + newMessageContHeight + 'px - 4px)')
+			chatContainer.css('height', 'calc(100% - ' + newMessageContHeight + 'px - 0px)')
 			return
 		pressedKey: (e) ->
 			nowStamp = new Date().getTime()
@@ -39,11 +39,17 @@ define ["underscore"
 				@lastSentTyping = new Date().getTime()
 				if @addDelegate? and _.isFunction(@addDelegate.newMessageIsTyping)
 					@addDelegate.newMessageIsTyping( @ )
+			message = @$el.find("textarea").val()
+			
+			keepGoing = @autoCompleteList?.updateWithEventAndText(e, message)
+			return false if !keepGoing
 			if e.keyCode is 13 && !e.shiftKey
 				@sendMessage()
 			@autoExpand()
 			return false
 		keyDown: (e) ->
+			keepGoing = @autoCompleteList?.keyDownHandling(e)
+			return false if !keepGoing
 			if e.keyCode is 13 and !e.shiftKey
 				e.preventDefault()
 		clickedAttach: ->
@@ -54,6 +60,25 @@ define ["underscore"
 				@addDelegate.newFileSelected(@, file)
 		setUploading: (isUploading) ->
 			@$el.find(".attach-button-container").toggleClass("isUploading", isUploading)
+		acListSelectedItem: (acList, result) ->
+			message = @$el.find("textarea").val()
+
+			# the parts of the new string, taking out the search string and prepare replacement
+			firstPart = message.substr(0, acList.searchStartIndex)
+			replacementText = result.name + " "
+			lastPart = message.substr(acList.searchStartIndex+acList.searchText.length)
+			
+			newMessage = firstPart + replacementText + lastPart
+			# Calculating where cursor should be after
+			newSelectionIndex = acList.searchStartIndex + replacementText.length
+			
+			@$el.find("textarea").val(newMessage)
+			@$el.find("textarea").focus()
+
+			# normal js to set the cursor 
+			textAreaJSEl = document.getElementById("new-message-textarea")
+			textAreaJSEl.selectionStart = newSelectionIndex
+			textAreaJSEl.selectionEnd = newSelectionIndex
 		sendMessage: ->
 			message = @$el.find("textarea").val()
 			return if message.length is 0

@@ -1,0 +1,8 @@
+<li class="ac-res-item" data-href="<%= data.i %>" id="ac-item-<%= data.id %>">
+<% if(data.icon){ %>
+	<svg class="icon leftIcon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-<%= data.icon %>"></use>
+	</svg>
+<% } %>
+<%= data.name %>
+</li>

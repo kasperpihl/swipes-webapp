@@ -5,7 +5,7 @@ $fonts-url: 'fonts/';
 	Normal fonts
 	====================
  */
-$font_name: 'sf-ui-text-bold-webfont';
+/*$font_name: 'opensans-bold-webfont';
 @font-face {
 	font-family: $font-name;
 	src: url($fonts-url + $font-name + '.woff');
@@ -17,7 +17,7 @@ $font_name: 'sf-ui-text-bold-webfont';
 	font-style: normal;
 }
 
-$font_name: 'sf-ui-text-medium-webfont';
+$font_name: 'opensans-semibold-webfont';
 @font-face {
 	font-family: $font-name;
 	src: url($fonts-url + $font-name + '.woff');
@@ -29,7 +29,7 @@ $font_name: 'sf-ui-text-medium-webfont';
 	font-style: normal;
 }
 
-$font_name: 'sf-ui-text-regular-webfont';
+$font_name: 'opensans-regular-webfont';
 @font-face {
 	font-family: $font-name;
 	src: url($fonts-url + $font-name + '.woff');
@@ -39,11 +39,17 @@ $font_name: 'sf-ui-text-regular-webfont';
 		 url($fonts-url + $font-name + '.svg#' + 'font-name') format('svg');
 	font-weight: normal;
 	font-style: normal;
-}
+}*/
 
-$font-bold: "sf-ui-text-bold-webfont", sans-serif;
-$font-normal: "sf-ui-text-medium-webfont", sans-serif;
-$font-light: "sf-ui-text-regular-webfont", sans-serif;
+$font-bold: "Open Sans", sans-serif;
+$font-normal: "Open Sans", sans-serif;
+$font-light: "Open Sans", sans-serif;
+
+$light: 300;
+$regular: 400;
+$semibold: 600;
+$bold: 700;
+$extrabold: 800;
 
 /*
 	====================

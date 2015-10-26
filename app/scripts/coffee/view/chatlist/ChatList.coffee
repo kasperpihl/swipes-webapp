@@ -124,7 +124,7 @@ define [
 					lastSection.after section.el if renderSection
 				else
 					@$el.prepend section.el if renderSection
-				lastSection = sectionEl
+				lastSection = section.$el
 			if !@unread? and lastChat? and unixStamp > @lastRead
 				if @delegate? and _.isFunction(@delegate.chatListMarkAsRead)
 					@delegate.chatListMarkAsRead( @ )

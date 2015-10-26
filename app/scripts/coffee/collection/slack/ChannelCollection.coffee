@@ -5,3 +5,11 @@ define [ "underscore", "js/model/slack/ChannelModel", "localStorage"], ( _, Chan
 		localStorage: new Backbone.LocalStorage("ChannelCollection")
 		slackbot: ->
 			@findWhere({user: "USLACKBOT"})
+		activeChannels: ->
+			filteredChannels = _.filter(@models, (channel) ->
+				if channel.get("is_channel") and !channel.get("is_archived")
+					return true
+				return false
+			)
+
+			return filteredChannels
