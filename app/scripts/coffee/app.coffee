@@ -63,6 +63,7 @@ define [
 			# Synchronization
 			@settings = new SettingsController()
 			@sync = new SyncController()
+
 			@slackSync = new SlackSyncController()
 			@api = new APIController()
 			@updateTimer = new ClockWork()
@@ -81,8 +82,8 @@ define [
 				@init()
 				@sync.sync()
 			else
-				Backbone.once( "slack-first-connected", @sync.sync, @sync )
-				Backbone.once( "sync-complete", @init, @ )
+				Backbone.once( "slack-first-connected", @init, @ )
+				#Backbone.once( "sync-complete", @init, @ )
 		init: ->
 			@cleanUp()
 			@analytics = new AnalyticsController()
@@ -106,7 +107,7 @@ define [
 			@sound = new SoundController()
 			@workmode = new WorkController()
 			@onboarding = new OnboardingController()
-
+			
 			Backbone.history.start( pushState: no )
 			$(".load-indicator").remove()
 
@@ -127,13 +128,13 @@ define [
 		cleanUp: ->
 			#@stopAutoUpdate()
 			##@tags?.destroy()
-			@mainViewController?.destroy()
-			@router?.destroy()
-			@scheduler?.destroy()
-			@sidebar?.destroy()
-			@filter?.destroy()
-			@settings?.destroy()
-			@sound?.destroy()
+			@mainViewController?.destroy?()
+			@router?.destroy?()
+			@scheduler?.destroy?()
+			@sidebar?.destroy?()
+			@filter?.destroy?()
+			@settings?.destroy?()
+			@sound?.destroy?()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			#if Parse.History.started then Parse.history.stop()

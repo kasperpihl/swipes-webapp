@@ -6,11 +6,11 @@ var name = data.channel.get("name");
 var showName = name;
 var numberOfNotifications = 0;
 var showClose = false;
-if(data.channel.get("is_channel")){
+if(data.channel.get("type") == "public"){
 	type = "channel";
 	prefix = "# ";
 }
-if(data.channel.get("is_im")){
+if(data.channel.get("type") == "direct"){
 	type = "im";
 	showClose = true;
 	name = showName = data.user.get("name");
@@ -18,7 +18,7 @@ if(data.channel.get("is_im")){
 		showName = "slackbot & s.o.f.i.";
 	numberOfNotifications = data.channel.get("unread_count_display");
 }
-if(data.channel.get("is_group")){
+if(data.channel.get("type") == "private"){
 	type = "group";
 }
 %>

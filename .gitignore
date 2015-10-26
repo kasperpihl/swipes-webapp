@@ -2,6 +2,7 @@
 .tmp
 .sass-cache
 .DS_Store
+rethinkdb_data
 cloud/public
 npm-debug.log
 node_modules*

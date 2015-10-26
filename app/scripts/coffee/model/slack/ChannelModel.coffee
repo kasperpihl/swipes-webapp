@@ -25,14 +25,15 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			if @get("user") and swipy.slackCollections and swipy.slackCollections.users.get(@get("user"))
 				return swipy.slackCollections.users.get(@get("user")).get("name")
 		getApiType: ->
+			return "channels"
 			apiType = "channels"
-			if @get("is_im")
+			if @get("")
 				apiType = "im"
 			if @get("is_group")
 				apiType = "groups"
 			apiType
 		closeChannel: ->
-			swipy.slackSync.apiRequest(@getApiType() + ".close",{channel: @id}, 
+			swipy.slackSync.apiRequest(@getApiType() + ".close", "POST",{channel: @id}, 
 				(res, error) =>
 					console.log("closed channel", res, error)
 			)
@@ -41,13 +42,13 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			firstObject = collection.at(0)
 			@fetchMessages(firstObject.get("ts"), callback)
 		fetchMessages: (newest, callback) ->
-			options = {channel: @id, count: @skipCount }
+			options = {channel_id: @id, count: @skipCount }
 			collection = @getMessageCollection()
-			if newest
+			###if newest
 				options.latest = newest
 				allowMore = true
-				options.inclusive = 1
-			swipy.slackSync.apiRequest(@getApiType() + ".history",options, 
+				options.inclusive = 1###
+			swipy.slackSync.apiRequest(@getApiType() + ".history", "POST", options, 
 				(res, error) =>
 					if res and res.ok
 						@hasFetched = true

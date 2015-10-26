@@ -13,7 +13,6 @@ define [
 			@bouncedUpdateNotificationsForMyTasks = _.debounce(@updateNotificationsForMyTasks, 15)
 			@listenTo( swipy.collections.todos, "add reset remove change:completionDate change:schedule", @bouncedUpdateNotificationsForMyTasks)
 			# Proper render list when projects change/add/remove
-			
 			_.bindAll( @, "renderSidebar", "clickedInvite")
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
@@ -177,7 +176,8 @@ define [
 		renderSidebar: ->
 			channelsLeft = 0
 			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) -> 
-				if channel.get("is_channel") and !channel.get("is_archived")
+				if channel.get("type") is "public" and !channel.get("is_archived")
+					return true
 					if channel.get("is_member") 
 						return true
 					else

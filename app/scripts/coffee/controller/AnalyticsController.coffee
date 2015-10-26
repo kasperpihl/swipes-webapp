@@ -15,6 +15,7 @@ define ["underscore"], (_) ->
 			Backbone.on("slack-first-connected", @updateIdentity, @)
 		startIntercom: ->
 			return if !@user?
+			return
 			userId = @user.id
 
 			if @validateEmail @user.get("profile").email
@@ -39,7 +40,7 @@ define ["underscore"], (_) ->
 		sendEventToIntercom: (eventName, metadata) ->
 			Intercom('trackEvent', eventName, metadata )
 		updateIdentity: ->
-
+			return
 			if @user? and @user.id
 				amplitude.setUserId(@user.id)
 			
