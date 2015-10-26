@@ -16,6 +16,7 @@ define [
 			@template = _.template Tmpl, {variable: "data" }
 			@itemTemplate = _.template ItemTmpl, {variable: "data" }
 			@render()
+			@lockMouseEvent = false
 
 			#$(document).on('keydown', @keyDownHandling )
 		render: ->
@@ -98,7 +99,7 @@ define [
 			if @selectedIndex < 0
 				@selectedIndex = @results.length - 1
 			@selectRow()
-		selectRow: ->
+		selectRow: (dontScroll)->
 			el = @results[@selectedIndex]
 
 			# scrollEl should be the container set with overflow-y:scroll;
@@ -132,10 +133,6 @@ define [
 				# additional scroll spacing when moving up/down (0 would be element follow edge)
 				extraScrollPadding = 30
 				
-				$targetEl.on 'mouseover', ->
-					$listEl.find("li.selected").removeClass 'selected'
-					$targetEl.addClass 'selected'
-				return
 				
 				#console.log elPos, scrollContainerHeight
 				
@@ -149,8 +146,14 @@ define [
 					newScroll = scrollPos + elPos - scrollContainerHeight + elHeight + extraScrollPadding
 				newScroll = maxScrollPos if newScroll > maxScrollPos
 				
-				if newScroll?
+				if newScroll? and !dontScroll?
+					@lockMouseEvent = true
 					$scrollEl.scrollTop(newScroll)
+					setTimeout(=>
+						if @?
+							@lockMouseEvent = false
+					,100)
+
 				
 
 		toggleShown: (toggle) ->
@@ -169,10 +172,13 @@ define [
 			for item in results
 				item.i = i++
 				$listEl.append( @itemTemplate(item) )
+			$(".ac-result-list > li").on 'mouseover', (e) =>
+				return if @lockMouseEvent
+				el = $(e.currentTarget)
+				@selectedIndex = parseInt(el.attr("data-href"))
+				@selectRow(true)
+
 			$listEl.find("li.ac-res-item").click((e) =>
-				index = parseInt($(e.currentTarget).attr("data-href"))
-				@selectedIndex = index
-				@selectRow()
 				@sendResultAndClose()
 			)
 			if results and results.length 
