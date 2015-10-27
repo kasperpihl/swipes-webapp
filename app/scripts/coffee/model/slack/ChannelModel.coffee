@@ -44,6 +44,7 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 		fetchMessages: (newest, callback) ->
 			options = {"channel_id": @id, count: @skipCount }
 			collection = @getMessageCollection()
+			allowMore = false
 			###if newest
 				options.latest = newest
 				allowMore = true

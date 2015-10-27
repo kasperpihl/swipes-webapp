@@ -1,11 +1,15 @@
 <%
 	var hasProfilePicture = "";
 	var user = data.message.get("user");
+	if(!user)
+		user = data.message.get("user_id");
 	var sender;
 	var profilePictureURL;
+
 	if(user){
 		sender = swipy.slackCollections.users.get(user);
-		profilePictureURL = sender.get("profile").image_192;
+		if(sender.get("profile"))
+			profilePictureURL = sender.get("profile").image_192;
 	}
 	var bot_id = data.message.get("bot_id");
 	if(bot_id){
@@ -23,6 +27,8 @@
 
 	if(sender){
 		name = sender.get("name");
+		if(!name)
+			name = sender.get("username");
 	}
 
 

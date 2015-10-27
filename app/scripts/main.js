@@ -216,7 +216,8 @@ require(["jquery", "underscore", "backbone"], function($) {
         });
       },
       error: function (error) {
-        location.href = location.origin + "/newlogin/"
+        localStorage.clear();
+        location.href = location.origin + "/newlogin/";
       }
     });
 

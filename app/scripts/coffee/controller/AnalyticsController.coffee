@@ -31,6 +31,7 @@ define ["underscore"], (_) ->
 			regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 			regex.test email
 		logEvent: (name, data) ->
+			return
 			platform = "Web"
 			if @isMac?
 				platform = "Mac"
@@ -38,6 +39,7 @@ define ["underscore"], (_) ->
 				platform = "Windows"
 			amplitude.logEvent(name, data)
 		sendEventToIntercom: (eventName, metadata) ->
+			return
 			Intercom('trackEvent', eventName, metadata )
 		updateIdentity: ->
 			return

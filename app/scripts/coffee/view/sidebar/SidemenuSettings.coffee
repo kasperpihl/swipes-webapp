@@ -23,7 +23,7 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 			else if identifier is "logout-button"
 				if confirm "Are you sure you want to log out?"
 					localStorage.clear()
-					Parse.User.logOut()
+					Parse.User.logOut() if Parse
 					location.href = "/loginslack/"
 			false
 		keyUpHandling: (e) ->
@@ -36,3 +36,13 @@ define ["underscore", "text!templates/sidemenu/sidemenu-settings.html"], (_, Set
 		remove: ->
 			@undelegateEvents()
 			@$el.remove()
+
+
+
+			"channels": [
+				{
+				 	id: "CXRPGQEPX",
+				 	last_read: "12031203.1023"
+				}
+			]
+			

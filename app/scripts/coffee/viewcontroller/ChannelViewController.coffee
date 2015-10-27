@@ -27,7 +27,7 @@ define [
 		open: (type, options) ->
 			@identifier = options.id
 			@type = type
-			@mainView = "task"
+			@mainView = "chat"
 
 			@showSomedayMaybe = false
 			@showLaterTasks = false

@@ -89,14 +89,15 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		openWebSocket: (url) ->
 			#@webSocket = new WebSocket(url)
+			console.log "connecting socket"
 			@webSocket = io.connect('http://localhost:5000');
-
-			@webSocket.onopen = @onSocketOpen
-			@webSocket.onclose = @onSocketClose
-			@webSocket.onmessage = @onSocketMessage
-			@webSocket.onerror = @onSocketError
-
-
+			randomId = @util.generateId(5)
+			@webSocket.on('message', (data) =>
+				console.log randomId, data
+				message = data.message
+				channel = swipy.slackCollections.channels.get(message.channel_id)
+				channel.addMessage(message, true)
+			)
 		onSocketOpen: (evt) ->
 		onSocketClose: (evt) ->
 			@webSocket = null if @webSocket?
@@ -151,15 +152,17 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				@start()
 		sendMessage:(message, channel, callback) ->
 			self = @
-			options = {text: message, channel: channel, as_user: true, link_names: 1}
-			@apiRequest("chat.postMessage", 'POST', options, (res, error) ->
+			console.log "user id", swipy.slackCollections.users.me().id
+			options = {text: message, "channel_id": channel, "user_id":swipy.slackCollections.users.me().id}
+			@apiRequest("chat.send", 'POST', options, (res, error) ->
 				if res and res.ok
-					slackbotChannelId = swipy.slackCollections.channels.slackbot().id
-					type = self.util.slackTypeForId(channel)
-					if type is "DM" and channel is slackbotChannelId
-						type = "Slackbot"
-					swipy.analytics.logEvent("[Engagement] Sent Message", {"Type": type})
-					swipy.analytics.sendEventToIntercom( 'Sent Message', {"Type": type} )
+					console.log res
+					#slackbotChannelId = swipy.slackCollections.channels.slackbot().id
+					#type = self.util.slackTypeForId(channel)
+					#if type is "DM" and channel is slackbotChannelId
+					#	type = "Slackbot"
+					#swipy.analytics.logEvent("[Engagement] Sent Message", {"Type": type})
+					#swipy.analytics.sendEventToIntercom( 'Sent Message', {"Type": type} )
 				callback?(res, error)
 			)
 		uploadFile: (channels, file, callback, initialComment) ->
