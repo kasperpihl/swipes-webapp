@@ -34,20 +34,18 @@ define [
 			@showCompletedTasks = false
 
 			swipy.rightSidebarVC.sidebarDelegate = @
+			collection = swipy.slackCollections.channels
 			if @type isnt "im"
-				collection = swipy.slackCollections.channels
-
 				@currentList = collection.findWhere({name: @identifier})
-
 			else
-				collection = swipy.slackCollections.channels
-
 				@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
 
 				@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
 
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
+			@currentList.set("is_active_channel", true)
 			@render()
+			
 			action = options.action
 			if action is "task" and options.actionId
 				task = swipy.collections.todos.get(options.actionId)

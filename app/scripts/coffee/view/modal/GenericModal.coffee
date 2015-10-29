@@ -33,7 +33,7 @@ define ["underscore"
 					value = input.val()
 					
 					#this doesn't actually work, but it fixes the issue with modals not pulling the text for edit or create task, no idea why
-					chatVal = that.closest('.chat-message').children('.chat-right-side-container').children('.message-container').text()
+					chatVal = self.closest('.chat-message').children('.chat-right-side-container').children('.message-container').text()
 					console.log(chatVal)
 
 					input.focus()

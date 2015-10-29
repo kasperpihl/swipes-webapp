@@ -10,6 +10,7 @@ define [
 		className: "channel-row"
 		events:
 			"click .close-container" : "clickedClose"
+			"click .action-container" : "clickedAction"
 		initialize: ->
 			throw new Error("Model must be added when constructing a SidebarChannelRow") if !@model?
 			@template = _.template RowTmpl, {variable: "data" }
@@ -22,9 +23,12 @@ define [
 		clickedClose: (e) ->
 			Backbone.trigger("close/channel", @model)
 			false
+		clickedAction: (e) ->
+			Backbone.trigger("channel/action", @model, e)
+			false
 		updatePresence: ->
 			return if !@user?
-			@$el.find(".status-container .status").toggleClass("online", (@user.get("presence") is "active"))
+			@$el.find(".statusToggle").toggleClass("online", (@user.get("presence") is "active"))
 		render: ->
 			@$el.toggleClass("unread", @model.get("unread_count_display") > 0)
 			@$el.toggleClass("hasNotification", @model.get("unread_count_display") > 0) if @model.get("is_im")
