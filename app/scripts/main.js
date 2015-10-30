@@ -1,6 +1,7 @@
 require.config({
     baseUrl: "scripts",
     paths: {
+        apps: 'plugins/apps',
         jquery: '../bower_components/jquery/dist/jquery',
         bootstrapAffix: '../bower_components/sass-bootstrap/js/affix',
         bootstrapAlert: '../bower_components/sass-bootstrap/js/alert',

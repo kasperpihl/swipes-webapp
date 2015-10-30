@@ -12,7 +12,12 @@ define [
 			inboxApp = new InboxApp()
 			@$el.html inboxApp.el
 			inboxApp.render()
-		
+			script = document.createElement('script')
+			
+			
+			require ["text!apps/inbox-app.js"],(inboxApp) =>
+				scriptString = "<script type='text/javascript'>" + inboxApp + "</script>"
+				@$el.append(scriptString)
 		open: (type, options) ->
 			swipy.topbarVC.setMainTitleAndEnableProgress("Inbox", false )
 			swipy.rightSidebarVC.hideSidemenu()
