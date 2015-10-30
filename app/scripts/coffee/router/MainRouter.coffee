@@ -2,6 +2,7 @@ define ["underscore"], (_) ->
 	MainRouter = Backbone.Router.extend
 		routes:
 			"add": "add"
+			"app/:identifier": "app"
 			"settings/:id": "settings"
 			"settings": "settings"
 			"edit/:id": "edit"
@@ -36,6 +37,10 @@ define ["underscore"], (_) ->
 		asanaImport: ->
 			swipy.startImportFromAsana = true
 			@navigate( "tasks", { trigger: yes, replace: yes } )
+		app: (identifier) ->
+			options = { identifier: identifier }
+			Backbone.trigger( "open/viewcontroller", "app", options )
+
 		task: (id) ->
 			task = swipy.collections.todos.get(id)
 			if task

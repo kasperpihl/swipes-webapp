@@ -4,7 +4,8 @@ define [
 	"js/viewcontroller/ChannelViewController"
 	"js/viewcontroller/MyTasksViewController"
 	"js/viewcontroller/SearchViewController"
-	], (_, TweenLite, ChannelViewController, MyTasksViewController, SearchViewController) ->
+	"js/viewcontroller/AppViewController"
+	], (_, TweenLite, ChannelViewController, MyTasksViewController, SearchViewController, AppViewController) ->
 	class MainViewController
 		constructor: (opts) ->
 			@init()
@@ -40,6 +41,7 @@ define [
 			else if viewcontroller is "channel" then dfd.resolve ChannelViewController
 			else if viewcontroller is "group" then dfd.resolve ChannelViewController
 			else if viewcontroller is "search" then dfd.resolve SearchViewController
+			else if viewcontroller is "app" then dfd.resolve AppViewController
 			else dfd.resolve MyTasksViewController
 			return dfd.promise()
 		destroy: ->
