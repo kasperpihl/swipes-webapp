@@ -74,6 +74,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				model = collection.get(channel.id)
 				model = collection.create(channel) if !model
 				model.save(channel)
+				if !channel.is_starred
+					model.save("is_starred", false) 
+
 		clearDeletedChannels: ->
 			channelsToDelete = []
 			for channel in swipy.slackCollections.channels.models
@@ -121,6 +124,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					user.save("presence", data.presence)
 				else if data.type is "message"
 					@handleReceivedMessage(data, true)
+				else if data.type is "star_added" or data.type is "star_removed"
+					if data.item.type is "channel" or data.item.type is "im" or data.item.type is "group"
+						targetObj = swipy.slackCollections.channels.get(data.item.channel)
+					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
 				else if data.type is "channel_marked" or data.type is "im_marked" or data.type is "group_marked"
 					channel = swipy.slackCollections.channels.get(data.channel)
 					channel.save("last_read", data.ts)

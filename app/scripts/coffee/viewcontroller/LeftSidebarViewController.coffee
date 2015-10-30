@@ -9,7 +9,8 @@ define [
 		el: ".sidebar_content"
 		initialize: ->
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
-			@listenTo( swipy.slackCollections.channels, "add reset remove change:is_open change:is_member", @bouncedRenderSidebar )
+			@listenTo( swipy.slackCollections.channels, "add reset remove change:is_open change:is_active_channel change:is_member change:is_starred change:unread_count_display", @bouncedRenderSidebar )
+
 			@bouncedUpdateNotificationsForMyTasks = _.debounce(@updateNotificationsForMyTasks, 15)
 			@listenTo( swipy.collections.todos, "add reset remove change:completionDate change:schedule", @bouncedUpdateNotificationsForMyTasks)
 			# Proper render list when projects change/add/remove
@@ -17,16 +18,23 @@ define [
 			@listenTo( Backbone, "set-active-menu", @setActiveMenu )
 			@listenTo( Backbone, "resized-window", @checkAndEnableScrollBars)
 			@listenTo( Backbone, "close/channel", @closeChannel, @)
+			@listenTo( Backbone, "channel/action", @channelAction, @)
 			@listenTo( Backbone, "open/invitemodal", @clickedInvite)
+			@listenTo( Backbone, "opened-window", @collapseChannels)
+			@listenTo( Backbone, "opened-window", @collapseDM)
 			@renderSidebar()
 			@updateNotificationsForMyTasks()
+			@expandedDM = false
+			@expandedChannels = false
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 			"click .invite-link": "clickedInvite"
-			"click #sidebar-members-list .more-button-dm, #sidebar-members-list > h1,  #sidebar-members-list .add-button": "clickedDM"
+			"click #sidebar-members-list .more-button-dm": "clickedExpandDM"
+			"click #sidebar-project-list .more-button": "clickedExpandChannels"
+			"click #sidebar-members-list > h1,  #sidebar-members-list .add-button": "clickedDM"
 			"click #sidebar-project-list .add-button" : "clickedAddChannel"
 			"click #sidebar-group-list .add-button" : "clickedAddGroup"
-			"click #sidebar-project-list > h1, #sidebar-project-list .more-button" : "clickedChannels"
+			"click #sidebar-project-list > h1" : "clickedChannels"
 			"click #sidebar-group-list .more-button, #sidebar-group-list > h1": "clickedGroups"
 		clickedInvite: ->
 			modal = @getModal("invite", "Invite your favorite colleagues<br>to work with.", "No more colleagues to invite")
@@ -34,6 +42,21 @@ define [
 			modal.selectOne = false
 			modal.render()
 			modal.presentModal()
+			false
+		collapseDM: ->
+			@expandedDM = false
+			@bouncedRenderSidebar()
+		collapseChannels: ->
+			@expandedChannels = false
+			@bouncedRenderSidebar()
+
+		clickedExpandDM: ->
+			@expandedDM = !@expandedDM
+			@bouncedRenderSidebar()
+			false
+		clickedExpandChannels: ->
+			@expandedChannels = !@expandedChannels
+			@bouncedRenderSidebar()
 			false
 		clickedGroups: ->
 			modal = @getChannelModal("groups", "Join a private group you're not part of", "No more groups to join")
@@ -53,6 +76,25 @@ define [
 			modal.render()
 			modal.presentModal()
 			false
+		channelAction: (channel, e) ->
+			actions = []
+			
+			if channel.get("is_starred")
+				return channel.unpin()
+				actions.push({name: "Unpin", icon: "dragMenuMove", action: "unpin"})
+			else
+				return channel.pin()
+				actions.push({name: "Pin", icon: "dragMenuInvite", action: "pin"})
+
+			actions.push({name: "Close", icon: "materialClose", action: "close"})
+			swipy.modalVC.presentActionList(actions, {centerX: false, centerY: false, left: e.pageX, top: e.pageY}, (result) =>
+				if result is "pin"
+					channel.pin()
+				else if result is "unpin"
+					channel.unpin()
+				else if result is "close"
+					channel.closeChannel()
+			)					
 		getChannelModal: (type, title, emptyMessage) ->
 			@modalType = type
 			channelPickerModal = new ChannelPickerModal()
@@ -184,47 +226,49 @@ define [
 						channelsLeft++
 				return false
 			)
-			channels = _.sortBy( filteredChannels, (channel) -> return channel.get("name") )
+			channels = _.sortBy( filteredChannels, (channel) -> 
+				if channel.get("unread_count_display") or !channel.get("is_starred")
+					return 0 + channel.get("name")
+				return 1 + channel.get("name") 
+			)
 			@$el.find("#sidebar-project-list .projects").html("")
+			if channelsLeft > 0
+				buttonText = if @expandedChannels then "Hide unstarred" else "+"+ channelsLeft + " More..."
+				@$el.find("#sidebar-project-list .more-button").html(buttonText)
 			@$el.find("#sidebar-project-list .more-button").toggleClass("shown", (channelsLeft > 0))
-			@$el.find("#sidebar-project-list .more-button").html("+"+ channelsLeft + " More...")
+			
 
 			for channel in channels
 				rowView = new ChannelRow({model: channel})
 				@$el.find("#sidebar-project-list .projects").append(rowView.el)
 				rowView.render()
+			if !channels.length then $("#sidebar-project-list .projects").html('<li class="empty">No unread messages</li>')
 
-			groupsLeft = 0
-			filteredGroups = _.filter(swipy.slackCollections.channels.models, (channel) -> 
-				if channel.get("is_group") and !channel.get("is_archived")
-					if channel.get("is_open")
+			imsLeft = 0
+			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) => 
+				if channel.get("is_im") and channel.get("is_open")
+					if @expandedDM or channel.get("is_active_channel") or channel.get("is_starred") or channel.get("unread_count_display")
+						if @expandedDM and !channel.get("is_starred")
+							imsLeft++
 						return true
 					else
-						groupsLeft++
+						imsLeft++
 				return false
 			)
-			groups = _.sortBy( filteredGroups, (group) -> return group.get("name") )
-			@$el.find("#sidebar-group-list .groups").html("")
-			@$el.find("#sidebar-group-list .more-button").toggleClass("shown", (groupsLeft > 0))
-			@$el.find("#sidebar-group-list .more-button").html("+"+ groupsLeft + " More...")
-			for group in groups
-				rowView = new ChannelRow({model: group})
-				@$el.find("#sidebar-group-list .groups").append(rowView.el)
-				rowView.render()
-				
-
-			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) -> return channel.get("is_im") and channel.get("is_open"))
 			ims = _.sortBy(filteredIms, (im) ->
 				user = swipy.slackCollections.users.get(im.get("user")).toJSON()
 				if user.name is "slackbot"
-					return 0 
-				return user.name
+					nameString = 0 
+				else nameString = user.name
+				if im.get("unread_count_display") or !im.get("is_starred")
+					return 0 + nameString
+				return 1 + nameString 
 			)
-			usersInTotal = _.filter(swipy.slackCollections.users.models, (user) -> !user.get("deleted") )
-			# Minus one extra - subtracting my self
-			usersLeft = usersInTotal.length - ims.length - 1
-			@$el.find("#sidebar-members-list .more-button").toggleClass("shown", (usersLeft > 0))
-			@$el.find("#sidebar-members-list .more-button").html("+"+ usersLeft + " More...")
+			if imsLeft > 0
+				buttonText = if @expandedDM then "Hide unstarred" else "+"+ imsLeft + " More..."
+				@$el.find("#sidebar-members-list .more-button").html(buttonText)
+			@$el.find("#sidebar-members-list .more-button").toggleClass("shown", (imsLeft > 0))
+			
 
 			@$el.find("#sidebar-members-list .team-members").html("")
 			for im in ims
@@ -234,6 +278,7 @@ define [
 
 				@$el.find("#sidebar-members-list .team-members").append(rowView.el)
 				rowView.render()
+			if !ims.length then $("#sidebar-members-list .team-members").html('<li class="empty">No unread messages</li>')
 
 			@checkAndEnableScrollBars()
 			@delegateEvents()

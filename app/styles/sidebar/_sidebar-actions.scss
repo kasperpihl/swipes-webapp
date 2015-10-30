@@ -119,6 +119,14 @@
 					opacity: 1;
 				}
 			}
+			ul .empty{
+				font-size: 14px;
+				color: rgba(255,255,255,0.5);
+				padding-left: 20px;
+				&:hover{
+					background: rgba(255, 255, 255, 0);
+				}
+			}
 			/*h1.title{
 				display: inline-block;
 				float:left;
@@ -166,11 +174,13 @@
 			
 			// Status icon for team members
 			.status-container{
-				height:$block-height;
-				float:left;
-				position: relative;
-				display: inline-block;
-				width:$dot-size*2;
+				height:$dot-size;
+				position: absolute;
+				width:$dot-size;
+				left: 7px;
+				top:50%;
+				margin-top: -$dot-size/2;
+
 				.status{
 					@include border-radius(50%);
 					display:inline-block;
@@ -228,8 +238,48 @@
 			}
 			
 			&:hover{
+				.status-container{
+					display: none;
+				}
 				.close-container{
 					display:block;
+				}
+				.action-container{
+					display: block;
+				}
+			}
+			.action-container{
+				position: absolute;
+				left: 4px;
+				$actionSize: 12px;
+				width:$actionSize;
+				height:$actionSize;
+				top: 50%;
+				margin-top: -6px;
+				display:none;
+				line-height: $actionSize;
+				color: $sidebar-dark-color;
+				z-index: 100;
+				font-size:$actionSize;
+				&.isStarred{
+					display: block;
+					color: rgba(255,255,255,0.5);
+					opacity: 1.0;
+				}
+				&.online{
+					color: $online-green;
+				}
+				&:hover{
+					color: white;
+					opacity: 0.8;
+					svg{
+						opacity: 1.0;
+					}
+				}
+				svg{
+					opacity: 0.5;
+					width: $actionSize;
+					height:$actionSize;
 				}
 			}
 			.close-container{
@@ -293,6 +343,9 @@
 				}
 				&:hover{
 					.close-container{
+						display:none;
+					}
+					.action-container{
 						display:none;
 					}
 				}

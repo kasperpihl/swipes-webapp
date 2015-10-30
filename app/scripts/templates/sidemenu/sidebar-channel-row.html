@@ -6,13 +6,15 @@ var name = data.channel.get("name");
 var showName = name;
 var numberOfNotifications = 0;
 var showClose = false;
+var showAction = true;
+var starClass = "";
+var hideStatus = false;
 if(data.channel.get("type") == "public"){
+	
 	type = "channel";
-	prefix = "# ";
 }
 if(data.channel.get("type") == "direct"){
 	type = "im";
-	showClose = true;
 	name = showName = data.user.get("name");
 	if(name == "slackbot")
 		showName = "slackbot & s.o.f.i.";
@@ -21,11 +23,15 @@ if(data.channel.get("type") == "direct"){
 if(data.channel.get("type") == "private"){
 	type = "group";
 }
+if(data.channel.get("is_starred")){
+	starClass = "isStarred";
+	hideStatus = true;
+}
 %>
 <a href="#<%= type %>/<%= name %>">
-	<% if(type == "im"){ %>
+	<% if(type == "im" && !hideStatus){ %>
 	<div class="status-container">
-		<span class="status <%= presenceClass %>"></span>
+		<span class="status statusToggle <%= presenceClass %>"></span>
 	</div>
 	<% } %>
 	<div class="text">
@@ -39,6 +45,11 @@ if(data.channel.get("type") == "private"){
 			<svg class="icon">
 				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialClose"></use>
 			</svg>
+		</div>
+	<% } %>
+	<% if(showAction) { %>
+		<div class="action-container statusToggle <%= presenceClass %> <%= starClass %>">
+			&#9733;
 		</div>
 	<% } %>
 </a>

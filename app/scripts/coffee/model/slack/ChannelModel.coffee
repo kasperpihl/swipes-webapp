@@ -32,6 +32,16 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			if @get("is_group")
 				apiType = "groups"
 			apiType
+		pin: ->
+			swipy.slackSync.apiRequest("stars.add",{channel: @id}, 
+				(res, error) =>
+					console.log("pinned channel", res, error)
+			)
+		unpin: ->
+			swipy.slackSync.apiRequest("stars.remove",{channel: @id}, 
+				(res, error) =>
+					console.log("unpinned channel", res, error)
+			)
 		closeChannel: ->
 			swipy.slackSync.apiRequest(@getApiType() + ".close", "POST",{channel: @id},
 				(res, error) =>
