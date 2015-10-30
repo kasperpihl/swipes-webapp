@@ -96,7 +96,7 @@ define ["underscore"], (_) ->
 			Backbone.trigger "show-settings"
 			if subview then Backbone.trigger( "settings/view", subview )
 		updateHistory: (me, page, subpage) ->
-			if @history.length is 0 and page isnt "edit" and page isnt "tasks" and page isnt "channel" and page isnt "im" and page isnt "group" and page isnt "search"
+			if @history.length is 0 and page isnt "app" and page isnt "tasks" and page isnt "channel" and page isnt "im" and page isnt "group" and page isnt "search"
 				Backbone.trigger( "open/viewcontroller", "tasks", {id:"now", onlyInstantiate: true} )
 			# We skip root, because it's just a redirect to another route.
 			return false if page is "" or page is "root"
