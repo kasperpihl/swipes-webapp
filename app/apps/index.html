@@ -1,0 +1,68 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
+<script src="/jquery-2.1.4.min.js"></script>
+</head>
+
+<body>
+<script>
+function receivedMessageFromSwipes(message){
+	if(message.origin == "http://localhost:9000"){
+		var i, json = JSON.parse(message.data);
+		if(json.body){
+			$('body').append(json.body);	
+		}
+		if(json.styles){
+			for(i = 0 ; i < json.styles.length ; i++){
+				var style = json.styles[i];
+				$('body').append('<link rel="stylesheet" type="text/css" href="' + json.path + style + '">');
+			}
+		}
+		if(json.scripts){
+			for(i = 0 ; i < json.scripts.length ; i++){
+				var script = json.scripts[i];
+				$('body').append('<script src="' + json.path + script + '"><\/script>')
+			}
+		}
+	}
+}
+window.addEventListener("message", receivedMessageFromSwipes, false);
+</script>
+
+
+
+
+<script type='text/javascript'>
+
+// This code is for hijacking and controlling ajax calls.
+var s_ajaxListener = new Object();
+s_ajaxListener.tempOpen = XMLHttpRequest.prototype.open;
+s_ajaxListener.tempSend = XMLHttpRequest.prototype.send;
+s_ajaxListener.callback = function () {
+  // this.method :the ajax method used
+  // this.url    :the url of the requested script (including query string, if any) (urlencoded) 
+  // this.data   :the data sent, if any ex: foo=bar&a=b (urlencoded)
+}
+
+XMLHttpRequest.prototype.open = function(a,b) {
+  if (!a) var a='';
+  if (!b) var b='';
+  s_ajaxListener.tempOpen.apply(this, arguments);
+  s_ajaxListener.method = a;  
+  s_ajaxListener.url = b;
+  if (a.toLowerCase() == 'get') {
+    s_ajaxListener.data = b.split('?');
+    s_ajaxListener.data = s_ajaxListener.data[1];
+  }
+}
+
+XMLHttpRequest.prototype.send = function(a,b) {
+  if (!a) var a='';
+  if (!b) var b='';
+  s_ajaxListener.tempSend.apply(this, arguments);
+  if(s_ajaxListener.method.toLowerCase() == 'post')s_ajaxListener.data = a;
+  s_ajaxListener.callback();
+}
+</script>
+</body>
+</html>

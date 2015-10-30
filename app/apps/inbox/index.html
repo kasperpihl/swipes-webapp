@@ -1,0 +1,32 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
+<script src="/jquery-2.1.4.min.js"></script>
+</head>
+<body>
+
+<script>
+console.log("loaded index");
+$(document).ready(function(){
+	console.log("document ready");
+});
+
+function receivedMessageFromSwipes(message){
+	console.log("received", message);
+	if(message.origin == "http://localhost:9000"){
+		var i, json = JSON.parse(message.data);
+		console.log(json);
+		if(json.styles){
+			for(i = 0 ; i < json.styles.length ; i++){
+				var style = json.styles[i];
+				console.log(json.path, style);
+
+				$('body').append('<link rel="stylesheet" type="text/css" href="' + json.path + style + '">');
+			}
+		}
+	}
+}
+window.addEventListener("message", receivedMessageFromSwipes, false);
+</script>
+</body>
+</html>

@@ -5,8 +5,7 @@
   "version": "0.1",
   "description": "A fake email client for showing Swipes",
   "main_app": {
-  	"head": "head.html",
-    "body": "body.html",
+    "index": "body.html",
     "js": ["script.js"],
     "css": ["style.css"]
   }
