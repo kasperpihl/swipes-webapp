@@ -228,7 +228,11 @@ define [
 						channelsLeft++
 				return false
 			)
-			channels = _.sortBy( filteredChannels, (channel) -> return channel.get("name") )
+			channels = _.sortBy( filteredChannels, (channel) -> 
+				if channel.get("unread_count_display") or !channel.get("is_starred")
+					return 0 + channel.get("name")
+				return 1 + channel.get("name") 
+			)
 			@$el.find("#sidebar-project-list .projects").html("")
 			if channelsLeft > 0
 				buttonText = if @expandedChannels then "Hide unstarred" else "+"+ channelsLeft + " More..."
@@ -256,8 +260,11 @@ define [
 			ims = _.sortBy(filteredIms, (im) ->
 				user = swipy.slackCollections.users.get(im.get("user")).toJSON()
 				if user.name is "slackbot"
-					return 0 
-				return user.name
+					nameString = 0 
+				else nameString = user.name
+				if im.get("unread_count_display") or !im.get("is_starred")
+					return 0 + nameString
+				return 1 + nameString 
 			)
 			if imsLeft > 0
 				buttonText = if @expandedDM then "Hide unstarred" else "+"+ imsLeft + " More..."
