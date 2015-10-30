@@ -20,9 +20,13 @@ define [
 				@manifest = manifest
 				swipy.topbarVC.setMainTitleAndEnableProgress(@manifest.name, false )
 				
-				return @loadIndex()
-			).then(	(indexFile) =>
-				@template = _.template indexFile, {variable: "data"}
+				return @loadBody()
+			).then(	(bodyFile) =>
+				@bodyTpl = _.template bodyFile, {variable: "data"} if bodyFile
+				
+				return @loadHead()
+			).then( (headFile) =>
+				@headTpl = _.template headFile, {variable: "data"} if headFile
 				
 				return @loadStyles()
 			).then( (styles) =>
@@ -38,7 +42,9 @@ define [
 					doc = $iframe[0].contentWindow.document
 					$body = $('body',doc)
 					$head = $('head', doc)
-					$body.html(@template())
+					$head.html(@headTpl()) if @headTpl
+					$body.html(@bodyTpl()) if @bodyTpl
+
 					for style in @styles
 						styleString = "<style>" + style + "</style>"
 						$head.prepend(styleString)
@@ -56,11 +62,20 @@ define [
 				manifest = JSON.parse(manifestString) 
 				dfd.resolve(manifest)
 			return dfd.promise()
-		loadIndex: ->
+		loadHead: ->
 			dfd = new $.Deferred()
-			require [@reqFileDir + @manifest.main_app.index], (Tmpl) =>
+			if !@manifest.main_app.head
+				dfd.resolve()
+			else
+				require [@reqFileDir + @manifest.main_app.head], (Tmpl) =>
+					dfd.resolve(Tmpl)
+			return dfd.promise()
+		loadBody: ->
+			dfd = new $.Deferred()		
+			require [@reqFileDir + @manifest.main_app.body], (Tmpl) =>
 				dfd.resolve(Tmpl)
 			return dfd.promise()
+		
 		loadStyles: ->
 			dfd = new $.Deferred()
 
