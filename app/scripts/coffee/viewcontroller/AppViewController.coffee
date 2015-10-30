@@ -14,6 +14,8 @@ define [
 			inboxApp.render()
 		
 		open: (type, options) ->
+			swipy.topbarVC.setMainTitleAndEnableProgress("Inbox", false )
+			swipy.rightSidebarVC.hideSidemenu()
 			@render()
 
 		destroy: ->
