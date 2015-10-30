@@ -1,3 +1,6 @@
+alert('asfg')
+
+
 var checkbox = $('.checkbox');
 var check = $('.check');
 
