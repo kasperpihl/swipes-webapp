@@ -11,10 +11,9 @@ define [
 			swipy.rightSidebarVC.hideSidemenu()
 			@$el.html "Loading App"
 			$("#main").html(@$el)
-			@appsUrl = "http://localhost/"
+			@appsUrl = "http://localhost:5000/apps"
 			# Set the file identifier for loading files as text (manual parse)
-			@reqFileDir = "text!apps/" + options.identifier + "/" 
-			@urlDir = "http://localhost/" + options.identifier + "/"
+			@reqFileDir = "text!apps/" + options.identifier + "/"
 
 			# Load manifest file
 			@loadManifest().then( (manifest) =>
@@ -25,7 +24,7 @@ define [
 			).then(	(indexFile) =>
 				@tpl = _.template indexFile, {variable: "swipes"} if indexFile
 
-				$iframe = $("<iframe src=\"" + @appsUrl + "app.html\" class=\"app-frame-class\" frameborder=\"0\">")
+				$iframe = $("<iframe src=\"" + @appsUrl + "/app-loader\" class=\"app-frame-class\" frameborder=\"0\">")
 				@$el.html ($iframe)
 				$iframe.on("load", (e, b) =>
 					doc = $iframe[0].contentWindow
@@ -33,7 +32,7 @@ define [
 						ok:true,
 						event: "app.run"
 						data:{
-							path: @urlDir,
+							identifier: options.identifier,
 							body: @tpl(),
 							scripts: @manifest.main_app.js,
 							styles: @manifest.main_app.css

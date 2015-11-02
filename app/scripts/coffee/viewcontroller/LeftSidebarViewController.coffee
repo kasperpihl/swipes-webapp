@@ -27,10 +27,13 @@ define [
 			@updateNotificationsForMyTasks()
 			@expandedDM = false
 			@expandedChannels = false
+			@expandedApps = false
+
 		events:
 			"click .add-project.button-container a": "clickedAddProject"
 			"click .invite-link": "clickedInvite"
 			"click #sidebar-members-list .more-button-dm": "clickedExpandDM"
+			"click #sidebar-apps-list .more-button-apps": "clickedExpandApps"
 			"click #sidebar-project-list .more-button": "clickedExpandChannels"
 			"click #sidebar-members-list > h1,  #sidebar-members-list .add-button": "clickedDM"
 			"click #sidebar-project-list .add-button" : "clickedAddChannel"
@@ -53,6 +56,10 @@ define [
 
 		clickedExpandDM: ->
 			@expandedDM = !@expandedDM
+			@bouncedRenderSidebar()
+			false
+		clickedExpandApps: ->
+			@expandedApps = !@expandedApps
 			@bouncedRenderSidebar()
 			false
 		clickedExpandChannels: ->
@@ -217,6 +224,63 @@ define [
 					placeholder: 'New channel name'
 			false
 		renderSidebar: ->
+			appsLeft = 0
+			appsJson = [
+				{
+					title: "Email",
+					name: "inbox",
+					is_starred: true,
+					is_app: true,
+				},
+				{
+					title: "My Tasks",
+					name: "mytasks",
+					is_starred: true,
+					is_app:true
+				},
+				{
+					title: "Calendar",
+					name: "calendar",
+					is_starred: false,
+					is_app:true
+				},
+				{
+					title: "Dashboard",
+					name: "dashboard",
+					is_starred: false,
+					is_app:true
+				},
+				{
+					title: "Tetris",
+					name: "tetris",
+					is_starred: false,
+					is_app:true
+				}
+			]
+			apps = []
+			for app in appsJson
+				model = new Backbone.Model(app)
+				if @expandedApps or model.get("is_starred")
+					if @expandedApps and !model.get("is_starred")
+						appsLeft++
+					apps.push(model)
+				else appsLeft++
+			@$el.find("#sidebar-apps-list .apps").html("")
+			if appsLeft > 0
+				buttonText = if @expandedApps then "Hide unstarred" else "+"+ appsLeft + " More..."
+				@$el.find("#sidebar-apps-list .more-button").html(buttonText)
+			@$el.find("#sidebar-apps-list .more-button").toggleClass("shown", (appsLeft > 0))
+			
+			for app in apps
+				rowView = new ChannelRow({model: app})
+				@$el.find("#sidebar-apps-list .apps").append(rowView.el)
+				rowView.render()
+			if !apps.length then $("#sidebar-apps-list .apps").html('<li class="empty">No apps installed</li>')
+
+
+
+
+
 			channelsLeft = 0
 			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) => 
 				if !channel.get("is_archived") and (channel.get("is_channel") and channel.get("is_member") or channel.get("is_group") and channel.get("is_open"))
