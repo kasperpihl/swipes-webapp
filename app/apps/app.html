@@ -6,22 +6,30 @@
 
 <body>
 <script>
+window.swipes = {}
 function receivedMessageFromSwipes(message){
 	if(message.origin == "http://localhost:9000"){
 		var i, json = JSON.parse(message.data);
-		if(json.body){
-			$('body').append(json.body);	
+		if(!json || !json.ok){
+			console.log("error w/ json to app");
+			return;
 		}
-		if(json.styles){
-			for(i = 0 ; i < json.styles.length ; i++){
-				var style = json.styles[i];
-				$('body').append('<link rel="stylesheet" type="text/css" href="' + json.path + style + '">');
+		var data = json.data;
+		if(data.path)
+			swipes.path = data.path
+		if(data.body){
+			$('body').append(data.body);	
+		}
+		if(data.styles){
+			for(i = 0 ; i < data.styles.length ; i++){
+				var style = data.styles[i];
+				$('body').append('<link rel="stylesheet" type="text/css" href="' + data.path + style + '">');
 			}
 		}
-		if(json.scripts){
-			for(i = 0 ; i < json.scripts.length ; i++){
-				var script = json.scripts[i];
-				$('body').append('<script src="' + json.path + script + '"><\/script>')
+		if(data.scripts){
+			for(i = 0 ; i < data.scripts.length ; i++){
+				var script = data.scripts[i];
+				$('body').append('<script src="' + data.path + script + '"><\/script>')
 			}
 		}
 	}
