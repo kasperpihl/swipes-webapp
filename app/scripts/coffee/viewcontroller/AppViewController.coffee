@@ -11,50 +11,41 @@ define [
 			swipy.rightSidebarVC.hideSidemenu()
 			@$el.html "Loading App"
 			$("#main").html(@$el)
-
+			@appsUrl = "http://localhost/"
 			# Set the file identifier for loading files as text (manual parse)
 			@reqFileDir = "text!apps/" + options.identifier + "/" 
-			@urlDir = "http://127.0.0.1:9000/apps/" + options.identifier + "/"
+			@urlDir = "http://localhost/" + options.identifier + "/"
+
 			# Load manifest file
 			@loadManifest().then( (manifest) =>
 				@manifest = manifest
-				swipy.topbarVC.setMainTitleAndEnableProgress(@manifest.name, false )
+				swipy.topbarVC.setMainTitleAndEnableProgress(@manifest.title, false )
 				
-				return @loadBody()
-			).then(	(bodyFile) =>
-				@bodyTpl = _.template bodyFile, {variable: "data"} if bodyFile
-				
-				return @loadHead()
-			).then( (headFile) =>
-				@headTpl = _.template headFile, {variable: "data"} if headFile
-				
-				return @loadStyles()
-			).then( (styles) =>
-				@styles = styles
+				return @loadIndex()
+			).then(	(indexFile) =>
+				@tpl = _.template indexFile, {variable: "swipes"} if indexFile
 
-				return @loadScripts()
-			).then( (scripts) =>
-				@scripts = scripts
-
-				$iframe = $("<iframe class=\"app-frame-class\" frameborder=\"0\">")
+				$iframe = $("<iframe src=\"" + @appsUrl + "app.html\" class=\"app-frame-class\" frameborder=\"0\">")
 				@$el.html ($iframe)
-				setTimeout( =>
-					doc = $iframe[0].contentWindow.document
-					$body = $('body',doc)
-					$head = $('head', doc)
-					$head.html(@headTpl()) if @headTpl
-					$body.html(@bodyTpl()) if @bodyTpl
-
-					for style in @styles
-						styleString = "<style>" + style + "</style>"
-						$head.prepend(styleString)
-					for script in @scripts
-						scriptString = "<script type='text/javascript'>(function() { " + script + " })();</script>"
-						$body.append(scriptString)
-				, 1)
-				
-
+				$iframe.on("load", (e, b) =>
+					doc = $iframe[0].contentWindow
+					event = {
+						ok:true,
+						event: "app.run"
+						data:{
+							path: @urlDir,
+							body: @tpl(),
+							scripts: @manifest.main_app.js,
+							styles: @manifest.main_app.css
+						}
+					}
+					doc.postMessage(JSON.stringify(event), @appsUrl);
+				)
+				window.addEventListener("message", @receivedMessageFromApp, false);
 			)
+		receivedMessageFromApp: (message) ->
+			window.receivedMessageFromApp = message
+			console.log "message from app", message
 		loadManifest: ->
 			dfd = new $.Deferred()
 			require [@reqFileDir + "manifest.json"], (manifestString) =>
@@ -62,45 +53,12 @@ define [
 				manifest = JSON.parse(manifestString) 
 				dfd.resolve(manifest)
 			return dfd.promise()
-		loadHead: ->
-			dfd = new $.Deferred()
-			if !@manifest.main_app.head
-				dfd.resolve()
-			else
-				require [@reqFileDir + @manifest.main_app.head], (Tmpl) =>
-					dfd.resolve(Tmpl)
-			return dfd.promise()
-		loadBody: ->
+		loadIndex: ->
 			dfd = new $.Deferred()		
-			require [@reqFileDir + @manifest.main_app.body], (Tmpl) =>
+			require [@reqFileDir + @manifest.main_app.index], (Tmpl) =>
 				dfd.resolve(Tmpl)
 			return dfd.promise()
 		
-		loadStyles: ->
-			dfd = new $.Deferred()
-
-			styles = []
-			dfd.resolve(styles) if !@manifest.main_app.css
-
-			for file in @manifest.main_app.css
-				styles.push(@reqFileDir + file)
-			require styles, () =>
-				dfd.resolve(arguments)
-
-			return dfd.promise()
-		loadScripts: ->
-			dfd = new $.Deferred()
-
-			scripts = []
-			dfd.resolve(scripts) if !@manifest.main_app.js
-
-			for file in @manifest.main_app.js
-				scripts.push(@reqFileDir + file)
-			
-			require scripts, () =>
-				dfd.resolve(arguments)
-
-			return dfd.promise()
 		destroy: ->
 
 
