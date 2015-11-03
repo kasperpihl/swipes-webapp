@@ -13,8 +13,8 @@ define [
 			$("#main").html(@$el)
 			@appsUrl = "http://localhost:5000/apps"
 			# Set the file identifier for loading files as text (manual parse)
-			@reqFileDir = "text!apps/" + options.identifier + "/"
-
+			@thisAppUrl = @appsUrl + "/" + options.id + "/"
+			
 			# Load manifest file
 			@loadManifest().then( (manifest) =>
 				@manifest = manifest
@@ -32,7 +32,7 @@ define [
 						ok:true,
 						event: "app.run"
 						data:{
-							identifier: options.identifier,
+							identifier: options.id,
 							body: @tpl(),
 							scripts: @manifest.main_app.js,
 							styles: @manifest.main_app.css
@@ -47,15 +47,15 @@ define [
 			console.log "message from app", message
 		loadManifest: ->
 			dfd = new $.Deferred()
-			require [@reqFileDir + "manifest.json"], (manifestString) =>
-				# Parse the text manifest file as json
-				manifest = JSON.parse(manifestString) 
-				dfd.resolve(manifest)
+			$.get(@thisAppUrl + "manifest.json", (data) =>
+				dfd.resolve(data)
+			)
 			return dfd.promise()
 		loadIndex: ->
-			dfd = new $.Deferred()		
-			require [@reqFileDir + @manifest.main_app.index], (Tmpl) =>
-				dfd.resolve(Tmpl)
+			dfd = new $.Deferred()
+			$.get(@thisAppUrl + @manifest.main_app.index, (data) =>
+				dfd.resolve(data)
+			)
 			return dfd.promise()
 		
 		destroy: ->
