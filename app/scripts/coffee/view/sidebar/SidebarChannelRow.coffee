@@ -36,7 +36,8 @@ define [
 			identifier = "sidebar-channel-" + @model.get("name")
 			identifier = "sidebar-group-" + @model.get("name") if @model.get("type") is "private"
 			identifier = "sidebar-member-" + @user.get("name") if @model.get("type") is "direct" and @user
-
+			identifier = "sidebar-app-" + @model.get("name") if @model.get("is_app")
+			
 			@$el.attr('id', identifier)
 
 			@$el.html @template( channel: @model, user: @user )

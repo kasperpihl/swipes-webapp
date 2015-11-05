@@ -94,13 +94,14 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			#@webSocket = new WebSocket(url)
 			console.log "connecting socket"
 			@webSocket = io.connect('http://localhost:5000');
-			randomId = @util.generateId(5)
 			@webSocket.on('message', (data) =>
-				console.log randomId, data
-				message = data.message
-				channel = swipy.slackCollections.channels.get(message.channel_id)
-				channel.addMessage(message, true)
+				console.log "message", data
+				if data.type is "message"
+					message = data.message
+					channel = swipy.slackCollections.channels.get(message.channel_id)
+					channel.addMessage(message, true)
 			)
+			
 		onSocketOpen: (evt) ->
 		onSocketClose: (evt) ->
 			@webSocket = null if @webSocket?
