@@ -12,7 +12,6 @@ var showAction = true;
 var starClass = "";
 var hideStatus = false;
 if(data.channel.get("type") == "public"){
-	
 	type = "channel";
 }
 
@@ -21,10 +20,9 @@ if(data.channel.get("is_app")){
 	type = "app";
 }
 if(data.channel.get("type") == "direct"){
+	console.log(data.user);
 	type = "im";
-	name = showName = data.user.get("name");
-	if(name == "slackbot")
-		showName = "slackbot & s.o.f.i.";
+	name = showName = data.user.get("username");
 	numberOfNotifications = data.channel.get("unread_count_display");
 }
 if(data.channel.get("type") == "private"){

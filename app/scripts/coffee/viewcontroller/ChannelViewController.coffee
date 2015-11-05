@@ -38,9 +38,9 @@ define [
 			if @type isnt "im"
 				@currentList = collection.findWhere({name: @identifier})
 			else
-				@currentUser = swipy.slackCollections.users.findWhere({name: @identifier})
+				@currentUser = swipy.slackCollections.users.findWhere({username: @identifier})
 
-				@currentList = collection.findWhere({is_im: true, user: @currentUser.id})
+				@currentList = collection.findWhere({type: "direct", user_id: @currentUser.id})
 
 			swipy.rightSidebarVC.loadSidemenu("navbarChat") if !swipy.rightSidebarVC.activeClass?
 			@currentList.set("is_active_channel", true)

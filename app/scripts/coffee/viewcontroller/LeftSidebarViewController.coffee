@@ -24,7 +24,7 @@ define [
 			@listenTo( Backbone, "opened-window", @collapseDM)
 			@renderSidebar()
 			@updateNotificationsForMyTasks()
-			@expandedDM = true
+			@expandedDM = false
 			@expandedChannels = false
 			@expandedApps = false
 
@@ -310,7 +310,7 @@ define [
 
 			imsLeft = 0
 			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) => 
-				if channel.get("is_im") and channel.get("is_open")
+				if channel.get("type") is "direct" and channel.get("is_open")
 					if @expandedDM or channel.get("is_active_channel") or channel.get("is_starred") or channel.get("unread_count_display")
 						if @expandedDM and !channel.get("is_starred")
 							imsLeft++
@@ -320,7 +320,7 @@ define [
 				return false
 			)
 			ims = _.sortBy(filteredIms, (im) ->
-				user = swipy.slackCollections.users.get(im.get("user")).toJSON()
+				user = swipy.slackCollections.users.get(im.get("user_id")).toJSON()
 				if user.name is "slackbot"
 					nameString = 0 
 				else nameString = user.name
@@ -336,7 +336,7 @@ define [
 
 			@$el.find("#sidebar-members-list .team-members").html("")
 			for im in ims
-				user = swipy.slackCollections.users.get(im.get("user"))
+				user = swipy.slackCollections.users.get(im.get("user_id"))
 				rowView = new ChannelRow({model: im})
 				rowView.setUser(user)
 

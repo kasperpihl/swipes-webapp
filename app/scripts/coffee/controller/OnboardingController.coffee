@@ -17,9 +17,9 @@ define ["underscore"], (_) ->
 			return if !me
 			if !@currentEvent?
 				attachments = JSON.stringify([{"fallback": "Invite people to Swipes","title": "Invite colleagues to collaborate with Swipes", "title_link":"http://swipesapp.com/forward?dest=invite-popup"}])
-				setTimeout( =>
+				###setTimeout( =>
 					swipy.slackSync.sendMessageAsSofi("Hola! Lovely to meet you. I’m your collaboration bot and would love to help you out around here.\r\n\r\nWorking alone is a bummer. Why not bring your whole team in here? It’s going to be more fun - plus you’ll get more done together.", "@"+me.get("name"), =>
 						@setCurrentEvent("DidSendWelcomeMessage")
 						swipy.analytics.logEvent("[Onboard] Welcome Message Sent")
 					, attachments)
-				, 2000)
+				, 2000)###
