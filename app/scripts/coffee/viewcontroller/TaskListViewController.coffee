@@ -121,17 +121,17 @@ define [
 
 				@addTaskCard.setPlaceHolder("Add a new private task")
 			else if channelVC.currentUser?
-				if channelVC.currentUser.get("name") isnt "slackbot"
+				if channelVC.currentUser.get("username") isnt "slackbot"
 					titles =
 						current:
-							emptyTitle: "No Direct Tasks between you & " + channelVC.currentUser.get("name")
+							emptyTitle: "No Direct Tasks between you & " + channelVC.currentUser.get("username")
 							emptySubtitle: "You can add them below or you can drag a message to here."
-							emptyDescription: "Tasks here will only be visible between you and " + channelVC.currentUser.get("name") + ". You can assign tasks to either you or " + channelVC.currentUser.get("name") + " and it will be sent into your workspaces."
+							emptyDescription: "Tasks here will only be visible between you and " + channelVC.currentUser.get("username") + ". You can assign tasks to either you or " + channelVC.currentUser.get("username") + " and it will be sent into your workspaces."
 						completed:
-							emptyTitle: "No Completed Tasks between you & " + channelVC.currentUser.get("name")
-							emptyDescription: "Tasks here will only be visible between you and " + channelVC.currentUser.get("name") + ". You can assign tasks to either you or " + channelVC.currentUser.get("name") + " and it will be sent into your workspaces."
+							emptyTitle: "No Completed Tasks between you & " + channelVC.currentUser.get("username")
+							emptyDescription: "Tasks here will only be visible between you and " + channelVC.currentUser.get("username") + ". You can assign tasks to either you or " + channelVC.currentUser.get("username") + " and it will be sent into your workspaces."
 
-					@addTaskCard.setPlaceHolder("Add a new task between you & " + channelVC.currentUser.get("name"))
+					@addTaskCard.setPlaceHolder("Add a new task between you & " + channelVC.currentUser.get("username"))
 				else
 					titles =
 						current:

@@ -82,7 +82,7 @@ define [
 			if @type isnt "im"
 				name = "# "+@currentList.get("name")
 			else
-				name = @currentUser.get("name")
+				name = @currentUser.get("username")
 				name = "slackbot & s.o.f.i." if name is "slackbot"
 			if @taskListVC? and @taskListVC.editModel
 				name += " &nbsp;>&nbsp; " +@taskListVC.editModel.get("title")

@@ -281,10 +281,12 @@ define [
 
 
 			channelsLeft = 0
-			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) -> 
-				if channel.get("type") is "public" and !channel.get("is_archived")
-					return true
-					if channel.get("is_member") 
+			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) => 
+				if channel.get("type") is "public" and !channel.get("is_archived") and channel.get("is_member") 
+					console.log "iterator channels", channel, @expandedChannels
+					if @expandedChannels or channel.get("is_active_channel") or channel.get("is_starred") or channel.get("unread_count_display")
+						if @expandedChannels and !channel.get("is_starred")
+							channelsLeft++
 						return true
 					else
 						channelsLeft++
@@ -296,6 +298,7 @@ define [
 				return 1 + channel.get("name") 
 			)
 			@$el.find("#sidebar-project-list .projects").html("")
+			console.log "channelsLeft", channelsLeft
 			if channelsLeft > 0
 				buttonText = if @expandedChannels then "Hide unstarred" else "+"+ channelsLeft + " More..."
 				@$el.find("#sidebar-project-list .more-button").html(buttonText)

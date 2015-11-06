@@ -100,6 +100,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					message = data.message
 					channel = swipy.slackCollections.channels.get(message.channel_id)
 					channel.addMessage(message, true)
+				else if data.type is "star_added" or data.type is "star_removed"
+					if data.data.type is "channel" or data.data.type is "im" or data.data.type is "group"
+						targetObj = swipy.slackCollections.channels.get(data.data.channel_id)
+					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
 			)
 			
 		onSocketOpen: (evt) ->

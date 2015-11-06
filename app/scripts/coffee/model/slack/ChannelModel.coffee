@@ -33,12 +33,12 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 				apiType = "groups"
 			apiType
 		pin: ->
-			swipy.slackSync.apiRequest("stars.add",{channel: @id}, 
+			swipy.slackSync.apiRequest("stars.add", "POST",{channel_id: @id}, 
 				(res, error) =>
 					console.log("pinned channel", res, error)
 			)
 		unpin: ->
-			swipy.slackSync.apiRequest("stars.remove",{channel: @id}, 
+			swipy.slackSync.apiRequest("stars.remove", "POST", {channel_id: @id}, 
 				(res, error) =>
 					console.log("unpinned channel", res, error)
 			)
