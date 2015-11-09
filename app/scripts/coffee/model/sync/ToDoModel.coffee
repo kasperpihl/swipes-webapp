@@ -153,11 +153,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 					@set saveObj, {localSync: true}
 			if assignedSelf is "No" and targetUser
 				type = "Assign Invite"
-				swipy.api.callAPI("invite/slack", "POST", {invite: {"slackUserId": targetUser, "type": type}}, (res, error) =>
-					console.log "res from invite", res, error
-					if res and res.ok
-						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From" : "Assigning" })
-				)
+				# TODO SEND INVITE
 
 			swipy.analytics.logEvent("[Engagement] Assigned Task", {"Type": @getType(), "To Self": assignedSelf})
 		userIsAssigned:(userId) ->

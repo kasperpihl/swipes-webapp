@@ -122,11 +122,13 @@ define [
 			userPickerModal
 		userPickerClickedUser: (targetUser) ->
 			if @modalType is "invite"
+				console.log("should do invite, functionality killed")
+				###
 				swipy.api.callAPI("invite/slack", "POST", {invite: {"slackUserId": targetUser.id, "type": "Standard Invite"}}, (res, error) =>
 					console.log "res from invite", res, error
 					if res and res.ok
 						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From": "Invite Overlay"})
-				)
+				)###
 			else if @modalType is "dm"
 				swipy.slackSync.apiRequest("im.open", "POST", {"user_id": targetUser.id}, (res,error) =>
 					if res and res.ok

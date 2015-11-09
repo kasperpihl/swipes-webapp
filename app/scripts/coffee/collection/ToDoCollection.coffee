@@ -19,7 +19,7 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 			if newTodo.get("projectLocalId")
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 				sofiMessage = capitalizedName + " added the action \"" + newTodo.getTaskLinkForSlack() + "\" to the task \"" + parentModel.getTaskLinkForSlack() + "\""
-				swipy.slackSync.sendMessageAsSofi(sofiMessage, newTodo.get("projectLocalId"))
+				swipy.swipesSync.sendMessageAsSofi(sofiMessage, newTodo.get("projectLocalId"))
 
 			newTodo.save({}, {sync:true})
 		createTask: (str, options) ->
@@ -46,7 +46,7 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 				targetChannel = newTodo.get("projectLocalId")
 				#toUser = swipy.slackCollections.users.get(options.targetUserId) if options.targetUserId
 				#targetChannel = "@"+toUser.get("name") if toUser
-				swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+				swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			newTodo.save({}, {sync:true})
 
 			from = "Input"

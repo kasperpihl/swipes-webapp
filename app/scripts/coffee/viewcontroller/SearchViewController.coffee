@@ -56,7 +56,7 @@ define [
 
 			@isLoading = true
 
-			swipy.slackSync.apiRequest("search.all", {
+			swipy.swipesSync.apiRequest("search.all", {
 				query: text
 				sort: "timestamp"
 				count: '50'

@@ -21,16 +21,12 @@ define [
 	"js/controller/SettingsController"
 	"js/controller/SyncController"
 	"js/controller/SlackSyncController"
-	"js/controller/APIController"
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
-	"js/controller/OnboardingController"
-	"js/controller/UserController"
-	"js/controller/WorkController"
 	"js/controller/SoundController"
 	"js/model/extra/NotificationModel"
 	"gsap"
-	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, SwipesAppController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, APIController, KeyboardController, BridgeController, OnboardingController, UserController, WorkController, SoundController, NotificationModel) ->
+	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, SwipesAppController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -66,7 +62,6 @@ define [
 			@sync = new SyncController()
 
 			@slackSync = new SlackSyncController()
-			@api = new APIController()
 			@updateTimer = new ClockWork()
 
 			# Keyboard/Shortcut handler
@@ -105,10 +100,7 @@ define [
 
 			@swipes = new SwipesAppController()
 			@filter = new FilterController()
-			@userController = new UserController()
 			@sound = new SoundController()
-			@workmode = new WorkController()
-			@onboarding = new OnboardingController()
 			
 			Backbone.history.start( pushState: no )
 			$(".load-indicator").remove()
@@ -120,13 +112,12 @@ define [
 				return false
 			)
 
-			@workmode.checkForWork()
 			if @href
 				switch @href
 					when "keyboard" then @sidebar.showKeyboardShortcuts()
 
 				@href = false
-			@onboarding.start()
+
 		cleanUp: ->
 			#@stopAutoUpdate()
 			##@tags?.destroy()

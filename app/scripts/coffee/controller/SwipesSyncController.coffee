@@ -8,10 +8,10 @@
 ###
 
 define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
-	class SlackSyncController
+	class SwipesSyncController
 		constructor: ->
 			@token = localStorage.getItem("slack-token")
-			@baseURL = "http://localhost:5000/v1/"
+			@baseURL = "http://" + document.location.hostname + ":5000/v1/"
 			@util = new Utility()
 			@currentIdCount = 0
 			@sentMessages = {}
@@ -33,9 +33,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@handleChannels(data.groups) if data.groups
 					@handleChannels(data.ims) if data.ims
 					# Only enable threaded conversations for Swipes Team
-					if data.team.id is "T02A53ZUJ"
+					#if data.team.id is "T02A53ZUJ"
 						# T_TODO disabling threds. There are still comments when you try to type from the edit view
-						localStorage.setItem("EnableThreadedConversations", true)
+						#localStorage.setItem("EnableThreadedConversations", true)
 					@clearDeletedChannels()
 					@openWebSocket(data.url)
 					localStorage.setItem("slackLastConnected", new Date())
@@ -73,6 +73,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				model = collection.get(channel.id)
 				model = collection.create(channel) if !model
 				model.save(channel)
+				if !channel.is_starred
+					model.save("is_starred", false) 
+
 		clearDeletedChannels: ->
 			channelsToDelete = []
 			for channel in swipy.slackCollections.channels.models
@@ -88,16 +91,19 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		openWebSocket: (url) ->
 			#@webSocket = new WebSocket(url)
-			@webSocket = io.connect('http://localhost:5000');
-			@webSocket.on('message', (data) ->
-				console.log data
+			@webSocket = io.connect(urlbase);
+			@webSocket.on('message', (data) =>
+				console.log "message", data
+				if data.type is "message"
+					message = data.message
+					channel = swipy.slackCollections.channels.get(message.channel_id)
+					channel.addMessage(message, true)
+				else if data.type is "star_added" or data.type is "star_removed"
+					if data.data.type is "channel" or data.data.type is "im" or data.data.type is "group"
+						targetObj = swipy.slackCollections.channels.get(data.data.channel_id)
+					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
 			)
-			# @webSocket.onopen = @onSocketOpen
-			# @webSocket.onclose = @onSocketClose
-			# @webSocket.onmessage = @onSocketMessage
-			# @webSocket.onerror = @onSocketError
-
-
+			
 		onSocketOpen: (evt) ->
 		onSocketClose: (evt) ->
 			@webSocket = null if @webSocket?
@@ -121,6 +127,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					user.save("presence", data.presence)
 				else if data.type is "message"
 					@handleReceivedMessage(data, true)
+				else if data.type is "star_added" or data.type is "star_removed"
+					if data.item.type is "channel" or data.item.type is "im" or data.item.type is "group"
+						targetObj = swipy.slackCollections.channels.get(data.item.channel)
+					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
 				else if data.type is "channel_marked" or data.type is "im_marked" or data.type is "group_marked"
 					channel = swipy.slackCollections.channels.get(data.channel)
 					channel.save("last_read", data.ts)
@@ -152,15 +162,16 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				@start()
 		sendMessage:(message, channel, callback) ->
 			self = @
-			options = {text: message, channel: channel, as_user: true, link_names: 1}
-			@apiRequest("chat.postMessage", 'POST', options, (res, error) ->
+			options = {text: message, "channel_id": channel, "user_id":swipy.slackCollections.users.me().id}
+			@apiRequest("chat.send", 'POST', options, (res, error) ->
 				if res and res.ok
-					slackbotChannelId = swipy.slackCollections.channels.slackbot().id
-					type = self.util.slackTypeForId(channel)
-					if type is "DM" and channel is slackbotChannelId
-						type = "Slackbot"
-					swipy.analytics.logEvent("[Engagement] Sent Message", {"Type": type})
-					swipy.analytics.sendEventToIntercom( 'Sent Message', {"Type": type} )
+					console.log res if res.fuckyou
+					#slackbotChannelId = swipy.slackCollections.channels.slackbot().id
+					#type = self.util.slackTypeForId(channel)
+					#if type is "DM" and channel is slackbotChannelId
+					#	type = "Slackbot"
+					#swipy.analytics.logEvent("[Engagement] Sent Message", {"Type": type})
+					#swipy.analytics.sendEventToIntercom( 'Sent Message', {"Type": type} )
 				callback?(res, error)
 			)
 		uploadFile: (channels, file, callback, initialComment) ->
@@ -187,6 +198,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			options = {} if !options? or !_.isObject(options)
 			options.token = @token
 
+			options = JSON.stringify(options)
+
 			settings =
 				url : url
 				type : type
@@ -202,7 +215,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@util.sendError( error, "Server Error")
 					callback?(false, error)
 				crossDomain : true
-				dataType : "json"
 				contentType: "application/json; charset=utf-8"
 				xhrFields:
 					withCredentials: true

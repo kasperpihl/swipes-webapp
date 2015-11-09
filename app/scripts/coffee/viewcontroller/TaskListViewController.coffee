@@ -160,9 +160,10 @@ define [
 			@taskList.titles = titles
 		importAsana: ->
 			importCallback = () ->
+				###
 				swipy.api.callAPI "asana/asanaToken", "POST", {}, (res, error) ->
 					if res && res.redirect
-						window.location = res.redirect
+						window.location = res.redirect###
 
 			genericModal = new GenericModal
 				type: 'deleteModal'
@@ -177,9 +178,10 @@ define [
 				type: 'importAsanaModal'
 				tmplOptions: {}
 
-			swipy.api.callAPI "asana/import", "POST", {}, (res, error) ->
+			###swipy.api.callAPI "asana/import", "POST", {}, (res, error) ->
 				if res
 					window.location = '/'
+					###
 		destroy: ->
 			Backbone.off(null,null, @)
 			@addTaskCard?.destroy?()
