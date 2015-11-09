@@ -175,6 +175,7 @@ if (typeof String.prototype.startsWith != 'function') {
     return this.indexOf(str) === 0;
   };
 }
+window.urlbase = 'http://' + document.location.hostname + ':5000'
 require(["jquery", "underscore", "backbone"], function($) {
     var appCache = window.applicationCache;
     if(appCache){
@@ -196,7 +197,7 @@ require(["jquery", "underscore", "backbone"], function($) {
     })*/
 
     $.ajax({
-      url: 'http://localhost:5000/v1/users.logged',
+      url: urlbase + '/v1/users.logged',
       type: 'GET',
       dataType: 'json',
       contentType: "application/json; charset=utf-8",

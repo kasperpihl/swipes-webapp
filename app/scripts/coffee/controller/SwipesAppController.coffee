@@ -5,7 +5,6 @@
 define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 	class SwipesAppController
 		constructor: ->
-			console.log "init swipes app controller"
 			@util = new Utility()
 			@baseURL = "http://swipesslack.elasticbeanstalk.com/v1/"
 		test: ->

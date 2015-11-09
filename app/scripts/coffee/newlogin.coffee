@@ -11,9 +11,9 @@ $('#sign-up').on 'submit', (e) ->
     username: username,
     password: password,
     repassword: repassword
-
+  urlbase = 'http://' + document.location.hostname + ':5000'
   settings = {
-    url: 'http://localhost:5000/v1/users.create'
+    url: urlbase + '/v1/users.create'
     type: 'POST'
     dataType: 'json'
     contentType: "application/json; charset=utf-8"
@@ -40,9 +40,9 @@ $('#sign-in').on 'submit', (e) ->
   data =
     email: email,
     password: password
-
+  urlbase = 'http://' + document.location.hostname + ':5000'
   settings = {
-    url: 'http://localhost:5000/v1/users.login'
+    url: urlbase + '/v1/users.login'
     type: 'POST'
     dataType: 'json'
     contentType: "application/json; charset=utf-8"

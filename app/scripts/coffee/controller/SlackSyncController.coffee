@@ -11,7 +11,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 	class SlackSyncController
 		constructor: ->
 			@token = localStorage.getItem("slack-token")
-			@baseURL = "http://localhost:5000/v1/"
+			@baseURL = "http://" + document.location.hostname + ":5000/v1/"
 			@util = new Utility()
 			@currentIdCount = 0
 			@sentMessages = {}
@@ -67,7 +67,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		handleChannels: (channels) ->
 
 			for channel in channels
-				console.log channel
 				@_channelsById[channel.id] = channel
 				collection = swipy.slackCollections.channels
 
@@ -92,8 +91,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		openWebSocket: (url) ->
 			#@webSocket = new WebSocket(url)
-			console.log "connecting socket"
-			@webSocket = io.connect('http://localhost:5000');
+			@webSocket = io.connect(urlbase);
 			@webSocket.on('message', (data) =>
 				console.log "message", data
 				if data.type is "message"
@@ -164,11 +162,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				@start()
 		sendMessage:(message, channel, callback) ->
 			self = @
-			console.log "user id", swipy.slackCollections.users.me().id
 			options = {text: message, "channel_id": channel, "user_id":swipy.slackCollections.users.me().id}
 			@apiRequest("chat.send", 'POST', options, (res, error) ->
 				if res and res.ok
-					console.log res
+					console.log res if res.fuckyou
 					#slackbotChannelId = swipy.slackCollections.channels.slackbot().id
 					#type = self.util.slackTypeForId(channel)
 					#if type is "DM" and channel is slackbotChannelId

@@ -223,7 +223,9 @@ define [
 			chatListVC.newMessage.addDelegate = @
 			chatListVC.chatList.delegate = @
 			chatListVC.threadHeader.clickDelegate = @
-			chatListVC.chatList.lastRead = parseInt(@currentList.get("last_read"))
+			lastRead = @currentList.get("last_read")
+			lastRead = 0 if !lastRead
+			chatListVC.chatList.lastRead = parseInt(lastRead)
 			chatListVC.chatHandler.loadCollection(@currentList)
 			if @currentUser? # if is IM
 				chatListVC.newMessage.setPlaceHolder("Send a message to " + @currentUser.get("name"))

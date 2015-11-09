@@ -53,6 +53,7 @@ define [
 		setTemplate: ->
 			@template = _.template( Template, {variable: "data"})
 		renderSidebar: ->
+			return
 			@buttons = [{ "iconClass": "navbarChat"}, { "iconClass": "today" }]
 			@$el.find(".right-sidebar-controls").html( @template({buttons: @buttons }) )
 			@delegateEvents()
@@ -63,6 +64,7 @@ define [
 			if @activeClass
 				@loadSidemenu(@activeClass)
 		loadSidemenu:(target) ->
+			return
 			@vc?.destroy()
 			if @sidebarDelegate? and _.isFunction(@sidebarDelegate.sidebarGetViewController)
 				@vc = @sidebarDelegate.sidebarGetViewController( @, target )

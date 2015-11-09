@@ -11,7 +11,7 @@ define [
 			swipy.rightSidebarVC.hideSidemenu()
 			@$el.html "Loading App"
 			$("#main").html(@$el)
-			@appsUrl = "http://localhost:5000/apps"
+			@appsUrl = urlbase + "/apps"
 			# Set the file identifier for loading files as text (manual parse)
 			@thisAppUrl = @appsUrl + "/" + options.id + "/"
 			
@@ -39,12 +39,27 @@ define [
 						}
 					}
 					doc.postMessage(JSON.stringify(event), @appsUrl);
+					$(document).mousedown(
+						(e) =>
+							$iframe.blur() if @isInIframe
+					)
+					$iframe.mouseenter(
+						(e) =>
+							@isInIframe = true
+					)
+					$iframe.mouseleave(
+						(e) =>
+							@isInIframe = false
+							
+					)
 				)
 				window.addEventListener("message", @receivedMessageFromApp, false);
 			)
-		receivedMessageFromApp: (message) ->
+		receivedMessageFromApp: (message, test) ->
 			window.receivedMessageFromApp = message
-			console.log "message from app", message
+			
+			data = JSON.parse(message.data)
+			console.log "message from app", data
 		loadManifest: ->
 			dfd = new $.Deferred()
 			$.get(@thisAppUrl + "manifest.json", (data) =>
