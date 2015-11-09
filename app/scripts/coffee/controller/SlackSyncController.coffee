@@ -10,7 +10,7 @@
 define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 	class SlackSyncController
 		constructor: ->
-			@token = localStorage.getItem("slack-token")
+			@token = localStorage.getItem("swipy-token")
 			@baseURL = "http://" + document.location.hostname + ":5000/v1/"
 			@util = new Utility()
 			@currentIdCount = 0
@@ -74,7 +74,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				model = collection.create(channel) if !model
 				model.save(channel)
 				if !channel.is_starred
-					model.save("is_starred", false) 
+					model.save("is_starred", false)
 
 		clearDeletedChannels: ->
 			channelsToDelete = []
@@ -91,7 +91,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		openWebSocket: (url) ->
 			#@webSocket = new WebSocket(url)
-			@webSocket = io.connect(urlbase);
+			@webSocket = io.connect(urlbase, {query: 'token=' + @token});
 			@webSocket.on('message', (data) =>
 				console.log "message", data
 				if data.type is "message"
@@ -103,7 +103,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 						targetObj = swipy.slackCollections.channels.get(data.data.channel_id)
 					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
 			)
-			
+
 		onSocketOpen: (evt) ->
 		onSocketClose: (evt) ->
 			@webSocket = null if @webSocket?
@@ -202,7 +202,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 			settings =
 				url : url
-				type : type
+				type : 'POST'
 				success : ( data ) ->
 					console.log "slack success", data
 					if data and data.ok

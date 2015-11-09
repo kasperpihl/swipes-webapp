@@ -50,8 +50,10 @@ $('#sign-in').on 'submit', (e) ->
     data: JSON.stringify data
     xhrFields:
       withCredentials: true
-    success: () ->
-      window.location = '/'
+    success: (response) ->
+      if response.ok == true
+        localStorage.setItem("swipy-token", response.token)
+        window.location = '/'
     error: (errors) ->
       errors = errors.responseJSON.errors
 
