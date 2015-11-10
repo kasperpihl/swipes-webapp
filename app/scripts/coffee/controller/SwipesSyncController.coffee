@@ -20,7 +20,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		start: ->
 			return if @isStarting?
 			@isStarting = true
-			@apiRequest("rtm.start", 'GET', {simple_latest: false}, (data, error) =>
+			@apiRequest("rtm.start", {simple_latest: false}, (data, error) =>
 				@isStarting = null
 				if data and data.ok
 					@handleTeam(data.team) if data.team
@@ -193,32 +193,31 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@apiRequest("chat.postMessage", 'POST', options, (res, error) ->
 				callback?(res, error)
 			)
-		apiRequest: (command, type, options, callback, formData) ->
+		apiRequest: (command, options, callback, formData) ->
 			url = @baseURL + command
 			options = {} if !options? or !_.isObject(options)
 			options.token = @token
 
-			options = JSON.stringify(options)
+			serData = JSON.stringify(options)
 
 			settings =
 				url : url
-				type : type
+				type: 'POST'
 				success : ( data ) ->
-					console.log "slack success", data
+					console.log "swipes api success", data
 					if data and data.ok
 						callback?(data);
 					else
-						@util.sendError( data, "Sync Error" )
 						callback?(false, data);
 				error : ( error ) ->
-					console.log "slack error", error
-					@util.sendError( error, "Server Error")
+					console.log "swipes api error", error
 					callback?(false, error)
 				crossDomain : true
 				contentType: "application/json; charset=utf-8"
-				context: @
-				data : options
+				context: @,
+				data: serData,
 				processData : true
+			console.log url, settings, options
 			if formData
 				settings.data = formData
 				settings.processData = false

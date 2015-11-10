@@ -173,7 +173,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
 			#@syncIndicator.show()
 			settings =
 				url : url
-				type : 'POST'
+				type : "POST"
 				success : @responseFromSync
 				error : @errorFromSync
 				dataType : "json"

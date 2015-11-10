@@ -130,7 +130,7 @@ define [
 						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From": "Invite Overlay"})
 				)###
 			else if @modalType is "dm"
-				swipy.swipesSync.apiRequest("im.open", "POST", {"user_id": targetUser.id}, (res,error) =>
+				swipy.swipesSync.apiRequest("im.open", {"user_id": targetUser.id}, (res,error) =>
 					if res and res.ok
 						swipy.router.navigate("im/"+targetUser.get("name"), {trigger:true})
 					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
