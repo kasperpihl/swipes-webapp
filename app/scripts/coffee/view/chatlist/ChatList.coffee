@@ -84,7 +84,7 @@ define [
 					@numberOfChats++
 					if !@removeUnreadIfSeen and @unread and chat.get("ts") is @unread.ts
 						sectionEl.append( @unread.el )
-					console.log parseInt(chat.get("ts")) , @lastRead
+						
 					if !shouldAddNewUnread and !@unread?
 						if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user")?.id isnt swipy.slackCollections.users.me().id
 							@unread = new Unread()

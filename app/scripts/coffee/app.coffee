@@ -20,13 +20,13 @@ define [
 	"js/controller/FilterController"
 	"js/controller/SettingsController"
 	"js/controller/SyncController"
-	"js/controller/SlackSyncController"
+	"js/controller/SwipesSyncController"
 	"js/controller/KeyboardController"
 	"js/controller/BridgeController"
 	"js/controller/SoundController"
 	"js/model/extra/NotificationModel"
 	"gsap"
-	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, SwipesAppController, ScheduleController, FilterController, SettingsController, SyncController, SlackSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
+	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, SwipesAppController, ScheduleController, FilterController, SettingsController, SyncController, SwipesSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -60,8 +60,8 @@ define [
 			# Synchronization
 			@settings = new SettingsController()
 			@sync = new SyncController()
-
-			@slackSync = new SlackSyncController()
+			
+			@swipesSync = new SwipesSyncController()
 			@updateTimer = new ClockWork()
 
 			# Keyboard/Shortcut handler
@@ -70,7 +70,7 @@ define [
 
 		start: ->
 			@slackCollections.fetchAll()
-			@slackSync.start()
+			@swipesSync.start()
 			@collections.fetchAll()
 			if @sync.lastUpdate? and localStorage.getItem("slackLastConnected")
 				_.invoke(@collections.todos.models, "set", { selected: no } )

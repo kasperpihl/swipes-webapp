@@ -33,17 +33,17 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 				apiType = "groups"
 			apiType
 		pin: ->
-			swipy.slackSync.apiRequest("stars.add", "POST",{channel_id: @id}, 
+			swipy.swipesSync.apiRequest("stars.add", "POST",{channel_id: @id}, 
 				(res, error) =>
 					console.log("pinned channel", res, error)
 			)
 		unpin: ->
-			swipy.slackSync.apiRequest("stars.remove", "POST", {channel_id: @id}, 
+			swipy.swipesSync.apiRequest("stars.remove", "POST", {channel_id: @id}, 
 				(res, error) =>
 					console.log("unpinned channel", res, error)
 			)
 		closeChannel: ->
-			swipy.slackSync.apiRequest(@getApiType() + ".close", "POST",{channel: @id},
+			swipy.swipesSync.apiRequest(@getApiType() + ".close", "POST",{channel: @id},
 				(res, error) =>
 					console.log("closed channel", res, error)
 			)
@@ -59,7 +59,7 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 				options.latest = newest
 				allowMore = true
 				options.inclusive = 1###
-			swipy.slackSync.apiRequest(@getApiType() + ".history", "POST", options,
+			swipy.swipesSync.apiRequest(@getApiType() + ".history", "POST", options,
 				(res, error) =>
 					if res and res.ok
 						@hasFetched = true
@@ -116,7 +116,7 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			if @get("last_read")
 				unixLastRead = new Date(parseFloat(@get("last_read"))*1000).getTime()
 				return if unixLastModel <= unixLastRead
-			swipy.slackSync.apiRequest(@getApiType() + ".mark", "POST", options,
+			swipy.swipesSync.apiRequest(@getApiType() + ".mark", "POST", options,
 				(res, error) =>
 					if res and res.ok
 						console.log "marked"

@@ -285,12 +285,12 @@ define [
 			if @taskListVC? and @taskListVC.editModel and localStorage.getItem("EnableThreadedConversations")
 			 	model = @taskListVC.editModel
 			 	message = "<http://swipesapp.com/task/" + model.id + "|" + model.get("title") + ">: " + message
-			swipy.slackSync.sendMessage( message, @currentList.id)
+			swipy.swipesSync.sendMessage( message, @currentList.id)
 			@chatListVC.chatList.scrollToBottomVar = true
 			@chatListVC.chatList.removeUnreadIfSeen = true
 		newFileSelected: (newMessage, file) ->
 			newMessage.setUploading(true)
-			swipy.slackSync.uploadFile(@currentList.id, file, (res, error) ->
+			swipy.swipesSync.uploadFile(@currentList.id, file, (res, error) ->
 				newMessage.setUploading(false)
 				if res and res.ok
 					console.log "success!"
@@ -299,7 +299,7 @@ define [
 			)
 		newMessageIsTyping: (newMessage ) ->
 			options = {type: "typing", channel: @currentList.id }
-			swipy.slackSync.doSocketSend(options, true)
+			swipy.swipesSync.doSocketSend(options, true)
 		###
 			AddTaskCard Delegate
 		###

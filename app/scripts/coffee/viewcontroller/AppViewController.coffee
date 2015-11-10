@@ -1,7 +1,8 @@
 define [
 	"underscore"
 	"gsap"
-	], (_, TweenLite) ->
+	"js/controller/ClientAPIController"
+	], (_, TweenLite, ClientAPIController) ->
 	Backbone.View.extend
 		className: "app-view-controller"
 		initialize: ->
@@ -15,6 +16,8 @@ define [
 			# Set the file identifier for loading files as text (manual parse)
 			@thisAppUrl = @appsUrl + "/" + options.id + "/"
 			
+			@clientAPI = new ClientAPIController(@appsUrl)
+
 			# Load manifest file
 			@loadManifest().then( (manifest) =>
 				@manifest = manifest
@@ -25,9 +28,15 @@ define [
 				@tpl = _.template indexFile, {variable: "swipes"} if indexFile
 
 				$iframe = $("<iframe src=\"" + @appsUrl + "/app-loader\" class=\"app-frame-class\" frameborder=\"0\">")
+
+
 				@$el.html ($iframe)
+				doc = $iframe[0].contentWindow
+				@clientAPI._doc = doc
+				
 				$iframe.on("load", (e, b) =>
-					doc = $iframe[0].contentWindow
+					
+					
 					event = {
 						ok:true,
 						event: "app.run"
@@ -53,7 +62,7 @@ define [
 							
 					)
 				)
-				window.addEventListener("message", @receivedMessageFromApp, false);
+				window.addEventListener("message", @receivedMessageFromApp, false)
 			)
 		receivedMessageFromApp: (message, test) ->
 			window.receivedMessageFromApp = message

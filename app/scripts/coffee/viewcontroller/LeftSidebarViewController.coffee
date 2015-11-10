@@ -130,20 +130,20 @@ define [
 						swipy.analytics.logEvent("Invite Sent", {"Hours Since Signup": res.hoursSinceSignup, "From": "Invite Overlay"})
 				)###
 			else if @modalType is "dm"
-				swipy.slackSync.apiRequest("im.open", "POST", {"user_id": targetUser.id}, (res,error) =>
+				swipy.swipesSync.apiRequest("im.open", "POST", {"user_id": targetUser.id}, (res,error) =>
 					if res and res.ok
 						swipy.router.navigate("im/"+targetUser.get("name"), {trigger:true})
 					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
 				)
 		channelPickerClickedChannel: (targetChannel) ->
 			if @modalType is "channels"
-				swipy.slackSync.apiRequest("channels.join", {"name": targetChannel.get("name") }, (res,error) =>
+				swipy.swipesSync.apiRequest("channels.join", {"name": targetChannel.get("name") }, (res,error) =>
 					if res and res.ok
 						swipy.router.navigate("channel/"+targetChannel.get("name"), {trigger:true})
 					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
 				)
 			else if @modalType is "groups"
-				swipy.slackSync.apiRequest("groups.open", {"channel": targetChannel.id }, (res,error) =>
+				swipy.swipesSync.apiRequest("groups.open", {"channel": targetChannel.id }, (res,error) =>
 					if res and res.ok
 						swipy.router.navigate("group/"+targetChannel.get("name"), {trigger:true})
 					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
@@ -182,7 +182,7 @@ define [
 					if !groupName
 						return [{error: "You can't create group with an empty name"}]
 					else if groupName.length > 0
-						swipy.slackSync.apiRequest("groups.create",{name: groupName},(res, error) =>
+						swipy.swipesSync.apiRequest("groups.create",{name: groupName},(res, error) =>
 							if res and res.ok
 								swipy.router.navigate("group/"+res.channel.name)
 							else
@@ -206,7 +206,7 @@ define [
 					if !channelName
 						return [{error: "You can't create channel with an empty name"}]
 					else if channelName.length > 0
-						swipy.slackSync.apiRequest("channels.create",{name: channelName},(res, error) =>
+						swipy.swipesSync.apiRequest("channels.create",{name: channelName},(res, error) =>
 							if res and res.ok
 								swipy.router.navigate("channel/"+res.channel.name)
 							else
@@ -310,6 +310,10 @@ define [
 				@$el.find("#sidebar-project-list .projects").append(rowView.el)
 				rowView.render()
 			if !channels.length then $("#sidebar-project-list .projects").html('<li class="empty">No unread messages</li>')
+
+
+
+
 
 			imsLeft = 0
 			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) => 

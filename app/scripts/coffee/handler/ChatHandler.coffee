@@ -105,7 +105,7 @@ define [
 								ts: chatMessageModel.get("ts")
 								channel: channelModel.id
 							}
-							swipy.slackSync.apiRequest("chat.delete", options, (res, error) ->
+							swipy.swipesSync.apiRequest("chat.delete", options, (res, error) ->
 								console.log "result from message delete", res, error
 								#T_TODO check what I have to do here
 								#if res and res.ok
@@ -133,7 +133,7 @@ define [
 									channel: channelModel.id
 									link_names: 1
 								}
-								swipy.slackSync.apiRequest("chat.update", options, (res, error) ->
+								swipy.swipesSync.apiRequest("chat.update", options, (res, error) ->
 									console.log "result from message update", res, error
 									if res and res.ok
 										chatMessageModel.set("text", res.text)

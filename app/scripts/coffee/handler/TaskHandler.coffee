@@ -185,7 +185,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " completed the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
-					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Completed Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Action Step", {"Type": model.getType() })
@@ -197,7 +197,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " deleted the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
-					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Deleted Action Step", {"Type": model.getType() , "Is My Tasks": isMyTasks})
@@ -222,7 +222,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";
-					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Completed Task", {"Type": model.getType() , "Is My Tasks": isMyTasks})
 			swipy.analytics.sendEventToIntercom("Completed Tasks", {"Type": model.getType() })
@@ -239,7 +239,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " deleted the task \"" + model.getTaskLinkForSlack() + "\"";
-					swipy.slackSync.sendMessageAsSofi(sofiMessage, targetChannel)
+					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
 			swipy.analytics.logEvent("[Engagement] Deleted Task", {"Type": model.getType() , "Is My Tasks": isMyTasks})
@@ -272,7 +272,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
 				if swipy.slackCollections.users.me().id isnt targetUser.id
 					sofiMessage = capitalizedName + " assigned you the task \"" + @pickerModel.getTaskLinkForSlack() + "\"";
-					swipy.slackSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
+					swipy.swipesSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
 			#@pickerModel = null
 			#@dismissModal()
 		userPickerModalPeople: (userPickerModal) ->
