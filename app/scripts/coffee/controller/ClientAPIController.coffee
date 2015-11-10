@@ -36,6 +36,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				@_addCallback(identifier, callback)
 
 			@_doc.postMessage(JSON.stringify(callJson), @_url)
+			
 		_respondCall: (identifier, data, error) ->
 			console.log @
 			throw new Error("No doc/iframe set") if !@_doc

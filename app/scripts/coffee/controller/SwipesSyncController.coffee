@@ -10,7 +10,7 @@
 define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 	class SwipesSyncController
 		constructor: ->
-			@token = localStorage.getItem("slack-token")
+			@token = localStorage.getItem("swipy-token")
 			@baseURL = "http://" + document.location.hostname + ":5000/v1/"
 			@util = new Utility()
 			@currentIdCount = 0
