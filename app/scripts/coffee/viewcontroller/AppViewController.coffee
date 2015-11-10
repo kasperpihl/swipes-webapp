@@ -17,71 +17,35 @@ define [
 			@thisAppUrl = @appsUrl + "/" + options.id + "/"
 			
 			@clientAPI = new ClientAPIController(@appsUrl)
+			$iframe = $("<iframe src=\"" + urlbase+ "/v1/apps.load?appId=" + options.id + "&token=" + localStorage.getItem("swipy-token") + "\" class=\"app-frame-class\" frameborder=\"0\">")
 
-			# Load manifest file
-			@loadManifest().then( (manifest) =>
-				@manifest = manifest
-				swipy.topbarVC.setMainTitleAndEnableProgress(@manifest.title, false )
+
+			@$el.html ($iframe)
+			doc = $iframe[0].contentWindow
+			@clientAPI._doc = doc
+			
+			$iframe.on("load", (e, b) =>
 				
-				return @loadIndex()
-			).then(	(indexFile) =>
-				@tpl = _.template indexFile, {variable: "swipes"} if indexFile
-
-				$iframe = $("<iframe src=\"" + @appsUrl + "/app-loader\" class=\"app-frame-class\" frameborder=\"0\">")
-
-
-				@$el.html ($iframe)
-				doc = $iframe[0].contentWindow
-				@clientAPI._doc = doc
-				
-				$iframe.on("load", (e, b) =>
-					
-					
-					event = {
-						ok:true,
-						event: "app.run"
-						data:{
-							identifier: options.id,
-							body: @tpl(),
-							scripts: @manifest.main_app.js,
-							styles: @manifest.main_app.css
-						}
-					}
-					doc.postMessage(JSON.stringify(event), @appsUrl);
-					$(document).mousedown(
-						(e) =>
-							$iframe.blur() if @isInIframe
-					)
-					$iframe.mouseenter(
-						(e) =>
-							@isInIframe = true
-					)
-					$iframe.mouseleave(
-						(e) =>
-							@isInIframe = false
-							
-					)
+				$(document).mousedown(
+					(e) =>
+						$iframe.blur() if @isInIframe
 				)
-				window.addEventListener("message", @receivedMessageFromApp, false)
+				$iframe.mouseenter(
+					(e) =>
+						@isInIframe = true
+				)
+				$iframe.mouseleave(
+					(e) =>
+						@isInIframe = false
+						
+				)
 			)
+			
 		receivedMessageFromApp: (message, test) ->
 			window.receivedMessageFromApp = message
 			
 			data = JSON.parse(message.data)
 			console.log "message from app", data
-		loadManifest: ->
-			dfd = new $.Deferred()
-			$.get(@thisAppUrl + "manifest.json", (data) =>
-				dfd.resolve(data)
-			)
-			return dfd.promise()
-		loadIndex: ->
-			dfd = new $.Deferred()
-			$.get(@thisAppUrl + @manifest.main_app.index, (data) =>
-				dfd.resolve(data)
-			)
-			return dfd.promise()
-		
 		destroy: ->
 
 
