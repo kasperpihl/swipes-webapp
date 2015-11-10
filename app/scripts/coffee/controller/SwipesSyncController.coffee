@@ -216,8 +216,6 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					callback?(false, error)
 				crossDomain : true
 				contentType: "application/json; charset=utf-8"
-				xhrFields:
-					withCredentials: true
 				context: @
 				data : options
 				processData : true

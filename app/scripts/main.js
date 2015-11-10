@@ -196,80 +196,19 @@ require(["jquery", "underscore", "backbone"], function($) {
         $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});
     })*/
 
-    $.ajax({
-      url: urlbase + '/v1/users.logged',
-      type: 'GET',
-      dataType: 'json',
-      contentType: "application/json; charset=utf-8",
-      crossDomain : true,
-      xhrFields: {
-        withCredentials: true
-      },
-      success: function () {
-        queryString = QueryString;
-        require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
-            'use strict';
+    if (localStorage.getItem("swipy-token")) {
+      queryString = QueryString;
+      require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
+          'use strict';
 
-            window.swipy = new App();
-            window.swipy.handleQueryString(queryString);
-            window.swipy.manualInit();
-            window.debugHelper = new DebugHelper();
-            swipy.start();
-        });
-      },
-      error: function (error) {
-        localStorage.clear();
-        location.href = location.origin + "/newlogin/";
-      }
-    });
-
-    // if (localStorage.getItem("logged")) {
-    //   // First check that the user is actually logged in
-    //   queryString = QueryString;
-    //   require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
-    //       'use strict';
-    //
-    //       window.swipy = new App();
-    //       window.swipy.handleQueryString(queryString);
-    //       window.swipy.manualInit();
-    //       window.debugHelper = new DebugHelper();
-    //       swipy.start();
-    //   });
-    // } else {
-    //   path = location.origin + "/newlogin/"
-    //
-    //   location.href = path;
-    // }
-    // require(["parse"], function() {
-    //     // First check that the user is actually logged in
-    //     queryString = QueryString;
-    //     var appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3";
-    //     var jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg";
-    //
-    //     Parse.initialize(appId, jsId);
-    //     if (localStorage.getItem("slack-token")) {
-    //         require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
-    //             'use strict';
-    //
-    //             window.swipy = new App();
-    //             window.swipy.handleQueryString(queryString);
-    //             window.swipy.manualInit();
-    //             window.debugHelper = new DebugHelper();
-    //             swipy.start();
-    //         });
-    //     } else {
-    //
-    //         path = location.origin + "/loginslack/"
-    //         if(queryString && queryString.href){
-    //             path += "?href="+queryString.href;
-    //         }
-    //         if(location.hash){
-    //             path += "#" + location.hash.substring(1);
-    //         }
-    //
-    //
-    //
-    //         location.href = path;
-    //     }
-    // });
+          window.swipy = new App();
+          window.swipy.handleQueryString(queryString);
+          window.swipy.manualInit();
+          window.debugHelper = new DebugHelper();
+          swipy.start();
+      });
+    } else {
+      localStorage.clear();
+      location.href = location.origin + "/newlogin/";
+    }
 });
