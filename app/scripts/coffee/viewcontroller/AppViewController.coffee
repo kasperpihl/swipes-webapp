@@ -16,13 +16,13 @@ define [
 			# Set the file identifier for loading files as text (manual parse)
 			@thisAppUrl = @appsUrl + "/" + options.id + "/"
 			
-			@clientAPI = new ClientAPIController(@appsUrl)
+			
 			$iframe = $("<iframe src=\"" + urlbase+ "/v1/apps.load?appId=" + options.id + "&token=" + localStorage.getItem("swipy-token") + "\" class=\"app-frame-class\" frameborder=\"0\">")
 
 
 			@$el.html ($iframe)
 			doc = $iframe[0].contentWindow
-			@clientAPI._doc = doc
+			swipy.api.setListener(doc)
 			
 			$iframe.on("load", (e, b) =>
 				
@@ -47,7 +47,7 @@ define [
 			data = JSON.parse(message.data)
 			console.log "message from app", data
 		destroy: ->
-
+			console.log("destroying app view controller")
 
 ###
 	A fake Inbox app
