@@ -1,3 +1,5 @@
+baseAPIURL = "http://" + document.location.hostname + ":5000"
+apiConnectorUrl = baseAPIURL + "/apps/app-loader/swipes-api-connector.js"
 define [
 	"jquery"
 	"underscore"
@@ -25,7 +27,7 @@ define [
 	"js/controller/BridgeController"
 	"js/controller/SoundController"
 	"js/model/extra/NotificationModel"
-	"plugins/swipes-js-sdk/swipes-api-connector"
+	apiConnectorUrl
 	"gsap"
 	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, SwipesAppController, ScheduleController, FilterController, SettingsController, SyncController, SwipesSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
 	class Swipes
@@ -46,8 +48,7 @@ define [
 			@isOpened = true
 			_.bindAll(@, "openedWindow", "closedWindow")
 
-			apiUrl = "http://" + document.location.hostname + ":5000"
-			@api = new SwipesAPIConnector(apiUrl, localStorage.getItem("swipy-token"))
+			@api = new SwipesAPIConnector(baseAPIURL, localStorage.getItem("swipy-token"))
 			$(window).focus @openedWindow
 			$(window).blur @closedWindow
 			$(window).on( "resize", @resizedWindow )

@@ -12,17 +12,15 @@ define [
 			swipy.rightSidebarVC.hideSidemenu()
 			@$el.html "Loading App"
 			$("#main").html(@$el)
-			@appsUrl = urlbase + "/apps"
+			
 			# Set the file identifier for loading files as text (manual parse)
-			@thisAppUrl = @appsUrl + "/" + options.id + "/"
-			
-			
-			$iframe = $("<iframe src=\"" + urlbase+ "/v1/apps.load?appId=" + options.id + "&token=" + localStorage.getItem("swipy-token") + "\" class=\"app-frame-class\" frameborder=\"0\">")
+			apiUrl = swipy.api.getAPIURL()
+			$iframe = $("<iframe src=\"" + apiUrl + "apps.load?appId=" + options.id + "&token=" + localStorage.getItem("swipy-token") + "\" class=\"app-frame-class\" frameborder=\"0\">")
 
 
 			@$el.html ($iframe)
 			doc = $iframe[0].contentWindow
-			swipy.api.setListener(doc)
+			swipy.api.setListener(doc, apiUrl)
 			
 			$iframe.on("load", (e, b) =>
 				
