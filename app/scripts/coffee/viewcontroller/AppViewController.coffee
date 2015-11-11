@@ -1,8 +1,7 @@
 define [
 	"underscore"
 	"gsap"
-	"js/controller/ClientAPIController"
-	], (_, TweenLite, ClientAPIController) ->
+	], (_, TweenLite) ->
 	Backbone.View.extend
 		className: "app-view-controller"
 		initialize: ->
