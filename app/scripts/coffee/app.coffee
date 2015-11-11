@@ -25,6 +25,7 @@ define [
 	"js/controller/BridgeController"
 	"js/controller/SoundController"
 	"js/model/extra/NotificationModel"
+	"plugins/swipes-js-sdk/swipes-api-connector"
 	"gsap"
 	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, SwipesAppController, ScheduleController, FilterController, SettingsController, SyncController, SwipesSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
 	class Swipes
@@ -44,6 +45,9 @@ define [
 			##@tags.fetch()
 			@isOpened = true
 			_.bindAll(@, "openedWindow", "closedWindow")
+
+			apiUrl = "http://" + document.location.hostname + ":5000"
+			@api = new SwipesAPIConnector(apiUrl, localStorage.getItem("swipy-token"))
 			$(window).focus @openedWindow
 			$(window).blur @closedWindow
 			$(window).on( "resize", @resizedWindow )
@@ -128,6 +132,7 @@ define [
 			@filter?.destroy?()
 			@settings?.destroy?()
 			@sound?.destroy?()
+			@api?.destroy()
 
 			# If we init multiple times, we need to make sure to stop the history between each.
 			#if Parse.History.started then Parse.history.stop()

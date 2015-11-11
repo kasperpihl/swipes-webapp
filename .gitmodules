@@ -7,3 +7,6 @@
 [submodule "app/bower_components/clndr"]
 	path = app/bower_components/clndr
 	url = git@github.com:Ahrengot/CLNDR.git
+[submodule "app/scripts/plugins/swipes-js-sdk"]
+	path = app/scripts/plugins/swipes-js-sdk
+	url = https://github.com/swipesapp/swipes-js-sdk.git

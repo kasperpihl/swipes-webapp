@@ -193,8 +193,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@apiRequest("chat.postMessage", 'POST', options, (res, error) ->
 				callback?(res, error)
 			)
-		apiRequest: (command, options, callback, formData) ->
-			url = @baseURL + command
+		apiRequest: (options, data, callback, formData) ->
+			swipy.api.callSwipesApi(options, data, callback, formData)
+			###url = @baseURL + command
 			options = {} if !options? or !_.isObject(options)
 			options.token = @token
 
@@ -224,4 +225,4 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				settings.contentType = false
 			#console.log serData
 			console.log settings
-			$.ajax( settings )
+			$.ajax( settings )###
