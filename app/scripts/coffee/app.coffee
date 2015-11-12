@@ -17,7 +17,6 @@ define [
 	"js/viewcontroller/LeftSidebarViewController"
 	"js/viewcontroller/TopbarViewController"
 	"js/viewcontroller/RightSidebarViewController"
-	"js/controller/SwipesAppController"
 	"js/controller/ScheduleController"
 	"js/controller/FilterController"
 	"js/controller/SettingsController"
@@ -29,7 +28,7 @@ define [
 	"js/model/extra/NotificationModel"
 	apiConnectorUrl
 	"gsap"
-	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, SwipesAppController, ScheduleController, FilterController, SettingsController, SyncController, SwipesSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
+	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SwipesSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -103,7 +102,6 @@ define [
 			@scheduler = new ScheduleController()
 			@sidebar = new SidebarController()
 
-			@swipes = new SwipesAppController()
 			@filter = new FilterController()
 			@sound = new SoundController()
 			
