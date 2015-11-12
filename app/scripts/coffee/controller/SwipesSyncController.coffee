@@ -15,7 +15,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@util = new Utility()
 			@currentIdCount = 0
 			@sentMessages = {}
-			_.bindAll(@, "onSocketMessage", "onSocketClose", "onOpenedWindow")
+			@listeners = {}
+
+			_.bindAll(@, "onOpenedWindow")
 			Backbone.on("opened-window", @onOpenedWindow, @)
 		start: ->
 			return if @isStarting?
@@ -92,6 +94,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		openWebSocket: (url) ->
 			#@webSocket = new WebSocket(url)
 			@webSocket = io.connect(urlbase, {query: 'token=' + @token});
+			console.log "opening websocket"
 			@webSocket.on('message', (data) =>
 				console.log "message", data
 				if data.type is "message"
@@ -102,55 +105,10 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					if data.data.type is "channel" or data.data.type is "im" or data.data.type is "group"
 						targetObj = swipy.slackCollections.channels.get(data.data.channel_id)
 					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
+				if @listeners[data.type]
+					@listeners[data.type].callListener("event", data)
 			)
 
-		onSocketOpen: (evt) ->
-		onSocketClose: (evt) ->
-			@webSocket = null if @webSocket?
-			@start()
-		onSocketMessage: (evt) ->
-			if evt and evt.data
-
-				data = JSON.parse(evt.data)
-				# Reply to sent data over websocket
-				if data.ok and data.reply_to
-					sentMessage = @sentMessages[""+data.reply_to]
-					return if !sentMessage?
-					if sentMessage.type is "message"
-						sentMessage.ts = data.ts
-						delete sentMessage["id"]
-						@handleReceivedMessage(sentMessage)
-						delete @sentMessages[""+data.reply_to]
-					return
-				if data.type is "presence_change"
-					user = swipy.slackCollections.users.get(data.user)
-					user.save("presence", data.presence)
-				else if data.type is "message"
-					@handleReceivedMessage(data, true)
-				else if data.type is "star_added" or data.type is "star_removed"
-					if data.item.type is "channel" or data.item.type is "im" or data.item.type is "group"
-						targetObj = swipy.slackCollections.channels.get(data.item.channel)
-					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
-				else if data.type is "channel_marked" or data.type is "im_marked" or data.type is "group_marked"
-					channel = swipy.slackCollections.channels.get(data.channel)
-					channel.save("last_read", data.ts)
-					channel.save("unread_count_display", data.unread_count_display)
-				else if data.type is "channel_joined"
-					channel = swipy.slackCollections.channels.get(data.channel.id)
-					channel.save(data.channel)
-				else if data.type is "channel_left"
-					channel = swipy.slackCollections.channels.get(data.channel)
-					channel.save("is_member", false)
-				else if data.type is "im_close" or data.type is "group_close"
-					channel = swipy.slackCollections.channels.get(data.channel)
-					channel.save("is_open", false)
-				else if data.type is "im_open" or data.type is "group_open"
-					channel = swipy.slackCollections.channels.get(data.channel)
-					channel.save("is_open", true)
-
-			console.log evt.data
-		onSocketError: (evt) ->
-			console.log evt
 		doSocketSend: (message, dontSave) ->
 			if _.isObject(message)
 				message.id = ++@currentIdCount
@@ -162,8 +120,9 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				@start()
 		sendMessage:(message, channel, callback) ->
 			self = @
+			console.log channel
 			options = {text: message, "channel_id": channel, "user_id":swipy.slackCollections.users.me().id}
-			@apiRequest("chat.send", 'POST', options, (res, error) ->
+			@apiRequest("chat.send", options, (res, error) ->
 				if res and res.ok
 					console.log res if res.fuckyou
 					#slackbotChannelId = swipy.slackCollections.channels.slackbot().id
@@ -193,36 +152,17 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			@apiRequest("chat.postMessage", 'POST', options, (res, error) ->
 				callback?(res, error)
 			)
+		connectorHandleResponseReceivedFromListener: (connector, message, callback) ->
+			if message and message.command
+				data = message.data
+				if message.command is "navigation.setTitle"
+					swipy.topbarVC.setMainTitleAndEnableProgress(data.title, false ) if data.title
+				if message.command is "users.get"
+					if data.id
+						callback(swipy.slackCollections.users.get(data.id))
+				else if message.command is "listenTo"
+					@listeners[data.event] = connector
+
+
 		apiRequest: (options, data, callback, formData) ->
 			swipy.api.callSwipesApi(options, data, callback, formData)
-			###url = @baseURL + command
-			options = {} if !options? or !_.isObject(options)
-			options.token = @token
-
-			serData = JSON.stringify(options)
-
-			settings =
-				url : url
-				type: 'POST'
-				success : ( data ) ->
-					console.log "swipes api success", data
-					if data and data.ok
-						callback?(data);
-					else
-						callback?(false, data);
-				error : ( error ) ->
-					console.log "swipes api error", error
-					callback?(false, error)
-				crossDomain : true
-				contentType: "application/json; charset=utf-8"
-				context: @,
-				data: serData,
-				processData : true
-			console.log url, settings, options
-			if formData
-				settings.data = formData
-				settings.processData = false
-				settings.contentType = false
-			#console.log serData
-			console.log settings
-			$.ajax( settings )###

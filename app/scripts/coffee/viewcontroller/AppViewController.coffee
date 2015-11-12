@@ -20,7 +20,7 @@ define [
 			@$el.html ($iframe)
 			doc = $iframe[0].contentWindow
 			swipy.api.setListener(doc, apiUrl)
-			
+			swipy.api.setDelegate(swipy.swipesSync)
 			$iframe.on("load", (e, b) =>
 				
 				$(document).mousedown(
@@ -33,8 +33,7 @@ define [
 				)
 				$iframe.mouseleave(
 					(e) =>
-						@isInIframe = false
-						
+						@isInIframe = false		
 				)
 			)
 			
@@ -45,7 +44,6 @@ define [
 			console.log "message from app", data
 		destroy: ->
 			console.log("destroying app view controller")
-
 ###
 	A fake Inbox app
 
