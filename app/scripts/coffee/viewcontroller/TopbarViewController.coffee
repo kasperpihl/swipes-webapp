@@ -6,16 +6,16 @@ define [
 		el: ".top-bar-container"
 		className: ".top-bar-container"
 		initialize: ->
-			@foregroundColor = ".navigation-foreground-light"
+			@foregroundClass = "navigation-foreground-light"
 		setForegroundColor: (color) ->
-			foregroundClass = ".navigation-foreground-light"
+			foregroundClass = "navigation-foreground-light"
 			if color is "dark"
-				foregroundClass = ".navigation-foreground-dark"
+				foregroundClass = "navigation-foreground-dark"
 
-			if color isnt @foregroundColor
-				@$el.removeClass(@foregroundColor)
+			if color isnt @foregroundClass
+				@$el.removeClass(@foregroundClass)
 				@$el.addClass(foregroundClass)
-				@foregroundColor = foregroundClass
+				@foregroundClass = foregroundClass
 		setBackgroundColor: (color) ->
 			@$el.css("backgroundColor", "transparent")
 			color = "transparent" if !color

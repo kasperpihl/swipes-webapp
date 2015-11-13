@@ -1,57 +1,42 @@
 .top-bar-container{
-	/*&.red{
-		background: $red;
-	}
-	&.yellow{
-		background: $yellow;
-	}
-	&.green{
-		background: $green;
-	}*/
 	height:$top-bar-height;
 	position:absolute;
 	width:100%;
 	z-index: 1999;
 	top:0;
+	// This is the default background color of sidebar
 	background: $sidebar-dark-color;
-		&.navigation-foreground-light {
-			color: #F4F4F5;
-		}
-		&.navigation-foreground-dark {
-			color: #000C2F;
-		}
-		h1{
-			margin: 0;
-			margin-left: 3%;
-			font: 1.1em/1 $font-normal;
-			text-align:left;
-			line-height: 60px;
-		}
-		.search-button{
-			position: absolute;
-			width:60px;
-			height:60px;
-			right: 0;
-			top: 0;
-			cursor: pointer;
-			svg{
-				height:20px;
-				margin-top: 20px;
-				margin-right: 20px;
-				width: 20px;
-				fill: $white-background;
-			
-			}
-			
-			&:hover  {
-				background-color: rgba($white-background, .3);
-			}
-		}
-	.progress-header{
-		margin-top:$top-bar-height;
-		z-index: 2000; // To be on top of tasks that have 1000+
+	&.navigation-foreground-light {
+		color: #F4F4F5;
 	}
-	.progress-header.no-progress{
-		margin-top:$top-bar-height - 1;
+	&.navigation-foreground-dark {
+		color: #000C2F;
+	}
+	h1{
+		margin: 0;
+		margin-left: 3%;
+		font: 1.1em/1 $font-normal;
+		text-align:left;
+		line-height: 60px;
+	}
+	.search-button{
+		position: absolute;
+		width:60px;
+		height:60px;
+		right: 0;
+		top: 0;
+		cursor: pointer;
+		svg{
+			height:20px;
+			margin-top: 20px;
+			margin-right: 20px;
+			width: 20px;
+			fill: $white-background;
+		
+		}
+		
+		&:hover  {
+			background-color: rgba($white-background, .3);
+		}
 	}
 }
