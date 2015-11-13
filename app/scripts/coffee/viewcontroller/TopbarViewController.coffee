@@ -5,10 +5,10 @@ define [
 	Backbone.View.extend
 		className: "top-bar-inner-container"
 		initialize: ->
-			@template = _.template(Tmpl)
+			@template = _.template(Tmpl, {variable: "data"})
 			@render()
 		render: ->
-			@$el.html(@template({}))
+			@$el.html(@template({"backgroundColor": "background:red;"}))
 			$(".top-bar-container").html(@$el)
 
 		setMainTitleAndEnableProgress: (title, progress) ->
