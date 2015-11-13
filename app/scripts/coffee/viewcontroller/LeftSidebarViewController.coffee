@@ -234,8 +234,8 @@ define [
 					is_app: true,
 				},
 				{
-					title: "My Tasks",
-					name: "mytasks",
+					title: "Admin",
+					name: "admin",
 					is_starred: true,
 					is_app:true
 				},
