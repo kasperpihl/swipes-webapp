@@ -13,17 +13,19 @@
 	width:100%;
 	z-index: 1999;
 	top:0;
-	.topbar-header{
-		position:absolute;
-		left:0;
-		top:0;
-		width:100%;
+		
+		&.navigation-foreground-light {
+			color: #F4F4F5;
+		}
+		&.navigation-foreground-dark {
+			color: #000C2F;
+		}
 		h1{
 			margin: 0;
-			line-height: 60px;
 			margin-left: 3%;
 			font: 1.1em/1 $font-normal;
 			text-align:left;
+			line-height: 60px;
 		}
 		.search-button{
 			position: absolute;
@@ -45,7 +47,6 @@
 				background-color: rgba($white-background, .3);
 			}
 		}
-	}
 	.progress-header{
 		margin-top:$top-bar-height;
 		z-index: 2000; // To be on top of tasks that have 1000+
