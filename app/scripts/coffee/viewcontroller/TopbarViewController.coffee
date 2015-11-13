@@ -20,6 +20,10 @@ define [
 			@$el.css("backgroundColor", "transparent")
 			color = "transparent" if !color
 			@$el.css("backgroundColor", color)
+		enableBoxShadow: (enable) ->
+			enableToggle = false
+			enableToggle = true if enable
+			@$el.toggleClass("navigation-boxshadow", enableToggle)
 		setTitle: (title, reset) ->
 			@$el.find(".title").html(title)
 			if reset

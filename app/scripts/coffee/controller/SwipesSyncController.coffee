@@ -161,6 +161,8 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					swipy.topbarVC.setBackgroundColor(data.color)
 				else if message.command is "navigation.setForegroundColor"
 					swipy.topbarVC.setForegroundColor(data.color)
+				else if message.command is "navigation.enableBoxShadow"
+					swipy.topbarVC.enableBoxShadow(data.enable)
 				else if message.command is "users.get"
 					if data.id
 						callback(swipy.slackCollections.users.get(data.id))
