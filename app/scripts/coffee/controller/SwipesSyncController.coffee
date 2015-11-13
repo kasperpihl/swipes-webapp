@@ -64,7 +64,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 			collection = swipy.swipesCollections.apps
 			for app in apps
 				model = collection.get(app.id)
-				model = collection.create(app) if !app
+				model = collection.create(app) if !model
 				model.save(app)
 		handleChannels: (channels) ->
 			collection = swipy.swipesCollections.channels

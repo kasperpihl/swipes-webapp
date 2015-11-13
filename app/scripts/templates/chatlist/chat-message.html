@@ -7,18 +7,9 @@
 	var profilePictureURL;
 
 	if(user){
-		sender = swipy.slackCollections.users.get(user);
+		sender = swipy.swipesCollections.users.get(user);
 		if(sender.get("profile"))
 			profilePictureURL = sender.get("profile").image_192;
-	}
-	var bot_id = data.message.get("bot_id");
-	if(bot_id){
-		sender = swipy.slackCollections.bots.get(bot_id);
-		profilePictureURL = sender.get("icons").image_48;
-	}
-	if(data.message.get("comment")){
-		sender = swipy.slackCollections.users.get(data.message.get("comment").user)
-		profilePictureURL = sender.get("profile").image_192;
 	}
 
 	var icons = data.message.get("icons");

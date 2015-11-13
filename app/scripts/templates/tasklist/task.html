@@ -3,9 +3,9 @@
 	var hasMetaClass = "";
 	var sourceOfTask, timeString, numberOfTags;
 	if(data.showSource){
-		var currentUserId = swipy.slackCollections.users.me().id
+		var currentUserId = swipy.swipesCollections.users.me().id
 		if(data.task.get("projectLocalId")){
-			var channel = swipy.slackCollections.channels.get(data.task.get("projectLocalId"));
+			var channel = swipy.swipesCollections.channels.get(data.task.get("projectLocalId"));
 			if(channel){
 				var srcName = channel.getName();
 				if(channel.get("is_channel"))
@@ -40,7 +40,7 @@
 	if (!data.showSource && data.task.get("assignees") && data.task.get("assignees").length ){
 		numberOfAssignees = data.task.get("assignees").length;
 		if(numberOfAssignees == 1){
-			assignee = swipy.slackCollections.users.get(data.task.get("assignees")[0]);
+			assignee = swipy.swipesCollections.users.get(data.task.get("assignees")[0]);
 			numberOfAssignees = assignee.escape("name");
 		}
 		numberOfMetaInfos++;

@@ -2,12 +2,12 @@
 var sender;
 var profilePictureURL = "";
 if(data.result.user){
-	sender = swipy.slackCollections.users.get(data.result.user);
+	sender = swipy.swipesCollections.users.get(data.result.user);
 	if(sender)
 		profilePictureURL = sender.get("profile").image_192;
 }
 else if(data.result.username){
-	sender = swipy.slackCollections.bots.findWhere({name: data.result.username})
+	sender = swipy.swipesCollections.bots.findWhere({name: data.result.username})
 	if(sender)
 		profilePictureURL = sender.get("icons").image_48;
 	else
@@ -33,7 +33,7 @@ if(data.result.channel){
 	}
 	if(channel.id.startsWith("D")){
 		urlStart = "#im/";
-		var channelObj = swipy.slackCollections.channels.get(channel.id);
+		var channelObj = swipy.swipesCollections.channels.get(channel.id);
 		if(channelObj)
 			channelName = "@"+channelObj.getName();
 	}
