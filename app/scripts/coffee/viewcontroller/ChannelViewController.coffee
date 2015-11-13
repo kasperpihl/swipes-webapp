@@ -86,7 +86,7 @@ define [
 				name = "slackbot & s.o.f.i." if name is "slackbot"
 			if @taskListVC? and @taskListVC.editModel
 				name += " &nbsp;>&nbsp; " +@taskListVC.editModel.get("title")
-			swipy.topbarVC.setMainTitleAndEnableProgress(name, false)
+			swipy.topbarVC.setTitle(name, true)
 		loadMainWindow: (type) ->
 			@vc?.destroy()
 			if type is "task"

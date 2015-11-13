@@ -4,11 +4,24 @@ define [
 	], (_, Tmpl) ->
 	Backbone.View.extend
 		el: ".top-bar-container"
+		className: ".top-bar-container"
 		initialize: ->
-			@template = _.template(Tmpl, {variable: "data"})
-			@render()
-		render: ->
-			#@$el.html(@template({"backgroundColor": "background:red;"}))
-		
-		setMainTitleAndEnableProgress: (title, progress) ->
+			@foregroundColor = ".navigation-foreground-light"
+		setForegroundColor: (color) ->
+			foregroundClass = ".navigation-foreground-light"
+			if color is "dark"
+				foregroundClass = ".navigation-foreground-dark"
+
+			if color isnt @foregroundColor
+				@$el.removeClass(@foregroundColor)
+				@$el.addClass(foregroundClass)
+				@foregroundColor = foregroundClass
+		setBackgroundColor: (color) ->
+			@$el.css("backgroundColor", "transparent")
+			color = "transparent" if !color
+			@$el.css("backgroundColor", color)
+		setTitle: (title, reset) ->
 			@$el.find(".title").html(title)
+			if reset
+				@setForegroundColor()
+				@setBackgroundColor()

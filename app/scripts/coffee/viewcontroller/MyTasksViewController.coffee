@@ -27,7 +27,7 @@ define [
 			@showLaterTasks = false
 			@showCompletedTasks = false
 
-			swipy.topbarVC.setMainTitleAndEnableProgress("My Tasks", false )
+			swipy.topbarVC.setTitle("My Tasks", true )
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
 			if options and options.id

@@ -44,8 +44,7 @@ define [
 			@$el.find(".search-field-container input").focus()
 		open: (options) ->
 			swipy.rightSidebarVC.sidebarDelegate = @
-			swipy.topbarVC.setSectionTitleAndProgress("No results")
-			swipy.topbarVC.setMainTitleAndEnableProgress("Search", false )
+			swipy.topbarVC.setTitle("Search", true )
 			swipy.rightSidebarVC.hideSidemenu()
 			@render()
 		doSearch: ->
@@ -94,15 +93,12 @@ define [
 			numberOfFiles = res.files.total
 			@$el.find(".filter-option.files").html("Files ("+numberOfFiles+")")
 
-			swipy.topbarVC.setSectionTitleAndProgress(+numberOfMessages+ + +numberOfFiles+ " results")
 		renderSearch: ->
 			@searchList.render()
 		clearSearch: ->
 			@$el.find(".search-result-container").html("")
 			@$el.find(".filter-option.messages").html("Messages")
 			@$el.find(".filter-option.files").html("Files")
-			swipy.topbarVC.setSectionTitleAndProgress("No results")
-
 		###
 			SearchList Datasource
 		###
