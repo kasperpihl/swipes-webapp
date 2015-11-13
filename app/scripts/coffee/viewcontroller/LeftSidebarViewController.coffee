@@ -142,22 +142,12 @@ define [
 						swipy.router.navigate("channel/"+targetChannel.get("name"), {trigger:true})
 					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
 				)
-			else if @modalType is "groups"
-				swipy.swipesSync.apiRequest("groups.open", {"channel": targetChannel.id }, (res,error) =>
-					if res and res.ok
-						swipy.router.navigate("group/"+targetChannel.get("name"), {trigger:true})
-					else alert("error trying to message " + JSON.stringify(res) + " " + JSON.stringify(error))
-				)
 		channelPickerModalChannels: (channelPickerModal) ->
 			channels = []
 			swipy.swipesCollections.channels.each( (channel) =>
 				if @modalType is "channels"
-					if channel.get("is_channel") and !channel.get("is_archived")
+					if channel.get("type") is "public" and !channel.get("is_archived")
 						if !channel.get("is_member") 
-							channels.push(channel.toJSON())
-				else if @modalType is "groups"
-					if channel.get("is_group") and !channel.get("is_archived")
-						if !channel.get("is_open")
 							channels.push(channel.toJSON())
 				return false
 			)
@@ -176,30 +166,6 @@ define [
 			return people
 		closeChannel: (model) ->
 			model.closeChannel()
-		clickedAddGroup: (e) ->
-			createGroupCallback = (() ->
-				return (groupName) ->
-					if !groupName
-						return [{error: "You can't create group with an empty name"}]
-					else if groupName.length > 0
-						swipy.swipesSync.apiRequest("groups.create",{name: groupName},(res, error) =>
-							if res and res.ok
-								swipy.router.navigate("group/"+res.channel.name)
-							else
-								console.log("error group",res, error)
-						)
-			)()
-
-			genericModal = new GenericModal
-				type: 'inputModal'
-				submitCallback: createGroupCallback
-				inputSelector: 'input'
-				tmplOptions:
-					title: 'Create new private group'
-					cancelText: 'CANCEL'
-					submitText: 'CREATE'
-					placeholder: 'Group name'
-			false
 		clickedAddChannel: (e) ->
 			createChannelCallback = (() ->
 				return (channelName) ->
