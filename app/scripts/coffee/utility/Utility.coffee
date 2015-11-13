@@ -37,7 +37,7 @@ define ["underscore"], (_) ->
 			)
 
 		sendError: (error, type) ->
-			me = swipy.slackCollections.users.me()
+			me = swipy.swipesCollections.users.me()
 			#ErrorObject = Parse.Object.extend("Error")
 			# errorObject = new ErrorObject()
 			#
@@ -84,7 +84,7 @@ define ["underscore"], (_) ->
 						replacement = "<a " + targetPart + " href=\""+action+"\">" + placeholder + "</a>"
 						text = text.replace("<" + match+ ">", replacement)
 					else if action.startsWith("@U")
-						user = swipy.slackCollections.users.get(action.substring(1))
+						user = swipy.swipesCollections.users.get(action.substring(1))
 
 						if user
 
@@ -93,7 +93,7 @@ define ["underscore"], (_) ->
 
 						text = text.replace("<" + match+ ">", replacement)
 					else if action.startsWith("@C")
-						placeholder = swipy.slackCollections.channels.get(action.substring(1)).get("name")
+						placeholder = swipy.swipesCollections.channels.get(action.substring(1)).get("name")
 						replacement = "<a href=\"#channel/"+placeholder+"\">@"+placeholder + "</a>"
 						text = text.replace("<" + match+ ">", replacement)
 

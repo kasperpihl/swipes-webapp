@@ -17,7 +17,7 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 		createAction: (parentModel, str, options) ->
 			newTodo = @create {"parentLocalId": parentModel.id, "projectLocalId": parentModel.get("projectLocalId"), "title": str, "animateIn": true }
 			if newTodo.get("projectLocalId")
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				capitalizedName = swipy.swipesCollections.users.me().capitalizedName()
 				sofiMessage = capitalizedName + " added the action \"" + newTodo.getTaskLinkForSlack() + "\" to the task \"" + parentModel.getTaskLinkForSlack() + "\""
 				swipy.swipesSync.sendMessageAsSofi(sofiMessage, newTodo.get("projectLocalId"))
 
@@ -41,10 +41,10 @@ define ["js/model/sync/ToDoModel", "localStorage", "momentjs"], ( ToDoModel ) ->
 				newTodo.assign( options.assignee) if options.assignee?
 			#newTodo.set( "tags", tags )
 			if newTodo.get("projectLocalId")
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				capitalizedName = swipy.swipesCollections.users.me().capitalizedName()
 				sofiMessage = capitalizedName + " added the task \"" + newTodo.getTaskLinkForSlack() + "\"";
 				targetChannel = newTodo.get("projectLocalId")
-				#toUser = swipy.slackCollections.users.get(options.targetUserId) if options.targetUserId
+				#toUser = swipy.swipesCollections.users.get(options.targetUserId) if options.targetUserId
 				#targetChannel = "@"+toUser.get("name") if toUser
 				swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			newTodo.save({}, {sync:true})

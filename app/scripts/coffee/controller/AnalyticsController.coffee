@@ -8,7 +8,7 @@ define ["underscore"], (_) ->
 		init: ->
 			@loadedIntercom = false
 
-			@user = swipy.slackCollections.users.me()
+			@user = swipy.swipesCollections.users.me()
 
 			@startIntercom()
 			@updateIdentity()
@@ -50,8 +50,8 @@ define ["underscore"], (_) ->
 			companyIdentity = {"type": "company"}
 			if swipy?
 				intercomIdentity["slack_user"] = true
-				me = swipy.slackCollections.users.me()
-				activeUsers = swipy.slackCollections.users.activeUsers()
+				me = swipy.swipesCollections.users.me()
+				activeUsers = swipy.swipesCollections.users.activeUsers()
 				intercomIdentity.custom_attributes = {}
 				if me
 					intercomIdentity.name = me.get("name") if me.get("name")
@@ -59,7 +59,7 @@ define ["underscore"], (_) ->
 					intercomIdentity.avatar = {type:"avatar", image_url: me.get("profile").image_192} if me.get("profile") and me.get("profile").image_192
 					intercomIdentity.custom_attributes.team_mates = activeUsers.length
 				companyIdentity.avatar = {type:"avatar", image_url: me.get("profile").image_192} if me.get("profile") and me.get("profile").image_192
-				team = swipy.slackCollections.teams.at(0)
+				team = swipy.swipesCollections.teams.at(0)
 				if team
 					companyIdentity.company_id = team.id
 					companyIdentity.name = team.get("name") if team.get("name")

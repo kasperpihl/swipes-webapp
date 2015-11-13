@@ -22,8 +22,8 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			messages
 		getName: ->
 			return @get("name") if @get("name")
-			if @get("user") and swipy.slackCollections and swipy.slackCollections.users.get(@get("user"))
-				return swipy.slackCollections.users.get(@get("user")).get("name")
+			if @get("user") and swipy.swipesCollections and swipy.swipesCollections.users.get(@get("user"))
+				return swipy.swipesCollections.users.get(@get("user")).get("name")
 		getApiType: ->
 			return "channels"
 			apiType = "channels"
@@ -74,7 +74,7 @@ define ["underscore", "js/collection/slack/MessageCollection", "collectionSubset
 			identifier = message.message.ts if message.message? and message.message.ts?
 			model = collection.get(identifier)
 			if !model
-				if increment and message.user isnt swipy.slackCollections.users.me().id
+				if increment and message.user isnt swipy.swipesCollections.users.me().id
 					@save("unread_count_display", @get("unread_count_display")+1)
 					if @get("is_im") and @getName() is "slackbot"
 						swipy.sync.shortBouncedSync()

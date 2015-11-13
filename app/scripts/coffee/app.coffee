@@ -11,7 +11,7 @@ define [
 	"js/controller/AnalyticsController"
 	"js/router/MainRouter"
 	"js/collection/Collections"
-	"js/collection/slack/SlackCollections"
+	"js/collection/swipes/SwipesCollections"
 	"js/controller/SidebarController"
 	"js/viewcontroller/ModalViewController"
 	"js/viewcontroller/LeftSidebarViewController"
@@ -28,7 +28,7 @@ define [
 	"js/model/extra/NotificationModel"
 	apiConnectorUrl
 	"gsap"
-	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SlackCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SwipesSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
+	], ($, _, Backbone, BackLocal, ColSubset, ClockWork, MainViewController, AnalyticsController, MainRouter, Collections, SwipesCollections, SidebarController, ModalViewController, LeftSidebarViewController, TopbarViewController, RightSidebarViewController, ScheduleController, FilterController, SettingsController, SyncController, SwipesSyncController, KeyboardController, BridgeController, SoundController, NotificationModel) ->
 	class Swipes
 		UPDATE_INTERVAL: 30
 		UPDATE_COUNT: 0
@@ -56,7 +56,7 @@ define [
 			#@hackParseAPI()
 			# Base app data
 			@collections = new Collections()
-			@slackCollections = new SlackCollections()
+			@swipesCollections = new SwipesCollections()
 
 			@bridge = new BridgeController()
 
@@ -73,7 +73,7 @@ define [
 
 
 		start: ->
-			@slackCollections.fetchAll()
+			@swipesCollections.fetchAll()
 			@swipesSync.start()
 			@collections.fetchAll()
 			if @sync.lastUpdate? and localStorage.getItem("slackLastConnected")

@@ -46,14 +46,14 @@ define ["underscore"], (_) ->
 			if task
 				pathStart = "tasks"
 				channelId = task.get("projectLocalId")
-				channel = swipy.slackCollections.channels.get(channelId)
+				channel = swipy.swipesCollections.channels.get(channelId)
 				if channel
 					if channel.get("is_channel")
 						pathStart = "channel/" + channel.get("name")
 					if channel.get("is_group")
 						pathStart = "group/" + channel.get("name")
 					if channel.get("is_im")
-						user = swipy.slackCollections.users.get(channel.get("user"))
+						user = swipy.swipesCollections.users.get(channel.get("user"))
 						pathStart = "im/" + user.get("name")
 
 				fullPath = pathStart + "/task/" + task.id

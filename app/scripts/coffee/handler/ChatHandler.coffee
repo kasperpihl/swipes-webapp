@@ -72,7 +72,7 @@ define [
 		###
 		messageClickedActions: (chatMessage, e) ->
 			model = chatMessage.model
-			me = swipy.slackCollections.users.me()
+			me = swipy.swipesCollections.users.me()
 			actions = []
 			actions.push({name: "Create Task", icon: "dragMenuCopy", action: "create"})
 			if model and model.get("user") is me.id

@@ -1,4 +1,4 @@
-define [ "underscore", "js/model/slack/ChannelModel", "localStorage"], ( _, ChannelModel) ->
+define [ "underscore", "js/model/swipes/ChannelModel", "localStorage"], ( _, ChannelModel) ->
 	Backbone.Collection.extend
 		model: ChannelModel
 		slackApiType: "channels"

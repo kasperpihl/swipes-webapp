@@ -125,7 +125,7 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 					swipy.analytics.sendEventToIntercom("Reorder Task", {"Type": draggedTask.getType(), "Is My Tasks": isMyTasks})
 
 			else if hit.type is "project"
-				targetProject = swipy.slackCollections.channels.findWhere( {name: @projectCollectionIdFromHtmlId(hit.target)} )
+				targetProject = swipy.swipesCollections.channels.findWhere( {name: @projectCollectionIdFromHtmlId(hit.target)} )
 				return if !targetProject?
 				actions = []
 				actions.push({name: "Copy", icon: "dragMenuCopy", action: "copy"})
@@ -138,10 +138,10 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 				)
 			else if hit.type is "member"
 				memberId = @memberCollectionIdFromHtmlId(hit.target)
-				member = swipy.slackCollections.users.findWhere({name: memberId})
+				member = swipy.swipesCollections.users.findWhere({name: memberId})
 
 				return if !member?
-				targetProject = swipy.slackCollections.channels.findWhere({user: member.id})
+				targetProject = swipy.swipesCollections.channels.findWhere({user: member.id})
 				name = member.get "name"
 				actions = []
 				if draggedTask.get("projectLocalId")
@@ -181,9 +181,9 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				capitalizedName = swipy.swipesCollections.users.me().capitalizedName()
 
-				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+				if targetChannel isnt swipy.swipesCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " completed the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
 					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
@@ -193,9 +193,9 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 		taskActionStepDidDelete: (model, parentTaskModel) ->
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				capitalizedName = swipy.swipesCollections.users.me().capitalizedName()
 
-				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+				if targetChannel isnt swipy.swipesCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " deleted the action step \"" + model.getTaskLinkForSlack() + "\" from the task \"" + parentTaskModel.getTaskLinkForSlack() + "\"";
 					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 
@@ -215,12 +215,12 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
 				###if model.get("projectLocalId").startsWith("D")
-					channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
+					channel = swipy.swipesCollections.channels.get(model.get("projectLocalId"))
 					if channel
 						targetChannel = "@" + channel.getName()###
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				capitalizedName = swipy.swipesCollections.users.me().capitalizedName()
 
-				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+				if targetChannel isnt swipy.swipesCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " completed the task \"" + model.getTaskLinkForSlack() + "\"";
 					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 			isMyTasks = if @isMyTasks? then "Yes" else "No"
@@ -235,9 +235,9 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 
 			if model.get("projectLocalId")
 				targetChannel = model.get("projectLocalId")
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
+				capitalizedName = swipy.swipesCollections.users.me().capitalizedName()
 
-				if targetChannel isnt swipy.slackCollections.channels.slackbot().id
+				if targetChannel isnt swipy.swipesCollections.channels.slackbot().id
 					sofiMessage = capitalizedName + " deleted the task \"" + model.getTaskLinkForSlack() + "\"";
 					swipy.swipesSync.sendMessageAsSofi(sofiMessage, targetChannel)
 
@@ -269,8 +269,8 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 		userPickerClickedUser: (targetUser) ->
 			@pickerModel.assign( targetUser.id, true )
 			if @pickerModel.get("projectLocalId")
-				capitalizedName = swipy.slackCollections.users.me().capitalizedName()
-				if swipy.slackCollections.users.me().id isnt targetUser.id
+				capitalizedName = swipy.swipesCollections.users.me().capitalizedName()
+				if swipy.swipesCollections.users.me().id isnt targetUser.id
 					sofiMessage = capitalizedName + " assigned you the task \"" + @pickerModel.getTaskLinkForSlack() + "\"";
 					swipy.swipesSync.sendMessageAsSofi(sofiMessage, "@" + targetUser.get("name"))
 			#@pickerModel = null
@@ -278,30 +278,30 @@ define ["underscore", "js/view/modal/UserPickerModal"], (_, UserPickerModal) ->
 		userPickerModalPeople: (userPickerModal) ->
 			peopleToAssign = []
 			model = @pickerModel
-			me = swipy.slackCollections.users.me()
+			me = swipy.swipesCollections.users.me()
 			if me?
 				data = me.toJSON()
 				if _.indexOf(model.getAssignees(), me.id) is -1
 					peopleToAssign.push(data)
-			channel = swipy.slackCollections.channels.get(model.get("projectLocalId"))
+			channel = swipy.swipesCollections.channels.get(model.get("projectLocalId"))
 			if channel
 				members = channel.get("members")
 				userId = channel.get("user")
 				if members
 					for member in members
-						user = swipy.slackCollections.users.get(member)
+						user = swipy.swipesCollections.users.get(member)
 						continue if !user or user.id is me.id or user.get("deleted")
 						data = user.toJSON()
 						if _.indexOf(model.getAssignees(), user.id) is -1
 							peopleToAssign.push(data)
 				else if userId and _.indexOf(model.getAssignees(), userId) is -1
-					user = swipy.slackCollections.users.get(userId)
+					user = swipy.swipesCollections.users.get(userId)
 					if user
 						peopleToAssign.push(user.toJSON())
 
 
 
-			###swipy.slackCollections.users.each( (user) =>
+			###swipy.swipesCollections.users.each( (user) =>
 				return if user.id is me.id or user.get("deleted") or user.get("is_bot") or user.id is "USLACKBOT"
 				if !model.userIsAssigned(user.id)
 					peopleToAssign.push(user.toJSON())

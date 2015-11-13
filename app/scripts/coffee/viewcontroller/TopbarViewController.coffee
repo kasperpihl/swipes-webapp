@@ -17,9 +17,9 @@ define [
 				@$el.addClass(foregroundClass)
 				@foregroundClass = foregroundClass
 		setBackgroundColor: (color) ->
-			@$el.css("backgroundColor", "transparent")
-			color = "transparent" if !color
-			@$el.css("backgroundColor", color)
+			@$el.css("backgroundColor", "")
+			if color
+				@$el.css("backgroundColor", color)
 		enableBoxShadow: (enable) ->
 			enableToggle = false
 			enableToggle = true if enable

@@ -9,8 +9,8 @@ define [
 		el: ".sidebar_content"
 		initialize: ->
 			@bouncedRenderSidebar = _.debounce(@renderSidebar, 15)
-			@listenTo( swipy.slackCollections.channels, "add reset remove change:is_open change:is_active_channel change:is_member change:is_starred change:unread_count_display", @bouncedRenderSidebar )
-
+			@listenTo( swipy.swipesCollections.channels, "add reset remove change:is_open change:is_active_channel change:is_member change:is_starred change:unread_count_display", @bouncedRenderSidebar )
+			@listenTo( swipy.swipesCollections.apps, "add reset remove change:is_user change:is_starred", @bouncedRenderSidebar)
 			@bouncedUpdateNotificationsForMyTasks = _.debounce(@updateNotificationsForMyTasks, 15)
 			@listenTo( swipy.collections.todos, "add reset remove change:completionDate change:schedule", @bouncedUpdateNotificationsForMyTasks)
 			# Proper render list when projects change/add/remove
@@ -150,7 +150,7 @@ define [
 				)
 		channelPickerModalChannels: (channelPickerModal) ->
 			channels = []
-			swipy.slackCollections.channels.each( (channel) =>
+			swipy.swipesCollections.channels.each( (channel) =>
 				if @modalType is "channels"
 					if channel.get("is_channel") and !channel.get("is_archived")
 						if !channel.get("is_member") 
@@ -165,8 +165,8 @@ define [
 
 		userPickerModalPeople: (userPickerModal) ->
 			people = []
-			me = swipy.slackCollections.users.me()
-			users = swipy.slackCollections.users.filter((user) =>
+			me = swipy.swipesCollections.users.me()
+			users = swipy.swipesCollections.users.filter((user) =>
 				return false if user.get("deleted") or user.id is me.id
 				return false if @modalType is "invite" and user.id is "USLACKBOT"
 				return true
@@ -225,7 +225,6 @@ define [
 					placeholder: 'New channel name'
 			false
 		renderSidebar: ->
-			appsLeft = 0
 			appsJson = [
 				{
 					title: "Email",
@@ -258,14 +257,23 @@ define [
 					is_app:true
 				}
 			]
-			apps = []
-			for app in appsJson
-				model = new Backbone.Model(app)
-				if @expandedApps or model.get("is_starred")
-					if @expandedApps and !model.get("is_starred")
+
+			appsLeft = 0
+			filteredApps = _.filter(swipy.swipesCollections.apps.models, (app) =>
+				if app.get("is_active") and app.get("is_user")
+					if @expandedApps or app.get("is_active_menu") or app.get("is_starred")
+						if @expandedApps and !app.get("is_starred")
+							appsLeft++
+						return true
+					else
 						appsLeft++
-					apps.push(model)
-				else appsLeft++
+				return false
+			)
+			apps = _.sortBy( filteredApps, (app) -> 
+				if !app.get("is_starred")
+					return 0 + app.get("title")
+				return 1 + app.get("title") 
+			)
 			@$el.find("#sidebar-apps-list .apps").html("")
 			if appsLeft > 0
 				buttonText = if @expandedApps then "Hide unstarred" else "+"+ appsLeft + " More..."
@@ -283,7 +291,7 @@ define [
 
 
 			channelsLeft = 0
-			filteredChannels = _.filter(swipy.slackCollections.channels.models, (channel) => 
+			filteredChannels = _.filter(swipy.swipesCollections.channels.models, (channel) => 
 				if channel.get("type") is "public" and !channel.get("is_archived") and channel.get("is_member") 
 					if @expandedChannels or channel.get("is_active_channel") or channel.get("is_starred") or channel.get("unread_count_display")
 						if @expandedChannels and !channel.get("is_starred")
@@ -304,7 +312,6 @@ define [
 				@$el.find("#sidebar-project-list .more-button").html(buttonText)
 			@$el.find("#sidebar-project-list .more-button").toggleClass("shown", (channelsLeft > 0))
 			
-
 			for channel in channels
 				rowView = new ChannelRow({model: channel})
 				@$el.find("#sidebar-project-list .projects").append(rowView.el)
@@ -316,7 +323,7 @@ define [
 
 
 			imsLeft = 0
-			filteredIms = _.filter(swipy.slackCollections.channels.models, (channel) => 
+			filteredIms = _.filter(swipy.swipesCollections.channels.models, (channel) => 
 				if channel.get("type") is "direct" and channel.get("is_open")
 					if @expandedDM or channel.get("is_active_channel") or channel.get("is_starred") or channel.get("unread_count_display")
 						if @expandedDM and !channel.get("is_starred")
@@ -327,7 +334,7 @@ define [
 				return false
 			)
 			ims = _.sortBy(filteredIms, (im) ->
-				user = swipy.slackCollections.users.get(im.get("user_id")).toJSON()
+				user = swipy.swipesCollections.users.get(im.get("user_id")).toJSON()
 				if user.name is "slackbot"
 					nameString = 0 
 				else nameString = user.name
@@ -343,7 +350,7 @@ define [
 
 			@$el.find("#sidebar-members-list .team-members").html("")
 			for im in ims
-				user = swipy.slackCollections.users.get(im.get("user_id"))
+				user = swipy.swipesCollections.users.get(im.get("user_id"))
 				rowView = new ChannelRow({model: im})
 				rowView.setUser(user)
 

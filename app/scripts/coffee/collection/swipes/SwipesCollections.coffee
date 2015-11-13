@@ -1,22 +1,22 @@
 define [
 	"underscore"
 	"backbone"
-	"js/collection/slack/UserCollection"
-	"js/collection/slack/BotCollection"
-	"js/collection/slack/TeamCollection"
-	"js/collection/slack/ChannelCollection"
+	"js/collection/swipes/UserCollection"
+	"js/collection/swipes/TeamCollection"
+	"js/collection/swipes/AppCollection"
+	"js/collection/swipes/ChannelCollection"
 	"collectionSubset"
-	], (_, Backbone, UserCollection, BotCollection, TeamCollection, ChannelCollection) ->
+	], (_, Backbone, UserCollection, TeamCollection, AppCollection, ChannelCollection) ->
 	class Collections
 		constructor: ->
 			
 			@users = new UserCollection()
-			@bots = new BotCollection()
 			@teams = new TeamCollection()
+			@apps = new AppCollection()
 			@channels = new ChannelCollection()
 			@channels.localStorage = new Backbone.LocalStorage("ChannelCollection")
 
-			@all = [@teams, @users, @bots, @channels]
+			@all = [@teams, @users, @apps, @channels]
 		fetchAll: ->
 			for collection in @all
 				collection.fetch()

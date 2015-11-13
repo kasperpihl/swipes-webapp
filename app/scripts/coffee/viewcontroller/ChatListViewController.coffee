@@ -36,7 +36,7 @@ define [
 		getResultsForTextAndSearchLetter: (searchLetter, searchText) ->
 			results = []
 			if searchLetter is "@"
-				sortedUsers = _.sortBy(swipy.slackCollections.users.activeUsers(true), (user) ->
+				sortedUsers = _.sortBy(swipy.swipesCollections.users.activeUsers(true), (user) ->
 					return user.get("name")
 				)
 				_.each(sortedUsers, (user) ->
@@ -45,7 +45,7 @@ define [
 						results.push({id: user.id, icon: "person", name: user.get("name")})
 				)
 			else if searchLetter is "#"
-				sortedChannels = _.sortBy(swipy.slackCollections.channels.activeChannels(), (channel) ->
+				sortedChannels = _.sortBy(swipy.swipesCollections.channels.activeChannels(), (channel) ->
 					return channel.get("name")
 				)
 				_.each(sortedChannels, (channel) ->

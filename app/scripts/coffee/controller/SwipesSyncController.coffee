@@ -28,7 +28,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					@handleTeam(data.team) if data.team
 					@handleSelf(data.self) if data.self
 					@handleUsers(data.users) if data.users
-					@handleBots(data.bots) if data.bots
+					@handleApps(data.apps) if data.apps
 
 					@_channelsById = {}
 					@handleChannels(data.channels) if data.channels
@@ -44,33 +44,32 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					Backbone.trigger('slack-first-connected')
 			)
 		handleTeam: (team) ->
-			collection = swipy.slackCollections.teams
+			collection = swipy.swipesCollections.teams
 			model = collection.get(team.id)
 			model = collection.create(team) if !model
 			model.save(team)
 		handleSelf:(self) ->
-			collection = swipy.slackCollections.users
+			collection = swipy.swipesCollections.users
 			model = collection.get(self.id)
 			model = collection.create(self) if !model
 			model.set("me",true)
 			model.save(self)
 		handleUsers:(users) ->
+			collection = swipy.swipesCollections.users
 			for user in users
-				collection = swipy.slackCollections.users
 				model = collection.get(user.id)
 				model = collection.create(user) if !model
 				model.save(user)
-		handleBots:(bots) ->
-			for bot in bots
-				collection = swipy.slackCollections.bots
-				model = collection.get(bot.id)
-				model = collection.create(bot) if !model
-				model.save(bot)
+		handleApps: (apps) ->
+			collection = swipy.swipesCollections.apps
+			for app in apps
+				model = collection.get(app.id)
+				model = collection.create(app) if !app
+				model.save(app)
 		handleChannels: (channels) ->
-
+			collection = swipy.swipesCollections.channels
 			for channel in channels
 				@_channelsById[channel.id] = channel
-				collection = swipy.slackCollections.channels
 
 				model = collection.get(channel.id)
 				model = collection.create(channel) if !model
@@ -80,15 +79,15 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 
 		clearDeletedChannels: ->
 			channelsToDelete = []
-			for channel in swipy.slackCollections.channels.models
+			for channel in swipy.swipesCollections.channels.models
 				if !@_channelsById[channel.id]
 					channelsToDelete.push(channel)
 			for channel in channelsToDelete
-				swipy.slackCollections.channels.remove(channel)
-				channel.localStorage = swipy.slackCollections.channels.localStorage
+				swipy.swipesCollections.channels.remove(channel)
+				channel.localStorage = swipy.swipesCollections.channels.localStorage
 				channel.destroy()
 		handleReceivedMessage: (message, incrementUnread) ->
-			channel = swipy.slackCollections.channels.get(message.channel)
+			channel = swipy.swipesCollections.channels.get(message.channel)
 			channel.addMessage(message, incrementUnread)
 
 		openWebSocket: (url) ->
@@ -99,11 +98,11 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 				console.log "message", data
 				if data.type is "message"
 					message = data.message
-					channel = swipy.slackCollections.channels.get(message.channel_id)
+					channel = swipy.swipesCollections.channels.get(message.channel_id)
 					channel.addMessage(message, true)
 				else if data.type is "star_added" or data.type is "star_removed"
 					if data.data.type is "channel" or data.data.type is "im" or data.data.type is "group"
-						targetObj = swipy.slackCollections.channels.get(data.data.channel_id)
+						targetObj = swipy.swipesCollections.channels.get(data.data.channel_id)
 					targetObj.save("is_starred", (data.type is "star_added")) if targetObj
 				if @listeners[data.type]
 					@listeners[data.type].callListener("event", data)
@@ -121,11 +120,11 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 		sendMessage:(message, channel, callback) ->
 			self = @
 			console.log channel
-			options = {text: message, "channel_id": channel, "user_id":swipy.slackCollections.users.me().id}
+			options = {text: message, "channel_id": channel, "user_id":swipy.swipesCollections.users.me().id}
 			@apiRequest("chat.send", options, (res, error) ->
 				if res and res.ok
 					console.log res if res.fuckyou
-					#slackbotChannelId = swipy.slackCollections.channels.slackbot().id
+					#slackbotChannelId = swipy.swipesCollections.channels.slackbot().id
 					#type = self.util.slackTypeForId(channel)
 					#if type is "DM" and channel is slackbotChannelId
 					#	type = "Slackbot"
@@ -165,7 +164,7 @@ define ["underscore", "jquery", "js/utility/Utility"], (_, $, Utility) ->
 					swipy.topbarVC.enableBoxShadow(data.enable)
 				else if message.command is "users.get"
 					if data.id
-						callback(swipy.slackCollections.users.get(data.id))
+						callback(swipy.swipesCollections.users.get(data.id))
 				else if message.command is "listenTo"
 					@listeners[data.event] = connector
 

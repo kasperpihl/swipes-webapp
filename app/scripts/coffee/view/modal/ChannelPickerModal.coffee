@@ -57,7 +57,7 @@ define ["underscore",
 		clickedRow: (e) ->
 			$el = $(e.currentTarget)
 			channelId = $el.attr("data-href")
-			targetChannel = swipy.slackCollections.channels.get(channelId)
+			targetChannel = swipy.swipesCollections.channels.get(channelId)
 			if @delegate? and _.isFunction(@delegate.channelPickerClickedChannel)
 				val = @delegate.channelPickerClickedChannel(targetChannel)
 			if @selectOne

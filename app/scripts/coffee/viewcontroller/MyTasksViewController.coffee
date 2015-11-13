@@ -43,7 +43,7 @@ define [
 			@vc.render()
 
 		createTask: ( title, options ) ->
-			me = swipy.slackCollections.users.me()
+			me = swipy.swipesCollections.users.me()
 			options = {} if !options
 			options.toUserId = me.id if !options.toUserId?
 			now = new Date()

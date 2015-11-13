@@ -1,4 +1,4 @@
-define [ "underscore", "js/model/slack/MessageModel", "localStorage"], ( _, MessageModel) ->
+define [ "underscore", "js/model/swipes/MessageModel", "localStorage"], ( _, MessageModel) ->
 	Backbone.Collection.extend
 		model: MessageModel
 		sendMessage: (message, options) ->

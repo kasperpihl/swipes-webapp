@@ -34,11 +34,11 @@ define [
 			@showCompletedTasks = false
 
 			swipy.rightSidebarVC.sidebarDelegate = @
-			collection = swipy.slackCollections.channels
+			collection = swipy.swipesCollections.channels
 			if @type isnt "im"
 				@currentList = collection.findWhere({name: @identifier})
 			else
-				@currentUser = swipy.slackCollections.users.findWhere({username: @identifier})
+				@currentUser = swipy.swipesCollections.users.findWhere({username: @identifier})
 
 				@currentList = collection.findWhere({type: "direct", user_id: @currentUser.id})
 

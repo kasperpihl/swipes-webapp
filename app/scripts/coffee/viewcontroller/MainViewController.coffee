@@ -13,7 +13,7 @@ define [
 			# Listen for navigation events
 			Backbone.on( 'open/viewcontroller', @openVC, @)
 		openVC: (viewcontroller, options) ->
-			activeChannels = swipy.slackCollections.channels.where({"is_active_channel": true})
+			activeChannels = swipy.swipesCollections.channels.where({"is_active_channel": true})
 			for channel in activeChannels
 				channel.set("is_active_channel", false)
 				

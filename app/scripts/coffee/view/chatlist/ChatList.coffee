@@ -86,7 +86,7 @@ define [
 						sectionEl.append( @unread.el )
 						
 					if !shouldAddNewUnread and !@unread?
-						if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user")?.id isnt swipy.slackCollections.users.me().id
+						if chat.get("ts") and parseInt(chat.get("ts")) > @lastRead and chat.get("user")?.id isnt swipy.swipesCollections.users.me().id
 							@unread = new Unread()
 							sectionEl.append( @unread.el )
 							@unread.ts = chat.get("ts")

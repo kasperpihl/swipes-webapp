@@ -86,7 +86,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 			projectLocalId = @get("projectLocalId")
 			if projectLocalId
 				if projectLocalId.startsWith("D")
-					if projectLocalId is swipy.slackCollections.channels.slackbot().id
+					if projectLocalId is swipy.swipesCollections.channels.slackbot().id
 						type = "Slackbot"
 					else
 						type = "DM"
@@ -129,7 +129,7 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 		assign: ( userIds, save ) ->
 			if _.isString(userIds)
 				userIds = [userIds]
-			me = swipy.slackCollections.users.me()
+			me = swipy.swipesCollections.users.me()
 			throw new Error("ToDoModel assign: userIds must be either array or string") if !_.isArray(userIds)
 			assignedSelf = "No"
 			currentAssignees = @getAssignees()
@@ -231,14 +231,14 @@ define ["js/model/sync/BaseModel", "js/utility/TimeUtility" ,"momentjs"],( BaseM
 				@setCompletionTimeStr()
 			@setRestrictedForMe()
 		setRestrictedForMe: ->
-			me = swipy.slackCollections.users.me()
+			me = swipy.swipesCollections.users.me()
 			if @get("toUserId")
 				if @get("toUserId") isnt me.id and @get("userId") isnt me.id
 					@set("restrictedForMe",true)
 				else if @get("toUserId") is me.id and @get("userId") is me.id
 					@set("isPersonalTask", true)
 		checkAssigned: ->
-			me = swipy.slackCollections.users.me()
+			me = swipy.swipesCollections.users.me()
 			if @get("toUserId") is me.id or @get("assignees") and _.indexOf(@get("assignees"), me.id) isnt -1
 				@set("isMyTask", true)
 			else @set("isMyTask", false)

@@ -63,7 +63,7 @@ define ["underscore",
 		clickedPerson: (e) ->
 			$el = $(e.currentTarget)
 			userId = $el.attr("data-href")
-			targetUser = swipy.slackCollections.users.get(userId)
+			targetUser = swipy.swipesCollections.users.get(userId)
 			if @delegate? and _.isFunction(@delegate.userPickerClickedUser)
 				val = @delegate.userPickerClickedUser(targetUser)
 			if @selectOne
