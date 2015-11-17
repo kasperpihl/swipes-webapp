@@ -6,11 +6,11 @@ define [
 		el: ".top-bar-container"
 		className: ".top-bar-container"
 		initialize: ->
-			@foregroundClass = "navigation-foreground-light"
+			@foregroundClass = "navigation-foreground-dark"
 		setForegroundColor: (color) ->
-			foregroundClass = "navigation-foreground-light"
-			if color is "dark"
-				foregroundClass = "navigation-foreground-dark"
+			foregroundClass = "navigation-foreground-dark"
+			if color is "light"
+				foregroundClass = "navigation-foreground-light"
 
 			if color isnt @foregroundClass
 				@$el.removeClass(@foregroundClass)
