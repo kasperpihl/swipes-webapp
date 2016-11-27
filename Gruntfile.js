@@ -1,9 +1,11 @@
 // Generated on 2013-09-05 using generator-webapp 0.4.1
 'use strict';
+
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var mountFolder = function (connect, dir) {
-    return connect.static(require('path').resolve(dir));
+var serveStatic = require('serve-static');
+var mountFolder = function (dir) {
+    return serveStatic(require('path').resolve(dir));
 };
 
 // # Globbing
@@ -125,31 +127,31 @@ module.exports = function (grunt) {
             },
             livereload: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function () {
                         return [
                             lrSnippet,
-                            mountFolder(connect, '.tmp'),
-                            mountFolder(connect, yeomanConfig.app)
+                            mountFolder('.tmp'),
+                            mountFolder(yeomanConfig.app)
                         ];
                     }
                 }
             },
             test: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function () {
                         return [
-                            mountFolder(connect, '.tmp'),
-                            mountFolder(connect, 'test'),
-                            mountFolder(connect, yeomanConfig.app)
+                            mountFolder('.tmp'),
+                            mountFolder('test'),
+                            mountFolder(yeomanConfig.app)
                         ];
                     }
                 }
             },
             dist: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function () {
                         return [
-                            mountFolder(connect, yeomanConfig.dist)
+                            mountFolder(yeomanConfig.dist)
                         ];
                     }
                 }
@@ -266,7 +268,7 @@ module.exports = function (grunt) {
         /*concat: {
             dist: {}
         },*/
-        
+
         rev: {
             dist: {
                 files: {
@@ -433,12 +435,12 @@ module.exports = function (grunt) {
         'useminPrepare',
         'concurrent:dist',
         //'autoprefixer',
-        
+
         'requirejs',
         'concat',
         'cssmin',
         'uglify',
-        
+
         // 'modernizr',
         'copy:dist',
 

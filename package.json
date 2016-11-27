@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {
+    "bower": "^1.8.0",
     "connect-livereload": "*",
     "grunt": "*",
     "grunt-autoprefixer": "*",
@@ -13,7 +14,7 @@
     "grunt-contrib-coffee": "*",
     "grunt-contrib-compass": "*",
     "grunt-contrib-concat": "*",
-    "grunt-contrib-connect": "*",
+    "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-copy": "*",
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-htmlmin": "*",
@@ -30,6 +31,7 @@
     "grunt-svgmin": "*",
     "grunt-usemin": "^0.1.13",
     "load-grunt-tasks": "*",
+    "serve-static": "^1.11.1",
     "time-grunt": "*"
   },
   "engines": {
