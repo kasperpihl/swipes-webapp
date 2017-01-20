@@ -23,7 +23,6 @@ define ["underscore"], () ->
                 swipy.todos.addChangeListenerForBridge()
             )
             @bridge.registerHandler('intercom', (data, responseCallback) ->
-                Intercom('show')
             )
             @bridge.registerHandler('add-task', (data, responseCallback) ->
                 Backbone.trigger("create-task", data.title)
