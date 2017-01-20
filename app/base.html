@@ -2,269 +2,269 @@
 <!--[if IE 8]>         <html class="no-js ie8"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" manifest="manifest.appcache"> <!--<![endif]-->
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
- 
-	<title>Swipes</title>
- 
-	<meta name="description" content="">
-	<meta name="viewport" content="width=device-width, user-scalable=no">
- 
-	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-	<!-- build:css(.tmp) styles/main.css -->
-	<link rel="stylesheet" href="styles/main.css">
-	<!-- endbuild -->
-	<link rel="apple-touch-icon" href="styles/img/touch-icon-iphone.png" />
-	<link rel="apple-touch-icon" sizes="76x76" href="styles/img/touch-icon-ipad.png" />
-	<link rel="apple-touch-icon" sizes="120x120" href="styles/img/touch-icon-iphone-retina.png" />
-	<link rel="apple-touch-icon" sizes="152x152" href="styles/img/touch-icon-ipad-retina.png" />
-	<script>
-		window.liveEnvironment = !!( location.host === "web.swipesapp.com" );
-		if (window.liveEnvironment && window.location.protocol != "https:")
-			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
-	</script>
-	<script async src='//www.google-analytics.com/analytics.js'></script>
-	<script>
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	</script>
-	<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Swipes</title>
+
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+  <link rel="apple-touch-icon" href="styles/img/touch-icon-iphone.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="styles/img/touch-icon-ipad.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="styles/img/touch-icon-iphone-retina.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="styles/img/touch-icon-ipad-retina.png" />
+  <script>
+    window.liveEnvironment = !!( location.host === "web.swipesapp.com" );
+    if (window.liveEnvironment && window.location.protocol != "https:")
+      window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+  </script>
+  <script async src='//www.google-analytics.com/analytics.js'></script>
+  <script>
+  window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+  </script>
+  <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;
 s.src='https://widget.intercom.io/widget/yobuz4ff';
 var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
- 
-	<!-- build:js scripts/vendor/modernizr.js -->
-	<script src="bower_components/modernizr/modernizr.js"></script>
-	<!-- endbuild -->
+
+  <!-- build:js scripts/vendor/modernizr.js -->
+  <script src="bower_components/modernizr/modernizr.js"></script>
+  <!-- endbuild -->
 </head>
- 
+
 <body class="loading">
-	<!--(bake styles/icon-svg/swipes-icons.svg)-->
+  <!--(bake styles/icon-svg/swipes-icons.svg)-->
 
-	<!--[if lt IE 10]>
-	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-	<![endif]-->
+  <!--[if lt IE 10]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
 
-	<div class="container">
- 
- 
-		<aside class="sidebar sub-opened">
-			<div class="sidebar_content">
-				
-				<a href="#" class="swipes-logo">
-					<img src="styles/img/logo.svg" alt="Swipes">
-				</a>
- 
-				<ul class="sidebar-controls ">
-					<li>
-						<a href="#add" class="btn-icon addtask" data-toggle="tooltip" data-placement="right" title="Add a task">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarAdd"></use>
-							</svg>
-						</a>
-					</li>
-					<!--<li>
-						<a href="#list/todo/organise" class="btn-icon organise" data-toggle="tooltip" data-placement="right" title="Swipes Flow">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarOrganise"></use>
-							</svg>
-						</a>
-					</li>-->
-					<li>
-						<a href="#search" class="btn-icon search" data-toggle="tooltip" data-placement="right" title="Search">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSearch"></use>
-							</svg>
-						</a>
-					</li>
-					<li>
-						<a href="#workspaces" class="btn-icon workspaces" data-toggle="tooltip" data-placement="right" title="Workspaces">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarWorkspace"></use>
-							</svg>
-						</a>
-					</li>
-					<li>
-						<a href="#settings" class="btn-icon settings" data-toggle="tooltip" data-placement="right" title="Settings">
-							<svg class="icon">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSetting"></use>
-							</svg>
-						</a>
-					</li>
-				</ul>
- 
-			</div><!-- content -->
- 
-			<div class="sidebar-sub">
-				<a href="#" class="sub-back">
-					<svg class="icon">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialBack"></use>
-					</svg>
-				</a>
-				<h1 class="sub-title">
-					<svg class="icon">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href=""></use>
-					</svg>
-					<span></span>
-				</h1>
-				<a href="#" class="sub-clear"></a>
-				<div class="sub-content">
-					[sub content]
-				</div>
-			</div><!-- sub structures come here -->
- 			<div class="clickable-overlay"></div>
-		</aside><!-- sidebar -->
-		<ul class="organise-bar top">
-			<li class="back-button">
-				<a href="#" class="go-back">
-					<svg class="icon">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarBack"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="title">Choose 3 tasks to work on today</li>
-		</ul>
-		<ul class="organise-bar bottom">
-			<li class="start-day-section">
-				<a href="#" class="start-day-button">START DAY</a>
-			</li>
-		</ul>
- 		<ul class="action-bar fadeout bottom">
-			<li class="counting-selected">
-				<span style="display:none;" class="selected-label">4</span>
-			</li>
-			<li class="spacer"></li>
-			<li class="snooze">
-				<a class="action-snooze" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Snooze for later">
-					<svg class="icon icon-snooze">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSnooze"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="today">
-				<a class="action-today" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Send to now">
-					<svg class="icon icon-today">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarNow"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="complete">
-				<a class="action-complete" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Complete">
-					<svg class="icon icon-done">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarComplete"></use>
-					</svg>
-				</a>
-			</li>
-			<li class="spacer"></li>
-			<li class="tags">
-				<a href="JavaScript:void(0);" class="tags" data-toggle="tooltip" data-placement="top" title="Set tags">
-					<svg class="icon icon-navbarTag">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarTag"></use>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="JavaScript:void(0);" class="delete" data-toggle="tooltip" data-placement="top" title="Delete">
-					<svg class="icon icon-navbarDelete">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarDelete"></use>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="JavaScript:void(0);" class="share" data-toggle="tooltip" data-placement="top" title="Share">
-					<svg class="icon icon-navbarShare">
-						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarShare"></use>
-					</svg>
-				</a>
-			</li>
-		</ul>
- 
-		<section class="scroll-container" id="scrollcont">
-			<div id="main" role="main">
- 
-				<nav class="row">
-					<ul class="list-nav">
-						<li>
-							<a tabindex="2" class="schedule" href="#list/scheduled">
-								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-later"></use></svg>
-								<span class="sr-only">Schedule</span>
-							</a>
-						</li>
-						<li>
-							<a tabindex="3" class="todo" href="#list/todo">
-								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-today"></use></svg>
-								<span class="sr-only">Todo</span>
-							</a>
-						</li>
-						<li>
-							<a tabindex="4" class="checkmark" href="#list/completed">
-								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-done"></use></svg>
-								<span class="sr-only">Completed</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
- 
-				<section id="main-content" class="row">
-					
-					<ol class="todo-list hidden scheduled"></ol>
-					<ol class="todo-list hidden todo"></ol>
-					<ol class="todo-list hidden completed"></ol>
-					<div class="search-result hidden">
-						<span id="search-result-string"></span>
-						<a href="#">Clear workspace</a>
-					</div>
- 
- 
-					<div class="list-fade hidden-xs"></div>
+  <div class="container">
 
-					<section class="all-done">
-						<div class="done-image now">
-							<img src="styles/img/alldonefornow@2x.png">
-						</div><!-- image -->
-						<div class="done-image today">
-							<img src="styles/img/alldonefortoday@2x.png">
-						</div><!-- image -->
-						<div class="done-content">
-							<div class="text-block">
-								<p>Kickin’ my shoes off because
-								today’s to-do list is complete! </p>
-								<p>#ProductiveDay</p>
-							</div>
-						</div><!-- content -->
-						<div class="done-socials">
-							<a target="_blank" class="facebook" href="https://www.facebook.com/dialog/share?app_id=531435630236702&display=popup&href=http%3A%2F%2Fswipesapp.com&redirect_uri=http%3A%2F%2Fweb.swipesapp.com">
-								<svg class="icon icon-facebook">
-									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-facebook"></use>
-								</svg>
-							</a>
-							<a href="https://twitter.com/intent/tweet?text=Kickin%E2%80%99%20my%20shoes%20off%20because%20today%E2%80%99s%20to-do%20list%20is%20complete!&via=swipesapp&hashtags=ProductiveDay">
-								<svg class="icon icon-facebook">
-									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-twitter"></use>
-								</svg>
-							</a>
-						</div>
-					</section><!-- all done container -->
- 
-				</section>
- 
-				<div class="load-indicator">
-					<div class="spinner">
-						<div class="bounce1"></div>
-						<div class="bounce2"></div>
-						<div class="bounce3"></div>
-					</div>
-				</div>
- 
-			</div>
-		</section><!-- .scroll-container -->
- 	
-	</div>
-	<div id="fb-root"></div>
- 	<script type="text/javascript" async src="//platform.twitter.com/widgets.js"></script>
 
-	<!-- build:js scripts/main.js -->
-	<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
-	<!-- endbuild -->
-	<script>
+    <aside class="sidebar sub-opened">
+      <div class="sidebar_content">
+
+        <a href="#" class="swipes-logo">
+          <img src="styles/img/logo.svg" alt="Swipes">
+        </a>
+
+        <ul class="sidebar-controls ">
+          <li>
+            <a href="#add" class="btn-icon addtask" data-toggle="tooltip" data-placement="right" title="Add a task">
+              <svg class="icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarAdd"></use>
+              </svg>
+            </a>
+          </li>
+          <!--<li>
+            <a href="#list/todo/organise" class="btn-icon organise" data-toggle="tooltip" data-placement="right" title="Swipes Flow">
+              <svg class="icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarOrganise"></use>
+              </svg>
+            </a>
+          </li>-->
+          <li>
+            <a href="#search" class="btn-icon search" data-toggle="tooltip" data-placement="right" title="Search">
+              <svg class="icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSearch"></use>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="#workspaces" class="btn-icon workspaces" data-toggle="tooltip" data-placement="right" title="Workspaces">
+              <svg class="icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarWorkspace"></use>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="#settings" class="btn-icon settings" data-toggle="tooltip" data-placement="right" title="Settings">
+              <svg class="icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSetting"></use>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+      </div><!-- content -->
+
+      <div class="sidebar-sub">
+        <a href="#" class="sub-back">
+          <svg class="icon">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-materialBack"></use>
+          </svg>
+        </a>
+        <h1 class="sub-title">
+          <svg class="icon">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href=""></use>
+          </svg>
+          <span></span>
+        </h1>
+        <a href="#" class="sub-clear"></a>
+        <div class="sub-content">
+          [sub content]
+        </div>
+      </div><!-- sub structures come here -->
+       <div class="clickable-overlay"></div>
+    </aside><!-- sidebar -->
+    <ul class="organise-bar top">
+      <li class="back-button">
+        <a href="#" class="go-back">
+          <svg class="icon">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarBack"></use>
+          </svg>
+        </a>
+      </li>
+      <li class="title">Choose 3 tasks to work on today</li>
+    </ul>
+    <ul class="organise-bar bottom">
+      <li class="start-day-section">
+        <a href="#" class="start-day-button">START DAY</a>
+      </li>
+    </ul>
+     <ul class="action-bar fadeout bottom">
+      <li class="counting-selected">
+        <span style="display:none;" class="selected-label">4</span>
+      </li>
+      <li class="spacer"></li>
+      <li class="snooze">
+        <a class="action-snooze" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Snooze for later">
+          <svg class="icon icon-snooze">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarSnooze"></use>
+          </svg>
+        </a>
+      </li>
+      <li class="today">
+        <a class="action-today" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Send to now">
+          <svg class="icon icon-today">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarNow"></use>
+          </svg>
+        </a>
+      </li>
+      <li class="complete">
+        <a class="action-complete" href="JavaScript:void(0);" data-toggle="tooltip" data-placement="top" title="Complete">
+          <svg class="icon icon-done">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarComplete"></use>
+          </svg>
+        </a>
+      </li>
+      <li class="spacer"></li>
+      <li class="tags">
+        <a href="JavaScript:void(0);" class="tags" data-toggle="tooltip" data-placement="top" title="Set tags">
+          <svg class="icon icon-navbarTag">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarTag"></use>
+          </svg>
+        </a>
+      </li>
+      <li>
+        <a href="JavaScript:void(0);" class="delete" data-toggle="tooltip" data-placement="top" title="Delete">
+          <svg class="icon icon-navbarDelete">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarDelete"></use>
+          </svg>
+        </a>
+      </li>
+      <li>
+        <a href="JavaScript:void(0);" class="share" data-toggle="tooltip" data-placement="top" title="Share">
+          <svg class="icon icon-navbarShare">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-navbarShare"></use>
+          </svg>
+        </a>
+      </li>
+    </ul>
+
+    <section class="scroll-container" id="scrollcont">
+      <div id="main" role="main">
+
+        <nav class="row">
+          <ul class="list-nav">
+            <li>
+              <a tabindex="2" class="schedule" href="#list/scheduled">
+                <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-later"></use></svg>
+                <span class="sr-only">Schedule</span>
+              </a>
+            </li>
+            <li>
+              <a tabindex="3" class="todo" href="#list/todo">
+                <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-today"></use></svg>
+                <span class="sr-only">Todo</span>
+              </a>
+            </li>
+            <li>
+              <a tabindex="4" class="checkmark" href="#list/completed">
+                <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-done"></use></svg>
+                <span class="sr-only">Completed</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <section id="main-content" class="row">
+
+          <ol class="todo-list hidden scheduled"></ol>
+          <ol class="todo-list hidden todo"></ol>
+          <ol class="todo-list hidden completed"></ol>
+          <div class="search-result hidden">
+            <span id="search-result-string"></span>
+            <a href="#">Clear workspace</a>
+          </div>
+
+
+          <div class="list-fade hidden-xs"></div>
+
+          <section class="all-done">
+            <div class="done-image now">
+              <img src="styles/img/alldonefornow@2x.png">
+            </div><!-- image -->
+            <div class="done-image today">
+              <img src="styles/img/alldonefortoday@2x.png">
+            </div><!-- image -->
+            <div class="done-content">
+              <div class="text-block">
+                <p>Kickin’ my shoes off because
+                today’s to-do list is complete! </p>
+                <p>#ProductiveDay</p>
+              </div>
+            </div><!-- content -->
+            <div class="done-socials">
+              <a target="_blank" class="facebook" href="https://www.facebook.com/dialog/share?app_id=531435630236702&display=popup&href=http%3A%2F%2Fswipesapp.com&redirect_uri=http%3A%2F%2Fweb.swipesapp.com">
+                <svg class="icon icon-facebook">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-facebook"></use>
+                </svg>
+              </a>
+              <a href="https://twitter.com/intent/tweet?text=Kickin%E2%80%99%20my%20shoes%20off%20because%20today%E2%80%99s%20to-do%20list%20is%20complete!&via=swipesapp&hashtags=ProductiveDay">
+                <svg class="icon icon-facebook">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-twitter"></use>
+                </svg>
+              </a>
+            </div>
+          </section><!-- all done container -->
+
+        </section>
+
+        <div class="load-indicator">
+          <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- .scroll-container -->
+
+  </div>
+  <div id="fb-root"></div>
+   <script type="text/javascript" async src="//platform.twitter.com/widgets.js"></script>
+
+  <!-- build:js scripts/main.js -->
+  <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+  <!-- endbuild -->
+  <script>
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '531435630236702',

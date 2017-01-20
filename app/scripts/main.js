@@ -123,6 +123,9 @@ require.config({
             ],
             exports: 'Draggable'
         },
+        parse: {
+          exports: 'Parse'
+        },
         clndr: {
             deps: [
                 'momentjs'
@@ -139,7 +142,7 @@ require.config({
     }
 });
 var QueryString = function () {
-  // This function is anonymous, is executed immediately and 
+  // This function is anonymous, is executed immediately and
   // the return value is assigned to QueryString!
   var query_string = {};
   var query = window.location.search.substring(1);
@@ -157,7 +160,7 @@ var QueryString = function () {
     } else {
       query_string[pair[0]].push(pair[1]);
     }
-  } 
+  }
     return query_string;
 } ();
 require(["jquery", "backbone"], function($) {
@@ -165,13 +168,16 @@ require(["jquery", "backbone"], function($) {
     require(["bootstrapTooltip"],function(){
         $('[data-toggle="tooltip"]').tooltip({delay:{show:1000,hide:0}});
     })
-    require(["parse"], function() {
+    require(["parse"], function(Parse) {
+        window.Parse = Parse;
         // First check that the user is actually logged in
         queryString = QueryString;
         var appId = "nf9lMphPOh3jZivxqQaMAg6YLtzlfvRjExUEKST3";
         var jsId = "SEwaoJk0yUzW2DG8GgYwuqbeuBeGg51D1mTUlByg";
-        
+
         Parse.initialize(appId, jsId);
+        Parse.serverURL = 'https://pg-app-7zd37b94rjuze3x1cwrxfhlf9qj292.scalabl.cloud/1/';
+        Parse.User.enableRevocableSession();
         if (Parse.User.current()) {
             require(["js/app", "js/DebugHelper", "plugins/log"], function (App, DebugHelper) {
                 'use strict';
@@ -183,7 +189,7 @@ require(["jquery", "backbone"], function($) {
                 swipy.start();
             });
         } else {
-            
+
             path = location.origin + "/login"
             if(queryString && queryString.href){
                 path += "?href="+queryString.href;
@@ -191,7 +197,7 @@ require(["jquery", "backbone"], function($) {
             if(location.hash){
                 path += "#" + location.hash.substring(1);
             }
-            
+
 
 
             location.href = path;
