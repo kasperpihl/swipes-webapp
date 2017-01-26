@@ -141,7 +141,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
       return @needSync = true if @isSyncing
       return if !Parse.User.current()
       @isSyncing = true
-      url = "http://localhost:5000/v1/sync" #"https://api.swipesapp.com/v1/sync" #
+      url = "https://api.swipesapp.com/v1/sync" #"http://localhost:5000/v1/sync" #
       user = Parse.User.current()
       token = user.getSessionToken()
       data =
@@ -172,7 +172,6 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
         data : serData
         processData : false
       #console.log serData
-      console.log('req', serData);
       $.ajax( settings )
     finalizeSync: ( error ) ->
       @syncIndicator.hide()
@@ -186,9 +185,7 @@ define ["underscore", "jquery", "js/controller/ChangedAttributesController", "js
     errorFromSync: ( data, textStatus, error ) ->
       @finalizeSync()
     responseFromSync: ( data, textStatus ) ->
-      console.log('res', JSON.stringify(data));
       if data and data.serverTime
-        console.log('res', JSON.stringify(data));
         @currentSyncing = null
         @changedAttributes.resetChanges()
         @handleObjectsFromSync( data.Tag, "Tag" ) if data.Tag?
